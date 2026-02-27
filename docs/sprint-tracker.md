@@ -5,7 +5,7 @@
 - [x] 0.2 All 17 Edge Functions exported to repo
 - [x] 0.3 Publish pipeline FIXED (65 items published)
 - [x] 0.4 Anthropic API key verified (classify-content-v2 returns 0.95 confidence)
-- [ ] 0.5 TypeScript types generated
+- [x] 0.5 TypeScript types generated (67 tables, 3648 lines)
 - [ ] 0.6 Vercel deploy verified
 
 ## Sprint 1: Engine Hardening (Week 1)
