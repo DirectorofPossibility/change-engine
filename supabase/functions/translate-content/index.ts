@@ -60,13 +60,13 @@ async function translateText(
 }
 
 async function supabasePost(table: string, body: Record<string, unknown>) {
-  return fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+  return fetch(`${SUPABASE_URL}/rest/v1/${table}?on_conflict=translation_id`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_KEY,
       'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Prefer': 'return=representation',
+      'Prefer': 'return=representation,resolution=merge-duplicates',
     },
     body: JSON.stringify(body),
   });
