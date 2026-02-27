@@ -1,0 +1,116 @@
+import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getRecentActivity } from '@/lib/data/dashboard'
+import { StatsCard } from '@/components/ui/StatsCard'
+import { PipelineFlow } from '@/components/ui/PipelineFlow'
+import { ThemePill } from '@/components/ui/ThemePill'
+import { CenterBadge } from '@/components/ui/CenterBadge'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { CRON_JOBS } from '@/lib/types/dashboard'
+
+export default async function DashboardPage() {
+  const [stats, breakdown, byPathway, byCenter, activity] = await Promise.all([
+    getPipelineStats(),
+    getReviewStatusBreakdown(),
+    getContentByPathway(),
+    getContentByCenter(),
+    getRecentActivity(10),
+  ])
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Dashboard Overview</h1>
+
+      {/* Stats Row */}
+      <div className="grid grid-cols-4 gap-4">
+        <StatsCard label="Total Ingested" value={stats.totalIngested} icon="📥" />
+        <StatsCard label="Needs Review" value={stats.needsReview} icon="🔍" />
+        <StatsCard label="Published" value={stats.published} icon="✅" />
+        <StatsCard label="Translated" value={stats.translated} icon="🌐" />
+      </div>
+
+      {/* Pipeline Flow */}
+      <PipelineFlow stats={stats} breakdown={breakdown} />
+
+      {/* Content by Pathway + Center */}
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-2 bg-white rounded-lg shadow-sm border border-brand-border p-6">
+          <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Content by Pathway</h3>
+          <div className="space-y-3">
+            {Object.entries(byPathway)
+              .sort((a, b) => b[1] - a[1])
+              .map(([themeId, count]) => (
+                <div key={themeId} className="flex items-center gap-3">
+                  <ThemePill themeId={themeId} size="md" />
+                  <div className="flex-1 bg-brand-bg rounded-full h-4 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-brand-accent/30"
+                      style={{ width: `${Math.min((count / stats.published) * 100, 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium w-8 text-right">{count}</span>
+                </div>
+              ))}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
+          <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Content by Center</h3>
+          <div className="space-y-4">
+            {Object.entries(byCenter).map(([center, count]) => (
+              <div key={center} className="flex items-center justify-between">
+                <CenterBadge center={center} />
+                <span className="text-lg font-bold">{count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
+        <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Recent Activity</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-brand-border text-left text-brand-muted">
+                <th className="pb-2 font-medium">Event</th>
+                <th className="pb-2 font-medium">Source</th>
+                <th className="pb-2 font-medium">Status</th>
+                <th className="pb-2 font-medium">Message</th>
+                <th className="pb-2 font-medium">Items</th>
+                <th className="pb-2 font-medium">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activity.map((log) => (
+                <tr key={log.id} className="border-b border-brand-border/50 hover:bg-brand-bg/50">
+                  <td className="py-2 font-mono text-xs">{log.event_type}</td>
+                  <td className="py-2 text-brand-muted">{log.source}</td>
+                  <td className="py-2"><StatusBadge status={log.status} /></td>
+                  <td className="py-2 text-xs max-w-xs truncate">{log.message}</td>
+                  <td className="py-2">{log.item_count}</td>
+                  <td className="py-2 text-brand-muted text-xs">{log.created_at ? new Date(log.created_at).toLocaleString() : '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Cron Status */}
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
+        <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Cron Jobs (8 Active)</h3>
+        <div className="grid grid-cols-2 gap-3">
+          {CRON_JOBS.map((job) => (
+            <div key={job.name} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3">
+              <div>
+                <p className="text-sm font-medium">{job.name}</p>
+                <p className="text-xs text-brand-muted">{job.description}</p>
+              </div>
+              <span className="text-xs font-mono bg-white px-2 py-1 rounded border border-brand-border">{job.schedule}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}

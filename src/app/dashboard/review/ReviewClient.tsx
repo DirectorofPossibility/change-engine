@@ -1,0 +1,255 @@
+'use client'
+
+import { useState } from 'react'
+import { ThemePill } from '@/components/ui/ThemePill'
+import { CenterBadge } from '@/components/ui/CenterBadge'
+import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { SlidePanel } from '@/components/ui/SlidePanel'
+import { approveItem, rejectItem } from './actions'
+import type { AiClassification } from '@/lib/types/dashboard'
+
+type ReviewItem = any // from Supabase join query
+
+const STATUS_TABS = ['all', 'pending', 'flagged', 'auto_approved', 'rejected'] as const
+
+export function ReviewClient({ initialItems }: { initialItems: ReviewItem[] }) {
+  const [items] = useState(initialItems)
+  const [activeTab, setActiveTab] = useState<string>('all')
+  const [selected, setSelected] = useState<ReviewItem | null>(null)
+  const [acting, setActing] = useState(false)
+  const [rejectNotes, setRejectNotes] = useState('')
+
+  const filtered = activeTab === 'all'
+    ? items
+    : items.filter((i: any) => i.review_status === activeTab)
+
+  const tabCounts: Record<string, number> = {
+    all: items.length,
+    pending: items.filter((i: any) => i.review_status === 'pending').length,
+    flagged: items.filter((i: any) => i.review_status === 'flagged').length,
+    auto_approved: items.filter((i: any) => i.review_status === 'auto_approved').length,
+    rejected: items.filter((i: any) => i.review_status === 'rejected').length,
+  }
+
+  const classification = selected?.ai_classification as AiClassification | null
+
+  async function handleApprove() {
+    if (!selected || !classification) return
+    setActing(true)
+    await approveItem(selected.id, selected.inbox_id, classification)
+    setSelected(null)
+    setActing(false)
+    window.location.reload()
+  }
+
+  async function handleReject() {
+    if (!selected) return
+    setActing(true)
+    await rejectItem(selected.id, rejectNotes)
+    setSelected(null)
+    setRejectNotes('')
+    setActing(false)
+    window.location.reload()
+  }
+
+  return (
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold">Review Queue</h1>
+
+      {/* Tabs */}
+      <div className="flex gap-1 bg-white rounded-lg border border-brand-border p-1">
+        {STATUS_TABS.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === tab
+                ? 'bg-brand-accent text-white'
+                : 'text-brand-muted hover:text-brand-text hover:bg-brand-bg'
+            }`}
+          >
+            {tab === 'all' ? 'All' : tab === 'auto_approved' ? 'Auto-Approved' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+            <span className="ml-1.5 text-xs opacity-70">({tabCounts[tab]})</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Table */}
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-brand-border text-left text-brand-muted bg-brand-bg/50">
+              <th className="px-4 py-3 font-medium">Title</th>
+              <th className="px-4 py-3 font-medium">Source</th>
+              <th className="px-4 py-3 font-medium">Confidence</th>
+              <th className="px-4 py-3 font-medium">Pathway</th>
+              <th className="px-4 py-3 font-medium">Center</th>
+              <th className="px-4 py-3 font-medium">Status</th>
+              <th className="px-4 py-3 font-medium">Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((item: any) => {
+              const c = item.ai_classification as AiClassification | null
+              return (
+                <tr
+                  key={item.id}
+                  onClick={() => setSelected(item)}
+                  className="border-b border-brand-border/50 hover:bg-brand-bg/50 cursor-pointer"
+                >
+                  <td className="px-4 py-3 font-medium max-w-xs truncate">
+                    {c?.title_6th_grade || item.content_inbox?.title || 'Untitled'}
+                  </td>
+                  <td className="px-4 py-3 text-brand-muted text-xs">
+                    {item.content_inbox?.source_domain || '-'}
+                  </td>
+                  <td className="px-4 py-3"><ConfidenceBadge confidence={item.confidence} /></td>
+                  <td className="px-4 py-3"><ThemePill themeId={c?.theme_primary || null} /></td>
+                  <td className="px-4 py-3"><CenterBadge center={c?.center || null} /></td>
+                  <td className="px-4 py-3"><StatusBadge status={item.review_status} /></td>
+                  <td className="px-4 py-3 text-brand-muted text-xs">
+                    {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+        {filtered.length === 0 && (
+          <div className="text-center py-12 text-brand-muted">No items in this category.</div>
+        )}
+      </div>
+
+      {/* Detail Panel */}
+      <SlidePanel open={!!selected} onClose={() => setSelected(null)} title="Review Detail">
+        {selected && classification && (
+          <div className="space-y-6">
+            {/* Original vs AI */}
+            <div>
+              <h4 className="text-xs font-semibold text-brand-muted uppercase mb-2">Original Title</h4>
+              <p className="text-sm">{selected.content_inbox?.title || '-'}</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold text-brand-muted uppercase mb-2">AI Title (6th Grade)</h4>
+              <p className="text-sm font-medium">{classification.title_6th_grade}</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold text-brand-muted uppercase mb-2">AI Summary (6th Grade)</h4>
+              <p className="text-sm">{classification.summary_6th_grade}</p>
+            </div>
+
+            {/* Classification */}
+            <div className="border-t border-brand-border pt-4 space-y-3">
+              <h4 className="text-xs font-semibold text-brand-muted uppercase mb-2">Classification</h4>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                  <span className="text-brand-muted text-xs">Pathway</span>
+                  <div className="mt-1"><ThemePill themeId={classification.theme_primary} size="md" /></div>
+                </div>
+                <div>
+                  <span className="text-brand-muted text-xs">Center</span>
+                  <div className="mt-1"><CenterBadge center={classification.center} /></div>
+                </div>
+                <div>
+                  <span className="text-brand-muted text-xs">Confidence</span>
+                  <div className="mt-1"><ConfidenceBadge confidence={classification.confidence} /></div>
+                </div>
+                <div>
+                  <span className="text-brand-muted text-xs">SDOH</span>
+                  <div className="mt-1 text-xs">{classification.sdoh_code || '-'}</div>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-brand-muted text-xs">Focus Areas</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(classification.focus_area_ids || []).map((id: string) => (
+                    <span key={id} className="text-xs bg-brand-bg px-2 py-0.5 rounded">{id}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs">SDGs</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(classification.sdg_ids || []).map((id: string) => (
+                    <span key={id} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{id}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs">Audience</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(classification.audience_segment_ids || []).map((id: string) => (
+                    <span key={id} className="text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded">{id}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs">Life Situations</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(classification.life_situation_ids || []).map((id: string) => (
+                    <span key={id} className="text-xs bg-orange-50 text-orange-700 px-2 py-0.5 rounded">{id}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs">Action Items</span>
+                <div className="mt-1 space-y-1">
+                  {Object.entries(classification.action_items || {}).filter(([, v]) => v).map(([k, v]) => (
+                    <div key={k} className="text-xs">
+                      <span className="text-brand-muted">{k}:</span>{' '}
+                      <a href={v as string} target="_blank" rel="noreferrer" className="text-brand-accent underline">{(v as string).substring(0, 60)}</a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs">Reasoning</span>
+                <p className="mt-1 text-xs text-brand-muted">{classification.reasoning}</p>
+              </div>
+            </div>
+
+            {/* Source Link */}
+            {selected.content_inbox?.source_url && (
+              <div className="border-t border-brand-border pt-4">
+                <a href={selected.content_inbox.source_url} target="_blank" rel="noreferrer" className="text-sm text-brand-accent underline">
+                  View Source →
+                </a>
+              </div>
+            )}
+
+            {/* Actions */}
+            {(selected.review_status === 'pending' || selected.review_status === 'flagged') && (
+              <div className="border-t border-brand-border pt-4 space-y-3">
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleApprove}
+                    disabled={acting}
+                    className="flex-1 bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {acting ? 'Processing...' : 'Approve & Publish'}
+                  </button>
+                  <button
+                    onClick={handleReject}
+                    disabled={acting}
+                    className="flex-1 bg-red-600 text-white py-2 rounded-lg font-medium hover:bg-red-700 disabled:opacity-50"
+                  >
+                    {acting ? 'Processing...' : 'Reject'}
+                  </button>
+                </div>
+                <textarea
+                  placeholder="Reviewer notes (optional)..."
+                  value={rejectNotes}
+                  onChange={(e) => setRejectNotes(e.target.value)}
+                  className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm"
+                  rows={2}
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </SlidePanel>
+    </div>
+  )
+}
