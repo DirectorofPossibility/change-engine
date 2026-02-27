@@ -2,7 +2,7 @@
 
 ## Sprint 0: Foundation ← CURRENT
 - [x] 0.1 Repo organized for MVP build
-- [ ] 0.2 All 17 Edge Functions exported to repo
+- [x] 0.2 All 17 Edge Functions exported to repo
 - [x] 0.3 Publish pipeline FIXED (65 items published)
 - [ ] 0.4 Anthropic API key verified
 - [ ] 0.5 TypeScript types generated
