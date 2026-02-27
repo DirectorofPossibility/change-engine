@@ -4,7 +4,7 @@
 - [x] 0.1 Repo organized for MVP build
 - [x] 0.2 All 17 Edge Functions exported to repo
 - [x] 0.3 Publish pipeline FIXED (65 items published)
-- [ ] 0.4 Anthropic API key verified
+- [x] 0.4 Anthropic API key verified (classify-content-v2 returns 0.95 confidence)
 - [ ] 0.5 TypeScript types generated
 - [ ] 0.6 Vercel deploy verified
 
