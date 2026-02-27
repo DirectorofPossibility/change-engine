@@ -6,7 +6,7 @@
 - [x] 0.3 Publish pipeline FIXED (65 items published)
 - [x] 0.4 Anthropic API key verified (classify-content-v2 returns 0.95 confidence)
 - [x] 0.5 TypeScript types generated (67 tables, 3648 lines)
-- [ ] 0.6 Vercel deploy verified
+- [x] 0.6 Vercel deploy verified (https://change-lab-api.vercel.app)
 
 ## Sprint 1: Engine Hardening (Week 1)
 - [ ] 1.1 classify-content-v2 fills ALL 15 dimensions
