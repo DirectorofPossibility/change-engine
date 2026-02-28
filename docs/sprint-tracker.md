@@ -59,4 +59,21 @@
 - [x] 4.13 Help detail enriched (opportunities + policies sections below existing content/services)
 - [x] 4.14 Build verified (17 routes compile, 0 TypeScript errors, 20 files changed, 1159 additions)
 
+## Sprint 4b: Exchange Detail Pages (COMPLETE)
+- [x] 4b.1 9 new components (ActionBar, CandidateCard, BallotItemCard, VotingLocationCard, ModuleTimeline, BadgeCard, ZipLookupForm, ElectionCountdown, RelatedContent)
+- [x] 4b.2 Content detail page (/content/[id]) — full 15-dimension display, action bar, translations, sidebar metadata (pathway, focus areas, SDGs, SDOH, audience, life situations), classification reasoning, related content
+- [x] 4b.3 Official detail page (/officials/[id]) — level badge, contact card, about, district info, connected policies, related content
+- [x] 4b.4 ZIP lookup page (/officials/lookup) — full ZipLookupForm with officials grouped by level, neighborhood info, voting locations
+- [x] 4b.5 Elections list page (/elections) — upcoming countdown banner, future/past grouping
+- [x] 4b.6 Election detail page (/elections/[id]) — countdown, register CTA, candidates by office, ballot items, voting locations
+- [x] 4b.7 Service detail page (/services/[id]) — contact/access card, eligibility/fees/languages, parent org link, related services
+- [x] 4b.8 Organization detail page (/organizations/[id]) — logo, contact, JSONB hours + social media, stats, tags, services list
+- [x] 4b.9 Learning path detail page (/learn/[id]) — module timeline, quizzes, badge earned, prerequisite path
+- [x] 4b.10 Policies list + detail pages (/policies, /policies/[id]) — status badges, timeline, summary, connected officials, related policies
+- [x] 4b.11 Neighborhood detail page (/neighborhoods/[id]) — demographics, description, local services, ZIP lookup link
+- [x] 4b.12 ContentCard updated (links internally to /content/[id] instead of external source)
+- [x] 4b.13 Header updated (added Elections + Find Your Reps nav links)
+- [x] 4b.14 Footer updated (added Elections, Policies, Find Your Reps links)
+- [x] 4b.15 Build verified (29 routes compile, 0 TypeScript errors, 23 files changed, 2141 additions)
+
 ## Sprint 5: Polish & Launch (Week 5-6)
