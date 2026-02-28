@@ -1,9 +1,14 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getLifeSituation, getLifeSituationContent, getLearningPaths } from '@/lib/data/exchange'
+import {
+  getLifeSituation, getLifeSituationContent, getLearningPaths,
+  getRelatedOpportunities, getRelatedPolicies,
+} from '@/lib/data/exchange'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
+import { OpportunityCard } from '@/components/exchange/OpportunityCard'
+import { PolicyCard } from '@/components/exchange/PolicyCard'
 
 export default async function HelpDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -12,14 +17,16 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
 
   const isCritical = situation.urgency_level === 'Critical'
 
-  const { content, services } = await getLifeSituationContent(
-    situation.focus_area_ids || '',
-    situation.service_cat_ids
-  )
+  const focusIds = (situation.focus_area_ids || '').split(',').map(function (s) { return s.trim() }).filter(Boolean)
 
-  // Get related learning path
-  const paths = situation.path_id ? await getLearningPaths() : []
-  const relatedPath = paths.find(p => p.path_id === situation.path_id)
+  const [{ content, services }, paths, opportunities, policies] = await Promise.all([
+    getLifeSituationContent(situation.focus_area_ids || '', situation.service_cat_ids),
+    situation.path_id ? getLearningPaths() : Promise.resolve([]),
+    getRelatedOpportunities(focusIds),
+    getRelatedPolicies(focusIds),
+  ])
+
+  const relatedPath = paths.find(function (p) { return p.path_id === situation.path_id })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -52,18 +59,20 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         <section className="mb-10">
           <h2 className="text-xl font-bold text-brand-text mb-4">Related Resources</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {content.map((item) => (
-              <ContentCard
-                key={item.id}
-                id={item.id}
-                title={item.title_6th_grade}
-                summary={item.summary_6th_grade}
-                pathway={item.pathway_primary}
-                center={item.center}
-                sourceUrl={item.source_url}
-                publishedAt={item.published_at}
-              />
-            ))}
+            {content.map(function (item) {
+              return (
+                <ContentCard
+                  key={item.id}
+                  id={item.id}
+                  title={item.title_6th_grade}
+                  summary={item.summary_6th_grade}
+                  pathway={item.pathway_primary}
+                  center={item.center}
+                  sourceUrl={item.source_url}
+                  publishedAt={item.published_at}
+                />
+              )
+            })}
           </div>
         </section>
       )}
@@ -73,20 +82,69 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         <section className="mb-10">
           <h2 className="text-xl font-bold text-brand-text mb-4">Services</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services.map((svc) => (
-              <ServiceCard
-                key={svc.service_id}
-                name={svc.service_name}
-                orgName={svc.org_name}
-                description={svc.description_5th_grade}
-                phone={svc.phone}
-                address={svc.address}
-                city={svc.city}
-                state={svc.state}
-                zipCode={svc.zip_code}
-                website={svc.website}
-              />
-            ))}
+            {services.map(function (svc) {
+              return (
+                <ServiceCard
+                  key={svc.service_id}
+                  name={svc.service_name}
+                  orgName={svc.org_name}
+                  description={svc.description_5th_grade}
+                  phone={svc.phone}
+                  address={svc.address}
+                  city={svc.city}
+                  state={svc.state}
+                  zipCode={svc.zip_code}
+                  website={svc.website}
+                />
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Opportunities */}
+      {opportunities.length > 0 && (
+        <section className="mb-10">
+          <h2 className="text-xl font-bold text-brand-text mb-4">Opportunities</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {opportunities.map(function (o) {
+              return (
+                <OpportunityCard
+                  key={o.opportunity_id}
+                  name={o.opportunity_name}
+                  description={o.description_5th_grade}
+                  startDate={o.start_date}
+                  endDate={o.end_date}
+                  address={o.address}
+                  city={o.city}
+                  isVirtual={o.is_virtual}
+                  registrationUrl={o.registration_url}
+                  spotsAvailable={o.spots_available}
+                />
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Policies */}
+      {policies.length > 0 && (
+        <section className="mb-10">
+          <h2 className="text-xl font-bold text-brand-text mb-4">Related Policies</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {policies.map(function (p) {
+              return (
+                <PolicyCard
+                  key={p.policy_id}
+                  name={p.policy_name}
+                  summary={p.summary_5th_grade}
+                  billNumber={p.bill_number}
+                  status={p.status}
+                  level={p.level}
+                  sourceUrl={p.source_url}
+                />
+              )
+            })}
           </div>
         </section>
       )}

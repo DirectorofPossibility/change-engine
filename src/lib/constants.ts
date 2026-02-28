@@ -39,3 +39,9 @@ export const PERSONAS = [
   { id: 'scout', name: 'Scout', tagline: 'I want to explore what\'s out there.' },
   { id: 'register', name: 'Register', tagline: 'I want to vote and participate in democracy.' },
 ] as const;
+
+export const LANGUAGES = [
+  { code: 'en' as const, label: 'EN', name: 'English', langId: null },
+  { code: 'es' as const, label: 'ES', name: 'Español', langId: 'LANG-ES' },
+  { code: 'vi' as const, label: 'VI', name: 'Tiếng Việt', langId: 'LANG-VI' },
+] as const;

@@ -2,8 +2,9 @@ import Link from 'next/link'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
 import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations } from '@/lib/data/exchange'
 import { CenterCard } from '@/components/exchange/CenterCard'
-import { ContentCard } from '@/components/exchange/ContentCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
+import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
+import { NeighborhoodBanner } from '@/components/exchange/NeighborhoodBanner'
 
 export default async function HomePage() {
   const [stats, centerCounts, pathwayCounts, latestContent, situations] = await Promise.all([
@@ -15,7 +16,7 @@ export default async function HomePage() {
   ])
 
   const featuredSituations = situations
-    .filter(s => s.is_featured === 'Yes' || s.urgency_level === 'Critical' || s.urgency_level === 'High')
+    .filter(function (s) { return s.is_featured === 'Yes' || s.urgency_level === 'Critical' || s.urgency_level === 'High' })
     .slice(0, 6)
 
   return (
@@ -45,20 +46,25 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Neighborhood Banner */}
+      <NeighborhoodBanner />
+
       {/* 4 Centers */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-brand-text mb-6">Four Centers of Community Life</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {Object.entries(CENTERS).map(([name, config]) => (
-            <CenterCard
-              key={name}
-              name={name}
-              emoji={config.emoji}
-              question={config.question}
-              slug={config.slug}
-              count={centerCounts[name] || 0}
-            />
-          ))}
+          {Object.entries(CENTERS).map(function ([name, config]) {
+            return (
+              <CenterCard
+                key={name}
+                name={name}
+                emoji={config.emoji}
+                question={config.question}
+                slug={config.slug}
+                count={centerCounts[name] || 0}
+              />
+            )
+          })}
         </div>
       </section>
 
@@ -66,20 +72,22 @@ export default async function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-brand-text mb-6">Seven Pathways</h2>
         <div className="flex gap-3 overflow-x-auto pb-4">
-          {Object.entries(THEMES).map(([id, theme]) => (
-            <Link
-              key={id}
-              href={`/pathways/${theme.slug}`}
-              className="flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: theme.color }}
-            >
-              <span>{theme.emoji}</span>
-              <span>{theme.name}</span>
-              <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
-                {pathwayCounts[id] || 0}
-              </span>
-            </Link>
-          ))}
+          {Object.entries(THEMES).map(function ([id, theme]) {
+            return (
+              <Link
+                key={id}
+                href={'/pathways/' + theme.slug}
+                className="flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: theme.color }}
+              >
+                <span>{theme.emoji}</span>
+                <span>{theme.name}</span>
+                <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                  {pathwayCounts[id] || 0}
+                </span>
+              </Link>
+            )
+          })}
         </div>
       </section>
 
@@ -93,38 +101,27 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featuredSituations.map((s) => (
-              <LifeSituationCard
-                key={s.situation_id}
-                name={s.situation_name}
-                slug={s.situation_slug}
-                description={s.description_5th_grade}
-                urgency={s.urgency_level}
-                iconName={s.icon_name}
-              />
-            ))}
+            {featuredSituations.map(function (s) {
+              return (
+                <LifeSituationCard
+                  key={s.situation_id}
+                  name={s.situation_name}
+                  slug={s.situation_slug}
+                  description={s.description_5th_grade}
+                  urgency={s.urgency_level}
+                  iconName={s.icon_name}
+                />
+              )
+            })}
           </div>
         </section>
       )}
 
-      {/* Latest Content */}
+      {/* Latest Content — uses TranslatedContentGrid for translation support */}
       {latestContent.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h2 className="text-2xl font-bold text-brand-text mb-6">Latest Resources</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {latestContent.map((item) => (
-              <ContentCard
-                key={item.id}
-                id={item.id}
-                title={item.title_6th_grade}
-                summary={item.summary_6th_grade}
-                pathway={item.pathway_primary}
-                center={item.center}
-                sourceUrl={item.source_url}
-                publishedAt={item.published_at}
-              />
-            ))}
-          </div>
+          <TranslatedContentGrid items={latestContent} />
         </section>
       )}
 

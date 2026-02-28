@@ -1,0 +1,44 @@
+'use client'
+
+import { useState } from 'react'
+import { MapPin, X } from 'lucide-react'
+import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
+
+export function ZipInput() {
+  const { zip, neighborhood, lookupZip, clearZip, isLoading } = useNeighborhood()
+  const [input, setInput] = useState(zip || '')
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (input.length === 5) {
+      lookupZip(input)
+    }
+  }
+
+  if (zip && neighborhood) {
+    return (
+      <div className="flex items-center gap-1 text-xs">
+        <MapPin size={12} className="text-brand-accent" />
+        <span className="text-brand-muted">{zip}</span>
+        <button onClick={clearZip} className="text-brand-muted hover:text-brand-text" aria-label="Clear ZIP">
+          <X size={12} />
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex items-center gap-1">
+      <MapPin size={14} className="text-brand-muted" />
+      <input
+        type="text"
+        value={input}
+        onChange={function (e) { setInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+        placeholder="ZIP"
+        className="w-16 text-xs px-1.5 py-1 border border-brand-border rounded bg-white focus:outline-none focus:border-brand-accent"
+        maxLength={5}
+        disabled={isLoading}
+      />
+    </form>
+  )
+}

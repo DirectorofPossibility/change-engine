@@ -20,3 +20,31 @@ export interface ExchangeStats {
 export interface ServiceWithOrg extends Service211 {
   org_name?: string
 }
+
+// Sprint 4 types
+export type Translation = Tables<'translations'>
+export type Neighborhood = Tables<'neighborhoods'>
+export type Opportunity = Tables<'opportunities'>
+export type Policy = Tables<'policies'>
+export type FocusArea = Tables<'focus_areas'>
+
+export type SupportedLanguage = 'en' | 'es' | 'vi'
+
+export interface TranslationMap {
+  [inboxId: string]: {
+    title?: string
+    summary?: string
+  }
+}
+
+export interface SearchResults {
+  content: ContentPublished[]
+  officials: ElectedOfficial[]
+  services: ServiceWithOrg[]
+}
+
+export interface NeighborhoodInfo {
+  neighborhood: Neighborhood
+  councilDistrict: string | null
+  officials: ElectedOfficial[]
+}

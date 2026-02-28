@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { ExchangeStats, ServiceWithOrg } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea } from '@/lib/types/exchange'
 
 export async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
@@ -190,4 +190,134 @@ export async function getCenterContentForPathway(themeId: string): Promise<Recor
     }
   })
   return counts
+}
+
+// --- Sprint 4 fetchers ---
+
+export async function getFocusAreas(): Promise<FocusArea[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('focus_areas').select('*')
+  return data ?? []
+}
+
+export async function getFocusAreaMap(): Promise<Record<string, string>> {
+  const areas = await getFocusAreas()
+  const map: Record<string, string> = {}
+  areas.forEach(function (a) { map[a.focus_id] = a.focus_area_name })
+  return map
+}
+
+export async function getRelatedOpportunities(focusAreaIds: string[]) {
+  const supabase = await createClient()
+  if (focusAreaIds.length === 0) return []
+  // focus_area_ids is comma-separated TEXT — use .or() with .ilike() per ID
+  const filters = focusAreaIds.map(function (id) {
+    return 'focus_area_ids.ilike.%' + id + '%'
+  }).join(',')
+  const { data } = await supabase
+    .from('opportunities')
+    .select('*')
+    .or(filters)
+    .eq('is_active', 'Yes')
+    .limit(10)
+  return data ?? []
+}
+
+export async function getRelatedPolicies(focusAreaIds: string[]) {
+  const supabase = await createClient()
+  if (focusAreaIds.length === 0) return []
+  const filters = focusAreaIds.map(function (id) {
+    return 'focus_area_ids.ilike.%' + id + '%'
+  }).join(',')
+  const { data } = await supabase
+    .from('policies')
+    .select('*')
+    .or(filters)
+    .limit(10)
+  return data ?? []
+}
+
+export async function getTranslations(inboxIds: string[], langId: string): Promise<TranslationMap> {
+  const supabase = await createClient()
+  if (inboxIds.length === 0 || !langId) return {}
+  const { data } = await supabase
+    .from('translations')
+    .select('*')
+    .in('content_id', inboxIds)
+    .eq('language_id', langId)
+  const map: TranslationMap = {}
+  if (data) {
+    data.forEach(function (t) {
+      if (!t.content_id) return
+      if (!map[t.content_id]) map[t.content_id] = {}
+      if (t.field_name === 'title') map[t.content_id].title = t.translated_text ?? undefined
+      if (t.field_name === 'summary') map[t.content_id].summary = t.translated_text ?? undefined
+    })
+  }
+  return map
+}
+
+export async function getTranslationAvailability(inboxIds: string[]): Promise<Record<string, string[]>> {
+  const supabase = await createClient()
+  if (inboxIds.length === 0) return {}
+  const { data } = await supabase
+    .from('translations')
+    .select('content_id, language_id')
+    .in('content_id', inboxIds)
+  const avail: Record<string, string[]> = {}
+  if (data) {
+    data.forEach(function (t) {
+      if (!t.content_id || !t.language_id) return
+      if (!avail[t.content_id]) avail[t.content_id] = []
+      if (avail[t.content_id].indexOf(t.language_id) === -1) {
+        avail[t.content_id].push(t.language_id)
+      }
+    })
+  }
+  return avail
+}
+
+export async function getNeighborhoodByZip(zip: string) {
+  const supabase = await createClient()
+  // zip_codes is comma-separated TEXT — use ilike to find matching ZIP
+  const { data } = await supabase
+    .from('neighborhoods')
+    .select('*')
+    .ilike('zip_codes', '%' + zip + '%')
+  if (!data || data.length === 0) return null
+  // Validate in JS that the ZIP actually matches (not just a substring)
+  var match = data.find(function (n) {
+    if (!n.zip_codes) return false
+    var zips = n.zip_codes.split(',').map(function (z) { return z.trim() })
+    return zips.indexOf(zip) !== -1
+  })
+  return match ?? null
+}
+
+export async function getOfficialsForDistrict(districtId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('elected_officials')
+    .select('*')
+    .eq('district_id', districtId)
+  return data ?? []
+}
+
+export async function getServicesByZip(zip: string): Promise<ServiceWithOrg[]> {
+  const supabase = await createClient()
+  const { data: services } = await supabase
+    .from('services_211')
+    .select('*')
+    .eq('is_active', 'Yes')
+    .eq('zip_code', zip)
+    .limit(20)
+  if (!services || services.length === 0) return []
+  const orgIds = Array.from(new Set(services.map(function (s) { return s.org_id }).filter(Boolean)))
+  if (orgIds.length === 0) return services
+  const { data: orgs } = await supabase
+    .from('organizations')
+    .select('org_id, org_name')
+    .in('org_id', orgIds as string[])
+  const orgMap = new Map(orgs?.map(function (o) { return [o.org_id, o.org_name] as [string, string] }) ?? [])
+  return services.map(function (s) { return Object.assign({}, s, { org_name: orgMap.get(s.org_id!) ?? undefined }) })
 }
