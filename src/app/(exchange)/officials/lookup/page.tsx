@@ -1,0 +1,13 @@
+import { ZipLookupForm } from '@/components/exchange/ZipLookupForm'
+
+export default function ZipLookupPage() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-3xl font-bold text-brand-text mb-2">Find Your Representatives</h1>
+      <p className="text-brand-muted mb-8 max-w-2xl">
+        Enter your ZIP code to see who represents you at every level of government — federal, state, county, and city.
+      </p>
+      <ZipLookupForm />
+    </div>
+  )
+}

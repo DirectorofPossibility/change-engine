@@ -12,7 +12,9 @@ const NAV_LINKS = [
   { href: '/pathways', label: 'Pathways' },
   { href: '/help', label: 'I Need Help' },
   { href: '/officials', label: 'Officials' },
+  { href: '/officials/lookup', label: 'Find Your Reps' },
   { href: '/services', label: 'Services' },
+  { href: '/elections', label: 'Elections' },
   { href: '/learn', label: 'Learn' },
 ]
 

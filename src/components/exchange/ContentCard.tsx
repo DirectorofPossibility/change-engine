@@ -15,11 +15,11 @@ interface ContentCardProps {
 }
 
 export function ContentCard({
-  title, summary, pathway, center, sourceUrl, publishedAt,
+  id, title, summary, pathway, center, sourceUrl, publishedAt,
   focusAreaNames,
 }: ContentCardProps) {
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
+    <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-2 mb-3">
         <ThemePill themeId={pathway} size="sm" />
         <CenterBadge center={center} />
@@ -35,15 +35,10 @@ export function ContentCard({
         <span className="text-xs text-brand-muted">
           {publishedAt ? new Date(publishedAt).toLocaleDateString() : ''}
         </span>
-        <Link
-          href={sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-brand-accent hover:underline"
-        >
+        <span className="text-xs text-brand-accent">
           Read more &rarr;
-        </Link>
+        </span>
       </div>
-    </div>
+    </Link>
   )
 }

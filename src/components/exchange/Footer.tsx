@@ -17,7 +17,10 @@ export function Footer() {
               <Link href="/pathways" className="block text-sm text-gray-400 hover:text-white">Pathways</Link>
               <Link href="/help" className="block text-sm text-gray-400 hover:text-white">I Need Help</Link>
               <Link href="/officials" className="block text-sm text-gray-400 hover:text-white">Officials</Link>
+              <Link href="/officials/lookup" className="block text-sm text-gray-400 hover:text-white">Find Your Reps</Link>
               <Link href="/services" className="block text-sm text-gray-400 hover:text-white">Services</Link>
+              <Link href="/elections" className="block text-sm text-gray-400 hover:text-white">Elections</Link>
+              <Link href="/policies" className="block text-sm text-gray-400 hover:text-white">Policies</Link>
               <Link href="/learn" className="block text-sm text-gray-400 hover:text-white">Learning Paths</Link>
             </div>
           </div>
