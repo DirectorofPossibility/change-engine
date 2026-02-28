@@ -1,6 +1,14 @@
+import type { Metadata } from 'next'
 import { THEMES, CENTERS } from '@/lib/constants'
 import { getPathwayCounts, getCenterContentForPathway } from '@/lib/data/exchange'
 import { PathwayCard } from '@/components/exchange/PathwayCard'
+
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Seven Pathways Into Community Life',
+  description: 'Explore health, families, neighborhood, voice, money, planet, and bridging divides.',
+}
 
 export default async function PathwaysPage() {
   const pathwayCounts = await getPathwayCounts()

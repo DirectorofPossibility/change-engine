@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import { getLifeSituations } from '@/lib/data/exchange'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
+
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'I Need Help',
+  description: 'Find services and resources for food, housing, healthcare, jobs, and more in Houston.',
+}
 
 const URGENCY_ORDER = ['Critical', 'High', 'Medium', 'Low']
 

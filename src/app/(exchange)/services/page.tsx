@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ServicesClient } from './ServicesClient'
+
+export const revalidate = 86400
+
+export const metadata: Metadata = {
+  title: 'Find Services',
+  description: 'Free and low-cost services in the Houston area — a community resource directory.',
+}
 
 export default async function ServicesPage() {
   const services = await getServices()

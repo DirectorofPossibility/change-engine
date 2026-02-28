@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { OfficialsClient } from './OfficialsClient'
+
+export const revalidate = 86400
+
+export const metadata: Metadata = {
+  title: 'Who Represents You',
+  description: 'Find your elected officials at every level of government in Houston, Texas.',
+}
 
 export default async function OfficialsPage() {
   const { officials, levels } = await getOfficials()

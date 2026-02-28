@@ -38,9 +38,14 @@ export interface TranslationMap {
 }
 
 export interface SearchResults {
-  content: ContentPublished[]
-  officials: ElectedOfficial[]
-  services: ServiceWithOrg[]
+  content: any[]
+  officials: any[]
+  services: any[]
+  organizations: any[]
+  policies: any[]
+  situations: any[]
+  resources: any[]
+  paths: any[]
 }
 
 export interface NeighborhoodInfo {

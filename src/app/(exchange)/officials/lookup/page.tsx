@@ -1,4 +1,10 @@
+import type { Metadata } from 'next'
 import { ZipLookupForm } from '@/components/exchange/ZipLookupForm'
+
+export const metadata: Metadata = {
+  title: 'Find Your Representatives',
+  description: 'Enter your ZIP code to see who represents you in Houston and Harris County.',
+}
 
 export default function ZipLookupPage() {
   return (

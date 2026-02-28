@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -5,6 +6,19 @@ import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { CandidateCard } from '@/components/exchange/CandidateCard'
 import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
+
+export const revalidate = 3600
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('elections').select('election_name, description').eq('election_id', id).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.election_name,
+    description: data.description || 'Details on The Change Engine.',
+  }
+}
 
 export default async function ElectionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

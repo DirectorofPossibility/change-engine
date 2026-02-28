@@ -1,5 +1,13 @@
+import type { Metadata } from 'next'
 import { getLearningPaths } from '@/lib/data/exchange'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
+
+export const revalidate = 86400
+
+export const metadata: Metadata = {
+  title: 'Start Learning',
+  description: 'Free courses on civic engagement, housing, health, finance, and community building.',
+}
 
 export default async function LearnPage() {
   const paths = await getLearningPaths()

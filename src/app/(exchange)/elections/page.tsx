@@ -1,6 +1,14 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
+
+export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Elections and Voting Guide',
+  description: 'Upcoming elections, candidates, ballot items, and where to vote in Houston.',
+}
 
 export default async function ElectionsPage() {
   const supabase = await createClient()

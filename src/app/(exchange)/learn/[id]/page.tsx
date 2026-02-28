@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -5,6 +6,19 @@ import { Clock, BookOpen } from 'lucide-react'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { ModuleTimeline } from '@/components/exchange/ModuleTimeline'
 import { BadgeCard } from '@/components/exchange/BadgeCard'
+
+export const revalidate = 86400
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('learning_paths').select('path_name, description_5th_grade').eq('path_id', id).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.path_name,
+    description: data.description_5th_grade || 'Details on The Change Engine.',
+  }
+}
 
 export default async function LearningPathDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

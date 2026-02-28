@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -12,6 +13,19 @@ function statusColor(status: string | null): string {
   if (s === 'pending' || s === 'introduced' || s === 'in committee' || s === 'active') return 'bg-yellow-100 text-yellow-700'
   if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-100 text-red-700'
   return 'bg-blue-100 text-blue-700'
+}
+
+export const revalidate = 86400
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('policies').select('policy_name, summary_5th_grade').eq('policy_id', id).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.policy_name,
+    description: data.summary_5th_grade || 'Details on The Change Engine.',
+  }
 }
 
 export default async function PolicyDetailPage({ params }: { params: Promise<{ id: string }> }) {

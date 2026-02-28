@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -10,6 +11,18 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
+
+export const revalidate = 3600
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  var { slug } = await params
+  var situation = await getLifeSituation(slug)
+  if (!situation) return { title: 'Not Found' }
+  return {
+    title: situation.situation_name,
+    description: situation.description_5th_grade || 'Details on The Change Engine.',
+  }
+}
 
 export default async function HelpDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

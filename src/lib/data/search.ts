@@ -1,37 +1,62 @@
 import { createClient } from '@/lib/supabase/server'
-import type { SearchResults, ServiceWithOrg } from '@/lib/types/exchange'
+import type { SearchResults } from '@/lib/types/exchange'
 
 export async function searchAll(query: string): Promise<SearchResults> {
-  if (!query || query.trim().length === 0) {
-    return { content: [], officials: [], services: [] }
-  }
+  var empty: SearchResults = { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
+  if (!query || query.trim().length === 0) return empty
 
-  const supabase = await createClient()
-  const pattern = '%' + query.trim() + '%'
+  var supabase = await createClient()
+  var tsQuery = query.trim().split(/\s+/).join(' & ')
 
-  const [contentRes, officialsRes, servicesRes] = await Promise.all([
+  var [contentRes, servicesRes, officialsRes, orgsRes, policiesRes, situationsRes, resourcesRes, pathsRes] = await Promise.all([
     supabase
       .from('content_published')
-      .select('*')
+      .select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at')
+      .textSearch('fts', tsQuery)
       .eq('is_active', true)
-      .or('title_6th_grade.ilike.' + pattern + ',summary_6th_grade.ilike.' + pattern)
-      .order('published_at', { ascending: false })
-      .limit(20),
-    supabase
-      .from('elected_officials')
-      .select('*')
-      .or('official_name.ilike.' + pattern + ',title.ilike.' + pattern)
       .limit(20),
     supabase
       .from('services_211')
-      .select('*')
+      .select('service_id, service_name, description_5th_grade, org_id, phone, address, city, state, zip_code, website')
+      .textSearch('fts', tsQuery)
       .eq('is_active', 'Yes')
-      .or('service_name.ilike.' + pattern + ',description_5th_grade.ilike.' + pattern)
       .limit(20),
+    supabase
+      .from('elected_officials')
+      .select('official_id, official_name, title, level, party, jurisdiction, email, office_phone, website')
+      .textSearch('fts', tsQuery)
+      .limit(20),
+    supabase
+      .from('organizations')
+      .select('org_id, org_name, description_5th_grade, website')
+      .textSearch('fts', tsQuery)
+      .limit(20),
+    supabase
+      .from('policies')
+      .select('policy_id, policy_name, policy_type, level, status, summary_5th_grade, bill_number')
+      .textSearch('fts', tsQuery)
+      .limit(10),
+    supabase
+      .from('life_situations')
+      .select('situation_id, situation_name, situation_slug, description_5th_grade, urgency_level, icon_name')
+      .textSearch('fts', tsQuery)
+      .limit(10),
+    supabase
+      .from('resources')
+      .select('resource_id, resource_name, description_5th_grade, source_url')
+      .textSearch('fts', tsQuery)
+      .eq('is_active', 'Yes')
+      .limit(20),
+    supabase
+      .from('learning_paths')
+      .select('path_id, path_name, description_5th_grade, theme_id, difficulty_level')
+      .textSearch('fts', tsQuery)
+      .eq('is_active', 'Yes')
+      .limit(10),
   ])
 
   // Enrich services with org names
-  var services: ServiceWithOrg[] = []
+  var services: any[] = []
   if (servicesRes.data && servicesRes.data.length > 0) {
     var orgIds = Array.from(new Set(servicesRes.data.map(function (s) { return s.org_id }).filter(Boolean)))
     if (orgIds.length > 0) {
@@ -52,5 +77,10 @@ export async function searchAll(query: string): Promise<SearchResults> {
     content: contentRes.data ?? [],
     officials: officialsRes.data ?? [],
     services: services,
+    organizations: orgsRes.data ?? [],
+    policies: policiesRes.data ?? [],
+    situations: situationsRes.data ?? [],
+    resources: resourcesRes.data ?? [],
+    paths: pathsRes.data ?? [],
   }
 }

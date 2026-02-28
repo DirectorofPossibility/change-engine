@@ -1,9 +1,23 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Phone, Globe, MapPin, Clock } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+
+export const revalidate = 86400
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('services_211').select('service_name, description_5th_grade').eq('service_id', id).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.service_name,
+    description: data.description_5th_grade || 'Details on The Change Engine.',
+  }
+}
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

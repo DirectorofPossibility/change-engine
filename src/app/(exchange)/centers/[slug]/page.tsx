@@ -13,6 +13,8 @@ function resolveCenter(slug: string) {
   return null
 }
 
+export const revalidate = 3600
+
 export default async function CenterPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const center = resolveCenter(slug)

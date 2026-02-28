@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { THEMES, CENTERS } from '@/lib/constants'
 import {
@@ -18,6 +19,18 @@ function resolveTheme(slug: string) {
     if (theme.slug === slug) return { id, ...theme }
   }
   return null
+}
+
+export const revalidate = 3600
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  var { slug } = await params
+  var theme = resolveTheme(slug)
+  if (!theme) return { title: 'Not Found' }
+  return {
+    title: theme.name,
+    description: 'Resources and community information for the ' + theme.name + ' pathway.',
+  }
 }
 
 export default async function SinglePathwayPage({ params }: { params: Promise<{ slug: string }> }) {

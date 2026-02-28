@@ -1,7 +1,15 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+
+export const revalidate = 86400
+
+export const metadata: Metadata = {
+  title: 'Policies',
+  description: 'Track legislation and policies affecting Houston and Harris County communities.',
+}
 
 export default async function PoliciesPage() {
   const supabase = await createClient()

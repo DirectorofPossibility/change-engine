@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -13,6 +14,19 @@ function resolveThemeSlug(themeId: string | null) {
   if (!themeId) return null
   var entry = Object.entries(THEMES).find(function ([id]) { return id === themeId })
   return entry ? entry[1].slug : null
+}
+
+export const revalidate = 86400
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('content_published').select('title_6th_grade, summary_6th_grade').eq('id', id).eq('is_active', true).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.title_6th_grade,
+    description: data.summary_6th_grade || 'Details on The Change Engine.',
+  }
 }
 
 export default async function ContentDetailPage({ params }: { params: Promise<{ id: string }> }) {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
@@ -12,6 +13,19 @@ function levelColor(level: string | null): string {
   if (level === 'County') return 'bg-orange-100 text-orange-700'
   if (level === 'City') return 'bg-teal-100 text-teal-700'
   return 'bg-gray-100 text-gray-700'
+}
+
+export const revalidate = 86400
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('elected_officials').select('official_name, title').eq('official_id', id).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.official_name,
+    description: data.title || 'Details on The Change Engine.',
+  }
 }
 
 export default async function OfficialDetailPage({ params }: { params: Promise<{ id: string }> }) {

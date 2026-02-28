@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
 import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations } from '@/lib/data/exchange'
@@ -5,6 +6,13 @@ import { CenterCard } from '@/components/exchange/CenterCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { NeighborhoodBanner } from '@/components/exchange/NeighborhoodBanner'
+
+export const revalidate = 1800
+
+export const metadata: Metadata = {
+  title: 'The Change Engine — Community Life, Organized',
+  description: 'Your guide to services, civic engagement, and community resources in Houston, Texas.',
+}
 
 export default async function HomePage() {
   const [stats, centerCounts, pathwayCounts, latestContent, situations] = await Promise.all([

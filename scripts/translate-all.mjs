@@ -192,11 +192,11 @@ async function main() {
 
         try {
           const result = await translateText(titleText, descText, langCode)
-          const idPrefix = String(contentId).substring(0, 8)
+          const idSafe = String(contentId).replace(/[^a-zA-Z0-9_-]/g, '')
 
           // Write title via RPC
           await supabaseRpc('upsert_translation', {
-            p_translation_id: `TR-${idPrefix}-${langCode}-title`,
+            p_translation_id: `TR-${idSafe}-${langCode}-title`,
             p_content_type: config.contentType,
             p_content_id: contentId,
             p_field_name: 'title',
@@ -207,7 +207,7 @@ async function main() {
           // Write summary via RPC
           if (result.summary) {
             await supabaseRpc('upsert_translation', {
-              p_translation_id: `TR-${idPrefix}-${langCode}-summary`,
+              p_translation_id: `TR-${idSafe}-${langCode}-summary`,
               p_content_type: config.contentType,
               p_content_id: contentId,
               p_field_name: 'summary',

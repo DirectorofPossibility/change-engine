@@ -2,8 +2,21 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'The Change Engine',
-  description: 'Community Life, Organized — Houston, TX',
+  metadataBase: new URL('https://thechangeengine.org'),
+  title: {
+    default: 'The Change Engine — Community Life, Organized',
+    template: '%s | The Change Engine',
+  },
+  description: 'Your guide to services, civic engagement, and community resources in Houston, Texas.',
+  openGraph: {
+    siteName: 'The Change Engine',
+    locale: 'en_US',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({

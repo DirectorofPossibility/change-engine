@@ -1,8 +1,22 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { MapPin, Users, DollarSign } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+
+export const revalidate = 86400
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  var { id } = await params
+  var supabase = await createClient()
+  var { data } = await supabase.from('neighborhoods').select('neighborhood_name').eq('neighborhood_id', id).single()
+  if (!data) return { title: 'Not Found' }
+  return {
+    title: data.neighborhood_name,
+    description: 'Community resources, services, and information for ' + data.neighborhood_name + '.',
+  }
+}
 
 export default async function NeighborhoodDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
