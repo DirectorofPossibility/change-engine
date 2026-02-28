@@ -15,6 +15,10 @@ const config: Config = {
           accent: '#C75B2A',
           muted: '#8B7E74',
           border: '#E8E3DB',
+          card: '#FFFFFF',
+          success: '#38a169',
+          warning: '#d69e2e',
+          danger: '#e53e3e',
         },
         theme: {
           health: '#e53e3e',

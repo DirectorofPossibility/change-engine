@@ -1,0 +1,33 @@
+import { getLearningPaths } from '@/lib/data/exchange'
+import { LearningPathCard } from '@/components/exchange/LearningPathCard'
+
+export default async function LearnPage() {
+  const paths = await getLearningPaths()
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-3xl font-bold text-brand-text mb-2">Learning Paths</h1>
+      <p className="text-brand-muted mb-8">
+        Self-guided learning journeys to deepen your understanding of community issues.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {paths.map((path) => (
+          <LearningPathCard
+            key={path.path_id}
+            name={path.path_name}
+            description={path.description_5th_grade}
+            themeId={path.theme_id}
+            difficulty={path.difficulty_level}
+            moduleCount={path.module_count}
+            estimatedMinutes={path.estimated_minutes}
+          />
+        ))}
+      </div>
+
+      {paths.length === 0 && (
+        <p className="text-center text-brand-muted py-12">Learning paths coming soon.</p>
+      )}
+    </div>
+  )
+}

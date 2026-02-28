@@ -79,7 +79,7 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
           className="border border-brand-border rounded-lg px-3 py-2 text-sm"
         >
           <option value="">All Centers</option>
-          {CENTERS.map((c) => (
+          {Object.keys(CENTERS).map((c) => (
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
@@ -157,7 +157,7 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
               <div>
                 <label className="block text-sm font-medium mb-1">Center</label>
                 <select name="center" defaultValue={editing.center || ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm">
-                  {CENTERS.map((c) => (
+                  {Object.keys(CENTERS).map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
                 </select>
