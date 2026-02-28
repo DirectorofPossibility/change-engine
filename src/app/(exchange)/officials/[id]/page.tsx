@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Mail, Phone, Globe } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -45,6 +46,22 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     related = contentData || []
   }
 
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var officialTranslation: { title?: string; summary?: string } | undefined
+  var policyTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    const pIds = (policies || []).map(function (p) { return p.policy_id })
+    var results = await Promise.all([
+      fetchTranslationsForTable('elected_officials', [official.official_id], langId),
+      pIds.length > 0 ? fetchTranslationsForTable('policies', pIds, langId) : {},
+    ])
+    officialTranslation = results[0][official.official_id]
+    policyTranslations = results[1]
+  }
+
+  var displayTitle = officialTranslation?.title || official.title
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
@@ -62,7 +79,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           )}
         </div>
         <h1 className="text-3xl font-bold text-brand-text mb-1">{official.official_name}</h1>
-        {official.title && <p className="text-lg text-brand-muted mb-2">{official.title}</p>}
+        {displayTitle && <p className="text-lg text-brand-muted mb-2">{displayTitle}</p>}
         <div className="flex items-center gap-2 text-sm text-brand-muted">
           {official.party && <span>{official.party}</span>}
           {official.party && official.jurisdiction && <span>&bull;</span>}
@@ -117,6 +134,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           <h2 className="text-xl font-bold text-brand-text mb-4">Policies &amp; Legislation</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {policies.map(function (p) {
+              var pt = policyTranslations[p.policy_id]
               return (
                 <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
                   <PolicyCard
@@ -126,6 +144,8 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     status={p.status}
                     level={p.level}
                     sourceUrl={null}
+                    translatedName={pt?.title}
+                    translatedSummary={pt?.summary}
                   />
                 </Link>
               )

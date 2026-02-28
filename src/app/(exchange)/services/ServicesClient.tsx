@@ -3,13 +3,14 @@
 import { useState, useMemo } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
-import type { ServiceWithOrg } from '@/lib/types/exchange'
+import type { ServiceWithOrg, TranslationMap } from '@/lib/types/exchange'
 
 interface ServicesClientProps {
   services: ServiceWithOrg[]
+  translations?: TranslationMap
 }
 
-export function ServicesClient({ services }: ServicesClientProps) {
+export function ServicesClient({ services, translations = {} }: ServicesClientProps) {
   const [search, setSearch] = useState('')
   const [zipFilter, setZipFilter] = useState('')
 
@@ -44,20 +45,25 @@ export function ServicesClient({ services }: ServicesClientProps) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((s) => (
-          <ServiceCard
-            key={s.service_id}
-            name={s.service_name}
-            orgName={s.org_name}
-            description={s.description_5th_grade}
-            phone={s.phone}
-            address={s.address}
-            city={s.city}
-            state={s.state}
-            zipCode={s.zip_code}
-            website={s.website}
-          />
-        ))}
+        {filtered.map((s) => {
+          var t = translations[s.service_id]
+          return (
+            <ServiceCard
+              key={s.service_id}
+              name={s.service_name}
+              orgName={s.org_name}
+              description={s.description_5th_grade}
+              phone={s.phone}
+              address={s.address}
+              city={s.city}
+              state={s.state}
+              zipCode={s.zip_code}
+              website={s.website}
+              translatedName={t?.title}
+              translatedDescription={t?.summary}
+            />
+          )
+        })}
       </div>
 
       {filtered.length === 0 && (

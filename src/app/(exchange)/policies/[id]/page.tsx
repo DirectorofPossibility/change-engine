@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 function statusColor(status: string | null): string {
   if (!status) return 'bg-gray-100 text-gray-600'
@@ -44,13 +45,36 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
     .eq('level', policy.level || '')
     .limit(4)
 
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var translatedName: string | undefined
+  var translatedSummary: string | undefined
+  var officialTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var relatedPolicyTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    const oIds = officials.map(function (o) { return o.official_id })
+    const rIds = (related || []).map(function (p) { return p.policy_id })
+    var results = await Promise.all([
+      fetchTranslationsForTable('policies', [policy.policy_id], langId),
+      oIds.length > 0 ? fetchTranslationsForTable('elected_officials', oIds, langId) : {},
+      rIds.length > 0 ? fetchTranslationsForTable('policies', rIds, langId) : {},
+    ])
+    translatedName = results[0][policy.policy_id]?.title
+    translatedSummary = results[0][policy.policy_id]?.summary
+    officialTranslations = results[1]
+    relatedPolicyTranslations = results[2]
+  }
+
+  var displayName = translatedName || policy.policy_name
+  var displaySummary = translatedSummary || policy.summary_5th_grade
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
       <div className="text-sm text-brand-muted mb-6">
         <Link href="/policies" className="hover:text-brand-accent">Policies</Link>
         <span className="mx-2">/</span>
-        <span>{policy.policy_name}</span>
+        <span>{displayName}</span>
       </div>
 
       {/* Header */}
@@ -66,7 +90,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         )}
       </div>
 
-      <h1 className="text-3xl font-bold text-brand-text mb-2">{policy.policy_name}</h1>
+      <h1 className="text-3xl font-bold text-brand-text mb-2">{displayName}</h1>
       {policy.bill_number && <p className="text-brand-muted font-mono mb-4">{policy.bill_number}</p>}
 
       {/* Timeline */}
@@ -93,10 +117,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
       </div>
 
       {/* Summary */}
-      {policy.summary_5th_grade && (
+      {displaySummary && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-3">Summary</h2>
-          <p className="text-brand-muted leading-relaxed">{policy.summary_5th_grade}</p>
+          <p className="text-brand-muted leading-relaxed">{displaySummary}</p>
         </section>
       )}
 
@@ -106,6 +130,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           <h2 className="text-xl font-bold text-brand-text mb-4">Decision Makers on This Policy</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {officials.map(function (o) {
+              var ot = officialTranslations[o.official_id]
               return (
                 <Link key={o.official_id} href={'/officials/' + o.official_id}>
                   <OfficialCard
@@ -116,6 +141,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     email={o.email}
                     phone={o.office_phone}
                     website={o.website}
+                    translatedTitle={ot?.title}
                   />
                 </Link>
               )
@@ -130,6 +156,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           <h2 className="text-xl font-bold text-brand-text mb-4">Related Policies</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {related.map(function (p) {
+              var rpt = relatedPolicyTranslations[p.policy_id]
               return (
                 <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
                   <PolicyCard
@@ -139,6 +166,8 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     status={p.status}
                     level={p.level}
                     sourceUrl={null}
+                    translatedName={rpt?.title}
+                    translatedSummary={rpt?.summary}
                   />
                 </Link>
               )

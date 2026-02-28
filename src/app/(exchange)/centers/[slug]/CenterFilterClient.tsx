@@ -3,14 +3,15 @@
 import { useState } from 'react'
 import { THEMES } from '@/lib/constants'
 import { ContentCard } from '@/components/exchange/ContentCard'
-import type { ContentPublished } from '@/lib/types/exchange'
+import type { ContentPublished, TranslationMap } from '@/lib/types/exchange'
 
 interface CenterFilterClientProps {
   items: ContentPublished[]
   pathwayCounts: Record<string, number>
+  translations?: TranslationMap
 }
 
-export function CenterFilterClient({ items, pathwayCounts }: CenterFilterClientProps) {
+export function CenterFilterClient({ items, pathwayCounts, translations = {} }: CenterFilterClientProps) {
   const [activePathway, setActivePathway] = useState<string | null>(null)
 
   const filtered = activePathway
@@ -49,18 +50,23 @@ export function CenterFilterClient({ items, pathwayCounts }: CenterFilterClientP
 
       {/* Content grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((item) => (
-          <ContentCard
-            key={item.id}
-            id={item.id}
-            title={item.title_6th_grade}
-            summary={item.summary_6th_grade}
-            pathway={item.pathway_primary}
-            center={item.center}
-            sourceUrl={item.source_url}
-            publishedAt={item.published_at}
-          />
-        ))}
+        {filtered.map((item) => {
+          var t = item.inbox_id ? translations[item.inbox_id] : undefined
+          return (
+            <ContentCard
+              key={item.id}
+              id={item.id}
+              title={item.title_6th_grade}
+              summary={item.summary_6th_grade}
+              pathway={item.pathway_primary}
+              center={item.center}
+              sourceUrl={item.source_url}
+              publishedAt={item.published_at}
+              translatedTitle={t?.title}
+              translatedSummary={t?.summary}
+            />
+          )
+        })}
       </div>
 
       {filtered.length === 0 && (

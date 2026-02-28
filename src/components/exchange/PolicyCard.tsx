@@ -7,6 +7,8 @@ interface PolicyCardProps {
   status: string | null
   level: string | null
   sourceUrl: string | null
+  translatedName?: string
+  translatedSummary?: string
 }
 
 function statusColor(status: string | null): string {
@@ -18,7 +20,10 @@ function statusColor(status: string | null): string {
   return 'bg-gray-100 text-gray-600'
 }
 
-export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl }: PolicyCardProps) {
+export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary }: PolicyCardProps) {
+  const displayName = translatedName || name
+  const displaySummary = translatedSummary || summary
+
   return (
     <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-2 mb-2">
@@ -31,9 +36,9 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
           </span>
         )}
       </div>
-      <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{name}</h4>
-      {summary && (
-        <p className="text-xs text-brand-muted mb-2 line-clamp-2">{summary}</p>
+      <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{displayName}</h4>
+      {displaySummary && (
+        <p className="text-xs text-brand-muted mb-2 line-clamp-2">{displaySummary}</p>
       )}
       <div className="flex items-center justify-between">
         {level && (

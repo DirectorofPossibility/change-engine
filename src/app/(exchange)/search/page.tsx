@@ -3,6 +3,7 @@ import { searchAll } from '@/lib/data/search'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 export default async function SearchPage({
   searchParams,
@@ -13,6 +14,19 @@ export default async function SearchPage({
   const query = q || ''
   const results = query ? await searchAll(query) : { content: [], officials: [], services: [] }
   const totalCount = results.content.length + results.officials.length + results.services.length
+
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var officialTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var serviceTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    const oIds = results.officials.map(function (o) { return o.official_id })
+    const sIds = results.services.map(function (s) { return s.service_id })
+    ;[officialTranslations, serviceTranslations] = await Promise.all([
+      oIds.length > 0 ? fetchTranslationsForTable('elected_officials', oIds, langId) : {},
+      sIds.length > 0 ? fetchTranslationsForTable('services_211', sIds, langId) : {},
+    ])
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -52,6 +66,7 @@ export default async function SearchPage({
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {results.officials.map(function (o) {
+              var ot = officialTranslations[o.official_id]
               return (
                 <OfficialCard
                   key={o.official_id}
@@ -62,6 +77,7 @@ export default async function SearchPage({
                   email={o.email}
                   phone={o.office_phone}
                   website={o.website}
+                  translatedTitle={ot?.title}
                 />
               )
             })}
@@ -77,6 +93,7 @@ export default async function SearchPage({
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {results.services.map(function (svc) {
+              var st = serviceTranslations[svc.service_id]
               return (
                 <ServiceCard
                   key={svc.service_id}
@@ -89,6 +106,8 @@ export default async function SearchPage({
                   state={svc.state}
                   zipCode={svc.zip_code}
                   website={svc.website}
+                  translatedName={st?.title}
+                  translatedDescription={st?.summary}
                 />
               )
             })}

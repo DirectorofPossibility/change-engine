@@ -1,5 +1,18 @@
 import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
+import { LANGUAGES } from '@/lib/constants'
 import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea } from '@/lib/types/exchange'
+
+/**
+ * Read language preference from cookie and return the LANG-XX id.
+ * Returns null for English (no translations needed).
+ */
+export async function getLangId(): Promise<string | null> {
+  const cookieStore = await cookies()
+  const langCode = cookieStore.get('lang')?.value || 'en'
+  const langConfig = LANGUAGES.find(function (l) { return l.code === langCode })
+  return langConfig?.langId ?? null
+}
 
 export async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
@@ -238,20 +251,38 @@ export async function getRelatedPolicies(focusAreaIds: string[]) {
 }
 
 export async function getTranslations(inboxIds: string[], langId: string): Promise<TranslationMap> {
+  return fetchTranslationsForTable('content_published', inboxIds, langId)
+}
+
+/**
+ * Fetch translations for any table type.
+ * Returns a map keyed by content_id with translated title/summary.
+ * Handles both 'title'/'summary' and 'title_6th_grade'/'summary_6th_grade' field_name formats.
+ */
+export async function fetchTranslationsForTable(
+  contentType: string,
+  ids: string[],
+  langId: string
+): Promise<TranslationMap> {
+  if (ids.length === 0 || !langId) return {}
   const supabase = await createClient()
-  if (inboxIds.length === 0 || !langId) return {}
   const { data } = await supabase
     .from('translations')
-    .select('*')
-    .in('content_id', inboxIds)
+    .select('content_id, field_name, translated_text')
+    .eq('content_type', contentType)
+    .in('content_id', ids)
     .eq('language_id', langId)
   const map: TranslationMap = {}
   if (data) {
     data.forEach(function (t) {
       if (!t.content_id) return
       if (!map[t.content_id]) map[t.content_id] = {}
-      if (t.field_name === 'title') map[t.content_id].title = t.translated_text ?? undefined
-      if (t.field_name === 'summary') map[t.content_id].summary = t.translated_text ?? undefined
+      if (t.field_name === 'title' || t.field_name === 'title_6th_grade') {
+        map[t.content_id].title = t.translated_text ?? undefined
+      }
+      if (t.field_name === 'summary' || t.field_name === 'summary_6th_grade') {
+        map[t.content_id].summary = t.translated_text ?? undefined
+      }
     })
   }
   return map

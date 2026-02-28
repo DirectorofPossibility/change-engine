@@ -58,8 +58,8 @@ export function LanguageProvider({
         data.forEach(function (t) {
           if (!t.content_id) return
           if (!map[t.content_id]) map[t.content_id] = {}
-          if (t.field_name === 'title') map[t.content_id].title = t.translated_text ?? undefined
-          if (t.field_name === 'summary') map[t.content_id].summary = t.translated_text ?? undefined
+          if (t.field_name === 'title' || t.field_name === 'title_6th_grade') map[t.content_id].title = t.translated_text ?? undefined
+          if (t.field_name === 'summary' || t.field_name === 'summary_6th_grade') map[t.content_id].summary = t.translated_text ?? undefined
         })
       }
       setTranslations(map)

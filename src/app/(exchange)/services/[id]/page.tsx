@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Phone, Globe, MapPin, Clock } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -42,6 +43,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   var fullAddress = [service.address, service.city, service.state, service.zip_code].filter(Boolean).join(', ')
 
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var translatedName: string | undefined
+  var translatedDesc: string | undefined
+  if (langId) {
+    const t = await fetchTranslationsForTable('services_211', [service.service_id], langId)
+    translatedName = t[service.service_id]?.title
+    translatedDesc = t[service.service_id]?.summary
+  }
+
+  var displayName = translatedName || service.service_name
+  var displayDesc = translatedDesc || service.description_5th_grade
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
@@ -51,7 +65,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <span>{service.service_name}</span>
       </div>
 
-      <h1 className="text-3xl font-bold text-brand-text mb-2">{service.service_name}</h1>
+      <h1 className="text-3xl font-bold text-brand-text mb-2">{displayName}</h1>
       {org && (
         <p className="text-brand-muted mb-2">
           Provided by <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline">{org.org_name}</Link>
@@ -62,9 +76,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       )}
 
       {/* Description */}
-      {service.description_5th_grade && (
+      {displayDesc && (
         <div className="mt-6 mb-8">
-          <p className="text-brand-text leading-relaxed">{service.description_5th_grade}</p>
+          <p className="text-brand-text leading-relaxed">{displayDesc}</p>
         </div>
       )}
 

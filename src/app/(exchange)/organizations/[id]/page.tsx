@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Phone, Mail, Globe, MapPin } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 export default async function OrganizationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -50,6 +51,23 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
     } catch { /* ignore parse errors */ }
   }
 
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var orgTranslation: { title?: string; summary?: string } | undefined
+  var serviceTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    const sIds = (services || []).map(function (s) { return s.service_id })
+    var results = await Promise.all([
+      fetchTranslationsForTable('organizations', [org.org_id], langId),
+      sIds.length > 0 ? fetchTranslationsForTable('services_211', sIds, langId) : {},
+    ])
+    orgTranslation = results[0][org.org_id]
+    serviceTranslations = results[1]
+  }
+
+  var displayOrgName = orgTranslation?.title || org.org_name
+  var displayOrgDesc = orgTranslation?.summary || org.description_5th_grade
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
@@ -58,9 +76,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border" />
         )}
         <div>
-          <h1 className="text-3xl font-bold text-brand-text">{org.org_name}</h1>
+          <h1 className="text-3xl font-bold text-brand-text">{displayOrgName}</h1>
           {org.mission_statement && <p className="text-brand-muted mt-1">{org.mission_statement}</p>}
-          {!org.mission_statement && org.description_5th_grade && <p className="text-brand-muted mt-1">{org.description_5th_grade}</p>}
+          {!org.mission_statement && displayOrgDesc && <p className="text-brand-muted mt-1">{displayOrgDesc}</p>}
           <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
             {org.year_founded && <span>Founded {org.year_founded}</span>}
             {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg">NTEE: {org.ntee_code}</span>}
@@ -149,10 +167,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       )}
 
       {/* Description (if mission wasn't shown) */}
-      {org.mission_statement && org.description_5th_grade && (
+      {org.mission_statement && displayOrgDesc && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-3">About</h2>
-          <p className="text-brand-muted">{org.description_5th_grade}</p>
+          <p className="text-brand-muted">{displayOrgDesc}</p>
         </section>
       )}
 
@@ -171,6 +189,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           <h2 className="text-xl font-bold text-brand-text mb-4">Services ({services.length})</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map(function (svc) {
+              var st = serviceTranslations[svc.service_id]
               return (
                 <Link key={svc.service_id} href={'/services/' + svc.service_id}>
                   <ServiceCard
@@ -182,6 +201,8 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                     state={svc.state}
                     zipCode={svc.zip_code}
                     website={svc.website}
+                    translatedName={st?.title}
+                    translatedDescription={st?.summary}
                   />
                 </Link>
               )

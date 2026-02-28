@@ -8,14 +8,17 @@ interface OfficialCardProps {
   email: string | null
   phone: string | null
   website: string | null
+  translatedTitle?: string
 }
 
-export function OfficialCard({ name, title, party, level, email, phone, website }: OfficialCardProps) {
+export function OfficialCard({ name, title, party, level, email, phone, website, translatedTitle }: OfficialCardProps) {
+  const displayTitle = translatedTitle || title
+
   return (
     <div className="bg-white rounded-xl border border-brand-border p-5">
       <div className="mb-3">
         <h3 className="font-semibold text-brand-text">{name}</h3>
-        {title && <p className="text-sm text-brand-muted">{title}</p>}
+        {displayTitle && <p className="text-sm text-brand-muted">{displayTitle}</p>}
         <div className="flex items-center gap-2 mt-1">
           {party && (
             <span className="text-xs bg-brand-bg px-2 py-0.5 rounded-full text-brand-muted">{party}</span>

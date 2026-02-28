@@ -10,16 +10,20 @@ interface ServiceCardProps {
   state: string | null
   zipCode: string | null
   website: string | null
+  translatedName?: string
+  translatedDescription?: string
 }
 
-export function ServiceCard({ name, orgName, description, phone, address, city, state, zipCode, website }: ServiceCardProps) {
+export function ServiceCard({ name, orgName, description, phone, address, city, state, zipCode, website, translatedName, translatedDescription }: ServiceCardProps) {
   const fullAddress = [address, city, state, zipCode].filter(Boolean).join(', ')
+  const displayName = translatedName || name
+  const displayDesc = translatedDescription || description
 
   return (
     <div className="bg-white rounded-xl border border-brand-border p-5">
-      <h3 className="font-semibold text-brand-text mb-1">{name}</h3>
+      <h3 className="font-semibold text-brand-text mb-1">{displayName}</h3>
       {orgName && <p className="text-xs text-brand-muted mb-2">{orgName}</p>}
-      {description && <p className="text-sm text-brand-muted mb-3 line-clamp-2">{description}</p>}
+      {displayDesc && <p className="text-sm text-brand-muted mb-3 line-clamp-2">{displayDesc}</p>}
       <div className="space-y-1.5">
         {phone && (
           <a href={`tel:${phone}`} className="flex items-center gap-2 text-xs text-brand-accent hover:underline">

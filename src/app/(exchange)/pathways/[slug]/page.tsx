@@ -3,6 +3,7 @@ import { THEMES, CENTERS } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway, getLifeSituations, getLearningPaths,
   getFocusAreaMap, getRelatedOpportunities, getRelatedPolicies,
+  getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
@@ -50,6 +51,22 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const relatedSituations = situations.filter(function (s) { return s.theme_id === theme.id }).slice(0, 5)
   const relatedPaths = paths.filter(function (p) { return p.theme_id === theme.id })
 
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var contentTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var opportunityTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var policyTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    const contentIds = content.map(function (c) { return c.inbox_id }).filter(function (id): id is string { return id != null })
+    const oppIds = opportunities.map(function (o) { return o.opportunity_id })
+    const polIds = policies.map(function (p) { return p.policy_id })
+    ;[contentTranslations, opportunityTranslations, policyTranslations] = await Promise.all([
+      contentIds.length > 0 ? fetchTranslationsForTable('content_published', contentIds, langId) : {},
+      oppIds.length > 0 ? fetchTranslationsForTable('opportunities', oppIds, langId) : {},
+      polIds.length > 0 ? fetchTranslationsForTable('policies', polIds, langId) : {},
+    ])
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center gap-3 mb-2">
@@ -68,6 +85,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             themeId={theme.id}
             centerCounts={centerCounts}
             initialContent={content}
+            translations={contentTranslations}
           />
         </div>
 
@@ -79,6 +97,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               <h3 className="font-semibold text-brand-text mb-3">Opportunities</h3>
               <div className="space-y-3">
                 {opportunities.slice(0, 5).map(function (o) {
+                  var ot = opportunityTranslations[o.opportunity_id]
                   return (
                     <OpportunityCard
                       key={o.opportunity_id}
@@ -91,6 +110,8 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                       isVirtual={o.is_virtual}
                       registrationUrl={o.registration_url}
                       spotsAvailable={o.spots_available}
+                      translatedName={ot?.title}
+                      translatedDescription={ot?.summary}
                     />
                   )
                 })}
@@ -104,6 +125,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               <h3 className="font-semibold text-brand-text mb-3">Related Policies</h3>
               <div className="space-y-3">
                 {policies.slice(0, 5).map(function (p) {
+                  var pt = policyTranslations[p.policy_id]
                   return (
                     <PolicyCard
                       key={p.policy_id}
@@ -113,6 +135,8 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                       status={p.status}
                       level={p.level}
                       sourceUrl={p.source_url}
+                      translatedName={pt?.title}
+                      translatedSummary={pt?.summary}
                     />
                   )
                 })}

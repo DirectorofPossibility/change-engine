@@ -3,14 +3,15 @@
 import { useState, useMemo } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
-import type { ElectedOfficial, GovernmentLevel } from '@/lib/types/exchange'
+import type { ElectedOfficial, GovernmentLevel, TranslationMap } from '@/lib/types/exchange'
 
 interface OfficialsClientProps {
   officials: ElectedOfficial[]
   levels: GovernmentLevel[]
+  translations?: TranslationMap
 }
 
-export function OfficialsClient({ officials, levels }: OfficialsClientProps) {
+export function OfficialsClient({ officials, levels, translations = {} }: OfficialsClientProps) {
   const [search, setSearch] = useState('')
   const [activeLevel, setActiveLevel] = useState<string | null>(null)
 
@@ -55,18 +56,22 @@ export function OfficialsClient({ officials, levels }: OfficialsClientProps) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((o) => (
-          <OfficialCard
-            key={o.official_id}
-            name={o.official_name}
-            title={o.title}
-            party={o.party}
-            level={o.level}
-            email={o.email}
-            phone={o.office_phone}
-            website={o.website}
-          />
-        ))}
+        {filtered.map((o) => {
+          var t = translations[o.official_id]
+          return (
+            <OfficialCard
+              key={o.official_id}
+              name={o.official_name}
+              title={o.title}
+              party={o.party}
+              level={o.level}
+              email={o.email}
+              phone={o.office_phone}
+              website={o.website}
+              translatedTitle={t?.title}
+            />
+          )
+        })}
       </div>
 
       {filtered.length === 0 && (

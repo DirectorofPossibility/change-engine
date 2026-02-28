@@ -207,6 +207,24 @@ Deno.serve(async (req: Request) => {
           title: c.title_6th_grade || 'Untitled',
           pathway: isV2 ? c.theme_primary : c.pathway,
         });
+
+        // Fire-and-forget: translate the published item to ES and VI
+        try {
+          fetch(`${SUPABASE_URL}/functions/v1/translate-content`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+            },
+            body: JSON.stringify({
+              inbox_id: item.inbox_id,
+              languages: ['es', 'vi'],
+              mode: 'single',
+            }),
+          }).catch(function (e) {
+            console.error(`Auto-translate fire-and-forget error for ${item.inbox_id}:`, e);
+          });
+        } catch { /* ignore translation errors — publishing is the priority */ }
       } catch (e) {
         console.error(`Publish error for ${item.inbox_id}:`, e);
       }

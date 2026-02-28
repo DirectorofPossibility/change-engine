@@ -3,6 +3,7 @@ import { THEMES, CENTERS } from '@/lib/constants'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { CenterFilterClient } from './CenterFilterClient'
 import { createClient } from '@/lib/supabase/server'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 // Resolve slug to center name
 function resolveCenter(slug: string) {
@@ -36,6 +37,11 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
     }
   })
 
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  const inboxIds = items.map(function (i) { return i.inbox_id }).filter(function (id): id is string { return id != null })
+  const translations = langId && inboxIds.length > 0 ? await fetchTranslationsForTable('content_published', inboxIds, langId) : {}
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-8">
@@ -48,6 +54,7 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
       <CenterFilterClient
         items={items}
         pathwayCounts={pathwayCounts}
+        translations={translations}
       />
     </div>
   )

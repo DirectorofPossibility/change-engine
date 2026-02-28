@@ -1,8 +1,13 @@
-import { getOfficials } from '@/lib/data/exchange'
+import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { OfficialsClient } from './OfficialsClient'
 
 export default async function OfficialsPage() {
   const { officials, levels } = await getOfficials()
+
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  const officialIds = officials.map(function (o) { return o.official_id })
+  const translations = langId ? await fetchTranslationsForTable('elected_officials', officialIds, langId) : {}
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -11,7 +16,7 @@ export default async function OfficialsPage() {
         Find and contact your elected representatives at every level of government.
       </p>
 
-      <OfficialsClient officials={officials} levels={levels} />
+      <OfficialsClient officials={officials} levels={levels} translations={translations} />
     </div>
   )
 }

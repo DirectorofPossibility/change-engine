@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
+import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 export default async function PoliciesPage() {
   const supabase = await createClient()
@@ -11,6 +12,11 @@ export default async function PoliciesPage() {
     .order('last_action_date', { ascending: false })
 
   var all = policies || []
+
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  const policyIds = all.map(function (p) { return p.policy_id })
+  const translations = langId ? await fetchTranslationsForTable('policies', policyIds, langId) : {}
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -23,6 +29,7 @@ export default async function PoliciesPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {all.map(function (p) {
+          var t = translations[p.policy_id]
           return (
             <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
               <PolicyCard
@@ -32,6 +39,8 @@ export default async function PoliciesPage() {
                 status={p.status}
                 level={p.level}
                 sourceUrl={null}
+                translatedName={t?.title}
+                translatedSummary={t?.summary}
               />
             </Link>
           )

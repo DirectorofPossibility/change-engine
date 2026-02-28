@@ -12,20 +12,25 @@ interface ContentCardProps {
   sourceUrl: string
   publishedAt: string | null
   focusAreaNames?: string[]
+  translatedTitle?: string
+  translatedSummary?: string
 }
 
 export function ContentCard({
   id, title, summary, pathway, center, sourceUrl, publishedAt,
-  focusAreaNames,
+  focusAreaNames, translatedTitle, translatedSummary,
 }: ContentCardProps) {
+  const displayTitle = translatedTitle || title
+  const displaySummary = translatedSummary || summary
+
   return (
     <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-2 mb-3">
         <ThemePill themeId={pathway} size="sm" />
         <CenterBadge center={center} />
       </div>
-      <h3 className="font-semibold text-brand-text mb-2 line-clamp-2">{title}</h3>
-      <p className="text-sm text-brand-muted mb-3 line-clamp-3">{summary}</p>
+      <h3 className="font-semibold text-brand-text mb-2 line-clamp-2">{displayTitle}</h3>
+      <p className="text-sm text-brand-muted mb-3 line-clamp-3">{displaySummary}</p>
       {focusAreaNames && focusAreaNames.length > 0 && (
         <div className="mb-3">
           <FocusAreaPills focusAreaNames={focusAreaNames} />

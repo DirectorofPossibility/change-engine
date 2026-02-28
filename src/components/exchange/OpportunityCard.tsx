@@ -11,19 +11,24 @@ interface OpportunityCardProps {
   isVirtual: string | null
   registrationUrl: string | null
   spotsAvailable: number | null
+  translatedName?: string
+  translatedDescription?: string
 }
 
 export function OpportunityCard({
   name, description, startDate, endDate, address, city,
   isVirtual, registrationUrl, spotsAvailable,
+  translatedName, translatedDescription,
 }: OpportunityCardProps) {
   var location = isVirtual === 'Yes' ? 'Virtual' : [address, city].filter(Boolean).join(', ')
+  var displayName = translatedName || name
+  var displayDesc = translatedDescription || description
 
   return (
     <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
-      <h4 className="font-semibold text-brand-text text-sm mb-2 line-clamp-2">{name}</h4>
-      {description && (
-        <p className="text-xs text-brand-muted mb-3 line-clamp-2">{description}</p>
+      <h4 className="font-semibold text-brand-text text-sm mb-2 line-clamp-2">{displayName}</h4>
+      {displayDesc && (
+        <p className="text-xs text-brand-muted mb-3 line-clamp-2">{displayDesc}</p>
       )}
       <div className="space-y-1.5 text-xs text-brand-muted">
         {startDate && (

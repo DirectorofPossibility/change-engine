@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {
   getLifeSituation, getLifeSituationContent, getLearningPaths,
   getRelatedOpportunities, getRelatedPolicies,
+  getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
@@ -27,6 +28,25 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
   ])
 
   const relatedPath = paths.find(function (p) { return p.path_id === situation.path_id })
+
+  // Fetch translations for non-English
+  const langId = await getLangId()
+  var contentTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var serviceTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var opportunityTranslations: Record<string, { title?: string; summary?: string }> = {}
+  var policyTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    const cIds = content.map(function (c) { return c.inbox_id }).filter(function (id): id is string { return id != null })
+    const sIds = services.map(function (s) { return s.service_id })
+    const oIds = opportunities.map(function (o) { return o.opportunity_id })
+    const pIds = policies.map(function (p) { return p.policy_id })
+    ;[contentTranslations, serviceTranslations, opportunityTranslations, policyTranslations] = await Promise.all([
+      cIds.length > 0 ? fetchTranslationsForTable('content_published', cIds, langId) : {},
+      sIds.length > 0 ? fetchTranslationsForTable('services_211', sIds, langId) : {},
+      oIds.length > 0 ? fetchTranslationsForTable('opportunities', oIds, langId) : {},
+      pIds.length > 0 ? fetchTranslationsForTable('policies', pIds, langId) : {},
+    ])
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -60,6 +80,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
           <h2 className="text-xl font-bold text-brand-text mb-4">Related Resources</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {content.map(function (item) {
+              var ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
               return (
                 <ContentCard
                   key={item.id}
@@ -70,6 +91,8 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
                   center={item.center}
                   sourceUrl={item.source_url}
                   publishedAt={item.published_at}
+                  translatedTitle={ct?.title}
+                  translatedSummary={ct?.summary}
                 />
               )
             })}
@@ -83,6 +106,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
           <h2 className="text-xl font-bold text-brand-text mb-4">Services</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map(function (svc) {
+              var st = serviceTranslations[svc.service_id]
               return (
                 <ServiceCard
                   key={svc.service_id}
@@ -95,6 +119,8 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
                   state={svc.state}
                   zipCode={svc.zip_code}
                   website={svc.website}
+                  translatedName={st?.title}
+                  translatedDescription={st?.summary}
                 />
               )
             })}
@@ -108,6 +134,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
           <h2 className="text-xl font-bold text-brand-text mb-4">Opportunities</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {opportunities.map(function (o) {
+              var ot = opportunityTranslations[o.opportunity_id]
               return (
                 <OpportunityCard
                   key={o.opportunity_id}
@@ -120,6 +147,8 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
                   isVirtual={o.is_virtual}
                   registrationUrl={o.registration_url}
                   spotsAvailable={o.spots_available}
+                  translatedName={ot?.title}
+                  translatedDescription={ot?.summary}
                 />
               )
             })}
@@ -133,6 +162,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
           <h2 className="text-xl font-bold text-brand-text mb-4">Related Policies</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {policies.map(function (p) {
+              var pt = policyTranslations[p.policy_id]
               return (
                 <PolicyCard
                   key={p.policy_id}
@@ -142,6 +172,8 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
                   status={p.status}
                   level={p.level}
                   sourceUrl={p.source_url}
+                  translatedName={pt?.title}
+                  translatedSummary={pt?.summary}
                 />
               )
             })}

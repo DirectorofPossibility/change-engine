@@ -45,8 +45,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       .eq('language_id', langConfig.langId)
     if (translations) {
       translations.forEach(function (t) {
-        if (t.field_name === 'title' && t.translated_text) { translatedTitle = t.translated_text; isTranslated = true }
-        if (t.field_name === 'summary' && t.translated_text) { translatedSummary = t.translated_text; isTranslated = true }
+        if ((t.field_name === 'title' || t.field_name === 'title_6th_grade') && t.translated_text) { translatedTitle = t.translated_text; isTranslated = true }
+        if ((t.field_name === 'summary' || t.field_name === 'summary_6th_grade') && t.translated_text) { translatedSummary = t.translated_text; isTranslated = true }
       })
     }
   }

@@ -114,7 +114,7 @@ Deno.serve(async (req: Request) => {
           // Check if translation already exists
           const existing = await supabaseGet(
             'translations',
-            `content_id=eq.${item.inbox_id}&language_id=eq.${LANGUAGE_MAP[langCode].id}&field_name=eq.title_6th_grade`
+            `content_id=eq.${item.inbox_id}&language_id=eq.${LANGUAGE_MAP[langCode].id}&field_name=eq.title`
           );
 
           if (Array.isArray(existing) && existing.length > 0) continue;
@@ -131,7 +131,7 @@ Deno.serve(async (req: Request) => {
               translation_id: `TR-${item.inbox_id.substring(0, 8)}-${langCode}-title`,
               content_type: 'content_published',
               content_id: item.inbox_id,
-              field_name: 'title_6th_grade',
+              field_name: 'title',
               language_id: LANGUAGE_MAP[langCode].id,
               translated_text: result.title,
               is_verified: 'No',
@@ -145,7 +145,7 @@ Deno.serve(async (req: Request) => {
               translation_id: `TR-${item.inbox_id.substring(0, 8)}-${langCode}-summary`,
               content_type: 'content_published',
               content_id: item.inbox_id,
-              field_name: 'summary_6th_grade',
+              field_name: 'summary',
               language_id: LANGUAGE_MAP[langCode].id,
               translated_text: result.summary,
               is_verified: 'No',
@@ -220,7 +220,7 @@ Deno.serve(async (req: Request) => {
         translation_id: `TR-${inbox_id.substring(0, 8)}-${langCode}-title`,
         content_type: 'content_published',
         content_id: inbox_id,
-        field_name: 'title_6th_grade',
+        field_name: 'title',
         language_id: LANGUAGE_MAP[langCode].id,
         translated_text: result.title,
         is_verified: 'No',
@@ -233,7 +233,7 @@ Deno.serve(async (req: Request) => {
         translation_id: `TR-${inbox_id.substring(0, 8)}-${langCode}-summary`,
         content_type: 'content_published',
         content_id: inbox_id,
-        field_name: 'summary_6th_grade',
+        field_name: 'summary',
         language_id: LANGUAGE_MAP[langCode].id,
         translated_text: result.summary,
         is_verified: 'No',
