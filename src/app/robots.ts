@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/dashboard/', '/me/', '/api/'],
     },
-    sitemap: 'https://thechangeengine.org/sitemap.xml',
+    sitemap: 'https://www.changeengine.us/sitemap.xml',
   }
 }
