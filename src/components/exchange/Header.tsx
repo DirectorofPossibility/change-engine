@@ -7,6 +7,7 @@ import { Menu, X, Search } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
+import { AuthButton } from './AuthButton'
 
 const NAV_LINKS = [
   { href: '/pathways', label: 'Pathways' },
@@ -71,6 +72,7 @@ export function Header() {
             </form>
             <ZipInput />
             <LanguageSwitcher />
+            <AuthButton />
           </div>
 
           {/* Mobile hamburger */}
@@ -112,6 +114,7 @@ export function Header() {
               <div className="flex items-center justify-between">
                 <ZipInput />
                 <LanguageSwitcher />
+                <AuthButton />
               </div>
             </div>
           </nav>

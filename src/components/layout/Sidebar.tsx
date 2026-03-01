@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import type { PipelineStats } from '@/lib/types/dashboard'
+import { createClient } from '@/lib/supabase/client'
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Overview', icon: '📊' },
@@ -20,6 +21,15 @@ interface SidebarProps {
 
 export function Sidebar({ pipelineStats }: SidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  function handleSignOut() {
+    var supabase = createClient()
+    supabase.auth.signOut().then(function () {
+      router.push('/login')
+      router.refresh()
+    })
+  }
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard'
@@ -53,6 +63,24 @@ export function Sidebar({ pipelineStats }: SidebarProps) {
           </Link>
         ))}
       </nav>
+
+      {/* Sign Out + Exchange Link */}
+      <div className="px-3 py-3 border-t border-white/10 space-y-1">
+        <Link
+          href="/"
+          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/70 hover:bg-sidebar-hover hover:text-white"
+        >
+          <span className="text-base">🌐</span>
+          <span>View Site</span>
+        </Link>
+        <button
+          onClick={handleSignOut}
+          className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm text-white/70 hover:bg-red-600/20 hover:text-red-300"
+        >
+          <span className="text-base">🚪</span>
+          <span>Sign Out</span>
+        </button>
+      </div>
 
       {/* Pipeline Mini Status */}
       <div className="px-5 py-4 border-t border-white/10">

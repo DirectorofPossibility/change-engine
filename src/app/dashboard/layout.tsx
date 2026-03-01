@@ -1,9 +1,17 @@
-// TODO: Sprint 5 — add auth middleware
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { getPipelineStats } from '@/lib/data/dashboard'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const stats = await getPipelineStats()
+  var supabase = await createClient()
+  var { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login?redirect=/dashboard')
+  }
+
+  var stats = await getPipelineStats()
 
   return (
     <div className="min-h-screen bg-brand-bg">
