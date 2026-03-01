@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/submit', label: 'Submit', icon: '➕' },
   { href: '/dashboard/translations', label: 'Translations', icon: '🌐' },
   { href: '/dashboard/taxonomy', label: 'Taxonomy', icon: '🗂️' },
+  { href: '/dashboard/knowledge-graph', label: 'Knowledge Graph', icon: '🌌' },
 ]
 
 interface SidebarProps {
