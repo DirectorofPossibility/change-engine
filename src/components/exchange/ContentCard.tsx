@@ -14,17 +14,28 @@ interface ContentCardProps {
   focusAreaNames?: string[]
   translatedTitle?: string
   translatedSummary?: string
+  imageUrl?: string | null
 }
 
 export function ContentCard({
   id, title, summary, pathway, center, sourceUrl, publishedAt,
-  focusAreaNames, translatedTitle, translatedSummary,
+  focusAreaNames, translatedTitle, translatedSummary, imageUrl,
 }: ContentCardProps) {
   const displayTitle = translatedTitle || title
   const displaySummary = translatedSummary || summary
 
   return (
-    <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
+    <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+      {imageUrl && (
+        <div className="w-full h-40 relative">
+          <img
+            src={imageUrl}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+      <div className="p-5">
       <div className="flex items-center gap-2 mb-3">
         <ThemePill themeId={pathway} size="sm" />
         <CenterBadge center={center} />
@@ -43,6 +54,7 @@ export function ContentCard({
         <span className="text-xs text-brand-accent">
           Read more &rarr;
         </span>
+      </div>
       </div>
     </Link>
   )

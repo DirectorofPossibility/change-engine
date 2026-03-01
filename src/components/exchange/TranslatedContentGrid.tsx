@@ -52,6 +52,7 @@ export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContent
             sourceUrl={item.source_url}
             publishedAt={item.published_at}
             focusAreaNames={focusNames}
+            imageUrl={item.image_url}
           />
         )
       })}

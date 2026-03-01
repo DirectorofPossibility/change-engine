@@ -890,6 +890,7 @@ export type Database = {
           description: string | null
           extracted_text: string | null
           id: string
+          image_url: string | null
           org_id: string | null
           scraped_at: string | null
           source_domain: string | null
@@ -903,6 +904,7 @@ export type Database = {
           description?: string | null
           extracted_text?: string | null
           id?: string
+          image_url?: string | null
           org_id?: string | null
           scraped_at?: string | null
           source_domain?: string | null
@@ -916,6 +918,7 @@ export type Database = {
           description?: string | null
           extracted_text?: string | null
           id?: string
+          image_url?: string | null
           org_id?: string | null
           scraped_at?: string | null
           source_domain?: string | null
@@ -951,6 +954,7 @@ export type Database = {
           focus_area_ids: string[] | null
           geographic_scope: string | null
           id: string
+          image_url: string | null
           inbox_id: string | null
           is_active: boolean | null
           is_featured: boolean | null
@@ -984,6 +988,7 @@ export type Database = {
           focus_area_ids?: string[] | null
           geographic_scope?: string | null
           id?: string
+          image_url?: string | null
           inbox_id?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
@@ -1017,6 +1022,7 @@ export type Database = {
           focus_area_ids?: string[] | null
           geographic_scope?: string | null
           id?: string
+          image_url?: string | null
           inbox_id?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
@@ -1817,6 +1823,60 @@ export type Database = {
           gov_level_id?: string
           gov_level_name?: string
           level_order?: number | null
+        }
+        Relationships: []
+      }
+      guides: {
+        Row: {
+          guide_id: string
+          title: string
+          slug: string
+          description: string | null
+          hero_image_url: string | null
+          content_html: string | null
+          sections: Json | null
+          theme_id: string | null
+          focus_area_ids: string[] | null
+          engagement_level: string | null
+          is_active: boolean | null
+          display_order: number | null
+          source_url: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          guide_id: string
+          title: string
+          slug: string
+          description?: string | null
+          hero_image_url?: string | null
+          content_html?: string | null
+          sections?: Json | null
+          theme_id?: string | null
+          focus_area_ids?: string[] | null
+          engagement_level?: string | null
+          is_active?: boolean | null
+          display_order?: number | null
+          source_url?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          guide_id?: string
+          title?: string
+          slug?: string
+          description?: string | null
+          hero_image_url?: string | null
+          content_html?: string | null
+          sections?: Json | null
+          theme_id?: string | null
+          focus_area_ids?: string[] | null
+          engagement_level?: string | null
+          is_active?: boolean | null
+          display_order?: number | null
+          source_url?: string | null
+          created_at?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }

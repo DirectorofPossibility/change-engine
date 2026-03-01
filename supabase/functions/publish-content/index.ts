@@ -67,7 +67,7 @@ Deno.serve(async (req: Request) => {
     const inboxIds = queue.map((q: { inbox_id: string }) => q.inbox_id);
     const inbox = await supabaseGet(
       'content_inbox',
-      `id=in.(${inboxIds.join(',')})&select=id,source_url,source_domain,title,description`
+      `id=in.(${inboxIds.join(',')})&select=id,source_url,source_domain,title,description,image_url`
     );
 
     const inboxMap: Record<string, Record<string, unknown>> = {};
@@ -111,6 +111,7 @@ Deno.serve(async (req: Request) => {
           inbox_id: item.inbox_id,
           source_url: (inboxItem.source_url as string) || '',
           source_domain: (inboxItem.source_domain as string) || '',
+          image_url: (inboxItem.image_url as string) || null,
           resource_type: c.resource_type_id || null,
           pathway_primary: c.theme_primary,
           pathway_secondary: c.theme_secondary || [],
@@ -156,6 +157,7 @@ Deno.serve(async (req: Request) => {
           inbox_id: item.inbox_id,
           source_url: (inboxItem.source_url as string) || '',
           source_domain: (inboxItem.source_domain as string) || '',
+          image_url: (inboxItem.image_url as string) || null,
           resource_type: c.resource_type || 'Government Resource',
           pathway_primary: pathwayMap[c.pathway] || 'T3',
           pathway_secondary: (c.pathway_secondary || []).map(

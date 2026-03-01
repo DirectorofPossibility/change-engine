@@ -105,6 +105,7 @@ Deno.serve(async (req: Request) => {
     let pageTitle = inputTitle;
     let pageText = inputDesc;
     let sourceDomain = '';
+    let imageUrl = '';
 
     if (url) {
       try {
@@ -129,6 +130,22 @@ Deno.serve(async (req: Request) => {
             || html.match(/name=["']description["'][^>]*content=["']([^"']+)["']/i);
           if (og) pageText = og[1].trim();
         }
+
+        // Extract og:image or twitter:image
+        if (!imageUrl) {
+          const ogImage = html.match(/property=["']og:image["'][^>]*content=["']([^"']+)["']/i)
+            || html.match(/content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
+          if (ogImage) {
+            imageUrl = ogImage[1].trim();
+          } else {
+            const twImage = html.match(/name=["']twitter:image["'][^>]*content=["']([^"']+)["']/i)
+              || html.match(/content=["']([^"']+)["'][^>]*name=["']twitter:image["']/i);
+            if (twImage) {
+              imageUrl = twImage[1].trim();
+            }
+          }
+        }
+
         if (!pageText || pageText.length < 100) {
           const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
           if (bodyMatch) {
@@ -245,7 +262,7 @@ ${taxonomyPrompt}`;
     const inboxRes = await fetch(`${SUPABASE_URL}/rest/v1/content_inbox`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, Prefer: 'return=representation' },
-      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), status: enriched.confidence >= 0.8 ? 'classified' : enriched.confidence >= 0.5 ? 'needs_review' : 'flagged', source_trust_level: 'unknown' }),
+      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, status: enriched.confidence >= 0.8 ? 'classified' : enriched.confidence >= 0.5 ? 'needs_review' : 'flagged', source_trust_level: 'unknown' }),
     });
     const inboxData = await inboxRes.json();
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
@@ -264,7 +281,7 @@ ${taxonomyPrompt}`;
       body: JSON.stringify({ event_type: 'classify_v2', source: sourceDomain || 'manual', source_url: url, status: validation.invalid.length > 0 ? 'partial' : 'success', message: `v2: ${enrichedFocusAreas.length}FA ${finalSdgs.length}SDG ${finalNtee.length}NTEE | ${validation.invalid.length} invalid`, item_count: 1 }),
     });
 
-    return new Response(JSON.stringify({ success: true, version: 'v2-full-matrix', inbox_id: inboxId, classification: enriched, extracted: { title: pageTitle, domain: sourceDomain }, taxonomy_count: { focus_areas: taxonomy.focusAreas.length, themes: taxonomy.themes.length } }), {
+    return new Response(JSON.stringify({ success: true, version: 'v2-full-matrix', inbox_id: inboxId, classification: enriched, extracted: { title: pageTitle, domain: sourceDomain, image_url: imageUrl || null }, taxonomy_count: { focus_areas: taxonomy.focusAreas.length, themes: taxonomy.themes.length } }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     });
 

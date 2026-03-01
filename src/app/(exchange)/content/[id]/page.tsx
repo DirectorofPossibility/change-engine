@@ -115,6 +115,17 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main content */}
         <div className="lg:col-span-2">
+          {/* Hero image */}
+          {item.image_url && (
+            <div className="w-full mb-6 rounded-xl overflow-hidden">
+              <img
+                src={item.image_url}
+                alt=""
+                className="w-full h-64 sm:h-80 object-cover"
+              />
+            </div>
+          )}
+
           {/* Header */}
           <div className="flex items-center gap-2 mb-4">
             <ThemePill themeId={item.pathway_primary} size="sm" />
