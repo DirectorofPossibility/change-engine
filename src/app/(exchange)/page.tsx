@@ -167,6 +167,11 @@ export default async function HomePage() {
               <div className="text-sm text-gray-400 mt-1">Learning Paths</div>
             </div>
           </div>
+          <div className="text-center mt-8">
+            <Link href="/dashboard-live" className="text-sm text-gray-400 hover:text-white transition-colors">
+              View Live Houston Dashboard &rarr;
+            </Link>
+          </div>
         </div>
       </section>
     </div>
