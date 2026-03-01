@@ -5,7 +5,7 @@ import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
 import { Modal } from '@/components/ui/Modal'
-import { updateContent, toggleFeatured, toggleActive } from './actions'
+import { updateContent, toggleFeatured, toggleActive, deleteContent, moveToDraft } from './actions'
 import { THEMES, CENTERS } from '@/lib/constants'
 import type { ContentPublished } from '@/lib/types/dashboard'
 
@@ -125,7 +125,28 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
                   </button>
                 </td>
                 <td className="px-4 py-3">
-                  <button onClick={() => setEditing(item)} className="text-brand-accent text-xs hover:underline">Edit</button>
+                  <div className="flex gap-2">
+                    <button onClick={() => setEditing(item)} className="text-brand-accent text-xs hover:underline">Edit</button>
+                    <button
+                      onClick={async () => {
+                        if (!item.inbox_id) return alert('No inbox ID — cannot move to draft.')
+                        if (!window.confirm('Move this content back to the review queue?')) return
+                        const res = await moveToDraft(item.id, item.inbox_id)
+                        if (res.error) return alert(res.error)
+                        setItems(prev => prev.filter(i => i.id !== item.id))
+                      }}
+                      className="text-amber-600 text-xs hover:underline"
+                    >Draft</button>
+                    <button
+                      onClick={async () => {
+                        if (!window.confirm('Permanently delete this content?')) return
+                        const res = await deleteContent(item.id, item.inbox_id)
+                        if (res.error) return alert(res.error)
+                        setItems(prev => prev.filter(i => i.id !== item.id))
+                      }}
+                      className="text-red-600 text-xs hover:underline"
+                    >Delete</button>
+                  </div>
                 </td>
               </tr>
             ))}
