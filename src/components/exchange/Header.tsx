@@ -67,6 +67,7 @@ export function Header() {
                 value={searchQuery}
                 onChange={function (e) { setSearchQuery(e.target.value) }}
                 placeholder="Search..."
+                aria-label="Search the site"
                 className="w-36 pl-7 pr-2 py-1 text-xs border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
               />
             </form>

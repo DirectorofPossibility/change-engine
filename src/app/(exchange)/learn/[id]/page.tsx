@@ -5,9 +5,10 @@ import { createClient } from '@/lib/supabase/server'
 import { Clock, BookOpen } from 'lucide-react'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { ModuleTimeline } from '@/components/exchange/ModuleTimeline'
+import { ModuleProgressTimeline } from '@/components/exchange/ModuleProgressTimeline'
 import { BadgeCard } from '@/components/exchange/BadgeCard'
 
-export const revalidate = 86400
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   var { id } = await params
@@ -66,6 +67,18 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
       .eq('path_id', path.prerequisite_path_id)
       .single()
     prerequisitePath = prereq
+  }
+
+  // Check if user is logged in and fetch their progress
+  var { data: { user } } = await supabase.auth.getUser()
+  var userProgress: any[] = []
+  if (user) {
+    var { data: progressData } = await supabase
+      .from('user_progress')
+      .select('progress_id, module_id, status, started_at, completed_at')
+      .eq('user_id', user.id)
+      .eq('path_id', id)
+    userProgress = progressData || []
   }
 
   // Build module data for timeline
@@ -127,11 +140,32 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         </div>
       )}
 
+      {/* Sign-up CTA for non-logged-in users */}
+      {!user && timelineModules.length > 0 && (
+        <div className="bg-brand-bg/60 border border-brand-border rounded-xl p-4 mb-8">
+          <p className="text-sm text-brand-text">
+            <Link href={'/signup'} className="text-brand-accent font-semibold hover:underline">Create a free account</Link>
+            {' '}to track your progress and earn badges as you learn.
+          </p>
+        </div>
+      )}
+
       {/* Module Timeline */}
       {timelineModules.length > 0 && (
         <section className="mb-10">
           <h2 className="text-xl font-bold text-brand-text mb-6">Modules</h2>
-          <ModuleTimeline modules={timelineModules} />
+          {user ? (
+            <ModuleProgressTimeline
+              modules={timelineModules}
+              pathId={id}
+              userId={user.id}
+              initialProgress={userProgress}
+              badgeId={badge?.badge_id || null}
+              badgeName={badge?.badge_name || null}
+            />
+          ) : (
+            <ModuleTimeline modules={timelineModules} />
+          )}
         </section>
       )}
 
