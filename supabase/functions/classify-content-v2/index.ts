@@ -269,11 +269,8 @@ ${taxonomyPrompt}`;
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
 
     if (inboxId) {
-      // Require an image for auto-approval — no image means needs_review
       let reviewStatus = 'flagged';
-      if (enriched.confidence >= 0.8) {
-        reviewStatus = imageUrl ? 'auto_approved' : 'needs_review';
-      } else if (enriched.confidence >= 0.5) {
+      if (enriched.confidence >= 0.5) {
         reviewStatus = 'needs_review';
       }
 
