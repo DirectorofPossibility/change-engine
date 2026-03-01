@@ -1,14 +1,10 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { getCallerRole, requireRole } from '../_shared/auth.ts';
+import { CORS } from '../_shared/cors.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const CLASSIFY_URL = `${SUPABASE_URL}/functions/v1/classify-content-v2`;
-
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -16,6 +12,11 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: CORS });
   }
+
+  // Auth: require service_role or partner
+  const caller = await getCallerRole(req);
+  const denied = requireRole(caller, ['service_role', 'partner']);
+  if (denied) return denied;
 
   try {
     const body = await req.json();
