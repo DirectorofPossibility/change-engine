@@ -4,7 +4,7 @@ import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   var supabase = await createClient()
-  var baseUrl = 'https://thechangeengine.org'
+  var baseUrl = 'https://www.changeengine.us'
 
   // Static pages
   var staticPages = [
