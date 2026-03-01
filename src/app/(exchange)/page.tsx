@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
-import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations } from '@/lib/data/exchange'
+import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { CenterCard } from '@/components/exchange/CenterCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
@@ -26,6 +26,11 @@ export default async function HomePage() {
   const featuredSituations = situations
     .filter(function (s) { return s.is_featured === 'Yes' || s.urgency_level === 'Critical' || s.urgency_level === 'High' })
     .slice(0, 6)
+
+  const langId = await getLangId()
+  const situationTranslations = langId && featuredSituations.length > 0
+    ? await fetchTranslationsForTable('life_situations', featuredSituations.map(s => s.situation_id), langId)
+    : {}
 
   return (
     <div>
@@ -118,6 +123,8 @@ export default async function HomePage() {
                   description={s.description_5th_grade}
                   urgency={s.urgency_level}
                   iconName={s.icon_name}
+                  translatedName={situationTranslations[s.situation_id]?.title}
+                  translatedDescription={situationTranslations[s.situation_id]?.summary}
                 />
               )
             })}

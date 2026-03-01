@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getLearningPaths } from '@/lib/data/exchange'
+import { getLearningPaths, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 
 export const revalidate = 86400
@@ -11,6 +11,10 @@ export const metadata: Metadata = {
 
 export default async function LearnPage() {
   const paths = await getLearningPaths()
+  const langId = await getLangId()
+  const translations = langId
+    ? await fetchTranslationsForTable('learning_paths', paths.map(p => p.path_id), langId)
+    : {}
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -29,6 +33,8 @@ export default async function LearnPage() {
             difficulty={path.difficulty_level}
             moduleCount={path.module_count}
             estimatedMinutes={path.estimated_minutes}
+            translatedName={translations[path.path_id]?.title}
+            translatedDescription={translations[path.path_id]?.summary}
           />
         ))}
       </div>

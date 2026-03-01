@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getLifeSituations } from '@/lib/data/exchange'
+import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 
 export const revalidate = 3600
@@ -20,6 +20,10 @@ const URGENCY_HEADERS: Record<string, { label: string; color: string }> = {
 
 export default async function HelpPage() {
   const situations = await getLifeSituations()
+  const langId = await getLangId()
+  const translations = langId
+    ? await fetchTranslationsForTable('life_situations', situations.map(s => s.situation_id), langId)
+    : {}
 
   const grouped: Record<string, typeof situations> = {}
   situations.forEach((s) => {
@@ -65,6 +69,8 @@ export default async function HelpPage() {
                     description={s.description_5th_grade}
                     urgency={s.urgency_level}
                     iconName={s.icon_name}
+                    translatedName={translations[s.situation_id]?.title}
+                    translatedDescription={translations[s.situation_id]?.summary}
                   />
                 ))}
               </div>

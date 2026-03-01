@@ -14,9 +14,11 @@ interface LearningPathCardProps {
   difficulty: string | null
   moduleCount: number | null
   estimatedMinutes: number | null
+  translatedName?: string
+  translatedDescription?: string
 }
 
-export function LearningPathCard({ name, description, themeId, difficulty, moduleCount, estimatedMinutes }: LearningPathCardProps) {
+export function LearningPathCard({ name, description, themeId, difficulty, moduleCount, estimatedMinutes, translatedName, translatedDescription }: LearningPathCardProps) {
   const theme = themeId ? THEMES[themeId as keyof typeof THEMES] : null
 
   return (
@@ -28,10 +30,10 @@ export function LearningPathCard({ name, description, themeId, difficulty, modul
             style={{ backgroundColor: theme.color }}
           />
         )}
-        <h3 className="font-semibold text-brand-text">{name}</h3>
+        <h3 className="font-semibold text-brand-text">{translatedName || name}</h3>
       </div>
-      {description && (
-        <p className="text-sm text-brand-muted mb-3 line-clamp-2">{description}</p>
+      {(translatedDescription || description) && (
+        <p className="text-sm text-brand-muted mb-3 line-clamp-2">{translatedDescription || description}</p>
       )}
       <div className="flex items-center gap-3 flex-wrap">
         {difficulty && (

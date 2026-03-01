@@ -42,9 +42,11 @@ interface LifeSituationCardProps {
   description: string | null
   urgency: string | null
   iconName: string | null
+  translatedName?: string
+  translatedDescription?: string
 }
 
-export function LifeSituationCard({ name, slug, description, urgency, iconName }: LifeSituationCardProps) {
+export function LifeSituationCard({ name, slug, description, urgency, iconName, translatedName, translatedDescription }: LifeSituationCardProps) {
   const colors = URGENCY_COLORS[urgency || 'Low'] || URGENCY_COLORS.Low
   const Icon = (iconName && ICON_MAP[iconName]) || CircleHelp
 
@@ -55,10 +57,10 @@ export function LifeSituationCard({ name, slug, description, urgency, iconName }
     >
       <div className="flex items-center gap-3 mb-2">
         <Icon size={20} className={colors.text} />
-        <h3 className={`font-semibold ${colors.text}`}>{name}</h3>
+        <h3 className={`font-semibold ${colors.text}`}>{translatedName || name}</h3>
       </div>
-      {description && (
-        <p className="text-sm text-brand-muted line-clamp-2">{description}</p>
+      {(translatedDescription || description) && (
+        <p className="text-sm text-brand-muted line-clamp-2">{translatedDescription || description}</p>
       )}
       {urgency && (
         <span className={`inline-block mt-3 text-xs font-medium px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
