@@ -12,10 +12,12 @@ import { AuthButton } from './AuthButton'
 const NAV_LINKS = [
   { href: '/pathways', label: 'Pathways' },
   { href: '/explore', label: 'Explore' },
+  { href: '/guides', label: 'Guides' },
   { href: '/help', label: 'I Need Help' },
   { href: '/officials', label: 'Officials' },
   { href: '/officials/lookup', label: 'Find Your Reps' },
   { href: '/services', label: 'Services' },
+  { href: '/dashboard-live', label: 'Dashboard' },
   { href: '/elections', label: 'Elections' },
   { href: '/learn', label: 'Learn' },
 ]

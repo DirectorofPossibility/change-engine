@@ -379,6 +379,18 @@ export async function getOfficialsForDistrict(districtId: string) {
   return data ?? []
 }
 
+export async function getGuides() {
+  const supabase = await createClient()
+  const { data } = await supabase.from('guides').select('*').eq('is_active', true).order('display_order')
+  return data ?? []
+}
+
+export async function getGuideBySlug(slug: string) {
+  const supabase = await createClient()
+  const { data } = await supabase.from('guides').select('*').eq('slug', slug).eq('is_active', true).single()
+  return data
+}
+
 export async function getServicesByZip(zip: string): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()
   const { data: services } = await supabase

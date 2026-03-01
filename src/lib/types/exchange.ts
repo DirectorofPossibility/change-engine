@@ -29,6 +29,7 @@ export type Policy = Tables<'policies'>
 export type FocusArea = Tables<'focus_areas'>
 export type SDG = Tables<'sdgs'>
 export type SDOHDomain = Tables<'sdoh_domains'>
+export type Guide = Tables<'guides'>
 
 export type SupportedLanguage = 'en' | 'es' | 'vi'
 
