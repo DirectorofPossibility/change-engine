@@ -269,10 +269,18 @@ ${taxonomyPrompt}`;
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
 
     if (inboxId) {
+      // Require an image for auto-approval — no image means needs_review
+      let reviewStatus = 'flagged';
+      if (enriched.confidence >= 0.8) {
+        reviewStatus = imageUrl ? 'auto_approved' : 'needs_review';
+      } else if (enriched.confidence >= 0.5) {
+        reviewStatus = 'needs_review';
+      }
+
       await fetch(`${SUPABASE_URL}/rest/v1/content_review_queue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        body: JSON.stringify({ inbox_id: inboxId, ai_classification: enriched, confidence: enriched.confidence || 0, review_status: enriched.confidence >= 0.8 ? 'auto_approved' : enriched.confidence >= 0.5 ? 'pending' : 'flagged' }),
+        body: JSON.stringify({ inbox_id: inboxId, ai_classification: enriched, confidence: enriched.confidence || 0, review_status: reviewStatus }),
       });
     }
 
