@@ -69,6 +69,20 @@ const TABLE_CONFIGS: Record<string, {
     contentType: 'elected_officials',
     selectCols: 'official_id,official_name,title',
   },
+  learning_paths: {
+    idCol: 'path_id',
+    nameCol: 'path_name',
+    descCol: 'description_5th_grade',
+    contentType: 'learning_paths',
+    selectCols: 'path_id,path_name,description_5th_grade',
+  },
+  life_situations: {
+    idCol: 'situation_id',
+    nameCol: 'situation_name',
+    descCol: 'description_5th_grade',
+    contentType: 'life_situations',
+    selectCols: 'situation_id,situation_name,description_5th_grade',
+  },
 };
 
 const SYSTEM_PROMPT = `You are a professional translator for The Change Engine, a civic engagement platform in Houston, Texas.
@@ -99,7 +113,7 @@ async function translateText(
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 500,
       system: SYSTEM_PROMPT,
       messages: [{
@@ -146,6 +160,7 @@ Deno.serve(async (req: Request) => {
       tables = Object.keys(TABLE_CONFIGS),
       languages = ['es', 'vi'],
       limit = 50,
+      offset = 0,
       dry_run = false,
     } = await req.json();
 
@@ -161,7 +176,7 @@ Deno.serve(async (req: Request) => {
         continue;
       }
 
-      let queryParams = `select=${config.selectCols}&limit=${limit}`;
+      let queryParams = `select=${config.selectCols}&limit=${limit}&offset=${offset}`;
       if (config.activeFilter) {
         queryParams += `&${config.activeFilter.col}=eq.${config.activeFilter.val}`;
       }
@@ -239,6 +254,9 @@ Deno.serve(async (req: Request) => {
           } catch (e) {
             console.error(`Translation error for ${tableName}/${contentId} (${langCode}):`, e);
             errors++;
+            if (errors === 1) {
+              (details as any)._firstError = `${tableName}/${contentId}/${langCode}: ${(e as Error).message}`;
+            }
           }
         }
       }
