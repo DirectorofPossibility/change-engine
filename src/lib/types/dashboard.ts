@@ -24,6 +24,23 @@ export interface RssFeed {
   created_at: string | null
 }
 
+// api_keys not in auto-generated types (created via SQL migration)
+export interface ApiKey {
+  id: string
+  key_hash: string
+  key_prefix: string
+  org_id: string | null
+  label: string
+  is_active: boolean
+  rate_limit_per_day: number
+  total_requests: number
+  total_items: number
+  last_used_at: string | null
+  expires_at: string | null
+  created_by: string | null
+  created_at: string | null
+}
+
 export interface PipelineStats {
   totalIngested: number
   needsReview: number

@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/dashboard/review', label: 'Review', icon: '🔍' },
   { href: '/dashboard/content', label: 'Content', icon: '📄' },
   { href: '/dashboard/ingestion', label: 'Ingestion', icon: '⚡' },
+  { href: '/dashboard/api-keys', label: 'API Keys', icon: '🔑' },
   { href: '/dashboard/submit', label: 'Submit', icon: '➕' },
   { href: '/dashboard/translations', label: 'Translations', icon: '🌐' },
   { href: '/dashboard/taxonomy', label: 'Taxonomy', icon: '🗂️' },

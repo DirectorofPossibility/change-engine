@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { PipelineStats, ReviewStatusBreakdown, RssFeed } from '@/lib/types/dashboard'
+import type { ApiKey, PipelineStats, ReviewStatusBreakdown, RssFeed } from '@/lib/types/dashboard'
 
 export async function getPipelineStats(): Promise<PipelineStats> {
   const supabase = await createClient()
@@ -155,4 +155,13 @@ export async function getThemesWithFocusAreas() {
     ntee: ntee.data || [],
     airs: airs.data || [],
   }
+}
+
+export async function getApiKeys(): Promise<ApiKey[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('api_keys' as any)
+    .select('*')
+    .order('created_at', { ascending: false })
+  return (data as unknown as ApiKey[]) || []
 }
