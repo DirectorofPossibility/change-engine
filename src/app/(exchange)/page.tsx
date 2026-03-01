@@ -55,6 +55,12 @@ export default async function HomePage() {
             >
               I Need Help
             </Link>
+            <Link
+              href="/explore"
+              className="px-6 py-3 bg-white/10 text-white rounded-lg text-sm font-semibold hover:bg-white/20 border border-white/20"
+            >
+              Explore Topics
+            </Link>
           </div>
         </div>
       </section>

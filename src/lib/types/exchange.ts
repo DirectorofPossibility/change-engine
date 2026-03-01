@@ -27,6 +27,8 @@ export type Neighborhood = Tables<'neighborhoods'>
 export type Opportunity = Tables<'opportunities'>
 export type Policy = Tables<'policies'>
 export type FocusArea = Tables<'focus_areas'>
+export type SDG = Tables<'sdgs'>
+export type SDOHDomain = Tables<'sdoh_domains'>
 
 export type SupportedLanguage = 'en' | 'es' | 'vi'
 

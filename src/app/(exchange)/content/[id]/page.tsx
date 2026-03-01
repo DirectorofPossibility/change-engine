@@ -6,9 +6,14 @@ import { cookies } from 'next/headers'
 import { THEMES, LANGUAGES } from '@/lib/constants'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
+import { SDGBadge } from '@/components/ui/SDGBadge'
+import { SDOHBadge } from '@/components/ui/SDOHBadge'
 import { ActionBar } from '@/components/exchange/ActionBar'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
+import { OpportunityCard } from '@/components/exchange/OpportunityCard'
+import { PolicyCard } from '@/components/exchange/PolicyCard'
+import { getFocusAreasByIds, getSDGMap, getSDOHMap, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
 
 function resolveThemeSlug(themeId: string | null) {
   if (!themeId) return null
@@ -65,17 +70,18 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Resolve focus areas
-  var focusAreaNames: string[] = []
-  if (item.focus_area_ids && item.focus_area_ids.length > 0) {
-    const { data: areas } = await supabase
-      .from('focus_areas')
-      .select('focus_id, focus_area_name')
-      .in('focus_id', item.focus_area_ids)
-    if (areas) {
-      focusAreaNames = areas.map(function (a) { return a.focus_area_name })
-    }
-  }
+  // Resolve focus areas (full objects for clickable pills)
+  const focusAreas = item.focus_area_ids && item.focus_area_ids.length > 0
+    ? await getFocusAreasByIds(item.focus_area_ids)
+    : []
+
+  // Fetch SDG map, SDOH map, and related opportunities/policies in parallel
+  const [sdgMap, sdohMap, opportunities, policies] = await Promise.all([
+    item.sdg_ids && item.sdg_ids.length > 0 ? getSDGMap() : Promise.resolve({} as Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }>),
+    item.sdoh_domain ? getSDOHMap() : Promise.resolve({} as Record<string, { sdoh_name: string; sdoh_description: string | null }>),
+    item.focus_area_ids && item.focus_area_ids.length > 0 ? getRelatedOpportunities(item.focus_area_ids) : Promise.resolve([]),
+    item.focus_area_ids && item.focus_area_ids.length > 0 ? getRelatedPolicies(item.focus_area_ids) : Promise.resolve([]),
+  ])
 
   // Resolve life situations
   var lifeSituationLinks: Array<{ name: string; slug: string }> = []
@@ -180,10 +186,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           )}
 
           {/* Focus Areas */}
-          {focusAreaNames.length > 0 && (
+          {focusAreas.length > 0 && (
             <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-muted mb-2">Focus Areas</h3>
-              <FocusAreaPills focusAreaNames={focusAreaNames} />
+              <FocusAreaPills focusAreas={focusAreas} />
             </div>
           )}
 
@@ -193,6 +199,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               <h3 className="text-sm font-semibold text-brand-muted mb-2">SDGs</h3>
               <div className="flex flex-wrap gap-1">
                 {item.sdg_ids.map(function (sdg) {
+                  var info = sdgMap[sdg]
+                  if (info) {
+                    return <SDGBadge key={sdg} sdgNumber={info.sdg_number} sdgName={info.sdg_name} sdgColor={info.sdg_color} linkToExplore />
+                  }
                   return <span key={sdg} className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">SDG {sdg.replace('SDG_', '')}</span>
                 })}
               </div>
@@ -203,7 +213,16 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           {item.sdoh_domain && (
             <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-muted mb-2">SDOH Domain</h3>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">{item.sdoh_domain}</span>
+              {sdohMap[item.sdoh_domain] ? (
+                <SDOHBadge
+                  sdohCode={item.sdoh_domain}
+                  sdohName={sdohMap[item.sdoh_domain].sdoh_name}
+                  sdohDescription={sdohMap[item.sdoh_domain].sdoh_description}
+                  linkToExplore
+                />
+              ) : (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">{item.sdoh_domain}</span>
+              )}
             </div>
           )}
 
@@ -229,6 +248,53 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     <Link key={s.slug} href={'/help/' + s.slug} className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-accent hover:underline">
                       {s.name}
                     </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Opportunities */}
+          {opportunities.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-brand-muted mb-2">Opportunities</h3>
+              <div className="space-y-3">
+                {opportunities.slice(0, 5).map(function (o) {
+                  return (
+                    <OpportunityCard
+                      key={o.opportunity_id}
+                      name={o.opportunity_name}
+                      description={o.description_5th_grade}
+                      startDate={o.start_date}
+                      endDate={o.end_date}
+                      address={o.address}
+                      city={o.city}
+                      isVirtual={o.is_virtual}
+                      registrationUrl={o.registration_url}
+                      spotsAvailable={o.spots_available}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Policies */}
+          {policies.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold text-brand-muted mb-2">Related Policies</h3>
+              <div className="space-y-3">
+                {policies.slice(0, 5).map(function (p) {
+                  return (
+                    <PolicyCard
+                      key={p.policy_id}
+                      name={p.policy_name}
+                      summary={p.summary_5th_grade}
+                      billNumber={p.bill_number}
+                      status={p.status}
+                      level={p.level}
+                      sourceUrl={p.source_url}
+                    />
                   )
                 })}
               </div>

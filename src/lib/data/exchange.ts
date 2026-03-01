@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
-import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain } from '@/lib/types/exchange'
 
 /**
  * Read language preference from cookie and return the LANG-XX id.
@@ -218,6 +218,51 @@ export async function getFocusAreaMap(): Promise<Record<string, string>> {
   const map: Record<string, string> = {}
   areas.forEach(function (a) { map[a.focus_id] = a.focus_area_name })
   return map
+}
+
+export async function getSDGs(): Promise<SDG[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('sdgs').select('*').order('sdg_number')
+  return data ?? []
+}
+
+export async function getSDGMap(): Promise<Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }>> {
+  const sdgs = await getSDGs()
+  const map: Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }> = {}
+  sdgs.forEach(function (s) { map[s.sdg_id] = { sdg_number: s.sdg_number, sdg_name: s.sdg_name, sdg_color: s.sdg_color } })
+  return map
+}
+
+export async function getSDOHDomains(): Promise<SDOHDomain[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('sdoh_domains').select('*')
+  return data ?? []
+}
+
+export async function getSDOHMap(): Promise<Record<string, { sdoh_name: string; sdoh_description: string | null }>> {
+  const domains = await getSDOHDomains()
+  const map: Record<string, { sdoh_name: string; sdoh_description: string | null }> = {}
+  domains.forEach(function (d) { map[d.sdoh_code] = { sdoh_name: d.sdoh_name, sdoh_description: d.sdoh_description } })
+  return map
+}
+
+export async function getFocusAreasByIds(ids: string[]): Promise<FocusArea[]> {
+  if (ids.length === 0) return []
+  const supabase = await createClient()
+  const { data } = await supabase.from('focus_areas').select('*').in('focus_id', ids)
+  return data ?? []
+}
+
+export async function getContentByFocusArea(focusId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_published')
+    .select('*')
+    .eq('is_active', true)
+    .contains('focus_area_ids', [focusId])
+    .order('published_at', { ascending: false })
+    .limit(20)
+  return data ?? []
 }
 
 export async function getRelatedOpportunities(focusAreaIds: string[]) {
