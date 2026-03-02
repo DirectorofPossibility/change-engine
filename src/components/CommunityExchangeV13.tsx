@@ -723,36 +723,58 @@ export default function CommunityExchangeV13() {
         {/* CENTER CONTENT */}
         <main style={{ flex: 1, minWidth: 0, overflowY: 'auto', opacity: ready ? 1 : 0, transition: 'opacity .3s ease .1s' }}>
           <div style={{ padding: '0 24px 80px', maxWidth: 880, margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', padding: isHome ? '20px 0 0' : '12px 0 0', transition: 'padding .4s' }}>
-              {isHome && zipEntered && (<div style={{ textAlign: 'center', marginBottom: 4, animation: 'fin .6s ease' }}><p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.lt, fontSize: 13 }}><span style={{ color: C.teal }}>{neighborhood} Edition</span></p></div>)}
-              <TheCircles sel={sel} onSelect={pick} compact={!isHome && !open} ready={ready} />
-              {isHome && (<p style={{ color: '#ADA698', fontSize: 11, marginTop: 2, animation: 'fin .7s ease 1.1s both' }}>Tap any circle to explore -- numbers show shared resources between pathways</p>)}
-              {isHome && (
-                <div style={{ display: 'flex', gap: 28, marginTop: 14, animation: 'up .5s ease .9s both', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {[{ n: STATS.resources, l: 'Resources' }, { n: STATS.officials, l: 'Officials' }, { n: STATS.policies, l: 'Policies' }, { n: STATS.focusAreas, l: 'Focus Areas' }].map((s, i) => (
-                    <div key={i} style={{ textAlign: 'center', cursor: 'pointer' }}>
-                      <div style={{ fontFamily: "'Newsreader',serif", fontSize: 26, fontWeight: 300, color: C.orange }}>{s.n}</div>
-                      <div style={{ fontSize: 9, color: C.lt, textTransform: 'uppercase', letterSpacing: '.1em' }}>{s.l}</div>
-                    </div>
-                  ))}
+
+            {/* ── HERO: side-by-side when home, circles always visible ── */}
+            {isHome ? (
+              <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', padding: '28px 0 0' }}>
+                {/* LEFT: headline, stats, connections */}
+                <div style={{ flex: '1 1 0', minWidth: 0, animation: 'up .5s ease .4s both' }}>
+                  {zipEntered && (<div style={{ marginBottom: 6, animation: 'fin .6s ease' }}><p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.lt, fontSize: 13 }}><span style={{ color: C.teal }}>{neighborhood} Edition</span></p></div>)}
+                  <h1 style={{ fontFamily: "'Newsreader',serif", fontSize: 32, fontWeight: 400, lineHeight: 1.15, letterSpacing: '-.02em', marginBottom: 6 }}>
+                    Community Life,<br /><span style={{ color: C.orange, fontWeight: 600 }}>Organized.</span>
+                  </h1>
+                  <p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.lt, fontSize: 13, lineHeight: 1.6, marginBottom: 16 }}>
+                    7 pathways. 4 centers. One Houston.<br />
+                    Tap any circle to explore — numbers show shared resources between pathways.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 20 }}>
+                    {[{ n: STATS.resources, l: 'Resources' }, { n: STATS.officials, l: 'Officials' }, { n: STATS.policies, l: 'Policies' }, { n: STATS.focusAreas, l: 'Focus Areas' }].map((s, i) => (
+                      <div key={i} style={{ cursor: 'pointer' }}>
+                        <div style={{ fontFamily: "'Newsreader',serif", fontSize: 28, fontWeight: 300, color: C.orange }}>{s.n}</div>
+                        <div style={{ fontSize: 9, color: C.lt, textTransform: 'uppercase', letterSpacing: '.1em' }}>{s.l}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Weather bar — compact */}
+                  <div style={{ display: 'flex', gap: 6, padding: '10px 0', borderTop: `1px solid ${C.rule}`, borderBottom: `1px solid ${C.rule}` }}>
+                    {[{ l: 'TEMP', v: '72\u00b0F', s: 'Sunny', c: C.orange }, { l: 'AIR', v: '85', s: 'Moderate', c: '#C9A84C' }, { l: 'BAYOU', v: 'Normal', s: 'Buffalo', c: '#3D7A7A' }, { l: 'NWS', v: '0', s: 'All clear', c: '#4A6B52' }].map((w, i) => (
+                      <div key={i} style={{ flex: '1 1 0', padding: '5px 6px', background: C.card, borderRadius: 4, border: `1px solid ${C.bdr}`, textAlign: 'center', borderTop: `2px solid ${w.c}` }}>
+                        <div style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.1em', color: C.lt, textTransform: 'uppercase' }}>{w.l}</div>
+                        <div style={{ fontFamily: "'Newsreader',serif", fontSize: 15, fontWeight: 400, color: w.c }}>{w.v}</div>
+                        <div style={{ fontSize: 7, color: C.lt }}>{w.s}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              )}
-            </div>
+
+                {/* RIGHT: circles graphic */}
+                <div style={{ flex: '0 0 420px', animation: 'fin .6s ease .2s both' }}>
+                  <TheCircles sel={sel} onSelect={pick} compact={false} ready={ready} />
+                </div>
+              </div>
+            ) : (
+              /* Non-home: circles compact/centered above content */
+              <div style={{ textAlign: 'center', padding: '12px 0 0' }}>
+                <TheCircles sel={sel} onSelect={pick} compact={!open} ready={ready} />
+              </div>
+            )}
 
             <div ref={cRef}>
               {/* HOME */}
               {isHome && (
                 <div style={{ animation: 'up .5s ease .5s both' }}>
-                  <div style={{ display: 'flex', gap: 6, padding: '10px 0', borderTop: `1px solid ${C.rule}`, borderBottom: `1px solid ${C.rule}`, margin: '18px 0 22px' }}>
-                    {[{ l: 'TEMP', v: '72\u00b0F', s: 'Sunny', c: C.orange }, { l: 'AIR', v: '85', s: 'Moderate', c: '#C9A84C' }, { l: 'BAYOU', v: 'Normal', s: 'Buffalo', c: '#3D7A7A' }, { l: 'NWS', v: '0', s: 'All clear', c: '#4A6B52' }].map((w, i) => (
-                      <div key={i} style={{ flex: '1 1 0', padding: '7px 8px', background: C.card, borderRadius: 4, border: `1px solid ${C.bdr}`, textAlign: 'center', borderTop: `2px solid ${w.c}` }}>
-                        <div style={{ fontSize: 7, fontWeight: 700, letterSpacing: '.1em', color: C.lt, textTransform: 'uppercase' }}>{w.l}</div>
-                        <div style={{ fontFamily: "'Newsreader',serif", fontSize: 17, fontWeight: 400, color: w.c }}>{w.v}</div>
-                        <div style={{ fontSize: 8, color: C.lt }}>{w.s}</div>
-                      </div>
-                    ))}
-                  </div>
-
                   <SH title="What Your Community Offers" extra="Organized by what's available, not what's missing" />
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 24 }}>
                     {[{ n: 'Fresh Food', c: '#D4654A', ct: 42 }, { n: 'Healthcare', c: '#C4706E', ct: 38 }, { n: 'Housing', c: '#7B6BA8', ct: 27 }, { n: 'Job Training', c: '#4A7A8A', ct: 31 }, { n: 'Education', c: '#C4943C', ct: 45 }, { n: 'Legal Aid', c: '#8B7D3C', ct: 19 }, { n: 'Mental Health', c: '#3D7A7A', ct: 22 }, { n: 'Youth Programs', c: '#8B6BA8', ct: 34 }].map((a, i) => (
