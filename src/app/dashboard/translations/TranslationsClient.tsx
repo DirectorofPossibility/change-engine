@@ -33,8 +33,10 @@ export function TranslationsClient({
   const esPct = stats.totalPublished > 0 ? Math.round((stats.esCount / stats.totalPublished) * 100) : 0
   const viPct = stats.totalPublished > 0 ? Math.round((stats.viCount / stats.totalPublished) * 100) : 0
 
+  const getTranslation = (p: any) => translationMap[p.inbox_id] || translationMap[p.id]
+
   const filteredPublished = published.filter((p) => {
-    const t = translationMap[p.id]
+    const t = getTranslation(p)
     if (langFilter === 'es') return !t?.es
     if (langFilter === 'vi') return !t?.vi
     return true
@@ -120,7 +122,7 @@ export function TranslationsClient({
           </thead>
           <tbody>
             {filteredPublished.map((p: any) => {
-              const t = translationMap[p.id]
+              const t = getTranslation(p)
               return (
                 <tr key={p.id} className="border-b border-brand-border/50 hover:bg-brand-bg/50">
                   <td className="px-4 py-3 font-medium max-w-xs truncate">{p.title_6th_grade}</td>

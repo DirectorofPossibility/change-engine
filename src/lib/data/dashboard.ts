@@ -117,8 +117,8 @@ export async function getSourceTrust() {
 export async function getTranslationStats() {
   const supabase = await createClient()
   const [esCount, viCount, publishedCount] = await Promise.all([
-    supabase.from('translations').select('translation_id', { count: 'exact', head: true }).eq('language_id', 'LANG-ES').eq('field_name', 'title_6th_grade'),
-    supabase.from('translations').select('translation_id', { count: 'exact', head: true }).eq('language_id', 'LANG-VI').eq('field_name', 'title_6th_grade'),
+    supabase.from('translations').select('translation_id', { count: 'exact', head: true }).eq('language_id', 'LANG-ES').in('field_name', ['title_6th_grade', 'title']),
+    supabase.from('translations').select('translation_id', { count: 'exact', head: true }).eq('language_id', 'LANG-VI').in('field_name', ['title_6th_grade', 'title']),
     supabase.from('content_published').select('id', { count: 'exact', head: true }),
   ])
   return {
@@ -132,7 +132,7 @@ export async function getTranslationsWithContent() {
   const supabase = await createClient()
   const [published, translations] = await Promise.all([
     supabase.from('content_published').select('id, inbox_id, title_6th_grade').order('published_at', { ascending: false }),
-    supabase.from('translations').select('*').in('language_id', ['LANG-ES', 'LANG-VI']).eq('field_name', 'title_6th_grade'),
+    supabase.from('translations').select('*').in('language_id', ['LANG-ES', 'LANG-VI']).in('field_name', ['title_6th_grade', 'title', 'summary_6th_grade', 'summary']),
   ])
   return { published: published.data || [], translations: translations.data || [] }
 }
