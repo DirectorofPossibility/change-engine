@@ -10,6 +10,7 @@ import { ZipInput } from './ZipInput'
 import { AuthButton } from './AuthButton'
 
 const NAV_LINKS = [
+  { href: '/circle', label: 'Circle' },
   { href: '/pathways', label: 'Pathways' },
   { href: '/explore', label: 'Explore' },
   { href: '/guides', label: 'Guides' },

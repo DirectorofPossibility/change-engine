@@ -3,6 +3,29 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+export async function pollRssFeedsAction() {
+  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+    return { error: 'Server configuration missing (SUPABASE_URL or SERVICE_ROLE_KEY)' }
+  }
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/rss-proxy`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
+    },
+    body: JSON.stringify({ mode: 'poll_all' }),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    return { error: `RSS poll failed (${res.status}): ${text}` }
+  }
+  revalidatePath('/dashboard/ingestion')
+  return res.json()
+}
+
 export async function addFeed(data: {
   feed_name: string
   feed_url: string

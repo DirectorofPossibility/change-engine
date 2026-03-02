@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Modal } from '@/components/ui/Modal'
-import { addFeed, updateFeed, deleteFeed, addTrustDomain, updateTrust } from './actions'
-import { pollRssFeeds } from '@/lib/data/edge-functions'
+import { addFeed, updateFeed, deleteFeed, addTrustDomain, updateTrust, pollRssFeedsAction } from './actions'
 import type { RssFeed } from '@/lib/types/dashboard'
 
 const TABS = ['Pipeline Logs', 'RSS Feeds', 'Source Trust'] as const
@@ -40,11 +39,23 @@ export function IngestionClient({
     return true
   })
 
+  const [pollError, setPollError] = useState('')
+
   async function handlePollNow() {
     setPolling(true)
-    await pollRssFeeds()
-    setPolling(false)
-    window.location.reload()
+    setPollError('')
+    try {
+      const result = await pollRssFeedsAction()
+      if (result?.error) {
+        setPollError(result.error)
+      } else {
+        window.location.reload()
+      }
+    } catch (err: any) {
+      setPollError(err.message || 'RSS poll failed')
+    } finally {
+      setPolling(false)
+    }
   }
 
   async function handleToggleFeed(feed: RssFeed) {
@@ -196,6 +207,11 @@ export function IngestionClient({
               {polling ? 'Polling...' : 'Poll All Now'}
             </button>
           </div>
+          {pollError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              {pollError}
+            </div>
+          )}
           <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>

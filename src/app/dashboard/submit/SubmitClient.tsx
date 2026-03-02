@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
-import { classifyUrl, csvUpload } from '@/lib/data/edge-functions'
+import { classifyUrlAction, csvUploadAction, uploadDocumentAction } from './actions'
 import type { AiClassification } from '@/lib/types/dashboard'
 
 export function SubmitClient() {
@@ -18,6 +18,12 @@ export function SubmitClient() {
   const [csvUploading, setCsvUploading] = useState(false)
   const [csvResults, setCsvResults] = useState<any[]>([])
 
+  // Document upload
+  const [docUploading, setDocUploading] = useState(false)
+  const [docResult, setDocResult] = useState<AiClassification | null>(null)
+  const [docError, setDocError] = useState('')
+  const [docFileName, setDocFileName] = useState('')
+
   async function handleClassify(e: React.FormEvent) {
     e.preventDefault()
     if (!url.trim()) return
@@ -25,7 +31,7 @@ export function SubmitClient() {
     setResult(null)
     setError('')
     try {
-      const data = await classifyUrl(url.trim())
+      const data = await classifyUrlAction(url.trim())
       if (data.error) {
         setError(data.error)
       } else {
@@ -58,12 +64,35 @@ export function SubmitClient() {
     setCsvUploading(true)
     setCsvResults([])
     try {
-      const data = await csvUpload(csvRows)
+      const data = await csvUploadAction(csvRows)
       setCsvResults(data.results || [data])
     } catch (err: any) {
       setCsvResults([{ error: err.message }])
     }
     setCsvUploading(false)
+  }
+
+  async function handleDocUpload(e: React.FormEvent) {
+    e.preventDefault()
+    const form = e.target as HTMLFormElement
+    const formData = new FormData(form)
+    const file = formData.get('file') as File | null
+    if (!file) return
+    setDocUploading(true)
+    setDocResult(null)
+    setDocError('')
+    setDocFileName(file.name)
+    try {
+      const data = await uploadDocumentAction(formData)
+      if (data.error) {
+        setDocError(data.error)
+      } else {
+        setDocResult(data.classification || data)
+      }
+    } catch (err: any) {
+      setDocError(err.message || 'Document upload failed')
+    }
+    setDocUploading(false)
   }
 
   return (
@@ -143,6 +172,83 @@ export function SubmitClient() {
             <div>
               <span className="text-brand-muted text-xs block">Reasoning</span>
               <p className="text-xs text-brand-muted mt-1">{result.reasoning}</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Document Upload */}
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6 space-y-4">
+        <h2 className="text-lg font-semibold">Upload Document</h2>
+        <p className="text-sm text-brand-muted">Upload a PDF, DOCX, or TXT file to extract text and classify it.</p>
+        <form onSubmit={handleDocUpload} className="flex gap-3 items-center">
+          <input
+            type="file"
+            name="file"
+            accept=".pdf,.docx,.doc,.txt"
+            className="text-sm"
+          />
+          <button
+            type="submit"
+            disabled={docUploading}
+            className="px-6 py-2 bg-brand-accent text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+          >
+            {docUploading ? 'Processing...' : 'Upload & Classify'}
+          </button>
+        </form>
+        {docUploading && (
+          <div className="flex items-center gap-2 text-sm text-brand-muted">
+            <div className="w-4 h-4 border-2 border-brand-accent border-t-transparent rounded-full animate-spin" />
+            Extracting text and classifying {docFileName}...
+          </div>
+        )}
+        {docError && (
+          <div className="bg-red-50 text-red-700 rounded-lg p-3 text-sm">{docError}</div>
+        )}
+        {docResult && (
+          <div className="border border-brand-border rounded-lg p-4 space-y-4">
+            <h3 className="font-semibold">Classification Result — {docFileName}</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-brand-muted text-xs block">Title (6th Grade)</span>
+                <p className="font-medium mt-1">{docResult.title_6th_grade}</p>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs block">Confidence</span>
+                <div className="mt-1"><ConfidenceBadge confidence={docResult.confidence} /></div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs block">Pathway</span>
+                <div className="mt-1"><ThemePill themeId={docResult.theme_primary} /></div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs block">Center</span>
+                <div className="mt-1"><CenterBadge center={docResult.center} /></div>
+              </div>
+            </div>
+            <div>
+              <span className="text-brand-muted text-xs block">Summary (6th Grade)</span>
+              <p className="text-sm mt-1">{docResult.summary_6th_grade}</p>
+            </div>
+            <div>
+              <span className="text-brand-muted text-xs block">Focus Areas</span>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {(docResult.focus_area_ids || []).map((id) => (
+                  <span key={id} className="text-xs bg-brand-bg px-2 py-0.5 rounded">{id}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <span className="text-brand-muted text-xs block">SDGs</span>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {(docResult.sdg_ids || []).map((id) => (
+                  <span key={id} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{id}</span>
+                ))}
+              </div>
+            </div>
+            <div>
+              <span className="text-brand-muted text-xs block">Reasoning</span>
+              <p className="text-xs text-brand-muted mt-1">{docResult.reasoning}</p>
             </div>
           </div>
         )}
