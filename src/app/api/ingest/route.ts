@@ -1,24 +1,39 @@
+/**
+ * @fileoverview Unified content ingestion pipeline for The Change Engine.
+ *
+ * This is step 1 of the content pipeline. It accepts URLs (single, batch, or
+ * pre-scraped items) and drives the full ingestion flow:
+ *
+ *   1. **Scrape** -- fetch the URL, strip HTML, extract metadata and links.
+ *   2. **Classify** -- send full extracted text to Claude with the complete
+ *      taxonomy prompt; receive theme, focus-area, SDG, NTEE, AIRS, SDOH,
+ *      audience, and action-item classifications.
+ *   3. **Review** -- create `content_inbox` and `content_review_queue` rows;
+ *      confidence thresholds determine whether content is auto-classified,
+ *      flagged, or queued for human review.
+ *   4. **Translate** -- translate the 6th-grade title and summary to Spanish
+ *      (LANG-ES) and Vietnamese (LANG-VI) via Claude.
+ *   5. **Extract orgs** -- pull organization names/URLs from the Claude
+ *      response and upsert them into `organizations` / `org_domains`.
+ *
+ * Two request shapes are supported:
+ *   - **URL mode:** `{ "url": "..." }` or `{ "urls": [...] }` -- the route
+ *     fetches and scrapes each URL before classifying.
+ *   - **Pre-scraped batch mode:** `{ "items": [...] }` -- callers supply
+ *     already-extracted text, skipping the fetch/scrape step.
+ *
+ * SSRF protection: {@link validateUrl} rejects private/internal IP ranges,
+ * localhost, and link-local addresses before any outbound fetch is made.
+ *
+ * Auth: every request is validated by {@link validateApiRequest} from
+ * `@/lib/api-auth`.
+ *
+ * Environment variables: `ANTHROPIC_API_KEY`, `SUPABASE_SECRET_KEY` (or
+ * `NEXT_PUBLIC_SUPABASE_ANON_KEY` as fallback), `NEXT_PUBLIC_SUPABASE_URL`.
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
-
-/**
- * POST /api/ingest
- *
- * Unified content ingestion pipeline. Accepts a URL and runs the full flow:
- *   1. Fetch URL → extract full text from HTML
- *   2. Classify + enrich using Claude with full taxonomy
- *   3. Create content_inbox + content_review_queue + content_published entries
- *   4. Translate to Spanish (LANG-ES) and Vietnamese (LANG-VI)
- *   5. Extract organizations → create org nodes
- *
- * Body:
- *   { "url": "https://example.com/article", "auto_publish": true }
- *
- * Or batch mode:
- *   { "urls": ["https://...", "https://..."], "auto_publish": true }
- *
- * Requires ANTHROPIC_API_KEY and SUPABASE_SECRET_KEY in environment.
- */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -131,6 +146,16 @@ function extractLinks(html: string, baseUrl: string): { external: Array<{url: st
   return { external, internal }
 }
 
+/**
+ * Validate a URL for safety before fetching.
+ *
+ * Guards against SSRF by rejecting private/internal IP ranges (RFC 1918),
+ * localhost, link-local, and cloud metadata endpoints. Only `http:` and
+ * `https:` schemes are permitted.
+ *
+ * @param url - The raw URL string to validate.
+ * @throws {Error} If the URL is malformed, non-HTTP(S), or targets a private address.
+ */
 function validateUrl(url: string): void {
   let parsed: URL
   try {
@@ -160,6 +185,20 @@ function validateUrl(url: string): void {
   }
 }
 
+/**
+ * Fetch a URL, extract its text content, metadata, and links.
+ *
+ * Validates the URL via {@link validateUrl} first (SSRF protection), then
+ * fetches with a 15-second timeout. The raw HTML is processed to extract:
+ *   - Full plain text (HTML stripped, nav/footer removed)
+ *   - OpenGraph / meta-tag metadata (title, description, image)
+ *   - Internal and external hyperlinks
+ *   - Download links (PDFs, docs, spreadsheets, etc.)
+ *
+ * @param url - A public HTTP(S) URL to scrape.
+ * @returns Scraped content including full text, metadata, and categorized links.
+ * @throws {Error} On fetch failure, timeout, or SSRF-blocked URL.
+ */
 async function scrapeUrl(url: string): Promise<{
   fullText: string
   meta: { title: string; description: string; image: string; domain: string }

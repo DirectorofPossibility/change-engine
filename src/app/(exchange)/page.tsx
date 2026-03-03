@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Homepage for The Change Engine community platform.
+ *
+ * Fetches aggregate stats, center/pathway counts, latest content, featured
+ * life-situations, and geo-coded map markers (services, voting locations,
+ * organizations) via parallel Supabase queries.
+ *
+ * @datasource Supabase tables: content, services_211, elected_officials,
+ *   organizations, policies, life_situations, voting_locations, translations
+ * @caching ISR with `revalidate = 1800` (30 minutes)
+ * @route GET /
+ */
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
@@ -77,7 +90,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
+      {/* ── Hero ── */}
       <section className="bg-brand-text text-white py-14 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">Houston, Texas</p>
@@ -109,13 +122,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Neighborhood Banner */}
+      {/* ── Neighborhood Banner ── */}
       <NeighborhoodBanner />
 
-      {/* Houston at a Glance Map */}
+      {/* ── Houston at a Glance Map ── */}
       <HomeMap markers={homeMarkers} />
 
-      {/* 4 Centers */}
+      {/* ── 4 Centers ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-brand-text mb-6">Four Centers of Community Life</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -134,7 +147,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 7 Pathways */}
+      {/* ── 7 Pathways ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-bold text-brand-text mb-6">Seven Pathways</h2>
         <div className="flex gap-3 overflow-x-auto pb-4">

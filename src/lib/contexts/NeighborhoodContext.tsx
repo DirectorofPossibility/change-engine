@@ -1,8 +1,22 @@
+/**
+ * @fileoverview Client-side neighborhood detection context provider.
+ *
+ * Reads the user's ZIP code (from a cookie or explicit input), queries the
+ * Supabase `neighborhoods` table to resolve the matching neighborhood, and
+ * fetches the associated council-district elected officials. The resolved
+ * data is exposed via React context so components like NeighborhoodBanner
+ * can display location-aware content.
+ */
+
 'use client'
+
+// ── Imports ──
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Neighborhood, ElectedOfficial } from '@/lib/types/exchange'
+
+// ── Types ──
 
 interface NeighborhoodContextValue {
   zip: string | null
@@ -14,8 +28,24 @@ interface NeighborhoodContextValue {
   isLoading: boolean
 }
 
+// ── Context ──
+
 const NeighborhoodContext = createContext<NeighborhoodContextValue | null>(null)
 
+// ── Provider ──
+
+/**
+ * Provides neighborhood and council-district data to child components.
+ *
+ * When a ZIP code is supplied (either as `initialZip` or via `lookupZip`),
+ * the provider queries Supabase for a matching neighborhood and its elected
+ * officials. The ZIP is also persisted in a cookie so it survives page
+ * reloads. Call `clearZip` to reset all neighborhood state and remove the
+ * cookie.
+ *
+ * @param props.initialZip - Optional ZIP code read from cookies at SSR time.
+ * @param props.children   - React children that may consume the context.
+ */
 export function NeighborhoodProvider({
   initialZip,
   children,
@@ -90,6 +120,16 @@ export function NeighborhoodProvider({
   )
 }
 
+// ── Hook ──
+
+/**
+ * Convenience hook to consume the {@link NeighborhoodContext}.
+ *
+ * Must be called inside a `<NeighborhoodProvider>` -- throws if the context
+ * is missing.
+ *
+ * @returns The current ZIP, neighborhood, council district, officials, and helpers.
+ */
 export function useNeighborhood() {
   const ctx = useContext(NeighborhoodContext)
   if (!ctx) throw new Error('useNeighborhood must be used within NeighborhoodProvider')

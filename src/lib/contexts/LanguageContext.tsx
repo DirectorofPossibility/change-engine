@@ -1,9 +1,22 @@
+/**
+ * @fileoverview Client-side language and translation context provider.
+ *
+ * Manages the active language (en / es / vi), fetches translations from the
+ * Supabase `translations` table on demand, and exposes them to the component
+ * tree via React context. Wrap any page that needs i18n support in
+ * `<LanguageProvider>`.
+ */
+
 'use client'
+
+// ── Imports ──
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { SupportedLanguage, TranslationMap } from '@/lib/types/exchange'
 import { LANGUAGES } from '@/lib/constants'
+
+// ── Types ──
 
 interface LanguageContextValue {
   language: SupportedLanguage
@@ -13,8 +26,24 @@ interface LanguageContextValue {
   isLoading: boolean
 }
 
+// ── Context ──
+
 const LanguageContext = createContext<LanguageContextValue | null>(null)
 
+// ── Provider ──
+
+/**
+ * Provides language state and translation data to child components.
+ *
+ * On mount the active language is derived from `initialLang` (falling back to
+ * `'en'`). When the language is changed via `setLanguage`, a cookie is set so
+ * the preference persists across page loads. Translations are loaded lazily
+ * through `loadTranslations` and are *merged* into the existing map -- they
+ * are never replaced wholesale.
+ *
+ * @param props.initialLang - Optional initial language code read from cookies or URL.
+ * @param props.children    - React children that may consume the context.
+ */
 export function LanguageProvider({
   initialLang,
   children,
@@ -75,6 +104,16 @@ export function LanguageProvider({
   )
 }
 
+// ── Hook ──
+
+/**
+ * Convenience hook to consume the {@link LanguageContext}.
+ *
+ * Must be called inside a `<LanguageProvider>` -- throws if the context is
+ * missing.
+ *
+ * @returns The current language, translation map, and helper functions.
+ */
 export function useLanguage() {
   const ctx = useContext(LanguageContext)
   if (!ctx) throw new Error('useLanguage must be used within LanguageProvider')
