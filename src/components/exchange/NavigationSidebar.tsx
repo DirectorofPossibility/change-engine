@@ -26,6 +26,7 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
 }
 
 const DISCOVER_LINKS = [
+  { label: 'discover.elections', icon: Vote, href: '/elections' },
   { label: 'discover.events', icon: Calendar, href: '/search?q=event+community' },
   { label: 'discover.books_guides', icon: BookOpen, href: '/search?q=book+guide+toolkit' },
   { label: 'discover.diy_kits', icon: Wrench, href: '/search?q=toolkit+free+diy' },

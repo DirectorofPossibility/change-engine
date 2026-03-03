@@ -243,6 +243,7 @@ const en: Record<string, string> = {
   'sidebar.no_topics': 'No topics available',
 
   // Discover links
+  'discover.elections': 'Elections',
   'discover.events': 'Events',
   'discover.books_guides': 'Books & Guides',
   'discover.diy_kits': 'DIY Kits',
@@ -505,6 +506,7 @@ const es: Record<string, string> = {
   'sidebar.no_topics': 'No hay temas disponibles',
 
   // Discover links
+  'discover.elections': 'Elecciones',
   'discover.events': 'Eventos',
   'discover.books_guides': 'Libros y Guías',
   'discover.diy_kits': 'Kits para Hacer',
@@ -767,6 +769,7 @@ const vi: Record<string, string> = {
   'sidebar.no_topics': 'Không có chủ đề',
 
   // Discover links
+  'discover.elections': 'Bầu Cử',
   'discover.events': 'Sự Kiện',
   'discover.books_guides': 'Sách & Hướng Dẫn',
   'discover.diy_kits': 'Bộ Tự Làm',
