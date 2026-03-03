@@ -1,3 +1,18 @@
+/**
+ * @fileoverview Root layout for all public-facing "(exchange)" routes.
+ *
+ * Wraps every public page with:
+ *  - LanguageProvider  (reads `lang` cookie to set i18n context)
+ *  - NeighborhoodProvider (reads `zip` cookie for geo-personalization)
+ *  - Schema.org JSON-LD (Organization + WebSite with SearchAction)
+ *  - ElectionBanner, Header, and Footer chrome
+ *  - Skip-to-content accessibility link
+ *
+ * @datasource Cookies: `lang`, `zip`
+ * @caching Dynamic (reads cookies per request)
+ * @route layout for /(exchange)/*
+ */
+
 import { cookies } from 'next/headers'
 import { Header } from '@/components/exchange/Header'
 import { Footer } from '@/components/exchange/Footer'

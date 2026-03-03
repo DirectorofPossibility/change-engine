@@ -232,6 +232,16 @@ async function scrapeUrl(url: string): Promise<{
 
 // ── Taxonomy ──────────────────────────────────────────────────────────
 
+/**
+ * Load the full classification taxonomy from Supabase.
+ *
+ * Fetches themes, focus areas, SDGs, SDOH domains, NTEE/AIRS codes,
+ * audience segments, life situations, resource types, service categories,
+ * and skills in parallel. The result is used to build the Claude
+ * classification prompt and to validate AI-returned IDs.
+ *
+ * @returns An object keyed by taxonomy dimension, each containing an array of rows.
+ */
 async function fetchTaxonomy() {
   const get = (table: string, select = '*') =>
     supaRest('GET', `${table}?select=${select}&limit=500`)
@@ -253,6 +263,17 @@ async function fetchTaxonomy() {
   return { themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills }
 }
 
+/**
+ * Serialize the taxonomy into a text prompt for Claude classification.
+ *
+ * Formats every taxonomy dimension (themes, focus areas grouped by theme,
+ * audience segments, life situations, resource types, service categories,
+ * skills, and centers) into a human-readable block that Claude uses to map
+ * content onto the knowledge graph.
+ *
+ * @param tax - The taxonomy object returned by {@link fetchTaxonomy}.
+ * @returns A multi-line string ready to embed in a Claude system prompt.
+ */
 function buildTaxonomyPrompt(tax: Awaited<ReturnType<typeof fetchTaxonomy>>): string {
   const themeList = tax.themes.map((t: any) => `${t.theme_id}: ${t.theme_name}`).join('\n')
 
@@ -346,6 +367,20 @@ async function translateItem(
 
 // ── Main ingest pipeline ──────────────────────────────────────────────
 
+/**
+ * Run the full ingestion pipeline for a single URL.
+ *
+ * Orchestrates every stage: dedup check, scrape, inbox creation, Claude
+ * classification, focus-area validation and taxonomy inheritance, review
+ * queue insertion, Spanish + Vietnamese translation, organization
+ * extraction, and ingestion logging.
+ *
+ * @param url - The public URL to ingest.
+ * @param taxonomy - Pre-fetched taxonomy (shared across a batch).
+ * @param taxonomyPrompt - Pre-built taxonomy prompt string for Claude.
+ * @returns A result object with `success`, classification metadata, and
+ *   counts of translations/orgs created.
+ */
 async function ingestUrl(
   url: string,
   taxonomy: Awaited<ReturnType<typeof fetchTaxonomy>>,

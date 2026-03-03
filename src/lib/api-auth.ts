@@ -24,6 +24,22 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const CRON_SECRET = process.env.CRON_SECRET
 
+// ── Validation ──
+
+/**
+ * Validates an incoming API request and authorises or rejects it.
+ *
+ * Checks, in order:
+ * 1. `Authorization: Bearer <CRON_SECRET>` header (fast-path for cron jobs).
+ * 2. `x-api-key` header -- SHA-256 hashed and matched against the Supabase
+ *    `api_keys` table. Expired or inactive keys are rejected. On success the
+ *    row's `total_requests` and `last_used_at` fields are bumped
+ *    (fire-and-forget).
+ *
+ * @param req - The incoming Next.js API request.
+ * @returns `null` if the request is authorised, otherwise a `NextResponse`
+ *          JSON body with an appropriate 401 status.
+ */
 export async function validateApiRequest(req: NextRequest): Promise<NextResponse | null> {
   // Allow cron jobs via Bearer token
   const authHeader = req.headers.get('authorization')

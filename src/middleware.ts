@@ -69,6 +69,12 @@ export async function middleware(request: NextRequest) {
   return supabaseResponse
 }
 
+// ── Route Matcher ──
+
+/**
+ * Next.js middleware configuration. Only requests whose pathnames match
+ * these patterns will invoke the {@link middleware} function.
+ */
 export const config = {
   matcher: ['/dashboard/:path*', '/me/:path*'],
 }
