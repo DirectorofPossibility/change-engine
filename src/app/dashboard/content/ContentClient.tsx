@@ -5,7 +5,7 @@ import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
 import { Modal } from '@/components/ui/Modal'
-import { updateContent, toggleFeatured, toggleActive, deleteContent, moveToDraft } from './actions'
+import { updateContent, toggleFeatured, toggleActive, deleteContent, moveToDraft, bulkMoveToDraft, bulkDeleteContent } from './actions'
 import { THEMES, CENTERS } from '@/lib/constants'
 import type { ContentPublished } from '@/lib/types/dashboard'
 
@@ -16,6 +16,8 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
   const [centerFilter, setCenterFilter] = useState('')
   const [editing, setEditing] = useState<ContentPublished | null>(null)
   const [saving, setSaving] = useState(false)
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [bulkLoading, setBulkLoading] = useState(false)
 
   const filtered = items.filter((item) => {
     if (search && !item.title_6th_grade.toLowerCase().includes(search.toLowerCase())) return false
@@ -48,6 +50,55 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
     setEditing(null)
     setSaving(false)
     window.location.reload()
+  }
+
+  function toggleSelect(id: string) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAll() {
+    if (selected.size === filtered.length) {
+      setSelected(new Set())
+    } else {
+      setSelected(new Set(filtered.map(i => i.id)))
+    }
+  }
+
+  /** @sideeffect Calls bulkMoveToDraft for all selected items with inbox IDs. */
+  async function handleBulkDraft() {
+    const targets = items.filter(i => selected.has(i.id) && i.inbox_id)
+    const skipped = items.filter(i => selected.has(i.id) && !i.inbox_id).length
+    if (targets.length === 0) return alert('None of the selected items have an inbox ID — cannot move to draft.')
+    const msg = `Move ${targets.length} item(s) back to the review queue?` + (skipped ? ` (${skipped} skipped — no inbox ID)` : '')
+    if (!window.confirm(msg)) return
+
+    setBulkLoading(true)
+    const res = await bulkMoveToDraft(targets.map(i => ({ id: i.id, inboxId: i.inbox_id! })))
+    setBulkLoading(false)
+
+    const succeeded = new Set(targets.map(i => i.id).filter(id => !res.failed.includes(id)))
+    setItems(prev => prev.filter(i => !succeeded.has(i.id)))
+    setSelected(new Set())
+    if (res.failed.length) alert(`${res.failed.length} item(s) failed to move to draft.`)
+  }
+
+  /** @sideeffect Calls bulkDeleteContent for all selected items. */
+  async function handleBulkDelete() {
+    if (!window.confirm(`Permanently delete ${selected.size} item(s)?`)) return
+
+    setBulkLoading(true)
+    const targets = items.filter(i => selected.has(i.id))
+    const res = await bulkDeleteContent(targets.map(i => ({ id: i.id, inboxId: i.inbox_id })))
+    setBulkLoading(false)
+
+    const succeeded = new Set(targets.map(i => i.id).filter(id => !res.failed.includes(id)))
+    setItems(prev => prev.filter(i => !succeeded.has(i.id)))
+    setSelected(new Set())
+    if (res.failed.length) alert(`${res.failed.length} item(s) failed to delete.`)
   }
 
   return (
@@ -86,11 +137,46 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
         <span className="text-sm text-brand-muted self-center">{filtered.length} items</span>
       </div>
 
+      {/* Bulk action bar */}
+      {selected.size > 0 && (
+        <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2">
+          <span className="text-sm font-medium">{selected.size} selected</span>
+          <button
+            onClick={handleBulkDraft}
+            disabled={bulkLoading}
+            className="text-sm text-amber-700 bg-amber-100 hover:bg-amber-200 px-3 py-1 rounded-md disabled:opacity-50"
+          >
+            {bulkLoading ? 'Working...' : 'Move to Draft'}
+          </button>
+          <button
+            onClick={handleBulkDelete}
+            disabled={bulkLoading}
+            className="text-sm text-red-700 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-md disabled:opacity-50"
+          >
+            {bulkLoading ? 'Working...' : 'Delete'}
+          </button>
+          <button
+            onClick={() => setSelected(new Set())}
+            className="text-sm text-brand-muted hover:underline ml-auto"
+          >
+            Clear selection
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-brand-border text-left text-brand-muted bg-brand-bg/50">
+              <th className="px-2 py-3 w-8">
+                <input
+                  type="checkbox"
+                  checked={filtered.length > 0 && selected.size === filtered.length}
+                  onChange={toggleSelectAll}
+                  className="rounded"
+                />
+              </th>
               <th className="px-4 py-3 font-medium">Title</th>
               <th className="px-4 py-3 font-medium">Pathway</th>
               <th className="px-4 py-3 font-medium">Center</th>
@@ -103,7 +189,15 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
           </thead>
           <tbody>
             {filtered.map((item) => (
-              <tr key={item.id} className="border-b border-brand-border/50 hover:bg-brand-bg/50">
+              <tr key={item.id} className={`border-b border-brand-border/50 hover:bg-brand-bg/50 ${selected.has(item.id) ? 'bg-blue-50/50' : ''}`}>
+                <td className="px-2 py-3">
+                  <input
+                    type="checkbox"
+                    checked={selected.has(item.id)}
+                    onChange={() => toggleSelect(item.id)}
+                    className="rounded"
+                  />
+                </td>
                 <td className="px-4 py-3 font-medium max-w-sm truncate">{item.title_6th_grade}</td>
                 <td className="px-4 py-3"><ThemePill themeId={item.pathway_primary} /></td>
                 <td className="px-4 py-3"><CenterBadge center={item.center} /></td>

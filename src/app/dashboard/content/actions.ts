@@ -173,3 +173,93 @@ export async function moveToDraft(id: string, inboxId: string) {
   revalidatePath('/dashboard')
   return deleteErr ? { error: deleteErr.message } : { success: true }
 }
+
+/**
+ * Move multiple published content items back to draft / review.
+ *
+ * Iterates over each item and delegates to the single-item
+ * {@link moveToDraft} logic (reset review queue, update inbox, delete
+ * published row). Collects per-item errors and returns a summary.
+ *
+ * @param items - Array of `{ id, inboxId }` pairs to unpublish.
+ * @returns `{ success: true, failed: string[] }` — `failed` contains
+ *   IDs that encountered errors.
+ *
+ * @requires Authentication via {@link requireAuth}.
+ * @sideeffect Resets `content_review_queue` rows to `pending`.
+ * @sideeffect Updates `content_inbox` rows to `needs_review`.
+ * @sideeffect Deletes `content_published` rows.
+ * @sideeffect Revalidates `/dashboard/content`, `/dashboard/review`, `/dashboard`.
+ */
+export async function bulkMoveToDraft(items: { id: string; inboxId: string }[]) {
+  const supabase = await createClient()
+  await requireAuth(supabase)
+
+  const failed: string[] = []
+
+  for (const item of items) {
+    const { error: reviewErr } = await supabase
+      .from('content_review_queue')
+      .update({ review_status: 'pending', reviewed_at: null, reviewed_by: null, reviewer_notes: null })
+      .eq('inbox_id', item.inboxId)
+
+    if (reviewErr) { failed.push(item.id); continue }
+
+    const { error: inboxErr } = await supabase
+      .from('content_inbox')
+      .update({ status: 'needs_review' })
+      .eq('id', item.inboxId)
+
+    if (inboxErr) { failed.push(item.id); continue }
+
+    const { error: deleteErr } = await supabase
+      .from('content_published')
+      .delete()
+      .eq('id', item.id)
+
+    if (deleteErr) { failed.push(item.id) }
+  }
+
+  revalidatePath('/dashboard/content')
+  revalidatePath('/dashboard/review')
+  revalidatePath('/dashboard')
+  return { success: true, failed }
+}
+
+/**
+ * Permanently delete multiple published content items.
+ *
+ * Iterates over each item and delegates to the single-item delete logic
+ * (clean up translations & review queue if inboxId exists, then delete
+ * the published row). Collects per-item errors and returns a summary.
+ *
+ * @param items - Array of `{ id, inboxId }` pairs to delete.
+ * @returns `{ success: true, failed: string[] }` — `failed` contains
+ *   IDs that encountered errors.
+ *
+ * @requires Authentication via {@link requireAuth}.
+ * @sideeffect Deletes from `translations` (if inboxId supplied).
+ * @sideeffect Deletes from `content_review_queue` (if inboxId supplied).
+ * @sideeffect Deletes `content_published` rows.
+ * @sideeffect Revalidates `/dashboard/content` and `/dashboard`.
+ */
+export async function bulkDeleteContent(items: { id: string; inboxId: string | null }[]) {
+  const supabase = await createClient()
+  await requireAuth(supabase)
+
+  const failed: string[] = []
+
+  for (const item of items) {
+    if (item.inboxId) {
+      await supabase.from('translations').delete().eq('content_id', item.inboxId)
+      await supabase.from('content_review_queue').delete().eq('inbox_id', item.inboxId)
+    }
+
+    const { error } = await supabase.from('content_published').delete().eq('id', item.id)
+    if (error) { failed.push(item.id) }
+  }
+
+  revalidatePath('/dashboard/content')
+  revalidatePath('/dashboard')
+  return { success: true, failed }
+}
