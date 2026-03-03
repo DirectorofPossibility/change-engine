@@ -16,7 +16,7 @@ type Tables<T extends keyof Database['public']['Tables']> = Database['public']['
 
 // ── Entity row types ───────────────────────────────────────────────────
 
-/** "I Need Help" scenarios — e.g. "I lost my job", "I need food". Featured on homepage. */
+/** Life situation scenarios — e.g. "Find food", "Find a job". Featured on homepage. */
 export type LifeSituation = Tables<'life_situations'>
 /** City council, state, federal elected officials. Pulled from Civic API + manual entry. */
 export type ElectedOfficial = Tables<'elected_officials'>

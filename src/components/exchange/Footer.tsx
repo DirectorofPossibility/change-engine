@@ -14,7 +14,7 @@ export function Footer() {
             <h4 className="font-semibold text-sm mb-3 text-gray-300">Explore</h4>
             <div className="grid grid-cols-2 gap-2">
               <Link href="/pathways" className="text-sm text-gray-400 hover:text-white">Pathways</Link>
-              <Link href="/help" className="text-sm text-gray-400 hover:text-white">I Need Help</Link>
+              <Link href="/help" className="text-sm text-gray-400 hover:text-white">Available Resources</Link>
               <Link href="/officials" className="text-sm text-gray-400 hover:text-white">Officials</Link>
               <Link href="/services" className="text-sm text-gray-400 hover:text-white">Services</Link>
               <Link href="/elections" className="text-sm text-gray-400 hover:text-white">Elections</Link>

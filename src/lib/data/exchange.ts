@@ -83,7 +83,7 @@ export async function getLatestContent(limit = 6) {
   return data ?? []
 }
 
-// ── Life situations ("I Need Help") ────────────────────────────────────
+// ── Life situations ("Available Resources") ───────────────────────────
 
 /** All life situations, ordered for display. Featured/critical ones show on the homepage. */
 export async function getLifeSituations() {

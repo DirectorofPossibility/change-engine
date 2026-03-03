@@ -12,7 +12,7 @@ import { AuthButton } from './AuthButton'
 const NAV_LINKS = [
   { href: '/pathways', label: 'Pathways' },
   { href: '/explore', label: 'Explore' },
-  { href: '/help', label: 'I Need Help' },
+  { href: '/help', label: 'Available Resources' },
   { href: '/services', label: 'Services' },
   { href: '/elections', label: 'Elections' },
 ]

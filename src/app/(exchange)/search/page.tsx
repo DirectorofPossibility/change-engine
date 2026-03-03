@@ -241,7 +241,7 @@ export default async function SearchPage({
           <p className="text-brand-muted mb-4">No results found for &ldquo;{query}&rdquo;</p>
           <p className="text-sm text-brand-muted mb-6">Try different keywords or browse our categories:</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/help" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">I Need Help</Link>
+            <Link href="/help" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Available Resources</Link>
             <Link href="/services" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Find Services</Link>
             <Link href="/pathways" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Browse Pathways</Link>
             <Link href="/officials/lookup" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Find My Reps</Link>

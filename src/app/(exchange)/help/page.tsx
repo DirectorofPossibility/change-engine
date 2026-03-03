@@ -5,17 +5,17 @@ import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'I Need Help',
+  title: 'Available Resources',
   description: 'Find services and resources for food, housing, healthcare, jobs, and more in Houston.',
 }
 
 const URGENCY_ORDER = ['Critical', 'High', 'Medium', 'Low']
 
 const URGENCY_HEADERS: Record<string, { label: string; color: string }> = {
-  Critical: { label: 'Immediate Help Needed', color: 'text-red-700 border-red-300 bg-red-50' },
-  High:     { label: 'Urgent Situations', color: 'text-orange-700 border-orange-300 bg-orange-50' },
-  Medium:   { label: 'Important Needs', color: 'text-yellow-700 border-yellow-300 bg-yellow-50' },
-  Low:      { label: 'General Support', color: 'text-green-700 border-green-300 bg-green-50' },
+  Critical: { label: 'Time-Sensitive Resources', color: 'text-red-700 border-red-300 bg-red-50' },
+  High:     { label: 'Priority Resources', color: 'text-orange-700 border-orange-300 bg-orange-50' },
+  Medium:   { label: 'Community Resources', color: 'text-yellow-700 border-yellow-300 bg-yellow-50' },
+  Low:      { label: 'Ongoing Resources', color: 'text-green-700 border-green-300 bg-green-50' },
 }
 
 export default async function HelpPage() {
@@ -34,9 +34,9 @@ export default async function HelpPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">I Need Help</h1>
+      <h1 className="text-3xl font-bold text-brand-text mb-2">Available Resources</h1>
       <p className="text-brand-muted mb-8">
-        Find support for life situations you may be facing. Resources are organized by urgency level.
+        Explore resources available for life situations you may be facing, organized by urgency level.
       </p>
 
       {/* Crisis banner */}

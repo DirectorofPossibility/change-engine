@@ -66,7 +66,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Breadcrumb */}
       <div className="text-sm text-brand-muted mb-6">
-        <Link href="/help" className="hover:text-brand-accent">I Need Help</Link>
+        <Link href="/help" className="hover:text-brand-accent">Available Resources</Link>
         <span className="mx-2">/</span>
         <span>{situation.situation_name}</span>
       </div>

@@ -11,7 +11,7 @@ export default function NotFound() {
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/help" className="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm hover:opacity-90 transition-opacity">
-            I Need Help
+            Available Resources
           </Link>
           <Link href="/services" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg transition-colors">
             Find Services

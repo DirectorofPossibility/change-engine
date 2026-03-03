@@ -215,7 +215,7 @@ export default async function MyDashboardPage() {
                 Browse Learning Paths
               </Link>
               <Link href="/help" className="block bg-white rounded-lg border border-brand-border p-3 text-sm text-brand-text hover:bg-brand-bg">
-                I Need Help
+                Available Resources
               </Link>
               <Link href="/officials/lookup" className="block bg-white rounded-lg border border-brand-border p-3 text-sm text-brand-text hover:bg-brand-bg">
                 Find My Representatives
