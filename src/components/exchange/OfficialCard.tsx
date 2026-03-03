@@ -46,6 +46,7 @@ interface OfficialCardProps {
   photoUrl?: string | null
   /** Optional translated title for non-English display. */
   translatedTitle?: string
+  onSelect?: () => void
 }
 
 /**
@@ -57,14 +58,19 @@ interface OfficialCardProps {
  *
  * @param props - {@link OfficialCardProps}
  */
-export function OfficialCard({ id, name, title, party, level, email, phone, website, photoUrl, translatedTitle }: OfficialCardProps) {
+export function OfficialCard({ id, name, title, party, level, email, phone, website, photoUrl, translatedTitle, onSelect }: OfficialCardProps) {
   const { t } = useTranslation()
   const displayTitle = translatedTitle || title
   const ringColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
 
+  const NameWrapper = onSelect ? 'div' : Link
+  const nameProps = onSelect
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block mb-3 cursor-pointer' }
+    : { href: '/officials/' + id, className: 'block mb-3' }
+
   return (
     <div className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
-      <Link href={'/officials/' + id} className="block mb-3">
+      <NameWrapper {...nameProps as any}>
         <div className="flex items-start gap-4">
           {/* Enlarged circular photo with level-colored ring */}
           <div
@@ -101,7 +107,7 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
             </div>
           </div>
         </div>
-      </Link>
+      </NameWrapper>
       <div className="flex items-center gap-3 flex-wrap">
         {email && (
           <a href={'mailto:' + email} className="flex items-center gap-1 text-xs text-brand-accent hover:underline">

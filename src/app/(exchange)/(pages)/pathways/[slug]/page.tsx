@@ -8,13 +8,8 @@ import {
   getFocusAreas,
   getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
-import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
-import { LearningPathCard } from '@/components/exchange/LearningPathCard'
-import { OpportunityCard } from '@/components/exchange/OpportunityCard'
-import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { ServiceCard } from '@/components/exchange/ServiceCard'
-import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { PathwayFilterClient } from './PathwayFilterClient'
+import { PathwayPanelClient } from './PathwayPanelClient'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
 
@@ -225,157 +220,20 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           </section>
         )}
 
-        {/* ── Services ── */}
-        {relatedServices.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <SectionHeading icon={SECTION_ICONS.services} title="Services" count={relatedServices.length} color="#26BDE2" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {relatedServices.map(function (svc) {
-                const t = serviceTranslations[svc.service_id]
-                return (
-                  <ServiceCard
-                    key={svc.service_id}
-                    serviceId={svc.service_id}
-                    name={svc.service_name || ''}
-                    description={svc.description_5th_grade}
-                    phone={svc.phone}
-                    address={svc.address}
-                    city={svc.city}
-                    state={svc.state}
-                    zipCode={svc.zip_code}
-                    website={svc.website}
-                    translatedName={t?.title}
-                    translatedDescription={t?.summary}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* ── Elected Officials ── */}
-        {relatedOfficials.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <SectionHeading icon={SECTION_ICONS.officials} title="Elected Officials" count={relatedOfficials.length} color="#805ad5" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {relatedOfficials.map(function (o) {
-                const t = officialTranslations[o.official_id]
-                return (
-                  <OfficialCard
-                    key={o.official_id}
-                    id={o.official_id}
-                    name={o.official_name || ''}
-                    title={o.title}
-                    party={o.party}
-                    level={o.level}
-                    email={o.email}
-                    phone={o.office_phone}
-                    website={o.website}
-                    translatedTitle={t?.title}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* ── Policies ── */}
-        {policies.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <SectionHeading icon={SECTION_ICONS.policies} title="Policies" count={policies.length} color="#8B6BA8" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {policies.map(function (p) {
-                const pt = policyTranslations[p.policy_id]
-                return (
-                  <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
-                    <PolicyCard
-                      name={p.policy_name}
-                      summary={p.summary_5th_grade}
-                      billNumber={p.bill_number}
-                      status={p.status}
-                      level={p.level}
-                      sourceUrl={p.source_url}
-                      translatedName={pt?.title}
-                      translatedSummary={pt?.summary}
-                    />
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* ── Opportunities ── */}
-        {opportunities.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <SectionHeading icon={SECTION_ICONS.opportunities} title="Opportunities" count={opportunities.length} color="#DD1367" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {opportunities.map(function (o) {
-                const ot = opportunityTranslations[o.opportunity_id]
-                return (
-                  <OpportunityCard
-                    key={o.opportunity_id}
-                    name={o.opportunity_name}
-                    description={o.description_5th_grade}
-                    startDate={o.start_date}
-                    endDate={o.end_date}
-                    address={o.address}
-                    city={o.city}
-                    isVirtual={o.is_virtual}
-                    registrationUrl={o.registration_url}
-                    spotsAvailable={o.spots_available}
-                    translatedName={ot?.title}
-                    translatedDescription={ot?.summary}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* ── Life Situations ── */}
-        {relatedSituations.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <SectionHeading icon={SECTION_ICONS.situations} title="Available Resources" count={relatedSituations.length} color="#38a169" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {relatedSituations.map(function (s) {
-                return (
-                  <LifeSituationCard
-                    key={s.situation_id}
-                    name={s.situation_name}
-                    slug={s.situation_slug}
-                    description={s.description_5th_grade || null}
-                    urgency={s.urgency_level}
-                    iconName={s.icon_name}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* ── Learning Paths ── */}
-        {relatedPaths.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <SectionHeading icon={SECTION_ICONS.paths} title="Learning Paths" count={relatedPaths.length} color="#4C9F38" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {relatedPaths.map(function (p) {
-                return (
-                  <Link key={p.path_id} href={'/learn/' + p.path_id}>
-                    <LearningPathCard
-                      name={p.path_name}
-                      description={p.description_5th_grade}
-                      themeId={p.theme_id}
-                      difficulty={p.difficulty_level}
-                      moduleCount={p.module_count}
-                      estimatedMinutes={p.estimated_minutes}
-                    />
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
+        {/* ── Entity sections with slide-out detail panel ── */}
+        <PathwayPanelClient
+          themeColor={theme.color}
+          services={relatedServices}
+          officials={relatedOfficials}
+          policies={policies}
+          opportunities={opportunities}
+          situations={relatedSituations}
+          paths={relatedPaths}
+          serviceTranslations={serviceTranslations}
+          officialTranslations={officialTranslations}
+          policyTranslations={policyTranslations}
+          opportunityTranslations={opportunityTranslations}
+        />
 
         {/* Bottom spacing */}
         <div className="h-8" />

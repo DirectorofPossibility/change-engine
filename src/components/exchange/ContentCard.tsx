@@ -44,6 +44,7 @@ interface ContentCardProps {
   translatedTitle?: string
   translatedSummary?: string
   imageUrl?: string | null
+  onSelect?: () => void
 }
 
 /**
@@ -66,14 +67,18 @@ interface ContentCardProps {
  */
 export function ContentCard({
   id, title, summary, pathway, center, sourceUrl, publishedAt,
-  focusAreaNames, translatedTitle, translatedSummary, imageUrl,
+  focusAreaNames, translatedTitle, translatedSummary, imageUrl, onSelect,
 }: ContentCardProps) {
   const { t } = useTranslation()
   const displayTitle = translatedTitle || title
   const displaySummary = translatedSummary || summary
   const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
+  const Wrapper = onSelect ? 'div' : Link
+  const wrapperProps = onSelect
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow cursor-pointer' }
+    : { href: '/content/' + id, className: 'block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow' }
   return (
-    <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+    <Wrapper {...wrapperProps as any}>
       {/* TODO: Replace with real Houston photography */}
       {imageUrl ? (
         <div className="w-full h-40 relative">
@@ -132,6 +137,6 @@ export function ContentCard({
         </span>
       </div>
       </div>
-    </Link>
+    </Wrapper>
   )
 }

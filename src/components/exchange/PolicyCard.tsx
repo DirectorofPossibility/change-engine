@@ -12,6 +12,7 @@ interface PolicyCardProps {
   sourceUrl: string | null
   translatedName?: string
   translatedSummary?: string
+  onSelect?: () => void
 }
 
 function statusColor(status: string | null): string {
@@ -23,13 +24,16 @@ function statusColor(status: string | null): string {
   return 'bg-gray-100 text-gray-600'
 }
 
-export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary }: PolicyCardProps) {
+export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary, onSelect }: PolicyCardProps) {
   const { t } = useTranslation()
   const displayName = translatedName || name
   const displaySummary = translatedSummary || summary
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
+    <div
+      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+      {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, style: { cursor: 'pointer' } } : {})}
+    >
       <div className="flex items-center gap-2 mb-2">
         {billNumber && (
           <span className="text-xs font-mono text-brand-muted">{billNumber}</span>

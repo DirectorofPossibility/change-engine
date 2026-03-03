@@ -62,6 +62,7 @@ interface LifeSituationCardProps {
   translatedName?: string
   /** Optional translated description override for non-English display. */
   translatedDescription?: string
+  onSelect?: () => void
 }
 
 /**
@@ -73,15 +74,17 @@ interface LifeSituationCardProps {
  *
  * @param props - {@link LifeSituationCardProps}
  */
-export function LifeSituationCard({ name, slug, description, urgency, iconName, translatedName, translatedDescription }: LifeSituationCardProps) {
+export function LifeSituationCard({ name, slug, description, urgency, iconName, translatedName, translatedDescription, onSelect }: LifeSituationCardProps) {
   const colors = URGENCY_COLORS[urgency || 'Low'] || URGENCY_COLORS.Low
   const Icon = (iconName && ICON_MAP[iconName]) || CircleHelp
 
+  const Wrapper = onSelect ? 'div' : Link
+  const wrapperProps = onSelect
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: `block rounded-xl border overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${colors.bg} ${colors.border}` }
+    : { href: '/help/' + (slug || ''), className: `block rounded-xl border overflow-hidden hover:shadow-md transition-shadow ${colors.bg} ${colors.border}` }
+
   return (
-    <Link
-      href={'/help/' + (slug || '')}
-      className={`block rounded-xl border overflow-hidden hover:shadow-md transition-shadow ${colors.bg} ${colors.border}`}
-    >
+    <Wrapper {...wrapperProps as any}>
       {/* TODO: Replace with real Houston photography */}
       {/* Gradient image strip at top */}
       <div
@@ -117,6 +120,6 @@ export function LifeSituationCard({ name, slug, description, urgency, iconName, 
           </span>
         )}
       </div>
-    </Link>
+    </Wrapper>
   )
 }

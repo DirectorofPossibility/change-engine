@@ -16,13 +16,13 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
-import { X, ExternalLink, Phone, Mail, Globe, MapPin, Clock, DollarSign, Users } from 'lucide-react'
+import { X, ExternalLink, Phone, Mail, Globe, MapPin, Clock, DollarSign, Users, Calendar, BookOpen, BarChart3, AlertTriangle } from 'lucide-react'
 
 // ── Types ────────────────────────────────────────────────────────────
 
 /** Shape of a single entity displayed in the panel, including mesh connections. */
 export interface PanelData {
-  type: 'resource' | 'official' | 'policy' | 'service'
+  type: 'resource' | 'official' | 'policy' | 'service' | 'opportunity' | 'situation' | 'path'
   id: string
   title: string
   summary?: string
@@ -51,6 +51,20 @@ export interface PanelData {
   eligibility?: string
   fees?: string
   hours?: string
+  /** For opportunities. */
+  startDate?: string | null
+  endDate?: string | null
+  isVirtual?: string | null
+  registrationUrl?: string | null
+  spotsAvailable?: number | null
+  /** For situations. */
+  urgency?: string | null
+  slug?: string | null
+  /** For learning paths. */
+  difficulty?: string | null
+  moduleCount?: number | null
+  estimatedMinutes?: number | null
+  themeId?: string | null
   /** Shared -- pathway color used for accent treatments. */
   pathwayColor?: string
   focusAreas?: Array<{ id: string; name: string }>
@@ -79,14 +93,20 @@ const TYPE_LABELS: Record<PanelData['type'], string> = {
   official: 'Official',
   policy: 'Policy',
   service: 'Service',
+  opportunity: 'Opportunity',
+  situation: 'Resource Guide',
+  path: 'Learning Path',
 }
 
 /** Detail page path prefixes, keyed by entity type. */
-const DETAIL_PATHS: Record<PanelData['type'], string> = {
+const DETAIL_PATHS: Record<PanelData['type'], string | null> = {
   resource: '/content/',
   official: '/officials/',
   policy: '/policies/',
   service: '/services/',
+  opportunity: null,
+  situation: '/help/',
+  path: '/learn/',
 }
 
 /** Default accent color when no pathway color is provided. */
@@ -471,6 +491,84 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                     )}
                   </div>
                 )}
+
+                {/* Opportunity: dates, location, registration, spots */}
+                {panel.type === 'opportunity' && (
+                  <div className="space-y-1.5">
+                    {panel.startDate && (
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <Calendar size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                        <span>
+                          {new Date(panel.startDate).toLocaleDateString()}
+                          {panel.endDate ? ' – ' + new Date(panel.endDate).toLocaleDateString() : ''}
+                        </span>
+                      </div>
+                    )}
+                    {(panel.address || panel.city || panel.isVirtual) && (
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <MapPin size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                        <span>
+                          {panel.isVirtual === 'Yes'
+                            ? 'Virtual'
+                            : [panel.address, panel.city].filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {panel.spotsAvailable != null && (
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <Users size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                        <span>{panel.spotsAvailable} spots available</span>
+                      </div>
+                    )}
+                    {panel.registrationUrl && (
+                      <a
+                        href={panel.registrationUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm text-[#319795] hover:underline mt-1"
+                      >
+                        <ExternalLink size={14} />
+                        Register
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                {/* Situation: urgency */}
+                {panel.type === 'situation' && (
+                  <div className="space-y-2">
+                    {panel.urgency && (
+                      <div className="flex items-center gap-1.5">
+                        <AlertTriangle size={14} className="text-brand-muted" />
+                        <span className="text-sm font-semibold text-brand-text">{panel.urgency}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Learning Path: difficulty, modules, duration */}
+                {panel.type === 'path' && (
+                  <div className="space-y-1.5">
+                    {panel.difficulty && (
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <BarChart3 size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                        <span>{panel.difficulty}</span>
+                      </div>
+                    )}
+                    {panel.moduleCount != null && (
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <BookOpen size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                        <span>{panel.moduleCount} modules</span>
+                      </div>
+                    )}
+                    {panel.estimatedMinutes != null && (
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <Clock size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                        <span>{panel.estimatedMinutes} min estimated</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* ── Focus areas ── */}
@@ -599,25 +697,48 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
               )}
             </div>
 
-            {/* ── View Full Profile button ── */}
-            <div className="flex-shrink-0 border-t border-brand-border px-5 py-4">
-              <Link
-                href={DETAIL_PATHS[panel.type] + panel.id}
-                className="block w-full text-center text-sm font-semibold py-3 rounded-md transition-colors"
-                style={{
-                  backgroundColor: accent + '1a',
-                  color: accent,
-                }}
-                onMouseEnter={function (e) {
-                  e.currentTarget.style.backgroundColor = accent + '33'
-                }}
-                onMouseLeave={function (e) {
-                  e.currentTarget.style.backgroundColor = accent + '1a'
-                }}
-              >
-                View Full Profile
-              </Link>
-            </div>
+            {/* ── Footer action ── */}
+            {(function () {
+              const detailPath = DETAIL_PATHS[panel.type]
+              // Situation uses slug, not id
+              const detailHref = panel.type === 'situation'
+                ? (detailPath + (panel.slug || ''))
+                : detailPath
+                  ? (detailPath + panel.id)
+                  : null
+              // Opportunity with registration URL shows Register button
+              if (panel.type === 'opportunity' && panel.registrationUrl) {
+                return (
+                  <div className="flex-shrink-0 border-t border-brand-border px-5 py-4">
+                    <a
+                      href={panel.registrationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block w-full text-center text-sm font-semibold py-3 rounded-md transition-colors"
+                      style={{ backgroundColor: accent + '1a', color: accent }}
+                      onMouseEnter={function (e) { e.currentTarget.style.backgroundColor = accent + '33' }}
+                      onMouseLeave={function (e) { e.currentTarget.style.backgroundColor = accent + '1a' }}
+                    >
+                      Register
+                    </a>
+                  </div>
+                )
+              }
+              if (!detailHref) return null
+              return (
+                <div className="flex-shrink-0 border-t border-brand-border px-5 py-4">
+                  <Link
+                    href={detailHref}
+                    className="block w-full text-center text-sm font-semibold py-3 rounded-md transition-colors"
+                    style={{ backgroundColor: accent + '1a', color: accent }}
+                    onMouseEnter={function (e) { e.currentTarget.style.backgroundColor = accent + '33' }}
+                    onMouseLeave={function (e) { e.currentTarget.style.backgroundColor = accent + '1a' }}
+                  >
+                    View Full Profile
+                  </Link>
+                </div>
+              )
+            })()}
           </>
         )}
       </div>

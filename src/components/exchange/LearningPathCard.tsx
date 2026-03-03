@@ -16,13 +16,17 @@ interface LearningPathCardProps {
   estimatedMinutes: number | null
   translatedName?: string
   translatedDescription?: string
+  onSelect?: () => void
 }
 
-export function LearningPathCard({ name, description, themeId, difficulty, moduleCount, estimatedMinutes, translatedName, translatedDescription }: LearningPathCardProps) {
+export function LearningPathCard({ name, description, themeId, difficulty, moduleCount, estimatedMinutes, translatedName, translatedDescription, onSelect }: LearningPathCardProps) {
   const theme = themeId ? THEMES[themeId as keyof typeof THEMES] : null
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
+    <div
+      className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow"
+      {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, style: { cursor: 'pointer' } } : {})}
+    >
       <div className="flex items-center gap-2 mb-3">
         {theme && (
           <span

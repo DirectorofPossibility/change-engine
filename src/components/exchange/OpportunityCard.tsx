@@ -16,12 +16,13 @@ interface OpportunityCardProps {
   spotsAvailable: number | null
   translatedName?: string
   translatedDescription?: string
+  onSelect?: () => void
 }
 
 export function OpportunityCard({
   name, description, startDate, endDate, address, city,
   isVirtual, registrationUrl, spotsAvailable,
-  translatedName, translatedDescription,
+  translatedName, translatedDescription, onSelect,
 }: OpportunityCardProps) {
   const { t } = useTranslation()
   const location = isVirtual === 'Yes' ? t('card.virtual') : [address, city].filter(Boolean).join(', ')
@@ -29,7 +30,10 @@ export function OpportunityCard({
   const displayDesc = translatedDescription || description
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
+    <div
+      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+      {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, style: { cursor: 'pointer' } } : {})}
+    >
       <h4 className="font-semibold text-brand-text text-sm mb-2 line-clamp-2">{displayName}</h4>
       {displayDesc && (
         <p className="text-xs text-brand-muted mb-3 line-clamp-2">{displayDesc}</p>
@@ -63,6 +67,7 @@ export function OpportunityCard({
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block mt-3 text-xs text-brand-accent hover:underline"
+          onClick={function (e) { e.stopPropagation() }}
         >
           {t('card.register')} &rarr;
         </Link>

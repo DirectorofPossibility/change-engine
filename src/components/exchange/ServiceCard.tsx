@@ -29,6 +29,7 @@ interface ServiceCardProps {
   website: string | null
   translatedName?: string
   translatedDescription?: string
+  onSelect?: () => void
 }
 
 /**
@@ -36,7 +37,7 @@ interface ServiceCardProps {
  *
  * @param props - {@link ServiceCardProps}
  */
-export function ServiceCard({ serviceId, name, orgName, orgId, description, phone, address, city, state, zipCode, website, translatedName, translatedDescription }: ServiceCardProps) {
+export function ServiceCard({ serviceId, name, orgName, orgId, description, phone, address, city, state, zipCode, website, translatedName, translatedDescription, onSelect }: ServiceCardProps) {
   const { t } = useTranslation()
   const fullAddress = [address, city, state, zipCode].filter(Boolean).join(', ')
   const displayName = translatedName || name
@@ -73,6 +74,9 @@ export function ServiceCard({ serviceId, name, orgName, orgId, description, phon
     </div>
   )
 
+  if (onSelect) {
+    return <div role="button" tabIndex={0} onClick={onSelect} onKeyDown={function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }} className="cursor-pointer">{card}</div>
+  }
   if (serviceId) {
     return <Link href={'/services/' + serviceId} className="block">{card}</Link>
   }
