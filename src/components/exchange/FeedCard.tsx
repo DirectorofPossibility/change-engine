@@ -197,7 +197,7 @@ function OfficialCard({ item }: { item: FeedItem }) {
         </div>
         <div className="min-w-0 flex-1">
           <span className="text-xs uppercase tracking-wider font-bold block mb-0.5" style={{ color: TEAL }}>
-            Who Decides
+            Civic Leader
           </span>
           <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-1">{item.title}</h4>
           {item.role && <p className="text-sm text-brand-muted leading-snug line-clamp-1">{item.role}</p>}
@@ -225,7 +225,7 @@ function PolicyCard({ item }: { item: FeedItem }) {
         <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">{item.title}</h4>
         {item.body && (
           <p className="text-xs text-brand-muted mt-1.5">
-            Decided by: <span className="font-medium">{item.body}</span>
+            Level: <span className="font-medium">{item.body}</span>
           </p>
         )}
       </div>

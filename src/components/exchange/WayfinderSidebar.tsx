@@ -7,7 +7,7 @@ import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   BookOpen, Calendar, Wrench, FlaskConical, Activity,
-  HelpCircle,
+  Landmark, Compass,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -41,6 +41,7 @@ const DISCOVER_LINKS = [
   { label: 'DIY Kits', icon: Wrench, href: '/search?q=diy+kits' },
   { label: 'Research', icon: FlaskConical, href: '/search?q=research' },
   { label: 'Activity Types', icon: Activity, href: '/explore' },
+  { label: 'Foundations', icon: Landmark, href: '/foundations' },
 ]
 
 export function WayfinderSidebar({
@@ -278,8 +279,8 @@ export function WayfinderSidebar({
               onClick={closeMobile}
               className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-accent font-semibold hover:bg-brand-accent/[0.06] transition-colors"
             >
-              <HelpCircle size={15} />
-              I Need Help Now
+              <Compass size={15} />
+              Quick Resources
             </Link>
           </div>
         )}

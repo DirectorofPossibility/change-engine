@@ -82,12 +82,12 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
 }
 
 const LIFE_SITUATIONS = [
-  { emoji: '🍽️', label: 'I need food', href: '/help/i-need-food-right-now', color: '#e53e3e' },
-  { emoji: '🏠', label: 'I need housing', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
-  { emoji: '💼', label: 'I lost my job', href: '/help/i-lost-my-job', color: '#3182ce' },
-  { emoji: '🏥', label: 'I need healthcare', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
-  { emoji: '🛡️', label: "I'm in danger", href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
-  { emoji: '💰', label: "Can't pay bills", href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
+  { emoji: '🍽️', label: 'Food Access', href: '/help/i-need-food-right-now', color: '#e53e3e' },
+  { emoji: '🏠', label: 'Housing & Shelter', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
+  { emoji: '💼', label: 'Career & Employment', href: '/help/i-lost-my-job', color: '#3182ce' },
+  { emoji: '🏥', label: 'Health & Wellness', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
+  { emoji: '🛡️', label: 'Safety & Protection', href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
+  { emoji: '💰', label: 'Financial Stability', href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
 ]
 
 function feedDataToItems(feed: PathwayFeedData, themeId: string) {
@@ -285,7 +285,7 @@ export function Wayfinder({
               <section className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
                   <Sparkles size={18} style={{ color: BRAND.accent }} />
-                  <h2 className="font-serif text-2xl font-bold tracking-tight">I need help with...</h2>
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">Start Your Journey</h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                   {LIFE_SITUATIONS.map(function (sit) {
@@ -294,7 +294,7 @@ export function Wayfinder({
                         <span className="text-3xl group-hover:scale-110 transition-transform">{sit.emoji}</span>
                         <span className="text-sm font-semibold text-brand-text leading-tight">{sit.label}</span>
                         <span className="text-xs font-medium rounded-full px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: sit.color, backgroundColor: sit.color + '15' }}>
-                          Get help <ArrowRight className="inline w-3 h-3 ml-0.5" />
+                          Explore <ArrowRight className="inline w-3 h-3 ml-0.5" />
                         </span>
                       </Link>
                     )
@@ -302,7 +302,7 @@ export function Wayfinder({
                 </div>
                 <div className="text-center mt-3">
                   <Link href="/help" className="text-sm font-semibold hover:underline" style={{ color: BRAND.accent }}>
-                    See all available resources <ArrowRight className="inline w-3.5 h-3.5 ml-0.5" />
+                    Browse all pathways <ArrowRight className="inline w-3.5 h-3.5 ml-0.5" />
                   </Link>
                 </div>
               </section>
@@ -359,6 +359,16 @@ export function Wayfinder({
                 style={{ background: `radial-gradient(circle, ${selectedTheme.color}08 0%, transparent 70%)` }}
                 aria-hidden="true"
               />
+
+              {/* Knowledge Graph — evolves to show selected pathway */}
+              <div className="max-w-2xl mx-auto mb-4">
+                <EmbeddableCircles
+                  onSelectPathway={handleSelectPathway}
+                  pathwayCounts={pathwayCounts}
+                  selectedPathway={selectedPathway}
+                />
+              </div>
+
               <div className="mb-6 pb-4 relative z-10" style={{ borderBottom: `2px solid ${selectedTheme.color}15` }}>
                 <div className="flex items-center gap-4 mb-3">
                   {(() => {
