@@ -282,7 +282,7 @@ const DIMENSION_GROUPS = [
     { name: "211 Services", edges: 100 }, { name: "Officials", edges: 100 },
     { name: "Policies", edges: 30 },
   ]},
-  { group: "Metadata", color: "#5a6b7f", dims: [
+  { group: "Metadata", color: "#8b8178", dims: [
     { name: "Engagement", edges: 195 }, { name: "Reading Level", edges: 195 },
     { name: "Confidence", edges: 195 }, { name: "Review Status", edges: 233 },
   ]},
@@ -583,7 +583,7 @@ export default function KnowledgeGraphClient() {
         if (org.situations.length) c.push({ label: "Life Situations", nodes: org.situations, color: "#10b981" });
         const orgGeos = GEOGRAPHY.filter(g => g.orgs.includes(org.id));
         if (orgGeos.length) c.push({ label: "Geography", nodes: orgGeos.map(g => `🏘️ ${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
-        c.push({ label: "Pipeline", nodes: [`${org.pipeline} — ${org.domain} — ${org.count} articles`], color: "#5a6b7f" });
+        c.push({ label: "Pipeline", nodes: [`${org.pipeline} — ${org.domain} — ${org.count} articles`], color: "#8b8178" });
       }
     }
     if (node.type === "geography") {
@@ -607,19 +607,19 @@ export default function KnowledgeGraphClient() {
   // ─── Render ─────────────────────────────────────────────────
 
   return (
-    <div style={{ background: "#0f1419", color: "#e8e6e3", fontFamily: "system-ui, -apple-system, sans-serif", borderRadius: 12, overflow: "hidden" }}>
+    <div style={{ background: "#ffffff", color: "#2C2C2C", fontFamily: "system-ui, -apple-system, sans-serif", borderRadius: 12, overflow: "hidden" }}>
       {/* Header */}
       <div style={{ padding: "20px 28px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
             <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, #e53e3e, #dd6b20, #d69e2e, #38a169, #3182ce, #805ad5)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#0f1419", border: "2px solid #e8e6e3" }} />
+              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ffffff", border: "2px solid #2C2C2C" }} />
             </div>
             <div>
               <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em" }}>
                 <span style={{ color: "#C75B2A" }}>Civic Knowledge Mesh</span>
               </h1>
-              <p style={{ margin: 0, fontSize: 11, color: "#5a6b7f", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+              <p style={{ margin: 0, fontSize: 11, color: "#8b8178", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                 {STATS.totalRecords.toLocaleString()} records · {STATS.totalEdges.toLocaleString()}+ edges · ~{TOTAL_DIMS} dimensions per node · {STATS.tables} tables
               </p>
             </div>
@@ -628,15 +628,15 @@ export default function KnowledgeGraphClient() {
         <div style={{ display: "flex", gap: 5, alignItems: "center" }}>
           <div style={{ position: "relative" }}>
             <input type="text" placeholder="Search nodes..." value={search} onChange={e => setSearch(e.target.value)}
-              style={{ padding: "7px 12px 7px 30px", borderRadius: 8, border: "1px solid #2a3441", background: "#1a2332", color: "#e8e6e3", fontSize: 12, width: 160, outline: "none" }} />
-            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 12, color: "#5a6b7f" }}>🔍</span>
+              style={{ padding: "7px 12px 7px 30px", borderRadius: 8, border: "1px solid #e5e0d8", background: "#f5f1eb", color: "#2C2C2C", fontSize: 12, width: 160, outline: "none" }} />
+            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 12, color: "#8b8178" }}>🔍</span>
           </div>
           {["galaxy", "nodemap", "mesh", "stats", "gaps"].map(v => (
             <button key={v} onClick={() => setView(v)} style={{
               padding: "7px 14px", borderRadius: 8, border: "1px solid",
-              borderColor: view === v ? "#C75B2A" : "#2a3441",
+              borderColor: view === v ? "#C75B2A" : "#e5e0d8",
               background: view === v ? "rgba(199,91,42,0.15)" : "transparent",
-              color: view === v ? "#C75B2A" : "#8b9baf", cursor: "pointer", fontSize: 12, fontWeight: 500,
+              color: view === v ? "#C75B2A" : "#6b6157", cursor: "pointer", fontSize: 12, fontWeight: 500,
             }}>
               {v === "nodemap" ? "Node Map" : v.charAt(0).toUpperCase() + v.slice(1)}
             </button>
@@ -647,13 +647,16 @@ export default function KnowledgeGraphClient() {
       <div style={{ padding: "10px 28px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
         <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#38a169", boxShadow: "0 0 6px #38a169" }} />
         <span style={{ fontSize: 11, color: "#38a169" }}>Pipeline Active</span>
-        <span style={{ fontSize: 11, color: "#2a3441" }}>|</span>
-        <span style={{ fontSize: 11, color: "#5a6b7f" }}>
+        <span style={{ fontSize: 11, color: "#e5e0d8" }}>|</span>
+        <span style={{ fontSize: 11, color: "#8b8178" }}>
           ~{TOTAL_DIMS} dims · {STATS.totalEdges.toLocaleString()} edges · {ORGANIZATIONS.length} orgs pipelined · Scroll to zoom · Drag to pan · Click for mesh
         </span>
       </div>
 
-      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}`}</style>
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+[data-node]{transition:transform .15s ease-out,filter .15s ease-out}
+[data-node]:hover{filter:drop-shadow(0 2px 8px rgba(0,0,0,.15))}
+.kg-circle{transition:r .2s ease-out,opacity .2s ease-out,stroke-width .15s ease-out}`}</style>
 
       {/* ═══════════════════ GALAXY VIEW ═══════════════════ */}
       {view === "galaxy" && (
@@ -674,22 +677,22 @@ export default function KnowledgeGraphClient() {
             ]).map(l => (
               <button key={l.key} onClick={() => toggleLayer(l.key)} style={{
                 padding: "4px 9px", borderRadius: 16, fontSize: 10, fontWeight: 600,
-                border: `1px solid ${layers[l.key] ? l.color + "60" : "#1e2d3d"}`,
+                border: `1px solid ${layers[l.key] ? l.color + "60" : "#e5e0d8"}`,
                 background: layers[l.key] ? l.color + "15" : "transparent",
-                color: layers[l.key] ? l.color : "#3d4f63", cursor: "pointer", transition: "all 0.2s",
+                color: layers[l.key] ? l.color : "#9a918a", cursor: "pointer", transition: "all 0.2s",
               }}>{l.label}</button>
             ))}
             <div style={{ flex: 1 }} />
             <button onClick={() => setShowMissing(!showMissing)} style={{
               padding: "4px 9px", borderRadius: 16, fontSize: 10, fontWeight: 600,
-              border: `1px solid ${showMissing ? "#ef444460" : "#1e2d3d"}`,
+              border: `1px solid ${showMissing ? "#ef444460" : "#e5e0d8"}`,
               background: showMissing ? "#ef444415" : "transparent",
-              color: showMissing ? "#ef4444" : "#3d4f63", cursor: "pointer",
+              color: showMissing ? "#ef4444" : "#9a918a", cursor: "pointer",
             }}>{showMissing ? "Hide" : "Show"} Gaps</button>
           </div>
 
           <div ref={svgContainerRef} onWheel={onWheel} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onMouseUp}
-            style={{ position: "relative", overflow: "hidden", borderRadius: 12, background: "radial-gradient(ellipse at 50% 50%, #141d26 0%, #0c1117 60%, #080b0f 100%)", cursor: isPanning ? "grabbing" : "grab", touchAction: "none" }}>
+            style={{ position: "relative", overflow: "hidden", borderRadius: 12, background: "radial-gradient(ellipse at 50% 50%, #f5f1eb 0%, #faf9f7 60%, #ffffff 100%)", cursor: isPanning ? "grabbing" : "grab", touchAction: "none" }}>
             <svg viewBox="0 0 1000 900" style={{ width: "100%", maxHeight: "72vh", transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: "0 0", transition: isPanning ? "none" : "transform 0.1s ease-out" }}>
               <defs>
                 <radialGradient id="coreGlow"><stop offset="0%" stopColor="#C75B2A" stopOpacity={0.14} /><stop offset="100%" stopColor="#C75B2A" stopOpacity={0} /></radialGradient>
@@ -699,11 +702,11 @@ export default function KnowledgeGraphClient() {
 
               {/* Orbital guides */}
               {layers.crosswalks && <circle cx={cx} cy={cy} r={56} fill="none" stroke="#319795" strokeWidth={0.4} strokeDasharray="2 4" opacity={0.25} />}
-              {layers.centers && <circle cx={cx} cy={cy} r={95} fill="none" stroke="#1a2332" strokeWidth={0.5} opacity={0.35} />}
+              {layers.centers && <circle cx={cx} cy={cy} r={95} fill="none" stroke="#f5f1eb" strokeWidth={0.5} opacity={0.35} />}
               {layers.lifeSit && <circle cx={cx} cy={cy} r={140} fill="none" stroke="#10b981" strokeWidth={0.3} strokeDasharray="1 8" opacity={0.12} />}
-              {layers.pathways && <circle cx={cx} cy={cy} r={195} fill="none" stroke="#1a2332" strokeWidth={0.5} strokeDasharray="3 6" opacity={0.3} />}
+              {layers.pathways && <circle cx={cx} cy={cy} r={195} fill="none" stroke="#f5f1eb" strokeWidth={0.5} strokeDasharray="3 6" opacity={0.3} />}
               {layers.sdgs && <circle cx={cx} cy={cy} r={248} fill="none" stroke="#dd6b20" strokeWidth={0.3} strokeDasharray="2 6" opacity={0.2} />}
-              {layers.sdoh && <circle cx={cx} cy={cy} r={300} fill="none" stroke="#1a2332" strokeWidth={0.4} strokeDasharray="4 10" opacity={0.2} />}
+              {layers.sdoh && <circle cx={cx} cy={cy} r={300} fill="none" stroke="#f5f1eb" strokeWidth={0.4} strokeDasharray="4 10" opacity={0.2} />}
               {layers.geography && <circle cx={cx} cy={cy} r={365} fill="none" stroke="#d69e2e" strokeWidth={0.3} strokeDasharray="2 8" opacity={0.12} />}
               {layers.rings && <circle cx={cx} cy={cy} r={350} fill="none" stroke="#6366f1" strokeWidth={0.3} strokeDasharray="3 8" opacity={0.15} />}
               {layers.orgs && <circle cx={cx} cy={cy} r={430} fill="none" stroke="#dd6b20" strokeWidth={0.2} strokeDasharray="2 12" opacity={0.1} />}
@@ -946,7 +949,7 @@ export default function KnowledgeGraphClient() {
                 return (
                   <g key={`edge-${i}`} onMouseEnter={() => setHoveredEdge(i)} onMouseLeave={() => setHoveredEdge(null)}>
                     <line x1={e.from.x} y1={e.from.y} x2={e.to.x} y2={e.to.y} stroke={THEMES[e.from.id as string]?.color || "#555"} strokeWidth={Math.max(0.6, e.count / 5)} opacity={hot ? 0.55 : 0.07} strokeDasharray={hot ? "none" : "3 5"} />
-                    {hot && <text x={(e.from.x + e.to.x) / 2} y={(e.from.y + e.to.y) / 2 - 6} fill="#e8e6e3" fontSize={9} textAnchor="middle" style={{ pointerEvents: "none" }}>{e.count}</text>}
+                    {hot && <text x={(e.from.x + e.to.x) / 2} y={(e.from.y + e.to.y) / 2 - 6} fill="#2C2C2C" fontSize={9} textAnchor="middle" style={{ pointerEvents: "none" }}>{e.count}</text>}
                   </g>
                 );
               })}
@@ -991,7 +994,7 @@ export default function KnowledgeGraphClient() {
                   <g key={`org-${i}`} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(o)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(o)}>
                     {isSel && <circle cx={o.x} cy={o.y} r={r * 3} fill={o.color} opacity={0.1} filter="url(#selGlow)" />}
                     <rect x={o.x - r} y={o.y - r} width={r * 2} height={r * 2} rx={3} fill={o.color} opacity={isH || isSel ? 0.7 : 0.2} stroke={isSel ? "#fff" : "none"} strokeWidth={1} />
-                    {(isH || isSel || o.count > 10) && <text x={o.x} y={o.y + r + 12} fill={isH || isSel ? "#e8e6e3" : "#2a3441"} fontSize={7} textAnchor="middle" fontWeight={isH ? 600 : 400}>{o.name}</text>}
+                    {(isH || isSel || o.count > 10) && <text x={o.x} y={o.y + r + 12} fill={isH || isSel ? "#2C2C2C" : "#e5e0d8"} fontSize={7} textAnchor="middle" fontWeight={isH ? 600 : 400}>{o.name}</text>}
                     {(isH || isSel) && <text x={o.x} y={o.y + r + 21} fill={o.color} fontSize={7} textAnchor="middle">{o.count} · {o.pipeline}</text>}
                   </g>
                 );
@@ -1008,10 +1011,10 @@ export default function KnowledgeGraphClient() {
                 return (
                   <g key={`geo-${i}`} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(g)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(g)}>
                     {isSel && <circle cx={g.x} cy={g.y} r={r * 2.5} fill="#d69e2e" opacity={0.1} filter="url(#selGlow)" />}
-                    <polygon points={hex} fill="#111822" stroke="#d69e2e" strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.4} />
-                    <text x={g.x} y={g.y + 1} fill="#e8e6e3" fontSize={8} textAnchor="middle" dominantBaseline="middle">🏘️</text>
+                    <polygon points={hex} fill="#f8f6f3" stroke="#d69e2e" strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.4} />
+                    <text x={g.x} y={g.y + 1} fill="#2C2C2C" fontSize={8} textAnchor="middle" dominantBaseline="middle">🏘️</text>
                     {(isH || isSel) && <text x={g.x} y={g.y + r + 14} fill="#d69e2e" fontSize={7} textAnchor="middle" fontWeight={600}>{g.name}</text>}
-                    {(isH || isSel) && <text x={g.x} y={g.y + r + 23} fill="#5a6b7f" fontSize={6} textAnchor="middle">{g.population?.toLocaleString()} pop · {g.zips?.join(", ")}</text>}
+                    {(isH || isSel) && <text x={g.x} y={g.y + r + 23} fill="#8b8178" fontSize={6} textAnchor="middle">{g.population?.toLocaleString()} pop · {g.zips?.join(", ")}</text>}
                   </g>
                 );
               })}
@@ -1022,10 +1025,10 @@ export default function KnowledgeGraphClient() {
                 return (
                   <g key={r.id} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(r)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(r)}>
                     {isSel && <circle cx={r.x} cy={r.y} r={24} fill={r.color} opacity={0.1} filter="url(#selGlow)" />}
-                    <circle cx={r.x} cy={r.y} r={16} fill="#111822" stroke={r.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.5} />
-                    <text x={r.x} y={r.y + 1} fill="#e8e6e3" fontSize={12} textAnchor="middle" dominantBaseline="middle">{r.icon}</text>
-                    <text x={r.x} y={r.y + (r.y < cy ? -22 : 28)} fill={isH || isSel ? r.color : "#2a3441"} fontSize={8} textAnchor="middle" fontWeight={600}>{r.name}</text>
-                    {(isH || isSel) && <text x={r.x} y={r.y + (r.y < cy ? -12 : 38)} fill="#5a6b7f" fontSize={7} textAnchor="middle">{r.count}</text>}
+                    <circle cx={r.x} cy={r.y} r={16} fill="#f8f6f3" stroke={r.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.5} />
+                    <text x={r.x} y={r.y + 1} fill="#2C2C2C" fontSize={12} textAnchor="middle" dominantBaseline="middle">{r.icon}</text>
+                    <text x={r.x} y={r.y + (r.y < cy ? -22 : 28)} fill={isH || isSel ? r.color : "#e5e0d8"} fontSize={8} textAnchor="middle" fontWeight={600}>{r.name}</text>
+                    {(isH || isSel) && <text x={r.x} y={r.y + (r.y < cy ? -12 : 38)} fill="#8b8178" fontSize={7} textAnchor="middle">{r.count}</text>}
                   </g>
                 );
               })}
@@ -1037,9 +1040,9 @@ export default function KnowledgeGraphClient() {
                 return (
                   <g key={d.id} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(d)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(d)}>
                     <circle cx={d.x} cy={d.y} r={clusterR + 8} fill={d.color} opacity={isH || isSel ? 0.08 : 0.015} />
-                    <circle cx={d.x} cy={d.y} r={16} fill="#0f1419" stroke={d.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 0.7} opacity={isH || isSel ? 1 : 0.5} />
+                    <circle cx={d.x} cy={d.y} r={16} fill="#ffffff" stroke={d.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 0.7} opacity={isH || isSel ? 1 : 0.5} />
                     <text x={d.x} y={d.y + 4} fill={d.color} fontSize={9} textAnchor="middle" fontWeight={800}>{d.items.length}</text>
-                    <text x={d.x} y={d.y + (d.y < cy ? -(clusterR + 4) : clusterR + 10)} fill={isH || isSel ? d.color : "#2a3441"} fontSize={8} textAnchor="middle" fontWeight={600}>{d.name}</text>
+                    <text x={d.x} y={d.y + (d.y < cy ? -(clusterR + 4) : clusterR + 10)} fill={isH || isSel ? d.color : "#e5e0d8"} fontSize={8} textAnchor="middle" fontWeight={600}>{d.name}</text>
                     {d.items.map((item: any, j: number) => {
                       const a = (j / d.items.length) * Math.PI * 2 - Math.PI / 2;
                       return <circle key={`${d.id}-${j}`} cx={d.x + Math.cos(a) * clusterR} cy={d.y + Math.sin(a) * clusterR} r={2 + Math.log10(item.count + 1) * 1.5} fill={d.color} opacity={isH || isSel ? 0.65 : 0.12} />;
@@ -1057,7 +1060,7 @@ export default function KnowledgeGraphClient() {
                     {isSel && <circle cx={n.x} cy={n.y} r={r * 2.2} fill={n.color} opacity={0.12} filter="url(#selGlow)" />}
                     <circle cx={n.x} cy={n.y} r={r} fill={n.color} opacity={isH || isSel ? 0.75 : 0.3} stroke={isSel ? "#fff" : "none"} strokeWidth={1} filter={isH ? "url(#glow)" : undefined} />
                     <text x={n.x} y={n.y + 3.5} fill="#fff" fontSize={8} textAnchor="middle" fontWeight={700}>{n.count}</text>
-                    <text x={n.x} y={n.y + (n.y < cy ? -(r + 7) : r + 13)} fill={isH || isSel ? n.color : "#2a3441"} fontSize={8.5} textAnchor="middle" fontWeight={500}>{n.short}</text>
+                    <text x={n.x} y={n.y + (n.y < cy ? -(r + 7) : r + 13)} fill={isH || isSel ? n.color : "#e5e0d8"} fontSize={8.5} textAnchor="middle" fontWeight={500}>{n.short}</text>
                   </g>
                 );
               })}
@@ -1083,10 +1086,10 @@ export default function KnowledgeGraphClient() {
                   <g key={n.id} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(n)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(n)}>
                     {isSel && <circle cx={n.x} cy={n.y} r={36} fill={n.color} opacity={0.15} filter="url(#selGlow)" />}
                     <circle cx={n.x} cy={n.y} r={16 + n.content / 3} fill={n.color} opacity={0}><animate attributeName="opacity" values="0;0.1;0" dur="3s" begin={`${i * 0.4}s`} repeatCount="indefinite" /></circle>
-                    <circle cx={n.x} cy={n.y} r={21} fill="#111822" stroke={n.color} strokeWidth={isSel ? 3 : isH ? 2.5 : 1.5} />
-                    <text x={n.x} y={n.y + 1} fill="#e8e6e3" fontSize={15} textAnchor="middle" dominantBaseline="middle">{n.emoji}</text>
+                    <circle cx={n.x} cy={n.y} r={21} fill="#f8f6f3" stroke={n.color} strokeWidth={isSel ? 3 : isH ? 2.5 : 1.5} />
+                    <text x={n.x} y={n.y + 1} fill="#2C2C2C" fontSize={15} textAnchor="middle" dominantBaseline="middle">{n.emoji}</text>
                     <text x={n.x} y={n.y + (n.y < cy ? -29 : 34)} fill={n.color} fontSize={10} textAnchor="middle" fontWeight={600}>{n.name}</text>
-                    <text x={n.x} y={n.y + (n.y < cy ? -18 : 45)} fill="#3d4f63" fontSize={8} textAnchor="middle">{n.content} · {n.focus}fa</text>
+                    <text x={n.x} y={n.y + (n.y < cy ? -18 : 45)} fill="#9a918a" fontSize={8} textAnchor="middle">{n.content} · {n.focus}fa</text>
                   </g>
                 );
               })}
@@ -1098,7 +1101,7 @@ export default function KnowledgeGraphClient() {
                   <g key={`ls-${i}`} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(s)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(s)}>
                     {isSel && <circle cx={s.x} cy={s.y} r={16} fill="#10b981" opacity={0.15} filter="url(#selGlow)" />}
                     <circle cx={s.x} cy={s.y} r={isH || isSel ? 11 : 6} fill="#10b981" opacity={isH || isSel ? 0.3 : 0.08} />
-                    <text x={s.x} y={s.y + 4} fill="#e8e6e3" fontSize={isH || isSel ? 10 : 8} textAnchor="middle">{s.emoji}</text>
+                    <text x={s.x} y={s.y + 4} fill="#2C2C2C" fontSize={isH || isSel ? 10 : 8} textAnchor="middle">{s.emoji}</text>
                     {(isH || isSel) && <text x={s.x} y={s.y + 18} fill="#10b981" fontSize={7} textAnchor="middle" fontWeight={600}>{s.name} ({s.count})</text>}
                   </g>
                 );
@@ -1110,10 +1113,10 @@ export default function KnowledgeGraphClient() {
                 return (
                   <g key={n.id} data-node style={{ cursor: "pointer" }} onMouseEnter={() => setHovered(n)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(n)}>
                     {isSel && <circle cx={n.x} cy={n.y} r={38} fill={n.color} opacity={0.12} filter="url(#selGlow)" />}
-                    <circle cx={n.x} cy={n.y} r={22} fill="#111822" stroke={n.color} strokeWidth={isSel ? 3 : isH ? 2.5 : 1.5} />
-                    <text x={n.x} y={n.y + 1} fill="#e8e6e3" fontSize={16} textAnchor="middle" dominantBaseline="middle">{n.emoji}</text>
+                    <circle cx={n.x} cy={n.y} r={22} fill="#f8f6f3" stroke={n.color} strokeWidth={isSel ? 3 : isH ? 2.5 : 1.5} />
+                    <text x={n.x} y={n.y + 1} fill="#2C2C2C" fontSize={16} textAnchor="middle" dominantBaseline="middle">{n.emoji}</text>
                     <text x={n.x} y={n.y + 34} fill={n.color} fontSize={9.5} textAnchor="middle" fontWeight={600}>{n.name}</text>
-                    <text x={n.x} y={n.y + 45} fill="#3d4f63" fontSize={8} textAnchor="middle">{n.count}</text>
+                    <text x={n.x} y={n.y + 45} fill="#9a918a" fontSize={8} textAnchor="middle">{n.count}</text>
                   </g>
                 );
               })}
@@ -1124,18 +1127,18 @@ export default function KnowledgeGraphClient() {
                 return (
                   <g key={co.id} data-node style={{ cursor: "pointer" }} onMouseEnter={() => setHovered(co)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(co)}>
                     <circle cx={co.x} cy={co.y} r={isH || isSel ? 8 : 5} fill={co.color} opacity={isH || isSel ? 0.8 : 0.3} filter={isH ? "url(#glow)" : undefined} />
-                    {(isH || isSel) && <><text x={co.x} y={co.y - 12} fill={co.color} fontSize={8} textAnchor="middle" fontWeight={700}>{co.name}</text><text x={co.x} y={co.y + 16} fill="#5a6b7f" fontSize={7} textAnchor="middle">{co.full} ({co.count})</text></>}
+                    {(isH || isSel) && <><text x={co.x} y={co.y - 12} fill={co.color} fontSize={8} textAnchor="middle" fontWeight={700}>{co.name}</text><text x={co.x} y={co.y + 16} fill="#8b8178" fontSize={7} textAnchor="middle">{co.full} ({co.count})</text></>}
                   </g>
                 );
               })}
 
               {/* Hub */}
               <g data-node style={{ cursor: "pointer" }} onClick={() => setShowExplosion(!showExplosion)}>
-                <circle cx={cx} cy={cy} r={32} fill="#111822" stroke="#C75B2A" strokeWidth={2} filter="url(#glow)" />
+                <circle cx={cx} cy={cy} r={32} fill="#f8f6f3" stroke="#C75B2A" strokeWidth={2} filter="url(#glow)" />
                 <text x={cx} y={cy - 9} fill="#C75B2A" fontSize={7} textAnchor="middle" fontWeight={700} letterSpacing="0.1em">CHANGE</text>
                 <text x={cx} y={cy + 1} fill="#C75B2A" fontSize={7} textAnchor="middle" fontWeight={700} letterSpacing="0.1em">ENGINE</text>
-                <text x={cx} y={cy + 13} fill="#5a6b7f" fontSize={5.5} textAnchor="middle">~{TOTAL_DIMS} dims · 5 rings</text>
-                <text x={cx} y={cy + 21} fill="#3d4f63" fontSize={5} textAnchor="middle">{showExplosion ? "click to collapse" : "click to explode all dims"}</text>
+                <text x={cx} y={cy + 13} fill="#8b8178" fontSize={5.5} textAnchor="middle">~{TOTAL_DIMS} dims · 5 rings</text>
+                <text x={cx} y={cy + 21} fill="#9a918a" fontSize={5} textAnchor="middle">{showExplosion ? "click to collapse" : "click to explode all dims"}</text>
               </g>
             </svg>
 
@@ -1155,15 +1158,15 @@ export default function KnowledgeGraphClient() {
 
           {/* Detail panel */}
           {selectedNode && (
-            <div style={{ marginTop: 12, padding: 20, background: "#111822", borderRadius: 12, border: `1px solid ${selectedNode.color || "#2a3441"}30`, maxHeight: 400, overflowY: "auto" }}>
+            <div style={{ marginTop: 12, padding: 20, background: "#f8f6f3", borderRadius: 12, border: `1px solid ${selectedNode.color || "#e5e0d8"}30`, maxHeight: 400, overflowY: "auto" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
                   <span style={{ padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, background: selectedNode.color + "20", color: selectedNode.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{selectedNode.type}</span>
                   <h3 style={{ margin: "6px 0 0", fontSize: 18, color: selectedNode.color }}>{selectedNode.emoji || selectedNode.icon || ""} {selectedNode.name}</h3>
                 </div>
-                <button onClick={() => setSelectedNode(null)} style={{ background: "#1a2332", border: "1px solid #2a3441", color: "#5a6b7f", cursor: "pointer", fontSize: 14, borderRadius: 8, padding: "4px 10px" }}>ESC</button>
+                <button onClick={() => setSelectedNode(null)} style={{ background: "#f5f1eb", border: "1px solid #e5e0d8", color: "#8b8178", cursor: "pointer", fontSize: 14, borderRadius: 8, padding: "4px 10px" }}>ESC</button>
               </div>
-              <div style={{ marginTop: 12, fontSize: 13, color: "#8b9baf", lineHeight: 1.7 }}>
+              <div style={{ marginTop: 12, fontSize: 13, color: "#6b6157", lineHeight: 1.7 }}>
                 {selectedNode.type === "pathway" && <>{selectedNode.content} items across {selectedNode.focus} focus areas, distributed across 5 rings. Each item classified across ~{TOTAL_DIMS} dimensions. Orgs mentioned are auto-detected and run through the full pipeline.</>}
                 {selectedNode.type === "center" && <>Answers &ldquo;{selectedNode.question}&rdquo; — {selectedNode.count} items routed through all 7 pathways. Centers frame content: learning material, available resources, calls to action, or accountability structures.</>}
                 {selectedNode.type === "sdoh" && <>{selectedNode.count} items in &ldquo;{selectedNode.name}&rdquo; — links to pathways, SDGs, life situations, and organizations in a full mesh. SDOH factors account for up to 80% of health outcomes.</>}
@@ -1180,13 +1183,13 @@ export default function KnowledgeGraphClient() {
                 if (!conns.length) return null;
                 return (
                   <div style={{ marginTop: 16 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#5a6b7f", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Mesh Connections</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Mesh Connections</div>
                     {conns.map((conn, i) => (
                       <div key={i} style={{ marginBottom: 10 }}>
                         <div style={{ fontSize: 11, fontWeight: 600, color: conn.color, marginBottom: 3 }}>{conn.label.startsWith("Missing") ? "⚠️ " : ""}{conn.label}</div>
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
                           {conn.nodes.map((n, j) => (
-                            <span key={j} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, background: conn.label.startsWith("Missing") ? "#ef444415" : conn.color + "12", border: `1px solid ${conn.label.startsWith("Missing") ? "#ef4444" : conn.color}25`, color: conn.label.startsWith("Missing") ? "#ef4444" : "#8b9baf", lineHeight: 1.4 }}>{n}</span>
+                            <span key={j} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, background: conn.label.startsWith("Missing") ? "#ef444415" : conn.color + "12", border: `1px solid ${conn.label.startsWith("Missing") ? "#ef4444" : conn.color}25`, color: conn.label.startsWith("Missing") ? "#ef4444" : "#6b6157", lineHeight: 1.4 }}>{n}</span>
                           ))}
                         </div>
                       </div>
@@ -1382,11 +1385,11 @@ export default function KnowledgeGraphClient() {
 
         return (
           <div style={{ padding: "0 28px 28px" }}>
-            <p style={{ fontSize: 12, color: "#5a6b7f", marginBottom: 12 }}>
+            <p style={{ fontSize: 12, color: "#8b8178", marginBottom: 12 }}>
               Hierarchical node map — every node type in its own column with mesh connections drawn between them. Hover nodes to highlight edges. Click any node to inspect.
             </p>
             <div ref={svgContainerRef} onWheel={onWheel} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
-              style={{ position: "relative", overflow: "hidden", borderRadius: 12, background: "radial-gradient(ellipse at 50% 50%, #141d26 0%, #0c1117 60%, #080b0f 100%)", cursor: isPanning ? "grabbing" : "grab", touchAction: "none" }}>
+              style={{ position: "relative", overflow: "hidden", borderRadius: 12, background: "radial-gradient(ellipse at 50% 50%, #f5f1eb 0%, #faf9f7 60%, #ffffff 100%)", cursor: isPanning ? "grabbing" : "grab", touchAction: "none" }}>
               <svg viewBox={`0 0 ${totalW} ${totalH}`} style={{ width: "100%", maxHeight: "75vh", transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: "0 0", transition: isPanning ? "none" : "transform 0.1s ease-out" }}>
                 <defs>
                   <radialGradient id="nmGlow"><stop offset="0%" stopColor="#C75B2A" stopOpacity={0.08} /><stop offset="100%" stopColor="#C75B2A" stopOpacity={0} /></radialGradient>
@@ -1400,7 +1403,7 @@ export default function KnowledgeGraphClient() {
                     <g key={`col-${ci}`}>
                       <line x1={colX} y1={padY + 28} x2={colX} y2={totalH - 20} stroke={col.color} strokeWidth={0.3} opacity={0.08} />
                       <text x={colX} y={padY + 14} fill={col.color} fontSize={9} textAnchor="middle" fontWeight={700} letterSpacing="0.04em">{col.label.toUpperCase()}</text>
-                      <text x={colX} y={padY + 26} fill="#3d4f63" fontSize={8} textAnchor="middle">{col.nodes.length}</text>
+                      <text x={colX} y={padY + 26} fill="#9a918a" fontSize={8} textAnchor="middle">{col.nodes.length}</text>
                     </g>
                   );
                 })}
@@ -1453,14 +1456,14 @@ export default function KnowledgeGraphClient() {
                         {n.type === "org" ? (
                           <rect x={pos.x - r} y={pos.y - r} width={r * 2} height={r * 2} rx={3} fill={n.color} opacity={isH || isSel ? 0.7 : 0.25} stroke={isSel ? "#fff" : "none"} strokeWidth={1} />
                         ) : n.type === "geography" ? (
-                          <polygon points={Array.from({ length: 6 }, (_, k) => { const angle = (k / 6) * Math.PI * 2 - Math.PI / 6; return `${pos.x + Math.cos(angle) * r},${pos.y + Math.sin(angle) * r}`; }).join(" ")} fill="#111822" stroke={n.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.4} />
+                          <polygon points={Array.from({ length: 6 }, (_, k) => { const angle = (k / 6) * Math.PI * 2 - Math.PI / 6; return `${pos.x + Math.cos(angle) * r},${pos.y + Math.sin(angle) * r}`; }).join(" ")} fill="#f8f6f3" stroke={n.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.4} />
                         ) : (
-                          <circle cx={pos.x} cy={pos.y} r={r} fill={n.type === "crosswalk" ? n.color : "#111822"} stroke={n.color}
+                          <circle cx={pos.x} cy={pos.y} r={r} fill={n.type === "crosswalk" ? n.color : "#f8f6f3"} stroke={n.color}
                             strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.5} />
                         )}
                         {/* Emoji/text inside */}
                         {(n.emoji || n.icon) && (
-                          <text x={pos.x} y={pos.y + 1} fill="#e8e6e3" fontSize={n.type === "pathway" || n.type === "center" ? 12 : 9}
+                          <text x={pos.x} y={pos.y + 1} fill="#2C2C2C" fontSize={n.type === "pathway" || n.type === "center" ? 12 : 9}
                             textAnchor="middle" dominantBaseline="middle">{n.emoji || n.icon}</text>
                         )}
                         {!n.emoji && !n.icon && n.type === "sdg" && (
@@ -1473,11 +1476,11 @@ export default function KnowledgeGraphClient() {
                           <text x={pos.x} y={pos.y + 3} fill="#fff" fontSize={6} textAnchor="middle" fontWeight={700}>{n.name?.slice(0, 4)}</text>
                         )}
                         {/* Label */}
-                        <text x={pos.x + r + 6} y={pos.y + 1} fill={isH || isSel ? n.color : "#3d4f63"} fontSize={8} fontWeight={isH || isSel ? 600 : 400} dominantBaseline="middle">
+                        <text x={pos.x + r + 6} y={pos.y + 1} fill={isH || isSel ? n.color : "#9a918a"} fontSize={8} fontWeight={isH || isSel ? 600 : 400} dominantBaseline="middle">
                           {n.name?.length > 14 ? n.name.slice(0, 13) + "..." : n.name}
                         </text>
                         {(isH || isSel) && n.count !== undefined && (
-                          <text x={pos.x + r + 6} y={pos.y + 11} fill="#5a6b7f" fontSize={7} dominantBaseline="middle">{n.count} items · {connCount} edges</text>
+                          <text x={pos.x + r + 6} y={pos.y + 11} fill="#8b8178" fontSize={7} dominantBaseline="middle">{n.count} items · {connCount} edges</text>
                         )}
                       </g>
                     );
@@ -1493,8 +1496,8 @@ export default function KnowledgeGraphClient() {
               </div>
 
               {/* Legend */}
-              <div style={{ position: "absolute", top: 12, left: 12, padding: "8px 12px", borderRadius: 8, background: "rgba(15,20,25,0.9)", border: "1px solid #2a3441", backdropFilter: "blur(8px)" }}>
-                <div style={{ fontSize: 9, fontWeight: 700, color: "#5a6b7f", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Edge Types</div>
+              <div style={{ position: "absolute", top: 12, left: 12, padding: "8px 12px", borderRadius: 8, background: "rgba(15,20,25,0.9)", border: "1px solid #e5e0d8", backdropFilter: "blur(8px)" }}>
+                <div style={{ fontSize: 9, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Edge Types</div>
                 {[
                   { color: "#C75B2A", label: "Pathway → Center" },
                   { color: "#10b981", label: "Life Sit/Ring ↔ Org" },
@@ -1506,7 +1509,7 @@ export default function KnowledgeGraphClient() {
                 ].map(l => (
                   <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
                     <div style={{ width: 12, height: 2, borderRadius: 1, background: l.color }} />
-                    <span style={{ fontSize: 9, color: "#8b9baf" }}>{l.label}</span>
+                    <span style={{ fontSize: 9, color: "#6b6157" }}>{l.label}</span>
                   </div>
                 ))}
               </div>
@@ -1514,26 +1517,26 @@ export default function KnowledgeGraphClient() {
 
             {/* Detail panel (reuse the same one as galaxy view) */}
             {selectedNode && (
-              <div style={{ marginTop: 12, padding: 20, background: "#111822", borderRadius: 12, border: `1px solid ${selectedNode.color || "#2a3441"}30`, maxHeight: 400, overflowY: "auto" }}>
+              <div style={{ marginTop: 12, padding: 20, background: "#f8f6f3", borderRadius: 12, border: `1px solid ${selectedNode.color || "#e5e0d8"}30`, maxHeight: 400, overflowY: "auto" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
                     <span style={{ padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, background: selectedNode.color + "20", color: selectedNode.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{selectedNode.type}</span>
                     <h3 style={{ margin: "6px 0 0", fontSize: 18, color: selectedNode.color }}>{selectedNode.emoji || selectedNode.icon || ""} {selectedNode.name}</h3>
                   </div>
-                  <button onClick={() => setSelectedNode(null)} style={{ background: "#1a2332", border: "1px solid #2a3441", color: "#5a6b7f", cursor: "pointer", fontSize: 14, borderRadius: 8, padding: "4px 10px" }}>ESC</button>
+                  <button onClick={() => setSelectedNode(null)} style={{ background: "#f5f1eb", border: "1px solid #e5e0d8", color: "#8b8178", cursor: "pointer", fontSize: 14, borderRadius: 8, padding: "4px 10px" }}>ESC</button>
                 </div>
                 {(() => {
                   const conns = getConnections(selectedNode);
                   if (!conns.length) return null;
                   return (
                     <div style={{ marginTop: 12 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "#5a6b7f", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Mesh Connections</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Mesh Connections</div>
                       {conns.map((conn, i) => (
                         <div key={i} style={{ marginBottom: 10 }}>
                           <div style={{ fontSize: 11, fontWeight: 600, color: conn.color, marginBottom: 3 }}>{conn.label.startsWith("Missing") ? "Warning " : ""}{conn.label}</div>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
                             {conn.nodes.map((nn, j) => (
-                              <span key={j} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, background: conn.label.startsWith("Missing") ? "#ef444415" : conn.color + "12", border: `1px solid ${conn.label.startsWith("Missing") ? "#ef4444" : conn.color}25`, color: conn.label.startsWith("Missing") ? "#ef4444" : "#8b9baf", lineHeight: 1.4 }}>{nn}</span>
+                              <span key={j} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, background: conn.label.startsWith("Missing") ? "#ef444415" : conn.color + "12", border: `1px solid ${conn.label.startsWith("Missing") ? "#ef4444" : conn.color}25`, color: conn.label.startsWith("Missing") ? "#ef4444" : "#6b6157", lineHeight: 1.4 }}>{nn}</span>
                             ))}
                           </div>
                         </div>
@@ -1550,19 +1553,19 @@ export default function KnowledgeGraphClient() {
       {/* ═══════════════════ MESH VIEW ═══════════════════ */}
       {view === "mesh" && (
         <div style={{ padding: "0 28px 28px" }}>
-          <p style={{ fontSize: 12, color: "#5a6b7f", marginBottom: 16 }}>Every dimension group and how they interconnect. Click any cell to see the mesh path between two systems.</p>
+          <p style={{ fontSize: 12, color: "#8b8178", marginBottom: 16 }}>Every dimension group and how they interconnect. Click any cell to see the mesh path between two systems.</p>
           <div style={{ display: "grid", gap: 16 }}>
             {DIMENSION_GROUPS.map(g => (
-              <div key={g.group} style={{ padding: 16, background: "#1a2332", borderRadius: 12, borderLeft: `4px solid ${g.color}` }}>
+              <div key={g.group} style={{ padding: 16, background: "#f5f1eb", borderRadius: 12, borderLeft: `4px solid ${g.color}` }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                   <h3 style={{ margin: 0, fontSize: 14, color: g.color }}>{g.group}</h3>
                   <span style={{ fontSize: 20, fontWeight: 800, color: g.color }}>{g.dims.length}</span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(g.dims.length, 7)}, 1fr)`, gap: 6 }}>
                   {g.dims.map(d => (
-                    <div key={d.name} style={{ padding: "8px 6px", background: "#0f1419", borderRadius: 6, textAlign: "center" }}>
+                    <div key={d.name} style={{ padding: "8px 6px", background: "#ffffff", borderRadius: 6, textAlign: "center" }}>
                       <div style={{ fontSize: 14, fontWeight: 800, color: g.color }}>{d.edges}</div>
-                      <div style={{ fontSize: 9, color: "#5a6b7f", marginTop: 2 }}>{d.name}</div>
+                      <div style={{ fontSize: 9, color: "#8b8178", marginTop: 2 }}>{d.name}</div>
                     </div>
                   ))}
                 </div>
@@ -1576,25 +1579,25 @@ export default function KnowledgeGraphClient() {
           </div>
 
           {/* Org Pipeline */}
-          <div style={{ marginTop: 16, padding: 16, background: "#1a2332", borderRadius: 12, borderLeft: "4px solid #dd6b20" }}>
+          <div style={{ marginTop: 16, padding: 16, background: "#f5f1eb", borderRadius: 12, borderLeft: "4px solid #dd6b20" }}>
             <h3 style={{ margin: "0 0 8px", fontSize: 14, color: "#dd6b20" }}>Organization Pipeline</h3>
-            <p style={{ fontSize: 11, color: "#5a6b7f", margin: "0 0 10px" }}>
+            <p style={{ fontSize: 11, color: "#8b8178", margin: "0 0 10px" }}>
               When content mentions an organization, Claude extracts it. If it doesn&apos;t exist, a new record is created and classified across all ~{TOTAL_DIMS} dimensions.
             </p>
             <div style={{ display: "flex", gap: 6, marginBottom: 12, flexWrap: "wrap" }}>
               {["Detect in content", "Extract name+URL", "Lookup org_domains", "Create if new (ORG_CL_*)", `Classify ~${TOTAL_DIMS}D`, "Link to content"].map((step, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 4 }}>
                   <span style={{ padding: "4px 8px", borderRadius: 6, fontSize: 10, fontWeight: 600, background: "#dd6b2015", color: "#dd6b20", border: "1px solid #dd6b2030" }}>{step}</span>
-                  {i < 5 && <span style={{ color: "#2a3441" }}>→</span>}
+                  {i < 5 && <span style={{ color: "#e5e0d8" }}>→</span>}
                 </div>
               ))}
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 6 }}>
               {ORGANIZATIONS.map(org => (
-                <div key={org.id} style={{ padding: "8px 10px", background: "#0f1419", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div key={org.id} style={{ padding: "8px 10px", background: "#ffffff", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: org.color }}>{org.name}</div>
-                    <div style={{ fontSize: 10, color: "#5a6b7f" }}>{org.domain} · {org.themes.length} pw · {org.sdoh.length} sdoh · {org.situations.length} sits</div>
+                    <div style={{ fontSize: 10, color: "#8b8178" }}>{org.domain} · {org.themes.length} pw · {org.sdoh.length} sdoh · {org.situations.length} sits</div>
                   </div>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: org.pipeline === "verified" ? "#38a16920" : "#3182ce20", color: org.pipeline === "verified" ? "#38a169" : "#3182ce" }}>{org.pipeline}</span>
                 </div>
@@ -1622,24 +1625,24 @@ export default function KnowledgeGraphClient() {
               { label: "Resources", value: STATS.resources, color: "#319795", sub: "Guides & tools" },
               { label: "Content Rings", value: 5, color: "#6366f1", sub: "Wayfinder layers" },
             ].map(s => (
-              <div key={s.label} style={{ padding: 14, background: "#1a2332", borderRadius: 10, borderTop: `3px solid ${s.color}` }}>
+              <div key={s.label} style={{ padding: 14, background: "#f5f1eb", borderRadius: 10, borderTop: `3px solid ${s.color}` }}>
                 <div style={{ fontSize: 28, fontWeight: 800, color: s.color }}>{typeof s.value === "number" ? s.value.toLocaleString() : s.value}</div>
                 <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>{s.label}</div>
-                <div style={{ fontSize: 11, color: "#5a6b7f", marginTop: 2 }}>{s.sub}</div>
+                <div style={{ fontSize: 11, color: "#8b8178", marginTop: 2 }}>{s.sub}</div>
               </div>
             ))}
           </div>
 
           <div style={{ padding: 18, background: "rgba(49,151,149,0.06)", borderRadius: 12, border: "1px solid rgba(49,151,149,0.15)" }}>
             <h3 style={{ margin: "0 0 10px", fontSize: 15, color: "#319795" }}>Rosetta Stone</h3>
-            <div style={{ fontSize: 13, color: "#8b9baf", lineHeight: 1.6, marginBottom: 12 }}>
+            <div style={{ fontSize: 13, color: "#6b6157", lineHeight: 1.6, marginBottom: 12 }}>
               312 focus areas × 5 systems = <strong style={{ color: "#319795" }}>1,560 crosswalks</strong>. Every focus area inherits SDG, SDOH, NTEE, and AIRS codes — making it the universal key that connects all classification systems.
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {CROSSWALKS.map(cw => (
                 <div key={cw.name} style={{ padding: "6px 12px", background: cw.color + "12", border: `1px solid ${cw.color}25`, borderRadius: 8, textAlign: "center" }}>
                   <div style={{ fontSize: 14, fontWeight: 800, color: cw.color }}>{cw.count}</div>
-                  <div style={{ fontSize: 10, color: "#8b9baf" }}>{cw.name}</div>
+                  <div style={{ fontSize: 10, color: "#6b6157" }}>{cw.name}</div>
                 </div>
               ))}
             </div>
@@ -1659,67 +1662,67 @@ export default function KnowledgeGraphClient() {
         return (
         <div style={{ padding: "0 28px 28px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 20 }}>
-            <div style={{ padding: 16, background: "#1a2332", borderRadius: 12, borderTop: "3px solid #ef4444" }}>
+            <div style={{ padding: 16, background: "#f5f1eb", borderRadius: 12, borderTop: "3px solid #ef4444" }}>
               <div style={{ fontSize: 32, fontWeight: 800, color: "#ef4444" }}>{MISSING_BRIDGES.length}</div>
               <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>Missing Bridges</div>
-              <div style={{ fontSize: 11, color: "#5a6b7f", marginTop: 2 }}>Pathway pairs with no content overlap</div>
+              <div style={{ fontSize: 11, color: "#8b8178", marginTop: 2 }}>Pathway pairs with no content overlap</div>
             </div>
-            <div style={{ padding: 16, background: "#1a2332", borderRadius: 12, borderTop: "3px solid #f59e0b" }}>
+            <div style={{ padding: 16, background: "#f5f1eb", borderRadius: 12, borderTop: "3px solid #f59e0b" }}>
               <div style={{ fontSize: 32, fontWeight: 800, color: "#f59e0b" }}>{MISSING_CENTER_EDGES.length}</div>
               <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>Missing Centers</div>
-              <div style={{ fontSize: 11, color: "#5a6b7f", marginTop: 2 }}>Pathways missing center connections</div>
+              <div style={{ fontSize: 11, color: "#8b8178", marginTop: 2 }}>Pathways missing center connections</div>
             </div>
-            <div style={{ padding: 16, background: "#1a2332", borderRadius: 12, borderTop: "3px solid #3182ce" }}>
+            <div style={{ padding: 16, background: "#f5f1eb", borderRadius: 12, borderTop: "3px solid #3182ce" }}>
               <div style={{ fontSize: 32, fontWeight: 800, color: "#3182ce" }}>{SDG_SDOH_LINKS.length}</div>
               <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>SDG-SDOH Links</div>
-              <div style={{ fontSize: 11, color: "#5a6b7f", marginTop: 2 }}>Cross-system connections to formalize</div>
+              <div style={{ fontSize: 11, color: "#8b8178", marginTop: 2 }}>Cross-system connections to formalize</div>
             </div>
-            <div style={{ padding: 16, background: "#1a2332", borderRadius: 12, borderTop: "3px solid #d69e2e" }}>
+            <div style={{ padding: 16, background: "#f5f1eb", borderRadius: 12, borderTop: "3px solid #d69e2e" }}>
               <div style={{ fontSize: 32, fontWeight: 800, color: "#d69e2e" }}>{crossEntityGapCount}</div>
               <div style={{ fontSize: 13, fontWeight: 600, marginTop: 2 }}>Cross-Entity Gaps</div>
-              <div style={{ fontSize: 11, color: "#5a6b7f", marginTop: 2 }}>Org, service, geography disconnects</div>
+              <div style={{ fontSize: 11, color: "#8b8178", marginTop: 2 }}>Org, service, geography disconnects</div>
             </div>
           </div>
 
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #ef444430", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #ef444430", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#ef4444" }}>Missing Bridges Between Pathways</h3>
             <div style={{ display: "grid", gap: 8 }}>
               {MISSING_BRIDGES.map((b, i) => (
-                <div key={i} style={{ padding: "12px 14px", background: "#0f1419", borderRadius: 8, border: "1px solid #ef444420" }}>
+                <div key={i} style={{ padding: "12px 14px", background: "#ffffff", borderRadius: 8, border: "1px solid #ef444420" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                     <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[b.a].color + "20", color: THEMES[b.a].color }}>{THEMES[b.a].emoji} {THEMES[b.a].name}</span>
                     <span style={{ color: "#ef4444", fontSize: 14 }}>⟷</span>
                     <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[b.b].color + "20", color: THEMES[b.b].color }}>{THEMES[b.b].emoji} {THEMES[b.b].name}</span>
                   </div>
-                  <div style={{ fontSize: 12, color: "#8b9baf" }}>{b.reason}</div>
+                  <div style={{ fontSize: 12, color: "#6b6157" }}>{b.reason}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #f59e0b30", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #f59e0b30", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#f59e0b" }}>Missing Center Connections</h3>
             {MISSING_CENTER_EDGES.map((e, i) => (
-              <div key={i} style={{ padding: "12px 14px", background: "#0f1419", borderRadius: 8, border: "1px solid #f59e0b20", marginBottom: 8 }}>
+              <div key={i} style={{ padding: "12px 14px", background: "#ffffff", borderRadius: 8, border: "1px solid #f59e0b20", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
                   <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[e.pw].color + "20", color: THEMES[e.pw].color }}>{THEMES[e.pw].emoji} {THEMES[e.pw].name}</span>
                   <span style={{ color: "#f59e0b" }}>→</span>
                   <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: CENTERS[e.c].color + "20", color: CENTERS[e.c].color }}>{CENTERS[e.c].emoji} {e.c}</span>
                   <span style={{ padding: "2px 6px", borderRadius: 6, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>0 items</span>
                 </div>
-                <div style={{ fontSize: 12, color: "#8b9baf" }}>{e.reason}</div>
+                <div style={{ fontSize: 12, color: "#6b6157" }}>{e.reason}</div>
               </div>
             ))}
           </div>
 
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #3182ce30", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #3182ce30", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#3182ce" }}>SDG ↔ SDOH Cross-links to Formalize</h3>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {SDG_SDOH_LINKS.map((link, i) => (
-                <div key={i} style={{ padding: "10px 12px", background: "#0f1419", borderRadius: 8 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#8b9baf", marginBottom: 4 }}>{link.label}</div>
+                <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#6b6157", marginBottom: 4 }}>{link.label}</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                    <div style={{ flex: 1, height: 3, borderRadius: 2, background: "#1a2332" }}>
+                    <div style={{ flex: 1, height: 3, borderRadius: 2, background: "#f5f1eb" }}>
                       <div style={{ width: `${link.strength * 10}%`, height: "100%", borderRadius: 2, background: "#3182ce" }} />
                     </div>
                     <span style={{ fontSize: 9, color: "#3182ce", fontWeight: 700 }}>{link.strength}/10</span>
@@ -1731,15 +1734,15 @@ export default function KnowledgeGraphClient() {
 
           {/* Cross-Entity Gap Analysis */}
           {orgsNoGeo.length > 0 && (
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #d69e2e30", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #d69e2e30", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#d69e2e" }}>Org → Geography Gaps</h3>
-            <p style={{ fontSize: 12, color: "#5a6b7f", margin: "0 0 10px" }}>Organizations with no neighborhood assignment — cannot trace service coverage geographically.</p>
+            <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Organizations with no neighborhood assignment — cannot trace service coverage geographically.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {orgsNoGeo.map((org, i) => (
-                <div key={i} style={{ padding: "10px 12px", background: "#0f1419", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: org.color }}>{org.name}</div>
-                    <div style={{ fontSize: 10, color: "#5a6b7f" }}>{org.domain} · {org.themes.length} pathways</div>
+                    <div style={{ fontSize: 10, color: "#8b8178" }}>{org.domain} · {org.themes.length} pathways</div>
                   </div>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#d69e2e20", color: "#d69e2e" }}>no geo</span>
                 </div>
@@ -1749,12 +1752,12 @@ export default function KnowledgeGraphClient() {
           )}
 
           {ringsNoOrg.length > 0 && (
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #10b98130", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #10b98130", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#10b981" }}>Ring → Org Gaps</h3>
-            <p style={{ fontSize: 12, color: "#5a6b7f", margin: "0 0 10px" }}>Content rings with no organization connections.</p>
+            <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Content rings with no organization connections.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {ringsNoOrg.map((ring, i) => (
-                <div key={i} style={{ padding: "10px 12px", background: "#0f1419", borderRadius: 8, display: "flex", alignItems: "center", gap: 8 }}>
+                <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8, display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: ring.color + "20", color: ring.color }}>{ring.icon} {ring.name} ({ring.count})</span>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>no orgs</span>
                 </div>
@@ -1764,14 +1767,14 @@ export default function KnowledgeGraphClient() {
           )}
 
           {lifeSitsNoOrg.length > 0 && (
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #10b98130", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #10b98130", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#10b981" }}>Life Situation → Org Gaps</h3>
-            <p style={{ fontSize: 12, color: "#5a6b7f", margin: "0 0 10px" }}>Life situations with no serving organization.</p>
+            <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Life situations with no serving organization.</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {lifeSitsNoOrg.map((sit, i) => (
-                <div key={i} style={{ padding: "6px 10px", background: "#0f1419", borderRadius: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                <div key={i} style={{ padding: "6px 10px", background: "#ffffff", borderRadius: 8, display: "flex", alignItems: "center", gap: 6 }}>
                   <span style={{ fontSize: 12 }}>{sit.emoji}</span>
-                  <span style={{ fontSize: 11, color: "#8b9baf" }}>{sit.name}</span>
+                  <span style={{ fontSize: 11, color: "#6b6157" }}>{sit.name}</span>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>no orgs</span>
                 </div>
               ))}
@@ -1780,15 +1783,15 @@ export default function KnowledgeGraphClient() {
           )}
 
           {orgsNoSituations.length > 0 && (
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #dd6b2030", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #dd6b2030", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#dd6b20" }}>Org → Life Situation Gaps</h3>
-            <p style={{ fontSize: 12, color: "#5a6b7f", margin: "0 0 10px" }}>Organizations with no life situation connections — cannot trace who they serve.</p>
+            <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Organizations with no life situation connections — cannot trace who they serve.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {orgsNoSituations.map((org, i) => (
-                <div key={i} style={{ padding: "10px 12px", background: "#0f1419", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: org.color }}>{org.name}</div>
-                    <div style={{ fontSize: 10, color: "#5a6b7f" }}>{org.domain}</div>
+                    <div style={{ fontSize: 10, color: "#8b8178" }}>{org.domain}</div>
                   </div>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#dd6b2020", color: "#dd6b20" }}>no sits</span>
                 </div>
@@ -1798,17 +1801,17 @@ export default function KnowledgeGraphClient() {
           )}
 
           {lowServiceGeos.length > 0 && (
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #d69e2e30", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #d69e2e30", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#d69e2e" }}>Geography → Service Coverage Gaps</h3>
-            <p style={{ fontSize: 12, color: "#5a6b7f", margin: "0 0 10px" }}>Neighborhoods with low service density — 2 or fewer life situations connected.</p>
+            <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Neighborhoods with low service density — 2 or fewer life situations connected.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {lowServiceGeos.map((geo, i) => (
-                <div key={i} style={{ padding: "10px 12px", background: "#0f1419", borderRadius: 8 }}>
+                <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                     <span style={{ fontSize: 12, fontWeight: 600, color: "#d69e2e" }}>🏘️ {geo.name}</span>
                     <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>{geo.situations.length} sits</span>
                   </div>
-                  <div style={{ fontSize: 10, color: "#5a6b7f" }}>ZIPs: {geo.zips.join(", ")} · pop. {geo.population.toLocaleString()}</div>
+                  <div style={{ fontSize: 10, color: "#8b8178" }}>ZIPs: {geo.zips.join(", ")} · pop. {geo.population.toLocaleString()}</div>
                 </div>
               ))}
             </div>
@@ -1816,15 +1819,15 @@ export default function KnowledgeGraphClient() {
           )}
 
           {orgsNoSdoh.length > 0 && (
-          <div style={{ padding: 18, background: "#1a2332", borderRadius: 12, border: "1px solid #805ad530", marginBottom: 16 }}>
+          <div style={{ padding: 18, background: "#f5f1eb", borderRadius: 12, border: "1px solid #805ad530", marginBottom: 16 }}>
             <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#805ad5" }}>Org → SDOH Gaps</h3>
-            <p style={{ fontSize: 12, color: "#5a6b7f", margin: "0 0 10px" }}>Organizations missing health domain linkage — cannot assess health impact.</p>
+            <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Organizations missing health domain linkage — cannot assess health impact.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {orgsNoSdoh.map((org, i) => (
-                <div key={i} style={{ padding: "10px 12px", background: "#0f1419", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: org.color }}>{org.name}</div>
-                    <div style={{ fontSize: 10, color: "#5a6b7f" }}>{org.domain}</div>
+                    <div style={{ fontSize: 10, color: "#8b8178" }}>{org.domain}</div>
                   </div>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#805ad520", color: "#805ad5" }}>no SDOH</span>
                 </div>
@@ -1836,7 +1839,7 @@ export default function KnowledgeGraphClient() {
         );
       })()}
 
-      <div style={{ padding: "14px 28px", borderTop: "1px solid #1a2332", display: "flex", justifyContent: "space-between", color: "#3d4f63", fontSize: 11 }}>
+      <div style={{ padding: "14px 28px", borderTop: "1px solid #f5f1eb", display: "flex", justifyContent: "space-between", color: "#9a918a", fontSize: 11 }}>
         <span>The Change Engine — Community Life, Organized</span>
         <span>Houston, TX · ~{TOTAL_DIMS}D mesh · v5</span>
       </div>
@@ -1846,8 +1849,8 @@ export default function KnowledgeGraphClient() {
 
 const zoomBtnStyle: React.CSSProperties = {
   width: 36, height: 36, borderRadius: 8,
-  background: "rgba(15, 20, 25, 0.85)", border: "1px solid #2a3441",
-  color: "#8b9baf", cursor: "pointer", fontSize: 18,
+  background: "rgba(255, 255, 255, 0.9)", border: "1px solid #e5e0d8",
+  color: "#6b6157", cursor: "pointer", fontSize: 18,
   display: "flex", alignItems: "center", justifyContent: "center",
   backdropFilter: "blur(8px)",
 };
