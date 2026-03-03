@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Search, MapPin, User, Vote } from 'lucide-react'
+import { Search, MapPin, User, Vote, Landmark, Star, Home, Building2 } from 'lucide-react'
 import Link from 'next/link'
 import { VotingLocationsMap } from './VotingLocationsMap'
 
@@ -55,10 +55,10 @@ function levelColor(level: string | null): string {
 }
 
 export function ZipLookupForm() {
-  var [zip, setZip] = useState('')
-  var [results, setResults] = useState<LookupResults | null>(null)
-  var [loading, setLoading] = useState(false)
-  var [error, setError] = useState('')
+  const [zip, setZip] = useState('')
+  const [results, setResults] = useState<LookupResults | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault()
@@ -68,10 +68,10 @@ export function ZipLookupForm() {
     setResults(null)
 
     try {
-      var supabase = createClient()
+      const supabase = createClient()
 
       // Step 1: Get district info
-      var { data: zipData } = await supabase
+      const { data: zipData } = await supabase
         .from('zip_codes')
         .select('*')
         .eq('zip_code', parseInt(zip))
@@ -80,26 +80,26 @@ export function ZipLookupForm() {
       if (!zipData) { setError('ZIP code not found in our database'); setLoading(false); return }
 
       // Step 2: Find matching officials
-      var districts = [
+      const districts = [
         zipData.congressional_district,
         zipData.state_senate_district,
         zipData.state_house_district,
         'TX',
       ].filter(Boolean)
 
-      var filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+      let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
       filterParts += ',level.eq.City'
       if (zipData.county_id) {
         filterParts += ',counties_served.like.%' + zipData.county_id + '%'
       }
 
-      var { data: officials } = await supabase
+      const { data: officials } = await supabase
         .from('elected_officials')
         .select('*')
         .or(filterParts)
 
-      var all = officials || []
-      var grouped: LookupResults = {
+      const all = officials || []
+      const grouped: LookupResults = {
         federal: all.filter(function (o) { return o.level === 'Federal' }),
         state: all.filter(function (o) { return o.level === 'State' }),
         county: all.filter(function (o) { return o.level === 'County' }),
@@ -110,7 +110,7 @@ export function ZipLookupForm() {
 
       // Step 3: Neighborhood lookup
       if (zipData.neighborhood_id != null) {
-        var { data: hood } = await supabase
+        const { data: hood } = await supabase
           .from('neighborhoods')
           .select('*')
           .eq('neighborhood_id', zipData.neighborhood_id.toString())
@@ -119,7 +119,7 @@ export function ZipLookupForm() {
       }
 
       // Step 4: Voting locations
-      var { data: locations } = await supabase
+      const { data: locations } = await supabase
         .from('voting_locations')
         .select('*')
         .eq('zip_code', parseInt(zip))
@@ -216,10 +216,12 @@ export function ZipLookupForm() {
 
 function renderGroup(title: string, officials: Official[]) {
   if (officials.length === 0) return null
-  var emoji = title.indexOf('Federal') !== -1 ? '🏛️' : title.indexOf('State') !== -1 ? '⭐' : title.indexOf('County') !== -1 ? '🏘️' : '🏙️'
+  const LevelIcon = title.indexOf('Federal') !== -1 ? Landmark : title.indexOf('State') !== -1 ? Star : title.indexOf('County') !== -1 ? Home : Building2
   return (
     <div>
-      <h3 className="text-lg font-bold text-brand-text mb-3">{emoji} {title}</h3>
+      <h3 className="text-lg font-bold text-brand-text mb-3 flex items-center gap-2">
+        <LevelIcon size={20} /> {title}
+      </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {officials.map(function (o) {
           return (

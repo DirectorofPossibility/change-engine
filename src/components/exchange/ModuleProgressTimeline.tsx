@@ -36,30 +36,30 @@ interface ModuleProgressTimelineProps {
 
 function contentIcon(type: string | null) {
   if (!type) return <BookOpen size={14} />
-  var t = type.toLowerCase()
+  const t = type.toLowerCase()
   if (t.indexOf('video') !== -1) return <Video size={14} />
   if (t.indexOf('article') !== -1 || t.indexOf('text') !== -1) return <FileText size={14} />
   return <BookOpen size={14} />
 }
 
 export function ModuleProgressTimeline({ modules, pathId, userId, initialProgress, badgeId, badgeName }: ModuleProgressTimelineProps) {
-  var [progress, setProgress] = useState<Record<string, string>>(function () {
-    var map: Record<string, string> = {}
+  const [progress, setProgress] = useState<Record<string, string>>(function () {
+    const map: Record<string, string> = {}
     initialProgress.forEach(function (p) {
       if (p.module_id) map[p.module_id] = p.status || 'not_started'
     })
     return map
   })
-  var [updating, setUpdating] = useState<string | null>(null)
-  var [pathCompleted, setPathCompleted] = useState(false)
+  const [updating, setUpdating] = useState<string | null>(null)
+  const [pathCompleted, setPathCompleted] = useState(false)
 
   async function handleStartModule(moduleId: string) {
     setUpdating(moduleId)
-    var supabase = createClient()
-    var now = new Date().toISOString()
-    var progressId = 'PROG-' + userId.substring(0, 8) + '-' + moduleId.substring(0, 8)
+    const supabase = createClient()
+    const now = new Date().toISOString()
+    const progressId = 'PROG-' + userId.substring(0, 8) + '-' + moduleId.substring(0, 8)
 
-    var { error } = await supabase.from('user_progress').upsert({
+    const { error } = await supabase.from('user_progress').upsert({
       progress_id: progressId,
       user_id: userId,
       path_id: pathId,
@@ -72,7 +72,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
 
     if (!error) {
       setProgress(function (prev) {
-        var next = Object.assign({}, prev)
+        const next = Object.assign({}, prev)
         next[moduleId] = 'in_progress'
         return next
       })
@@ -82,11 +82,11 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
 
   async function handleCompleteModule(moduleId: string) {
     setUpdating(moduleId)
-    var supabase = createClient()
-    var now = new Date().toISOString()
-    var progressId = 'PROG-' + userId.substring(0, 8) + '-' + moduleId.substring(0, 8)
+    const supabase = createClient()
+    const now = new Date().toISOString()
+    const progressId = 'PROG-' + userId.substring(0, 8) + '-' + moduleId.substring(0, 8)
 
-    var { error } = await supabase.from('user_progress').upsert({
+    const { error } = await supabase.from('user_progress').upsert({
       progress_id: progressId,
       user_id: userId,
       path_id: pathId,
@@ -98,12 +98,12 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
     }, { onConflict: 'progress_id' })
 
     if (!error) {
-      var newProgress = Object.assign({}, progress)
+      const newProgress = Object.assign({}, progress)
       newProgress[moduleId] = 'completed'
       setProgress(newProgress)
 
       // Check if all modules now completed
-      var allComplete = modules.every(function (m) {
+      const allComplete = modules.every(function (m) {
         return newProgress[m.moduleId] === 'completed'
       })
 
@@ -116,7 +116,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
   }
 
   async function awardBadge(supabase: any, now: string) {
-    var userBadgeId = 'UB-' + userId.substring(0, 8) + '-' + (badgeId || '').substring(0, 8)
+    const userBadgeId = 'UB-' + userId.substring(0, 8) + '-' + (badgeId || '').substring(0, 8)
     await supabase.from('user_badges').upsert({
       user_badge_id: userBadgeId,
       user_id: userId,
@@ -128,7 +128,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
     }, { onConflict: 'user_badge_id' })
   }
 
-  var completedCount = modules.filter(function (m) { return progress[m.moduleId] === 'completed' }).length
+  const completedCount = modules.filter(function (m) { return progress[m.moduleId] === 'completed' }).length
 
   return (
     <div>
@@ -161,8 +161,8 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
       {/* Module timeline */}
       <div className="space-y-0">
         {modules.map(function (mod, index) {
-          var status = progress[mod.moduleId] || 'not_started'
-          var isUpdating = updating === mod.moduleId
+          const status = progress[mod.moduleId] || 'not_started'
+          const isUpdating = updating === mod.moduleId
 
           return (
             <div key={mod.moduleId} className="relative pl-10 pb-8 last:pb-0">

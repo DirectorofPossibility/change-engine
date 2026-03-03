@@ -3,11 +3,11 @@ import { THEMES } from '@/lib/constants'
 import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  var supabase = await createClient()
-  var baseUrl = 'https://www.changeengine.us'
+  const supabase = await createClient()
+  const baseUrl = 'https://www.changeengine.us'
 
   // Static pages
-  var staticPages = [
+  const staticPages = [
     '', '/pathways', '/help', '/officials', '/officials/lookup',
     '/elections', '/services', '/learn', '/search', '/policies',
   ].map(function (path) {
@@ -20,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
 
   // Pathway pages
-  var pathwayPages = Object.values(THEMES).map(function (t) {
+  const pathwayPages = Object.values(THEMES).map(function (t) {
     return {
       url: baseUrl + '/pathways/' + t.slug,
       lastModified: new Date(),
@@ -30,11 +30,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
 
   // Content pages
-  var { data: content } = await supabase
+  const { data: content } = await supabase
     .from('content_published')
     .select('id, published_at')
     .eq('is_active', true)
-  var contentPages = (content || []).map(function (c) {
+  const contentPages = (content || []).map(function (c) {
     return {
       url: baseUrl + '/content/' + c.id,
       lastModified: c.published_at ? new Date(c.published_at) : new Date(),
@@ -44,10 +44,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
 
   // Official pages
-  var { data: officials } = await supabase
+  const { data: officials } = await supabase
     .from('elected_officials')
     .select('official_id')
-  var officialPages = (officials || []).map(function (o) {
+  const officialPages = (officials || []).map(function (o) {
     return {
       url: baseUrl + '/officials/' + o.official_id,
       lastModified: new Date(),
@@ -57,10 +57,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
 
   // Life situation pages
-  var { data: situations } = await supabase
+  const { data: situations } = await supabase
     .from('life_situations')
     .select('situation_slug')
-  var helpPages = (situations || []).map(function (s) {
+  const helpPages = (situations || []).map(function (s) {
     return {
       url: baseUrl + '/help/' + s.situation_slug,
       lastModified: new Date(),
@@ -70,11 +70,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
 
   // Service pages
-  var { data: services } = await supabase
+  const { data: services } = await supabase
     .from('services_211')
     .select('service_id')
     .eq('is_active', 'Yes')
-  var servicePages = (services || []).map(function (s) {
+  const servicePages = (services || []).map(function (s) {
     return {
       url: baseUrl + '/services/' + s.service_id,
       lastModified: new Date(),
@@ -84,10 +84,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   })
 
   // Policy pages
-  var { data: policies } = await supabase
+  const { data: policies } = await supabase
     .from('policies')
     .select('policy_id')
-  var policyPages = (policies || []).map(function (p) {
+  const policyPages = (policies || []).map(function (p) {
     return {
       url: baseUrl + '/policies/' + p.policy_id,
       lastModified: new Date(),

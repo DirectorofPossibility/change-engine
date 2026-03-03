@@ -9,7 +9,20 @@ import { SlidePanel } from '@/components/ui/SlidePanel'
 import { approveItem, rejectItem } from './actions'
 import type { AiClassification } from '@/lib/types/dashboard'
 
-type ReviewItem = any // from Supabase join query
+/** Review queue item from the Supabase join between content_review_queue and content_inbox. */
+interface ReviewItem {
+  id: string
+  inbox_id: string | null
+  review_status: string | null
+  confidence: number | null
+  ai_classification: unknown
+  created_at: string | null
+  content_inbox?: {
+    title: string | null
+    source_domain: string | null
+    source_url: string | null
+  } | null
+}
 
 const STATUS_TABS = ['all', 'pending', 'flagged', 'auto_approved', 'rejected'] as const
 
@@ -22,20 +35,20 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
 
   const filtered = activeTab === 'all'
     ? items
-    : items.filter((i: any) => i.review_status === activeTab)
+    : items.filter((i: ReviewItem) => i.review_status === activeTab)
 
   const tabCounts: Record<string, number> = {
     all: items.length,
-    pending: items.filter((i: any) => i.review_status === 'pending').length,
-    flagged: items.filter((i: any) => i.review_status === 'flagged').length,
-    auto_approved: items.filter((i: any) => i.review_status === 'auto_approved').length,
-    rejected: items.filter((i: any) => i.review_status === 'rejected').length,
+    pending: items.filter((i: ReviewItem) => i.review_status === 'pending').length,
+    flagged: items.filter((i: ReviewItem) => i.review_status === 'flagged').length,
+    auto_approved: items.filter((i: ReviewItem) => i.review_status === 'auto_approved').length,
+    rejected: items.filter((i: ReviewItem) => i.review_status === 'rejected').length,
   }
 
   const classification = selected?.ai_classification as AiClassification | null
 
   async function handleApprove() {
-    if (!selected || !classification) return
+    if (!selected || !classification || !selected.inbox_id) return
     setActing(true)
     await approveItem(selected.id, selected.inbox_id, classification)
     setSelected(null)
@@ -90,7 +103,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
             </tr>
           </thead>
           <tbody>
-            {filtered.map((item: any) => {
+            {filtered.map((item: ReviewItem) => {
               const c = item.ai_classification as AiClassification | null
               return (
                 <tr

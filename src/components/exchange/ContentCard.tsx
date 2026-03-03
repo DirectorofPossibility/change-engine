@@ -17,7 +17,6 @@ import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { useTranslation } from '@/lib/i18n'
 import { FocusAreaPills } from './FocusAreaPills'
-import { THEMES } from '@/lib/constants'
 
 /** Gradient color pairs keyed by pathway ID for placeholder card images. */
 const PATHWAY_GRADIENTS: Record<string, { from: string; to: string }> = {
@@ -73,8 +72,6 @@ export function ContentCard({
   const displayTitle = translatedTitle || title
   const displaySummary = translatedSummary || summary
   const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
-  const themeConfig = pathway ? THEMES[pathway as keyof typeof THEMES] : null
-
   return (
     <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
       {/* TODO: Replace with real Houston photography */}
@@ -112,12 +109,6 @@ export function ContentCard({
             <rect x="340" y="40" width="15" height="40"/>
             <rect x="360" y="35" width="18" height="45"/>
           </svg>
-          {/* Pathway emoji overlay */}
-          {themeConfig && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-4xl opacity-30">{themeConfig.emoji}</span>
-            </div>
-          )}
         </div>
       )}
       <div className="p-5">

@@ -18,8 +18,8 @@ export function BallotItemCard({
   name, itemType, description, forArgument, againstArgument,
   fiscalImpact, passed, voteForPct,
 }: BallotItemCardProps) {
-  var [showFor, setShowFor] = useState(false)
-  var [showAgainst, setShowAgainst] = useState(false)
+  const [showFor, setShowFor] = useState(false)
+  const [showAgainst, setShowAgainst] = useState(false)
 
   return (
     <div className="bg-white rounded-xl border border-brand-border p-4">

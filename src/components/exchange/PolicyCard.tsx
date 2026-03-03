@@ -16,7 +16,7 @@ interface PolicyCardProps {
 
 function statusColor(status: string | null): string {
   if (!status) return 'bg-gray-100 text-gray-600'
-  var s = status.toLowerCase()
+  const s = status.toLowerCase()
   if (s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-100 text-green-700'
   if (s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-yellow-100 text-yellow-700'
   if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-100 text-red-700'

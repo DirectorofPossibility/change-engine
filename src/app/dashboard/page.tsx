@@ -16,6 +16,7 @@
  */
 
 import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog } from '@/lib/data/dashboard'
+import { Inbox, Search, CheckCircle, Globe } from 'lucide-react'
 import { StatsCard } from '@/components/ui/StatsCard'
 import { PipelineFlow } from '@/components/ui/PipelineFlow'
 import { ThemePill } from '@/components/ui/ThemePill'
@@ -38,10 +39,10 @@ export default async function DashboardPage() {
 
       {/* ── Stats Row ── */}
       <div className="grid grid-cols-4 gap-4">
-        <StatsCard label="Total Ingested" value={stats.totalIngested} icon="📥" />
-        <StatsCard label="Needs Review" value={stats.needsReview} icon="🔍" />
-        <StatsCard label="Published" value={stats.published} icon="✅" />
-        <StatsCard label="Translated" value={stats.translated} icon="🌐" />
+        <StatsCard label="Total Ingested" value={stats.totalIngested} icon={<Inbox size={28} />} />
+        <StatsCard label="Needs Review" value={stats.needsReview} icon={<Search size={28} />} />
+        <StatsCard label="Published" value={stats.published} icon={<CheckCircle size={28} />} />
+        <StatsCard label="Translated" value={stats.translated} icon={<Globe size={28} />} />
       </div>
 
       {/* ── Pipeline Flow ── */}

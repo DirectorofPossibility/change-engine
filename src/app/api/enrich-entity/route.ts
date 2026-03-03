@@ -261,10 +261,18 @@ Classify this ${config.entityType} into the knowledge graph. Return JSON:
     _version: 'v3-entity-enrich',
   }
 
-  // Update the entity
-  const updateData: any = {
+  // Update the entity — code to theme, pathway, focus areas, and center
+  const updateData: Record<string, unknown> = {
     classification_v2: enrichedClassification,
     focus_area_ids: validFocusAreaIds.join(','),
+  }
+
+  // Write theme/pathway/center if the classification provides them
+  if (classification.theme_primary) {
+    updateData.theme_id = classification.theme_primary
+  }
+  if (classification.center) {
+    updateData.engagement_level = classification.center
   }
 
   // Map entity type to table name
@@ -275,6 +283,24 @@ Classify this ${config.entityType} into the knowledge graph. Return JSON:
   }
   const tblName = tableMap[config.entityType] || config.entityType + 's'
   await supaRest('PATCH', `${tblName}?${config.idCol}=eq.${entityId}`, updateData)
+
+  // Write to entity-specific focus area junction table
+  const junctionMap: Record<string, { table: string; idCol: string }> = {
+    elected_official: { table: 'official_focus_areas', idCol: 'official_id' },
+    policy: { table: 'policy_focus_areas', idCol: 'policy_id' },
+    organization: { table: 'organization_focus_areas', idCol: 'org_id' },
+  }
+  const junction = junctionMap[config.entityType]
+  if (junction) {
+    // Delete existing junctions then re-insert (idempotent)
+    await supaRest('DELETE', `${junction.table}?${junction.idCol}=eq.${entityId}`).catch(() => {})
+    for (const focusId of validFocusAreaIds) {
+      await supaRest('POST', junction.table, {
+        [junction.idCol]: entityId,
+        focus_id: focusId,
+      }).catch(() => {}) // Ignore duplicates
+    }
+  }
 
   return {
     success: true,

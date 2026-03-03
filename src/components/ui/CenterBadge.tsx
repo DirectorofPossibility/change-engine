@@ -1,8 +1,8 @@
-const CENTER_CONFIG: Record<string, { emoji: string; question: string }> = {
-  Learning:       { emoji: '📚', question: 'How can I understand?' },
-  Action:         { emoji: '✊', question: 'How can I help?' },
-  Resource:       { emoji: '📋', question: "What's available to me?" },
-  Accountability: { emoji: '🏛️', question: 'Who makes decisions?' },
+const CENTER_CONFIG: Record<string, { question: string }> = {
+  Learning:       { question: 'How can I understand?' },
+  Action:         { question: 'How can I help?' },
+  Resource:       { question: "What's available to me?" },
+  Accountability: { question: 'Who makes decisions?' },
 }
 
 interface CenterBadgeProps {
@@ -17,7 +17,6 @@ export function CenterBadge({ center, showQuestion = false }: CenterBadgeProps) 
 
   return (
     <span className="inline-flex items-center gap-1 text-xs">
-      <span>{config.emoji}</span>
       <span>{center}</span>
       {showQuestion && <span className="text-brand-muted">— {config.question}</span>}
     </span>

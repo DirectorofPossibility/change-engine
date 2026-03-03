@@ -19,7 +19,7 @@ interface ModuleTimelineProps {
 
 function contentIcon(type: string | null) {
   if (!type) return <BookOpen size={14} />
-  var t = type.toLowerCase()
+  const t = type.toLowerCase()
   if (t.indexOf('video') !== -1) return <Video size={14} />
   if (t.indexOf('article') !== -1 || t.indexOf('text') !== -1) return <FileText size={14} />
   return <BookOpen size={14} />

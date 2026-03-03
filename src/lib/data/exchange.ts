@@ -1010,3 +1010,255 @@ export async function getContentLifeSituationIds(contentId: string): Promise<str
     .eq('content_id', contentId)
   return (data ?? []).map(j => j.situation_id)
 }
+
+// ── Wayfinder data (braided feed, mesh traversal) ────────────────────
+
+/**
+ * Fetch all entity types connected to a pathway via focus areas.
+ * Returns content, officials, policies, and services that share focus areas
+ * belonging to the given theme. This powers the braided feed.
+ *
+ * @param themeId - Pathway ID (THEME_01..THEME_07)
+ * @param zipCode - Optional ZIP for geographic filtering of services
+ */
+export async function getPathwayBraidedFeed(themeId: string, zipCode?: string) {
+  const supabase = await createClient()
+
+  // Get focus areas for this pathway
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id, focus_area_name')
+    .eq('theme_id', themeId)
+  const focusIds = (focusAreas ?? []).map(f => f.focus_id)
+
+  if (focusIds.length === 0) {
+    return { content: [], officials: [], policies: [], services: [], focusAreas: [] }
+  }
+
+  // Parallel fetch: all entity types connected to these focus areas
+  const [contentJunctions, officialJunctions, policyJunctions, serviceJunctions] = await Promise.all([
+    supabase.from('content_focus_areas').select('content_id').in('focus_id', focusIds),
+    supabase.from('official_focus_areas').select('official_id').in('focus_id', focusIds),
+    supabase.from('policy_focus_areas').select('policy_id').in('focus_id', focusIds),
+    supabase.from('service_focus_areas').select('service_id').in('focus_id', focusIds),
+  ])
+
+  const contentIds = Array.from(new Set((contentJunctions.data ?? []).map(j => j.content_id)))
+  const officialIds = Array.from(new Set((officialJunctions.data ?? []).map(j => j.official_id)))
+  const policyIds = Array.from(new Set((policyJunctions.data ?? []).map(j => j.policy_id)))
+  const serviceIds = Array.from(new Set((serviceJunctions.data ?? []).map(j => j.service_id)))
+
+  // Fetch actual entities in parallel
+  const [content, officials, policies, services] = await Promise.all([
+    contentIds.length > 0
+      ? supabase
+          .from('content_published')
+          .select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_domain, published_at')
+          .eq('is_active', true)
+          .in('id', contentIds.slice(0, 50))
+          .order('published_at', { ascending: false })
+          .limit(20)
+      : Promise.resolve({ data: [] }),
+    officialIds.length > 0
+      ? supabase
+          .from('elected_officials')
+          .select('official_id, official_name, title, party, level, jurisdiction, description_5th_grade')
+          .in('official_id', officialIds.slice(0, 50))
+          .limit(10)
+      : Promise.resolve({ data: [] }),
+    policyIds.length > 0
+      ? supabase
+          .from('policies')
+          .select('policy_id, policy_name, summary_5th_grade, policy_type, level, status, bill_number')
+          .in('policy_id', policyIds.slice(0, 50))
+          .limit(10)
+      : Promise.resolve({ data: [] }),
+    serviceIds.length > 0
+      ? supabase
+          .from('services_211')
+          .select('service_id, service_name, description_5th_grade, org_id, phone, address, city, state, zip_code, website')
+          .eq('is_active', 'Yes')
+          .in('service_id', serviceIds.slice(0, 100))
+          .limit(20)
+      : Promise.resolve({ data: [] }),
+  ])
+
+  // If zipCode provided, filter services to that zip
+  let filteredServices = services.data ?? []
+  if (zipCode) {
+    filteredServices = filteredServices.filter(s => s.zip_code === zipCode)
+  }
+
+  return {
+    content: content.data ?? [],
+    officials: officials.data ?? [],
+    policies: policies.data ?? [],
+    services: filteredServices,
+    focusAreas: focusAreas ?? [],
+  }
+}
+
+/**
+ * Get pathway bridge connections: count of shared focus areas between pathways.
+ * Used to render connection lines between pathway circles.
+ */
+export async function getPathwayBridges(): Promise<Array<[string, string, number]>> {
+  const supabase = await createClient()
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id, theme_id')
+
+  if (!focusAreas) return []
+
+  // Build focus_id → theme_id map
+  const focusToTheme: Record<string, string> = {}
+  focusAreas.forEach(fa => { if (fa.theme_id) focusToTheme[fa.focus_id] = fa.theme_id })
+
+  // Get content that has multiple pathways via content_pathways junction
+  const { data: contentPathways } = await supabase
+    .from('content_pathways')
+    .select('content_id, theme_id')
+
+  if (!contentPathways) return []
+
+  // Count shared content between theme pairs
+  const contentThemes: Record<string, Set<string>> = {}
+  contentPathways.forEach(cp => {
+    if (!contentThemes[cp.content_id]) contentThemes[cp.content_id] = new Set()
+    contentThemes[cp.content_id].add(cp.theme_id)
+  })
+
+  const pairCounts: Record<string, number> = {}
+  Object.values(contentThemes).forEach(themes => {
+    const themeArr = Array.from(themes)
+    for (let i = 0; i < themeArr.length; i++) {
+      for (let j = i + 1; j < themeArr.length; j++) {
+        const key = [themeArr[i], themeArr[j]].sort().join('|')
+        pairCounts[key] = (pairCounts[key] || 0) + 1
+      }
+    }
+  })
+
+  return Object.entries(pairCounts)
+    .filter(([, count]) => count > 0)
+    .map(([key, count]) => {
+      const [a, b] = key.split('|')
+      return [a, b, count] as [string, string, number]
+    })
+    .sort((a, b) => b[2] - a[2])
+}
+
+/**
+ * Get the full entity profile with mesh connections for the wayfinder panel.
+ * Every entity type returns its focus areas + related entities from other types.
+ *
+ * @param entityType - 'content' | 'official' | 'policy' | 'service' | 'organization'
+ * @param entityId - The entity's primary key value
+ */
+export async function getEntityMeshProfile(entityType: string, entityId: string) {
+  const supabase = await createClient()
+
+  const emptyResult = { focusAreas: [] as Array<{ focus_id: string; focus_area_name: string; theme_id: string | null }>, relatedContent: [] as Array<{ id: string; title_6th_grade: string | null; center: string | null }>, relatedOfficials: [] as Array<{ official_id: string; official_name: string; title: string | null; level: string | null }>, relatedPolicies: [] as Array<{ policy_id: string; policy_name: string; status: string | null }>, relatedServices: [] as Array<{ service_id: string; service_name: string; org_id: string | null }> }
+
+  // Get this entity's focus areas by entity type
+  let focusIds: string[] = []
+  if (entityType === 'content') {
+    const { data } = await supabase.from('content_focus_areas').select('focus_id').eq('content_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'official') {
+    const { data } = await supabase.from('official_focus_areas').select('focus_id').eq('official_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'policy') {
+    const { data } = await supabase.from('policy_focus_areas').select('focus_id').eq('policy_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'service') {
+    const { data } = await supabase.from('service_focus_areas').select('focus_id').eq('service_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'organization') {
+    const { data } = await supabase.from('organization_focus_areas').select('focus_id').eq('org_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else {
+    return emptyResult
+  }
+
+  if (focusIds.length === 0) {
+    return emptyResult
+  }
+
+  // Get focus area names
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id, focus_area_name, theme_id')
+    .in('focus_id', focusIds)
+
+  // Find related entities through shared focus areas (excluding self)
+  const [contentJ, officialJ, policyJ, serviceJ] = await Promise.all([
+    entityType !== 'content'
+      ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] }),
+    entityType !== 'official'
+      ? supabase.from('official_focus_areas').select('official_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] }),
+    entityType !== 'policy'
+      ? supabase.from('policy_focus_areas').select('policy_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] }),
+    entityType !== 'service'
+      ? supabase.from('service_focus_areas').select('service_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] }),
+  ])
+
+  const relContentIds = Array.from(new Set((contentJ.data ?? []).map(j => j.content_id))).slice(0, 5)
+  const relOfficialIds = Array.from(new Set((officialJ.data ?? []).map(j => j.official_id))).slice(0, 5)
+  const relPolicyIds = Array.from(new Set((policyJ.data ?? []).map(j => j.policy_id))).slice(0, 5)
+  const relServiceIds = Array.from(new Set((serviceJ.data ?? []).map(j => j.service_id))).slice(0, 5)
+
+  const [relContent, relOfficials, relPolicies, relServices] = await Promise.all([
+    relContentIds.length > 0
+      ? supabase.from('content_published').select('id, title_6th_grade, center').eq('is_active', true).in('id', relContentIds)
+      : Promise.resolve({ data: [] }),
+    relOfficialIds.length > 0
+      ? supabase.from('elected_officials').select('official_id, official_name, title, level').in('official_id', relOfficialIds)
+      : Promise.resolve({ data: [] }),
+    relPolicyIds.length > 0
+      ? supabase.from('policies').select('policy_id, policy_name, status').in('policy_id', relPolicyIds)
+      : Promise.resolve({ data: [] }),
+    relServiceIds.length > 0
+      ? supabase.from('services_211').select('service_id, service_name, org_id').eq('is_active', 'Yes').in('service_id', relServiceIds)
+      : Promise.resolve({ data: [] }),
+  ])
+
+  return {
+    focusAreas: focusAreas ?? [],
+    relatedContent: relContent.data ?? [],
+    relatedOfficials: relOfficials.data ?? [],
+    relatedPolicies: relPolicies.data ?? [],
+    relatedServices: relServices.data ?? [],
+  }
+}
+
+/**
+ * Get topics (focus area names) for a pathway, used in sidebar topic pills.
+ */
+export async function getPathwayTopics(themeId: string): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('focus_areas')
+    .select('focus_area_name')
+    .eq('theme_id', themeId)
+    .order('focus_area_name')
+  return (data ?? []).map(fa => fa.focus_area_name)
+}
+
+/**
+ * Get all topic names across all pathways for the home state sidebar.
+ * Returns top topics by entity count.
+ */
+export async function getAllTopics(limit = 24): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('focus_areas')
+    .select('focus_area_name')
+    .order('focus_area_name')
+    .limit(limit)
+  return (data ?? []).map(fa => fa.focus_area_name)
+}

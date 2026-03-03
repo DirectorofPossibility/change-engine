@@ -2,7 +2,7 @@
  * @fileoverview Circular pathway browsing component for The Change Engine.
  *
  * Renders a single pathway as a clickable circle with the pathway's theme
- * color, an SVG image or emoji fallback, the pathway name, and an optional
+ * color, an SVG image, the pathway name, and an optional
  * resource count badge. Designed for the Yelp-style horizontal category
  * row on the homepage and pathways listing page.
  *
@@ -31,8 +31,6 @@ interface PathwayCircleProps {
   color: string
   /** URL slug used to build the pathway detail route. */
   slug: string
-  /** Emoji fallback if no SVG image is available. */
-  emoji: string
   /** Number of resources in this pathway, shown as a small badge. */
   count?: number
 }
@@ -46,7 +44,7 @@ interface PathwayCircleProps {
  *
  * @param props - {@link PathwayCircleProps}
  */
-export function PathwayCircle({ id, name, color, slug, emoji, count }: PathwayCircleProps) {
+export function PathwayCircle({ id, name, color, slug, count }: PathwayCircleProps) {
   const imageSrc = PATHWAY_IMAGES[id]
 
   return (
@@ -62,7 +60,7 @@ export function PathwayCircle({ id, name, color, slug, emoji, count }: PathwayCi
                      ring-2 ring-white ring-offset-2"
           style={{ backgroundColor: color }}
         >
-          {imageSrc ? (
+          {imageSrc && (
             <Image
               src={imageSrc}
               alt={name}
@@ -70,8 +68,6 @@ export function PathwayCircle({ id, name, color, slug, emoji, count }: PathwayCi
               height={96}
               className="w-full h-full object-cover"
             />
-          ) : (
-            <span className="text-3xl">{emoji}</span>
           )}
         </div>
         {/* Resource count badge */}

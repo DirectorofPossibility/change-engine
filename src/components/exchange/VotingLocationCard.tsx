@@ -18,7 +18,7 @@ export function VotingLocationCard({
   hoursEarlyVoting, hoursElectionDay,
   isAccessible, hasParking, transitAccessible, hasCurbside,
 }: VotingLocationCardProps) {
-  var fullAddress = [address, city].filter(Boolean).join(', ')
+  const fullAddress = [address, city].filter(Boolean).join(', ')
 
   return (
     <div className="bg-white rounded-xl border border-brand-border p-4">

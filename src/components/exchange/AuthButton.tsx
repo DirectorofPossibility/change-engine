@@ -7,13 +7,13 @@ import { User, LogOut, Settings, LayoutDashboard } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 export function AuthButton() {
-  var [user, setUser] = useState<any>(null)
-  var [open, setOpen] = useState(false)
-  var ref = useRef<HTMLDivElement>(null)
-  var router = useRouter()
+  const [user, setUser] = useState<{ email?: string } | null>(null)
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   useEffect(function () {
-    var supabase = createClient()
+    const supabase = createClient()
     supabase.auth.getUser().then(function ({ data }) {
       setUser(data.user)
     })
@@ -30,7 +30,7 @@ export function AuthButton() {
   }, [])
 
   async function handleSignOut() {
-    var supabase = createClient()
+    const supabase = createClient()
     await supabase.auth.signOut()
     setUser(null)
     setOpen(false)
@@ -49,7 +49,7 @@ export function AuthButton() {
     )
   }
 
-  var initial = user.email ? user.email.charAt(0).toUpperCase() : 'U'
+  const initial = user.email ? user.email.charAt(0).toUpperCase() : 'U'
 
   return (
     <div ref={ref} className="relative">

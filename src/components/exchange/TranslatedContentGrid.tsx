@@ -44,7 +44,7 @@ export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContent
 
   useEffect(function () {
     if (language !== 'en' && items.length > 0) {
-      var inboxIds = items
+      const inboxIds = items
         .map(function (item) { return item.inbox_id })
         .filter(function (id): id is string { return id != null })
       if (inboxIds.length > 0) {
@@ -63,8 +63,8 @@ export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContent
         </div>
       )}
       {items.map(function (item) {
-        var t = item.inbox_id ? translations[item.inbox_id] : undefined
-        var focusNames: string[] = []
+        const t = item.inbox_id ? translations[item.inbox_id] : undefined
+        let focusNames: string[] = []
         if (focusAreaMap && item.focus_area_ids) {
           focusNames = item.focus_area_ids
             .map(function (id) { return focusAreaMap[id] })
