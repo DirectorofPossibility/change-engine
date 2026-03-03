@@ -41,7 +41,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Search, Home, ChevronDown, ChevronRight, Menu, X } from 'lucide-react'
+import { Search, Home, ChevronDown, ChevronRight, Menu, X, Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe, HelpCircle, Compass, BookOpen } from 'lucide-react'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
@@ -77,12 +77,21 @@ interface WayfinderSidebarProps {
 
 // -- Constants --
 
-/** Static color assignments for the 4 Centers (no color in the CENTERS const). */
 const CENTER_COLORS: Record<string, string> = {
   Learning: '#3182ce',
   Action: '#38a169',
   Resource: '#d69e2e',
   Accountability: '#805ad5',
+}
+
+const PATHWAY_ICONS: Record<string, typeof Heart> = {
+  THEME_01: Heart,
+  THEME_02: Users,
+  THEME_03: MapPin,
+  THEME_04: Megaphone,
+  THEME_05: Wallet,
+  THEME_06: Leaf,
+  THEME_07: Globe,
 }
 
 // -- Component --
@@ -332,32 +341,59 @@ export function WayfinderSidebar({
         <p className="text-xs font-bold tracking-[0.12em] uppercase text-brand-muted mb-2">
           Explore Houston
         </p>
-        <div className="space-y-0.5">
+        <div className="space-y-1">
           {themeEntries.map(function ([id, theme]) {
             const isActive = selectedPathway === id
             const count = pathwayCounts[id] ?? 0
+            const Icon = PATHWAY_ICONS[id] || Globe
             return (
               <button
                 key={id}
                 onClick={function () { onSelectPathway(isActive ? null : id); closeMobile() }}
                 className={
-                  'flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm transition-colors ' +
+                  'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-150 ' +
                   (isActive
-                    ? 'bg-[#3D5A5A]/[0.07] font-bold text-brand-text'
-                    : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04]')
+                    ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
+                    : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-white/60')
                 }
               >
-                <span
-                  className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: theme.color }}
-                />
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: isActive ? theme.color + '20' : theme.color + '10' }}
+                >
+                  <Icon size={16} style={{ color: theme.color }} />
+                </div>
                 <span className="flex-1 text-left truncate">{theme.name}</span>
                 {count > 0 && (
-                  <span className="text-xs text-brand-muted tabular-nums">{count}</span>
+                  <span
+                    className="text-xs font-bold tabular-nums px-2 py-0.5 rounded-full"
+                    style={isActive ? { backgroundColor: theme.color + '15', color: theme.color } : {}}
+                  >
+                    {count}
+                  </span>
                 )}
               </button>
             )
           })}
+        </div>
+      </div>
+
+      {/* -- Quick Links -- */}
+      <div className="h-px bg-brand-border mx-5 my-2" />
+      <div className="px-5">
+        <div className="space-y-0.5">
+          <Link href="/help" onClick={closeMobile} className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04] transition-colors">
+            <HelpCircle size={15} />
+            I Need Help Now
+          </Link>
+          <Link href="/explore" onClick={closeMobile} className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04] transition-colors">
+            <Compass size={15} />
+            Browse Topics
+          </Link>
+          <Link href="/services" onClick={closeMobile} className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04] transition-colors">
+            <BookOpen size={15} />
+            Services Directory
+          </Link>
         </div>
       </div>
 

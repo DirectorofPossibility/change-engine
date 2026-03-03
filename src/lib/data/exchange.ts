@@ -1053,7 +1053,7 @@ export async function getPathwayBraidedFeed(themeId: string, zipCode?: string) {
     contentIds.length > 0
       ? supabase
           .from('content_published')
-          .select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_domain, published_at')
+          .select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_domain, published_at, image_url')
           .eq('is_active', true)
           .in('id', contentIds.slice(0, 50))
           .order('published_at', { ascending: false })

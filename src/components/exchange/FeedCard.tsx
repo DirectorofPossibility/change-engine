@@ -1,78 +1,57 @@
-/**
- * @fileoverview Polymorphic feed card for the Community Exchange wayfinder.
- *
- * Renders a compact card whose layout adapts based on the {@link FeedItem.type}:
- *   - **resource** — left color bar in the pathway color, center dot + name,
- *     title, summary, org name, and an "Open" link.
- *   - **official** — teal accent tint, SVG initials circle, "WHO DECIDES"
- *     label, name, role, and an optional relevance note.
- *   - **policy** — status-colored accent (green/amber/red), status badge pill,
- *     "POLICY" label, name, relevance note, and governing body.
- *
- * All cards respond to click events (typically opening a slide-over detail
- * panel in the parent) and feature a subtle hover lift animation.
- */
 'use client'
 
-import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronRight, BookOpen, Zap, Package, Scale } from 'lucide-react'
 
-// ── Types ────────────────────────────────────────────────────────────────
-
-/**
- * Unified feed item that can represent a resource, official, policy, or service.
- * Only the fields relevant to a given `type` need to be populated.
- */
 export interface FeedItem {
-  /** Discriminant — controls which card layout is rendered. */
   type: 'resource' | 'official' | 'policy' | 'service'
-  /** Unique identifier for the entity. */
   id: string
-  /** Primary display title. */
   title: string
-  /** Optional short summary or description. */
   summary?: string
-  /** For resources: the engagement center (Learning, Action, etc.). */
   center?: string
-  /** For resources/services: parent organization name. */
   orgName?: string
-  /** For officials: role or position title. */
   role?: string
-  /** For policies: current status (Active, Proposed, Failed). */
   status?: string
-  /** For policies: governing body that decides (e.g. "Houston City Council"). */
   body?: string
-  /** Contextual note explaining why this item appears in the current feed. */
   relevance?: string
-  /** Pathway accent color (hex) used for the left color bar on resource cards. */
   pathwayColor?: string
-  /** Link to the entity's detail page. */
+  imageUrl?: string
   href?: string
 }
 
-/**
- * Props accepted by {@link FeedCard}.
- */
 interface FeedCardProps {
-  /** The feed item to render. */
   item: FeedItem
-  /** Callback fired when the card is clicked (e.g. to open a detail panel). */
   onClick?: () => void
+  variant?: 'grid' | 'list'
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────
-
-/** Default accent color when no pathway color is provided. */
 const DEFAULT_ACCENT = '#8B7E74'
-
-/** Teal accent used for official cards (matches brand teal). */
 const TEAL = '#319795'
 
-/**
- * Maps a policy status string to its accent color.
- *
- * @param status - The policy status value.
- * @returns A hex color string: green for active, amber for proposed, red for failed.
- */
+const CENTER_ICONS: Record<string, typeof BookOpen> = {
+  Learning: BookOpen,
+  Action: Zap,
+  Resource: Package,
+  Accountability: Scale,
+}
+
+const CENTER_COLORS: Record<string, string> = {
+  Learning: '#3182ce',
+  Action: '#38a169',
+  Resource: '#d69e2e',
+  Accountability: '#805ad5',
+}
+
+const GRADIENT_PAIRS: Record<string, [string, string]> = {
+  THEME_01: ['#e53e3e', '#c53030'],
+  THEME_02: ['#dd6b20', '#c05621'],
+  THEME_03: ['#d69e2e', '#b7791f'],
+  THEME_04: ['#38a169', '#2f855a'],
+  THEME_05: ['#3182ce', '#2b6cb0'],
+  THEME_06: ['#319795', '#2c7a7b'],
+  THEME_07: ['#805ad5', '#6b46c1'],
+}
+
 function policyAccentColor(status?: string): string {
   if (!status) return DEFAULT_ACCENT
   const s = status.toLowerCase()
@@ -82,27 +61,15 @@ function policyAccentColor(status?: string): string {
   return DEFAULT_ACCENT
 }
 
-/**
- * Maps a policy status string to Tailwind background/text utility classes for a pill badge.
- *
- * @param status - The policy status value.
- * @returns A className string for the status badge.
- */
 function statusBadgeClasses(status?: string): string {
   if (!status) return 'bg-gray-100 text-gray-600'
   const s = status.toLowerCase()
-  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-100 text-green-700'
-  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-amber-100 text-amber-700'
-  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-100 text-red-700'
+  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-50 text-green-700 ring-1 ring-green-200'
+  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-50 text-red-700 ring-1 ring-red-200'
   return 'bg-gray-100 text-gray-600'
 }
 
-/**
- * Extracts up to two initials from a full name for the avatar circle.
- *
- * @param name - The person's full name.
- * @returns One or two uppercase initial characters.
- */
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/)
   if (parts.length === 0) return '?'
@@ -110,213 +77,175 @@ function getInitials(name: string): string {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
 }
 
-// ── Sub-components ───────────────────────────────────────────────────────
-
-/**
- * Resource card layout — left color bar, center dot, title, summary, org, and link.
- *
- * @param props.item - The resource-type {@link FeedItem}.
- */
-function ResourceLayout({ item }: { item: FeedItem }) {
+function ResourceCard({ item, variant }: { item: FeedItem; variant: 'grid' | 'list' }) {
   const accent = item.pathwayColor || DEFAULT_ACCENT
+  const CenterIcon = item.center ? CENTER_ICONS[item.center] : null
+  const centerColor = item.center ? CENTER_COLORS[item.center] : accent
 
+  if (variant === 'grid') {
+    return (
+      <div className="group bg-white rounded-2xl border border-brand-border overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200">
+        {/* Image area */}
+        <div className="relative h-44 overflow-hidden">
+          {item.imageUrl ? (
+            <img
+              src={item.imageUrl}
+              alt=""
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div
+              className="w-full h-full"
+              style={{ background: `linear-gradient(135deg, ${accent}20, ${accent}40)` }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+                  <circle cx="32" cy="32" r="30" fill={accent} opacity={0.15} />
+                  <circle cx="32" cy="32" r="20" fill={accent} opacity={0.2} />
+                  <circle cx="32" cy="32" r="10" fill={accent} opacity={0.3} />
+                </svg>
+              </div>
+            </div>
+          )}
+          {/* Gradient overlay at bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
+          {/* Center badge */}
+          {item.center && CenterIcon && (
+            <div
+              className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-white text-xs font-semibold backdrop-blur-sm"
+              style={{ backgroundColor: centerColor + 'CC' }}
+            >
+              <CenterIcon size={12} />
+              {item.center}
+            </div>
+          )}
+          {/* Source domain */}
+          {item.orgName && (
+            <div className="absolute bottom-2 left-3 text-white/90 text-xs font-medium truncate max-w-[80%]">
+              {item.orgName}
+            </div>
+          )}
+        </div>
+        {/* Content */}
+        <div className="p-4">
+          <h4 className="font-semibold text-brand-text leading-snug line-clamp-2 text-[15px]">
+            {item.title}
+          </h4>
+          {item.summary && (
+            <p className="text-sm text-brand-muted mt-1.5 leading-relaxed line-clamp-2">
+              {item.summary}
+            </p>
+          )}
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-brand-border/50">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: accent }} />
+              <span className="text-xs text-brand-muted">Explore</span>
+            </div>
+            <span className="text-xs font-semibold inline-flex items-center gap-0.5" style={{ color: accent }}>
+              Read more
+              <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // List variant
   return (
-    <div className="flex-1 min-w-0 p-4">
-      {/* Center dot + center name */}
-      {item.center && (
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <span
-            className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
-            style={{ backgroundColor: accent }}
+    <div className="group flex bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-[1px] transition-all duration-150">
+      {item.imageUrl && (
+        <div className="w-28 sm:w-36 flex-shrink-0 overflow-hidden">
+          <img
+            src={item.imageUrl}
+            alt=""
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <span className="text-xs uppercase tracking-wide text-brand-muted font-medium">
-            {item.center}
-          </span>
         </div>
       )}
-      <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">
-        {item.title}
-      </h4>
-      {item.summary && (
-        <p className="text-sm text-brand-muted mt-1 leading-relaxed line-clamp-2">
-          {item.summary}
-        </p>
-      )}
-      <div className="flex items-center justify-between mt-2">
-        {item.orgName && (
-          <span className="text-xs text-brand-muted truncate mr-2">{item.orgName}</span>
+      <div className="flex-1 min-w-0 p-4">
+        {item.center && CenterIcon && (
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <CenterIcon size={12} style={{ color: centerColor }} />
+            <span className="text-xs uppercase tracking-wide font-medium" style={{ color: centerColor }}>
+              {item.center}
+            </span>
+          </div>
         )}
-        <span className="text-sm font-semibold flex-shrink-0 inline-flex items-center gap-0.5" style={{ color: TEAL }}>
-          Open
-          <ChevronRight className="w-4 h-4" />
-        </span>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Official card layout — teal tint, SVG initials circle, label, name, and role.
- *
- * @param props.item - The official-type {@link FeedItem}.
- */
-function OfficialLayout({ item }: { item: FeedItem }) {
-  const initials = getInitials(item.title)
-
-  return (
-    <div className="flex-1 min-w-0 p-4 flex items-center gap-3">
-      {/* SVG initials circle */}
-      <svg
-        width="44"
-        height="44"
-        viewBox="0 0 44 44"
-        className="flex-shrink-0"
-        aria-hidden="true"
-      >
-        <circle cx="22" cy="22" r="22" fill={TEAL} opacity={0.15} />
-        <circle cx="22" cy="22" r="18" fill={TEAL} opacity={0.25} />
-        <text
-          x="22"
-          y="22"
-          textAnchor="middle"
-          dominantBaseline="central"
-          fontSize="14"
-          fontWeight="600"
-          fill={TEAL}
-        >
-          {initials}
-        </text>
-      </svg>
-      <div className="min-w-0 flex-1">
-        <span className="text-xs uppercase tracking-wide font-semibold block" style={{ color: TEAL }}>
-          Who Decides
-        </span>
-        <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-1">
-          {item.title}
-        </h4>
-        {item.role && (
-          <p className="text-sm text-brand-muted leading-snug line-clamp-1">{item.role}</p>
+        <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">{item.title}</h4>
+        {item.summary && (
+          <p className="text-sm text-brand-muted mt-1 leading-relaxed line-clamp-2">{item.summary}</p>
         )}
-        {item.relevance && (
-          <p className="text-xs text-brand-muted mt-0.5 italic line-clamp-1">{item.relevance}</p>
-        )}
-      </div>
-      <ChevronRight className="w-4 h-4 flex-shrink-0 text-brand-muted" />
-    </div>
-  )
-}
-
-/**
- * Policy card layout — status-colored tint, badge pill, label, name, and governing body.
- *
- * @param props.item - The policy-type {@link FeedItem}.
- */
-function PolicyLayout({ item }: { item: FeedItem }) {
-  const accent = policyAccentColor(item.status)
-
-  return (
-    <div className="flex-1 min-w-0 p-4">
-      <div className="flex items-center gap-2 mb-1.5">
-        <span className="text-xs uppercase tracking-wide font-semibold" style={{ color: accent }}>
-          Policy
-        </span>
-        {item.status && (
-          <span className={`text-xs px-2 py-0.5 rounded-full font-medium leading-none ${statusBadgeClasses(item.status)}`}>
-            {item.status}
+        <div className="flex items-center justify-between mt-2">
+          {item.orgName && <span className="text-xs text-brand-muted truncate mr-2">{item.orgName}</span>}
+          <span className="text-sm font-semibold flex-shrink-0 inline-flex items-center gap-0.5" style={{ color: accent }}>
+            Open <ChevronRight className="w-4 h-4" />
           </span>
-        )}
+        </div>
       </div>
-      <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">
-        {item.title}
-      </h4>
-      {item.relevance && (
-        <p className="text-xs text-brand-muted mt-1 italic line-clamp-1">{item.relevance}</p>
-      )}
-      <div className="flex items-center justify-between mt-1">
+    </div>
+  )
+}
+
+function OfficialCard({ item }: { item: FeedItem }) {
+  const initials = getInitials(item.title)
+  return (
+    <div className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-[1px] transition-all duration-150">
+      <div className="p-4 flex items-center gap-4">
+        <div className="w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: TEAL + '18' }}>
+          <span className="text-lg font-bold" style={{ color: TEAL }}>{initials}</span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <span className="text-xs uppercase tracking-wider font-bold block mb-0.5" style={{ color: TEAL }}>
+            Who Decides
+          </span>
+          <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-1">{item.title}</h4>
+          {item.role && <p className="text-sm text-brand-muted leading-snug line-clamp-1">{item.role}</p>}
+        </div>
+        <ChevronRight className="w-5 h-5 flex-shrink-0 text-brand-muted group-hover:text-brand-text transition-colors" />
+      </div>
+    </div>
+  )
+}
+
+function PolicyCard({ item }: { item: FeedItem }) {
+  const accent = policyAccentColor(item.status)
+  return (
+    <div className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-[1px] transition-all duration-150">
+      <div className="p-4" style={{ borderLeft: `4px solid ${accent}` }}>
+        <div className="flex items-center gap-2 mb-2">
+          <Scale size={14} style={{ color: accent }} />
+          <span className="text-xs uppercase tracking-wider font-bold" style={{ color: accent }}>Policy</span>
+          {item.status && (
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadgeClasses(item.status)}`}>
+              {item.status}
+            </span>
+          )}
+        </div>
+        <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">{item.title}</h4>
         {item.body && (
-          <p className="text-xs text-brand-muted">
+          <p className="text-xs text-brand-muted mt-1.5">
             Decided by: <span className="font-medium">{item.body}</span>
           </p>
         )}
-        <span className="text-sm font-semibold flex-shrink-0 inline-flex items-center gap-0.5 ml-auto" style={{ color: accent }}>
-          Open
-          <ChevronRight className="w-4 h-4" />
-        </span>
       </div>
     </div>
   )
 }
 
-// ── Main component ───────────────────────────────────────────────────────
-
-/**
- * Polymorphic feed card that renders a resource, official, or policy layout
- * based on the {@link FeedItem.type} discriminant.
- *
- * Cards have a white background, rounded corners, a left color bar (4 px
- * border-left), and a subtle lift-on-hover animation. Clicking the card
- * fires the `onClick` callback, which the parent typically uses to open a
- * slide-over detail panel.
- *
- * @param props.item - The feed item data. See {@link FeedItem}.
- * @param props.onClick - Optional click handler.
- *
- * @example
- * ```tsx
- * <FeedCard
- *   item={{ type: 'resource', id: '1', title: 'Food Bank', center: 'Resource', pathwayColor: '#e53e3e' }}
- *   onClick={() => openPanel('1')}
- * />
- * ```
- */
-export function FeedCard({ item, onClick }: FeedCardProps) {
-  /** Resolve the left bar accent color based on card type. */
-  const leftBarColor = (() => {
-    switch (item.type) {
-      case 'official':
-        return TEAL
-      case 'policy':
-        return policyAccentColor(item.status)
-      case 'resource':
-      case 'service':
-      default:
-        return item.pathwayColor || DEFAULT_ACCENT
-    }
-  })()
-
-  /** Resolve an optional tinted background for official/policy cards. */
-  const bgTint = (() => {
-    switch (item.type) {
-      case 'official':
-        return `${TEAL}08` // ~3 % opacity teal tint
-      case 'policy':
-        return `${policyAccentColor(item.status)}08`
-      default:
-        return undefined
-    }
-  })()
+export function FeedCard({ item, onClick, variant = 'list' }: FeedCardProps) {
+  const Wrapper = item.href ? Link : 'div'
+  const wrapperProps = item.href ? { href: item.href } : {}
 
   return (
-    <button
-      type="button"
+    <Wrapper
+      {...(wrapperProps as any)}
+      className="block cursor-pointer"
       onClick={onClick}
-      className="
-        w-full text-left flex bg-white rounded-xl border border-brand-border
-        overflow-hidden cursor-pointer
-        hover:-translate-y-[2px] hover:shadow-md
-        transition-all duration-150
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent
-      "
-      style={{
-        borderLeftWidth: '4px',
-        borderLeftColor: leftBarColor,
-        backgroundColor: bgTint,
-      }}
     >
-      {/* Render the type-specific layout */}
-      {(item.type === 'resource' || item.type === 'service') && <ResourceLayout item={item} />}
-      {item.type === 'official' && <OfficialLayout item={item} />}
-      {item.type === 'policy' && <PolicyLayout item={item} />}
-    </button>
+      {(item.type === 'resource' || item.type === 'service') && <ResourceCard item={item} variant={variant} />}
+      {item.type === 'official' && <OfficialCard item={item} />}
+      {item.type === 'policy' && <PolicyCard item={item} />}
+    </Wrapper>
   )
 }

@@ -47,7 +47,7 @@ export default async function HomePage() {
     getPathwayCounts(),
     getPathwayBridges(),
     getAllTopics(30),
-    getLatestContent(12),
+    getLatestContent(24),
   ])
 
   // Fetch braided feed for each pathway in parallel

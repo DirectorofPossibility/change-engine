@@ -1,89 +1,30 @@
-/**
- * @fileoverview Braided feed for the Community Exchange wayfinder.
- *
- * Takes arrays of different entity types (resources, officials, policies) and
- * interleaves them into a single unified feed using an opinionated braiding
- * algorithm:
- *
- *   1. Officials always lead ("Who Decides" — civic accountability first).
- *   2. Resources and policies alternate: 2 resources, then 1 policy, repeat.
- *   3. An optional center filter narrows which items are visible:
- *      - "Accountability" shows only officials + policies.
- *      - Any other center filters resources by matching `center` field.
- *
- * The component also renders center-filter chips at the top so users can
- * narrow the feed by engagement mode (Learning, Action, Resource, Accountability).
- *
- * @example
- * ```tsx
- * <BraidedFeed
- *   resources={resourceItems}
- *   officials={officialItems}
- *   policies={policyItems}
- *   pathwayColor="#e53e3e"
- *   onItemClick={(item) => openDetailPanel(item)}
- * />
- * ```
- */
 'use client'
 
 import { useState, useMemo } from 'react'
 import { FeedCard } from './FeedCard'
 import type { FeedItem } from './FeedCard'
+import { BookOpen, Zap, Package, Scale, LayoutGrid, List } from 'lucide-react'
 
-// Re-export the FeedItem type so consumers can import from either module.
 export type { FeedItem } from './FeedCard'
 
-// ── Constants ────────────────────────────────────────────────────────────
-
-/**
- * Center filter definitions.
- * Order matches the 4 Centers defined in {@link CENTERS} from `lib/constants.ts`,
- * plus an "All" option to reset filtering.
- */
 const CENTER_FILTERS = [
-  { key: null, label: 'All' },
-  { key: 'Learning', label: 'Learning' },
-  { key: 'Action', label: 'Action' },
-  { key: 'Resource', label: 'Resource' },
-  { key: 'Accountability', label: 'Accountability' },
+  { key: null, label: 'All', icon: null },
+  { key: 'Learning', label: 'Learning', icon: BookOpen },
+  { key: 'Action', label: 'Action', icon: Zap },
+  { key: 'Resource', label: 'Resource', icon: Package },
+  { key: 'Accountability', label: 'Accountability', icon: Scale },
 ] as const
 
-// ── Props ────────────────────────────────────────────────────────────────
-
-/**
- * Props accepted by {@link BraidedFeed}.
- */
 interface BraidedFeedProps {
-  /** Resource-type feed items (content or services). */
   resources: FeedItem[]
-  /** Official-type feed items (elected officials). */
   officials: FeedItem[]
-  /** Policy-type feed items. */
   policies: FeedItem[]
-  /** Optional externally-controlled center filter. When provided, overrides the internal chip state. */
   activeCenter?: string | null
-  /** Pathway accent color (hex) applied to resource card left bars. */
   pathwayColor?: string
-  /**
-   * Callback fired when a center chip is clicked under external control.
-   * When provided alongside `activeCenter`, chip clicks call this instead of
-   * the internal setter (which would be a no-op).
-   */
   onSelectCenter?: (center: string | null) => void
-  /** Callback fired when any card in the feed is clicked. */
   onItemClick?: (item: FeedItem) => void
 }
 
-// ── Helpers ──────────────────────────────────────────────────────────────
-
-/**
- * Counts how many resources match a given center key.
- *
- * @param resources - The full list of resource feed items.
- * @param center - The center key to match against, or `null` for all.
- * @returns The number of matching resources.
- */
 function countForCenter(
   resources: FeedItem[],
   officials: FeedItem[],
@@ -95,60 +36,23 @@ function countForCenter(
   return resources.filter((r) => r.center === center).length
 }
 
-/**
- * Braids officials, resources, and policies into a single ordered array.
- *
- * Algorithm:
- *   1. All officials appear first (civic accountability is the anchor).
- *   2. Resources and policies alternate: for every 2 resources, 1 policy
- *      is inserted. If one list runs out, the other fills the remainder.
- *
- * @param officials - Official feed items.
- * @param resources - Resource/service feed items (already filtered by center).
- * @param policies  - Policy feed items.
- * @returns A single interleaved array of {@link FeedItem}.
- */
 function braidItems(
   officials: FeedItem[],
   resources: FeedItem[],
   policies: FeedItem[],
 ): FeedItem[] {
   const result: FeedItem[] = []
-
-  // 1. Officials first
   result.push(...officials)
-
-  // 2. Interleave resources and policies (2 resources : 1 policy)
   let rIdx = 0
   let pIdx = 0
-
   while (rIdx < resources.length || pIdx < policies.length) {
-    // Take up to 2 resources
     const batch = Math.min(2, resources.length - rIdx)
-    for (let i = 0; i < batch; i++) {
-      result.push(resources[rIdx++])
-    }
-
-    // Take 1 policy
-    if (pIdx < policies.length) {
-      result.push(policies[pIdx++])
-    }
+    for (let i = 0; i < batch; i++) result.push(resources[rIdx++])
+    if (pIdx < policies.length) result.push(policies[pIdx++])
   }
-
   return result
 }
 
-// ── Component ────────────────────────────────────────────────────────────
-
-/**
- * Braided feed component that interleaves resources, officials, and policies
- * into a single, filterable feed for the Community Exchange wayfinder.
- *
- * Renders center-filter chips at the top, a descriptive hint line, and then
- * the braided list of {@link FeedCard} components in a vertical flex column.
- *
- * @param props - {@link BraidedFeedProps}
- */
 export function BraidedFeed({
   resources,
   officials,
@@ -158,24 +62,15 @@ export function BraidedFeed({
   onSelectCenter,
   onItemClick,
 }: BraidedFeedProps) {
-  /** Internal center-filter state (overridden when `activeCenter` is passed). */
   const [internalCenter, setInternalCenter] = useState<string | null>(null)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const activeCenter = externalCenter !== undefined ? externalCenter : internalCenter
 
-  /**
-   * Stamp every resource item with the pathway color so FeedCard can use it
-   * for the left border accent. Memoized to avoid re-creating on every render.
-   */
   const coloredResources = useMemo(
-    () =>
-      resources.map((r) => ({
-        ...r,
-        pathwayColor: r.pathwayColor || pathwayColor,
-      })),
+    () => resources.map((r) => ({ ...r, pathwayColor: r.pathwayColor || pathwayColor })),
     [resources, pathwayColor],
   )
 
-  /** Filter items based on the active center selection. */
   const filteredResources = useMemo(() => {
     if (activeCenter === null || activeCenter === undefined) return coloredResources
     if (activeCenter === 'Accountability') return []
@@ -185,7 +80,6 @@ export function BraidedFeed({
   const filteredOfficials = useMemo(() => {
     if (activeCenter === null || activeCenter === undefined) return officials
     if (activeCenter === 'Accountability') return officials
-    // Non-accountability centers hide officials
     return []
   }, [officials, activeCenter])
 
@@ -195,7 +89,6 @@ export function BraidedFeed({
     return []
   }, [policies, activeCenter])
 
-  /** The final braided and filtered feed. */
   const feed = useMemo(
     () => braidItems(filteredOfficials, filteredResources, filteredPolicies),
     [filteredOfficials, filteredResources, filteredPolicies],
@@ -203,57 +96,79 @@ export function BraidedFeed({
 
   return (
     <div className="w-full">
-      {/* ── Center filter chips ─────────────────────────────────────── */}
-      <div className="flex flex-wrap gap-2 mb-3">
-        {CENTER_FILTERS.map(({ key, label }) => {
-          const count = countForCenter(coloredResources, officials, policies, key)
-          const isActive = activeCenter === key
-          return (
-            <button
-              key={label}
-              type="button"
-              onClick={() => onSelectCenter ? onSelectCenter(key) : setInternalCenter(key)}
-              className={`
-                inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium
-                transition-colors duration-150
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent
-                ${isActive
-                  ? 'bg-brand-text text-white'
-                  : 'bg-white text-brand-muted border border-brand-border hover:bg-brand-bg'
-                }
-              `}
-            >
-              {label}
-              <span
+      {/* Filter bar + view toggle */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex flex-wrap gap-2">
+          {CENTER_FILTERS.map(({ key, label, icon: Icon }) => {
+            const count = countForCenter(coloredResources, officials, policies, key)
+            const isActive = activeCenter === key
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={() => onSelectCenter ? onSelectCenter(key) : setInternalCenter(key)}
                 className={`
-                  inline-flex items-center justify-center min-w-[22px] h-[22px] rounded-full text-xs font-semibold leading-none px-1
-                  ${isActive ? 'bg-white/20 text-white' : 'bg-brand-bg text-brand-muted'}
+                  inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold
+                  transition-all duration-150
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent
+                  ${isActive
+                    ? 'bg-brand-text text-white shadow-sm'
+                    : 'bg-white text-brand-muted border border-brand-border hover:border-brand-accent/30 hover:text-brand-text'
+                  }
                 `}
               >
-                {count}
-              </span>
-            </button>
-          )
-        })}
+                {Icon && <Icon size={13} />}
+                {label}
+                <span className={`
+                  inline-flex items-center justify-center min-w-[20px] h-[20px] rounded-full text-[10px] font-bold leading-none px-1
+                  ${isActive ? 'bg-white/20 text-white' : 'bg-brand-bg text-brand-muted'}
+                `}>
+                  {count}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+        {/* View toggle */}
+        <div className="hidden sm:flex items-center gap-1 ml-3">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`p-1.5 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-brand-accent text-white' : 'text-brand-muted hover:text-brand-text'}`}
+            aria-label="Grid view"
+          >
+            <LayoutGrid size={16} />
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            className={`p-1.5 rounded-md transition-colors ${viewMode === 'list' ? 'bg-brand-accent text-white' : 'text-brand-muted hover:text-brand-text'}`}
+            aria-label="List view"
+          >
+            <List size={16} />
+          </button>
+        </div>
       </div>
 
-      {/* ── Hint line ───────────────────────────────────────────────── */}
-      <p className="text-sm text-brand-muted mb-3 italic">
-        Click any card below to see full details&hellip;
-      </p>
-
-      {/* ── Braided feed ────────────────────────────────────────────── */}
+      {/* Feed */}
       {feed.length === 0 ? (
-        <p className="text-sm text-brand-muted text-center py-8">
-          No items match the current filter.
-        </p>
+        <div className="text-center py-16">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-bg flex items-center justify-center">
+            <Package size={24} className="text-brand-muted" />
+          </div>
+          <p className="text-brand-muted font-medium">No items match the current filter</p>
+          <p className="text-sm text-brand-muted/60 mt-1">Try selecting a different category above</p>
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className={
+          viewMode === 'grid'
+            ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'
+            : 'flex flex-col gap-3'
+        }>
           {feed.map((item) => (
             <FeedCard
               key={`${item.type}-${item.id}`}
               item={item}
               onClick={() => onItemClick?.(item)}
+              variant={viewMode}
             />
           ))}
         </div>
