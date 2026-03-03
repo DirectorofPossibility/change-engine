@@ -1,6 +1,8 @@
 import { getIngestionLog, getRssFeeds, getSourceTrust } from '@/lib/data/dashboard'
 import { IngestionClient } from './IngestionClient'
 
+export const dynamic = 'force-dynamic'
+
 export default async function IngestionPage() {
   const [logs, feeds, trust] = await Promise.all([
     getIngestionLog(200),
