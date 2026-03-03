@@ -38,6 +38,49 @@ const RING_CONFIG: { key: RingKey; label: string; shortLabel: string }[] = [
   { key: 'policies', label: 'Policies', shortLabel: 'Policies' },
 ]
 
+// ─── EDITORIAL COPY CONSTANTS ───
+const PATHWAY_INTROS: Record<string, string> = {
+  Health: 'From mental health to maternal care — the resources, people, and policies shaping how Houston takes care of its own.',
+  Families: 'Schools, childcare, family safety nets — the building blocks that keep Houston\u2019s families standing strong.',
+  Neighborhood: 'Housing, public safety, parks, transit — the places we share and the decisions that shape them.',
+  Voice: 'Voting, civic participation, who represents you — the tools for making your voice heard.',
+  Money: 'Jobs, wages, financial literacy, opportunity — the economic life of Houstonians.',
+  Planet: 'Climate resilience, clean air, green space — Houston\u2019s relationship with the environment.',
+  'The Bigger We': 'Bridging differences, building trust, finding common ground — the work of being a community.',
+}
+
+const RING_INTROS: Record<RingKey, string> = {
+  resources: 'Curated articles, tools, and explainers about {pw} in Houston.',
+  guides: 'Step-by-step walkthroughs to help you navigate {pw} issues.',
+  services: 'Real services near you — call, visit, get help. Verified through Texas 211.',
+  officials: 'The people who represent you and make decisions about {pw}.',
+  policies: 'Bills, ordinances, and decisions shaping {pw} in your community.',
+}
+
+const RING_DESCRIPTORS: Record<RingKey, string> = {
+  resources: 'articles, tools, and explainers',
+  guides: 'step-by-step walkthroughs',
+  services: 'local help and hotlines',
+  officials: 'elected officials in this area',
+  policies: 'bills and decisions to watch',
+}
+
+const STAT_DESCRIPTORS: Record<string, string> = {
+  Resources: 'articles, tools, explainers',
+  Guides: 'step-by-step walkthroughs',
+  '211 Services': 'real help, near you',
+  Officials: 'the people in charge',
+  Policies: 'decisions that affect you',
+}
+
+const EMPTY_MESSAGES: Record<RingKey, string> = {
+  resources: 'We\u2019re still gathering resources for {pw}. Check back soon.',
+  guides: 'Guides for {pw} are in the works.',
+  services: 'We\u2019re connecting with 211 providers in this area.',
+  officials: 'We\u2019re mapping officials responsible for {pw}.',
+  policies: 'Policy tracking for {pw} is coming.',
+}
+
 function getRingCount(pw: CirclePathway, ring: RingKey): number {
   switch (ring) {
     case 'resources': return pw.resources.length
@@ -441,8 +484,108 @@ const InitialsCircle = ({ name, color, size = 38 }: { name: string; color: strin
 )
 
 // ═══════════════════════════════════════
-// RING CARD — unified card for all rings
+// TYPED CARDS — five distinct designs
 // ═══════════════════════════════════════
+const ResourceCard = ({ r, pw, onClick }: { r: any; pw: CirclePathway; onClick?: () => void }) => {
+  const cc = ctrColor(r.center)
+  return (
+    <div onClick={onClick} className="ch" style={{
+      background: C.cardW, border: `1px solid ${C.bdr}`, borderRadius: 8,
+      padding: 24, cursor: 'pointer', transition: 'box-shadow .15s, transform .15s',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 12 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 99, background: `${cc}14`, color: cc }}>{r.center}</span>
+        {r.engagement_level && <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 99, background: `${pw.color}10`, color: pw.color }}>{r.engagement_level}</span>}
+      </div>
+      <div style={{ fontFamily: "'Newsreader',serif", fontSize: 16, fontWeight: 600, color: C.charcoal, lineHeight: 1.35, marginBottom: 8 }}>{r.title}</div>
+      {r.summary && <div style={{ fontFamily: "'Newsreader',serif", fontSize: 14, color: C.mid, lineHeight: 1.7, marginBottom: 16, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{r.summary}</div>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {r.org && <span style={{ fontFamily: "'DM Sans'", fontSize: 12, color: C.lt }}>via {r.org}</span>}
+        <span style={{ fontFamily: "'DM Sans'", fontSize: 12, fontWeight: 700, color: C.tealLt }}>{`Read more \u203a`}</span>
+      </div>
+    </div>
+  )
+}
+
+const GuideCard = ({ g, pw, onClick }: { g: CircleGuide; pw: CirclePathway; onClick?: () => void }) => (
+  <div onClick={onClick} className="ch" style={{
+    background: C.cardW, border: `1px solid ${C.bdr}`, borderLeft: `4px solid ${pw.color}`,
+    borderRadius: 8, padding: 24, cursor: 'pointer', transition: 'box-shadow .15s, transform .15s',
+  }}>
+    <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: pw.color, marginBottom: 8 }}>Guide</div>
+    <div style={{ fontFamily: "'Newsreader',serif", fontSize: 16, fontWeight: 600, color: C.charcoal, lineHeight: 1.35, marginBottom: 8 }}>{g.title}</div>
+    {g.description && <div style={{ fontFamily: "'Newsreader',serif", fontSize: 14, color: C.mid, lineHeight: 1.7, marginBottom: 16, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{g.description}</div>}
+    <span style={{ fontFamily: "'DM Sans'", fontSize: 12, fontWeight: 700, color: pw.color }}>{`Start this guide \u203a`}</span>
+  </div>
+)
+
+const ServiceCard = ({ s, onClick }: { s: CircleService; onClick?: () => void }) => (
+  <div onClick={onClick} className="ch" style={{
+    background: C.cardW, border: `1px solid ${C.bdr}`, borderRadius: 8,
+    padding: 24, cursor: 'pointer', transition: 'box-shadow .15s, transform .15s',
+  }}>
+    <div style={{ marginBottom: 8 }}>
+      <span style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', padding: '3px 10px', borderRadius: 99, background: `${C.teal}14`, color: C.teal }}>{s.category || '211 Service'}</span>
+    </div>
+    <div style={{ fontFamily: "'DM Sans'", fontSize: 16, fontWeight: 600, color: C.charcoal, lineHeight: 1.35 }}>{s.name}</div>
+    {s.org && <div style={{ fontFamily: "'DM Sans'", fontSize: 12, color: C.lt, marginBottom: 16 }}>through {s.org}</div>}
+    {(s.phone || s.address) && (
+      <div style={{ background: C.card, border: `1px solid ${C.bdr}`, borderRadius: 8, padding: 16 }}>
+        {s.phone && <a href={`tel:${s.phone.replace(/[^0-9]/g, '')}`} style={{ fontFamily: "'Newsreader',serif", fontSize: 20, fontWeight: 700, color: C.teal, textDecoration: 'none', display: 'block' }}>{s.phone}</a>}
+        {s.address && <div style={{ fontFamily: "'DM Sans'", fontSize: 12, color: C.mid, marginTop: s.phone ? 4 : 0 }}>{s.address}</div>}
+      </div>
+    )}
+  </div>
+)
+
+const OfficialCard = ({ o, onClick }: { o: any; onClick?: () => void }) => {
+  const lc = lvlColor(o.level)
+  return (
+    <div onClick={onClick} className="ch" style={{
+      background: C.cardW, border: `1px solid ${C.bdr}`, borderLeft: `3px solid ${lc}`,
+      borderRadius: 8, padding: 24, cursor: 'pointer', transition: 'box-shadow .15s, transform .15s',
+      display: 'flex', gap: 16,
+    }}>
+      <InitialsCircle name={o.name} color={lc} size={48} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontFamily: "'Newsreader',serif", fontSize: 16, fontWeight: 600, color: C.charcoal, lineHeight: 1.35 }}>{o.name}</div>
+        <div style={{ fontFamily: "'DM Sans'", fontSize: 14, color: C.mid }}>{o.role}</div>
+        <div style={{ fontFamily: "'DM Sans'", fontSize: 12, color: C.lt }}>{o.level} {'\u00b7'} {o.jur}</div>
+        {o.note && <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 12, color: C.mid, marginTop: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{o.note.slice(0, 80)}{o.note.length > 80 ? '\u2026' : ''}</div>}
+        <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+          {o.phone && <a href={`tel:${o.phone.replace(/[^0-9]/g, '')}`} onClick={e => e.stopPropagation()} style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, color: C.teal, background: `${C.teal}14`, borderRadius: 99, padding: '4px 10px', textDecoration: 'none' }}>Call</a>}
+          {o.website && <a href={o.website} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, color: C.teal, background: `${C.teal}14`, borderRadius: 99, padding: '4px 10px', textDecoration: 'none' }}>Website</a>}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const PolicyCard = ({ p, onClick }: { p: any; onClick?: () => void }) => {
+  const sc = stColor(p.status)
+  return (
+    <div onClick={onClick} className="ch" style={{
+      background: C.cardW, border: `1px solid ${C.bdr}`, borderTop: `3px solid ${sc}`,
+      borderRadius: 8, padding: 24, cursor: 'pointer', transition: 'box-shadow .15s, transform .15s',
+    }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 10 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 99, background: `${sc}14`, color: sc }}>{p.status}</span>
+        <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 99, background: `${lvlColor(p.level)}14`, color: lvlColor(p.level) }}>{p.level}</span>
+        {p.body && <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 99, background: `${C.lt2}18`, color: C.lt }}>{p.body}</span>}
+      </div>
+      <div style={{ fontFamily: "'Newsreader',serif", fontSize: 16, fontWeight: 600, color: C.charcoal, lineHeight: 1.35, marginBottom: 8 }}>{p.name}</div>
+      {p.plain && (
+        <div style={{ background: '#FAF8F2', border: `1px solid ${C.bdr}`, borderLeft: `3px solid ${C.tealLt}`, borderRadius: 6, padding: 16, marginBottom: 12 }}>
+          <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: C.tealLt, marginBottom: 4 }}>In Plain Language</div>
+          <div style={{ fontFamily: "'Newsreader',serif", fontSize: 14, color: C.txt, lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.plain}</div>
+        </div>
+      )}
+      <span style={{ fontFamily: "'DM Sans'", fontSize: 12, fontWeight: 700, color: C.tealLt }}>{`Read full policy \u203a`}</span>
+    </div>
+  )
+}
+
+// ── Legacy RingCard (search results) ──
 const RingCard = ({ title, subtitle, meta, accentColor, onClick }: {
   title: string; subtitle?: string; meta?: string; accentColor: string; onClick?: () => void
 }) => (
@@ -648,7 +791,7 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
       </div>
 
       {/* ELECTION BANNER */}
-      <div style={{ background: '#8B7D3C', color: '#fff', padding: '6px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, fontSize: 12 }}>
+      <div style={{ background: '#8B7D3C', color: '#fff', padding: '6px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, fontSize: 12, position: 'sticky', top: 48, zIndex: 49 }}>
         <span style={{ fontWeight: 700, fontSize: 9, letterSpacing: '.08em', textTransform: 'uppercase', opacity: .8 }}>Upcoming</span>
         <span style={{ fontWeight: 600 }}>Texas Primary Election</span>
         <span style={{ fontSize: 10, opacity: .7 }}>Polls 7am-7pm</span>
@@ -656,7 +799,7 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
       </div>
 
       {/* TWO COLUMN LAYOUT */}
-      <div className="onion-layout" style={{ display: 'flex', width: '100%', minHeight: 'calc(100vh - 48px)' }}>
+      <div className="onion-layout" style={{ display: 'flex', width: '100%', minHeight: 'calc(100vh - 78px)' }}>
 
         {/* LEFT: Onion SVG */}
         <div
@@ -664,8 +807,8 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
           style={{
             width: '50%',
             position: 'sticky',
-            top: 48,
-            height: 'calc(100vh - 48px)',
+            top: 78,
+            height: 'calc(100vh - 78px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -697,20 +840,25 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
             transition: 'opacity .4s ease .2s',
           }}
         >
-          {/* STATE A: Landing (nothing selected) */}
+          {/* STATE A: Landing ("The Magazine Cover") */}
           {!sel && !searchResults && (
             <div style={{ animation: 'up .5s ease .2s both' }}>
+              {/* Hero headline */}
               <h1 style={{ fontFamily: "'Newsreader',serif", fontSize: 32, fontWeight: 400, lineHeight: 1.15, letterSpacing: '-.02em', marginBottom: 8 }}>
                 Community Life, <span style={{ color: C.orange, fontWeight: 600 }}>Organized.</span>
               </h1>
-              <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.lt, fontSize: 16, lineHeight: 1.6, marginBottom: 32 }}>
+
+              {/* Place + editorial lede */}
+              <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.lt, fontSize: 16, lineHeight: 1.6, marginBottom: 12 }}>
                 Houston, Texas
               </div>
-              <p style={{ fontSize: 14, color: C.mid, lineHeight: 1.7, marginBottom: 32, maxWidth: 400 }}>
-                Tap any circle to explore a pathway.<br />
-                Tap a ring to see resources, guides, services, officials, or policies.
+              <p style={{ fontFamily: "'Newsreader',serif", fontSize: 14, color: C.mid, lineHeight: 1.7, marginBottom: 32, maxWidth: 380 }}>
+                Every policy, every service, every person in office — organized around the things that matter to your daily life. Start by tapping a circle on the left.
               </p>
-              <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+
+              {/* Stats with warm descriptors */}
+              <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: C.lt, marginBottom: 16 }}>What{'\u2019'}s Inside</div>
+              <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginBottom: 48 }}>
                 {[
                   { n: STATS.resources, l: 'Resources' },
                   { n: STATS.guides, l: 'Guides' },
@@ -721,18 +869,55 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                   <div key={i} style={{ textAlign: 'center' }}>
                     <div style={{ fontFamily: "'Newsreader',serif", fontSize: 24, fontWeight: 300, color: C.orange }}>{s.n}</div>
                     <div style={{ fontSize: 10, color: C.lt, textTransform: 'uppercase', letterSpacing: '.1em' }}>{s.l}</div>
+                    <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 10, color: C.lt2, marginTop: 2 }}>{STAT_DESCRIPTORS[s.l]}</div>
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 48, paddingTop: 24, borderTop: `1px solid ${C.bdr}` }}>
+
+              {/* Pathway vignettes */}
+              <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: C.lt, marginBottom: 16 }}>Explore by Pathway</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 32 }}>
+                {PW.map((p, i) => (
+                  <div
+                    key={p.key}
+                    onClick={() => pick(i)}
+                    className="ch"
+                    style={{
+                      background: C.cardW,
+                      border: `1px solid ${C.bdr}`,
+                      borderLeft: `3px solid ${p.color}`,
+                      borderRadius: 8,
+                      padding: 16,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      cursor: 'pointer',
+                      transition: 'box-shadow .15s, transform .15s',
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontFamily: "'DM Sans'", fontSize: 14, fontWeight: 700, color: C.charcoal }}>{p.name}</div>
+                      <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 12, color: C.mid }}>{p.sub}</div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontFamily: "'Newsreader',serif", fontSize: 20, fontWeight: 300, color: p.color }}>{p.count}</span>
+                      <span style={{ fontSize: 14, color: C.lt }}>{'\u2192'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Footer */}
+              <div style={{ paddingTop: 24, borderTop: `1px solid ${C.bdr}` }}>
                 <div style={{ fontSize: 10, color: C.lt }}>The Community Exchange -- a product of The Change Engine</div>
               </div>
             </div>
           )}
 
-          {/* STATE B: Pathway selected, no ring */}
+          {/* STATE B: Pathway selected ("The Feature Story") */}
           {pw && !activeRing && !searchResults && (
             <div style={{ animation: 'up .4s cubic-bezier(.22,1,.36,1)' }}>
+              {/* Pathway identity */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
                 <svg width="24" height="24" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" fill="none" stroke={pw.color} strokeWidth="2.5" opacity=".6" />
@@ -740,16 +925,26 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                 </svg>
                 <h2 style={{ fontFamily: "'Newsreader',serif", fontSize: 24, fontWeight: 600, color: pw.color }}>{pw.name}</h2>
               </div>
-              <p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.mid, fontSize: 16, marginBottom: 24 }}>{pw.sub}</p>
 
-              {/* Ring summary rows */}
+              {/* Subtitle */}
+              <p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', color: C.mid, fontSize: 16, marginBottom: 16 }}>{pw.sub}</p>
+
+              {/* Narrative intro */}
+              {PATHWAY_INTROS[pw.name] && (
+                <p style={{ fontFamily: "'Newsreader',serif", fontSize: 14, color: C.mid, lineHeight: 1.7, maxWidth: 420, marginBottom: 32 }}>
+                  {PATHWAY_INTROS[pw.name]}
+                </p>
+              )}
+
+              {/* Ring summary rows with warm descriptors */}
+              <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: C.lt, marginBottom: 16 }}>What{'\u2019'}s Here</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 32 }}>
                 {RING_CONFIG.map(ring => {
                   const count = getRingCount(pw, ring.key)
                   return (
                     <div
                       key={ring.key}
-                      onClick={() => handleRingClick(ring.key, sel!)}
+                      onClick={() => count > 0 ? handleRingClick(ring.key, sel!) : undefined}
                       style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         padding: '12px 16px', borderRadius: 8,
@@ -761,7 +956,10 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                       }}
                       className={count > 0 ? 'ch' : undefined}
                     >
-                      <span style={{ fontSize: 14, fontWeight: 600, color: C.txt }}>{ring.label}</span>
+                      <div>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: C.txt }}>{ring.label}</span>
+                        <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 12, color: C.lt, marginTop: 2 }}>{RING_DESCRIPTORS[ring.key]}</div>
+                      </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span style={{ fontSize: 20, fontWeight: 300, fontFamily: "'Newsreader',serif", color: count > 0 ? pw.color : C.lt }}>{count}</span>
                         {count > 0 && <span style={{ fontSize: 14, color: C.lt }}>{'\u2192'}</span>}
@@ -771,10 +969,10 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                 })}
               </div>
 
-              {/* Topics */}
+              {/* Focus Areas (was Topics) */}
               {pw.topics.length > 0 && (
                 <div style={{ marginBottom: 24 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: C.lt, marginBottom: 8 }}>Topics</div>
+                  <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: C.lt, marginBottom: 8 }}>Focus Areas</div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {pw.topics.map(t => (
                       <span key={t} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 99, background: `${pw.color}10`, border: `1px solid ${pw.color}25`, color: pw.color, fontWeight: 600 }}>{t}</span>
@@ -783,10 +981,11 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                 </div>
               )}
 
-              {/* Bridges */}
+              {/* Connected Pathways (was Bridges) */}
               {bridges.length > 0 && (
                 <div>
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: C.lt, marginBottom: 8 }}>Bridges</div>
+                  <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: C.lt, marginBottom: 8 }}>Connected Pathways</div>
+                  <p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 12, color: C.lt, marginBottom: 16 }}>Issues don{'\u2019'}t live in silos. Here{'\u2019'}s where {pw.name} overlaps.</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {bridges.map((b, i) => (
                       <div key={i} onClick={() => pick(b.idx)} style={{
@@ -795,7 +994,7 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                         background: `${b.color}08`, border: `1px solid ${b.color}18`,
                       }}>
                         <span style={{ fontSize: 12, fontWeight: 600, color: b.color }}>{pw.name} + {b.name}</span>
-                        <span style={{ fontSize: 12, color: C.lt }}>{b.shared} shared</span>
+                        <span style={{ fontSize: 12, color: C.lt }}>{b.shared} shared resources</span>
                       </div>
                     ))}
                   </div>
@@ -804,9 +1003,10 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
             </div>
           )}
 
-          {/* STATE C: Ring + Pathway selected */}
+          {/* STATE C: Ring + Pathway ("The Listings Page") */}
           {pw && activeRing && !searchResults && (
             <div style={{ animation: 'up .4s cubic-bezier(.22,1,.36,1)' }}>
+              {/* Header */}
               <div style={{ marginBottom: 4 }}>
                 <span onClick={() => setActiveRing(null)} style={{ fontSize: 12, color: C.tealLt, cursor: 'pointer', fontWeight: 600 }}>{'\u2190'} {pw.name}</span>
               </div>
@@ -816,73 +1016,70 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
                 {RING_CONFIG.find(r => r.key === activeRing)?.label}
                 <span style={{ color: C.lt, fontWeight: 300 }}> ({getRingCount(pw, activeRing)})</span>
               </h2>
-              <div style={{ height: 2, background: `${pw.color}30`, borderRadius: 1, marginBottom: 16 }} />
+              <div style={{ height: 2, background: `${pw.color}30`, borderRadius: 1, marginBottom: 8 }} />
+
+              {/* Section intro */}
+              <p style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 14, color: C.mid, lineHeight: 1.6, marginBottom: 16 }}>
+                {RING_INTROS[activeRing].replace('{pw}', pw.name)}
+              </p>
 
               {/* Center filter pills (resources only) */}
               {activeRing === 'resources' && (
-                <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                  <button onClick={() => setCenterFilter(null)} style={{
-                    background: !centerFilter ? C.charcoal : '#fff', color: !centerFilter ? '#fff' : C.mid,
-                    padding: '4px 12px', borderRadius: 99, fontSize: 12, fontWeight: 600,
-                    border: centerFilter ? `1px solid ${C.bdr}` : 'none', cursor: 'pointer',
-                  }}>All</button>
-                  {CENTERS.map(c => {
-                    const cnt = pw.resources.filter(r => r.center === c.key).length
-                    if (!cnt) return null
-                    return (
-                      <button key={c.key} onClick={() => setCenterFilter(centerFilter === c.key ? null : c.key)} style={{
-                        background: centerFilter === c.key ? c.color : '#fff',
-                        color: centerFilter === c.key ? '#fff' : c.color,
-                        padding: '4px 12px', borderRadius: 99, fontSize: 12, fontWeight: 600,
-                        border: `1px solid ${centerFilter === c.key ? c.color : c.color + '30'}`, cursor: 'pointer',
-                      }}>{c.key} ({cnt})</button>
-                    )
-                  })}
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontFamily: "'DM Sans'", fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', color: C.lt, marginBottom: 8 }}>Browse by Type</div>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <button onClick={() => setCenterFilter(null)} style={{
+                      background: !centerFilter ? C.charcoal : '#fff', color: !centerFilter ? '#fff' : C.mid,
+                      padding: '4px 12px', borderRadius: 99, fontSize: 12, fontWeight: 600,
+                      border: centerFilter ? `1px solid ${C.bdr}` : 'none', cursor: 'pointer',
+                    }}>All</button>
+                    {CENTERS.map(c => {
+                      const cnt = pw.resources.filter(r => r.center === c.key).length
+                      if (!cnt) return null
+                      return (
+                        <button key={c.key} onClick={() => setCenterFilter(centerFilter === c.key ? null : c.key)} style={{
+                          background: centerFilter === c.key ? c.color : '#fff',
+                          color: centerFilter === c.key ? '#fff' : c.color,
+                          padding: '4px 12px', borderRadius: 99, fontSize: 12, fontWeight: 600,
+                          border: `1px solid ${centerFilter === c.key ? c.color : c.color + '30'}`, cursor: 'pointer',
+                        }}>{c.key} ({cnt})</button>
+                      )
+                    })}
+                  </div>
                 </div>
               )}
 
-              {/* Cards */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {/* Cards — typed per ring */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {activeRing === 'resources' && (() => {
                   const items = centerFilter ? pw.resources.filter(r => r.center === centerFilter) : pw.resources
                   return items.length > 0 ? items.map((r, i) => (
-                    <RingCard key={i} title={r.title} subtitle={r.summary} meta={`${r.center} · ${r.org}`} accentColor={pw.color} onClick={() => openPanel('resource', r)} />
-                  )) : <EmptyState label="resources" />
+                    <ResourceCard key={i} r={r} pw={pw} onClick={() => openPanel('resource', r)} />
+                  )) : <EmptyState ring="resources" pwName={pw.name} />
                 })()}
 
                 {activeRing === 'guides' && (() => {
                   return pw.guides.length > 0 ? pw.guides.map((g, i) => (
-                    <RingCard key={i} title={g.title} subtitle={g.description} accentColor={pw.color} onClick={() => openPanel('guide', g)} />
-                  )) : <EmptyState label="guides" />
+                    <GuideCard key={i} g={g} pw={pw} onClick={() => openPanel('guide', g)} />
+                  )) : <EmptyState ring="guides" pwName={pw.name} />
                 })()}
 
                 {activeRing === 'services' && (() => {
                   return pw.services.length > 0 ? pw.services.map((s, i) => (
-                    <RingCard key={i} title={s.name} subtitle={s.org} meta={[s.phone, s.address].filter(Boolean).join(' · ')} accentColor={pw.color} onClick={() => openPanel('service', s)} />
-                  )) : <EmptyState label="211 services" />
+                    <ServiceCard key={i} s={s} onClick={() => openPanel('service', s)} />
+                  )) : <EmptyState ring="services" pwName={pw.name} />
                 })()}
 
                 {activeRing === 'officials' && (() => {
                   return pw.officials.length > 0 ? pw.officials.map((o, i) => (
-                    <div key={i} onClick={() => openPanel('official', o)} className="ch" style={{
-                      display: 'flex', alignItems: 'center', gap: 12,
-                      background: C.white, border: `1px solid ${C.bdr}`, borderLeft: `3px solid ${lvlColor(o.level)}`,
-                      borderRadius: 8, padding: 16, cursor: 'pointer', transition: 'all .15s',
-                    }}>
-                      <InitialsCircle name={o.name} color={lvlColor(o.level)} size={40} />
-                      <div>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: C.charcoal }}>{o.name}</div>
-                        <div style={{ fontSize: 12, color: C.mid }}>{o.role}</div>
-                        <div style={{ fontSize: 10, color: C.lt }}>{o.level} {'\u00b7'} {o.jur}</div>
-                      </div>
-                    </div>
-                  )) : <EmptyState label="officials" />
+                    <OfficialCard key={i} o={o} onClick={() => openPanel('official', o)} />
+                  )) : <EmptyState ring="officials" pwName={pw.name} />
                 })()}
 
                 {activeRing === 'policies' && (() => {
                   return pw.policies.length > 0 ? pw.policies.map((p, i) => (
-                    <RingCard key={i} title={p.name} subtitle={p.plain || p.desc} meta={`${p.status} · ${p.level} · ${p.body}`} accentColor={stColor(p.status)} onClick={() => openPanel('policy', p)} />
-                  )) : <EmptyState label="policies" />
+                    <PolicyCard key={i} p={p} onClick={() => openPanel('policy', p)} />
+                  )) : <EmptyState ring="policies" pwName={pw.name} />
                 })()}
               </div>
             </div>
@@ -907,11 +1104,16 @@ export default function CommunityExchangeV13({ data }: { data: CircleData }) {
 }
 
 // ── Empty state ──
-function EmptyState({ label }: { label: string }) {
+function EmptyState({ ring, pwName }: { ring: RingKey; pwName: string }) {
+  const msg = EMPTY_MESSAGES[ring]?.replace('{pw}', pwName) || `No ${ring} mapped to this pathway yet.`
   return (
-    <div style={{ padding: 32, textAlign: 'center', color: C.lt, fontSize: 14 }}>
-      <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', marginBottom: 4 }}>Coming soon</div>
-      <div style={{ fontSize: 12 }}>No {label} mapped to this pathway yet.</div>
+    <div style={{ padding: 48, textAlign: 'center', color: C.lt }}>
+      <svg width="64" height="64" viewBox="0 0 64 64" style={{ opacity: 0.2, marginBottom: 16 }}>
+        <circle cx="32" cy="32" r="28" fill="none" stroke={C.lt} strokeWidth="2" strokeDasharray="6,4" />
+        <circle cx="32" cy="32" r="14" fill="none" stroke={C.lt} strokeWidth="1.5" strokeDasharray="4,3" />
+      </svg>
+      <div style={{ fontFamily: "'Newsreader',serif", fontStyle: 'italic', fontSize: 16, marginBottom: 8 }}>Coming soon</div>
+      <div style={{ fontFamily: "'Newsreader',serif", fontSize: 13, color: C.lt, lineHeight: 1.6, maxWidth: 280, margin: '0 auto' }}>{msg}</div>
     </div>
   )
 }

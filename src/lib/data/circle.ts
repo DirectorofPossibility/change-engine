@@ -37,6 +37,23 @@ export interface CirclePolicy {
   source_url: string | null
 }
 
+export interface CircleGuide {
+  id: string
+  title: string
+  slug: string
+  description: string
+  theme_id: string | null
+}
+
+export interface CircleService {
+  id: string
+  name: string
+  org: string
+  phone: string | null
+  address: string | null
+  category: string | null
+}
+
 export interface CirclePathway {
   id: number
   key: string
@@ -48,13 +65,15 @@ export interface CirclePathway {
   resources: CircleResource[]
   officials: CircleOfficial[]
   policies: CirclePolicy[]
+  guides: CircleGuide[]
+  services: CircleService[]
   isCenter?: boolean
 }
 
 export interface CircleData {
   pathways: CirclePathway[]
   bridges: [number, number, number, string][]
-  stats: { resources: number; officials: number; policies: number; focusAreas: number }
+  stats: { resources: number; officials: number; policies: number; guides: number; services: number; focusAreas: number }
   officialsHome: { name: string; title: string; level: string; since: string }[]
   engagementLevels: string[]
 }
@@ -91,6 +110,8 @@ export async function getCircleData(): Promise<CircleData> {
     { data: officials },
     { data: policies },
     { data: orgs },
+    { data: guides },
+    { data: services },
   ] = await Promise.all([
     supabase
       .from('content_published')
@@ -110,6 +131,15 @@ export async function getCircleData(): Promise<CircleData> {
     supabase
       .from('organizations')
       .select('org_id, org_name'),
+    supabase
+      .from('guides')
+      .select('guide_id, title, slug, description, theme_id')
+      .eq('is_active', true)
+      .order('display_order'),
+    supabase
+      .from('services_211')
+      .select('service_id, service_name, org_id, phone, address, service_cat_id, focus_area_ids')
+      .eq('is_active', 'Yes'),
   ])
 
   // Build lookup maps
@@ -211,6 +241,57 @@ export async function getCircleData(): Promise<CircleData> {
     }
   })
 
+  // Map guides to themes via theme_id (direct mapping)
+  const guidesByTheme = new Map<string, CircleGuide[]>()
+  guides?.forEach(g => {
+    const mapped: CircleGuide = {
+      id: g.guide_id,
+      title: g.title,
+      slug: g.slug,
+      description: g.description || '',
+      theme_id: g.theme_id,
+    }
+    if (g.theme_id) {
+      const existing = guidesByTheme.get(g.theme_id) || []
+      existing.push(mapped)
+      guidesByTheme.set(g.theme_id, existing)
+    }
+  })
+
+  // Map services to themes via focus_area_ids overlap (same logic as officials/policies)
+  const servicesByTheme = new Map<string, CircleService[]>()
+  services?.forEach(svc => {
+    const focusIds = (svc.focus_area_ids || '')
+      .split(',')
+      .map((s: string) => s.trim())
+      .filter(Boolean)
+    const themes = new Set<string>()
+    focusIds.forEach((fid: string) => {
+      const theme = focusToTheme.get(fid)
+      if (theme) themes.add(theme)
+    })
+    const mapped: CircleService = {
+      id: svc.service_id,
+      name: svc.service_name,
+      org: (svc.org_id && orgMap.get(svc.org_id)) || '',
+      phone: svc.phone,
+      address: svc.address,
+      category: svc.service_cat_id,
+    }
+    if (themes.size === 0) {
+      // Assign unmapped services to Neighborhood (THEME_03) as default
+      const existing = servicesByTheme.get('THEME_03') || []
+      existing.push(mapped)
+      servicesByTheme.set('THEME_03', existing)
+    } else {
+      themes.forEach(themeId => {
+        const existing = servicesByTheme.get(themeId) || []
+        existing.push(mapped)
+        servicesByTheme.set(themeId, existing)
+      })
+    }
+  })
+
   // Compute bridges: count content items shared between pathways via pathway_secondary
   const bridgeCounts = new Map<string, number>()
   content?.forEach(c => {
@@ -257,6 +338,8 @@ export async function getCircleData(): Promise<CircleData> {
     const themeContent = contentByTheme.get(config.key) || []
     const themeOfficials = officialsByTheme.get(config.key) || []
     const themePolicies = policiesByTheme.get(config.key) || []
+    const themeGuides = guidesByTheme.get(config.key) || []
+    const themeServices = servicesByTheme.get(config.key) || []
     const topics = themeFocusAreas.get(config.key) || []
 
     const resources: CircleResource[] = themeContent.map(c => ({
@@ -281,6 +364,8 @@ export async function getCircleData(): Promise<CircleData> {
       resources,
       officials: themeOfficials.slice(0, 10),
       policies: themePolicies.slice(0, 10),
+      guides: themeGuides,
+      services: themeServices.slice(0, 20),
       isCenter: config.isCenter,
     }
   })
@@ -296,6 +381,8 @@ export async function getCircleData(): Promise<CircleData> {
   const totalResources = content?.length || 0
   const totalOfficials = officials?.length || 0
   const totalPolicies = policies?.length || 0
+  const totalGuides = guides?.length || 0
+  const totalServices = services?.length || 0
   const totalFocusAreas = focusAreas?.length || 0
 
   // Officials for home display (pick top 4 by level order)
@@ -318,6 +405,8 @@ export async function getCircleData(): Promise<CircleData> {
       resources: totalResources,
       officials: totalOfficials,
       policies: totalPolicies,
+      guides: totalGuides,
+      services: totalServices,
       focusAreas: totalFocusAreas,
     },
     officialsHome,
