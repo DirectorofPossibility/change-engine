@@ -93,15 +93,28 @@ const LIFE_SITUATIONS = [
 
 /**
  * Convert pathway feed data into FeedItems.
- * NEWS (content_published) is EXCLUDED from pathway feeds — it only shows in "What's New".
- * Pathway feeds show civic infrastructure: services, officials, policies.
+ * Includes content_published, services, officials, and policies.
  */
 function feedDataToItems(feed: PathwayFeedData, themeId: string) {
   const themeKey = themeId as keyof typeof THEMES
   const color = THEMES[themeKey]?.color ?? '#8B7E74'
 
-  // Only services in the resource feed — news stays in "What's New"
-  const resources: FeedItem[] = feed.services.map(function (s) {
+  // Content (articles/resources) + services together
+  const contentItems: FeedItem[] = feed.content.map(function (c) {
+    return {
+      type: 'resource' as const,
+      id: c.id,
+      title: c.title_6th_grade || 'Untitled',
+      summary: c.summary_6th_grade || undefined,
+      center: c.center || undefined,
+      orgName: c.source_domain || undefined,
+      pathwayColor: color,
+      imageUrl: c.image_url || undefined,
+      href: '/content/' + c.id,
+    }
+  })
+
+  const serviceItems: FeedItem[] = feed.services.map(function (s) {
     return {
       type: 'service' as const,
       id: s.service_id,
@@ -112,6 +125,8 @@ function feedDataToItems(feed: PathwayFeedData, themeId: string) {
       href: '/services/' + s.service_id,
     }
   })
+
+  const resources: FeedItem[] = contentItems.concat(serviceItems)
 
   const officials: FeedItem[] = feed.officials.map(function (o) {
     return {
