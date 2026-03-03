@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Responsive grid of content cards with automatic translation loading.
+ *
+ * When the active language (from {@link LanguageContext}) is not English, this
+ * component automatically fetches translations for each item's `inbox_id` and
+ * passes the translated title/summary down to each {@link ContentCard}. While
+ * translations are loading, a spinner message is shown across the grid.
+ */
 'use client'
 
 import { useEffect } from 'react'
@@ -21,6 +29,14 @@ interface TranslatedContentGridProps {
   focusAreaMap?: Record<string, string>
 }
 
+/**
+ * Renders a responsive grid of {@link ContentCard} components with automatic
+ * translation support for non-English languages.
+ *
+ * @param props.items - Array of content items to render as cards.
+ * @param props.focusAreaMap - Optional mapping of focus-area IDs to display names,
+ *   used to resolve human-readable pills on each card.
+ */
 export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContentGridProps) {
   const { language, translations, loadTranslations, isLoading } = useLanguage()
 

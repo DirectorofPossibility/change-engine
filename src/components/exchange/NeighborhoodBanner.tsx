@@ -1,8 +1,22 @@
+/**
+ * @fileoverview Personalized banner showing the user's detected neighborhood.
+ *
+ * Reads the user's ZIP, neighborhood name, council district, and district
+ * officials from {@link NeighborhoodContext}. When data is available, renders
+ * a top-of-page banner with the neighborhood name, ZIP code, council
+ * district label, and a list of elected officials for that district.
+ * Returns `null` while loading or if no neighborhood data is available.
+ */
 'use client'
 
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { MapPin, User } from 'lucide-react'
 
+/**
+ * Personalized banner displaying the user's detected neighborhood, council
+ * district, and elected officials. Renders nothing when neighborhood data
+ * is unavailable or still loading.
+ */
 export function NeighborhoodBanner() {
   const { zip, neighborhood, councilDistrict, districtOfficials, isLoading } = useNeighborhood()
 

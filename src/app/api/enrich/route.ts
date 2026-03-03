@@ -2,21 +2,23 @@ import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
 
 /**
- * POST /api/enrich
+ * @fileoverview POST /api/enrich — Step 3 (optional) of the content pipeline.
  *
- * Deep knowledge-graph enrichment for content_published items.
- * Takes the FULL extracted text (not just og:description) and:
- *   1. Rewrites title + summary at 6th-grade reading level from full text
- *   2. Reclassifies with better accuracy (full context)
- *   3. Extracts organizations mentioned → creates org entries
- *   4. Resolves internal cross-references between content nodes
- *   5. Extracts keywords from source tags
- *   6. Maps action URLs (donate, volunteer, etc.)
+ * Deep knowledge-graph enrichment for content that has already been classified.
+ * Uses the FULL extracted text (not just og:description) to:
+ *   1. Rewrite title + summary at 6th-grade reading level
+ *   2. Reclassify with better accuracy (full text context)
+ *   3. Extract organizations mentioned → create org entries + org_domains
+ *   4. Resolve internal cross-references between content nodes
+ *   5. Extract keywords from HTML meta tags
+ *   6. Map action URLs (donate, volunteer, register, etc.)
+ *
+ * Auth: Requires API key (x-api-key) or cron secret (Bearer token).
  *
  * Body:
  *   { "batch_size": 5, "inbox_ids": ["uuid1"] }
  *
- * Requires ANTHROPIC_API_KEY and SUPABASE_SECRET_KEY in environment.
+ * Env: ANTHROPIC_API_KEY, SUPABASE_SECRET_KEY
  */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!

@@ -1,3 +1,20 @@
+/**
+ * @fileoverview Admin dashboard overview page.
+ *
+ * Displays at-a-glance pipeline health: total ingested, needs-review,
+ * published, and translated counts; a pipeline flow visualization;
+ * content distribution charts by pathway and center; a recent activity
+ * log from the ingestion_log table; and the status of all scheduled
+ * cron jobs.
+ *
+ * All data is fetched server-side in parallel via dashboard helpers.
+ *
+ * @datasource Supabase tables: content (aggregated), ingestion_log;
+ *   CRON_JOBS constant from dashboard types
+ * @caching Dynamic (no explicit revalidate; re-fetched on each request)
+ * @route GET /dashboard
+ */
+
 import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog } from '@/lib/data/dashboard'
 import { StatsCard } from '@/components/ui/StatsCard'
 import { PipelineFlow } from '@/components/ui/PipelineFlow'
@@ -19,7 +36,7 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Dashboard Overview</h1>
 
-      {/* Stats Row */}
+      {/* ── Stats Row ── */}
       <div className="grid grid-cols-4 gap-4">
         <StatsCard label="Total Ingested" value={stats.totalIngested} icon="📥" />
         <StatsCard label="Needs Review" value={stats.needsReview} icon="🔍" />
@@ -27,10 +44,10 @@ export default async function DashboardPage() {
         <StatsCard label="Translated" value={stats.translated} icon="🌐" />
       </div>
 
-      {/* Pipeline Flow */}
+      {/* ── Pipeline Flow ── */}
       <PipelineFlow stats={stats} breakdown={breakdown} />
 
-      {/* Content by Pathway + Center */}
+      {/* ── Content by Pathway + Center ── */}
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 bg-white rounded-lg shadow-sm border border-brand-border p-6">
           <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Content by Pathway</h3>
@@ -65,7 +82,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* ── Recent Activity ── */}
       <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
         <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Recent Activity</h3>
         <div className="overflow-x-auto">
@@ -96,7 +113,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Cron Status */}
+      {/* ── Cron Status ── */}
       <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
         <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Cron Jobs ({CRON_JOBS.length} Active)</h3>
         <div className="grid grid-cols-2 gap-3">

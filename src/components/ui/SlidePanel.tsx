@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Accessible slide-in panel with focus trap and Escape key dismissal.
+ *
+ * Renders a right-aligned overlay panel that slides in from the edge of the
+ * viewport. Shares the same accessibility behavior as {@link Modal}: body
+ * scroll locking, auto-focus on open, Tab/Shift+Tab focus trapping, Escape
+ * key dismissal, and backdrop click to close. Uses `role="dialog"` and
+ * `aria-modal="true"` for screen-reader support.
+ */
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
@@ -9,6 +18,14 @@ interface SlidePanelProps {
   children: React.ReactNode
 }
 
+/**
+ * Accessible slide-in side panel with the same a11y features as Modal.
+ *
+ * @param props.open - Whether the panel is currently visible.
+ * @param props.onClose - Callback invoked when the user dismisses the panel.
+ * @param props.title - Optional heading displayed in the sticky header bar.
+ * @param props.children - Panel body content.
+ */
 export function SlidePanel({ open, onClose, title, children }: SlidePanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 

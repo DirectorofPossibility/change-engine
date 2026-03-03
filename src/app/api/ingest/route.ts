@@ -660,6 +660,20 @@ Return JSON:
 
 // ── Pre-scraped ingest (skip fetch, go straight to classify) ─────────
 
+/**
+ * Ingest a single pre-scraped item (skip the fetch/scrape stage).
+ *
+ * Used by the batch `items` mode where the caller has already extracted
+ * text externally (e.g., government RSS feeds). The pipeline picks up
+ * at inbox creation and continues through classification, review,
+ * translation, and logging -- identical to {@link ingestUrl} minus the
+ * scrape step.
+ *
+ * @param item - Pre-scraped content including URL, title, full text, and source metadata.
+ * @param taxonomy - Pre-fetched taxonomy (shared across a batch).
+ * @param taxonomyPrompt - Pre-built taxonomy prompt string for Claude.
+ * @returns A result object with `success`, classification metadata, and translation counts.
+ */
 async function ingestPreScraped(
   item: { url: string; title: string; description: string; image_url: string; full_text: string; source: string; domain: string },
   taxonomy: Awaited<ReturnType<typeof fetchTaxonomy>>,
@@ -869,6 +883,13 @@ Return JSON:
 
 // ── Route handler ────────────────────────────────────────────────────
 
+/**
+ * POST /api/ingest -- Next.js route handler.
+ *
+ * Authenticates the request via {@link validateApiRequest}, then dispatches
+ * to either pre-scraped batch mode (`items` array) or standard URL mode
+ * (`url` / `urls`). Taxonomy is fetched once and shared across the batch.
+ */
 export async function POST(req: NextRequest) {
   const authError = await validateApiRequest(req)
   if (authError) return authError

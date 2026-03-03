@@ -1,3 +1,19 @@
+/**
+ * @fileoverview Universal search page for The Change Engine.
+ *
+ * Uses the `searchAll()` helper to perform full-text search across 8 entity
+ * types: content, services, officials, organizations, policies, life
+ * situations, resources, and learning paths.  For non-English users the
+ * page fetches per-entity translations in parallel via
+ * `fetchTranslationsForTable`.  Results are rendered in a tabbed UI
+ * (`SearchTabs`) with per-type cards.
+ *
+ * @datasource Supabase full-text search via `searchAll()`; translations
+ *   table for i18n
+ * @caching `dynamic = 'force-dynamic'` (no ISR; query-dependent)
+ * @route GET /search?q=<query>
+ */
+
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { searchAll } from '@/lib/data/search'
@@ -30,7 +46,7 @@ export default async function SearchPage({
   var results = query ? await searchAll(query) : { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
   var totalCount = results.content.length + results.officials.length + results.services.length + results.organizations.length + results.policies.length + results.situations.length + results.resources.length + results.paths.length
 
-  // Fetch translations for non-English
+  // ── Translations (non-English users) ──
   var langId = await getLangId()
   var officialTranslations: Record<string, { title?: string; summary?: string }> = {}
   var serviceTranslations: Record<string, { title?: string; summary?: string }> = {}
@@ -53,6 +69,7 @@ export default async function SearchPage({
     policyTranslations = pt
   }
 
+  // ── Tab definitions ──
   var tabs = [
     { key: 'content', label: 'Content', count: results.content.length },
     { key: 'services', label: 'Services', count: results.services.length },
@@ -64,6 +81,7 @@ export default async function SearchPage({
     { key: 'paths', label: 'Learning', count: results.paths.length },
   ]
 
+  // ── Per-tab result sections ──
   var sections: Record<string, React.ReactNode> = {
     content: (
       <TranslatedContentGrid items={results.content} />

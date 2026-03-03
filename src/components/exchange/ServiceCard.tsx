@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Service listing card for 211-type community resources.
+ *
+ * Renders a compact card for a single service or organization, showing the
+ * service name, optional organization name, description, and contact
+ * details (phone, address, website). Supports pre-translated name and
+ * description overrides for multilingual display.
+ */
 import { Phone, MapPin, Globe } from 'lucide-react'
 
 interface ServiceCardProps {
@@ -14,6 +22,21 @@ interface ServiceCardProps {
   translatedDescription?: string
 }
 
+/**
+ * Service listing card displaying organization name, description, and contact info.
+ *
+ * @param props.name - Service name.
+ * @param props.orgName - Optional parent organization name shown below the title.
+ * @param props.description - Service description (line-clamped to 2 lines).
+ * @param props.phone - Phone number rendered as a clickable `tel:` link.
+ * @param props.address - Street address.
+ * @param props.city - City name.
+ * @param props.state - State abbreviation.
+ * @param props.zipCode - ZIP code.
+ * @param props.website - External website URL opened in a new tab.
+ * @param props.translatedName - Optional pre-translated name override.
+ * @param props.translatedDescription - Optional pre-translated description override.
+ */
 export function ServiceCard({ name, orgName, description, phone, address, city, state, zipCode, website, translatedName, translatedDescription }: ServiceCardProps) {
   const fullAddress = [address, city, state, zipCode].filter(Boolean).join(', ')
   const displayName = translatedName || name

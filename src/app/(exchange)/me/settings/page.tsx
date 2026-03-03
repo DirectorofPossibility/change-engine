@@ -1,3 +1,21 @@
+/**
+ * @fileoverview User settings page (client component).
+ *
+ * Provides a client-side form for managing user preferences:
+ *  - Display name
+ *  - ZIP code (also stored in a cookie for geo-personalization)
+ *  - Preferred language (stored in a cookie for i18n)
+ *  - Gamification toggle (badges/points)
+ *  - Password change via Supabase Auth
+ *
+ * On mount, fetches the authenticated user and their `user_profiles` row.
+ * On save, updates the `user_profiles` table and syncs `lang`/`zip` cookies.
+ *
+ * @datasource Supabase tables: user_profiles; Supabase Auth for password
+ * @caching Client-side only (no ISR)
+ * @route GET /me/settings
+ */
+
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -17,6 +35,7 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
+  // ── Load profile on mount ──
   useEffect(function () {
     const supabase = createClient()
     supabase.auth.getUser().then(function ({ data }) {
@@ -42,6 +61,7 @@ export default function SettingsPage() {
     })
   }, [router])
 
+  // ── Save profile handler ──
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault()
     if (!profile) { setError('Profile not found. Please reload the page.'); return }
@@ -74,6 +94,7 @@ export default function SettingsPage() {
     setSaving(false)
   }
 
+  // ── Change password handler ──
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault()
     if (!newPassword || newPassword.length < 6) {
@@ -124,7 +145,7 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Profile settings */}
+      {/* ── Profile Settings ── */}
       <form onSubmit={handleSaveProfile} className="space-y-4 mb-10">
         <h2 className="text-lg font-semibold text-brand-text">Profile</h2>
         <div>
@@ -180,7 +201,7 @@ export default function SettingsPage() {
         </button>
       </form>
 
-      {/* Password change */}
+      {/* ── Password Change ── */}
       <form onSubmit={handleChangePassword} className="space-y-4">
         <h2 className="text-lg font-semibold text-brand-text">Change Password</h2>
         <div>

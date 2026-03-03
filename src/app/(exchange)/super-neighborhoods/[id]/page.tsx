@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Super neighborhood detail page.
+ *
+ * Displays a single Houston super neighborhood with demographic stats
+ * (population, median income), an interactive map showing services,
+ * voting locations, and organizations as markers, a list of child
+ * neighborhoods, and a grid of nearby services.
+ *
+ * Data is fetched in parallel: super neighborhood record, child
+ * neighborhoods, and map marker data (services, voting locations,
+ * organizations).
+ *
+ * @datasource Supabase tables: super_neighborhoods, neighborhoods,
+ *   services_211, voting_locations, organizations
+ * @caching ISR with `revalidate = 300` (5 minutes)
+ * @route GET /super-neighborhoods/[id]
+ */
+
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -70,7 +88,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
+      {/* ── Breadcrumb ── */}
       <div className="text-sm text-brand-muted mb-4">
         <Link href="/super-neighborhoods" className="hover:text-brand-accent">Super Neighborhoods</Link>
         <span className="mx-2">/</span>
@@ -87,7 +105,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         <h1 className="text-3xl font-bold text-brand-text">{sn.sn_name}</h1>
       </div>
 
-      {/* Demographics */}
+      {/* ── Demographics ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 mb-8">
         {sn.population != null && (
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
@@ -118,20 +136,20 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         )}
       </div>
 
-      {/* Description */}
+      {/* ── Description ── */}
       {sn.description && (
         <section className="mb-8">
           <p className="text-brand-muted leading-relaxed">{sn.description}</p>
         </section>
       )}
 
-      {/* Map with highlighted super neighborhood boundary + markers */}
+      {/* ── Map ── */}
       <section className="mb-8">
         <h2 className="text-xl font-bold text-brand-text mb-4">Map</h2>
         <SuperNeighborhoodDetailMap markers={markers} snId={sn.sn_id} />
       </section>
 
-      {/* ZIP codes */}
+      {/* ── ZIP Codes ── */}
       {zips.length > 0 && (
         <div className="bg-brand-accent/5 rounded-xl border border-brand-border p-4 mb-8">
           <p className="text-sm text-brand-text">
@@ -143,7 +161,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         </div>
       )}
 
-      {/* Child neighborhoods */}
+      {/* ── Child Neighborhoods ── */}
       {neighborhoods.length > 0 && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-4">Neighborhoods</h2>
@@ -170,7 +188,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         </section>
       )}
 
-      {/* Services */}
+      {/* ── Services ── */}
       {mapData.services.length > 0 && (
         <section>
           <h2 className="text-xl font-bold text-brand-text mb-4">Services in This Area</h2>

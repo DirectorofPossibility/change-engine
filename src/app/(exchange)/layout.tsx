@@ -25,6 +25,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
   const lang = cookieStore.get('lang')?.value
   const zip = cookieStore.get('zip')?.value
 
+  // ── Schema.org JSON-LD ──
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [

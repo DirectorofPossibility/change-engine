@@ -2,17 +2,24 @@ import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
 
 /**
- * POST /api/enrich-entity
+ * @fileoverview POST /api/enrich-entity — Entity enrichment (separate from content pipeline).
  *
- * Enriches any knowledge graph entity through the full classification matrix.
- * Works with: elected_officials, policies, organizations
+ * Enriches non-content knowledge graph entities (officials, policies, organizations)
+ * through the full classification matrix. Unlike /api/enrich (which handles content),
+ * this route processes entities that exist independently in the graph.
+ *
+ * For each entity, Claude reads the name + description and classifies it with:
+ * - Focus areas, SDGs, SDOH, NTEE codes, AIRS codes
+ * - A confidence score
+ * - Writes `classification_v2` JSON column on the entity row
+ *
+ * Auth: Requires API key (x-api-key) or cron secret (Bearer token).
  *
  * Body:
  *   { "table": "elected_officials", "limit": 10, "ids": ["OFFICIAL_001"] }
  *   { "table": "policies", "limit": 10, "force": true }
  *
- * Reads the entity's name + description, classifies through the full taxonomy,
- * and writes enriched classification_v2 with inherited SDGs, NTEE, AIRS, SDOH.
+ * Env: ANTHROPIC_API_KEY, SUPABASE_SECRET_KEY
  */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!

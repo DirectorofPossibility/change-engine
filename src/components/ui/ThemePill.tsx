@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Colored pill badge for pathway/theme display.
+ *
+ * Looks up the given `themeId` in the global {@link THEMES} constant map to
+ * resolve the theme's display name and brand color. Renders an inline
+ * rounded pill with white text on the theme color background. Falls back to
+ * a neutral gray pill when the theme ID is unrecognized, or a muted dash
+ * when `themeId` is `null`.
+ */
 import { THEMES } from '@/lib/constants'
 
 interface ThemePillProps {
@@ -5,6 +14,12 @@ interface ThemePillProps {
   size?: 'sm' | 'md'
 }
 
+/**
+ * Colored pill badge that displays a pathway/theme name.
+ *
+ * @param props.themeId - Theme identifier from the THEMES constant map, or `null` for a placeholder dash.
+ * @param props.size - Visual size variant: `'sm'` (default) or `'md'`.
+ */
 export function ThemePill({ themeId, size = 'sm' }: ThemePillProps) {
   if (!themeId) return <span className="text-brand-muted text-xs">-</span>
   const theme = THEMES[themeId as keyof typeof THEMES]

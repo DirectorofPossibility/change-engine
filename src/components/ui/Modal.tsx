@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Accessible modal dialog with focus trap and Escape key dismissal.
+ *
+ * Renders a centered overlay dialog with a semi-transparent backdrop. The
+ * component manages body scroll locking, auto-focuses the dialog on open,
+ * traps Tab/Shift+Tab focus within focusable descendants, and closes on
+ * Escape key or backdrop click. Uses `role="dialog"` and `aria-modal="true"`
+ * for screen-reader accessibility.
+ */
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
@@ -9,6 +18,14 @@ interface ModalProps {
   children: React.ReactNode
 }
 
+/**
+ * Accessible modal dialog with focus trap, Escape key, and backdrop click dismissal.
+ *
+ * @param props.open - Whether the modal is currently visible.
+ * @param props.onClose - Callback invoked when the user dismisses the modal.
+ * @param props.title - Optional heading displayed in the sticky header bar.
+ * @param props.children - Modal body content.
+ */
 export function Modal({ open, onClose, title, children }: ModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
 

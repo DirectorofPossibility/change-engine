@@ -1,3 +1,17 @@
+/**
+ * @fileoverview POST /api/cron/sync-polling-places — Cron job for election data sync.
+ *
+ * Queries the `elections` table for upcoming elections (within 60 days),
+ * then calls the Supabase Edge Function `sync-polling-places` to fetch
+ * and upsert polling location data from election APIs.
+ *
+ * Auth: Requires CRON_SECRET bearer token (set by Vercel cron scheduler).
+ * Schedule: Runs periodically to keep voting_locations table current.
+ *
+ * Safety: Only syncs future elections (election_date >= today) to avoid
+ * re-processing past election data.
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL

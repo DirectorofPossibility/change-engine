@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Individual content card for the Community Exchange grid.
+ *
+ * Displays a content item as a clickable card with an optional hero image,
+ * a {@link ThemePill} for the primary pathway, a {@link CenterBadge},
+ * the title and summary (clamped), optional {@link FocusAreaPills}, and a
+ * publication date. The entire card links to `/content/[id]`.
+ *
+ * Supports pre-translated title/summary overrides via the `translatedTitle`
+ * and `translatedSummary` props.
+ */
 import Link from 'next/link'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
@@ -17,6 +28,21 @@ interface ContentCardProps {
   imageUrl?: string | null
 }
 
+/**
+ * Clickable content card showing title, summary, pathway pill, and center badge.
+ *
+ * @param props.id - Unique content ID used to build the detail route.
+ * @param props.title - Primary title (English or 6th-grade simplified).
+ * @param props.summary - Primary summary text.
+ * @param props.pathway - Pathway/theme ID rendered as a colored {@link ThemePill}.
+ * @param props.center - Center name rendered as a {@link CenterBadge}.
+ * @param props.sourceUrl - Original source URL for attribution.
+ * @param props.publishedAt - ISO date string shown as a formatted date.
+ * @param props.focusAreaNames - Optional list of focus-area display names.
+ * @param props.translatedTitle - Optional pre-translated title override.
+ * @param props.translatedSummary - Optional pre-translated summary override.
+ * @param props.imageUrl - Optional hero image URL displayed at the top of the card.
+ */
 export function ContentCard({
   id, title, summary, pathway, center, sourceUrl, publishedAt,
   focusAreaNames, translatedTitle, translatedSummary, imageUrl,

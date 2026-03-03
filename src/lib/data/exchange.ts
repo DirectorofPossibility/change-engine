@@ -109,8 +109,9 @@ export async function getLifeSituation(slug: string) {
  * Fetch content + services relevant to a life situation.
  * Matches via focus_area_ids overlap (content) and service_cat_id (services).
  * Services are enriched with their parent organization name.
+ * When zipCode is provided, services are additionally filtered by geography.
  */
-export async function getLifeSituationContent(focusAreaIds: string, serviceCatIds: string | null) {
+export async function getLifeSituationContent(focusAreaIds: string, serviceCatIds: string | null, zipCode?: string) {
   const supabase = await createClient()
   // focus_area_ids is comma-separated TEXT in life_situations
   const focusIds = focusAreaIds.split(',').map(s => s.trim()).filter(Boolean)
@@ -126,12 +127,15 @@ export async function getLifeSituationContent(focusAreaIds: string, serviceCatId
   let services: ServiceWithOrg[] = []
   if (serviceCatIds) {
     const catIds = serviceCatIds.split(',').map(s => s.trim()).filter(Boolean)
-    const { data: svcData } = await supabase
+    let svcQuery = supabase
       .from('services_211')
       .select('*')
       .eq('is_active', 'Yes')
       .in('service_cat_id', catIds)
-      .limit(20)
+    if (zipCode) {
+      svcQuery = svcQuery.eq('zip_code', zipCode)
+    }
+    const { data: svcData } = await svcQuery.limit(20)
     if (svcData) {
       // Join with organizations
       const orgIds = Array.from(new Set(svcData.map(s => s.org_id).filter(Boolean)))
@@ -707,4 +711,84 @@ export async function getMapMarkersForNeighborhood(neighborhoodId: string) {
   ])
 
   return { services, votingLocations, distributionSites, organizations }
+}
+
+// ── Service-Org-Geography connectivity ───────────────────────────────
+// Functions that connect the service layer to organizations and geography,
+// enabling queries like "what services are in this neighborhood?"
+
+/**
+ * Fetch services available in a super neighborhood by aggregating its ZIP codes.
+ * Joins with organizations for parent org names.
+ */
+export async function getServicesByNeighborhood(neighborhoodId: string): Promise<ServiceWithOrg[]> {
+  const supabase = await createClient()
+
+  const { data: hoods } = await supabase
+    .from('neighborhoods')
+    .select('zip_codes')
+    .eq('super_neighborhood_id', neighborhoodId)
+
+  if (!hoods || hoods.length === 0) {
+    const { data: sn } = await supabase
+      .from('super_neighborhoods')
+      .select('zip_codes')
+      .eq('sn_id', neighborhoodId)
+      .single()
+    if (!sn?.zip_codes) return []
+    const zips = sn.zip_codes.split(',').map((s: string) => s.trim()).filter(Boolean)
+    return getServicesWithCoords(zips)
+  }
+
+  const allZips = Array.from(new Set(
+    hoods
+      .flatMap(h => (h.zip_codes || '').split(','))
+      .map((z: string) => z.trim())
+      .filter(Boolean)
+  ))
+
+  if (allZips.length === 0) return []
+  return getServicesWithCoords(allZips)
+}
+
+/**
+ * Fetch organizations located in a super neighborhood by aggregating its ZIP codes.
+ * Returns organizations with coordinates for map rendering.
+ */
+export async function getOrganizationsByNeighborhood(neighborhoodId: string) {
+  const supabase = await createClient()
+
+  const { data: hoods } = await supabase
+    .from('neighborhoods')
+    .select('zip_codes')
+    .eq('super_neighborhood_id', neighborhoodId)
+
+  let allZips: string[] = []
+
+  if (!hoods || hoods.length === 0) {
+    const { data: sn } = await supabase
+      .from('super_neighborhoods')
+      .select('zip_codes')
+      .eq('sn_id', neighborhoodId)
+      .single()
+    if (!sn?.zip_codes) return []
+    allZips = sn.zip_codes.split(',').map((s: string) => s.trim()).filter(Boolean)
+  } else {
+    allZips = Array.from(new Set(
+      hoods
+        .flatMap(h => (h.zip_codes || '').split(','))
+        .map((z: string) => z.trim())
+        .filter(Boolean)
+    ))
+  }
+
+  if (allZips.length === 0) return []
+
+  const { data } = await supabase
+    .from('organizations')
+    .select('org_id, org_name, description_5th_grade, website, latitude, longitude, zip_code, address, city')
+    .in('zip_code', allZips)
+    .limit(200)
+
+  return data ?? []
 }

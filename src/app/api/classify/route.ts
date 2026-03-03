@@ -1,19 +1,30 @@
+/**
+ * @fileoverview Batch content classification route -- step 2 of the content pipeline.
+ *
+ * After content enters `content_inbox` via `/api/ingest`, this route picks up
+ * pending items and classifies them against the full Change Engine taxonomy
+ * using Claude. For each item it:
+ *
+ *   1. Sends title + description + source metadata to Claude with the taxonomy
+ *      prompt.
+ *   2. Validates AI-returned focus-area IDs against the database and inherits
+ *      parent SDG, NTEE, AIRS, and SDOH codes from matched focus areas.
+ *   3. Writes the enriched classification to `content_review_queue`.
+ *   4. Updates `content_inbox.status` based on confidence thresholds
+ *      (>= 0.8 classified, >= 0.5 needs_review, else flagged).
+ *
+ * Callers may target specific items via `inbox_ids` or process the next N
+ * pending items with `batch_size`. Rate-limited at 1 s between Claude calls.
+ *
+ * Auth: every request is validated by {@link validateApiRequest} from
+ * `@/lib/api-auth`.
+ *
+ * Environment variables: `ANTHROPIC_API_KEY`, `SUPABASE_SECRET_KEY`,
+ * `NEXT_PUBLIC_SUPABASE_URL`.
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
-
-/**
- * POST /api/classify
- *
- * Batch-classify pending content_inbox items using Claude.
- * Replicates classify-content-v2 edge function logic but runs as a Next.js API route.
- *
- * Body (optional):
- *   { "batch_size": 10, "inbox_ids": ["uuid1", "uuid2"] }
- *
- * If inbox_ids provided, classify only those. Otherwise, classify next N pending items.
- *
- * Requires ANTHROPIC_API_KEY and SUPABASE_SECRET_KEY in environment.
- */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

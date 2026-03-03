@@ -2,15 +2,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
 
 /**
- * POST /api/translate
+ * @fileoverview POST /api/translate — Batch translation stage of the content pipeline.
  *
- * Translates content_published items to Spanish and Vietnamese.
- * Replicates supabase/functions/translate-all logic as a Next.js API route.
+ * Translates entity titles + summaries to Spanish (LANG-ES) and Vietnamese (LANG-VI)
+ * using Claude. Supports multiple table types (content_published, services_211,
+ * elected_officials, etc.) via TABLE_CONFIGS.
+ *
+ * For each untranslated item, sends title + summary to Claude for translation,
+ * then upserts into the `translations` table keyed by content_id + language_id + field_name.
+ *
+ * Auth: Requires API key (x-api-key) or cron secret (Bearer token).
+ * Called by: batch-translate cron job, "Translate All" dashboard button, /api/ingest.
  *
  * Body:
- *   { "tables": ["content_published"], "languages": ["es", "vi"], "limit": 50, "offset": 0, "inbox_ids": ["uuid1", ...] }
+ *   { "tables": ["content_published"], "languages": ["es", "vi"], "limit": 50, "offset": 0 }
  *
- * Requires ANTHROPIC_API_KEY and SUPABASE_SECRET_KEY in environment.
+ * Env: ANTHROPIC_API_KEY, SUPABASE_SECRET_KEY
  */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
