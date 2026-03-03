@@ -185,7 +185,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
           <div className="lg:col-span-3">
             <h2 className="text-xl font-serif font-bold text-brand-text mb-4">
-              Resources & Content
+              News
               <span className="text-sm font-normal text-brand-muted ml-2">({totalResources})</span>
             </h2>
             <PathwayFilterClient
