@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ServicesClient } from './ServicesClient'
+import { PageHeader } from '@/components/exchange/PageHeader'
 
 export const revalidate = 300
 
@@ -19,10 +20,7 @@ export default async function ServicesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Services</h1>
-      <p className="text-brand-muted mb-8">
-        Find community services and support organizations in the Houston area.
-      </p>
+      <PageHeader titleKey="services.title" subtitleKey="services.subtitle" />
 
       <ServicesClient services={services} translations={translations} />
     </div>

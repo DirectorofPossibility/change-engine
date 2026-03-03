@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { PollingPlaceClient } from './PollingPlaceClient'
+import { PageHeader } from '@/components/exchange/PageHeader'
 
 export const revalidate = 3600
 
@@ -26,8 +27,7 @@ export default async function PollingPlacesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Find Your Polling Place</h1>
-      <p className="text-brand-muted mb-8">Enter your ZIP code to find nearby voting locations.</p>
+      <PageHeader titleKey="polling.title" subtitleKey="polling.subtitle" />
 
       {activeElection && (
         <div className="mb-10">

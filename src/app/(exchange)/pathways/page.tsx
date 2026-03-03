@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { THEMES, CENTERS } from '@/lib/constants'
 import { getPathwayCounts, getCenterContentForPathway } from '@/lib/data/exchange'
 import { PathwayCard } from '@/components/exchange/PathwayCard'
+import { PageHeader } from '@/components/exchange/PageHeader'
 
 export const revalidate = 3600
 
@@ -23,8 +24,7 @@ export default async function PathwaysPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Seven Pathways</h1>
-      <p className="text-brand-muted mb-8">Explore community life through seven interconnected themes.</p>
+      <PageHeader titleKey="pathways.title" subtitleKey="pathways.subtitle" />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Object.entries(THEMES).map(([id, theme]) => (

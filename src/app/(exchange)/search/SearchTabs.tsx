@@ -1,16 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from '@/lib/i18n'
 
 interface TabDef {
   key: string
-  label: string
+  labelKey: string
   count: number
 }
 
 export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Record<string, React.ReactNode> }) {
-  var [active, setActive] = useState('all')
-  var total = tabs.reduce(function (sum, t) { return sum + t.count }, 0)
+  const { t } = useTranslation()
+  const [active, setActive] = useState('all')
+  const total = tabs.reduce(function (sum, tab) { return sum + tab.count }, 0)
 
   return (
     <div>
@@ -29,7 +31,7 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
               onClick={function () { setActive(tab.key) }}
               className={'px-3 py-1.5 text-sm rounded-lg transition-colors ' + (active === tab.key ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-text hover:bg-brand-bg')}
             >
-              {tab.label} ({tab.count})
+              {t(tab.labelKey)} ({tab.count})
             </button>
           )
         })}
@@ -41,7 +43,7 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
           return (
             <section key={tab.key}>
               {active === 'all' && (
-                <h2 className="text-xl font-bold text-brand-text mb-4">{tab.label} ({tab.count})</h2>
+                <h2 className="text-xl font-bold text-brand-text mb-4">{t(tab.labelKey)} ({tab.count})</h2>
               )}
               {children[tab.key]}
             </section>

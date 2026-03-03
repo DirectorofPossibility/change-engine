@@ -25,6 +25,7 @@ import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SearchTabs } from './SearchTabs'
+import { SearchResultsHeader } from './SearchResultsHeader'
 
 export const dynamic = 'force-dynamic'
 
@@ -71,14 +72,14 @@ export default async function SearchPage({
 
   // ── Tab definitions ──
   var tabs = [
-    { key: 'content', label: 'Content', count: results.content.length },
-    { key: 'services', label: 'Services', count: results.services.length },
-    { key: 'officials', label: 'Officials', count: results.officials.length },
-    { key: 'organizations', label: 'Organizations', count: results.organizations.length },
-    { key: 'policies', label: 'Policies', count: results.policies.length },
-    { key: 'situations', label: 'Help', count: results.situations.length },
-    { key: 'resources', label: 'Resources', count: results.resources.length },
-    { key: 'paths', label: 'Learning', count: results.paths.length },
+    { key: 'content', labelKey: 'search.tab_content', count: results.content.length },
+    { key: 'services', labelKey: 'search.tab_services', count: results.services.length },
+    { key: 'officials', labelKey: 'search.tab_officials', count: results.officials.length },
+    { key: 'organizations', labelKey: 'search.tab_organizations', count: results.organizations.length },
+    { key: 'policies', labelKey: 'search.tab_policies', count: results.policies.length },
+    { key: 'situations', labelKey: 'search.tab_help', count: results.situations.length },
+    { key: 'resources', labelKey: 'search.tab_resources', count: results.resources.length },
+    { key: 'paths', labelKey: 'search.tab_learning', count: results.paths.length },
   ]
 
   // ── Per-tab result sections ──
@@ -225,29 +226,7 @@ export default async function SearchPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-brand-text mb-2">Search Results</h1>
-        {query ? (
-          <p className="text-brand-muted">
-            {totalCount} result{totalCount !== 1 ? 's' : ''} for &ldquo;{query}&rdquo;
-          </p>
-        ) : (
-          <p className="text-brand-muted">Enter a search term to find content, services, officials, and more.</p>
-        )}
-      </div>
-
-      {query && totalCount === 0 && (
-        <div className="text-center py-12">
-          <p className="text-brand-muted mb-4">No results found for &ldquo;{query}&rdquo;</p>
-          <p className="text-sm text-brand-muted mb-6">Try different keywords or browse our categories:</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/help" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Available Resources</Link>
-            <Link href="/services" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Find Services</Link>
-            <Link href="/pathways" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Browse Pathways</Link>
-            <Link href="/officials/lookup" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">Find My Reps</Link>
-          </div>
-        </div>
-      )}
+      <SearchResultsHeader query={query} totalCount={totalCount} />
 
       {totalCount > 0 && (
         <SearchTabs tabs={tabs}>{sections}</SearchTabs>

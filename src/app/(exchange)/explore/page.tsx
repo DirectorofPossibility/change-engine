@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { THEMES } from '@/lib/constants'
 import { getFocusAreas, getSDGs, getSDOHDomains } from '@/lib/data/exchange'
 import { ExploreFilterClient } from './ExploreFilterClient'
+import { PageHeader } from '@/components/exchange/PageHeader'
 
 export const revalidate = 3600
 
@@ -33,10 +34,7 @@ export default async function ExplorePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Explore Topics</h1>
-      <p className="text-brand-muted mb-8 max-w-2xl">
-        Browse {focusAreas.length} focus areas across {Object.keys(THEMES).length} pathways. Filter by Sustainable Development Goal or Social Determinant of Health.
-      </p>
+      <PageHeader titleKey="explore.title" />
 
       <ExploreFilterClient
         themes={themes}

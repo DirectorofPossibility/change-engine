@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
+import { PageHeader } from '@/components/exchange/PageHeader'
+import { ElectionSectionHeader, TurnoutLabel, CertifiedBadge } from './ElectionsSectionHeaders'
 
 export const revalidate = 3600
 
@@ -36,8 +38,7 @@ export default async function ElectionsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Elections &amp; Voting</h1>
-      <p className="text-brand-muted mb-8">Know what&apos;s on your ballot and where to vote.</p>
+      <PageHeader titleKey="elections.title" subtitleKey="elections.subtitle" />
 
       {/* Upcoming election banner */}
       {upcomingElection && (
@@ -58,7 +59,7 @@ export default async function ElectionsPage() {
       {/* Upcoming elections */}
       {futureElections.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Upcoming Elections</h2>
+          <ElectionSectionHeader titleKey="elections.upcoming" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {futureElections.map(function (e) {
               return (
@@ -79,7 +80,7 @@ export default async function ElectionsPage() {
       {/* Past elections */}
       {pastElections.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold text-brand-text mb-4">Past Elections</h2>
+          <ElectionSectionHeader titleKey="elections.past" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {pastElections.map(function (e) {
               return (
@@ -87,8 +88,8 @@ export default async function ElectionsPage() {
                   <h3 className="font-semibold text-brand-text mb-1">{e.election_name}</h3>
                   {e.election_type && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{e.election_type}</span>}
                   {e.election_date && <p className="text-sm text-brand-muted mt-2">{new Date(e.election_date + 'T00:00:00').toLocaleDateString()}</p>}
-                  {e.turnout_pct != null && <p className="text-xs text-brand-muted mt-1">Turnout: {e.turnout_pct}%</p>}
-                  {e.results_certified === 'Yes' && <span className="text-xs text-green-600">Results certified</span>}
+                  {e.turnout_pct != null && <TurnoutLabel pct={e.turnout_pct} />}
+                  {e.results_certified === 'Yes' && <CertifiedBadge />}
                 </Link>
               )
             })}

@@ -6,11 +6,15 @@
  * stats bar section to showcase platform-wide metrics with a circle motif.
  */
 
+'use client'
+
+import { useTranslation } from '@/lib/i18n'
+
 interface StatsCircleProps {
   /** The numeric value to display prominently inside the circle. */
   value: number
-  /** Descriptive label shown below the number (e.g., 'Resources', 'Officials'). */
-  label: string
+  /** i18n key for the label (e.g., 'home.stats_resources'). */
+  labelKey: string
   /** Optional accent color for the ring. Defaults to brand accent. */
   accentColor?: string
 }
@@ -23,7 +27,8 @@ interface StatsCircleProps {
  *
  * @param props - {@link StatsCircleProps}
  */
-export function StatsCircle({ value, label, accentColor }: StatsCircleProps) {
+export function StatsCircle({ value, labelKey, accentColor }: StatsCircleProps) {
+  const { t } = useTranslation()
   const ringColor = accentColor || '#C75B2A'
 
   return (
@@ -37,7 +42,7 @@ export function StatsCircle({ value, label, accentColor }: StatsCircleProps) {
           {value.toLocaleString()}
         </span>
       </div>
-      <span className="text-sm text-gray-300 font-medium">{label}</span>
+      <span className="text-sm text-gray-300 font-medium">{t(labelKey)}</span>
     </div>
   )
 }

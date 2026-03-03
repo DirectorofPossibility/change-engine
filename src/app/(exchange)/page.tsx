@@ -19,7 +19,6 @@
  */
 
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import Image from 'next/image'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
 import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations, getLangId, fetchTranslationsForTable, getServicesWithCoords, getVotingLocationsWithCoords, getOrganizationsWithCoords } from '@/lib/data/exchange'
@@ -28,6 +27,8 @@ import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { NeighborhoodBanner } from '@/components/exchange/NeighborhoodBanner'
 import { HomeMap } from '@/components/exchange/HomeMap'
+import { HomepageHero } from '@/components/exchange/HomepageHero'
+import { HomeSectionHeading, HomeResourcesHeading, HomeStatLabel, HomeCommunityGlance } from '@/components/exchange/HomepageSections'
 import { PathwayCircle } from '@/components/exchange/PathwayCircle'
 import { StatsCircle } from '@/components/exchange/StatsCircle'
 import type { MarkerData } from '@/components/maps'
@@ -100,10 +101,10 @@ export default async function HomePage() {
 
   /** Stat entries filtered to non-zero values for the stats bar. */
   const statEntries = [
-    { value: stats.resources, label: 'Resources', color: '#C75B2A' },
-    { value: stats.officials, label: 'Officials', color: '#38a169' },
-    { value: stats.organizations ?? 0, label: 'Organizations', color: '#3182ce' },
-    { value: stats.policies ?? 0, label: 'Policies', color: '#805ad5' },
+    { value: stats.resources, labelKey: 'home.stats_resources', color: '#C75B2A' },
+    { value: stats.officials, labelKey: 'home.stats_officials', color: '#38a169' },
+    { value: stats.organizations ?? 0, labelKey: 'home.stats_organizations', color: '#3182ce' },
+    { value: stats.policies ?? 0, labelKey: 'home.stats_policies', color: '#805ad5' },
   ].filter(s => s.value > 0)
 
   return (
@@ -123,38 +124,7 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/80" />
 
           {/* Hero text content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-            <p className="text-sm font-medium text-gray-300 uppercase tracking-widest mb-4">
-              Houston, Texas
-            </p>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 max-w-3xl leading-tight drop-shadow-lg">
-              {BRAND.tagline}
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-xl leading-relaxed drop-shadow">
-              Every Houstonian should know their community matters.
-            </p>
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              <Link
-                href="/pathways"
-                className="px-6 py-3 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-lg"
-                style={{ backgroundColor: BRAND.accent }}
-              >
-                Explore Pathways
-              </Link>
-              <Link
-                href="/help"
-                className="px-6 py-3 bg-white text-brand-text rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors shadow-lg"
-              >
-                Available Resources
-              </Link>
-              <Link
-                href="/officials"
-                className="px-6 py-3 bg-white/15 text-white rounded-full text-sm font-semibold hover:bg-white/25 border border-white/30 transition-colors backdrop-blur-sm"
-              >
-                Find Your Reps
-              </Link>
-            </div>
-          </div>
+          <HomepageHero />
         </div>
 
         {/* Floating stats circles overlapping hero bottom edge */}
@@ -162,7 +132,7 @@ export default async function HomePage() {
           <div className="relative -mt-14 z-10 max-w-4xl mx-auto px-4">
             <div className="flex items-center justify-center gap-6 sm:gap-10">
               {statEntries.map(s => (
-                <div key={s.label} className="flex flex-col items-center">
+                <div key={s.labelKey} className="flex flex-col items-center">
                   <div
                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center
                                border-4 shadow-xl bg-white"
@@ -172,7 +142,7 @@ export default async function HomePage() {
                       {s.value.toLocaleString()}
                     </span>
                   </div>
-                  <span className="text-xs sm:text-sm text-brand-muted font-medium mt-2">{s.label}</span>
+                  <HomeStatLabel labelKey={s.labelKey} />
                 </div>
               ))}
             </div>
@@ -185,8 +155,7 @@ export default async function HomePage() {
 
       {/* ── Pathway Circles (Yelp-style category browsing) ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-2xl font-bold text-brand-text mb-2">Seven Pathways</h2>
-        <p className="text-brand-muted mb-6">Explore community life through these lenses</p>
+        <HomeSectionHeading titleKey="home.seven_pathways" subtitleKey="home.pathways_subtitle" />
         <div className="flex gap-6 sm:gap-8 overflow-x-auto pb-4 scrollbar-hide">
           {Object.entries(THEMES).map(function ([id, theme]) {
             return (
@@ -206,8 +175,7 @@ export default async function HomePage() {
 
       {/* ── 4 Centers — Circular badge layout ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-2xl font-bold text-brand-text mb-2">Four Centers of Community Life</h2>
-        <p className="text-brand-muted mb-6">Find what you need, organized by intent</p>
+        <HomeSectionHeading titleKey="home.four_centers" subtitleKey="home.centers_subtitle" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {Object.entries(CENTERS).map(function ([name, config]) {
             return (
@@ -230,15 +198,7 @@ export default async function HomePage() {
       {/* ── Available Resources ── */}
       {featuredSituations.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-brand-text">Available Resources</h2>
-              <p className="text-brand-muted mt-1">Find help for life situations you may be facing</p>
-            </div>
-            <Link href="/help" className="text-sm text-brand-accent hover:underline font-medium">
-              View all &rarr;
-            </Link>
-          </div>
+          <HomeResourcesHeading />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {featuredSituations.map(function (s) {
               return (
@@ -261,8 +221,7 @@ export default async function HomePage() {
       {/* ── Latest Resources ── */}
       {latestContent.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h2 className="text-2xl font-bold text-brand-text mb-2">Latest Resources</h2>
-          <p className="text-brand-muted mb-6">Recently published content for the community</p>
+          <HomeSectionHeading titleKey="home.latest_resources" subtitleKey="home.latest_subtitle" />
           <TranslatedContentGrid items={latestContent} />
         </section>
       )}
@@ -270,15 +229,13 @@ export default async function HomePage() {
       {/* ── Stats Bar with Circle Motif ── */}
       <section className="bg-brand-text text-white py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-xl font-bold text-center mb-8 text-gray-300">
-            Community at a Glance
-          </h2>
+          <HomeCommunityGlance />
           <div className="flex items-center justify-center gap-8 sm:gap-12 flex-wrap">
             {statEntries.map(s => (
               <StatsCircle
-                key={s.label}
+                key={s.labelKey}
                 value={s.value}
-                label={s.label}
+                labelKey={s.labelKey}
                 accentColor={s.color}
               />
             ))}
