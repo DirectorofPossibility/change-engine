@@ -55,7 +55,6 @@ change-lab-api/                         # Local clone (repo name: change-engine)
 │   │   ├── (exchange)/                 # Public-facing route group
 │   │   │   ├── (pages)/               # All public pages (nested route group)
 │   │   │   ├── auth/                   # Auth callback
-│   │   │   ├── foundations/            # Foundations galaxy (outside pages layout)
 │   │   │   ├── layout.tsx              # Exchange layout (header, footer, sidebar)
 │   │   │   └── page.tsx                # Homepage
 │   │   ├── api/                        # Next.js API routes
