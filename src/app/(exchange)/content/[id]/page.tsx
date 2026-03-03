@@ -123,7 +123,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     if (queueItem?.ai_classification) {
       const c = queueItem.ai_classification as any
       keywords = c._keywords || []
-      extractedOrgs = (c._external_orgs || []).filter((o: any) => o && o.name && o.url)
+      const rawOrgs = (c._external_orgs || c.organizations || []).filter((o: any) => o && o.name)
+      extractedOrgs = rawOrgs.map((o: any) => ({ name: o.name, url: o.url || '', description: o.description }))
       downloadLinks = c._download_links || []
 
       // Resolve internal cross-references to content_published IDs
@@ -142,15 +143,49 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
+  // Resolve extracted org names to internal org profiles via org_domains
+  let orgProfileMap: Record<string, string> = {}
+  if (extractedOrgs.length > 0) {
+    const orgDomains = extractedOrgs
+      .map(function (o) { try { return new URL(o.url).hostname } catch { return '' } })
+      .filter(Boolean)
+    if (orgDomains.length > 0) {
+      const { data: domainMatches } = await supabase
+        .from('org_domains')
+        .select('domain, org_id')
+        .in('domain', orgDomains)
+      if (domainMatches) {
+        for (const d of domainMatches) {
+          orgProfileMap[d.domain] = d.org_id
+        }
+      }
+    }
+  }
+
   // Fetch org info if linked
-  var orgInfo: { org_name: string; website: string | null; description_5th_grade: string | null } | null = null
+  var orgInfo: { org_id: string; org_name: string; website: string | null; description_5th_grade: string | null } | null = null
   if (item.org_id) {
     const { data: org } = await supabase
       .from('organizations')
-      .select('org_name, website, description_5th_grade')
+      .select('org_id, org_name, website, description_5th_grade')
       .eq('org_id', item.org_id)
       .single()
     orgInfo = org
+  }
+
+  // Resolve audience segment IDs to human-readable names
+  const segmentIds = item.audience_segments || []
+  let segmentNames: Record<string, string> = {}
+  if (segmentIds.length > 0) {
+    const { data: segments } = await supabase
+      .from('audience_segments')
+      .select('segment_id, segment_name')
+      .in('segment_id', segmentIds)
+    if (segments) {
+      for (const s of segments) {
+        segmentNames[s.segment_id] = s.segment_name
+      }
+    }
   }
 
   // Related content: use focus area overlap for better semantic matching
@@ -290,7 +325,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             </details>
           )}
 
-          {/* Organization — open by default */}
+          {/* Organization — open by default, links to internal profile */}
           {orgInfo && (
             <details open className="bg-white rounded-xl border border-brand-border group">
               <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
@@ -298,14 +333,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </summary>
               <div className="px-4 pb-4">
-                <p className="text-sm font-medium text-brand-text">{orgInfo.org_name}</p>
+                <Link href={'/organizations/' + orgInfo.org_id} className="text-sm font-medium text-brand-accent hover:underline">
+                  {orgInfo.org_name}
+                </Link>
                 {orgInfo.description_5th_grade && (
                   <p className="text-xs text-brand-muted mt-1">{orgInfo.description_5th_grade}</p>
-                )}
-                {orgInfo.website && (
-                  <Link href={orgInfo.website} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-accent hover:underline mt-1 inline-block">
-                    Visit website &rarr;
-                  </Link>
                 )}
               </div>
             </details>
@@ -354,8 +386,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             </details>
           )}
 
-          {/* Who This Is For — collapsed by default */}
-          {item.audience_segments && item.audience_segments.length > 0 && (
+          {/* Who This Is For — collapsed by default, shows human-readable names */}
+          {segmentIds.length > 0 && (
             <details className="bg-white rounded-xl border border-brand-border group">
               <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
                 Who This Is For
@@ -363,8 +395,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </summary>
               <div className="px-4 pb-4">
                 <div className="flex flex-wrap gap-1">
-                  {item.audience_segments.map(function (seg) {
-                    return <span key={seg} className="text-xs px-2 py-1 rounded-lg bg-brand-bg text-brand-muted">{seg}</span>
+                  {segmentIds.map(function (seg) {
+                    const name = segmentNames[seg] || seg.replace('SEG_', '').replace(/_/g, ' ')
+                    return <span key={seg} className="text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-700">{name}</span>
                   })}
                 </div>
               </div>
@@ -388,7 +421,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             </details>
           )}
 
-          {/* Organizations Mentioned — collapsed by default */}
+          {/* Organizations Mentioned — links to internal profiles when available */}
           {extractedOrgs.length > 0 && (
             <details className="bg-white rounded-xl border border-brand-border group">
               <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
@@ -398,11 +431,20 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               <div className="px-4 pb-4">
                 <div className="space-y-2">
                   {extractedOrgs.slice(0, 6).map(function (org) {
+                    let orgDomain = ''
+                    try { orgDomain = new URL(org.url).hostname } catch {}
+                    const internalOrgId = orgDomain ? orgProfileMap[orgDomain] : undefined
                     return (
-                      <div key={org.url}>
-                        <Link href={org.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
-                          {org.name}
-                        </Link>
+                      <div key={org.name}>
+                        {internalOrgId ? (
+                          <Link href={'/organizations/' + internalOrgId} className="text-xs font-medium text-brand-accent hover:underline">
+                            {org.name}
+                          </Link>
+                        ) : (
+                          <Link href={org.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
+                            {org.name}
+                          </Link>
+                        )}
                         {org.description && <p className="text-xs text-brand-muted">{org.description}</p>}
                       </div>
                     )

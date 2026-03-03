@@ -17,13 +17,13 @@
  * Colors are used for pills, charts, and pathway cards across the UI.
  */
 export const THEMES = {
-  THEME_01: { name: 'Our Health', color: '#e53e3e', slug: 'our-health', emoji: '🏥' },
-  THEME_02: { name: 'Our Families', color: '#dd6b20', slug: 'our-families', emoji: '👨‍👩‍👧‍👦' },
-  THEME_03: { name: 'Our Neighborhood', color: '#d69e2e', slug: 'our-neighborhood', emoji: '🏘️' },
-  THEME_04: { name: 'Our Voice', color: '#38a169', slug: 'our-voice', emoji: '📢' },
-  THEME_05: { name: 'Our Money', color: '#3182ce', slug: 'our-money', emoji: '💰' },
-  THEME_06: { name: 'Our Planet', color: '#319795', slug: 'our-planet', emoji: '🌍' },
-  THEME_07: { name: 'The Bigger We', color: '#805ad5', slug: 'the-bigger-we', emoji: '🤝' },
+  THEME_01: { name: 'Our Health', color: '#e53e3e', slug: 'our-health', emoji: '' },
+  THEME_02: { name: 'Our Families', color: '#dd6b20', slug: 'our-families', emoji: '' },
+  THEME_03: { name: 'Our Neighborhood', color: '#d69e2e', slug: 'our-neighborhood', emoji: '' },
+  THEME_04: { name: 'Our Voice', color: '#38a169', slug: 'our-voice', emoji: '' },
+  THEME_05: { name: 'Our Money', color: '#3182ce', slug: 'our-money', emoji: '' },
+  THEME_06: { name: 'Our Planet', color: '#319795', slug: 'our-planet', emoji: '' },
+  THEME_07: { name: 'The Bigger We', color: '#805ad5', slug: 'the-bigger-we', emoji: '' },
 } as const;
 
 /**
@@ -32,10 +32,10 @@ export const THEMES = {
  * Used for homepage cards, content filtering, and the classification prompt.
  */
 export const CENTERS: Record<string, { question: string; emoji: string; slug: string }> = {
-  Learning:       { question: 'How can I understand?', emoji: '📚', slug: 'learning' },
-  Action:         { question: 'How can I help?', emoji: '✊', slug: 'action' },
-  Resource:       { question: "What's available to me?", emoji: '📋', slug: 'resources' },
-  Accountability: { question: 'Who makes decisions?', emoji: '🏛️', slug: 'accountability' },
+  Learning:       { question: 'How can I understand?', emoji: '', slug: 'learning' },
+  Action:         { question: 'How can I help?', emoji: '', slug: 'action' },
+  Resource:       { question: "What's available to me?", emoji: '', slug: 'resources' },
+  Accountability: { question: 'Who makes decisions?', emoji: '', slug: 'accountability' },
 };
 
 /**

@@ -137,6 +137,22 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
       )
     }
 
+    // Service categories
+    const serviceCatIds: string[] = classification.service_cat_ids || []
+    for (const scId of serviceCatIds) {
+      junctionInserts.push(
+        supabase.from('content_service_categories').insert({ content_id: contentId, service_cat_id: scId }).then(() => {})
+      )
+    }
+
+    // Skills
+    const skillIds: string[] = classification.skill_ids || []
+    for (const skId of skillIds) {
+      junctionInserts.push(
+        supabase.from('content_skills').insert({ content_id: contentId, skill_id: skId }).then(() => {})
+      )
+    }
+
     // Fire all junction inserts in parallel, ignoring duplicates
     await Promise.allSettled(junctionInserts)
   }

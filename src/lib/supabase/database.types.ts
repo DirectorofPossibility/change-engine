@@ -4157,6 +4157,174 @@ export type Database = {
           },
         ]
       }
+      guide_focus_areas: {
+        Row: { guide_id: string; focus_id: string }
+        Insert: { guide_id: string; focus_id: string }
+        Update: { guide_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "guide_focus_areas_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "guides"
+            referencedColumns: ["guide_id"]
+          },
+          {
+            foreignKeyName: "guide_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      life_situation_agencies: {
+        Row: { situation_id: string; agency_id: string }
+        Insert: { situation_id: string; agency_id: string }
+        Update: { situation_id?: string; agency_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_agencies_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+          {
+            foreignKeyName: "life_situation_agencies_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["agency_id"]
+          },
+        ]
+      }
+      life_situation_resources: {
+        Row: { situation_id: string; resource_id: string }
+        Insert: { situation_id: string; resource_id: string }
+        Update: { situation_id?: string; resource_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_resources_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+          {
+            foreignKeyName: "life_situation_resources_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "resources"
+            referencedColumns: ["resource_id"]
+          },
+        ]
+      }
+      school_district_counties: {
+        Row: { district_id: string; county_id: string }
+        Insert: { district_id: string; county_id: string }
+        Update: { district_id?: string; county_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "school_district_counties_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "school_districts"
+            referencedColumns: ["school_district_id"]
+          },
+          {
+            foreignKeyName: "school_district_counties_county_id_fkey"
+            columns: ["county_id"]
+            isOneToOne: false
+            referencedRelation: "counties"
+            referencedColumns: ["county_id"]
+          },
+        ]
+      }
+      precinct_census_tracts: {
+        Row: { precinct_id: string; tract_id: string }
+        Insert: { precinct_id: string; tract_id: string }
+        Update: { precinct_id?: string; tract_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "precinct_census_tracts_precinct_id_fkey"
+            columns: ["precinct_id"]
+            isOneToOne: false
+            referencedRelation: "precincts"
+            referencedColumns: ["precinct_id"]
+          },
+          {
+            foreignKeyName: "precinct_census_tracts_tract_id_fkey"
+            columns: ["tract_id"]
+            isOneToOne: false
+            referencedRelation: "census_tracts"
+            referencedColumns: ["tract_id"]
+          },
+        ]
+      }
+      precinct_voting_locations: {
+        Row: { precinct_id: string; location_id: string }
+        Insert: { precinct_id: string; location_id: string }
+        Update: { precinct_id?: string; location_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "precinct_voting_locations_precinct_id_fkey"
+            columns: ["precinct_id"]
+            isOneToOne: false
+            referencedRelation: "precincts"
+            referencedColumns: ["precinct_id"]
+          },
+          {
+            foreignKeyName: "precinct_voting_locations_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "voting_locations"
+            referencedColumns: ["location_id"]
+          },
+        ]
+      }
+      content_service_categories: {
+        Row: { content_id: string; service_cat_id: string }
+        Insert: { content_id: string; service_cat_id: string }
+        Update: { content_id?: string; service_cat_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "content_service_categories_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+        ]
+      }
+      content_skills: {
+        Row: { content_id: string; skill_id: string }
+        Insert: { content_id: string; skill_id: string }
+        Update: { content_id?: string; skill_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "content_skills_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["skill_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -58,7 +58,7 @@ const en: Record<string, string> = {
   'home.seven_pathways': 'Seven Pathways',
   'home.pathways_subtitle': 'Explore community life through these lenses',
   'home.available_resources': 'Available Resources',
-  'home.help_subtitle': 'Find help for life situations you may be facing',
+  'home.help_subtitle': 'Explore resources for any life situation',
   'home.view_all': 'View all',
   'home.latest_resources': 'Latest Resources',
   'home.latest_subtitle': 'Recently published content for the community',
@@ -70,7 +70,7 @@ const en: Record<string, string> = {
 
   // Help page
   'help.title': 'Available Resources',
-  'help.subtitle': 'Explore resources available for life situations you may be facing, organized by urgency level.',
+  'help.subtitle': 'Browse community resources for any life situation, organized by priority.',
   'help.emergency': 'In an emergency?',
   'help.crisis_911': '911 for emergencies',
   'help.crisis_988': '988 for mental health crisis',
@@ -223,7 +223,7 @@ const es: Record<string, string> = {
   'home.seven_pathways': 'Siete Caminos',
   'home.pathways_subtitle': 'Explore la vida comunitaria a través de estos lentes',
   'home.available_resources': 'Recursos Disponibles',
-  'home.help_subtitle': 'Encuentre ayuda para situaciones de vida que pueda estar enfrentando',
+  'home.help_subtitle': 'Descubra recursos disponibles para cualquier situación de vida',
   'home.view_all': 'Ver todos',
   'home.latest_resources': 'Últimos Recursos',
   'home.latest_subtitle': 'Contenido publicado recientemente para la comunidad',
@@ -235,7 +235,7 @@ const es: Record<string, string> = {
 
   // Help page
   'help.title': 'Recursos Disponibles',
-  'help.subtitle': 'Explore los recursos disponibles para las situaciones de vida que pueda estar enfrentando, organizados por nivel de urgencia.',
+  'help.subtitle': 'Descubra recursos comunitarios para cualquier situación de vida, organizados por prioridad.',
   'help.emergency': '¿Es una emergencia?',
   'help.crisis_911': '911 para emergencias',
   'help.crisis_988': '988 para crisis de salud mental',
@@ -388,7 +388,7 @@ const vi: Record<string, string> = {
   'home.seven_pathways': 'Bảy Lộ Trình',
   'home.pathways_subtitle': 'Khám phá đời sống cộng đồng qua các góc nhìn này',
   'home.available_resources': 'Tài Nguyên Có Sẵn',
-  'home.help_subtitle': 'Tìm trợ giúp cho các tình huống cuộc sống bạn có thể đang gặp',
+  'home.help_subtitle': 'Khám phá tài nguyên có sẵn cho bất kỳ tình huống cuộc sống nào',
   'home.view_all': 'Xem tất cả',
   'home.latest_resources': 'Tài Nguyên Mới Nhất',
   'home.latest_subtitle': 'Nội dung mới xuất bản cho cộng đồng',
@@ -400,7 +400,7 @@ const vi: Record<string, string> = {
 
   // Help page
   'help.title': 'Tài Nguyên Có Sẵn',
-  'help.subtitle': 'Khám phá tài nguyên có sẵn cho các tình huống cuộc sống bạn có thể đang gặp phải, sắp xếp theo mức độ khẩn cấp.',
+  'help.subtitle': 'Khám phá tài nguyên cộng đồng cho bất kỳ tình huống cuộc sống nào, sắp xếp theo mức độ ưu tiên.',
   'help.emergency': 'Trường hợp khẩn cấp?',
   'help.crisis_911': '911 cho trường hợp khẩn cấp',
   'help.crisis_988': '988 cho khủng hoảng sức khỏe tâm thần',

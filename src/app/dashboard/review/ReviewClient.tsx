@@ -13,7 +13,7 @@ type ReviewItem = any // from Supabase join query
 
 const STATUS_TABS = ['all', 'pending', 'flagged', 'auto_approved', 'rejected'] as const
 
-export function ReviewClient({ initialItems }: { initialItems: ReviewItem[] }) {
+export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: ReviewItem[]; segmentMap?: Record<string, string> }) {
   const [items] = useState(initialItems)
   const [activeTab, setActiveTab] = useState<string>('all')
   const [selected, setSelected] = useState<ReviewItem | null>(null)
@@ -181,7 +181,7 @@ export function ReviewClient({ initialItems }: { initialItems: ReviewItem[] }) {
                 <span className="text-brand-muted text-xs">Audience</span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {(classification.audience_segment_ids || []).map((id: string) => (
-                    <span key={id} className="text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded">{id}</span>
+                    <span key={id} className="text-xs bg-purple-50 text-purple-700 px-2 py-0.5 rounded">{segmentMap[id] || id.replace('SEG_', '').replace(/_/g, ' ')}</span>
                   ))}
                 </div>
               </div>
