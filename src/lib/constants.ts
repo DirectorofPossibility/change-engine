@@ -69,7 +69,7 @@ export const LANGUAGES = [
 ] as const;
 
 /**
- * Configuration for a geographic boundary layer rendered on Google Maps.
+ * Configuration for a geographic boundary layer rendered on the map.
  * Each layer points to a static GeoJSON file in /public/geo/ and specifies
  * how to identify features (idProperty) and where to link for detail pages.
  */

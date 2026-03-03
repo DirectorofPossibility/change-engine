@@ -563,7 +563,7 @@ export async function getMapMarkersForSuperNeighborhood(snId: string) {
 }
 
 // ── Map marker data ────────────────────────────────────────────────────
-// These functions return entities with lat/lng for rendering on Google Maps.
+// These functions return entities with lat/lng for rendering on Leaflet maps.
 // Coordinates come from the entity table or fall back to geocode_cache.
 
 /**
