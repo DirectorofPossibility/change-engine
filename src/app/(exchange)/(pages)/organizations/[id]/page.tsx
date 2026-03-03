@@ -6,6 +6,7 @@ import { Phone, Mail, Globe, MapPin } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 86400
 
@@ -85,6 +86,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[
+        { label: 'Organizations', href: '/organizations' },
+        { label: displayOrgName }
+      ]} />
       {/* Header */}
       <div className="flex items-start gap-4 mb-6">
         {org.logo_url && (

@@ -4,15 +4,16 @@ import { useState, useMemo } from 'react'
 import { FeedCard } from './FeedCard'
 import type { FeedItem } from './FeedCard'
 import { BookOpen, Zap, Package, Scale, LayoutGrid, List } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 export type { FeedItem } from './FeedCard'
 
 const CENTER_FILTERS = [
-  { key: null, label: 'All', icon: null },
-  { key: 'Learning', label: 'Learning', icon: BookOpen },
-  { key: 'Action', label: 'Action', icon: Zap },
-  { key: 'Resource', label: 'Resource', icon: Package },
-  { key: 'Accountability', label: 'Accountability', icon: Scale },
+  { key: null, label: 'feed.all', icon: null },
+  { key: 'Learning', label: 'feed.learning', icon: BookOpen },
+  { key: 'Action', label: 'feed.action', icon: Zap },
+  { key: 'Resource', label: 'feed.resource', icon: Package },
+  { key: 'Accountability', label: 'feed.accountability', icon: Scale },
 ] as const
 
 interface BraidedFeedProps {
@@ -62,6 +63,7 @@ export function BraidedFeed({
   onSelectCenter,
   onItemClick,
 }: BraidedFeedProps) {
+  const { t } = useTranslation()
   const [internalCenter, setInternalCenter] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const activeCenter = externalCenter !== undefined ? externalCenter : internalCenter
@@ -118,7 +120,7 @@ export function BraidedFeed({
                 `}
               >
                 {Icon && <Icon size={13} />}
-                {label}
+                {t(label)}
                 <span className={`
                   inline-flex items-center justify-center min-w-[20px] h-[20px] rounded-full text-[10px] font-bold leading-none px-1
                   ${isActive ? 'bg-white/20 text-white' : 'bg-brand-bg text-brand-muted'}
@@ -154,8 +156,8 @@ export function BraidedFeed({
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-bg flex items-center justify-center">
             <Package size={24} className="text-brand-muted" />
           </div>
-          <p className="text-brand-muted font-medium">No items match the current filter</p>
-          <p className="text-sm text-brand-muted/60 mt-1">Try selecting a different category above</p>
+          <p className="text-brand-muted font-medium">{t('feed.no_items')}</p>
+          <p className="text-sm text-brand-muted/60 mt-1">{t('feed.try_different')}</p>
         </div>
       ) : (
         <div className={

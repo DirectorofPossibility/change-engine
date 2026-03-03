@@ -211,7 +211,7 @@ function HomeCircles({ onSelect, hov, setHov, ready, pw: pwOverride }: {
 
   return (
     <svg viewBox={`0 0 ${VBW} ${VBH}`}
-      style={{ width: '100%', height: 500, overflow: 'visible' }}
+      style={{ width: '100%', maxHeight: 380, overflow: 'visible' }}
       preserveAspectRatio="xMidYMid meet">
       {/* Bridge arcs */}
       {BRIDGES.map((b, i) => {
@@ -296,7 +296,7 @@ function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
 
   return (
     <svg viewBox={`0 0 ${VBW} ${VBH + 100}`}
-      style={{ width: '100%', height: 580, overflow: 'visible' }}
+      style={{ width: '100%', maxHeight: 420, overflow: 'visible' }}
       preserveAspectRatio="xMidYMid meet">
       <defs>
         <radialGradient id="selGlow">

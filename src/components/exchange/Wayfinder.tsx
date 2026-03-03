@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe, ArrowRight, Sparkles } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
+import { useTranslation } from '@/lib/i18n'
 import { WayfinderSidebar } from './WayfinderSidebar'
 import { EmbeddableCircles } from './CircleKnowledgeGraph'
 import { BraidedFeed } from './BraidedFeed'
@@ -82,44 +83,35 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
 }
 
 const LIFE_SITUATIONS = [
-  { emoji: '🍽️', label: 'Food Access', href: '/help/i-need-food-right-now', color: '#e53e3e' },
-  { emoji: '🏠', label: 'Housing & Shelter', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
-  { emoji: '💼', label: 'Career & Employment', href: '/help/i-lost-my-job', color: '#3182ce' },
-  { emoji: '🏥', label: 'Health & Wellness', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
-  { emoji: '🛡️', label: 'Safety & Protection', href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
-  { emoji: '💰', label: 'Financial Stability', href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
+  { emoji: '🍽️', label: 'life.food_access', href: '/help/i-need-food-right-now', color: '#e53e3e' },
+  { emoji: '🏠', label: 'life.housing_shelter', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
+  { emoji: '💼', label: 'life.career_employment', href: '/help/i-lost-my-job', color: '#3182ce' },
+  { emoji: '🏥', label: 'life.health_wellness', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
+  { emoji: '🛡️', label: 'life.safety_protection', href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
+  { emoji: '💰', label: 'life.financial_stability', href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
 ]
 
+/**
+ * Convert pathway feed data into FeedItems.
+ * NEWS (content_published) is EXCLUDED from pathway feeds — it only shows in "What's New".
+ * Pathway feeds show civic infrastructure: services, officials, policies.
+ */
 function feedDataToItems(feed: PathwayFeedData, themeId: string) {
   const themeKey = themeId as keyof typeof THEMES
   const color = THEMES[themeKey]?.color ?? '#8B7E74'
 
-  const resources: FeedItem[] = [
-    ...feed.content.map(function (c) {
-      return {
-        type: 'resource' as const,
-        id: c.id,
-        title: c.title_6th_grade || 'Untitled',
-        summary: c.summary_6th_grade || undefined,
-        center: c.center || undefined,
-        orgName: c.source_domain || undefined,
-        pathwayColor: color,
-        imageUrl: c.image_url || undefined,
-        href: '/content/' + c.id,
-      }
-    }),
-    ...feed.services.map(function (s) {
-      return {
-        type: 'service' as const,
-        id: s.service_id,
-        title: s.service_name,
-        summary: s.description_5th_grade || undefined,
-        orgName: s.org_id || undefined,
-        pathwayColor: color,
-        href: '/services/' + s.service_id,
-      }
-    }),
-  ]
+  // Only services in the resource feed — news stays in "What's New"
+  const resources: FeedItem[] = feed.services.map(function (s) {
+    return {
+      type: 'service' as const,
+      id: s.service_id,
+      title: s.service_name,
+      summary: s.description_5th_grade || undefined,
+      orgName: s.org_id || undefined,
+      pathwayColor: color,
+      href: '/services/' + s.service_id,
+    }
+  })
 
   const officials: FeedItem[] = feed.officials.map(function (o) {
     return {
@@ -159,6 +151,7 @@ export function Wayfinder({
   newThisWeek,
   latestContent,
 }: WayfinderProps) {
+  const { t } = useTranslation()
   const [selectedPathway, setSelectedPathway] = useState<string | null>(null)
   const [activeCenter, setActiveCenter] = useState<string | null>(null)
   const [panel, setPanel] = useState<PanelData | null>(null)
@@ -175,7 +168,7 @@ export function Wayfinder({
         return {
           type: 'resource' as const,
           id: c.id,
-          title: c.title_6th_grade || 'Untitled',
+          title: c.title_6th_grade || t('card.untitled'),
           summary: c.summary_6th_grade || undefined,
           center: c.center || undefined,
           orgName: c.source_domain || undefined,
@@ -255,7 +248,7 @@ export function Wayfinder({
                     Community <span style={{ color: BRAND.accent }}>Exchange</span>
                   </h1>
                   <p className="font-serif italic text-brand-muted text-lg mt-2 max-w-md mx-auto leading-relaxed">
-                    Everything connects. Explore 7 pathways of civic life.
+                    {t('wayfinder.hero_subtitle')}
                   </p>
                 </div>
 
@@ -268,7 +261,7 @@ export function Wayfinder({
                   />
                 </div>
                 <p className="text-center text-brand-muted/50 text-xs mt-1 font-serif italic">
-                  Tap any circle to explore a pathway
+                  {t('wayfinder.tap_hint')}
                 </p>
               </div>
 
@@ -285,16 +278,16 @@ export function Wayfinder({
               <section className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
                   <Sparkles size={18} style={{ color: BRAND.accent }} />
-                  <h2 className="font-serif text-2xl font-bold tracking-tight">Start Your Journey</h2>
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.start_journey')}</h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                   {LIFE_SITUATIONS.map(function (sit) {
                     return (
                       <Link key={sit.href} href={sit.href} className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-1 transition-all duration-200 text-center">
                         <span className="text-3xl group-hover:scale-110 transition-transform">{sit.emoji}</span>
-                        <span className="text-sm font-semibold text-brand-text leading-tight">{sit.label}</span>
+                        <span className="text-sm font-semibold text-brand-text leading-tight">{t(sit.label)}</span>
                         <span className="text-xs font-medium rounded-full px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: sit.color, backgroundColor: sit.color + '15' }}>
-                          Explore <ArrowRight className="inline w-3 h-3 ml-0.5" />
+                          {t('wayfinder.explore')} <ArrowRight className="inline w-3 h-3 ml-0.5" />
                         </span>
                       </Link>
                     )
@@ -302,7 +295,7 @@ export function Wayfinder({
                 </div>
                 <div className="text-center mt-3">
                   <Link href="/help" className="text-sm font-semibold hover:underline" style={{ color: BRAND.accent }}>
-                    Browse all pathways <ArrowRight className="inline w-3.5 h-3.5 ml-0.5" />
+                    {t('wayfinder.browse_all')} <ArrowRight className="inline w-3.5 h-3.5 ml-0.5" />
                   </Link>
                 </div>
               </section>
@@ -311,7 +304,7 @@ export function Wayfinder({
               <section className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-0.5 rounded-full" style={{ background: `linear-gradient(90deg, ${BRAND.accent}, #5B8A8A)` }} />
-                  <h2 className="font-serif text-2xl font-bold tracking-tight">Explore Houston</h2>
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.explore_houston')}</h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
                   {(Object.entries(THEMES) as [string, (typeof THEMES)[keyof typeof THEMES]][]).map(function ([id, theme]) {
@@ -324,7 +317,7 @@ export function Wayfinder({
                         </div>
                         <div className="min-w-0 flex-1">
                           <span className="block text-sm font-semibold text-brand-text leading-tight truncate">{theme.name}</span>
-                          <span className="block text-xs text-brand-muted mt-0.5">{count} resources</span>
+                          <span className="block text-xs text-brand-muted mt-0.5">{count} {t('card.resources')}</span>
                         </div>
                       </button>
                     )
@@ -335,14 +328,14 @@ export function Wayfinder({
               {/* Latest Content header */}
               <section>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-serif text-2xl font-bold tracking-tight">What&apos;s New</h2>
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.whats_new')}</h2>
                   {newThisWeek > 0 && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs font-semibold ring-1 ring-green-200">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
                       </span>
-                      +{newThisWeek} this week
+                      +{newThisWeek} {t('wayfinder.this_week')}
                     </span>
                   )}
                 </div>
@@ -382,13 +375,13 @@ export function Wayfinder({
                   <div>
                     <h2 className="font-serif text-3xl font-bold tracking-tight" style={{ color: selectedTheme.color }}>{selectedTheme.name}</h2>
                     <p className="text-sm text-brand-muted font-serif italic mt-0.5">
-                      {pathwayCounts[selectedPathway] ?? 0} resources across involvement, services, policies & civic life
+                      {pathwayCounts[selectedPathway] ?? 0} {t('wayfinder.pathway_desc')}
                     </p>
                   </div>
                 </div>
                 {bridges.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mt-3">
-                    <span className="text-xs text-brand-muted font-serif italic">Connected to</span>
+                    <span className="text-xs text-brand-muted font-serif italic">{t('wayfinder.connected_to')}</span>
                     {bridges
                       .filter(function (b) { return b[0] === selectedPathway || b[1] === selectedPathway })
                       .slice(0, 5)
@@ -425,7 +418,7 @@ export function Wayfinder({
         {/* Footer */}
         <div className="text-center py-8 border-t border-brand-border bg-white">
           <p className="text-sm text-brand-muted font-serif italic">
-            The Community Exchange — a product of The Change Engine
+            {t('wayfinder.footer')}
           </p>
           <p className="text-xs text-brand-muted/50 mt-1">
             {stats.resources} resources &middot; {stats.officials} officials &middot; {stats.policies} policies &middot; {stats.focusAreas} focus areas

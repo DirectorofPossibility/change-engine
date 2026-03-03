@@ -7,6 +7,7 @@ import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -93,12 +94,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-brand-muted mb-6">
-        <Link href="/officials" className="hover:text-brand-accent">Officials</Link>
-        <span className="mx-2">/</span>
-        <span>{official.official_name}</span>
-      </div>
+      <Breadcrumb items={[
+        { label: 'Civic Leaders', href: '/officials' },
+        { label: official.official_name }
+      ]} />
 
       {/* Header */}
       <div className="mb-8">

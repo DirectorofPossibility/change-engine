@@ -184,6 +184,81 @@ const en: Record<string, string> = {
   'countdown.election_day': 'Election Day',
   'countdown.early_voting': 'Early Voting',
   'countdown.registration_deadline': 'Registration Deadline',
+
+  // Wayfinder homepage
+  'wayfinder.the': 'The',
+  'wayfinder.community': 'Community',
+  'wayfinder.exchange': 'Exchange',
+  'wayfinder.hero_subtitle': 'Everything connects. Explore 7 pathways of civic life.',
+  'wayfinder.tap_hint': 'Tap any circle to explore a pathway',
+  'wayfinder.start_journey': 'Start Your Journey',
+  'wayfinder.explore': 'Explore',
+  'wayfinder.browse_all': 'Browse all pathways',
+  'wayfinder.explore_houston': 'Explore Houston',
+  'wayfinder.whats_new': "What's New",
+  'wayfinder.this_week': 'this week',
+  'wayfinder.connected_to': 'Connected to',
+  'wayfinder.pathway_desc': 'resources across involvement, services, policies & civic life',
+  'wayfinder.footer': 'The Community Exchange — a product of The Change Engine',
+
+  // Life situations
+  'life.food_access': 'Food Access',
+  'life.housing_shelter': 'Housing & Shelter',
+  'life.career_employment': 'Career & Employment',
+  'life.health_wellness': 'Health & Wellness',
+  'life.safety_protection': 'Safety & Protection',
+  'life.financial_stability': 'Financial Stability',
+
+  // Sidebar
+  'sidebar.home': 'Home',
+  'sidebar.edition': 'Edition',
+  'sidebar.change': 'change',
+  'sidebar.go': 'Go',
+  'sidebar.explore_houston': 'Explore Houston',
+  'sidebar.discover': 'Discover',
+  'sidebar.quick_resources': 'Quick Resources',
+  'sidebar.topics': 'Topics',
+  'sidebar.no_topics': 'No topics available',
+
+  // Discover links
+  'discover.events': 'Events',
+  'discover.books_guides': 'Books & Guides',
+  'discover.diy_kits': 'DIY Kits',
+  'discover.research': 'Research',
+  'discover.activity_types': 'Activity Types',
+  'discover.foundations': 'Foundations',
+
+  // Feed filters
+  'feed.all': 'All',
+  'feed.learning': 'Learning',
+  'feed.action': 'Action',
+  'feed.resource': 'Resource',
+  'feed.accountability': 'Accountability',
+  'feed.no_items': 'No items match the current filter',
+  'feed.try_different': 'Try selecting a different category above',
+
+  // Card labels
+  'card.explore': 'Explore',
+  'card.open': 'Open',
+  'card.civic_leader': 'Civic Leader',
+  'card.policy': 'Policy',
+  'card.level': 'Level:',
+  'card.untitled': 'Untitled',
+
+  // Theme names
+  'theme.our_health': 'Our Health',
+  'theme.our_families': 'Our Families',
+  'theme.our_neighborhood': 'Our Neighborhood',
+  'theme.our_voice': 'Our Voice',
+  'theme.our_money': 'Our Money',
+  'theme.our_planet': 'Our Planet',
+  'theme.the_bigger_we': 'The Bigger We',
+
+  // Center names
+  'center.learning': 'Learning',
+  'center.action': 'Action',
+  'center.resource': 'Resource',
+  'center.accountability': 'Accountability',
 }
 
 const es: Record<string, string> = {
@@ -349,6 +424,81 @@ const es: Record<string, string> = {
   'countdown.election_day': 'Día de Elecciones',
   'countdown.early_voting': 'Votación Anticipada',
   'countdown.registration_deadline': 'Fecha Límite de Registro',
+
+  // Wayfinder homepage
+  'wayfinder.the': 'El',
+  'wayfinder.community': 'Intercambio',
+  'wayfinder.exchange': 'Comunitario',
+  'wayfinder.hero_subtitle': 'Todo está conectado. Explora 7 caminos de vida cívica.',
+  'wayfinder.tap_hint': 'Toca cualquier círculo para explorar un camino',
+  'wayfinder.start_journey': 'Comienza Tu Camino',
+  'wayfinder.explore': 'Explorar',
+  'wayfinder.browse_all': 'Ver todos los caminos',
+  'wayfinder.explore_houston': 'Explorar Houston',
+  'wayfinder.whats_new': 'Novedades',
+  'wayfinder.this_week': 'esta semana',
+  'wayfinder.connected_to': 'Conectado a',
+  'wayfinder.pathway_desc': 'recursos de participación, servicios, políticas y vida cívica',
+  'wayfinder.footer': 'El Intercambio Comunitario — un producto de The Change Engine',
+
+  // Life situations
+  'life.food_access': 'Acceso a Alimentos',
+  'life.housing_shelter': 'Vivienda y Refugio',
+  'life.career_employment': 'Carrera y Empleo',
+  'life.health_wellness': 'Salud y Bienestar',
+  'life.safety_protection': 'Seguridad y Protección',
+  'life.financial_stability': 'Estabilidad Financiera',
+
+  // Sidebar
+  'sidebar.home': 'Inicio',
+  'sidebar.edition': 'Edición',
+  'sidebar.change': 'cambiar',
+  'sidebar.go': 'Ir',
+  'sidebar.explore_houston': 'Explorar Houston',
+  'sidebar.discover': 'Descubrir',
+  'sidebar.quick_resources': 'Recursos Rápidos',
+  'sidebar.topics': 'Temas',
+  'sidebar.no_topics': 'No hay temas disponibles',
+
+  // Discover links
+  'discover.events': 'Eventos',
+  'discover.books_guides': 'Libros y Guías',
+  'discover.diy_kits': 'Kits para Hacer',
+  'discover.research': 'Investigación',
+  'discover.activity_types': 'Tipos de Actividades',
+  'discover.foundations': 'Fundaciones',
+
+  // Feed filters
+  'feed.all': 'Todos',
+  'feed.learning': 'Aprendizaje',
+  'feed.action': 'Acción',
+  'feed.resource': 'Recurso',
+  'feed.accountability': 'Responsabilidad',
+  'feed.no_items': 'Ningún elemento coincide con el filtro actual',
+  'feed.try_different': 'Intente seleccionar una categoría diferente',
+
+  // Card labels
+  'card.explore': 'Explorar',
+  'card.open': 'Abrir',
+  'card.civic_leader': 'Líder Cívico',
+  'card.policy': 'Política',
+  'card.level': 'Nivel:',
+  'card.untitled': 'Sin título',
+
+  // Theme names
+  'theme.our_health': 'Nuestra Salud',
+  'theme.our_families': 'Nuestras Familias',
+  'theme.our_neighborhood': 'Nuestro Vecindario',
+  'theme.our_voice': 'Nuestra Voz',
+  'theme.our_money': 'Nuestro Dinero',
+  'theme.our_planet': 'Nuestro Planeta',
+  'theme.the_bigger_we': 'El Nosotros Mayor',
+
+  // Center names
+  'center.learning': 'Aprendizaje',
+  'center.action': 'Acción',
+  'center.resource': 'Recurso',
+  'center.accountability': 'Responsabilidad',
 }
 
 const vi: Record<string, string> = {
@@ -514,6 +664,81 @@ const vi: Record<string, string> = {
   'countdown.election_day': 'Ngày Bầu Cử',
   'countdown.early_voting': 'Bỏ Phiếu Sớm',
   'countdown.registration_deadline': 'Hạn Đăng Ký',
+
+  // Wayfinder homepage
+  'wayfinder.the': 'The',
+  'wayfinder.community': 'Trao Đổi',
+  'wayfinder.exchange': 'Cộng Đồng',
+  'wayfinder.hero_subtitle': 'Mọi thứ kết nối. Khám phá 7 lộ trình đời sống dân sự.',
+  'wayfinder.tap_hint': 'Chạm vào vòng tròn để khám phá lộ trình',
+  'wayfinder.start_journey': 'Bắt Đầu Hành Trình',
+  'wayfinder.explore': 'Khám Phá',
+  'wayfinder.browse_all': 'Xem tất cả lộ trình',
+  'wayfinder.explore_houston': 'Khám Phá Houston',
+  'wayfinder.whats_new': 'Tin Mới',
+  'wayfinder.this_week': 'tuần này',
+  'wayfinder.connected_to': 'Kết nối với',
+  'wayfinder.pathway_desc': 'tài nguyên về tham gia, dịch vụ, chính sách & đời sống dân sự',
+  'wayfinder.footer': 'Trao Đổi Cộng Đồng — sản phẩm của The Change Engine',
+
+  // Life situations
+  'life.food_access': 'Tiếp Cận Thực Phẩm',
+  'life.housing_shelter': 'Nhà Ở & Nơi Trú Ẩn',
+  'life.career_employment': 'Nghề Nghiệp & Việc Làm',
+  'life.health_wellness': 'Sức Khỏe & Thể Chất',
+  'life.safety_protection': 'An Toàn & Bảo Vệ',
+  'life.financial_stability': 'Ổn Định Tài Chính',
+
+  // Sidebar
+  'sidebar.home': 'Trang Chủ',
+  'sidebar.edition': 'Phiên Bản',
+  'sidebar.change': 'đổi',
+  'sidebar.go': 'Đi',
+  'sidebar.explore_houston': 'Khám Phá Houston',
+  'sidebar.discover': 'Khám Phá',
+  'sidebar.quick_resources': 'Tài Nguyên Nhanh',
+  'sidebar.topics': 'Chủ Đề',
+  'sidebar.no_topics': 'Không có chủ đề',
+
+  // Discover links
+  'discover.events': 'Sự Kiện',
+  'discover.books_guides': 'Sách & Hướng Dẫn',
+  'discover.diy_kits': 'Bộ Tự Làm',
+  'discover.research': 'Nghiên Cứu',
+  'discover.activity_types': 'Loại Hoạt Động',
+  'discover.foundations': 'Tổ Chức Từ Thiện',
+
+  // Feed filters
+  'feed.all': 'Tất Cả',
+  'feed.learning': 'Học Tập',
+  'feed.action': 'Hành Động',
+  'feed.resource': 'Tài Nguyên',
+  'feed.accountability': 'Trách Nhiệm',
+  'feed.no_items': 'Không có mục nào phù hợp với bộ lọc',
+  'feed.try_different': 'Thử chọn danh mục khác ở trên',
+
+  // Card labels
+  'card.explore': 'Khám Phá',
+  'card.open': 'Mở',
+  'card.civic_leader': 'Lãnh Đạo Dân Sự',
+  'card.policy': 'Chính Sách',
+  'card.level': 'Cấp:',
+  'card.untitled': 'Không có tiêu đề',
+
+  // Theme names
+  'theme.our_health': 'Sức Khỏe',
+  'theme.our_families': 'Gia Đình',
+  'theme.our_neighborhood': 'Khu Phố',
+  'theme.our_voice': 'Tiếng Nói',
+  'theme.our_money': 'Tài Chính',
+  'theme.our_planet': 'Hành Tinh',
+  'theme.the_bigger_we': 'Cộng Đồng Lớn',
+
+  // Center names
+  'center.learning': 'Học Tập',
+  'center.action': 'Hành Động',
+  'center.resource': 'Tài Nguyên',
+  'center.accountability': 'Trách Nhiệm',
 }
 
 const dictionaries: Record<SupportedLanguage, Record<string, string>> = { en, es, vi }

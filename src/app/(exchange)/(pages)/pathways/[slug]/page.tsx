@@ -13,6 +13,7 @@ import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { PathwayFilterClient } from './PathwayFilterClient'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 // Resolve slug to themeId
 function resolveTheme(slug: string) {
@@ -82,6 +83,10 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[
+        { label: 'Pathways', href: '/pathways' },
+        { label: theme.name }
+      ]} />
       <div className="flex items-center gap-3 mb-2">
         <span className="text-3xl">{theme.emoji}</span>
         <h1 className="text-3xl font-bold text-brand-text">{theme.name}</h1>

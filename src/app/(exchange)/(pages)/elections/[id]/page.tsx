@@ -7,6 +7,7 @@ import { CandidateCard } from '@/components/exchange/CandidateCard'
 import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
 import { VotingLocationsMap } from '@/components/exchange/VotingLocationsMap'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -57,12 +58,10 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-brand-muted mb-6">
-        <Link href="/elections" className="hover:text-brand-accent">Elections</Link>
-        <span className="mx-2">/</span>
-        <span>{election.election_name}</span>
-      </div>
+      <Breadcrumb items={[
+        { label: 'Elections', href: '/elections' },
+        { label: election.election_name }
+      ]} />
 
       {/* Countdown banner */}
       <div className="mb-8">

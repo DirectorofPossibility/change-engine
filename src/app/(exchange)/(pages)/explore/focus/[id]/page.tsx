@@ -12,6 +12,7 @@ import { ContentCard } from '@/components/exchange/ContentCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { ClusteredMap, type MarkerData } from '@/components/maps'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -75,6 +76,10 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[
+        { label: 'Explore', href: '/explore' },
+        { label: fa.focus_area_name }
+      ]} />
       {/* Header */}
       <h1 className="text-3xl font-bold text-brand-text mb-3">{fa.focus_area_name}</h1>
       {fa.description && (

@@ -6,6 +6,7 @@ import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 function statusColor(status: string | null): string {
   if (!status) return 'bg-gray-100 text-gray-600'
@@ -89,12 +90,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-brand-muted mb-6">
-        <Link href="/policies" className="hover:text-brand-accent">Policies</Link>
-        <span className="mx-2">/</span>
-        <span>{displayName}</span>
-      </div>
+      <Breadcrumb items={[
+        { label: 'Policies', href: '/policies' },
+        { label: displayName }
+      ]} />
 
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">

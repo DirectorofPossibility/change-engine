@@ -7,6 +7,7 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { SingleLocationMap } from '@/components/maps'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -74,12 +75,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-brand-muted mb-6">
-        <Link href="/services" className="hover:text-brand-accent">Services</Link>
-        <span className="mx-2">/</span>
-        <span>{service.service_name}</span>
-      </div>
+      <Breadcrumb items={[
+        { label: 'Services', href: '/services' },
+        { label: displayName }
+      ]} />
 
       <h1 className="text-3xl font-bold text-brand-text mb-2">{displayName}</h1>
       {org && (

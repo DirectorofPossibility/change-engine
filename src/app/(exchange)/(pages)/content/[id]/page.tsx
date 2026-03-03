@@ -16,6 +16,7 @@ import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getFocusAreasByIds, getSDGMap, getSDOHMap, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
 import { FileText } from 'lucide-react'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 function resolveThemeSlug(themeId: string | null) {
   if (!themeId) return null
@@ -225,6 +226,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[
+        { label: 'Content', href: '/content' },
+        { label: title }
+      ]} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main content */}
         <div className="lg:col-span-2">

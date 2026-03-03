@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { ChevronRight, BookOpen, Zap, Package, Scale } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 export interface FeedItem {
   type: 'resource' | 'official' | 'policy' | 'service'
@@ -77,7 +78,7 @@ function getInitials(name: string): string {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
 }
 
-function ResourceCard({ item, variant }: { item: FeedItem; variant: 'grid' | 'list' }) {
+function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 'list'; t: (key: string) => string }) {
   const accent = item.pathwayColor || DEFAULT_ACCENT
   const CenterIcon = item.center ? CENTER_ICONS[item.center] : null
   const centerColor = item.center ? CENTER_COLORS[item.center] : accent
@@ -139,10 +140,10 @@ function ResourceCard({ item, variant }: { item: FeedItem; variant: 'grid' | 'li
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-brand-border/50">
             <div className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: accent }} />
-              <span className="text-xs text-brand-muted">Explore</span>
+              <span className="text-xs text-brand-muted">{t('card.explore')}</span>
             </div>
             <span className="text-xs font-semibold inline-flex items-center gap-0.5" style={{ color: accent }}>
-              Read more
+              {t('card.read_more')}
               <ChevronRight className="w-3.5 h-3.5" />
             </span>
           </div>
@@ -179,7 +180,7 @@ function ResourceCard({ item, variant }: { item: FeedItem; variant: 'grid' | 'li
         <div className="flex items-center justify-between mt-2">
           {item.orgName && <span className="text-xs text-brand-muted truncate mr-2">{item.orgName}</span>}
           <span className="text-sm font-semibold flex-shrink-0 inline-flex items-center gap-0.5" style={{ color: accent }}>
-            Open <ChevronRight className="w-4 h-4" />
+            {t('card.open')} <ChevronRight className="w-4 h-4" />
           </span>
         </div>
       </div>
@@ -187,7 +188,7 @@ function ResourceCard({ item, variant }: { item: FeedItem; variant: 'grid' | 'li
   )
 }
 
-function OfficialCard({ item }: { item: FeedItem }) {
+function OfficialCard({ item, t }: { item: FeedItem; t: (key: string) => string }) {
   const initials = getInitials(item.title)
   return (
     <div className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-[1px] transition-all duration-150">
@@ -197,7 +198,7 @@ function OfficialCard({ item }: { item: FeedItem }) {
         </div>
         <div className="min-w-0 flex-1">
           <span className="text-xs uppercase tracking-wider font-bold block mb-0.5" style={{ color: TEAL }}>
-            Civic Leader
+            {t('card.civic_leader')}
           </span>
           <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-1">{item.title}</h4>
           {item.role && <p className="text-sm text-brand-muted leading-snug line-clamp-1">{item.role}</p>}
@@ -208,14 +209,14 @@ function OfficialCard({ item }: { item: FeedItem }) {
   )
 }
 
-function PolicyCard({ item }: { item: FeedItem }) {
+function PolicyCard({ item, t }: { item: FeedItem; t: (key: string) => string }) {
   const accent = policyAccentColor(item.status)
   return (
     <div className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-[1px] transition-all duration-150">
       <div className="p-4" style={{ borderLeft: `4px solid ${accent}` }}>
         <div className="flex items-center gap-2 mb-2">
           <Scale size={14} style={{ color: accent }} />
-          <span className="text-xs uppercase tracking-wider font-bold" style={{ color: accent }}>Policy</span>
+          <span className="text-xs uppercase tracking-wider font-bold" style={{ color: accent }}>{t('card.policy')}</span>
           {item.status && (
             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadgeClasses(item.status)}`}>
               {item.status}
@@ -225,7 +226,7 @@ function PolicyCard({ item }: { item: FeedItem }) {
         <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">{item.title}</h4>
         {item.body && (
           <p className="text-xs text-brand-muted mt-1.5">
-            Level: <span className="font-medium">{item.body}</span>
+            {t('card.level')} <span className="font-medium">{item.body}</span>
           </p>
         )}
       </div>
@@ -234,6 +235,7 @@ function PolicyCard({ item }: { item: FeedItem }) {
 }
 
 export function FeedCard({ item, onClick, variant = 'list' }: FeedCardProps) {
+  const { t } = useTranslation()
   const Wrapper = item.href ? Link : 'div'
   const wrapperProps = item.href ? { href: item.href } : {}
 
@@ -243,9 +245,9 @@ export function FeedCard({ item, onClick, variant = 'list' }: FeedCardProps) {
       className="block cursor-pointer"
       onClick={onClick}
     >
-      {(item.type === 'resource' || item.type === 'service') && <ResourceCard item={item} variant={variant} />}
-      {item.type === 'official' && <OfficialCard item={item} />}
-      {item.type === 'policy' && <PolicyCard item={item} />}
+      {(item.type === 'resource' || item.type === 'service') && <ResourceCard item={item} variant={variant} t={t} />}
+      {item.type === 'official' && <OfficialCard item={item} t={t} />}
+      {item.type === 'policy' && <PolicyCard item={item} t={t} />}
     </Wrapper>
   )
 }

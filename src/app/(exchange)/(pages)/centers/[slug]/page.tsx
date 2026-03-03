@@ -4,6 +4,7 @@ import { ContentCard } from '@/components/exchange/ContentCard'
 import { CenterFilterClient } from './CenterFilterClient'
 import { createClient } from '@/lib/supabase/server'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 // Resolve slug to center name
 function resolveCenter(slug: string) {
@@ -46,6 +47,10 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[
+        { label: 'Centers', href: '/centers' },
+        { label: center.name }
+      ]} />
       <div className="text-center mb-8">
         <span className="text-5xl block mb-3">{center.emoji}</span>
         <h1 className="text-3xl font-bold text-brand-text mb-2">{center.name}</h1>

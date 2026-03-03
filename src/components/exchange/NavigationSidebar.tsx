@@ -1,29 +1,19 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   BookOpen, Calendar, Wrench, FlaskConical, Activity,
-  Landmark, Compass,
+  Landmark, Compass, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { AuthButton } from './AuthButton'
-
-interface WayfinderSidebarProps {
-  selectedPathway: string | null
-  onSelectPathway: (id: string | null) => void
-  totalItems: number
-  newThisWeek: number
-  pathwayCounts: Record<string, number>
-  topics: string[]
-  onSelectTopic?: (topic: string) => void
-}
 
 const PATHWAY_ICONS: Record<string, typeof Heart> = {
   THEME_01: Heart,
@@ -44,24 +34,27 @@ const DISCOVER_LINKS = [
   { label: 'discover.foundations', icon: Landmark, href: '/foundations' },
 ]
 
-export function WayfinderSidebar({
-  selectedPathway,
-  onSelectPathway,
-  totalItems,
-  newThisWeek,
-  pathwayCounts,
-  topics,
-  onSelectTopic,
-}: WayfinderSidebarProps) {
+/**
+ * Persistent navigation sidebar for all sub-pages.
+ *
+ * Same visual design as WayfinderSidebar but uses links for pathway navigation
+ * (no dynamic counts or selection state). Highlights the active pathway based
+ * on the current URL pathname.
+ *
+ * Collapsible on desktop via a toggle button. Mobile uses the same
+ * hamburger/slide-in pattern as the homepage sidebar.
+ */
+export function NavigationSidebar({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation()
   const router = useRouter()
+  const pathname = usePathname()
   const { zip, neighborhood, lookupZip, clearZip, isLoading } = useNeighborhood()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [zipInput, setZipInput] = useState('')
-  const [topicsOpen, setTopicsOpen] = useState(false)
   const [discoverOpen, setDiscoverOpen] = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -81,15 +74,6 @@ export function WayfinderSidebar({
     }
   }
 
-  function handleTopicClick(topic: string) {
-    if (onSelectTopic) {
-      onSelectTopic(topic)
-    } else {
-      router.push('/search?q=' + encodeURIComponent(topic))
-    }
-    setMobileOpen(false)
-  }
-
   const closeMobile = useCallback(function () {
     setMobileOpen(false)
   }, [])
@@ -103,14 +87,27 @@ export function WayfinderSidebar({
     return function () { document.body.style.overflow = '' }
   }, [mobileOpen])
 
+  // Close mobile sidebar on route change
+  useEffect(function () {
+    setMobileOpen(false)
+  }, [pathname])
+
   const themeEntries = Object.entries(THEMES) as [string, (typeof THEMES)[keyof typeof THEMES]][]
-  const isHome = selectedPathway === null
+
+  // Determine which pathway is active based on the current URL
+  function getActivePathway(): string | null {
+    for (const [id, theme] of themeEntries) {
+      if (pathname.startsWith('/pathways/' + theme.slug)) return id
+    }
+    return null
+  }
+  const activePathway = getActivePathway()
 
   const sidebarContent = (
     <>
       {/* Brand lockup */}
       <div className="px-5 pt-5 pb-2">
-        <Link href="/" className="block group" onClick={function () { onSelectPathway(null); closeMobile() }}>
+        <Link href="/" className="block group" onClick={closeMobile}>
           <span className="block font-serif text-xl font-bold leading-tight text-brand-text group-hover:text-brand-accent transition-colors">
             The Change Engine
           </span>
@@ -123,13 +120,12 @@ export function WayfinderSidebar({
         </Link>
       </div>
 
-      {/* Language + Auth — at top per user request */}
+      {/* Language + Auth */}
       <div className="px-5 py-1.5 flex items-center justify-between">
         <LanguageSwitcher />
         <AuthButton />
       </div>
 
-      {/* Thin divider */}
       <div className="h-px bg-brand-border mx-5 my-1" />
 
       {/* ZIP personalization */}
@@ -179,46 +175,36 @@ export function WayfinderSidebar({
         </form>
       </div>
 
-      {/* Home button + live indicator */}
+      {/* Home link */}
       <div className="px-4 pt-2">
-        <button
-          onClick={function () { onSelectPathway(null); closeMobile() }}
+        <Link
+          href="/"
           className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
-            (isHome
+            (pathname === '/'
               ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
               : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
         >
           <Home size={16} />
           {t('sidebar.home')}
-          <span className="ml-auto flex items-center gap-1.5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
-            </span>
-            <span className="text-xs text-brand-muted tabular-nums">{totalItems.toLocaleString()}</span>
-            {newThisWeek > 0 && (
-              <span className="text-xs text-brand-accent font-semibold">+{newThisWeek}</span>
-            )}
-          </span>
-        </button>
+        </Link>
       </div>
 
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* 7 Pathways */}
+      {/* 7 Pathways — as links */}
       <div className="px-5">
         <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
           {t('sidebar.explore_houston')}
         </p>
         <div className="space-y-0.5">
           {themeEntries.map(function ([id, theme]) {
-            const isActive = selectedPathway === id
-            const count = pathwayCounts[id] ?? 0
+            const isActive = activePathway === id
             const Icon = PATHWAY_ICONS[id] || Globe
             return (
-              <button
+              <Link
                 key={id}
-                onClick={function () { onSelectPathway(isActive ? null : id); closeMobile() }}
+                href={'/pathways/' + theme.slug}
+                onClick={closeMobile}
                 className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
                   (isActive
                     ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
@@ -234,15 +220,7 @@ export function WayfinderSidebar({
                   <Icon size={16} style={{ color: theme.color }} />
                 </div>
                 <span className="flex-1 text-left truncate">{theme.name}</span>
-                {count > 0 && (
-                  <span
-                    className="text-xs font-semibold tabular-nums px-2 py-0.5 rounded-full"
-                    style={isActive ? { backgroundColor: theme.color + '15', color: theme.color } : {}}
-                  >
-                    {count}
-                  </span>
-                )}
-              </button>
+              </Link>
             )
           })}
         </div>
@@ -286,47 +264,14 @@ export function WayfinderSidebar({
         )}
       </div>
 
-      <div className="h-px bg-brand-border mx-5 my-2" />
-
-      {/* Topics — wired up */}
-      <div className="px-5">
-        <button
-          onClick={function () { setTopicsOpen(!topicsOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
-        >
-          {topicsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-          {t('sidebar.topics')} ({topics.length})
-        </button>
-        {topicsOpen && topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
-            {topics.map(function (topic) {
-              return (
-                <button
-                  key={topic}
-                  onClick={function () { handleTopicClick(topic) }}
-                  className="text-xs leading-none px-2.5 py-1.5 rounded-full bg-brand-border/40 text-brand-muted hover:text-brand-text hover:bg-brand-accent/10 hover:ring-1 hover:ring-brand-accent/20 cursor-pointer transition-all duration-150"
-                >
-                  {topic}
-                </button>
-              )
-            })}
-          </div>
-        )}
-        {topicsOpen && topics.length === 0 && (
-          <p className="text-xs text-brand-muted italic">{t('sidebar.no_topics')}</p>
-        )}
-      </div>
-
       {/* Spacer */}
       <div className="flex-1 min-h-4" />
-
-      {/* Bottom padding */}
       <div className="pb-4" />
     </>
   )
 
   return (
-    <>
+    <div className="flex min-h-screen">
       {/* Mobile hamburger */}
       <button
         type="button"
@@ -350,7 +295,7 @@ export function WayfinderSidebar({
       <aside
         className={'md:hidden fixed top-0 left-0 z-50 w-[280px] h-screen bg-white border-r border-brand-border flex flex-col overflow-y-auto scrollbar-thin transition-transform duration-300 ease-in-out ' +
           (mobileOpen ? 'translate-x-0' : '-translate-x-full')}
-        aria-label="Wayfinder sidebar"
+        aria-label="Navigation sidebar"
       >
         <div className="flex justify-end px-3 pt-3">
           <button type="button" onClick={closeMobile}
@@ -362,13 +307,31 @@ export function WayfinderSidebar({
         {sidebarContent}
       </aside>
 
-      {/* Desktop sticky sidebar */}
+      {/* Desktop sidebar — collapsible */}
       <aside
-        className="hidden md:flex w-[280px] min-w-[280px] h-screen sticky top-0 bg-white border-r border-brand-border flex-col overflow-y-auto scrollbar-thin"
-        aria-label="Wayfinder sidebar"
+        className={'hidden md:flex h-screen sticky top-0 bg-white border-r border-brand-border flex-col overflow-y-auto scrollbar-thin transition-all duration-300 ease-in-out ' +
+          (collapsed ? 'w-0 min-w-0 overflow-hidden border-r-0' : 'w-[280px] min-w-[280px]')}
+        aria-label="Navigation sidebar"
       >
         {sidebarContent}
       </aside>
-    </>
+
+      {/* Desktop collapse toggle */}
+      <button
+        type="button"
+        onClick={function () { setCollapsed(!collapsed) }}
+        className="hidden md:flex fixed bottom-4 z-40 p-2 rounded-lg bg-white shadow-md border border-brand-border text-brand-muted hover:text-brand-text hover:bg-gray-50 transition-all duration-300"
+        style={{ left: collapsed ? '12px' : '248px' }}
+        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+      </button>
+
+      {/* Main content area */}
+      <main className="flex-1 min-w-0">
+        {children}
+      </main>
+    </div>
   )
 }

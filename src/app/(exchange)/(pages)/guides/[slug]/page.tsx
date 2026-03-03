@@ -6,6 +6,7 @@ import { getGuideBySlug, getFocusAreasByIds } from '@/lib/data/exchange'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { ExternalLink } from 'lucide-react'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 /** Strip dangerous HTML tags and attributes to prevent XSS. */
 function sanitizeHtml(html: string): string {
@@ -59,12 +60,10 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-brand-muted mb-6">
-        <Link href="/guides" className="hover:text-brand-accent">Guides</Link>
-        <span className="mx-2">/</span>
-        <span>{guide.title}</span>
-      </div>
+      <Breadcrumb items={[
+        { label: 'Guides', href: '/guides' },
+        { label: guide.title }
+      ]} />
 
       {/* Hero */}
       {guide.hero_image_url && (
