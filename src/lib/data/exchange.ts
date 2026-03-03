@@ -233,6 +233,40 @@ export async function getOfficials() {
   return { officials: officials ?? [], levels: levels ?? [] }
 }
 
+/** Fetch all data for the Civic Hub: officials, policies, elections, government_levels. */
+export async function getCivicHubData() {
+  const supabase = await createClient()
+  const today = new Date().toISOString().split('T')[0]
+
+  const [
+    { data: officials },
+    { data: policies },
+    { data: elections },
+    { data: levels },
+    { data: upcoming },
+  ] = await Promise.all([
+    supabase.from('elected_officials').select('*').order('official_name'),
+    supabase.from('policies').select('*').order('last_action_date', { ascending: false }),
+    supabase.from('elections').select('*').order('election_date', { ascending: false }),
+    supabase.from('government_levels').select('*').order('level_order'),
+    supabase
+      .from('elections')
+      .select('*')
+      .eq('is_active', 'Yes')
+      .gte('election_date', today)
+      .order('election_date', { ascending: true })
+      .limit(1),
+  ])
+
+  return {
+    officials: officials ?? [],
+    policies: policies ?? [],
+    elections: elections ?? [],
+    levels: levels ?? [],
+    upcomingElection: upcoming && upcoming.length > 0 ? upcoming[0] : null,
+  }
+}
+
 /** All active 211 services, enriched with parent org names. */
 export async function getServices(): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()
@@ -424,6 +458,42 @@ export async function getRelatedPolicies(focusAreaIds: string[]) {
     .select('*')
     .in('policy_id', policyIds)
     .limit(10)
+  return data ?? []
+}
+
+/** Fetch services sharing any of the given focus areas via junction table. */
+export async function getRelatedServices(focusAreaIds: string[]) {
+  const supabase = await createClient()
+  if (focusAreaIds.length === 0) return []
+  const { data: junctions } = await supabase
+    .from('service_focus_areas')
+    .select('service_id')
+    .in('focus_id', focusAreaIds)
+  const serviceIds = Array.from(new Set((junctions ?? []).map(j => j.service_id)))
+  if (serviceIds.length === 0) return []
+  const { data } = await supabase
+    .from('services_211')
+    .select('service_id, service_name, description_5th_grade, org_id, phone, address, city, state, zip_code, website')
+    .in('service_id', serviceIds.slice(0, 100))
+    .limit(20)
+  return data ?? []
+}
+
+/** Fetch officials sharing any of the given focus areas via junction table. */
+export async function getRelatedOfficials(focusAreaIds: string[]) {
+  const supabase = await createClient()
+  if (focusAreaIds.length === 0) return []
+  const { data: junctions } = await supabase
+    .from('official_focus_areas')
+    .select('official_id')
+    .in('focus_id', focusAreaIds)
+  const officialIds = Array.from(new Set((junctions ?? []).map(j => j.official_id)))
+  if (officialIds.length === 0) return []
+  const { data } = await supabase
+    .from('elected_officials')
+    .select('official_id, official_name, title, party, level, email, office_phone, website')
+    .in('official_id', officialIds.slice(0, 50))
+    .limit(12)
   return data ?? []
 }
 
