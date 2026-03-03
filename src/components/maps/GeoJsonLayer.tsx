@@ -1,8 +1,26 @@
+/**
+ * @fileoverview GeoJSON boundary layer renderer for Leaflet.
+ *
+ * Fetches a GeoJSON file from a URL and renders its features using the
+ * react-leaflet `<GeoJSON>` component. Supports:
+ *
+ * - Visibility toggling (renders nothing when hidden, without re-fetching).
+ * - Configurable fill/stroke styling.
+ * - Feature highlighting by ID (increased opacity and stroke weight).
+ * - Hover highlighting with mouse-over/mouse-out visual feedback.
+ * - Click and hover callbacks that surface feature properties.
+ *
+ * GeoJSON responses are cached per URL to avoid redundant network requests
+ * when a layer is toggled off and back on.
+ */
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
-import { useMap } from '@vis.gl/react-google-maps'
+import { useEffect, useState, useCallback, useRef } from 'react'
+import { GeoJSON, useMap } from 'react-leaflet'
+import type { Layer, PathOptions, LeafletMouseEvent } from 'leaflet'
+import L from 'leaflet'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'
+import type { Feature, GeoJsonObject, Geometry } from 'geojson'
 
 interface GeoJsonLayerProps {
   url: string
@@ -19,6 +37,20 @@ interface GeoJsonLayerProps {
   idProperty?: string
 }
 
+/** Module-level GeoJSON cache shared across component instances. */
+const geoJsonCache = new Map<string, GeoJsonObject>()
+
+/**
+ * Renders a GeoJSON boundary layer on the map with optional highlighting.
+ *
+ * @param props.url - URL of the GeoJSON file to fetch and render.
+ * @param props.style - Fill and stroke styling for the layer features.
+ * @param props.visible - Whether the layer is currently shown on the map.
+ * @param props.onClick - Callback fired with feature properties when a polygon is clicked.
+ * @param props.onHover - Callback fired with feature properties on mouse-over, or `null` on mouse-out.
+ * @param props.highlightFeatureId - ID of a feature to visually emphasize (doubled opacity/stroke).
+ * @param props.idProperty - Name of the GeoJSON property used to match `highlightFeatureId`.
+ */
 export function GeoJsonLayer({
   url,
   style,
@@ -29,29 +61,14 @@ export function GeoJsonLayer({
   idProperty,
 }: GeoJsonLayerProps) {
   const map = useMap()
-  const dataLayerRef = useRef<google.maps.Data | null>(null)
-  const geoJsonCacheRef = useRef<Map<string, object[]>>(new Map())
+  const [data, setData] = useState<GeoJsonObject | null>(
+    geoJsonCache.get(url) ?? null
+  )
+  const hoveredLayerRef = useRef<Layer | null>(null)
 
-  // Create and configure the data layer
   useEffect(() => {
-    if (!map) return
-
-    const dataLayer = new google.maps.Data()
-    dataLayerRef.current = dataLayer
-
-    return () => {
-      dataLayer.setMap(null)
-      dataLayerRef.current = null
-    }
-  }, [map])
-
-  // Load GeoJSON data
-  useEffect(() => {
-    const dataLayer = dataLayerRef.current
-    if (!dataLayer || !map) return
-
-    if (geoJsonCacheRef.current.has(url)) {
-      // Already loaded
+    if (geoJsonCache.has(url)) {
+      setData(geoJsonCache.get(url)!)
       return
     }
 
@@ -60,109 +77,86 @@ export function GeoJsonLayer({
         if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`)
         return res.json()
       })
-      .then(geojson => {
-        geoJsonCacheRef.current.set(url, geojson.features || [])
-        dataLayer.addGeoJson(geojson)
+      .then((geojson: GeoJsonObject) => {
+        geoJsonCache.set(url, geojson)
+        setData(geojson)
       })
       .catch(err => {
         console.error('GeoJsonLayer: failed to load', url, err)
       })
-  }, [url, map])
+  }, [url])
 
-  // Toggle visibility
-  useEffect(() => {
-    const dataLayer = dataLayerRef.current
-    if (!dataLayer || !map) return
-
-    if (visible) {
-      dataLayer.setMap(map)
-    } else {
-      dataLayer.setMap(null)
-    }
-  }, [visible, map])
-
-  // Apply styles
-  useEffect(() => {
-    const dataLayer = dataLayerRef.current
-    if (!dataLayer) return
-
-    dataLayer.setStyle((feature: google.maps.Data.Feature) => {
-      const featureId = idProperty ? feature.getProperty(idProperty) : null
-      const isHighlighted = highlightFeatureId != null && featureId === highlightFeatureId
+  /** Returns the base or highlighted style for a given feature. */
+  const featureStyle = useCallback(
+    (feature?: Feature<Geometry>): PathOptions => {
+      const featureId = feature?.properties && idProperty
+        ? feature.properties[idProperty]
+        : null
+      const isHighlighted =
+        highlightFeatureId != null && featureId === highlightFeatureId
 
       return {
         fillColor: style.fillColor,
-        fillOpacity: isHighlighted ? style.fillOpacity * 2 : style.fillOpacity,
-        strokeColor: style.strokeColor,
-        strokeWeight: isHighlighted ? style.strokeWeight * 2 : style.strokeWeight,
-        clickable: true,
+        fillOpacity: isHighlighted
+          ? Math.min(style.fillOpacity * 2, 0.6)
+          : style.fillOpacity,
+        color: style.strokeColor,
+        weight: isHighlighted ? style.strokeWeight * 2 : style.strokeWeight,
       }
-    })
-  }, [style, highlightFeatureId, idProperty])
+    },
+    [style, highlightFeatureId, idProperty]
+  )
 
-  // Click handler
-  useEffect(() => {
-    const dataLayer = dataLayerRef.current
-    if (!dataLayer || !onClick) return
-
-    const listener = dataLayer.addListener('click', (event: google.maps.Data.MouseEvent) => {
-      const feature = event.feature
-      const props: GeoFeatureProperties = {}
-      feature.forEachProperty((value: unknown, name: string) => {
-        props[name] = value as string | number | null
-      })
-      onClick(props)
-    })
-
-    return () => {
-      google.maps.event.removeListener(listener)
-    }
-  }, [onClick])
-
-  // Hover handlers
-  const prevHoveredRef = useRef<google.maps.Data.Feature | null>(null)
-
+  /** Resets the previously hovered layer back to its base style. */
   const resetHover = useCallback(() => {
-    const dataLayer = dataLayerRef.current
-    if (!dataLayer || !prevHoveredRef.current) return
-    dataLayer.overrideStyle(prevHoveredRef.current, {
+    if (!hoveredLayerRef.current || !map) return
+    const path = hoveredLayerRef.current as L.Path
+    path.setStyle({
       fillOpacity: style.fillOpacity,
-      strokeWeight: style.strokeWeight,
+      weight: style.strokeWeight,
     })
-    prevHoveredRef.current = null
-  }, [style.fillOpacity, style.strokeWeight])
+    hoveredLayerRef.current = null
+  }, [map, style.fillOpacity, style.strokeWeight])
 
-  useEffect(() => {
-    const dataLayer = dataLayerRef.current
-    if (!dataLayer) return
-
-    const overListener = dataLayer.addListener('mouseover', (event: google.maps.Data.MouseEvent) => {
-      resetHover()
-      const feature = event.feature
-      prevHoveredRef.current = feature
-      dataLayer.overrideStyle(feature, {
-        fillOpacity: Math.min(style.fillOpacity * 2, 0.6),
-        strokeWeight: style.strokeWeight + 1,
+  /** Attaches click and hover handlers to each GeoJSON feature layer. */
+  const onEachFeature = useCallback(
+    (feature: Feature<Geometry>, layer: Layer) => {
+      layer.on({
+        click: () => {
+          if (onClick && feature.properties) {
+            onClick(feature.properties as GeoFeatureProperties)
+          }
+        },
+        mouseover: (e: LeafletMouseEvent) => {
+          resetHover()
+          hoveredLayerRef.current = e.target as Layer
+          const path = e.target as L.Path
+          path.setStyle({
+            fillOpacity: Math.min(style.fillOpacity * 2, 0.6),
+            weight: style.strokeWeight + 1,
+          })
+          path.bringToFront()
+          if (onHover && feature.properties) {
+            onHover(feature.properties as GeoFeatureProperties)
+          }
+        },
+        mouseout: () => {
+          resetHover()
+          if (onHover) onHover(null)
+        },
       })
-      if (onHover) {
-        const props: GeoFeatureProperties = {}
-        feature.forEachProperty((value: unknown, name: string) => {
-          props[name] = value as string | number | null
-        })
-        onHover(props)
-      }
-    })
+    },
+    [onClick, onHover, resetHover, style.fillOpacity, style.strokeWeight]
+  )
 
-    const outListener = dataLayer.addListener('mouseout', () => {
-      resetHover()
-      if (onHover) onHover(null)
-    })
+  if (!visible || !data) return null
 
-    return () => {
-      google.maps.event.removeListener(overListener)
-      google.maps.event.removeListener(outListener)
-    }
-  }, [onHover, resetHover, style.fillOpacity, style.strokeWeight])
-
-  return null
+  return (
+    <GeoJSON
+      key={`${url}-${highlightFeatureId ?? 'none'}`}
+      data={data}
+      style={featureStyle}
+      onEachFeature={onEachFeature}
+    />
+  )
 }

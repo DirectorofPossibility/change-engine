@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Single-location map convenience wrapper.
+ *
+ * Renders a compact Leaflet map centered on a single marker. Used by detail
+ * pages (services, help resources, etc.) to show the location of a specific
+ * entity without clustering or boundary layers.
+ */
 'use client'
 
 import { MapProvider } from './MapProvider'
@@ -20,6 +27,11 @@ function SingleLocationMapInner({ marker }: SingleLocationMapProps) {
   )
 }
 
+/**
+ * Self-contained single-marker map with its own MapProvider.
+ *
+ * @param props.marker - The {@link MarkerData} to display at the map center.
+ */
 export function SingleLocationMap({ marker }: SingleLocationMapProps) {
   return (
     <MapProvider>

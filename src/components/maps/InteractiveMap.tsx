@@ -1,8 +1,22 @@
+/**
+ * @fileoverview Full-featured interactive Leaflet map with GeoJSON boundary
+ * layers, marker clustering, layer toggle controls, and polygon-click info
+ * panels.
+ *
+ * This is the highest-level map component in the maps system. It composes
+ * {@link HoustonMap}, {@link MapMarker}, {@link GeoJsonLayer},
+ * {@link LayerControl}, {@link GeoInfoPanel}, and {@link MapLegend} into a
+ * single ready-to-use map experience. Consumers provide an array of markers
+ * and/or an array of GeoJSON layer configurations; the component handles
+ * clustering, visibility toggling, boundary rendering, feature highlighting,
+ * and polygon detail display.
+ */
 'use client'
 
-import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
-import { useMap } from '@vis.gl/react-google-maps'
-import { MarkerClusterer } from '@googlemaps/markerclusterer'
+import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useMap } from 'react-leaflet'
+import L from 'leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import { MapProvider } from './MapProvider'
 import { HoustonMap } from './HoustonMap'
 import { MapMarker, type MarkerData } from './MapMarker'
@@ -30,6 +44,23 @@ interface SelectedFeature {
   layerConfig: GeoLayerConfig
 }
 
+/**
+ * Auto-fits map bounds to contain all markers with padding.
+ *
+ * @param props.markers - Array of marker data with lat/lng positions.
+ */
+function FitBounds({ markers }: { markers: MarkerData[] }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (markers.length === 0) return
+    const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]))
+    map.fitBounds(bounds, { padding: [50, 50] })
+  }, [map, markers])
+
+  return null
+}
+
 function InteractiveMapInner({
   markers = [],
   layers = [],
@@ -41,44 +72,11 @@ function InteractiveMapInner({
   zoom,
   center,
 }: InteractiveMapProps) {
-  const map = useMap()
-  const clustererRef = useRef<MarkerClusterer | null>(null)
-  const markerRefs = useRef<Map<string, google.maps.marker.AdvancedMarkerElement>>(new Map())
-
-  // Visible layer state
   const [visibleLayerIds, setVisibleLayerIds] = useState<Set<string>>(
     new Set(defaultVisibleLayers)
   )
   const [selectedFeature, setSelectedFeature] = useState<SelectedFeature | null>(null)
 
-  // Marker clustering
-  useEffect(() => {
-    if (!map) return
-    if (!clustererRef.current) {
-      clustererRef.current = new MarkerClusterer({ map })
-    }
-  }, [map])
-
-  // Fit bounds to markers
-  useEffect(() => {
-    if (!map || markers.length === 0) return
-    const bounds = new google.maps.LatLngBounds()
-    markers.forEach(m => bounds.extend({ lat: m.lat, lng: m.lng }))
-    map.fitBounds(bounds, 50)
-  }, [map, markers])
-
-  const setMarkerRef = useCallback((marker: google.maps.marker.AdvancedMarkerElement | null, id: string) => {
-    if (!clustererRef.current) return
-    if (marker) {
-      markerRefs.current.set(id, marker)
-    } else {
-      markerRefs.current.delete(id)
-    }
-    clustererRef.current.clearMarkers()
-    clustererRef.current.addMarkers(Array.from(markerRefs.current.values()))
-  }, [])
-
-  // Layer toggle
   const handleToggleLayer = useCallback((layerId: string) => {
     setVisibleLayerIds(prev => {
       const next = new Set(prev)
@@ -91,7 +89,6 @@ function InteractiveMapInner({
     })
   }, [])
 
-  // Layer click
   const handleLayerClick = useCallback(
     (layerConfig: GeoLayerConfig) => (properties: GeoFeatureProperties) => {
       setSelectedFeature({ properties, layerConfig })
@@ -99,7 +96,6 @@ function InteractiveMapInner({
     []
   )
 
-  // Build layer options for control panel
   const layerOptions: LayerOption[] = useMemo(
     () =>
       layers.map(layer => ({
@@ -124,6 +120,9 @@ function InteractiveMapInner({
           zoom={zoom}
           center={center}
         >
+          {/* Auto-fit bounds to markers */}
+          {markers.length > 0 && <FitBounds markers={markers} />}
+
           {/* GeoJSON boundary layers */}
           {layers.map(layer => (
             <GeoJsonLayer
@@ -144,10 +143,12 @@ function InteractiveMapInner({
             />
           ))}
 
-          {/* Point markers on top of boundaries */}
-          {markers.map(m => (
-            <MapMarker key={m.id} marker={m} onMarkerReady={setMarkerRef} />
-          ))}
+          {/* Clustered point markers on top of boundaries */}
+          <MarkerClusterGroup chunkedLoading>
+            {markers.map(m => (
+              <MapMarker key={m.id} marker={m} />
+            ))}
+          </MarkerClusterGroup>
         </HoustonMap>
 
         {/* Layer toggle control */}
@@ -174,6 +175,24 @@ function InteractiveMapInner({
   )
 }
 
+/**
+ * Full-featured interactive map with boundary layers, clustering, and info panels.
+ *
+ * Wraps its own {@link MapProvider} so it can be dropped into any page without
+ * additional setup. Supports optional GeoJSON boundary layers with toggle
+ * controls, marker clustering, feature highlighting, and a detail panel that
+ * appears when the user clicks a polygon.
+ *
+ * @param props.markers - Point markers to display on the map.
+ * @param props.layers - GeoJSON boundary layer configurations.
+ * @param props.defaultVisibleLayers - Layer IDs that should be visible on mount.
+ * @param props.className - CSS class for the map container.
+ * @param props.showLegend - Whether to show the marker-type legend. Defaults to `true`.
+ * @param props.highlightLayerId - ID of the layer containing the feature to highlight.
+ * @param props.highlightFeatureId - ID of the specific feature to highlight within the layer.
+ * @param props.zoom - Initial zoom level override.
+ * @param props.center - Initial center coordinate override.
+ */
 export function InteractiveMap(props: InteractiveMapProps) {
   return (
     <MapProvider>
