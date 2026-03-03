@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { href: '/officials', label: 'Officials' },
   { href: '/services', label: 'Services' },
   { href: '/elections', label: 'Elections' },
+  { href: '/polling-places', label: 'Polling Places' },
   { href: '/policies', label: 'Policies' },
 ]
 
