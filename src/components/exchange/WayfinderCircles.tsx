@@ -55,24 +55,24 @@ const THEME_KEYS = Object.keys(THEMES) as Array<keyof typeof THEMES>
 
 /** SVG viewBox dimensions — all positions are computed relative to these. */
 const VB_WIDTH = 600
-const VB_HEIGHT = 520
+const VB_HEIGHT = 580
 
 /** Center point of the home-state flower arrangement. */
 const CX = VB_WIDTH / 2
-const CY = 230
+const CY = 260
 
 /** Circle radii for each state. */
-const HOME_RADIUS = 42
-const SELECTED_RADIUS = 64
-const ORBIT_RADIUS = 28
+const HOME_RADIUS = 50
+const SELECTED_RADIUS = 74
+const ORBIT_RADIUS = 34
 const COMPACT_RADIUS = 24
 const COMPACT_ACTIVE_RADIUS = 32
 
 /** Distance from center for flower petals. */
-const FLOWER_ORBIT = 130
+const FLOWER_ORBIT = 150
 
 /** Distance from selected circle for orbiting satellites. */
-const SATELLITE_ORBIT = 150
+const SATELLITE_ORBIT = 170
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -225,8 +225,7 @@ export function WayfinderCircles({
                     textAnchor="middle"
                     fill={BRAND.muted}
                     fontSize={10}
-                    fontFamily="serif"
-                    className="transition-all duration-300 ease-out"
+                    className="font-serif transition-all duration-300 ease-out"
                   >
                     {sharedCount}
                   </text>
@@ -240,7 +239,7 @@ export function WayfinderCircles({
           <circle
             cx={CX}
             cy={CY}
-            r={18}
+            r={22}
             fill={BRAND.accent}
             fillOpacity={0.08}
             stroke={BRAND.accent}
@@ -261,10 +260,7 @@ export function WayfinderCircles({
             <g
               key={node.id}
               className="cursor-pointer transition-all duration-300 ease-out"
-              style={{
-                transform: `translate(${pos.x}px, ${pos.y}px)`,
-                transformOrigin: '0 0',
-              }}
+              transform={`translate(${pos.x}, ${pos.y})`}
               onClick={() => handleClick(node.id)}
               role="button"
               tabIndex={0}
@@ -276,41 +272,51 @@ export function WayfinderCircles({
                 }
               }}
             >
+              {/* Concentric overlapping rings — outermost glow */}
+              <circle
+                cx={0}
+                cy={0}
+                r={pos.r + 6}
+                fill={node.color}
+                fillOpacity={isSelected ? 0.06 : 0.03}
+                className="transition-all duration-300 ease-out"
+                style={{ pointerEvents: 'none' }}
+              >
+                <set attributeName="fill-opacity" to={isSelected ? '0.08' : '0.06'} begin="mouseover" end="mouseout" />
+              </circle>
+
               {/* Outer ring */}
               <circle
                 cx={0}
                 cy={0}
                 r={pos.r}
-                fill="none"
-                stroke={node.color}
-                strokeWidth={isSelected ? 4 : 3}
-                className="transition-all duration-300 ease-out"
-              />
-
-              {/* Inner filled circle with subtle opacity */}
-              <circle
-                cx={0}
-                cy={0}
-                r={pos.r - 4}
                 fill={node.color}
-                fillOpacity={isSelected ? 0.18 : 0.08}
+                fillOpacity={isSelected ? 0.08 : 0.04}
+                stroke={node.color}
+                strokeWidth={isSelected ? 3 : 2}
+                strokeOpacity={0.4}
                 className="transition-all duration-300 ease-out"
               />
 
-              {/* Hover ring — slightly larger, only visible on hover via CSS */}
+              {/* Middle ring */}
               <circle
                 cx={0}
                 cy={0}
-                r={pos.r + 4}
-                fill="none"
-                stroke={node.color}
-                strokeWidth={2}
-                strokeOpacity={0}
-                className="transition-all duration-200 ease-out group-hover:stroke-opacity-30"
-                style={{ pointerEvents: 'none' }}
-              >
-                <set attributeName="stroke-opacity" to="0.25" begin="mouseover" end="mouseout" />
-              </circle>
+                r={pos.r * 0.7}
+                fill={node.color}
+                fillOpacity={isSelected ? 0.14 : 0.08}
+                className="transition-all duration-300 ease-out"
+              />
+
+              {/* Inner solid core */}
+              <circle
+                cx={0}
+                cy={0}
+                r={pos.r * 0.4}
+                fill={node.color}
+                fillOpacity={isSelected ? 0.25 : 0.15}
+                className="transition-all duration-300 ease-out"
+              />
 
               {/* Resource count inside circle */}
               <text
@@ -319,10 +325,9 @@ export function WayfinderCircles({
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill={node.color}
-                fontSize={compact ? 12 : isSelected ? 20 : 16}
-                fontFamily="serif"
+                fontSize={compact ? 12 : isSelected ? 22 : 18}
                 fontWeight="600"
-                className="transition-all duration-300 ease-out pointer-events-none"
+                className="font-serif transition-all duration-300 ease-out pointer-events-none"
               >
                 {node.count}
               </text>
@@ -331,13 +336,12 @@ export function WayfinderCircles({
               {(!compact || isSelected) && (
                 <text
                   x={0}
-                  y={pos.r + (compact ? 16 : 18)}
+                  y={pos.r + (compact ? 16 : 20)}
                   textAnchor="middle"
                   fill={BRAND.text}
-                  fontSize={compact ? 11 : isSelected ? 14 : 12}
-                  fontFamily="serif"
+                  fontSize={compact ? 11 : isSelected ? 15 : 13}
                   fontWeight={isSelected ? '600' : '400'}
-                  className="transition-all duration-300 ease-out pointer-events-none"
+                  className="font-serif transition-all duration-300 ease-out pointer-events-none"
                 >
                   {node.name}
                 </text>
@@ -370,12 +374,12 @@ function StatItem({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col items-center">
       <span
-        className="text-2xl sm:text-3xl font-semibold font-serif leading-none"
+        className="text-3xl sm:text-4xl font-semibold font-serif leading-none"
         style={{ color: BRAND.accent }}
       >
         {value.toLocaleString()}
       </span>
-      <span className="text-xs sm:text-sm text-brand-muted mt-1">{label}</span>
+      <span className="text-sm text-brand-muted mt-1">{label}</span>
     </div>
   )
 }

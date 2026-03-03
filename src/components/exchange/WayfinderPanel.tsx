@@ -83,7 +83,7 @@ const TYPE_LABELS: Record<PanelData['type'], string> = {
 
 /** Detail page path prefixes, keyed by entity type. */
 const DETAIL_PATHS: Record<PanelData['type'], string> = {
-  resource: '/resources/',
+  resource: '/content/',
   official: '/officials/',
   policy: '/policies/',
   service: '/services/',
@@ -154,7 +154,7 @@ function PanelSection({
           className="w-2 h-2 rounded-full flex-shrink-0"
           style={{ backgroundColor: accentColor }}
         />
-        <h3 className="text-[8px] font-bold tracking-[0.14em] uppercase text-brand-muted">
+        <h3 className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted">
           {title}
         </h3>
       </div>
@@ -183,7 +183,7 @@ function MiniCard({
       className="w-full text-left bg-white border border-brand-border rounded-md px-3 py-2.5 hover:shadow transition-shadow cursor-pointer group"
     >
       {children}
-      <span className="block text-[10px] text-[#319795] font-medium mt-1 group-hover:underline">
+      <span className="block text-xs text-[#319795] font-medium mt-1 group-hover:underline">
         View details &rsaquo;
       </span>
     </button>
@@ -278,7 +278,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
         tabIndex={-1}
         onKeyDown={handleKeyDown}
         className={
-          'fixed right-0 top-0 h-full w-[420px] max-w-full bg-white shadow-2xl z-50 ' +
+          'fixed right-0 top-0 h-full w-[460px] max-w-full bg-white shadow-2xl z-50 ' +
           'flex flex-col outline-none transition-transform duration-300 ease-in-out ' +
           (isOpen ? 'translate-x-0' : 'translate-x-full')
         }
@@ -295,12 +295,12 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 <X size={16} />
               </button>
               <span
-                className="text-[9px] font-bold tracking-[0.12em] uppercase px-2 py-0.5 rounded-full flex-shrink-0"
+                className="text-xs font-bold tracking-[0.12em] uppercase px-2 py-0.5 rounded-full flex-shrink-0"
                 style={pillStyle(accent)}
               >
                 {TYPE_LABELS[panel.type]}
               </span>
-              <h2 className="text-sm font-semibold text-brand-text leading-snug line-clamp-2 min-w-0">
+              <h2 className="text-base font-semibold text-brand-text leading-snug line-clamp-2 min-w-0">
                 {panel.title}
               </h2>
             </div>
@@ -312,14 +312,14 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
               <div className="space-y-3">
                 {/* Summary */}
                 {panel.summary && (
-                  <p className="text-[13px] leading-relaxed text-brand-muted">
+                  <p className="text-sm leading-relaxed text-brand-muted">
                     {panel.summary}
                   </p>
                 )}
 
                 {/* Description */}
                 {panel.description && (
-                  <p className="text-[13px] leading-relaxed text-brand-text">
+                  <p className="text-sm leading-relaxed text-brand-text">
                     {panel.description}
                   </p>
                 )}
@@ -328,12 +328,12 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 {panel.type === 'resource' && (
                   <div className="space-y-2">
                     {panel.center && (
-                      <p className="text-[11px] text-brand-muted">
+                      <p className="text-sm text-brand-muted">
                         <span className="font-semibold">Center:</span> {panel.center}
                       </p>
                     )}
                     {panel.orgName && (
-                      <p className="text-[11px] text-brand-muted">
+                      <p className="text-sm text-brand-muted">
                         <span className="font-semibold">Organization:</span>{' '}
                         {panel.orgId ? (
                           <Link
@@ -352,9 +352,9 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         href={panel.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] text-[#319795] hover:underline"
+                        className="inline-flex items-center gap-1 text-sm text-[#319795] hover:underline"
                       >
-                        <ExternalLink size={11} />
+                        <ExternalLink size={14} />
                         View source
                       </a>
                     )}
@@ -365,30 +365,30 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 {panel.type === 'official' && (
                   <div className="space-y-1.5">
                     {panel.role && (
-                      <p className="text-[11px] text-brand-muted">
+                      <p className="text-sm text-brand-muted">
                         <span className="font-semibold">Role:</span> {panel.role}
                       </p>
                     )}
                     {panel.party && (
-                      <p className="text-[11px] text-brand-muted">
+                      <p className="text-sm text-brand-muted">
                         <span className="font-semibold">Party:</span> {panel.party}
                       </p>
                     )}
                     {panel.phone && (
                       <a
                         href={'tel:' + panel.phone}
-                        className="flex items-center gap-1.5 text-[11px] text-brand-text hover:text-[#319795] transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-[#319795] transition-colors"
                       >
-                        <Phone size={11} className="text-brand-muted" />
+                        <Phone size={14} className="text-brand-muted" />
                         {panel.phone}
                       </a>
                     )}
                     {panel.email && (
                       <a
                         href={'mailto:' + panel.email}
-                        className="flex items-center gap-1.5 text-[11px] text-brand-text hover:text-[#319795] transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-[#319795] transition-colors"
                       >
-                        <Mail size={11} className="text-brand-muted" />
+                        <Mail size={14} className="text-brand-muted" />
                         {panel.email}
                       </a>
                     )}
@@ -397,9 +397,9 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         href={panel.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-[11px] text-[#319795] hover:underline"
+                        className="flex items-center gap-1.5 text-sm text-[#319795] hover:underline"
                       >
-                        <Globe size={11} />
+                        <Globe size={14} />
                         Website
                       </a>
                     )}
@@ -413,7 +413,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                       {panel.status && (
                         <span
                           className={
-                            'text-[10px] font-semibold px-2 py-0.5 rounded-full ' +
+                            'text-xs font-semibold px-2 py-0.5 rounded-full ' +
                             statusBadgeClasses(panel.status)
                           }
                         >
@@ -421,13 +421,13 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         </span>
                       )}
                       {panel.billNumber && (
-                        <span className="text-[10px] text-brand-muted font-mono">
+                        <span className="text-xs text-brand-muted font-mono">
                           {panel.billNumber}
                         </span>
                       )}
                     </div>
                     {panel.body && (
-                      <p className="text-[12px] leading-relaxed text-brand-text">
+                      <p className="text-sm leading-relaxed text-brand-text">
                         {panel.body}
                       </p>
                     )}
@@ -438,8 +438,8 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 {panel.type === 'service' && (
                   <div className="space-y-1.5">
                     {(panel.address || panel.city) && (
-                      <div className="flex items-start gap-1.5 text-[11px] text-brand-text">
-                        <MapPin size={11} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <MapPin size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
                         <span>
                           {[panel.address, panel.city, panel.state, panel.zipCode]
                             .filter(Boolean)
@@ -448,22 +448,22 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                       </div>
                     )}
                     {panel.hours && (
-                      <div className="flex items-start gap-1.5 text-[11px] text-brand-text">
-                        <Clock size={11} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <Clock size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
                         <span>{panel.hours}</span>
                       </div>
                     )}
                     {panel.eligibility && (
-                      <div className="flex items-start gap-1.5 text-[11px] text-brand-text">
-                        <Users size={11} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <Users size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
                         <span>
                           <span className="font-semibold">Eligibility:</span> {panel.eligibility}
                         </span>
                       </div>
                     )}
                     {panel.fees && (
-                      <div className="flex items-start gap-1.5 text-[11px] text-brand-text">
-                        <DollarSign size={11} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                      <div className="flex items-start gap-1.5 text-sm text-brand-text">
+                        <DollarSign size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
                         <span>
                           <span className="font-semibold">Fees:</span> {panel.fees}
                         </span>
@@ -476,7 +476,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
               {/* ── Focus areas ── */}
               {panel.focusAreas && panel.focusAreas.length > 0 && (
                 <div className="border-t border-brand-border pt-4">
-                  <h3 className="text-[8px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2">
+                  <h3 className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2">
                     Focus Areas
                   </h3>
                   <div className="flex flex-wrap gap-1.5">
@@ -484,7 +484,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                       return (
                         <span
                           key={fa.id}
-                          className="text-[10px] font-medium px-2.5 py-1 rounded-full"
+                          className="text-xs font-medium px-2.5 py-1 rounded-full"
                           style={pillStyle(accent)}
                         >
                           {fa.name}
@@ -504,11 +504,11 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         key={official.id}
                         onClick={function () { handleNavigate('official', official.id) }}
                       >
-                        <p className="text-[12px] font-semibold text-brand-text leading-snug">
+                        <p className="text-sm font-semibold text-brand-text leading-snug">
                           {official.name}
                         </p>
                         {official.role && (
-                          <p className="text-[10px] text-brand-muted mt-0.5">
+                          <p className="text-xs text-brand-muted mt-0.5">
                             {official.role}
                           </p>
                         )}
@@ -528,13 +528,13 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         onClick={function () { handleNavigate('policy', policy.id) }}
                       >
                         <div className="flex items-center gap-2">
-                          <p className="text-[12px] font-semibold text-brand-text leading-snug min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-brand-text leading-snug min-w-0 flex-1">
                             {policy.name}
                           </p>
                           {policy.status && (
                             <span
                               className={
-                                'text-[9px] font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0 ' +
+                                'text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0 ' +
                                 statusBadgeClasses(policy.status)
                               }
                             >
@@ -557,11 +557,11 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         key={resource.id}
                         onClick={function () { handleNavigate('resource', resource.id) }}
                       >
-                        <p className="text-[12px] font-semibold text-brand-text leading-snug">
+                        <p className="text-sm font-semibold text-brand-text leading-snug">
                           {resource.title}
                         </p>
                         {resource.center && (
-                          <p className="text-[10px] text-brand-muted mt-0.5 flex items-center gap-1">
+                          <p className="text-xs text-brand-muted mt-0.5 flex items-center gap-1">
                             <span
                               className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
                               style={{ backgroundColor: accent }}
@@ -584,11 +584,11 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         key={service.id}
                         onClick={function () { handleNavigate('service', service.id) }}
                       >
-                        <p className="text-[12px] font-semibold text-brand-text leading-snug">
+                        <p className="text-sm font-semibold text-brand-text leading-snug">
                           {service.name}
                         </p>
                         {service.orgName && (
-                          <p className="text-[10px] text-brand-muted mt-0.5">
+                          <p className="text-xs text-brand-muted mt-0.5">
                             {service.orgName}
                           </p>
                         )}
@@ -603,7 +603,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
             <div className="flex-shrink-0 border-t border-brand-border px-5 py-4">
               <Link
                 href={DETAIL_PATHS[panel.type] + panel.id}
-                className="block w-full text-center text-[12px] font-semibold py-2.5 rounded-md transition-colors"
+                className="block w-full text-center text-sm font-semibold py-3 rounded-md transition-colors"
                 style={{
                   backgroundColor: accent + '1a',
                   color: accent,

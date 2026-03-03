@@ -207,7 +207,7 @@ export function BraidedFeed({
               type="button"
               onClick={() => setInternalCenter(key)}
               className={`
-                inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium
+                inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium
                 transition-colors duration-150
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent
                 ${isActive
@@ -219,7 +219,7 @@ export function BraidedFeed({
               {label}
               <span
                 className={`
-                  inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-semibold leading-none px-1
+                  inline-flex items-center justify-center min-w-[22px] h-[22px] rounded-full text-xs font-semibold leading-none px-1
                   ${isActive ? 'bg-white/20 text-white' : 'bg-brand-bg text-brand-muted'}
                 `}
               >
@@ -231,7 +231,7 @@ export function BraidedFeed({
       </div>
 
       {/* ── Hint line ───────────────────────────────────────────────── */}
-      <p className="text-[11px] text-brand-muted mb-3 italic">
+      <p className="text-sm text-brand-muted mb-3 italic">
         Click any card below to see full details&hellip;
       </p>
 
@@ -241,7 +241,7 @@ export function BraidedFeed({
           No items match the current filter.
         </p>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {feed.map((item) => (
             <FeedCard
               key={`${item.type}-${item.id}`}

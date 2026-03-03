@@ -7,6 +7,7 @@
  *   - Braided feed data for each pathway (content, officials, policies, services)
  *   - Topic names for sidebar pills
  *   - Latest content for the home state feed
+ *   - New-this-week count from content_published
  *
  * All data is passed to the Wayfinder client component which manages the
  * two-column layout, pathway selection, center filtering, and detail panels.
@@ -20,6 +21,7 @@
 
 import type { Metadata } from 'next'
 import { THEMES } from '@/lib/constants'
+import { createClient } from '@/lib/supabase/server'
 import {
   getExchangeStats,
   getPathwayCounts,
@@ -64,9 +66,19 @@ export default async function HomePage() {
     }
   })
 
-  // Calculate total items and new this week
+  // Query new-this-week count from content_published
+  const weekAgo = new Date()
+  weekAgo.setDate(weekAgo.getDate() - 7)
+  const supabase = await createClient()
+  const { count: newCount } = await supabase
+    .from('content_published')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_active', true)
+    .gte('published_at', weekAgo.toISOString())
+  const newThisWeek = newCount ?? 0
+
+  // Calculate total items
   const totalItems = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
-  const newThisWeek = 0 // TODO: query content_published WHERE published_at > now() - 7 days
 
   // Build stats object for circles
   const circleStats = {

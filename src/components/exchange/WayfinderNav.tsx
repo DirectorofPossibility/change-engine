@@ -47,12 +47,16 @@ export function WayfinderNav() {
   return (
     <header className="bg-white/95 backdrop-blur-sm border-b border-brand-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-12 gap-4">
+        <div className="flex items-center h-14 gap-5">
           {/* Home link */}
-          <Link href="/" className="flex items-center gap-2 shrink-0 group">
+          <Link
+            href="/"
+            className="flex items-center gap-2 shrink-0 group"
+            title="Back to The Change Engine"
+          >
             <ChevronLeft size={16} className="text-brand-muted group-hover:text-brand-accent transition-colors" />
-            <span className="font-serif text-lg font-semibold tracking-tight" style={{ color: BRAND.accent }}>
-              CE
+            <span className="font-serif text-base font-bold tracking-tight" style={{ color: BRAND.accent }}>
+              The Change Engine
             </span>
           </Link>
 
@@ -67,7 +71,7 @@ export function WayfinderNav() {
                   title={p.name}
                 >
                   <span
-                    className="block w-3 h-3 rounded-full transition-transform group-hover:scale-150"
+                    className="block w-3.5 h-3.5 rounded-full transition-transform group-hover:scale-125"
                     style={{ backgroundColor: p.color }}
                   />
                 </Link>
@@ -87,7 +91,7 @@ export function WayfinderNav() {
                 onChange={function (e) { setSearchQuery(e.target.value) }}
                 placeholder={t('nav.search_placeholder')}
                 autoFocus
-                className="w-40 sm:w-56 pl-3 pr-2 py-1 text-xs border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
+                className="w-40 sm:w-56 pl-3 pr-2 py-1 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
               />
               <button
                 type="button"

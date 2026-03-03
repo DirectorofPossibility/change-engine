@@ -271,19 +271,30 @@ export function Wayfinder({
 
       {/* Main content area */}
       <main className="flex-1 min-w-0 overflow-y-auto">
-        <div className="max-w-[880px] mx-auto px-6 pb-20">
-          {/* Circles */}
-          <div className="pt-5">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8 pb-20">
+          {/* Circles — with concentric radial gradient background */}
+          <div className="pt-5 relative">
+            {/* Concentric circle background — warm accent → teal → transparent */}
             {!selectedPathway && (
-              <div className="text-center mb-2">
-                <p className="text-[10px] tracking-[0.25em] uppercase text-brand-muted font-serif">
+              <div
+                className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle, rgba(198,93,40,0.05) 0%, rgba(61,90,90,0.03) 35%, transparent 65%)',
+                }}
+                aria-hidden="true"
+              />
+            )}
+
+            {!selectedPathway && (
+              <div className="text-center mb-4 relative z-10">
+                <p className="text-xs tracking-widest uppercase text-brand-muted font-sans font-semibold">
                   The
                 </p>
-                <h1 className="font-serif text-[34px] font-normal tracking-tight leading-none">
+                <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight leading-none">
                   Community{' '}
                   <span style={{ color: BRAND.accent }}>Exchange</span>
                 </h1>
-                <p className="font-serif italic text-brand-muted text-[13px] mt-1">
+                <p className="font-serif italic text-brand-muted text-lg mt-2">
                   Community Life, Organized
                 </p>
               </div>
@@ -299,7 +310,7 @@ export function Wayfinder({
             />
 
             {!selectedPathway && (
-              <p className="text-center text-brand-muted/60 text-[11px] mt-2">
+              <p className="text-center text-brand-muted/60 text-sm mt-2">
                 Tap any circle to explore — numbers show shared resources between pathways
               </p>
             )}
@@ -308,26 +319,15 @@ export function Wayfinder({
           {/* Pathway header when selected */}
           {selectedPathway && selectedTheme && (
             <div className="mt-6 mb-5 pb-4" style={{ borderBottom: `2px solid ${selectedTheme.color}20` }}>
-              <div className="flex items-center gap-3 mb-2">
-                <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-                  <circle
-                    cx="15"
-                    cy="15"
-                    r="13"
-                    fill="none"
-                    stroke={selectedTheme.color}
-                    strokeWidth="2.5"
-                    opacity={0.6}
-                  />
-                  <circle
-                    cx="15"
-                    cy="15"
-                    r="5.5"
-                    fill={selectedTheme.color}
-                    opacity={0.15}
-                  />
+              <div className="flex items-center gap-4 mb-2">
+                {/* Concentric overlapping circles — pathway icon */}
+                <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+                  <circle cx="22" cy="22" r="20" fill={selectedTheme.color} fillOpacity={0.06} stroke={selectedTheme.color} strokeWidth="1.5" strokeOpacity={0.2} />
+                  <circle cx="22" cy="22" r="14" fill={selectedTheme.color} fillOpacity={0.1} stroke={selectedTheme.color} strokeWidth="1.5" strokeOpacity={0.3} />
+                  <circle cx="22" cy="22" r="8" fill={selectedTheme.color} fillOpacity={0.2} />
+                  <circle cx="22" cy="22" r="3" fill={selectedTheme.color} fillOpacity={0.5} />
                 </svg>
-                <h2 className="font-serif text-[28px] font-normal" style={{ color: selectedTheme.color }}>
+                <h2 className="font-serif text-3xl font-bold" style={{ color: selectedTheme.color }}>
                   {selectedTheme.name}
                 </h2>
               </div>
@@ -335,7 +335,7 @@ export function Wayfinder({
               {/* Connected pathways */}
               {bridges.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2 mt-3">
-                  <span className="text-[11px] text-brand-muted">Connected to</span>
+                  <span className="text-sm text-brand-muted">Connected to</span>
                   {bridges
                     .filter(function (b) { return b[0] === selectedPathway || b[1] === selectedPathway })
                     .slice(0, 5)
@@ -347,7 +347,7 @@ export function Wayfinder({
                         <button
                           key={i}
                           onClick={function () { handleSelectPathway(otherId) }}
-                          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-semibold cursor-pointer border transition-colors hover:opacity-80"
+                          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold cursor-pointer border transition-colors hover:opacity-80"
                           style={{
                             backgroundColor: otherTheme.color + '10',
                             color: otherTheme.color,
@@ -359,7 +359,7 @@ export function Wayfinder({
                             style={{ backgroundColor: otherTheme.color }}
                           />
                           {otherTheme.name}
-                          <span className="text-[10px] opacity-50 ml-1">{b[2]} shared</span>
+                          <span className="text-xs opacity-50 ml-1">{b[2]} shared</span>
                         </button>
                       )
                     })}
@@ -368,16 +368,35 @@ export function Wayfinder({
             </div>
           )}
 
+          {/* Pathway spectrum bar — all 7 colors in a horizontal strip */}
+          {!selectedPathway && (
+            <div className="flex h-1.5 max-w-lg mx-auto rounded-full overflow-hidden shadow-sm mb-8 mt-2">
+              {Object.values(THEMES).map(function (theme, i) {
+                return (
+                  <div
+                    key={i}
+                    className="flex-1 transition-all duration-300 hover:flex-[3]"
+                    style={{ backgroundColor: theme.color }}
+                    title={theme.name}
+                  />
+                )
+              })}
+            </div>
+          )}
+
           {/* Home state content */}
           {!selectedPathway && (
-            <div className="mt-8">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="font-serif text-[18px] font-semibold tracking-tight">
+            <div className="mt-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  className="w-12 h-0.5 rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${BRAND.accent}, #5B8A8A)` }}
+                />
+                <div className="font-serif text-2xl font-bold tracking-tight">
                   What Your Community Offers
                 </div>
-                <div className="flex-1 h-px bg-brand-border ml-2" />
               </div>
-              <p className="text-[9px] text-brand-muted italic mb-4">
+              <p className="text-sm text-brand-muted mb-5">
                 Organized by what is available, not what is missing
               </p>
             </div>
@@ -396,10 +415,10 @@ export function Wayfinder({
 
         {/* Footer */}
         <div className="text-center py-6 border-t border-brand-border">
-          <p className="text-[10px] text-brand-muted">
+          <p className="text-sm text-brand-muted">
             The Community Exchange — a product of The Change Engine
           </p>
-          <p className="text-[9px] text-brand-muted/60 mt-1">
+          <p className="text-sm text-brand-muted/60 mt-1">
             {stats.resources} resources, {stats.officials} officials, {stats.policies} policies, {stats.focusAreas} focus areas
           </p>
         </div>

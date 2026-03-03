@@ -14,6 +14,8 @@
  */
 'use client'
 
+import { ChevronRight } from 'lucide-react'
+
 // ── Types ────────────────────────────────────────────────────────────────
 
 /**
@@ -119,7 +121,7 @@ function ResourceLayout({ item }: { item: FeedItem }) {
   const accent = item.pathwayColor || DEFAULT_ACCENT
 
   return (
-    <div className="flex-1 min-w-0 py-2.5 pr-3 pl-3">
+    <div className="flex-1 min-w-0 p-4">
       {/* Center dot + center name */}
       {item.center && (
         <div className="flex items-center gap-1.5 mb-1.5">
@@ -127,25 +129,26 @@ function ResourceLayout({ item }: { item: FeedItem }) {
             className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: accent }}
           />
-          <span className="text-[8px] uppercase tracking-wide text-brand-muted font-medium">
+          <span className="text-xs uppercase tracking-wide text-brand-muted font-medium">
             {item.center}
           </span>
         </div>
       )}
-      <h4 className="text-[13px] font-semibold text-brand-text leading-snug line-clamp-2">
+      <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">
         {item.title}
       </h4>
       {item.summary && (
-        <p className="text-[11.5px] text-brand-muted mt-1 leading-relaxed line-clamp-2">
+        <p className="text-sm text-brand-muted mt-1 leading-relaxed line-clamp-2">
           {item.summary}
         </p>
       )}
       <div className="flex items-center justify-between mt-2">
         {item.orgName && (
-          <span className="text-[10px] text-brand-muted truncate mr-2">{item.orgName}</span>
+          <span className="text-xs text-brand-muted truncate mr-2">{item.orgName}</span>
         )}
-        <span className="text-[11px] font-medium flex-shrink-0" style={{ color: TEAL }}>
-          Open &#8250;
+        <span className="text-sm font-semibold flex-shrink-0 inline-flex items-center gap-0.5" style={{ color: TEAL }}>
+          Open
+          <ChevronRight className="w-4 h-4" />
         </span>
       </div>
     </div>
@@ -161,43 +164,44 @@ function OfficialLayout({ item }: { item: FeedItem }) {
   const initials = getInitials(item.title)
 
   return (
-    <div className="flex-1 min-w-0 py-2.5 pr-3 pl-3 flex items-center gap-3">
+    <div className="flex-1 min-w-0 p-4 flex items-center gap-3">
       {/* SVG initials circle */}
       <svg
-        width="36"
-        height="36"
-        viewBox="0 0 36 36"
+        width="44"
+        height="44"
+        viewBox="0 0 44 44"
         className="flex-shrink-0"
         aria-hidden="true"
       >
-        <circle cx="18" cy="18" r="18" fill={TEAL} opacity={0.15} />
-        <circle cx="18" cy="18" r="15" fill={TEAL} opacity={0.25} />
+        <circle cx="22" cy="22" r="22" fill={TEAL} opacity={0.15} />
+        <circle cx="22" cy="22" r="18" fill={TEAL} opacity={0.25} />
         <text
-          x="18"
-          y="18"
+          x="22"
+          y="22"
           textAnchor="middle"
           dominantBaseline="central"
-          fontSize="12"
+          fontSize="14"
           fontWeight="600"
           fill={TEAL}
         >
           {initials}
         </text>
       </svg>
-      <div className="min-w-0">
-        <span className="text-[8px] uppercase tracking-wide font-semibold block" style={{ color: TEAL }}>
+      <div className="min-w-0 flex-1">
+        <span className="text-xs uppercase tracking-wide font-semibold block" style={{ color: TEAL }}>
           Who Decides
         </span>
-        <h4 className="text-[13px] font-semibold text-brand-text leading-snug line-clamp-1">
+        <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-1">
           {item.title}
         </h4>
         {item.role && (
-          <p className="text-[11.5px] text-brand-muted leading-snug line-clamp-1">{item.role}</p>
+          <p className="text-sm text-brand-muted leading-snug line-clamp-1">{item.role}</p>
         )}
         {item.relevance && (
-          <p className="text-[10px] text-brand-muted mt-0.5 italic line-clamp-1">{item.relevance}</p>
+          <p className="text-xs text-brand-muted mt-0.5 italic line-clamp-1">{item.relevance}</p>
         )}
       </div>
+      <ChevronRight className="w-4 h-4 flex-shrink-0 text-brand-muted" />
     </div>
   )
 }
@@ -211,28 +215,34 @@ function PolicyLayout({ item }: { item: FeedItem }) {
   const accent = policyAccentColor(item.status)
 
   return (
-    <div className="flex-1 min-w-0 py-2.5 pr-3 pl-3">
+    <div className="flex-1 min-w-0 p-4">
       <div className="flex items-center gap-2 mb-1.5">
-        <span className="text-[8px] uppercase tracking-wide font-semibold" style={{ color: accent }}>
+        <span className="text-xs uppercase tracking-wide font-semibold" style={{ color: accent }}>
           Policy
         </span>
         {item.status && (
-          <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium leading-none ${statusBadgeClasses(item.status)}`}>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium leading-none ${statusBadgeClasses(item.status)}`}>
             {item.status}
           </span>
         )}
       </div>
-      <h4 className="text-[13px] font-semibold text-brand-text leading-snug line-clamp-2">
+      <h4 className="text-base font-bold text-brand-text leading-snug line-clamp-2">
         {item.title}
       </h4>
       {item.relevance && (
-        <p className="text-[10px] text-brand-muted mt-1 italic line-clamp-1">{item.relevance}</p>
+        <p className="text-xs text-brand-muted mt-1 italic line-clamp-1">{item.relevance}</p>
       )}
-      {item.body && (
-        <p className="text-[10px] text-brand-muted mt-1">
-          Decided by: <span className="font-medium">{item.body}</span>
-        </p>
-      )}
+      <div className="flex items-center justify-between mt-1">
+        {item.body && (
+          <p className="text-xs text-brand-muted">
+            Decided by: <span className="font-medium">{item.body}</span>
+          </p>
+        )}
+        <span className="text-sm font-semibold flex-shrink-0 inline-flex items-center gap-0.5 ml-auto" style={{ color: accent }}>
+          Open
+          <ChevronRight className="w-4 h-4" />
+        </span>
+      </div>
     </div>
   )
 }
@@ -243,7 +253,7 @@ function PolicyLayout({ item }: { item: FeedItem }) {
  * Polymorphic feed card that renders a resource, official, or policy layout
  * based on the {@link FeedItem.type} discriminant.
  *
- * Cards have a white background, rounded corners, a left color bar (3 px
+ * Cards have a white background, rounded corners, a left color bar (4 px
  * border-left), and a subtle lift-on-hover animation. Clicking the card
  * fires the `onClick` callback, which the parent typically uses to open a
  * slide-over detail panel.
@@ -291,14 +301,14 @@ export function FeedCard({ item, onClick }: FeedCardProps) {
       type="button"
       onClick={onClick}
       className="
-        w-full text-left flex bg-white rounded-lg border border-brand-border
+        w-full text-left flex bg-white rounded-xl border border-brand-border
         overflow-hidden cursor-pointer
         hover:-translate-y-[2px] hover:shadow-md
         transition-all duration-150
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent
       "
       style={{
-        borderLeftWidth: '3px',
+        borderLeftWidth: '4px',
         borderLeftColor: leftBarColor,
         backgroundColor: bgTint,
       }}
