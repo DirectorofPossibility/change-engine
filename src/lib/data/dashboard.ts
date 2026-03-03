@@ -153,6 +153,7 @@ export async function getTranslationStats() {
   }
 }
 
+/** Published content with their translations — for the translation management table. */
 export async function getTranslationsWithContent() {
   const supabase = await createClient()
   const [published, translations] = await Promise.all([
@@ -162,6 +163,12 @@ export async function getTranslationsWithContent() {
   return { published: published.data || [], translations: translations.data || [] }
 }
 
+// ── Taxonomy ──────────────────────────────────────────────────────────
+
+/**
+ * Full taxonomy tree: themes → focus areas, plus all cross-reference standards
+ * (SDGs, SDOH, NTEE, AIRS). Used by the taxonomy browser and classification prompt.
+ */
 export async function getThemesWithFocusAreas() {
   const supabase = await createClient()
   const [themes, focusAreas, sdgs, sdoh, ntee, airs] = await Promise.all([
@@ -182,6 +189,9 @@ export async function getThemesWithFocusAreas() {
   }
 }
 
+// ── API keys ──────────────────────────────────────────────────────────
+
+/** All API keys (hashed — raw keys are never retrievable after creation). */
 export async function getApiKeys(): Promise<ApiKey[]> {
   const supabase = await createClient()
   const { data } = await supabase

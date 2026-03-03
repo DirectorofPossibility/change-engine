@@ -1,6 +1,22 @@
+/**
+ * @fileoverview Full-text search across all entity tables.
+ *
+ * Uses PostgreSQL full-text search (tsvector/tsquery) via Supabase's `.textSearch()`.
+ * Each table has an `fts` generated column that indexes relevant text fields.
+ * Queries all 8 entity types in parallel, then enriches services with org names.
+ *
+ * Search result types are defined in `@/lib/types/exchange` as narrow column subsets
+ * to keep responses lightweight.
+ */
+
 import { createClient } from '@/lib/supabase/server'
 import type { SearchResults, SearchResultService } from '@/lib/types/exchange'
 
+/**
+ * Search across all content types using PostgreSQL full-text search.
+ * Multi-word queries are AND'd together (all words must match).
+ * Services are enriched with their parent organization name via a follow-up query.
+ */
 export async function searchAll(query: string): Promise<SearchResults> {
   const empty: SearchResults = { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
   if (!query || query.trim().length === 0) return empty
