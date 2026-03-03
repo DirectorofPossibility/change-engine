@@ -103,25 +103,56 @@ export interface ReviewStatusBreakdown {
  * Fields prefixed with `_` are enrichment metadata added during /api/enrich.
  */
 export interface AiClassification {
+  /** Primary pathway (THEME_01–THEME_07). */
   theme_primary: string
+  /** 0–2 secondary pathways. */
   theme_secondary: string[]
+  /** 1–4 focus area IDs — the specific topics within a pathway. */
   focus_area_ids: string[]
+  /** UN Sustainable Development Goal IDs. */
   sdg_ids: string[]
+  /** Social Determinants of Health code. */
   sdoh_code: string
+  /** Nonprofit taxonomy codes. */
   ntee_codes: string[]
+  /** Community resource info system codes. */
   airs_codes: string[]
+  /** Engagement level: Learning | Action | Resource | Accountability. */
   center: string
+  /** Content format (video, report, article, course, etc.) — NOT a community resource type. */
   resource_type_id: string
+  /** Who this content is for (1–3 segment IDs). */
   audience_segment_ids: string[]
+  /** What life situations this addresses (0–3). */
   life_situation_ids: string[]
+  /** Service domains referenced (0–2). */
   service_cat_ids: string[]
+  /** Skills needed or taught (0–3). */
   skill_ids: string[]
+  /** Time commitment to engage with this content (0–1). */
+  time_commitment_id?: string | null
+  /** Action types possible (0–2). */
+  action_type_ids?: string[]
+  /** Government level if accountability content (0–1). */
+  gov_level_id?: string | null
+  /** Organizations mentioned or responsible. */
+  organizations?: Array<{ name: string; url: string; description?: string }>
+  /** Locations identified (neighborhoods, ZIP codes, districts). */
+  locations?: { neighborhoods?: string[]; zip_codes?: string[]; city?: string; district?: string }
+  /** Rewritten title at 6th-grade reading level. */
   title_6th_grade: string
+  /** Rewritten summary at 6th-grade reading level (150–300 words). */
   summary_6th_grade: string
+  /** Actionable URLs extracted from the content. */
   action_items: Record<string, string | null>
+  /** Geographic scope: Houston | Harris County | Texas | National | Global. */
   geographic_scope: string
+  /** Classifier confidence (0.0–1.0). */
   confidence: number
+  /** Why the classifier made these choices. */
   reasoning: string
+  /** Extracted keywords. */
+  keywords?: string[]
   _enriched_focus_areas?: Array<{
     id: string; name: string; theme: string
     sdg: string; ntee: string; airs: string; sdoh: string; bridging: boolean

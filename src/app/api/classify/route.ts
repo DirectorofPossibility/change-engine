@@ -57,7 +57,7 @@ async function fetchTaxonomy() {
   const get = (table: string, select = '*') =>
     supaRest('GET', `${table}?select=${select}&limit=500`)
 
-  const [themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills] = await Promise.all([
+  const [themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills, timeCommitments, actionTypes, govLevels] = await Promise.all([
     get('themes', 'theme_id,theme_name'),
     get('focus_areas', 'focus_id,focus_area_name,theme_id,sdg_id,ntee_code,airs_code,sdoh_code,is_bridging'),
     get('sdgs', 'sdg_id,sdg_number,sdg_name'),
@@ -69,9 +69,12 @@ async function fetchTaxonomy() {
     get('resource_types', 'resource_type_id,resource_type_name,center'),
     get('service_categories', 'service_cat_id,service_cat_name'),
     get('skills', 'skill_id,skill_name,skill_category'),
+    get('time_commitments', 'time_id,time_name,min_minutes,max_minutes'),
+    get('action_types', 'action_type_id,action_type_name,category'),
+    get('government_levels', 'gov_level_id,gov_level_name'),
   ])
 
-  return { themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills }
+  return { themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills, timeCommitments, actionTypes, govLevels }
 }
 
 function buildTaxonomyPrompt(tax: Awaited<ReturnType<typeof fetchTaxonomy>>): string {
@@ -94,8 +97,56 @@ function buildTaxonomyPrompt(tax: Awaited<ReturnType<typeof fetchTaxonomy>>): st
   const rtList = tax.resourceTypes.map((r: any) => `${r.resource_type_id}: ${r.resource_type_name} (${r.center})`).join('\n')
   const scList = tax.serviceCats.map((s: any) => `${s.service_cat_id}: ${s.service_cat_name}`).join('\n')
   const skillList = tax.skills.map((s: any) => `${s.skill_id}: ${s.skill_name}`).join('\n')
+  const timeList = tax.timeCommitments.map((t: any) => `${t.time_id}: ${t.time_name} (${t.min_minutes}-${t.max_minutes} min)`).join('\n')
+  const actionList = tax.actionTypes.map((a: any) => `${a.action_type_id}: ${a.action_type_name} [${a.category}]`).join('\n')
+  const govList = tax.govLevels.map((g: any) => `${g.gov_level_id}: ${g.gov_level_name}`).join('\n')
 
-  return `THEMES (pick 1 primary + 0-2 secondary):\n${themeList}\n\nFOCUS AREAS (pick 1-4 by ID):\n${faText}\n\nAUDIENCE SEGMENTS (pick 1-3):\n${segList}\n\nLIFE SITUATIONS (pick 0-3):\n${sitList}\n\nRESOURCE TYPES (pick 1):\n${rtList}\n\nSERVICE CATEGORIES (pick 0-2):\n${scList}\n\nSKILLS (pick 0-3):\n${skillList}\n\nCENTERS (pick 1): Learning | Action | Resource | Accountability`
+  return `## OBJECT TYPE MODEL
+News is NOT resources. Content flowing through this pipeline is NEWSFEED content (articles, videos, research, reports, DIY activities, courses). Resources are separate entity types (services, organizations, benefits).
+
+## ENGAGEMENT LEVELS (Centers)
+Each piece of content serves one engagement level:
+- Learning:       "How can I understand?" — news, research, reports, explainers, courses, videos
+- Action:         "How can I help?"       — volunteer opportunities, campaigns, calls to action, events
+- Resource:       "What's available?"      — services, organizations, benefit programs, tools
+- Accountability: "Who makes decisions?"   — officials, policies, agencies, ballot items
+
+## CLASSIFICATION DIMENSIONS
+You must identify EVERY applicable dimension for each item:
+
+THEMES / PATHWAYS (pick 1 primary + 0-2 secondary):
+${themeList}
+
+FOCUS AREAS (pick 1-4 by ID — the WHAT):
+${faText}
+
+CONTENT FORMAT / RESOURCE TYPE (pick 1 — what kind of content is this):
+${rtList}
+
+ENGAGEMENT LEVEL / CENTER (pick 1): Learning | Action | Resource | Accountability
+
+AUDIENCE SEGMENTS (pick 1-3 — WHO is this for):
+${segList}
+
+LIFE SITUATIONS (pick 0-3 — what life situation does this address):
+${sitList}
+
+SERVICE CATEGORIES (pick 0-2 — what service domain):
+${scList}
+
+SKILLS (pick 0-3 — skills needed or taught):
+${skillList}
+
+TIME COMMITMENTS (pick 0-1 — how long to engage):
+${timeList}
+
+ACTION TYPES (pick 0-2 — what actions can someone take):
+${actionList}
+
+GOVERNMENT LEVELS (pick 0-1 — if accountability content, which level):
+${govList}
+
+GEOGRAPHIC SCOPE: Houston | Harris County | Texas | National | Global`
 }
 
 // ── Claude classification ───────────────────────────────────────────────
@@ -127,8 +178,24 @@ async function classifyItem(
     return { success: false, error: 'No content to classify' }
   }
 
-  const systemPrompt = `You are the Change Engine v2 classifier for Houston, Texas civic content.
-Classify content against the EXACT taxonomy below. Return ONLY valid IDs. Respond with a single JSON object, no markdown, no backticks.
+  const systemPrompt = `You are the Change Engine v3 classifier for Houston, Texas civic content.
+
+CRITICAL: You are classifying NEWSFEED content — articles, videos, research, reports, DIY activities, courses. This is NOT community resource classification. Identify EVERY dimension of the content.
+
+For each item, identify:
+- The ORGANIZATION(s) mentioned or responsible
+- The LOCATION(s) — neighborhood, ZIP, city, district
+- The SERVICE(s) referenced (if any)
+- The OBJECT TYPE — what format is this content (video, report, article, course, etc.)
+- The THEME/PATHWAY — which of the 7 pathways this belongs to
+- The FOCUS AREA(s) — specific topics within the pathway
+- The ENGAGEMENT LEVEL (center) — Learning, Action, Resource, or Accountability
+- The TIME COMMITMENT — how long would it take to engage with this
+- The ACTION TYPE(s) — what actions can someone take
+- WHO this is for — audience segments
+- WHAT life situation this addresses
+
+Classify against the EXACT taxonomy below. Return ONLY valid IDs. Respond with a single JSON object, no markdown, no backticks.
 
 ${taxonomyPrompt}`
 
@@ -141,9 +208,9 @@ ${taxonomyPrompt}`
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1500,
+      max_tokens: 2000,
       system: systemPrompt,
-      messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${item.source_url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${pageText}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
+      messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${item.source_url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${pageText}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"time_commitment_id":"TIME_XX or null","action_type_ids":["ATYPE_XX"],"gov_level_id":"GOV_XX or null","organizations":[{"name":"...","url":"..."}],"locations":{"neighborhoods":[],"zip_codes":[],"city":"Houston","district":""},"title_6th_grade":"...","summary_6th_grade":"...","action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
     }),
   })
 

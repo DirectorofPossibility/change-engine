@@ -246,7 +246,7 @@ async function fetchTaxonomy() {
   const get = (table: string, select = '*') =>
     supaRest('GET', `${table}?select=${select}&limit=500`)
 
-  const [themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills] = await Promise.all([
+  const [themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills, timeCommitments, actionTypes, govLevels] = await Promise.all([
     get('themes', 'theme_id,theme_name'),
     get('focus_areas', 'focus_id,focus_area_name,theme_id,sdg_id,ntee_code,airs_code,sdoh_code,is_bridging'),
     get('sdgs', 'sdg_id,sdg_number,sdg_name'),
@@ -258,18 +258,21 @@ async function fetchTaxonomy() {
     get('resource_types', 'resource_type_id,resource_type_name,center'),
     get('service_categories', 'service_cat_id,service_cat_name'),
     get('skills', 'skill_id,skill_name,skill_category'),
+    get('time_commitments', 'time_id,time_name,min_minutes,max_minutes'),
+    get('action_types', 'action_type_id,action_type_name,category'),
+    get('government_levels', 'gov_level_id,gov_level_name'),
   ])
 
-  return { themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills }
+  return { themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills, timeCommitments, actionTypes, govLevels }
 }
 
 /**
- * Serialize the taxonomy into a text prompt for Claude classification.
+ * Serialize the full taxonomy into a text prompt for Claude classification.
  *
- * Formats every taxonomy dimension (themes, focus areas grouped by theme,
- * audience segments, life situations, resource types, service categories,
- * skills, and centers) into a human-readable block that Claude uses to map
- * content onto the knowledge graph.
+ * Encodes the object type model (news vs resources), engagement levels,
+ * and every classification dimension: themes, focus areas, audience segments,
+ * life situations, resource types (content format), service categories,
+ * skills, time commitments, action types, and government levels.
  *
  * @param tax - The taxonomy object returned by {@link fetchTaxonomy}.
  * @returns A multi-line string ready to embed in a Claude system prompt.
@@ -294,8 +297,56 @@ function buildTaxonomyPrompt(tax: Awaited<ReturnType<typeof fetchTaxonomy>>): st
   const rtList = tax.resourceTypes.map((r: any) => `${r.resource_type_id}: ${r.resource_type_name} (${r.center})`).join('\n')
   const scList = tax.serviceCats.map((s: any) => `${s.service_cat_id}: ${s.service_cat_name}`).join('\n')
   const skillList = tax.skills.map((s: any) => `${s.skill_id}: ${s.skill_name}`).join('\n')
+  const timeList = tax.timeCommitments.map((t: any) => `${t.time_id}: ${t.time_name} (${t.min_minutes}-${t.max_minutes} min)`).join('\n')
+  const actionList = tax.actionTypes.map((a: any) => `${a.action_type_id}: ${a.action_type_name} [${a.category}]`).join('\n')
+  const govList = tax.govLevels.map((g: any) => `${g.gov_level_id}: ${g.gov_level_name}`).join('\n')
 
-  return `THEMES (pick 1 primary + 0-2 secondary):\n${themeList}\n\nFOCUS AREAS (pick 1-4 by ID):\n${faText}\n\nAUDIENCE SEGMENTS (pick 1-3):\n${segList}\n\nLIFE SITUATIONS (pick 0-3):\n${sitList}\n\nRESOURCE TYPES (pick 1):\n${rtList}\n\nSERVICE CATEGORIES (pick 0-2):\n${scList}\n\nSKILLS (pick 0-3):\n${skillList}\n\nCENTERS (pick 1): Learning | Action | Resource | Accountability`
+  return `## OBJECT TYPE MODEL
+News is NOT resources. Content flowing through this pipeline is NEWSFEED content (articles, videos, research, reports, DIY activities, courses). Resources are separate entity types (services, organizations, benefits).
+
+## ENGAGEMENT LEVELS (Centers)
+Each piece of content serves one engagement level:
+- Learning:       "How can I understand?" — news, research, reports, explainers, courses, videos
+- Action:         "How can I help?"       — volunteer opportunities, campaigns, calls to action, events
+- Resource:       "What's available?"      — services, organizations, benefit programs, tools
+- Accountability: "Who makes decisions?"   — officials, policies, agencies, ballot items
+
+## CLASSIFICATION DIMENSIONS
+You must identify EVERY applicable dimension for each item:
+
+THEMES / PATHWAYS (pick 1 primary + 0-2 secondary):
+${themeList}
+
+FOCUS AREAS (pick 1-4 by ID — the WHAT):
+${faText}
+
+CONTENT FORMAT / RESOURCE TYPE (pick 1 — what kind of content is this):
+${rtList}
+
+ENGAGEMENT LEVEL / CENTER (pick 1): Learning | Action | Resource | Accountability
+
+AUDIENCE SEGMENTS (pick 1-3 — WHO is this for):
+${segList}
+
+LIFE SITUATIONS (pick 0-3 — what life situation does this address):
+${sitList}
+
+SERVICE CATEGORIES (pick 0-2 — what service domain):
+${scList}
+
+SKILLS (pick 0-3 — skills needed or taught):
+${skillList}
+
+TIME COMMITMENTS (pick 0-1 — how long to engage):
+${timeList}
+
+ACTION TYPES (pick 0-2 — what actions can someone take):
+${actionList}
+
+GOVERNMENT LEVELS (pick 0-1 — if accountability content, which level):
+${govList}
+
+GEOGRAPHIC SCOPE: Houston | Harris County | Texas | National | Global`
 }
 
 // ── Claude helpers ────────────────────────────────────────────────────
@@ -427,14 +478,26 @@ async function ingestUrl(
   })
 
   // Step 4: Classify + enrich with full text (single Claude call)
-  const systemPrompt = `You are the Change Engine v2 knowledge graph enricher for Houston, Texas civic content.
-You have the FULL article text. Your job is to:
+  const systemPrompt = `You are the Change Engine v3 knowledge graph enricher for Houston, Texas civic content.
+
+CRITICAL: You are classifying NEWSFEED content — articles, videos, research, reports, DIY activities, courses. This is NOT community resource classification. News flows as a per-pathway feed. Resources are separate entity types (services, organizations, benefits).
+
+You have the FULL article text. Your job is to identify EVERY dimension:
 1. Write a clear, engaging title at 6th-grade reading level (max 80 chars)
 2. Write a comprehensive summary at 6th-grade reading level (150-300 words) capturing ALL key information
-3. Classify against the EXACT taxonomy below using valid IDs only
-4. Extract ALL organizations mentioned with their URLs
-5. Identify action items (donate, volunteer, sign up, etc.)
-6. Extract keywords
+3. Identify the ORGANIZATION(s) responsible — who published or is featured
+4. Identify the LOCATION(s) — neighborhoods, ZIP codes, districts
+5. Identify the SERVICE(s) referenced — what civic services are mentioned
+6. Classify the OBJECT TYPE — what format is this (video, report, article, course, etc.)
+7. Classify the THEME/PATHWAY — which of the 7 pathways
+8. Classify the FOCUS AREA(s) — specific topics within the pathway
+9. Classify the ENGAGEMENT LEVEL — Learning, Action, Resource, or Accountability
+10. Identify TIME COMMITMENT — how long to engage with this
+11. Identify ACTION TYPE(s) — what actions can someone take
+12. Identify WHO this is for — audience segments
+13. Identify WHAT LIFE SITUATION this addresses
+14. Extract action items (donate, volunteer, sign up, etc.)
+15. Extract keywords
 
 The summary should be detailed enough that if the original source disappears, a reader would still understand everything.
 
@@ -470,10 +533,14 @@ Return JSON:
   "life_situation_ids": ["SIT_XXX"],
   "service_cat_ids": ["SCAT_XX"],
   "skill_ids": ["SKILL_XX"],
+  "time_commitment_id": "TIME_XX or null",
+  "action_type_ids": ["ATYPE_XX"],
+  "gov_level_id": "GOV_XX or null",
   "action_items": {"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},
   "organizations": [{"name":"...","url":"https://...","description":"..."}],
+  "locations": {"neighborhoods":[],"zip_codes":[],"city":"Houston","district":""},
   "keywords": ["keyword1","keyword2"],
-  "geographic_scope": "Houston|National|Texas|Global",
+  "geographic_scope": "Houston|Harris County|Texas|National|Global",
   "confidence": 0.0,
   "reasoning": "..."
 }`

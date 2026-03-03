@@ -1,16 +1,43 @@
 /**
  * @fileoverview Data-fetching layer for the public exchange site (/(exchange)/*).
  *
- * All functions run server-side (RSC or server actions) and use the Supabase
- * server client. They are organized into sections:
+ * ## Object Type Model
+ *
+ * The platform distinguishes NEWS from RESOURCES:
+ *
+ * - **News / Newsfeed** (`content_published`) — articles, videos, research,
+ *   reports, DIY activities, courses. These flow as a per-pathway feed.
+ *   The `resource_type` field is the content FORMAT (Video, Report, etc.),
+ *   NOT a community resource classification.
+ *
+ * - **Resources** — persistent civic infrastructure:
+ *   - `services_211` — 211 social services (food, shelter, clinics)
+ *   - `organizations` — nonprofits, agencies, mutual aid groups
+ *   - `benefit_programs` — government assistance programs
+ *   - `opportunities` — volunteer, jobs, civic engagement
+ *
+ * - **Accountability** — governance entities:
+ *   - `elected_officials`, `policies`, `agencies`, `ballot_items`
+ *
+ * ## Engagement Levels (Centers)
+ *
+ * Each center answers a distinct community question:
+ *   - Learning  → "How can I understand?" (newsfeed: videos, research, reports, courses)
+ *   - Action    → "How can I help?"       (opportunities, campaigns, CTAs)
+ *   - Resource  → "What's available?"      (services, orgs, benefits)
+ *   - Accountability → "Who decides?"      (officials, policies, agencies)
+ *
+ * ## Sections
  *
  *   1. Language / Translation helpers
- *   2. Homepage data (stats, center counts, pathway counts, latest content)
- *   3. Entity queries (officials, services, learning paths, situations)
- *   4. Pathway + center content filtering
- *   5. Taxonomy lookups (focus areas, SDGs, SDOH)
- *   6. Geographic data (neighborhoods, super neighborhoods, ZIP lookups)
- *   7. Map marker data (services, voting locations, orgs, distribution sites with coords)
+ *   2. Homepage data (stats, newsfeed counts, pathway counts)
+ *   3. Newsfeed queries (per-pathway feed, latest news, center counts)
+ *   4. Entity queries (officials, services, learning paths, situations)
+ *   5. Pathway + center content filtering
+ *   6. Taxonomy lookups (focus areas, SDGs, SDOH)
+ *   7. Geographic data (neighborhoods, super neighborhoods, ZIP lookups)
+ *   8. Map marker data (services, voting locations, orgs, distribution sites)
+ *   9. Mesh query functions (cross-entity traversal via junction tables)
  *
  * Most pages use ISR (`export const revalidate = N`) so these queries are cached
  * at the edge and only re-run every N seconds.
@@ -37,10 +64,14 @@ export async function getLangId(): Promise<string | null> {
 
 // ── Homepage data ──────────────────────────────────────────────────────
 
-/** Aggregate counts for the stats bar at the bottom of the homepage. */
+/**
+ * Aggregate counts for the stats bar at the bottom of the homepage.
+ * Note: `newsItems` counts newsfeed articles (content_published), NOT resources.
+ * Resources are services + organizations + benefit programs.
+ */
 export async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
-  const [resources, services, officials, paths, orgs, policies] = await Promise.all([
+  const [newsItems, services, officials, paths, orgs, policies] = await Promise.all([
     supabase.from('content_published').select('id', { count: 'exact', head: true }).eq('is_active', true),
     supabase.from('services_211').select('service_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
     supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }),
@@ -49,7 +80,7 @@ export async function getExchangeStats(): Promise<ExchangeStats> {
     supabase.from('policies').select('policy_id', { count: 'exact', head: true }),
   ])
   return {
-    resources: resources.count ?? 0,
+    resources: newsItems.count ?? 0,
     services: services.count ?? 0,
     officials: officials.count ?? 0,
     learningPaths: paths.count ?? 0,
@@ -58,7 +89,10 @@ export async function getExchangeStats(): Promise<ExchangeStats> {
   }
 }
 
-/** Count published content per center (Learning/Action/Resource/Accountability) for homepage cards. */
+/**
+ * Count newsfeed items per engagement level (Learning/Action/Resource/Accountability).
+ * These are NEWS counts — articles, videos, reports — not community resource counts.
+ */
 export async function getCenterCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -74,7 +108,10 @@ export async function getCenterCounts(): Promise<Record<string, number>> {
   return counts
 }
 
-/** Most recently published content for the "Latest Resources" homepage section. */
+/**
+ * Most recently published newsfeed items.
+ * These are NEWS articles/videos/reports, not community resources.
+ */
 export async function getLatestContent(limit = 6) {
   const supabase = await createClient()
   const { data } = await supabase
@@ -231,7 +268,10 @@ export async function getLearningPaths() {
 
 // ── Pathway + center content ───────────────────────────────────────────
 
-/** Published content for a specific pathway, optionally filtered by center. */
+/**
+ * Newsfeed for a specific pathway, optionally filtered by engagement level (center).
+ * Returns news items (articles, videos, research, reports, courses) — not community resources.
+ */
 export async function getPathwayContent(themeId: string, center?: string) {
   const supabase = await createClient()
   let query = supabase
@@ -249,7 +289,7 @@ export async function getPathwayContent(themeId: string, center?: string) {
   return data ?? []
 }
 
-/** Count published content per pathway (THEME_01..THEME_07) for homepage pills. */
+/** Count newsfeed items per pathway (THEME_01..THEME_07) for homepage pills. */
 export async function getPathwayCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -830,8 +870,9 @@ export async function getOrganizationsBySdoh(sdohCode: string) {
 }
 
 /**
- * Get all content for a neighborhood.
- * Traverses: neighborhood → organization_neighborhoods → organizations → content_published
+ * Get newsfeed items for a neighborhood.
+ * Traverses: neighborhood → organization_neighborhoods → organizations → content_published (news).
+ * Returns news articles/videos/reports, not community resources.
  */
 export async function getContentForNeighborhood(neighborhoodId: string) {
   const supabase = await createClient()

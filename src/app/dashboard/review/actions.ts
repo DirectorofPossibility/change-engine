@@ -1,10 +1,16 @@
 /**
  * @fileoverview Server actions for the content review queue.
  *
+ * ## Object Type Model
+ * Content flowing through this pipeline is NEWSFEED content (articles, videos,
+ * research, reports, DIY activities, courses) — NOT community resources.
+ * Resources are separate entity types (services_211, organizations, benefits).
+ *
  * Mutations handled:
  * - **approveItem** -- Marks a review queue entry as `approved`, records the
- *   reviewer's email for audit, and publishes the content to
+ *   reviewer's email for audit, and publishes the newsfeed item to
  *   `content_published` (idempotent -- skips if already published).
+ *   Populates `engagement_level` from the classified center.
  * - **rejectItem** -- Marks a review queue entry as `rejected` with optional
  *   reviewer notes and records the reviewer's email for audit.
  *
@@ -26,7 +32,7 @@ async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
 }
 
 /**
- * Approve a review queue item and publish its content.
+ * Approve a review queue item and publish it as a newsfeed entry.
  *
  * Workflow:
  * 1. Sets the `content_review_queue` row to `approved` with the reviewer's
@@ -34,17 +40,20 @@ async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
  * 2. Fetches the full `content_inbox` row to build the published payload.
  * 3. Checks for an existing `content_published` row (idempotent guard).
  * 4. Inserts a new row into `content_published` using the AI classification
- *    metadata (pathways, SDGs, action items, etc.).
+ *    metadata — every dimension: pathway, focus areas, engagement level,
+ *    time commitment, action types, government level, organizations, locations.
+ * 5. Writes to all relevant junction tables for the knowledge mesh.
  *
  * @param reviewId       - UUID of the `content_review_queue` row.
  * @param inboxId        - UUID of the originating `content_inbox` row.
- * @param classification - AI-generated classification metadata to use for the
- *                         published content fields.
+ * @param classification - AI-generated classification metadata with all
+ *                         identified dimensions.
  * @returns `{ success: true }` or `{ error: string }`.
  *
  * @requires Authentication via {@link requireAuth}.
  * @sideeffect Updates `content_review_queue` (status, reviewed_by, reviewed_at).
  * @sideeffect Inserts into `content_published` (unless already present).
+ * @sideeffect Writes to junction tables (content_focus_areas, content_sdgs, etc.).
  * @sideeffect Revalidates `/dashboard/review`, `/dashboard/content`, and `/dashboard`.
  */
 export async function approveItem(reviewId: string, inboxId: string, classification: AiClassification) {
@@ -66,7 +75,7 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
   const { data: existing } = await supabase.from('content_published').select('id').eq('inbox_id', inboxId)
   if (existing && existing.length > 0) return { success: true, message: 'Already published' }
 
-  // Publish
+  // Publish as newsfeed item with all identified dimensions
   const actions = classification.action_items || {}
   const { data: published, error } = await supabase.from('content_published').insert({
     inbox_id: inboxId,
@@ -76,7 +85,8 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     pathway_primary: classification.theme_primary,
     pathway_secondary: classification.theme_secondary || [],
     focus_area_ids: classification.focus_area_ids || [],
-    center: classification.center || 'Resource',
+    center: classification.center || 'Learning',
+    engagement_level: classification.center || 'Learning',
     sdg_ids: classification.sdg_ids || [],
     sdoh_domain: classification.sdoh_code || null,
     audience_segments: classification.audience_segment_ids || [],
@@ -93,11 +103,12 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     action_attend: actions.attend_url || null,
     confidence: classification.confidence,
     classification_reasoning: classification.reasoning || '',
+    image_url: inbox.image_url || null,
     is_featured: false,
     is_active: true,
   }).select('id').single()
 
-  // Write to junction tables for the newly published content
+  // Write to junction tables for the knowledge mesh
   if (published?.id) {
     const contentId = published.id
     const focusAreaIds: string[] = classification.focus_area_ids || []
