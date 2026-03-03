@@ -1,3 +1,17 @@
+/**
+ * @fileoverview Server actions for the content review queue.
+ *
+ * Mutations handled:
+ * - **approveItem** -- Marks a review queue entry as `approved`, records the
+ *   reviewer's email for audit, and publishes the content to
+ *   `content_published` (idempotent -- skips if already published).
+ * - **rejectItem** -- Marks a review queue entry as `rejected` with optional
+ *   reviewer notes and records the reviewer's email for audit.
+ *
+ * Every exported action requires an authenticated session via {@link requireAuth}.
+ * The authenticated user's email is persisted in `reviewed_by` for audit trail
+ * purposes.
+ */
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
@@ -11,6 +25,28 @@ async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
   return user
 }
 
+/**
+ * Approve a review queue item and publish its content.
+ *
+ * Workflow:
+ * 1. Sets the `content_review_queue` row to `approved` with the reviewer's
+ *    identity and timestamp.
+ * 2. Fetches the full `content_inbox` row to build the published payload.
+ * 3. Checks for an existing `content_published` row (idempotent guard).
+ * 4. Inserts a new row into `content_published` using the AI classification
+ *    metadata (pathways, SDGs, action items, etc.).
+ *
+ * @param reviewId       - UUID of the `content_review_queue` row.
+ * @param inboxId        - UUID of the originating `content_inbox` row.
+ * @param classification - AI-generated classification metadata to use for the
+ *                         published content fields.
+ * @returns `{ success: true }` or `{ error: string }`.
+ *
+ * @requires Authentication via {@link requireAuth}.
+ * @sideeffect Updates `content_review_queue` (status, reviewed_by, reviewed_at).
+ * @sideeffect Inserts into `content_published` (unless already present).
+ * @sideeffect Revalidates `/dashboard/review`, `/dashboard/content`, and `/dashboard`.
+ */
 export async function approveItem(reviewId: string, inboxId: string, classification: AiClassification) {
   const supabase = await createClient()
   const user = await requireAuth(supabase)
@@ -67,6 +103,22 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
   return error ? { error: error.message } : { success: true }
 }
 
+/**
+ * Reject a review queue item.
+ *
+ * Sets the `content_review_queue` row to `rejected`, records the reviewer's
+ * identity and timestamp, and optionally stores reviewer notes explaining the
+ * rejection.
+ *
+ * @param reviewId - UUID of the `content_review_queue` row.
+ * @param notes    - Optional free-text explanation for the rejection.
+ * @returns `{ success: true }` or `{ error: string }`.
+ *
+ * @requires Authentication via {@link requireAuth}.
+ * @sideeffect Updates `content_review_queue` (status, reviewed_by, reviewed_at,
+ *             reviewer_notes).
+ * @sideeffect Revalidates `/dashboard/review` and `/dashboard`.
+ */
 export async function rejectItem(reviewId: string, notes?: string) {
   const supabase = await createClient()
   const user = await requireAuth(supabase)
