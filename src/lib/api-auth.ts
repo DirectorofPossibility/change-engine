@@ -1,10 +1,24 @@
+/**
+ * @fileoverview API route authentication middleware.
+ *
+ * Provides a single entry-point -- {@link validateApiRequest} -- that API
+ * route handlers call to gate access. Two authentication strategies are
+ * supported:
+ *
+ * 1. **CRON_SECRET bearer token** -- used by Vercel Cron jobs.
+ * 2. **x-api-key header** -- the raw key is SHA-256 hashed and compared
+ *    against the `api_keys` table in Supabase. Expired or revoked keys are
+ *    rejected and a fire-and-forget PATCH bumps usage counters on success.
+ *
+ * Returns `null` when the request is authorized, or a `NextResponse` JSON
+ * error (401) when it is not.
+ */
+
+// ── Imports ──
+
 import { NextRequest, NextResponse } from 'next/server'
 
-/**
- * Validates API route requests via API key (x-api-key header).
- * Keys are stored as SHA-256 hashes in the api_keys table.
- * Returns null if authorized, or a NextResponse error if not.
- */
+// ── Environment ──
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

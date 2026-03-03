@@ -125,6 +125,23 @@ export async function deleteContent(id: string, inboxId: string | null) {
   return error ? { error: error.message } : { success: true }
 }
 
+/**
+ * Move a published content item back to draft / review.
+ *
+ * This reverses the publish flow: the `content_review_queue` entry is reset
+ * to `pending`, the `content_inbox` status is set to `needs_review`, and the
+ * `content_published` row is deleted.
+ *
+ * @param id      - UUID of the `content_published` row to unpublish.
+ * @param inboxId - UUID of the originating `content_inbox` row.
+ * @returns `{ success: true }` or `{ error: string }`.
+ *
+ * @requires Authentication via {@link requireAuth}.
+ * @sideeffect Resets `content_review_queue` status to `pending`.
+ * @sideeffect Updates `content_inbox.status` to `needs_review`.
+ * @sideeffect Deletes the `content_published` row.
+ * @sideeffect Revalidates `/dashboard/content`, `/dashboard/review`, and `/dashboard`.
+ */
 export async function moveToDraft(id: string, inboxId: string) {
   const supabase = await createClient()
   await requireAuth(supabase)

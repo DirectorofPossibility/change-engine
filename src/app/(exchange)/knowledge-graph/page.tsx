@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Public knowledge graph visualization page.
+ *
+ * Renders an interactive force-directed graph of the civic knowledge mesh.
+ * The visualization is entirely client-side (KnowledgeGraphClient) and
+ * displays ~35 dimensions per node spanning 7 pathways, 4 centers,
+ * 5 content rings, 312 focus areas, and 1,560 crosswalks.
+ *
+ * @caching Static (no dynamic data fetching at the page level)
+ * @route GET /knowledge-graph
+ */
+
 import type { Metadata } from 'next'
 import KnowledgeGraphClient from '@/components/KnowledgeGraphClient'
 

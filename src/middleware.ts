@@ -1,7 +1,31 @@
+/**
+ * @fileoverview Next.js middleware for Supabase auth session management.
+ *
+ * Runs on every request that matches the `config.matcher` patterns
+ * (`/dashboard/*` and `/me/*`). The middleware:
+ *
+ * 1. Creates a Supabase server client backed by request cookies so that the
+ *    auth session is refreshed transparently on each navigation.
+ * 2. Calls `supabase.auth.getUser()` to verify the session.
+ * 3. Redirects unauthenticated users to `/login` with a `redirect` search
+ *    param so they can be returned to the originally requested page.
+ */
+
+// ── Imports ──
+
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// ── Middleware ──
+
+/**
+ * Next.js middleware function that refreshes Supabase auth sessions and
+ * protects authenticated routes.
+ *
+ * @param request - The incoming Next.js request object.
+ * @returns The (possibly cookie-updated) response, or a redirect to `/login`.
+ */
 export async function middleware(request: NextRequest) {
   var supabaseResponse = NextResponse.next({ request })
 
