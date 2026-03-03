@@ -7,7 +7,7 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { SingleLocationMap } from '@/components/maps'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
-export const revalidate = 86400
+export const revalidate = 300
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   var { id } = await params

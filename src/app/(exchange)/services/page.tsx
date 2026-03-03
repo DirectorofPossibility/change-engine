@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ServicesClient } from './ServicesClient'
 
-export const revalidate = 86400
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Find Services',

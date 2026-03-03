@@ -5,7 +5,7 @@ import { getSuperNeighborhoods } from '@/lib/data/exchange'
 import { GEO_LAYERS } from '@/lib/constants'
 import { SuperNeighborhoodsMap } from './SuperNeighborhoodsMap'
 
-export const revalidate = 86400
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Super Neighborhoods — The Change Engine',
