@@ -154,17 +154,18 @@ export default async function SearchPage({
         {results.policies.map(function (p) {
           const t = policyTranslations[p.policy_id]
           return (
-            <PolicyCard
-              key={p.policy_id}
-              name={p.policy_name || ''}
-              summary={p.summary_5th_grade}
-              billNumber={p.bill_number}
-              status={p.status}
-              level={p.level}
-              sourceUrl={null}
-              translatedName={t?.title}
-              translatedSummary={t?.summary}
-            />
+            <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
+              <PolicyCard
+                name={p.policy_name || ''}
+                summary={p.summary_5th_grade}
+                billNumber={p.bill_number}
+                status={p.status}
+                level={p.level}
+                sourceUrl={p.source_url}
+                translatedName={t?.title}
+                translatedSummary={t?.summary}
+              />
+            </Link>
           )
         })}
       </div>

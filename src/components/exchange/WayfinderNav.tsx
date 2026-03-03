@@ -20,7 +20,7 @@ import { ZipInput } from './ZipInput'
 import { AuthButton } from './AuthButton'
 
 const PATHWAYS = Object.entries(THEMES).map(function ([id, theme]) {
-  return { id, name: theme.name, color: theme.color }
+  return { id, name: theme.name, color: theme.color, slug: theme.slug }
 })
 
 /**
@@ -66,7 +66,7 @@ export function WayfinderNav() {
               return (
                 <Link
                   key={p.id}
-                  href={'/pathways/' + p.id.replace('THEME_', '').toLowerCase()}
+                  href={'/pathways/' + p.slug}
                   className="group relative"
                   title={p.name}
                 >

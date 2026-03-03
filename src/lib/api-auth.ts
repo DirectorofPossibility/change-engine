@@ -21,7 +21,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // ── Environment ──
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const CRON_SECRET = process.env.CRON_SECRET
 
 // ── Validation ──
@@ -81,6 +81,11 @@ export async function validateApiRequest(req: NextRequest): Promise<NextResponse
     return NextResponse.json({ error: 'API key expired' }, { status: 401 })
   }
 
+  // Check rate limit
+  if (key.rate_limit_per_day && (key.total_requests || 0) >= key.rate_limit_per_day) {
+    return NextResponse.json({ error: 'API key rate limit exceeded' }, { status: 429 })
+  }
+
   // Bump usage counter (fire-and-forget)
   fetch(`${SUPABASE_URL}/rest/v1/api_keys?id=eq.${key.id}`, {
     method: 'PATCH',
@@ -88,7 +93,7 @@ export async function validateApiRequest(req: NextRequest): Promise<NextResponse
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
       'Content-Type': 'application/json',
-      Prefer: '',
+      Prefer: 'return=minimal',
     },
     body: JSON.stringify({
       total_requests: (key.total_requests || 0) + 1,

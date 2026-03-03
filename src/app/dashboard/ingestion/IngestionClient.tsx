@@ -59,13 +59,21 @@ export function IngestionClient({
   }
 
   async function handleToggleFeed(feed: RssFeed) {
-    await updateFeed(feed.id, { is_active: !feed.is_active })
+    const result = await updateFeed(feed.id, { is_active: !feed.is_active })
+    if (result && 'error' in result) {
+      setPollError(result.error || 'Update failed')
+      return
+    }
     setFeeds(feeds.map(f => f.id === feed.id ? { ...f, is_active: !f.is_active } : f))
   }
 
   async function handleDeleteFeed(id: string) {
     if (!confirm('Delete this feed?')) return
-    await deleteFeed(id)
+    const result = await deleteFeed(id)
+    if (result && 'error' in result) {
+      setPollError(result.error || 'Delete failed')
+      return
+    }
     setFeeds(feeds.filter(f => f.id !== id))
   }
 
@@ -73,47 +81,62 @@ export function IngestionClient({
     e.preventDefault()
     setSaving(true)
     setPollError('')
-    const form = new FormData(e.currentTarget)
-    const data = {
-      feed_name: form.get('feed_name') as string,
-      feed_url: form.get('feed_url') as string,
-      source_domain: form.get('source_domain') as string,
-      poll_interval_hours: parseInt(form.get('poll_interval_hours') as string) || 1,
-    }
-    let result
-    if (feedModal === 'add') {
-      result = await addFeed(data)
-    } else if (feedModal && typeof feedModal === 'object') {
-      result = await updateFeed(feedModal.id, data)
-    }
-    setSaving(false)
-    if (result?.error) {
-      setPollError(result.error)
-    } else {
+    try {
+      const form = new FormData(e.currentTarget)
+      const data = {
+        feed_name: form.get('feed_name') as string,
+        feed_url: form.get('feed_url') as string,
+        source_domain: form.get('source_domain') as string,
+        poll_interval_hours: parseInt(form.get('poll_interval_hours') as string) || 1,
+      }
+      let result
+      if (feedModal === 'add') {
+        result = await addFeed(data)
+      } else if (feedModal && typeof feedModal === 'object') {
+        result = await updateFeed(feedModal.id, data)
+      }
+      if (result?.error) {
+        setPollError(result.error)
+        return
+      }
       setFeedModal(null)
       window.location.reload()
+    } catch (err) {
+      setPollError((err as Error).message)
+    } finally {
+      setSaving(false)
     }
   }
 
   async function handleSaveTrust(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setSaving(true)
-    const form = new FormData(e.currentTarget)
-    if (trustModal === 'add') {
-      await addTrustDomain({
-        domain: form.get('domain') as string,
-        trust_level: form.get('trust_level') as string,
-        notes: form.get('notes') as string,
-      })
-    } else if (trustModal && typeof trustModal === 'object') {
-      await updateTrust(trustModal.id, {
-        trust_level: form.get('trust_level') as string,
-        notes: form.get('notes') as string,
-      })
+    try {
+      const form = new FormData(e.currentTarget)
+      let result
+      if (trustModal === 'add') {
+        result = await addTrustDomain({
+          domain: form.get('domain') as string,
+          trust_level: form.get('trust_level') as string,
+          notes: form.get('notes') as string,
+        })
+      } else if (trustModal && typeof trustModal === 'object') {
+        result = await updateTrust(trustModal.id, {
+          trust_level: form.get('trust_level') as string,
+          notes: form.get('notes') as string,
+        })
+      }
+      if (result && 'error' in result) {
+        setPollError(result.error || 'Save failed')
+        return
+      }
+      setTrustModal(null)
+      window.location.reload()
+    } catch (err) {
+      setPollError((err as Error).message)
+    } finally {
+      setSaving(false)
     }
-    setSaving(false)
-    setTrustModal(null)
-    window.location.reload()
   }
 
   return (
@@ -180,7 +203,7 @@ export function IngestionClient({
                     <td className="px-4 py-3 font-medium">{log.event_type}</td>
                     <td className="px-4 py-3"><StatusBadge status={log.status} /></td>
                     <td className="px-4 py-3 text-brand-muted text-xs">{log.source_url?.substring(0, 40) || '-'}</td>
-                    <td className="px-4 py-3 text-brand-muted text-xs max-w-xs truncate">{log.details || '-'}</td>
+                    <td className="px-4 py-3 text-brand-muted text-xs max-w-xs truncate">{log.message || '-'}</td>
                     <td className="px-4 py-3 text-brand-muted text-xs">
                       {log.created_at ? new Date(log.created_at).toLocaleString() : '-'}
                     </td>

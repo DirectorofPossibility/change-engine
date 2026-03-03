@@ -184,7 +184,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     billNumber={p.bill_number}
                     status={p.status}
                     level={p.level}
-                    sourceUrl={null}
+                    sourceUrl={p.source_url}
                     translatedName={rpt?.title}
                     translatedSummary={rpt?.summary}
                   />

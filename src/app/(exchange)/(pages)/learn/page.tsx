@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { getLearningPaths, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 
@@ -25,17 +26,18 @@ export default async function LearnPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {paths.map((path) => (
-          <LearningPathCard
-            key={path.path_id}
-            name={path.path_name}
-            description={path.description_5th_grade}
-            themeId={path.theme_id}
-            difficulty={path.difficulty_level}
-            moduleCount={path.module_count}
-            estimatedMinutes={path.estimated_minutes}
-            translatedName={translations[path.path_id]?.title}
-            translatedDescription={translations[path.path_id]?.summary}
-          />
+          <Link key={path.path_id} href={'/learn/' + path.path_id}>
+            <LearningPathCard
+              name={path.path_name}
+              description={path.description_5th_grade}
+              themeId={path.theme_id}
+              difficulty={path.difficulty_level}
+              moduleCount={path.module_count}
+              estimatedMinutes={path.estimated_minutes}
+              translatedName={translations[path.path_id]?.title}
+              translatedDescription={translations[path.path_id]?.summary}
+            />
+          </Link>
         ))}
       </div>
 

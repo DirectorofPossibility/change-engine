@@ -210,14 +210,16 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         <section className="mb-10">
           <h2 className="text-xl font-bold text-brand-text mb-4">Learning Path</h2>
           <div className="max-w-md">
-            <LearningPathCard
-              name={relatedPath.path_name}
-              description={relatedPath.description_5th_grade}
-              themeId={relatedPath.theme_id}
-              difficulty={relatedPath.difficulty_level}
-              moduleCount={relatedPath.module_count}
-              estimatedMinutes={relatedPath.estimated_minutes}
-            />
+            <Link href={'/learn/' + relatedPath.path_id}>
+              <LearningPathCard
+                name={relatedPath.path_name}
+                description={relatedPath.description_5th_grade}
+                themeId={relatedPath.theme_id}
+                difficulty={relatedPath.difficulty_level}
+                moduleCount={relatedPath.module_count}
+                estimatedMinutes={relatedPath.estimated_minutes}
+              />
+            </Link>
           </div>
         </section>
       )}

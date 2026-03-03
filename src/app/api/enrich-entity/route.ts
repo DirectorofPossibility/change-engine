@@ -153,6 +153,7 @@ async function callClaude(system: string, user: string, maxTokens = 2000): Promi
           system,
           messages: [{ role: 'user', content: user }],
         }),
+        signal: AbortSignal.timeout(30000),
       })
       const data = await res.json()
       if (data.error) {

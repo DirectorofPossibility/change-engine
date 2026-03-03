@@ -30,5 +30,9 @@ export async function translateAll() {
     },
     body: JSON.stringify({ tables: ['content_published'], languages: ['es', 'vi'], limit: 50 }),
   })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`translateAll failed: ${res.status} ${text}`)
+  }
   return res.json()
 }

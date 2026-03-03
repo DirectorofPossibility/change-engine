@@ -77,6 +77,10 @@ async function supaGet(path: string, params: string) {
       'Authorization': `Bearer ${SUPABASE_KEY}`,
     },
   })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Supabase GET ${path}: ${res.status} ${text}`)
+  }
   return res.json()
 }
 
@@ -91,6 +95,10 @@ async function supaPost(table: string, body: Record<string, unknown>) {
     },
     body: JSON.stringify(body),
   })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Supabase POST ${table}: ${res.status} ${text}`)
+  }
   return res.json()
 }
 
@@ -122,6 +130,7 @@ async function translateText(
             content: `Translate the following to ${lang.name}. Return JSON with "title" and "summary" keys only.\n\nTitle: ${title}\nSummary: ${summary}`,
           }],
         }),
+        signal: AbortSignal.timeout(30000),
       })
       const data = await res.json()
       if (data.error) {
@@ -157,6 +166,8 @@ export async function POST(request: NextRequest) {
       inbox_ids,
     } = body
 
+    const validInboxIds = Array.isArray(inbox_ids) ? inbox_ids : undefined
+
     let totalTranslated = 0
     let totalErrors = 0
     let totalSkipped = 0
@@ -172,8 +183,9 @@ export async function POST(request: NextRequest) {
       let rows: any[]
 
       // If explicit inbox_ids provided, fetch those specific rows
-      if (inbox_ids && inbox_ids.length > 0 && tableName === 'content_published') {
-        rows = await supaGet(tableName, `select=${config.selectCols}&inbox_id=in.(${inbox_ids.join(',')})`)
+      if (validInboxIds && validInboxIds.length > 0 && tableName === 'content_published') {
+        const idFilter = validInboxIds.map((id: string) => `"${id}"`).join(',')
+        rows = await supaGet(tableName, `select=${config.selectCols}&inbox_id=in.(${idFilter})`)
       } else {
         let queryParams = `select=${config.selectCols}&limit=${limit}&offset=${offset}`
         if (config.activeFilter) {
@@ -204,7 +216,7 @@ export async function POST(request: NextRequest) {
           // Check if translation already exists
           const existing = await supaGet(
             'translations',
-            `content_type=eq.${config.contentType}&content_id=eq.${contentId}&language_id=eq.${langInfo.id}&field_name=eq.title&select=translation_id`
+            `content_type=eq.${config.contentType}&content_id=eq.${contentId}&language_id=eq.${langInfo.id}&field_name=in.("title","title_6th_grade")&select=translation_id`
           )
           if (Array.isArray(existing) && existing.length > 0) {
             skipped++

@@ -65,6 +65,12 @@ interface BraidedFeedProps {
   activeCenter?: string | null
   /** Pathway accent color (hex) applied to resource card left bars. */
   pathwayColor?: string
+  /**
+   * Callback fired when a center chip is clicked under external control.
+   * When provided alongside `activeCenter`, chip clicks call this instead of
+   * the internal setter (which would be a no-op).
+   */
+  onSelectCenter?: (center: string | null) => void
   /** Callback fired when any card in the feed is clicked. */
   onItemClick?: (item: FeedItem) => void
 }
@@ -149,6 +155,7 @@ export function BraidedFeed({
   policies,
   activeCenter: externalCenter,
   pathwayColor,
+  onSelectCenter,
   onItemClick,
 }: BraidedFeedProps) {
   /** Internal center-filter state (overridden when `activeCenter` is passed). */
@@ -205,7 +212,7 @@ export function BraidedFeed({
             <button
               key={label}
               type="button"
-              onClick={() => setInternalCenter(key)}
+              onClick={() => onSelectCenter ? onSelectCenter(key) : setInternalCenter(key)}
               className={`
                 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium
                 transition-colors duration-150

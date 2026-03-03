@@ -86,6 +86,10 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     pathway_secondary: classification.theme_secondary || [],
     focus_area_ids: classification.focus_area_ids || [],
     center: classification.center || 'Learning',
+    // engagement_level is intentionally set to the same value as center.
+    // Both columns exist in content_published: `center` is the canonical
+    // classification field; `engagement_level` is consumed by downstream
+    // views (e.g. guides) that expect a separate column name.
     engagement_level: classification.center || 'Learning',
     sdg_ids: classification.sdg_ids || [],
     sdoh_domain: classification.sdoh_code || null,
@@ -157,10 +161,12 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     await Promise.allSettled(junctionInserts)
   }
 
+  if (error) return { error: error.message }
+
   revalidatePath('/dashboard/review')
   revalidatePath('/dashboard/content')
   revalidatePath('/dashboard')
-  return error ? { error: error.message } : { success: true }
+  return { success: true }
 }
 
 /**
@@ -187,7 +193,9 @@ export async function rejectItem(reviewId: string, notes?: string) {
     .update({ review_status: 'rejected', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString(), reviewer_notes: notes || null })
     .eq('id', reviewId)
 
+  if (error) return { error: error.message }
+
   revalidatePath('/dashboard/review')
   revalidatePath('/dashboard')
-  return error ? { error: error.message } : { success: true }
+  return { success: true }
 }

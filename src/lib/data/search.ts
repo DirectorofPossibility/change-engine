@@ -49,7 +49,7 @@ export async function searchAll(query: string): Promise<SearchResults> {
       .limit(20),
     supabase
       .from('policies')
-      .select('policy_id, policy_name, policy_type, level, status, summary_5th_grade, bill_number')
+      .select('policy_id, policy_name, policy_type, level, status, summary_5th_grade, bill_number, source_url')
       .textSearch('fts', tsQuery)
       .limit(10),
     supabase

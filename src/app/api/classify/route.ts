@@ -212,6 +212,7 @@ ${taxonomyPrompt}`
       system: systemPrompt,
       messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${item.source_url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${pageText}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"time_commitment_id":"TIME_XX or null","action_type_ids":["ATYPE_XX"],"gov_level_id":"GOV_XX or null","organizations":[{"name":"...","url":"..."}],"locations":{"neighborhoods":[],"zip_codes":[],"city":"Houston","district":""},"title_6th_grade":"...","summary_6th_grade":"...","action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
     }),
+    signal: AbortSignal.timeout(30000),
   })
 
   if (!claudeRes.ok) {
@@ -278,7 +279,7 @@ ${taxonomyPrompt}`
     inbox_id: item.id,
     ai_classification: enriched,
     confidence,
-    review_status: confidence >= 0.5 ? 'needs_review' : 'flagged',
+    review_status: status,
   })
 
   // Log
@@ -315,6 +316,10 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}))
   const batchSize = Math.min(body.batch_size || 10, 50)
   const inboxIds: string[] | undefined = body.inbox_ids
+
+  if (inboxIds !== undefined && !Array.isArray(inboxIds)) {
+    return NextResponse.json({ error: 'inbox_ids must be an array' }, { status: 400 })
+  }
 
   // Fetch taxonomy once for the batch
   const taxonomy = await fetchTaxonomy()

@@ -144,6 +144,7 @@ export interface SearchResultPolicy {
   status: string | null
   summary_5th_grade: string | null
   bill_number: string | null
+  source_url: string | null
 }
 
 export interface SearchResultSituation {

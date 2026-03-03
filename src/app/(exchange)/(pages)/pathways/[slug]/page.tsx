@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway, getLifeSituations, getLearningPaths,
@@ -181,15 +182,16 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               <div className="space-y-3">
                 {relatedPaths.map(function (p) {
                   return (
-                    <LearningPathCard
-                      key={p.path_id}
-                      name={p.path_name}
-                      description={p.description_5th_grade}
-                      themeId={p.theme_id}
-                      difficulty={p.difficulty_level}
-                      moduleCount={p.module_count}
-                      estimatedMinutes={p.estimated_minutes}
-                    />
+                    <Link key={p.path_id} href={'/learn/' + p.path_id}>
+                      <LearningPathCard
+                        name={p.path_name}
+                        description={p.description_5th_grade}
+                        themeId={p.theme_id}
+                        difficulty={p.difficulty_level}
+                        moduleCount={p.module_count}
+                        estimatedMinutes={p.estimated_minutes}
+                      />
+                    </Link>
                   )
                 })}
               </div>

@@ -189,7 +189,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     city={svc.city}
                     state={svc.state}
                     zipCode={svc.zip_code}
-                    website={null}
+                    website={svc.website}
                   />
                 </Link>
               )
