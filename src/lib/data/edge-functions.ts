@@ -1,8 +1,19 @@
+/**
+ * @fileoverview Server actions that wrap internal API routes.
+ *
+ * These are called from dashboard client components (e.g. TranslationsClient)
+ * and handle auth before delegating to the API routes.
+ */
+
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
 
-/** Trigger batch translation via the internal /api/translate route using the service role key. */
+/**
+ * Trigger batch translation of all untranslated content to Spanish + Vietnamese.
+ * Authenticates the user, then calls /api/translate with a CRON_SECRET bearer token.
+ * Called from the "Translate All Missing" button on /dashboard/translations.
+ */
 export async function translateAll() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
