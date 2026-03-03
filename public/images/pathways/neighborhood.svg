@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#d69e2e"/>
+  <circle cx="100" cy="100" r="90" fill="#d69e2e" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- House icon -->
+  <path d="M100 55 L55 95 L65 95 L65 140 L90 140 L90 115 L110 115 L110 140 L135 140 L135 95 L145 95 Z" fill="white" opacity="0.9"/>
+</svg>

@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Calendar, MapPin, Users } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 interface OpportunityCardProps {
   name: string
@@ -20,9 +23,10 @@ export function OpportunityCard({
   isVirtual, registrationUrl, spotsAvailable,
   translatedName, translatedDescription,
 }: OpportunityCardProps) {
-  var location = isVirtual === 'Yes' ? 'Virtual' : [address, city].filter(Boolean).join(', ')
-  var displayName = translatedName || name
-  var displayDesc = translatedDescription || description
+  const { t } = useTranslation()
+  const location = isVirtual === 'Yes' ? t('card.virtual') : [address, city].filter(Boolean).join(', ')
+  const displayName = translatedName || name
+  const displayDesc = translatedDescription || description
 
   return (
     <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
@@ -49,7 +53,7 @@ export function OpportunityCard({
         {spotsAvailable != null && (
           <div className="flex items-center gap-1.5">
             <Users size={12} />
-            <span>{spotsAvailable} spots available</span>
+            <span>{spotsAvailable} {t('card.spots_available')}</span>
           </div>
         )}
       </div>
@@ -60,7 +64,7 @@ export function OpportunityCard({
           rel="noopener noreferrer"
           className="inline-block mt-3 text-xs text-brand-accent hover:underline"
         >
-          Register &rarr;
+          {t('card.register')} &rarr;
         </Link>
       )}
     </div>

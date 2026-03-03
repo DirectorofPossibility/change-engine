@@ -19,7 +19,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
+import type { Database } from '@/lib/supabase/database.types'
 import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood } from '@/lib/types/exchange'
+
+type ContentRow = Database['public']['Tables']['content_published']['Row']
 
 /**
  * Read language preference from cookie and return the LANG-XX id.
@@ -107,52 +110,78 @@ export async function getLifeSituation(slug: string) {
 
 /**
  * Fetch content + services relevant to a life situation.
- * Matches via focus_area_ids overlap (content) and service_cat_id (services).
- * Services are enriched with their parent organization name.
+ * Resolves focus areas via the life_situation_focus_areas junction table,
+ * then finds matching content via content_focus_areas junction.
+ * Services are resolved via life_situation_service_categories junction.
  * When zipCode is provided, services are additionally filtered by geography.
  */
-export async function getLifeSituationContent(focusAreaIds: string, serviceCatIds: string | null, zipCode?: string) {
+export async function getLifeSituationContent(situationId: string, serviceCatIds: string | null, zipCode?: string) {
   const supabase = await createClient()
-  // focus_area_ids is comma-separated TEXT in life_situations
-  const focusIds = focusAreaIds.split(',').map(s => s.trim()).filter(Boolean)
 
-  const { data: content } = await supabase
-    .from('content_published')
-    .select('*')
-    .eq('is_active', true)
-    .overlaps('focus_area_ids', focusIds)
-    .order('published_at', { ascending: false })
-    .limit(20)
+  // Get focus area IDs from junction table
+  const { data: focusJunctions } = await supabase
+    .from('life_situation_focus_areas')
+    .select('focus_id')
+    .eq('situation_id', situationId)
+  const focusIds = (focusJunctions ?? []).map(j => j.focus_id)
+
+  let content: ContentRow[] = []
+  if (focusIds.length > 0) {
+    // Get content IDs that share these focus areas
+    const { data: contentJunctions } = await supabase
+      .from('content_focus_areas')
+      .select('content_id')
+      .in('focus_id', focusIds)
+    const contentIds = Array.from(new Set((contentJunctions ?? []).map(j => j.content_id)))
+
+    if (contentIds.length > 0) {
+      const { data: contentData } = await supabase
+        .from('content_published')
+        .select('*')
+        .eq('is_active', true)
+        .in('id', contentIds)
+        .order('published_at', { ascending: false })
+        .limit(20)
+      content = contentData ?? []
+    }
+  }
 
   let services: ServiceWithOrg[] = []
   if (serviceCatIds) {
-    const catIds = serviceCatIds.split(',').map(s => s.trim()).filter(Boolean)
-    let svcQuery = supabase
-      .from('services_211')
-      .select('*')
-      .eq('is_active', 'Yes')
-      .in('service_cat_id', catIds)
-    if (zipCode) {
-      svcQuery = svcQuery.eq('zip_code', zipCode)
-    }
-    const { data: svcData } = await svcQuery.limit(20)
-    if (svcData) {
-      // Join with organizations
-      const orgIds = Array.from(new Set(svcData.map(s => s.org_id).filter(Boolean)))
-      if (orgIds.length > 0) {
-        const { data: orgs } = await supabase
-          .from('organizations')
-          .select('org_id, org_name')
-          .in('org_id', orgIds as string[])
-        const orgMap = new Map(orgs?.map(o => [o.org_id, o.org_name]) ?? [])
-        services = svcData.map(s => ({ ...s, org_name: orgMap.get(s.org_id!) ?? undefined }))
-      } else {
-        services = svcData
+    // Get service category IDs from junction table
+    const { data: catJunctions } = await supabase
+      .from('life_situation_service_categories')
+      .select('service_cat_id')
+      .eq('situation_id', situationId)
+    const catIds = (catJunctions ?? []).map(j => j.service_cat_id)
+
+    if (catIds.length > 0) {
+      let svcQuery = supabase
+        .from('services_211')
+        .select('*')
+        .eq('is_active', 'Yes')
+        .in('service_cat_id', catIds)
+      if (zipCode) {
+        svcQuery = svcQuery.eq('zip_code', zipCode)
+      }
+      const { data: svcData } = await svcQuery.limit(20)
+      if (svcData) {
+        const orgIds = Array.from(new Set(svcData.map(s => s.org_id).filter(Boolean)))
+        if (orgIds.length > 0) {
+          const { data: orgs } = await supabase
+            .from('organizations')
+            .select('org_id, org_name')
+            .in('org_id', orgIds as string[])
+          const orgMap = new Map(orgs?.map(o => [o.org_id, o.org_name]) ?? [])
+          services = svcData.map(s => ({ ...s, org_name: orgMap.get(s.org_id!) ?? undefined }))
+        } else {
+          services = svcData
+        }
       }
     }
   }
 
-  return { content: content ?? [], services }
+  return { content, services }
 }
 
 // ── Entity queries ─────────────────────────────────────────────────────
@@ -302,44 +331,58 @@ export async function getFocusAreasByIds(ids: string[]): Promise<FocusArea[]> {
   return data ?? []
 }
 
+/** Fetch published content linked to a focus area via the content_focus_areas junction. */
 export async function getContentByFocusArea(focusId: string) {
   const supabase = await createClient()
+  const { data: junctions } = await supabase
+    .from('content_focus_areas')
+    .select('content_id')
+    .eq('focus_id', focusId)
+  const contentIds = (junctions ?? []).map(j => j.content_id)
+  if (contentIds.length === 0) return []
   const { data } = await supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
-    .contains('focus_area_ids', [focusId])
+    .in('id', contentIds)
     .order('published_at', { ascending: false })
     .limit(20)
   return data ?? []
 }
 
+/** Fetch active opportunities sharing any of the given focus areas via junction table. */
 export async function getRelatedOpportunities(focusAreaIds: string[]) {
   const supabase = await createClient()
   if (focusAreaIds.length === 0) return []
-  // focus_area_ids is comma-separated TEXT — use .or() with .ilike() per ID
-  const filters = focusAreaIds.map(function (id) {
-    return 'focus_area_ids.ilike.%' + id + '%'
-  }).join(',')
+  const { data: junctions } = await supabase
+    .from('opportunity_focus_areas')
+    .select('opportunity_id')
+    .in('focus_id', focusAreaIds)
+  const oppIds = Array.from(new Set((junctions ?? []).map(j => j.opportunity_id)))
+  if (oppIds.length === 0) return []
   const { data } = await supabase
     .from('opportunities')
     .select('*')
-    .or(filters)
+    .in('opportunity_id', oppIds)
     .eq('is_active', 'Yes')
     .limit(10)
   return data ?? []
 }
 
+/** Fetch policies sharing any of the given focus areas via junction table. */
 export async function getRelatedPolicies(focusAreaIds: string[]) {
   const supabase = await createClient()
   if (focusAreaIds.length === 0) return []
-  const filters = focusAreaIds.map(function (id) {
-    return 'focus_area_ids.ilike.%' + id + '%'
-  }).join(',')
+  const { data: junctions } = await supabase
+    .from('policy_focus_areas')
+    .select('policy_id')
+    .in('focus_id', focusAreaIds)
+  const policyIds = Array.from(new Set((junctions ?? []).map(j => j.policy_id)))
+  if (policyIds.length === 0) return []
   const { data } = await supabase
     .from('policies')
     .select('*')
-    .or(filters)
+    .in('policy_id', policyIds)
     .limit(10)
   return data ?? []
 }
@@ -403,24 +446,22 @@ export async function getTranslationAvailability(inboxIds: string[]): Promise<Re
 
 /**
  * Find the neighborhood that contains a given ZIP code.
- * ZIP codes are stored as comma-separated text, so we use ilike + JS validation
- * to avoid false substring matches (e.g. "7700" matching "77001").
+ * Uses the neighborhood_zip_codes junction table for exact matching.
  */
 export async function getNeighborhoodByZip(zip: string) {
   const supabase = await createClient()
-  // zip_codes is comma-separated TEXT — use ilike to find matching ZIP
+  const { data: junctions } = await supabase
+    .from('neighborhood_zip_codes')
+    .select('neighborhood_id')
+    .eq('zip_code', zip)
+    .limit(1)
+  if (!junctions || junctions.length === 0) return null
   const { data } = await supabase
     .from('neighborhoods')
     .select('*')
-    .ilike('zip_codes', '%' + zip + '%')
-  if (!data || data.length === 0) return null
-  // Validate in JS that the ZIP actually matches (not just a substring)
-  var match = data.find(function (n) {
-    if (!n.zip_codes) return false
-    var zips = n.zip_codes.split(',').map(function (z) { return z.trim() })
-    return zips.indexOf(zip) !== -1
-  })
-  return match ?? null
+    .eq('neighborhood_id', junctions[0].neighborhood_id)
+    .single()
+  return data ?? null
 }
 
 export async function getOfficialsForDistrict(districtId: string) {
@@ -499,49 +540,29 @@ export async function getNeighborhoodsBySuperNeighborhood(snId: string) {
 
 /**
  * Gather all map markers (services, voting, distribution, orgs) for a super neighborhood.
- * Aggregates ZIP codes from child neighborhoods, then queries each marker type by ZIP.
- * Falls back to the super neighborhood's own zip_codes if no child neighborhoods exist.
+ * Aggregates ZIP codes from child neighborhoods via neighborhood_zip_codes junction,
+ * then queries each marker type by ZIP.
  */
 export async function getMapMarkersForSuperNeighborhood(snId: string) {
   const supabase = await createClient()
 
-  // Get all neighborhoods in this super neighborhood, then aggregate ZIP codes
+  // Get all neighborhoods in this super neighborhood
   const { data: hoods } = await supabase
     .from('neighborhoods')
-    .select('zip_codes')
+    .select('neighborhood_id')
     .eq('super_neighborhood_id', snId)
 
-  if (!hoods || hoods.length === 0) {
-    // Fall back to super_neighborhoods.zip_codes
-    const { data: sn } = await supabase
-      .from('super_neighborhoods')
-      .select('zip_codes')
-      .eq('sn_id', snId)
-      .single()
-    if (!sn?.zip_codes) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
-    const zips = sn.zip_codes.split(',').map(s => s.trim()).filter(Boolean)
-    const [services, votingLocations, distributionSites, organizations] = await Promise.all([
-      getServicesWithCoords(zips),
-      (async () => {
-        const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
-        for (const z of zips) {
-          const locs = await getVotingLocationsWithCoords(z)
-          results.push(...locs)
-        }
-        return results
-      })(),
-      getDistributionSitesWithCoords(zips),
-      getOrganizationsWithCoords(),
-    ])
-    return { services, votingLocations, distributionSites, organizations }
-  }
+  const hoodIds = (hoods ?? []).map(h => h.neighborhood_id)
 
-  const allZips = Array.from(new Set(
-    hoods
-      .flatMap(h => (h.zip_codes || '').split(','))
-      .map(z => z.trim())
-      .filter(Boolean)
-  ))
+  // Get ZIP codes from junction table
+  let allZips: string[] = []
+  if (hoodIds.length > 0) {
+    const { data: zipJunctions } = await supabase
+      .from('neighborhood_zip_codes')
+      .select('zip_code')
+      .in('neighborhood_id', hoodIds)
+    allZips = Array.from(new Set((zipJunctions ?? []).map(j => j.zip_code)))
+  }
 
   if (allZips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
 
@@ -681,24 +702,22 @@ export async function getDistributionSitesWithCoords(zipCodes?: string[]): Promi
   return data ?? []
 }
 
+/** Gather all map markers for a neighborhood using the neighborhood_zip_codes junction. */
 export async function getMapMarkersForNeighborhood(neighborhoodId: string) {
   const supabase = await createClient()
 
-  // Get neighborhood ZIP codes
-  const { data: hood } = await supabase
-    .from('neighborhoods')
-    .select('zip_codes')
+  // Get ZIP codes from junction table
+  const { data: zipJunctions } = await supabase
+    .from('neighborhood_zip_codes')
+    .select('zip_code')
     .eq('neighborhood_id', neighborhoodId)
-    .single()
 
-  if (!hood?.zip_codes) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
-
-  const zips = hood.zip_codes.split(',').map(s => s.trim()).filter(Boolean)
+  const zips = (zipJunctions ?? []).map(j => j.zip_code)
+  if (zips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
 
   const [services, votingLocations, distributionSites, organizations] = await Promise.all([
     getServicesWithCoords(zips),
     (async () => {
-      // Voting locations use numeric zip_code
       const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
       for (const z of zips) {
         const locs = await getVotingLocationsWithCoords(z)
@@ -718,77 +737,235 @@ export async function getMapMarkersForNeighborhood(neighborhoodId: string) {
 // enabling queries like "what services are in this neighborhood?"
 
 /**
- * Fetch services available in a super neighborhood by aggregating its ZIP codes.
- * Joins with organizations for parent org names.
+ * Fetch services available in a super neighborhood by aggregating ZIP codes
+ * from the neighborhood_zip_codes junction table. Joins with organizations for parent org names.
  */
 export async function getServicesByNeighborhood(neighborhoodId: string): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()
 
+  // Get child neighborhoods of this super neighborhood
   const { data: hoods } = await supabase
     .from('neighborhoods')
-    .select('zip_codes')
+    .select('neighborhood_id')
     .eq('super_neighborhood_id', neighborhoodId)
 
-  if (!hoods || hoods.length === 0) {
-    const { data: sn } = await supabase
-      .from('super_neighborhoods')
-      .select('zip_codes')
-      .eq('sn_id', neighborhoodId)
-      .single()
-    if (!sn?.zip_codes) return []
-    const zips = sn.zip_codes.split(',').map((s: string) => s.trim()).filter(Boolean)
-    return getServicesWithCoords(zips)
-  }
+  const hoodIds = (hoods ?? []).map(h => h.neighborhood_id)
+  if (hoodIds.length === 0) return []
 
-  const allZips = Array.from(new Set(
-    hoods
-      .flatMap(h => (h.zip_codes || '').split(','))
-      .map((z: string) => z.trim())
-      .filter(Boolean)
-  ))
+  // Get ZIP codes from junction table
+  const { data: zipJunctions } = await supabase
+    .from('neighborhood_zip_codes')
+    .select('zip_code')
+    .in('neighborhood_id', hoodIds)
 
+  const allZips = Array.from(new Set((zipJunctions ?? []).map(j => j.zip_code)))
   if (allZips.length === 0) return []
   return getServicesWithCoords(allZips)
 }
 
 /**
- * Fetch organizations located in a super neighborhood by aggregating its ZIP codes.
- * Returns organizations with coordinates for map rendering.
+ * Fetch organizations located in a super neighborhood using the
+ * organization_neighborhoods junction table. Returns organizations with coordinates for map rendering.
  */
 export async function getOrganizationsByNeighborhood(neighborhoodId: string) {
   const supabase = await createClient()
 
+  // Get child neighborhoods of this super neighborhood
   const { data: hoods } = await supabase
     .from('neighborhoods')
-    .select('zip_codes')
+    .select('neighborhood_id')
     .eq('super_neighborhood_id', neighborhoodId)
 
-  let allZips: string[] = []
+  const hoodIds = (hoods ?? []).map(h => h.neighborhood_id)
+  if (hoodIds.length === 0) return []
 
-  if (!hoods || hoods.length === 0) {
-    const { data: sn } = await supabase
-      .from('super_neighborhoods')
-      .select('zip_codes')
-      .eq('sn_id', neighborhoodId)
-      .single()
-    if (!sn?.zip_codes) return []
-    allZips = sn.zip_codes.split(',').map((s: string) => s.trim()).filter(Boolean)
-  } else {
-    allZips = Array.from(new Set(
-      hoods
-        .flatMap(h => (h.zip_codes || '').split(','))
-        .map((z: string) => z.trim())
-        .filter(Boolean)
-    ))
-  }
+  // Get org IDs from junction table
+  const { data: orgJunctions } = await supabase
+    .from('organization_neighborhoods')
+    .select('org_id')
+    .in('neighborhood_id', hoodIds)
 
-  if (allZips.length === 0) return []
+  const orgIds = Array.from(new Set((orgJunctions ?? []).map(j => j.org_id)))
+  if (orgIds.length === 0) return []
 
   const { data } = await supabase
     .from('organizations')
     .select('org_id, org_name, description_5th_grade, website, latitude, longitude, zip_code, address, city')
-    .in('zip_code', allZips)
+    .in('org_id', orgIds)
     .limit(200)
 
   return data ?? []
+}
+
+// ── Mesh query functions (enabled by normalized junction tables) ──────
+
+/**
+ * Get all organizations addressing a specific SDOH domain.
+ * Traverses: sdoh_domains → focus_areas → organization_focus_areas → organizations
+ */
+export async function getOrganizationsBySdoh(sdohCode: string) {
+  const supabase = await createClient()
+  // Get focus areas linked to this SDOH domain
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id')
+    .eq('sdoh_code', sdohCode)
+  const focusIds = (focusAreas ?? []).map(f => f.focus_id)
+  if (focusIds.length === 0) return []
+
+  // Get org IDs from junction
+  const { data: orgJunctions } = await supabase
+    .from('organization_focus_areas')
+    .select('org_id')
+    .in('focus_id', focusIds)
+  const orgIds = Array.from(new Set((orgJunctions ?? []).map(j => j.org_id)))
+  if (orgIds.length === 0) return []
+
+  const { data } = await supabase
+    .from('organizations')
+    .select('*')
+    .in('org_id', orgIds)
+    .limit(50)
+  return data ?? []
+}
+
+/**
+ * Get all content for a neighborhood.
+ * Traverses: neighborhood → organization_neighborhoods → organizations → content_published
+ */
+export async function getContentForNeighborhood(neighborhoodId: string) {
+  const supabase = await createClient()
+  const { data: orgJunctions } = await supabase
+    .from('organization_neighborhoods')
+    .select('org_id')
+    .eq('neighborhood_id', neighborhoodId)
+  const orgIds = (orgJunctions ?? []).map(j => j.org_id)
+  if (orgIds.length === 0) return []
+
+  const { data } = await supabase
+    .from('content_published')
+    .select('*')
+    .eq('is_active', true)
+    .in('org_id', orgIds)
+    .order('published_at', { ascending: false })
+    .limit(20)
+  return data ?? []
+}
+
+/**
+ * Get officials responsible for a neighborhood's districts.
+ * Traverses: neighborhood → precinct_neighborhoods → precincts → elected_officials
+ * Collects council, congressional, state house, and state senate district IDs.
+ */
+export async function getOfficialsForNeighborhood(neighborhoodId: string) {
+  const supabase = await createClient()
+  const { data: precinctJunctions } = await supabase
+    .from('precinct_neighborhoods')
+    .select('precinct_id')
+    .eq('neighborhood_id', neighborhoodId)
+  const precinctIds = (precinctJunctions ?? []).map(j => j.precinct_id)
+  if (precinctIds.length === 0) return []
+
+  const { data: precincts } = await supabase
+    .from('precincts')
+    .select('council_district, congressional_district, state_house_district, state_senate_district')
+    .in('precinct_id', precinctIds)
+
+  // Collect all unique district IDs across district types
+  const districtIds = Array.from(new Set(
+    (precincts ?? []).flatMap(p => [
+      p.council_district,
+      p.congressional_district,
+      p.state_house_district,
+      p.state_senate_district,
+    ]).filter((d): d is string => d != null)
+  ))
+  if (districtIds.length === 0) return []
+
+  const { data } = await supabase
+    .from('elected_officials')
+    .select('*')
+    .in('district_id', districtIds)
+  return data ?? []
+}
+
+/**
+ * Get the full mesh path: situation → focus_areas → orgs → neighborhoods.
+ * Returns organizations that address the given life situation and serve the given neighborhood.
+ */
+export async function getMeshPath(situationId: string, neighborhoodId: string) {
+  const supabase = await createClient()
+
+  // Get focus areas for the situation
+  const { data: focusJunctions } = await supabase
+    .from('life_situation_focus_areas')
+    .select('focus_id')
+    .eq('situation_id', situationId)
+  const focusIds = (focusJunctions ?? []).map(j => j.focus_id)
+  if (focusIds.length === 0) return []
+
+  // Get orgs that address these focus areas
+  const { data: orgFocusJunctions } = await supabase
+    .from('organization_focus_areas')
+    .select('org_id')
+    .in('focus_id', focusIds)
+  const focusOrgIds = new Set((orgFocusJunctions ?? []).map(j => j.org_id))
+
+  // Get orgs in the neighborhood
+  const { data: orgHoodJunctions } = await supabase
+    .from('organization_neighborhoods')
+    .select('org_id')
+    .eq('neighborhood_id', neighborhoodId)
+  const hoodOrgIds = new Set((orgHoodJunctions ?? []).map(j => j.org_id))
+
+  // Intersection: orgs that both address the situation AND serve the neighborhood
+  const matchingOrgIds = Array.from(focusOrgIds).filter(id => hoodOrgIds.has(id))
+  if (matchingOrgIds.length === 0) return []
+
+  const { data } = await supabase
+    .from('organizations')
+    .select('*')
+    .in('org_id', matchingOrgIds)
+    .limit(50)
+  return data ?? []
+}
+
+/** Get ZIP codes for a neighborhood from the junction table. */
+export async function getNeighborhoodZipCodes(neighborhoodId: string): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('neighborhood_zip_codes')
+    .select('zip_code')
+    .eq('neighborhood_id', neighborhoodId)
+  return (data ?? []).map(j => j.zip_code)
+}
+
+/** Get focus area IDs for an official from the junction table. */
+export async function getOfficialFocusAreaIds(officialId: string): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('official_focus_areas')
+    .select('focus_id')
+    .eq('official_id', officialId)
+  return (data ?? []).map(j => j.focus_id)
+}
+
+/** Get official IDs for a policy from the junction table. */
+export async function getPolicyOfficialIds(policyId: string): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('policy_officials')
+    .select('official_id')
+    .eq('policy_id', policyId)
+  return (data ?? []).map(j => j.official_id)
+}
+
+/** Get life situation IDs linked to content from the junction table. */
+export async function getContentLifeSituationIds(contentId: string): Promise<string[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_life_situations')
+    .select('situation_id')
+    .eq('content_id', contentId)
+  return (data ?? []).map(j => j.situation_id)
 }

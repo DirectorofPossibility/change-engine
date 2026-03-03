@@ -5,22 +5,24 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Menu, X, Search, MapPin } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
+import { useTranslation } from '@/lib/i18n'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
 import { AuthButton } from './AuthButton'
 
 const NAV_LINKS = [
-  { href: '/pathways', label: 'Pathways' },
-  { href: '/explore', label: 'Explore' },
-  { href: '/help', label: 'Available Resources' },
-  { href: '/services', label: 'Services' },
-  { href: '/elections', label: 'Elections' },
+  { href: '/pathways', key: 'nav.pathways' },
+  { href: '/explore', key: 'nav.explore' },
+  { href: '/help', key: 'nav.help' },
+  { href: '/services', key: 'nav.services' },
+  { href: '/elections', key: 'nav.elections' },
 ]
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
+  const { t } = useTranslation()
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -50,7 +52,7 @@ export function Header() {
                   href={link.href}
                   className="text-sm text-brand-text hover:text-brand-accent transition-colors"
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               )
             })}
@@ -67,7 +69,7 @@ export function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={function (e) { setSearchQuery(e.target.value) }}
-                placeholder="Search..."
+                placeholder={t('nav.search_placeholder')}
                 aria-label="Search the site"
                 className="w-36 pl-7 pr-2 py-1 text-xs border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
               />
@@ -92,7 +94,7 @@ export function Header() {
             <div className="pb-3 border-b border-brand-border">
               <p className="text-xs text-brand-muted mb-2 flex items-center gap-1">
                 <MapPin size={12} className="text-brand-accent" />
-                Start with your ZIP code
+                {t('nav.zip_prompt')}
               </p>
               <ZipInput />
             </div>
@@ -104,7 +106,7 @@ export function Header() {
                   className="block text-sm text-brand-text hover:text-brand-accent"
                   onClick={function () { setMenuOpen(false) }}
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               )
             })}
@@ -115,7 +117,7 @@ export function Header() {
                   type="text"
                   value={searchQuery}
                   onChange={function (e) { setSearchQuery(e.target.value) }}
-                  placeholder="Search..."
+                  placeholder={t('nav.search_placeholder')}
                   aria-label="Search the site"
                   className="w-full pl-7 pr-2 py-2 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
                 />

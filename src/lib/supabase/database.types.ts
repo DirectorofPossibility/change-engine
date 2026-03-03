@@ -3601,6 +3601,562 @@ export type Database = {
         }
         Relationships: []
       }
+      // ============================================================
+      // Junction tables for the Civic Knowledge Mesh
+      // ============================================================
+      agency_focus_areas: {
+        Row: { agency_id: string; focus_id: string }
+        Insert: { agency_id: string; focus_id: string }
+        Update: { agency_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "agency_focus_areas_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["agency_id"]
+          },
+          {
+            foreignKeyName: "agency_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      ballot_item_focus_areas: {
+        Row: { item_id: string; focus_id: string }
+        Insert: { item_id: string; focus_id: string }
+        Update: { item_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "ballot_item_focus_areas_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "ballot_items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "ballot_item_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      benefit_focus_areas: {
+        Row: { benefit_id: string; focus_id: string }
+        Insert: { benefit_id: string; focus_id: string }
+        Update: { benefit_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_focus_areas_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+          {
+            foreignKeyName: "benefit_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      campaign_ctas: {
+        Row: { campaign_id: string; cta_id: string }
+        Insert: { campaign_id: string; cta_id: string }
+        Update: { campaign_id?: string; cta_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_ctas_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["campaign_id"]
+          },
+          {
+            foreignKeyName: "campaign_ctas_cta_id_fkey"
+            columns: ["cta_id"]
+            isOneToOne: false
+            referencedRelation: "calls_to_action"
+            referencedColumns: ["cta_id"]
+          },
+        ]
+      }
+      campaign_focus_areas: {
+        Row: { campaign_id: string; focus_id: string }
+        Insert: { campaign_id: string; focus_id: string }
+        Update: { campaign_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_focus_areas_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["campaign_id"]
+          },
+          {
+            foreignKeyName: "campaign_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      campaign_partner_orgs: {
+        Row: { campaign_id: string; org_id: string }
+        Insert: { campaign_id: string; org_id: string }
+        Update: { campaign_id?: string; org_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_partner_orgs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["campaign_id"]
+          },
+          {
+            foreignKeyName: "campaign_partner_orgs_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+        ]
+      }
+      content_audience_segments: {
+        Row: { content_id: string; segment_id: string }
+        Insert: { content_id: string; segment_id: string }
+        Update: { content_id?: string; segment_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "content_audience_segments_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      content_focus_areas: {
+        Row: { content_id: string; focus_id: string }
+        Insert: { content_id: string; focus_id: string }
+        Update: { content_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "content_focus_areas_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      content_life_situations: {
+        Row: { content_id: string; situation_id: string }
+        Insert: { content_id: string; situation_id: string }
+        Update: { content_id?: string; situation_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "content_life_situations_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      content_pathways: {
+        Row: { content_id: string; theme_id: string; is_primary: boolean }
+        Insert: { content_id: string; theme_id: string; is_primary?: boolean }
+        Update: { content_id?: string; theme_id?: string; is_primary?: boolean }
+        Relationships: [
+          {
+            foreignKeyName: "content_pathways_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      content_sdgs: {
+        Row: { content_id: string; sdg_id: string }
+        Insert: { content_id: string; sdg_id: string }
+        Update: { content_id?: string; sdg_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "content_sdgs_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
+      cta_focus_areas: {
+        Row: { cta_id: string; focus_id: string }
+        Insert: { cta_id: string; focus_id: string }
+        Update: { cta_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "cta_focus_areas_cta_id_fkey"
+            columns: ["cta_id"]
+            isOneToOne: false
+            referencedRelation: "calls_to_action"
+            referencedColumns: ["cta_id"]
+          },
+          {
+            foreignKeyName: "cta_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      life_situation_benefits: {
+        Row: { situation_id: string; benefit_id: string }
+        Insert: { situation_id: string; benefit_id: string }
+        Update: { situation_id?: string; benefit_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_benefits_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+          {
+            foreignKeyName: "life_situation_benefits_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+        ]
+      }
+      life_situation_focus_areas: {
+        Row: { situation_id: string; focus_id: string }
+        Insert: { situation_id: string; focus_id: string }
+        Update: { situation_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_focus_areas_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+          {
+            foreignKeyName: "life_situation_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      life_situation_service_categories: {
+        Row: { situation_id: string; service_cat_id: string }
+        Insert: { situation_id: string; service_cat_id: string }
+        Update: { situation_id?: string; service_cat_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_service_categories_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+          {
+            foreignKeyName: "life_situation_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+        ]
+      }
+      neighborhood_zip_codes: {
+        Row: { neighborhood_id: string; zip_code: string }
+        Insert: { neighborhood_id: string; zip_code: string }
+        Update: { neighborhood_id?: string; zip_code?: string }
+        Relationships: [
+          {
+            foreignKeyName: "neighborhood_zip_codes_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["neighborhood_id"]
+          },
+        ]
+      }
+      official_counties: {
+        Row: { official_id: string; county_id: string }
+        Insert: { official_id: string; county_id: string }
+        Update: { official_id?: string; county_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "official_counties_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_counties_county_id_fkey"
+            columns: ["county_id"]
+            isOneToOne: false
+            referencedRelation: "counties"
+            referencedColumns: ["county_id"]
+          },
+        ]
+      }
+      official_focus_areas: {
+        Row: { official_id: string; focus_id: string }
+        Insert: { official_id: string; focus_id: string }
+        Update: { official_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "official_focus_areas_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      opportunity_focus_areas: {
+        Row: { opportunity_id: string; focus_id: string }
+        Insert: { opportunity_id: string; focus_id: string }
+        Update: { opportunity_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_focus_areas_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+          {
+            foreignKeyName: "opportunity_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      opportunity_skills: {
+        Row: { opportunity_id: string; skill_id: string }
+        Insert: { opportunity_id: string; skill_id: string }
+        Update: { opportunity_id?: string; skill_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_skills_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+          {
+            foreignKeyName: "opportunity_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["skill_id"]
+          },
+        ]
+      }
+      organization_focus_areas: {
+        Row: { org_id: string; focus_id: string }
+        Insert: { org_id: string; focus_id: string }
+        Update: { org_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "organization_focus_areas_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      organization_neighborhoods: {
+        Row: { org_id: string; neighborhood_id: string }
+        Insert: { org_id: string; neighborhood_id: string }
+        Update: { org_id?: string; neighborhood_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "organization_neighborhoods_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_neighborhoods_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["neighborhood_id"]
+          },
+        ]
+      }
+      policy_focus_areas: {
+        Row: { policy_id: string; focus_id: string }
+        Insert: { policy_id: string; focus_id: string }
+        Update: { policy_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "policy_focus_areas_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      policy_officials: {
+        Row: { policy_id: string; official_id: string }
+        Insert: { policy_id: string; official_id: string }
+        Update: { policy_id?: string; official_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "policy_officials_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_officials_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+        ]
+      }
+      precinct_neighborhoods: {
+        Row: { precinct_id: string; neighborhood_id: string }
+        Insert: { precinct_id: string; neighborhood_id: string }
+        Update: { precinct_id?: string; neighborhood_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "precinct_neighborhoods_precinct_id_fkey"
+            columns: ["precinct_id"]
+            isOneToOne: false
+            referencedRelation: "precincts"
+            referencedColumns: ["precinct_id"]
+          },
+          {
+            foreignKeyName: "precinct_neighborhoods_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["neighborhood_id"]
+          },
+        ]
+      }
+      precinct_zip_codes: {
+        Row: { precinct_id: string; zip_code: string }
+        Insert: { precinct_id: string; zip_code: string }
+        Update: { precinct_id?: string; zip_code?: string }
+        Relationships: [
+          {
+            foreignKeyName: "precinct_zip_codes_precinct_id_fkey"
+            columns: ["precinct_id"]
+            isOneToOne: false
+            referencedRelation: "precincts"
+            referencedColumns: ["precinct_id"]
+          },
+        ]
+      }
+      service_focus_areas: {
+        Row: { service_id: string; focus_id: string }
+        Insert: { service_id: string; focus_id: string }
+        Update: { service_id?: string; focus_id?: string }
+        Relationships: [
+          {
+            foreignKeyName: "service_focus_areas_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services_211"
+            referencedColumns: ["service_id"]
+          },
+          {
+            foreignKeyName: "service_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

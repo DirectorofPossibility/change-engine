@@ -68,19 +68,21 @@ export function NeighborhoodProvider({
     try {
       const supabase = createClient()
 
-      // Look up neighborhood by ZIP
-      const { data: neighborhoods } = await supabase
-        .from('neighborhoods')
-        .select('*')
-        .ilike('zip_codes', '%' + inputZip + '%')
+      // Look up neighborhood by ZIP via junction table
+      const { data: zipJunctions } = await supabase
+        .from('neighborhood_zip_codes')
+        .select('neighborhood_id')
+        .eq('zip_code', inputZip)
+        .limit(1)
 
       let match: Neighborhood | null = null
-      if (neighborhoods) {
-        match = neighborhoods.find(function (n) {
-          if (!n.zip_codes) return false
-          const zips = n.zip_codes.split(',').map(function (z) { return z.trim() })
-          return zips.indexOf(inputZip) !== -1
-        }) ?? null
+      if (zipJunctions && zipJunctions.length > 0) {
+        const { data: hood } = await supabase
+          .from('neighborhoods')
+          .select('*')
+          .eq('neighborhood_id', zipJunctions[0].neighborhood_id)
+          .single()
+        match = hood ?? null
       }
 
       setNeighborhood(match)

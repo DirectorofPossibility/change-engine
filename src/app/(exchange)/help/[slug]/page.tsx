@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 import {
   getLifeSituation, getLifeSituationContent, getLearningPaths,
   getRelatedOpportunities, getRelatedPolicies,
@@ -32,10 +33,16 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
 
   const isCritical = situation.urgency_level === 'Critical'
 
-  const focusIds = (situation.focus_area_ids || '').split(',').map(function (s) { return s.trim() }).filter(Boolean)
+  // Get focus area IDs from junction table (replaces comma-separated text parsing)
+  const supabase = await createClient()
+  const { data: focusJunctions } = await supabase
+    .from('life_situation_focus_areas')
+    .select('focus_id')
+    .eq('situation_id', situation.situation_id)
+  const focusIds = (focusJunctions ?? []).map(j => j.focus_id)
 
   const [{ content, services }, paths, opportunities, policies] = await Promise.all([
-    getLifeSituationContent(situation.focus_area_ids || '', situation.service_cat_ids),
+    getLifeSituationContent(situation.situation_id, situation.service_cat_ids),
     situation.path_id ? getLearningPaths() : Promise.resolve([]),
     getRelatedOpportunities(focusIds),
     getRelatedPolicies(focusIds),

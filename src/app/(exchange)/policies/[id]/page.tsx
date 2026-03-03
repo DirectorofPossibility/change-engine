@@ -40,8 +40,12 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
   if (!policy) notFound()
 
-  // Connected officials
-  var officialIds = policy.official_ids ? policy.official_ids.split(',').map(function (s) { return s.trim() }).filter(Boolean) : []
+  // Connected officials via junction table
+  const { data: officialJunctions } = await supabase
+    .from('policy_officials')
+    .select('official_id')
+    .eq('policy_id', id)
+  const officialIds = (officialJunctions ?? []).map(j => j.official_id)
   var officials: Array<{ official_id: string; official_name: string; title: string | null; level: string | null; party: string | null; email: string | null; office_phone: string | null; website: string | null }> = []
   if (officialIds.length > 0) {
     const { data: offData } = await supabase

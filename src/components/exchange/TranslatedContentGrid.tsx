@@ -10,6 +10,7 @@
 
 import { useEffect } from 'react'
 import { useLanguage } from '@/lib/contexts/LanguageContext'
+import { useTranslation } from '@/lib/i18n'
 import { ContentCard } from './ContentCard'
 interface ContentGridItem {
   id: string
@@ -39,6 +40,7 @@ interface TranslatedContentGridProps {
  */
 export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContentGridProps) {
   const { language, translations, loadTranslations, isLoading } = useLanguage()
+  const { t } = useTranslation()
 
   useEffect(function () {
     if (language !== 'en' && items.length > 0) {
@@ -57,7 +59,7 @@ export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContent
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {isLoading && (
         <div className="col-span-full text-center text-sm text-brand-muted py-4">
-          Loading translations...
+          {t('card.loading_translations')}
         </div>
       )}
       {items.map(function (item) {

@@ -70,26 +70,36 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Resolve focus areas (full objects for clickable pills)
-  const focusAreas = item.focus_area_ids && item.focus_area_ids.length > 0
-    ? await getFocusAreasByIds(item.focus_area_ids)
+  // Resolve focus areas via junction table
+  const { data: focusJunctions } = await supabase
+    .from('content_focus_areas')
+    .select('focus_id')
+    .eq('content_id', item.id)
+  const focusAreaIds = (focusJunctions ?? []).map(j => j.focus_id)
+  const focusAreas = focusAreaIds.length > 0
+    ? await getFocusAreasByIds(focusAreaIds)
     : []
 
   // Fetch SDG map, SDOH map, and related opportunities/policies in parallel
   const [sdgMap, sdohMap, opportunities, policies] = await Promise.all([
     item.sdg_ids && item.sdg_ids.length > 0 ? getSDGMap() : Promise.resolve({} as Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }>),
     item.sdoh_domain ? getSDOHMap() : Promise.resolve({} as Record<string, { sdoh_name: string; sdoh_description: string | null }>),
-    item.focus_area_ids && item.focus_area_ids.length > 0 ? getRelatedOpportunities(item.focus_area_ids) : Promise.resolve([]),
-    item.focus_area_ids && item.focus_area_ids.length > 0 ? getRelatedPolicies(item.focus_area_ids) : Promise.resolve([]),
+    focusAreaIds.length > 0 ? getRelatedOpportunities(focusAreaIds) : Promise.resolve([]),
+    focusAreaIds.length > 0 ? getRelatedPolicies(focusAreaIds) : Promise.resolve([]),
   ])
 
-  // Resolve life situations
+  // Resolve life situations via junction table
+  const { data: sitJunctions } = await supabase
+    .from('content_life_situations')
+    .select('situation_id')
+    .eq('content_id', item.id)
+  const situationIds = (sitJunctions ?? []).map(j => j.situation_id)
   var lifeSituationLinks: Array<{ name: string; slug: string }> = []
-  if (item.life_situations && item.life_situations.length > 0) {
+  if (situationIds.length > 0) {
     const { data: sits } = await supabase
       .from('life_situations')
       .select('situation_id, situation_name, situation_slug')
-      .in('situation_id', item.life_situations)
+      .in('situation_id', situationIds)
     if (sits) {
       lifeSituationLinks = sits
         .filter(function (s) { return s.situation_slug != null })

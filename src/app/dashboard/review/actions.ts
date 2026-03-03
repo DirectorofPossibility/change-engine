@@ -68,7 +68,7 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
 
   // Publish
   const actions = classification.action_items || {}
-  const { error } = await supabase.from('content_published').insert({
+  const { data: published, error } = await supabase.from('content_published').insert({
     inbox_id: inboxId,
     source_url: inbox.source_url || '',
     source_domain: inbox.source_domain || '',
@@ -95,7 +95,40 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     classification_reasoning: classification.reasoning || '',
     is_featured: false,
     is_active: true,
-  })
+  }).select('id').single()
+
+  // Write to junction tables for the newly published content
+  if (published?.id) {
+    const contentId = published.id
+    const focusAreaIds: string[] = classification.focus_area_ids || []
+    const sdgIds: string[] = classification.sdg_ids || []
+    const lifeSituationIds: string[] = classification.life_situation_ids || []
+    const audienceSegmentIds: string[] = classification.audience_segment_ids || []
+
+    const junctionInserts = [
+      ...focusAreaIds.map(fid => supabase.from('content_focus_areas').insert({ content_id: contentId, focus_id: fid }).then(() => {})),
+      ...sdgIds.map(sid => supabase.from('content_sdgs').insert({ content_id: contentId, sdg_id: sid }).then(() => {})),
+      ...lifeSituationIds.map(lid => supabase.from('content_life_situations').insert({ content_id: contentId, situation_id: lid }).then(() => {})),
+      ...audienceSegmentIds.map(aid => supabase.from('content_audience_segments').insert({ content_id: contentId, segment_id: aid }).then(() => {})),
+    ]
+
+    // Primary pathway
+    if (classification.theme_primary) {
+      junctionInserts.push(
+        supabase.from('content_pathways').insert({ content_id: contentId, theme_id: classification.theme_primary, is_primary: true }).then(() => {})
+      )
+    }
+    // Secondary pathways
+    const secondaryPathways: string[] = classification.theme_secondary || []
+    for (const themeId of secondaryPathways) {
+      junctionInserts.push(
+        supabase.from('content_pathways').insert({ content_id: contentId, theme_id: themeId, is_primary: false }).then(() => {})
+      )
+    }
+
+    // Fire all junction inserts in parallel, ignoring duplicates
+    await Promise.allSettled(junctionInserts)
+  }
 
   revalidatePath('/dashboard/review')
   revalidatePath('/dashboard/content')

@@ -40,24 +40,38 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   if (!official) notFound()
 
-  // Policies connected to this official
-  const { data: policies } = await supabase
-    .from('policies')
-    .select('*')
-    .like('official_ids', '%' + id + '%')
+  // Policies connected to this official via junction table
+  const { data: policyJunctions } = await supabase
+    .from('policy_officials')
+    .select('policy_id')
+    .eq('official_id', id)
+  const policyIds = (policyJunctions ?? []).map(j => j.policy_id)
+  const policies = policyIds.length > 0
+    ? (await supabase.from('policies').select('*').in('policy_id', policyIds)).data ?? []
+    : []
 
-  // Related content via focus areas
-  var focusAreas = official.focus_area_ids ? official.focus_area_ids.split(',').map(function (s) { return s.trim() }).filter(Boolean) : []
+  // Related content via focus areas junction table
+  const { data: focusJunctions } = await supabase
+    .from('official_focus_areas')
+    .select('focus_id')
+    .eq('official_id', id)
+  const focusAreas = (focusJunctions ?? []).map(j => j.focus_id)
   var related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null }> = []
   if (focusAreas.length > 0) {
-    var filters = focusAreas.map(function (fa) { return 'focus_area_ids.cs.{' + fa + '}' }).join(',')
-    var { data: contentData } = await supabase
-      .from('content_published')
-      .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at')
-      .eq('is_active', true)
-      .or(filters)
-      .limit(4)
-    related = contentData || []
+    const { data: contentJunctions } = await supabase
+      .from('content_focus_areas')
+      .select('content_id')
+      .in('focus_id', focusAreas)
+    const contentIds = Array.from(new Set((contentJunctions ?? []).map(j => j.content_id)))
+    if (contentIds.length > 0) {
+      var { data: contentData } = await supabase
+        .from('content_published')
+        .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at')
+        .eq('is_active', true)
+        .in('id', contentIds)
+        .limit(4)
+      related = contentData || []
+    }
   }
 
   // Fetch translations for non-English

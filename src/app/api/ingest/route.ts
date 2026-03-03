@@ -620,6 +620,15 @@ Return JSON:
         data_source: meta.domain,
       })
       await supaRest('POST', 'org_domains', { org_id: orgId, domain }).catch(() => {})
+
+      // Write to organization_focus_areas junction table
+      for (const focusId of validFocusAreaIds) {
+        await supaRest('POST', 'organization_focus_areas', {
+          org_id: orgId,
+          focus_id: focusId,
+        }).catch(() => {}) // Ignore duplicates
+      }
+
       orgsCreated.push(`${org.name} (NEW: ${orgId})`)
     } catch (e) {
       const msg = (e as Error).message || ''

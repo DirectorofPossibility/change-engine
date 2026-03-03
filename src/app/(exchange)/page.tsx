@@ -1,6 +1,13 @@
 /**
  * @fileoverview Homepage for The Change Engine community platform.
  *
+ * Features a redesigned layout with:
+ *  - Full-width hero with Houston skyline SVG, gradient overlay, and floating stats circles
+ *  - Horizontal scrollable pathway circles (Yelp-style category browsing)
+ *  - Circular center cards with SVG images and resource count badges
+ *  - Content cards with gradient placeholder images
+ *  - Stats bar with circular badge motif
+ *
  * Fetches aggregate stats, center/pathway counts, latest content, featured
  * life-situations, and geo-coded map markers (services, voting locations,
  * organizations) via parallel Supabase queries.
@@ -13,6 +20,7 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
 import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations, getLangId, fetchTranslationsForTable, getServicesWithCoords, getVotingLocationsWithCoords, getOrganizationsWithCoords } from '@/lib/data/exchange'
 import { CenterCard } from '@/components/exchange/CenterCard'
@@ -20,6 +28,8 @@ import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { NeighborhoodBanner } from '@/components/exchange/NeighborhoodBanner'
 import { HomeMap } from '@/components/exchange/HomeMap'
+import { PathwayCircle } from '@/components/exchange/PathwayCircle'
+import { StatsCircle } from '@/components/exchange/StatsCircle'
 import type { MarkerData } from '@/components/maps'
 
 export const revalidate = 1800
@@ -88,50 +98,117 @@ export default async function HomePage() {
     ? await fetchTranslationsForTable('life_situations', featuredSituations.map(s => s.situation_id), langId)
     : {}
 
+  /** Stat entries filtered to non-zero values for the stats bar. */
+  const statEntries = [
+    { value: stats.resources, label: 'Resources', color: '#C75B2A' },
+    { value: stats.officials, label: 'Officials', color: '#38a169' },
+    { value: stats.organizations ?? 0, label: 'Organizations', color: '#3182ce' },
+    { value: stats.policies ?? 0, label: 'Policies', color: '#805ad5' },
+  ].filter(s => s.value > 0)
+
   return (
     <div>
-      {/* ── Hero ── */}
-      <section className="bg-brand-text text-white py-14 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">Houston, Texas</p>
-          <h1 className="text-3xl sm:text-5xl font-bold mb-3">{BRAND.tagline}</h1>
-          <p className="text-base text-gray-300 mb-8 max-w-xl mx-auto leading-relaxed">
-            Find resources, know your representatives, and participate in shaping your community.
-          </p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link
-              href="/pathways"
-              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: BRAND.accent }}
-            >
-              Explore Pathways
-            </Link>
-            <Link
-              href="/help"
-              className="px-5 py-2.5 bg-white text-brand-text rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors"
-            >
-              Available Resources
-            </Link>
-            <Link
-              href="/officials"
-              className="px-5 py-2.5 bg-white/10 text-white rounded-lg text-sm font-semibold hover:bg-white/20 border border-white/20 transition-colors"
-            >
-              Find Your Reps
-            </Link>
+      {/* ── Hero with Houston Skyline ── */}
+      <section className="relative overflow-hidden">
+        {/* TODO: Replace with real Houston photography */}
+        <div className="relative h-[480px] sm:h-[540px]">
+          <Image
+            src="/images/hero/houston-skyline.svg"
+            alt="Houston skyline"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Dark gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/80" />
+
+          {/* Hero text content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
+            <p className="text-sm font-medium text-gray-300 uppercase tracking-widest mb-4">
+              Houston, Texas
+            </p>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 max-w-3xl leading-tight drop-shadow-lg">
+              {BRAND.tagline}
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-200 mb-8 max-w-xl leading-relaxed drop-shadow">
+              Every Houstonian should know their community matters.
+            </p>
+            <div className="flex items-center justify-center gap-3 flex-wrap">
+              <Link
+                href="/pathways"
+                className="px-6 py-3 rounded-full text-sm font-semibold text-white hover:opacity-90 transition-opacity shadow-lg"
+                style={{ backgroundColor: BRAND.accent }}
+              >
+                Explore Pathways
+              </Link>
+              <Link
+                href="/help"
+                className="px-6 py-3 bg-white text-brand-text rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors shadow-lg"
+              >
+                Available Resources
+              </Link>
+              <Link
+                href="/officials"
+                className="px-6 py-3 bg-white/15 text-white rounded-full text-sm font-semibold hover:bg-white/25 border border-white/30 transition-colors backdrop-blur-sm"
+              >
+                Find Your Reps
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* Floating stats circles overlapping hero bottom edge */}
+        {statEntries.length > 0 && (
+          <div className="relative -mt-14 z-10 max-w-4xl mx-auto px-4">
+            <div className="flex items-center justify-center gap-6 sm:gap-10">
+              {statEntries.map(s => (
+                <div key={s.label} className="flex flex-col items-center">
+                  <div
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center
+                               border-4 shadow-xl bg-white"
+                    style={{ borderColor: s.color }}
+                  >
+                    <span className="text-lg sm:text-2xl font-bold text-brand-text leading-none">
+                      {s.value.toLocaleString()}
+                    </span>
+                  </div>
+                  <span className="text-xs sm:text-sm text-brand-muted font-medium mt-2">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ── Neighborhood Banner ── */}
       <NeighborhoodBanner />
 
-      {/* ── Houston at a Glance Map ── */}
-      <HomeMap markers={homeMarkers} />
-
-      {/* ── 4 Centers ── */}
+      {/* ── Pathway Circles (Yelp-style category browsing) ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-2xl font-bold text-brand-text mb-6">Four Centers of Community Life</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <h2 className="text-2xl font-bold text-brand-text mb-2">Seven Pathways</h2>
+        <p className="text-brand-muted mb-6">Explore community life through these lenses</p>
+        <div className="flex gap-6 sm:gap-8 overflow-x-auto pb-4 scrollbar-hide">
+          {Object.entries(THEMES).map(function ([id, theme]) {
+            return (
+              <PathwayCircle
+                key={id}
+                id={id}
+                name={theme.name}
+                color={theme.color}
+                slug={theme.slug}
+                emoji={theme.emoji}
+                count={pathwayCounts[id] || 0}
+              />
+            )
+          })}
+        </div>
+      </section>
+
+      {/* ── 4 Centers — Circular badge layout ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 className="text-2xl font-bold text-brand-text mb-2">Four Centers of Community Life</h2>
+        <p className="text-brand-muted mb-6">Find what you need, organized by intent</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {Object.entries(CENTERS).map(function ([name, config]) {
             return (
               <CenterCard
@@ -147,35 +224,18 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── 7 Pathways ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-2xl font-bold text-brand-text mb-6">Seven Pathways</h2>
-        <div className="flex gap-3 overflow-x-auto pb-4">
-          {Object.entries(THEMES).map(function ([id, theme]) {
-            return (
-              <Link
-                key={id}
-                href={'/pathways/' + theme.slug}
-                className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: theme.color }}
-              >
-                <span>{theme.emoji}</span>
-                <span>{theme.name}</span>
-                <span className="bg-white/20 px-2 py-0.5 rounded text-xs">
-                  {pathwayCounts[id] || 0}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
-      </section>
+      {/* ── Houston at a Glance Map ── */}
+      <HomeMap markers={homeMarkers} />
 
       {/* ── Available Resources ── */}
       {featuredSituations.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-brand-text">Available Resources</h2>
-            <Link href="/help" className="text-sm text-brand-accent hover:underline">
+            <div>
+              <h2 className="text-2xl font-bold text-brand-text">Available Resources</h2>
+              <p className="text-brand-muted mt-1">Find help for life situations you may be facing</p>
+            </div>
+            <Link href="/help" className="text-sm text-brand-accent hover:underline font-medium">
               View all &rarr;
             </Link>
           </div>
@@ -201,25 +261,26 @@ export default async function HomePage() {
       {/* ── Latest Resources ── */}
       {latestContent.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <h2 className="text-2xl font-bold text-brand-text mb-6">Latest Resources</h2>
+          <h2 className="text-2xl font-bold text-brand-text mb-2">Latest Resources</h2>
+          <p className="text-brand-muted mb-6">Recently published content for the community</p>
           <TranslatedContentGrid items={latestContent} />
         </section>
       )}
 
-      {/* ── Stats Bar ── */}
-      <section className="bg-brand-text text-white py-10">
+      {/* ── Stats Bar with Circle Motif ── */}
+      <section className="bg-brand-text text-white py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-            {[
-              { value: stats.resources, label: 'Resources' },
-              { value: stats.officials, label: 'Officials' },
-              { value: stats.organizations ?? 0, label: 'Organizations' },
-              { value: stats.policies ?? 0, label: 'Policies' },
-            ].filter(s => s.value > 0).map(s => (
-              <div key={s.label}>
-                <div className="text-3xl font-bold">{s.value.toLocaleString()}</div>
-                <div className="text-sm text-gray-400 mt-1">{s.label}</div>
-              </div>
+          <h2 className="text-xl font-bold text-center mb-8 text-gray-300">
+            Community at a Glance
+          </h2>
+          <div className="flex items-center justify-center gap-8 sm:gap-12 flex-wrap">
+            {statEntries.map(s => (
+              <StatsCircle
+                key={s.label}
+                value={s.value}
+                label={s.label}
+                accentColor={s.color}
+              />
             ))}
           </div>
         </div>

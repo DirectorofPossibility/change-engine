@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Heart, Users, FileText, ClipboardList, Phone, Calendar, Pencil } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 interface Action {
   key: string
@@ -19,15 +22,16 @@ interface ActionBarProps {
 }
 
 export function ActionBar(props: ActionBarProps) {
+  const { t } = useTranslation()
   const actions: Action[] = []
 
-  if (props.actionDonate) actions.push({ key: 'donate', label: 'Donate', icon: <Heart size={16} />, value: props.actionDonate })
-  if (props.actionVolunteer) actions.push({ key: 'volunteer', label: 'Volunteer', icon: <Users size={16} />, value: props.actionVolunteer })
-  if (props.actionSignup) actions.push({ key: 'signup', label: 'Sign Up', icon: <Pencil size={16} />, value: props.actionSignup })
-  if (props.actionRegister) actions.push({ key: 'register', label: 'Register', icon: <ClipboardList size={16} />, value: props.actionRegister })
-  if (props.actionApply) actions.push({ key: 'apply', label: 'Apply', icon: <FileText size={16} />, value: props.actionApply })
-  if (props.actionCall) actions.push({ key: 'call', label: 'Call', icon: <Phone size={16} />, value: props.actionCall })
-  if (props.actionAttend) actions.push({ key: 'attend', label: 'Attend', icon: <Calendar size={16} />, value: props.actionAttend })
+  if (props.actionDonate) actions.push({ key: 'donate', label: t('action.donate'), icon: <Heart size={16} />, value: props.actionDonate })
+  if (props.actionVolunteer) actions.push({ key: 'volunteer', label: t('action.volunteer'), icon: <Users size={16} />, value: props.actionVolunteer })
+  if (props.actionSignup) actions.push({ key: 'signup', label: t('action.sign_up'), icon: <Pencil size={16} />, value: props.actionSignup })
+  if (props.actionRegister) actions.push({ key: 'register', label: t('action.register'), icon: <ClipboardList size={16} />, value: props.actionRegister })
+  if (props.actionApply) actions.push({ key: 'apply', label: t('action.apply'), icon: <FileText size={16} />, value: props.actionApply })
+  if (props.actionCall) actions.push({ key: 'call', label: t('action.call'), icon: <Phone size={16} />, value: props.actionCall })
+  if (props.actionAttend) actions.push({ key: 'attend', label: t('action.attend'), icon: <Calendar size={16} />, value: props.actionAttend })
 
   if (actions.length === 0) return null
 

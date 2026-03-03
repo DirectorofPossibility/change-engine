@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#38a169"/>
+  <circle cx="100" cy="100" r="90" fill="#38a169" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- Megaphone/speaker icon -->
+  <path d="M65 85 L85 85 L125 60 L125 140 L85 115 L65 115 Z" fill="white" opacity="0.9"/>
+  <rect x="55" y="88" width="15" height="24" rx="4" fill="white" opacity="0.9"/>
+  <!-- Sound waves -->
+  <path d="M135 80 Q150 100 135 120" stroke="white" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M145 70 Q165 100 145 130" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+</svg>

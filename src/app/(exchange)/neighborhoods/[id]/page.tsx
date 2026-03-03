@@ -32,8 +32,12 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
   if (!hood) notFound()
 
-  // Services in this neighborhood's ZIP codes
-  var zips = hood.zip_codes ? hood.zip_codes.split(',').map(function (s) { return s.trim() }).filter(Boolean) : []
+  // Get ZIP codes from junction table
+  const { data: zipJunctions } = await supabase
+    .from('neighborhood_zip_codes')
+    .select('zip_code')
+    .eq('neighborhood_id', id)
+  var zips = (zipJunctions ?? []).map(j => j.zip_code)
   var services: Array<{ service_id: string; service_name: string; description_5th_grade: string | null; phone: string | null; address: string | null; city: string | null; state: string | null; zip_code: string | null; website: string | null }> = []
   if (zips.length > 0) {
     const { data: svcData } = await supabase

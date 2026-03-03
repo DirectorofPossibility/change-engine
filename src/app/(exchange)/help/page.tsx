@@ -1,6 +1,20 @@
+/**
+ * @fileoverview Help / Available Resources listing page.
+ *
+ * Displays all life situations organized by urgency level, with a hero
+ * banner featuring the community-gathering illustration. Includes a crisis
+ * resource banner at the top for emergency contacts.
+ *
+ * @datasource Supabase tables: life_situations, translations
+ * @caching ISR with `revalidate = 300` (5 minutes)
+ * @route GET /help
+ */
 import type { Metadata } from 'next'
 import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
+import { PageHero } from '@/components/exchange/PageHero'
+import { HelpCrisisBanner } from './HelpCrisisBanner'
+import { HelpUrgencyHeader } from './HelpUrgencyHeader'
 
 export const revalidate = 300
 
@@ -9,14 +23,7 @@ export const metadata: Metadata = {
   description: 'Find services and resources for food, housing, healthcare, jobs, and more in Houston.',
 }
 
-const URGENCY_ORDER = ['Critical', 'High', 'Medium', 'Low']
-
-const URGENCY_HEADERS: Record<string, { label: string; color: string }> = {
-  Critical: { label: 'Time-Sensitive Resources', color: 'text-red-700 border-red-300 bg-red-50' },
-  High:     { label: 'Priority Resources', color: 'text-orange-700 border-orange-300 bg-orange-50' },
-  Medium:   { label: 'Community Resources', color: 'text-yellow-700 border-yellow-300 bg-yellow-50' },
-  Low:      { label: 'Ongoing Resources', color: 'text-green-700 border-green-300 bg-green-50' },
-}
+const URGENCY_LEVELS = ['Critical', 'High', 'Medium', 'Low']
 
 export default async function HelpPage() {
   const situations = await getLifeSituations()
@@ -33,50 +40,44 @@ export default async function HelpPage() {
   })
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Available Resources</h1>
-      <p className="text-brand-muted mb-8">
-        Explore resources available for life situations you may be facing, organized by urgency level.
-      </p>
+    <div>
+      {/* Hero banner */}
+      <PageHero
+        titleKey="help.title"
+        subtitleKey="help.subtitle"
+        backgroundImage="/images/hero/community-gathering.svg"
+        height="sm"
+      />
 
-      {/* Crisis banner */}
-      <div className="bg-red-50 border border-red-300 rounded-xl p-4 mb-8">
-        <p className="text-sm text-red-700 font-semibold mb-1">In an emergency?</p>
-        <p className="text-sm text-red-600">
-          Call <a href="tel:911" className="font-bold underline">911</a> for emergencies &bull;{' '}
-          <a href="tel:988" className="font-bold underline">988</a> for mental health crisis &bull;{' '}
-          <a href="tel:1-800-799-7233" className="font-bold underline">1-800-799-7233</a> for domestic violence
-        </p>
-      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <HelpCrisisBanner />
 
-      <div className="space-y-10">
-        {URGENCY_ORDER.map((level) => {
-          const items = grouped[level]
-          if (!items || items.length === 0) return null
-          const header = URGENCY_HEADERS[level]
+        <div className="space-y-10">
+          {URGENCY_LEVELS.map((level) => {
+            const items = grouped[level]
+            if (!items || items.length === 0) return null
 
-          return (
-            <section key={level}>
-              <div className={`border rounded-lg px-4 py-2 mb-4 ${header.color}`}>
-                <h2 className="font-semibold">{header.label}</h2>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {items.map((s) => (
-                  <LifeSituationCard
-                    key={s.situation_id}
-                    name={s.situation_name}
-                    slug={s.situation_slug}
-                    description={s.description_5th_grade}
-                    urgency={s.urgency_level}
-                    iconName={s.icon_name}
-                    translatedName={translations[s.situation_id]?.title}
-                    translatedDescription={translations[s.situation_id]?.summary}
-                  />
-                ))}
-              </div>
-            </section>
-          )
-        })}
+            return (
+              <section key={level}>
+                <HelpUrgencyHeader level={level} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {items.map((s) => (
+                    <LifeSituationCard
+                      key={s.situation_id}
+                      name={s.situation_name}
+                      slug={s.situation_slug}
+                      description={s.description_5th_grade}
+                      urgency={s.urgency_level}
+                      iconName={s.icon_name}
+                      translatedName={translations[s.situation_id]?.title}
+                      translatedDescription={translations[s.situation_id]?.summary}
+                    />
+                  ))}
+                </div>
+              </section>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

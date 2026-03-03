@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#3182ce"/>
+  <circle cx="100" cy="100" r="90" fill="#3182ce" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- Dollar sign -->
+  <text x="100" y="125" text-anchor="middle" fill="white" font-family="system-ui" font-size="80" font-weight="bold" opacity="0.9">$</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#e53e3e"/>
+  <circle cx="100" cy="100" r="90" fill="#e53e3e" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- Heart/Health cross icon -->
+  <rect x="85" y="55" width="30" height="90" rx="6" fill="white" opacity="0.9"/>
+  <rect x="55" y="85" width="90" height="30" rx="6" fill="white" opacity="0.9"/>
+</svg>

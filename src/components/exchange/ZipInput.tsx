@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import { MapPin, X } from 'lucide-react'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
+import { useTranslation } from '@/lib/i18n'
 
 export function ZipInput() {
   const { zip, neighborhood, lookupZip, clearZip, isLoading } = useNeighborhood()
+  const { t } = useTranslation()
   const [input, setInput] = useState(zip || '')
 
   function handleSubmit(e: React.FormEvent) {
@@ -20,7 +22,7 @@ export function ZipInput() {
       <div className="flex items-center gap-1 text-xs">
         <MapPin size={12} className="text-brand-accent" />
         <span className="text-brand-muted">{zip}</span>
-        <button onClick={clearZip} className="text-brand-muted hover:text-brand-text" aria-label="Clear ZIP">
+        <button onClick={clearZip} className="text-brand-muted hover:text-brand-text" aria-label={t('zip.clear')}>
           <X size={12} />
         </button>
       </div>
@@ -34,7 +36,7 @@ export function ZipInput() {
         type="text"
         value={input}
         onChange={function (e) { setInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-        placeholder="Enter ZIP"
+        placeholder={t('zip.enter')}
         aria-label="ZIP code"
         className="w-20 text-xs px-2 py-1 border border-brand-accent/30 rounded bg-brand-accent/5 focus:outline-none focus:border-brand-accent focus:bg-white"
         maxLength={5}

@@ -1,18 +1,37 @@
 /**
  * @fileoverview Individual content card for the Community Exchange grid.
  *
- * Displays a content item as a clickable card with an optional hero image,
- * a {@link ThemePill} for the primary pathway, a {@link CenterBadge},
+ * Displays a content item as a clickable card with a hero image (or a
+ * gradient placeholder with a Houston skyline silhouette when no image is
+ * available), a {@link ThemePill} for the primary pathway, a {@link CenterBadge},
  * the title and summary (clamped), optional {@link FocusAreaPills}, and a
  * publication date. The entire card links to `/content/[id]`.
  *
  * Supports pre-translated title/summary overrides via the `translatedTitle`
  * and `translatedSummary` props.
  */
+'use client'
+
 import Link from 'next/link'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
+import { useTranslation } from '@/lib/i18n'
 import { FocusAreaPills } from './FocusAreaPills'
+import { THEMES } from '@/lib/constants'
+
+/** Gradient color pairs keyed by pathway ID for placeholder card images. */
+const PATHWAY_GRADIENTS: Record<string, { from: string; to: string }> = {
+  THEME_01: { from: '#e53e3e', to: '#c53030' },
+  THEME_02: { from: '#dd6b20', to: '#c05621' },
+  THEME_03: { from: '#d69e2e', to: '#b7791f' },
+  THEME_04: { from: '#38a169', to: '#2f855a' },
+  THEME_05: { from: '#3182ce', to: '#2b6cb0' },
+  THEME_06: { from: '#319795', to: '#2c7a7b' },
+  THEME_07: { from: '#805ad5', to: '#6b46c1' },
+}
+
+/** Default gradient used when no pathway is specified. */
+const DEFAULT_GRADIENT = { from: '#8B7E74', to: '#6b5e52' }
 
 interface ContentCardProps {
   id: string
@@ -31,6 +50,9 @@ interface ContentCardProps {
 /**
  * Clickable content card showing title, summary, pathway pill, and center badge.
  *
+ * When no `imageUrl` is provided, displays a gradient placeholder with a
+ * subtle Houston skyline silhouette pattern using the pathway's theme color.
+ *
  * @param props.id - Unique content ID used to build the detail route.
  * @param props.title - Primary title (English or 6th-grade simplified).
  * @param props.summary - Primary summary text.
@@ -47,18 +69,55 @@ export function ContentCard({
   id, title, summary, pathway, center, sourceUrl, publishedAt,
   focusAreaNames, translatedTitle, translatedSummary, imageUrl,
 }: ContentCardProps) {
+  const { t } = useTranslation()
   const displayTitle = translatedTitle || title
   const displaySummary = translatedSummary || summary
+  const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
+  const themeConfig = pathway ? THEMES[pathway as keyof typeof THEMES] : null
 
   return (
     <Link href={'/content/' + id} className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
-      {imageUrl && (
+      {/* TODO: Replace with real Houston photography */}
+      {imageUrl ? (
         <div className="w-full h-40 relative">
           <img
             src={imageUrl}
             alt={displayTitle}
             className="w-full h-full object-cover"
           />
+        </div>
+      ) : (
+        <div
+          className="w-full h-32 relative overflow-hidden"
+          style={{ background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})` }}
+        >
+          {/* Subtle skyline silhouette pattern */}
+          <svg
+            className="absolute bottom-0 left-0 w-full opacity-10"
+            viewBox="0 0 400 80"
+            preserveAspectRatio="none"
+            fill="white"
+          >
+            <rect x="20" y="30" width="18" height="50"/>
+            <rect x="45" y="20" width="15" height="60"/>
+            <rect x="65" y="35" width="12" height="45"/>
+            <rect x="100" y="10" width="22" height="70"/>
+            <rect x="130" y="15" width="20" height="65"/>
+            <rect x="155" y="5" width="25" height="75"/>
+            <rect x="185" y="0" width="28" height="80"/>
+            <rect x="220" y="8" width="22" height="72"/>
+            <rect x="250" y="18" width="20" height="62"/>
+            <rect x="280" y="25" width="18" height="55"/>
+            <rect x="310" y="30" width="20" height="50"/>
+            <rect x="340" y="40" width="15" height="40"/>
+            <rect x="360" y="35" width="18" height="45"/>
+          </svg>
+          {/* Pathway emoji overlay */}
+          {themeConfig && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-4xl opacity-30">{themeConfig.emoji}</span>
+            </div>
+          )}
         </div>
       )}
       <div className="p-5">
@@ -78,7 +137,7 @@ export function ContentCard({
           {publishedAt ? new Date(publishedAt).toLocaleDateString() : ''}
         </span>
         <span className="text-xs text-brand-accent">
-          Read more &rarr;
+          {t('card.read_more')} &rarr;
         </span>
       </div>
       </div>

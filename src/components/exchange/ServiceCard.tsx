@@ -6,7 +6,10 @@
  * details (phone, address, website). Supports pre-translated name and
  * description overrides for multilingual display.
  */
+'use client'
+
 import { Phone, MapPin, Globe } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 interface ServiceCardProps {
   name: string
@@ -38,6 +41,7 @@ interface ServiceCardProps {
  * @param props.translatedDescription - Optional pre-translated description override.
  */
 export function ServiceCard({ name, orgName, description, phone, address, city, state, zipCode, website, translatedName, translatedDescription }: ServiceCardProps) {
+  const { t } = useTranslation()
   const fullAddress = [address, city, state, zipCode].filter(Boolean).join(', ')
   const displayName = translatedName || name
   const displayDesc = translatedDescription || description
@@ -60,7 +64,7 @@ export function ServiceCard({ name, orgName, description, phone, address, city, 
         )}
         {website && (
           <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-brand-accent hover:underline">
-            <Globe size={14} /> Website
+            <Globe size={14} /> {t('card.website')}
           </a>
         )}
       </div>

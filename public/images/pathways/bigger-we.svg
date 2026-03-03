@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#805ad5"/>
+  <circle cx="100" cy="100" r="90" fill="#805ad5" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- Handshake / connected people icon -->
+  <circle cx="75" cy="75" r="14" fill="white" opacity="0.9"/>
+  <circle cx="125" cy="75" r="14" fill="white" opacity="0.9"/>
+  <!-- Hands clasping -->
+  <path d="M70 100 Q75 95 85 98 L100 105 L115 98 Q125 95 130 100 L130 120 Q125 135 100 140 Q75 135 70 120 Z" fill="white" opacity="0.9"/>
+</svg>

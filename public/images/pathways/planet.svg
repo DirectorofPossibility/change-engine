@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#319795"/>
+  <circle cx="100" cy="100" r="90" fill="#319795" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- Globe/Earth icon -->
+  <circle cx="100" cy="100" r="40" stroke="white" stroke-width="3" fill="none" opacity="0.9"/>
+  <ellipse cx="100" cy="100" rx="20" ry="40" stroke="white" stroke-width="2" fill="none" opacity="0.7"/>
+  <line x1="60" y1="100" x2="140" y2="100" stroke="white" stroke-width="2" opacity="0.7"/>
+  <path d="M68 80 Q100 75 132 80" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M68 120 Q100 125 132 120" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <!-- Leaf accent -->
+  <path d="M130 65 Q145 50 155 65 Q145 75 130 65Z" fill="white" opacity="0.7"/>
+</svg>

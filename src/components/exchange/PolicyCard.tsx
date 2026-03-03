@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useTranslation } from '@/lib/i18n'
 
 interface PolicyCardProps {
   name: string
@@ -21,6 +24,7 @@ function statusColor(status: string | null): string {
 }
 
 export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary }: PolicyCardProps) {
+  const { t } = useTranslation()
   const displayName = translatedName || name
   const displaySummary = translatedSummary || summary
 
@@ -51,7 +55,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
             rel="noopener noreferrer"
             className="text-xs text-brand-accent hover:underline"
           >
-            View source &rarr;
+            {t('card.view_source')} &rarr;
           </Link>
         )}
       </div>

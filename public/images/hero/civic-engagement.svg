@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <linearGradient id="civicBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38a169" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#F5F1EB"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="url(#civicBg)"/>
+  <!-- Capitol/courthouse building silhouette -->
+  <g fill="#2C2C2C" opacity="0.1">
+    <!-- Base -->
+    <rect x="450" y="260" width="300" height="80" rx="4"/>
+    <!-- Columns -->
+    <rect x="480" y="180" width="20" height="80"/>
+    <rect x="520" y="180" width="20" height="80"/>
+    <rect x="560" y="180" width="20" height="80"/>
+    <rect x="600" y="180" width="20" height="80"/>
+    <rect x="640" y="180" width="20" height="80"/>
+    <rect x="680" y="180" width="20" height="80"/>
+    <!-- Pediment -->
+    <polygon points="460,180 600,120 740,180"/>
+    <!-- Steps -->
+    <rect x="430" y="340" width="340" height="10" rx="2"/>
+    <rect x="420" y="350" width="360" height="10" rx="2"/>
+  </g>
+  <!-- Vote checkmark in circle -->
+  <circle cx="600" cy="180" r="40" fill="#38a169" opacity="0.2"/>
+  <circle cx="600" cy="180" r="30" fill="#38a169" opacity="0.3"/>
+  <path d="M582 180 L595 193 L618 167" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- People raising hands (abstract circles) -->
+  <g opacity="0.5">
+    <circle cx="300" cy="280" r="20" fill="#C75B2A"/>
+    <line x1="300" y1="260" x2="290" y2="240" stroke="#C75B2A" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="370" cy="290" r="18" fill="#3182ce"/>
+    <line x1="370" y1="272" x2="380" y2="250" stroke="#3182ce" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="830" cy="280" r="20" fill="#805ad5"/>
+    <line x1="830" y1="260" x2="840" y2="240" stroke="#805ad5" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="900" cy="290" r="18" fill="#d69e2e"/>
+    <line x1="900" y1="272" x2="890" y2="250" stroke="#d69e2e" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <!-- Decorative circles -->
+  <circle cx="150" cy="80" r="50" fill="#38a169" opacity="0.06"/>
+  <circle cx="1050" cy="80" r="60" fill="#C75B2A" opacity="0.06"/>
+  <circle cx="100" cy="350" r="40" fill="#805ad5" opacity="0.06"/>
+  <circle cx="1100" cy="320" r="45" fill="#3182ce" opacity="0.06"/>
+</svg>

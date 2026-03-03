@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
+  <!-- Warm sunset gradient background -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C75B2A" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#d69e2e" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#F5F1EB" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#2C2C2C" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="buildingShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2C2C2C"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="600" fill="url(#sky)"/>
+  <!-- Houston skyline silhouette -->
+  <g fill="url(#buildingShade)">
+    <!-- Ground -->
+    <rect x="0" y="480" width="1200" height="120"/>
+    <!-- Buildings left cluster -->
+    <rect x="60" y="360" width="50" height="120" rx="2"/>
+    <rect x="120" y="320" width="40" height="160" rx="2"/>
+    <rect x="170" y="380" width="35" height="100" rx="2"/>
+    <rect x="215" y="340" width="45" height="140" rx="2"/>
+    <!-- Downtown towers -->
+    <rect x="300" y="200" width="55" height="280" rx="3"/>
+    <rect x="365" y="240" width="50" height="240" rx="3"/>
+    <rect x="425" y="160" width="60" height="320" rx="3"/>
+    <!-- Chase Tower (tallest) -->
+    <rect x="500" y="100" width="65" height="380" rx="4"/>
+    <rect x="505" y="85" width="15" height="15"/>
+    <!-- Williams Tower -->
+    <rect x="580" y="130" width="55" height="350" rx="3"/>
+    <rect x="600" y="110" width="15" height="20"/>
+    <!-- More towers -->
+    <rect x="650" y="190" width="50" height="290" rx="3"/>
+    <rect x="710" y="220" width="45" height="260" rx="3"/>
+    <rect x="765" y="260" width="40" height="220" rx="2"/>
+    <!-- Right cluster -->
+    <rect x="840" y="300" width="50" height="180" rx="2"/>
+    <rect x="900" y="340" width="45" height="140" rx="2"/>
+    <rect x="955" y="360" width="35" height="120" rx="2"/>
+    <rect x="1000" y="380" width="50" height="100" rx="2"/>
+    <rect x="1060" y="400" width="40" height="80" rx="2"/>
+    <rect x="1110" y="420" width="35" height="60" rx="2"/>
+  </g>
+  <!-- Window lights -->
+  <g fill="#F5F1EB" opacity="0.3">
+    <rect x="510" y="130" width="8" height="6" rx="1"/>
+    <rect x="530" y="130" width="8" height="6" rx="1"/>
+    <rect x="510" y="150" width="8" height="6" rx="1"/>
+    <rect x="530" y="150" width="8" height="6" rx="1"/>
+    <rect x="510" y="170" width="8" height="6" rx="1"/>
+    <rect x="530" y="170" width="8" height="6" rx="1"/>
+    <rect x="440" y="200" width="8" height="6" rx="1"/>
+    <rect x="460" y="200" width="8" height="6" rx="1"/>
+    <rect x="440" y="220" width="8" height="6" rx="1"/>
+    <rect x="460" y="220" width="8" height="6" rx="1"/>
+    <rect x="590" y="160" width="8" height="6" rx="1"/>
+    <rect x="610" y="160" width="8" height="6" rx="1"/>
+    <rect x="590" y="180" width="8" height="6" rx="1"/>
+    <rect x="610" y="180" width="8" height="6" rx="1"/>
+  </g>
+  <!-- Sun/circle motif -->
+  <circle cx="900" cy="200" r="60" fill="#C75B2A" opacity="0.6"/>
+  <circle cx="900" cy="200" r="45" fill="#d69e2e" opacity="0.5"/>
+</svg>

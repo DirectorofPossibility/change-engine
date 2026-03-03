@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
 
 /**
  * Urgent election banner. Shows when an election is upcoming or today.
@@ -28,6 +29,7 @@ function getDaysUntil(dateStr: string): number {
 
 export function ElectionBanner() {
   const [dismissed, setDismissed] = useState(false)
+  const { t } = useTranslation()
   const daysUntil = getDaysUntil(ELECTION.date)
 
   // Only show if election is within 14 days (past or future up to 0 = today)
@@ -37,10 +39,10 @@ export function ElectionBanner() {
   const isTomorrow = daysUntil === 1
 
   const urgencyText = isToday
-    ? 'TODAY — POLLS ARE OPEN'
+    ? t('election.today')
     : isTomorrow
-      ? 'TOMORROW'
-      : `IN ${daysUntil} DAYS`
+      ? t('election.tomorrow')
+      : t('election.in_days_prefix') + ' ' + daysUntil + ' ' + t('election.in_days_suffix')
 
   const urgencyColor = isToday || isTomorrow
     ? 'bg-red-700'
@@ -62,7 +64,7 @@ export function ElectionBanner() {
               </p>
               {(isToday || isTomorrow) && (
                 <p className="text-xs text-white/80">
-                  Polls open {ELECTION.polls}. Vote at any polling location in your county.
+                  {t('election.polls_open_prefix')} {ELECTION.polls}. {t('election.polls_open_suffix')}
                 </p>
               )}
             </div>
@@ -73,13 +75,13 @@ export function ElectionBanner() {
               href="/polling-places"
               className="bg-white text-brand-text px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap"
             >
-              Find Your Polling Place
+              {t('election.find_polling')}
             </Link>
             <Link
               href="/elections"
               className="hidden sm:inline-flex bg-white/15 border border-white/30 px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
             >
-              Election Info
+              {t('election.info')}
             </Link>
             <button
               onClick={() => setDismissed(true)}

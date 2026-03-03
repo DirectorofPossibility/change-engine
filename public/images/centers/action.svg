@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="100" fill="#2C2C2C"/>
+  <circle cx="100" cy="100" r="90" fill="#2C2C2C" stroke="white" stroke-width="2" stroke-opacity="0.3"/>
+  <!-- Raised fist icon -->
+  <path d="M85 130 L85 95 Q85 85 92 85 L95 85 Q100 85 100 90 L100 80 Q100 72 107 72 L107 72 Q114 72 114 80 L114 78 Q114 70 121 70 L121 70 Q128 70 128 78 L128 90 Q134 88 138 92 Q142 96 140 105 L138 120 Q135 140 115 145 L90 145 Q85 145 85 140 Z" fill="white" opacity="0.9"/>
+  <!-- Wrist -->
+  <rect x="82" y="130" width="25" height="20" rx="3" fill="white" opacity="0.85"/>
+</svg>

@@ -10,6 +10,7 @@
 'use client'
 
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
+import { useTranslation } from '@/lib/i18n'
 import { MapPin, User } from 'lucide-react'
 
 /**
@@ -19,6 +20,7 @@ import { MapPin, User } from 'lucide-react'
  */
 export function NeighborhoodBanner() {
   const { zip, neighborhood, councilDistrict, districtOfficials, isLoading } = useNeighborhood()
+  const { t } = useTranslation()
 
   if (!zip || isLoading) return null
   if (!neighborhood) return null
@@ -34,7 +36,7 @@ export function NeighborhoodBanner() {
           </div>
           {councilDistrict && (
             <span className="text-sm text-brand-muted">
-              Council District {councilDistrict}
+              {t('neighborhood.council_district')} {councilDistrict}
             </span>
           )}
           {districtOfficials.length > 0 && (

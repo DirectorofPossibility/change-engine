@@ -12,6 +12,7 @@
 // ── Imports ──
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { SupportedLanguage, TranslationMap } from '@/lib/types/exchange'
 import { LANGUAGES } from '@/lib/constants'
@@ -54,6 +55,7 @@ export function LanguageProvider({
   let validLang: SupportedLanguage = 'en'
   if (initialLang === 'es' || initialLang === 'vi') validLang = initialLang
 
+  const router = useRouter()
   const [language, setLangState] = useState<SupportedLanguage>(validLang)
   const [translations, setTranslations] = useState<TranslationMap>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -64,7 +66,8 @@ export function LanguageProvider({
     if (lang === 'en') {
       setTranslations({})
     }
-  }, [])
+    router.refresh()
+  }, [router])
 
   const loadTranslations = useCallback(async function (inboxIds: string[]) {
     if (language === 'en' || inboxIds.length === 0) {

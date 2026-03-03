@@ -20,6 +20,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Users, DollarSign, MapPin } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
 import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood } from '@/lib/data/exchange'
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
@@ -84,7 +85,21 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
       })),
   ]
 
-  const zips = sn.zip_codes ? sn.zip_codes.split(',').map(s => s.trim()).filter(Boolean) : []
+  // Get ZIP codes via junction table for child neighborhoods
+  const supabase = await createClient()
+  const { data: childHoods } = await supabase
+    .from('neighborhoods')
+    .select('neighborhood_id')
+    .eq('super_neighborhood_id', sn.sn_id)
+  const hoodIds = (childHoods ?? []).map(h => h.neighborhood_id)
+  let zips: string[] = []
+  if (hoodIds.length > 0) {
+    const { data: zipJunctions } = await supabase
+      .from('neighborhood_zip_codes')
+      .select('zip_code')
+      .in('neighborhood_id', hoodIds)
+    zips = Array.from(new Set((zipJunctions ?? []).map(j => j.zip_code)))
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
