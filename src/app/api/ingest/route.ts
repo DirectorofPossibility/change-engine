@@ -436,48 +436,11 @@ Return JSON:
     inbox_id: inboxId,
     ai_classification: enrichedClassification,
     confidence,
-    review_status: autoPublish && confidence >= 0.5 ? 'auto_approved' : (confidence >= 0.5 ? 'needs_review' : 'flagged'),
+    review_status: 'pending',
   })
 
-  // Step 7: Publish if auto_publish and confidence >= 0.5
+  // All items go to pending — no auto-publish
   let publishedId: string | null = null
-  if (autoPublish && confidence >= 0.5) {
-    const pubId = crypto.randomUUID()
-    await supaRest('POST', 'content_published', {
-      id: pubId,
-      inbox_id: inboxId,
-      title_6th_grade: classification.title_6th_grade || meta.title,
-      summary_6th_grade: classification.summary_6th_grade || meta.description,
-      source_url: url,
-      source_domain: meta.domain,
-      image_url: meta.image || null,
-      pathway_primary: classification.theme_primary,
-      pathway_secondary: classification.theme_secondary || [],
-      focus_area_ids: validFocusAreaIds,
-      center: classification.center,
-      sdg_ids: allSdgIds,
-      sdoh_domain: sdohCode,
-      audience_segments: classification.audience_segment_ids || [],
-      life_situations: classification.life_situation_ids || [],
-      resource_type: classification.resource_type_id,
-      geographic_scope: classification.geographic_scope || 'Houston',
-      confidence,
-      classification_reasoning: classification.reasoning || '',
-      action_donate: actions.donate_url || null,
-      action_volunteer: actions.volunteer_url || null,
-      action_signup: actions.signup_url || null,
-      action_register: actions.register_url || null,
-      action_apply: actions.apply_url || null,
-      action_call: actions.phone || null,
-      action_attend: actions.attend_url || null,
-      is_active: true,
-      published_at: new Date().toISOString(),
-    })
-    publishedId = pubId
-
-    // Mark inbox as published
-    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: 'published' })
-  }
 
   // Step 8: Translate to Spanish + Vietnamese
   const translations: Record<string, any> = {}
@@ -733,46 +696,11 @@ Return JSON:
     inbox_id: inboxId,
     ai_classification: enrichedClassification,
     confidence,
-    review_status: autoPublish && confidence >= 0.5 ? 'auto_approved' : (confidence >= 0.5 ? 'needs_review' : 'flagged'),
+    review_status: 'pending',
   })
 
-  // Publish
+  // All items go to pending — no auto-publish
   let publishedId: string | null = null
-  if (autoPublish && confidence >= 0.5) {
-    const pubId = crypto.randomUUID()
-    await supaRest('POST', 'content_published', {
-      id: pubId,
-      inbox_id: inboxId,
-      title_6th_grade: classification.title_6th_grade || item.title,
-      summary_6th_grade: classification.summary_6th_grade || item.description,
-      source_url: item.url,
-      source_domain: item.domain || new URL(item.url).hostname,
-      image_url: item.image_url || null,
-      pathway_primary: classification.theme_primary,
-      pathway_secondary: classification.theme_secondary || [],
-      focus_area_ids: validFocusAreaIds,
-      center: classification.center,
-      sdg_ids: allSdgIds,
-      sdoh_domain: sdohCode,
-      audience_segments: classification.audience_segment_ids || [],
-      life_situations: classification.life_situation_ids || [],
-      resource_type: classification.resource_type_id,
-      geographic_scope: classification.geographic_scope || 'Houston',
-      confidence,
-      classification_reasoning: classification.reasoning || '',
-      action_donate: actions.donate_url || null,
-      action_volunteer: actions.volunteer_url || null,
-      action_signup: actions.signup_url || null,
-      action_register: actions.register_url || null,
-      action_apply: actions.apply_url || null,
-      action_call: actions.phone || null,
-      action_attend: actions.attend_url || null,
-      is_active: true,
-      published_at: new Date().toISOString(),
-    })
-    publishedId = pubId
-    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: 'published' })
-  }
 
   // Translate
   const translations: Record<string, any> = {}

@@ -269,15 +269,10 @@ ${taxonomyPrompt}`;
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
 
     if (inboxId) {
-      let reviewStatus = 'flagged';
-      if (enriched.confidence >= 0.5) {
-        reviewStatus = 'needs_review';
-      }
-
       await fetch(`${SUPABASE_URL}/rest/v1/content_review_queue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-        body: JSON.stringify({ inbox_id: inboxId, ai_classification: enriched, confidence: enriched.confidence || 0, review_status: reviewStatus }),
+        body: JSON.stringify({ inbox_id: inboxId, ai_classification: enriched, confidence: enriched.confidence || 0, review_status: 'pending' }),
       });
     }
 

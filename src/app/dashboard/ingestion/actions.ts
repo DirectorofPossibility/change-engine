@@ -6,6 +6,27 @@ import { revalidatePath } from 'next/cache'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
+// Helper for rss_feeds table operations using service role (bypasses RLS)
+async function feedsRest(method: string, path: string, body?: unknown) {
+  const headers: Record<string, string> = {
+    apikey: SERVICE_ROLE_KEY,
+    Authorization: `Bearer ${SERVICE_ROLE_KEY}`,
+    'Content-Type': 'application/json',
+  }
+  if (method === 'POST') headers['Prefer'] = 'return=representation'
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`${method} ${path}: ${res.status} ${text}`)
+  }
+  const text = await res.text()
+  return text ? JSON.parse(text) : null
+}
+
 export async function pollRssFeedsAction() {
   if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
     return { error: 'Server configuration missing (SUPABASE_URL or SERVICE_ROLE_KEY)' }
@@ -32,13 +53,16 @@ export async function addFeed(data: {
   source_domain: string
   poll_interval_hours: number
 }) {
-  const supabase = await createClient()
-  const { error } = await (supabase.from('rss_feeds' as any) as any).insert({
-    ...data,
-    is_active: true,
-  })
-  revalidatePath('/dashboard/ingestion')
-  return error ? { error: error.message } : { success: true }
+  try {
+    await feedsRest('POST', 'rss_feeds', {
+      ...data,
+      is_active: true,
+    })
+    revalidatePath('/dashboard/ingestion')
+    return { success: true }
+  } catch (e) {
+    return { error: (e as Error).message }
+  }
 }
 
 export async function updateFeed(id: string, data: {
@@ -48,21 +72,23 @@ export async function updateFeed(id: string, data: {
   is_active?: boolean
   poll_interval_hours?: number
 }) {
-  const supabase = await createClient()
-  const { error } = await (supabase.from('rss_feeds' as any) as any)
-    .update(data)
-    .eq('id', id)
-  revalidatePath('/dashboard/ingestion')
-  return error ? { error: error.message } : { success: true }
+  try {
+    await feedsRest('PATCH', `rss_feeds?id=eq.${id}`, data)
+    revalidatePath('/dashboard/ingestion')
+    return { success: true }
+  } catch (e) {
+    return { error: (e as Error).message }
+  }
 }
 
 export async function deleteFeed(id: string) {
-  const supabase = await createClient()
-  const { error } = await (supabase.from('rss_feeds' as any) as any)
-    .delete()
-    .eq('id', id)
-  revalidatePath('/dashboard/ingestion')
-  return error ? { error: error.message } : { success: true }
+  try {
+    await feedsRest('DELETE', `rss_feeds?id=eq.${id}`)
+    revalidatePath('/dashboard/ingestion')
+    return { success: true }
+  } catch (e) {
+    return { error: (e as Error).message }
+  }
 }
 
 export async function addTrustDomain(data: {

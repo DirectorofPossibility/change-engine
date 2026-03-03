@@ -72,6 +72,7 @@ export function IngestionClient({
   async function handleSaveFeed(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setSaving(true)
+    setPollError('')
     const form = new FormData(e.currentTarget)
     const data = {
       feed_name: form.get('feed_name') as string,
@@ -79,14 +80,19 @@ export function IngestionClient({
       source_domain: form.get('source_domain') as string,
       poll_interval_hours: parseInt(form.get('poll_interval_hours') as string) || 1,
     }
+    let result
     if (feedModal === 'add') {
-      await addFeed(data)
+      result = await addFeed(data)
     } else if (feedModal && typeof feedModal === 'object') {
-      await updateFeed(feedModal.id, data)
+      result = await updateFeed(feedModal.id, data)
     }
     setSaving(false)
-    setFeedModal(null)
-    window.location.reload()
+    if (result?.error) {
+      setPollError(result.error)
+    } else {
+      setFeedModal(null)
+      window.location.reload()
+    }
   }
 
   async function handleSaveTrust(e: React.FormEvent<HTMLFormElement>) {

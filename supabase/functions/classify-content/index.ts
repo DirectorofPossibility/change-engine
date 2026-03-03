@@ -170,7 +170,7 @@ Deno.serve(async (req: Request) => {
           inbox_id: inboxId,
           ai_classification: classification,
           confidence: classification.confidence || 0,
-          review_status: classification.confidence >= 0.8 ? 'auto_approved' : 'pending',
+          review_status: 'pending',
         }),
       });
     }
