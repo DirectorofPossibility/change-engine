@@ -3,8 +3,10 @@ import { notFound } from 'next/navigation'
 import { THEMES } from '@/lib/constants'
 import {
   getFocusAreasByIds, getContentByFocusArea, getRelatedOpportunities, getRelatedPolicies,
+  getFoundationsByFocusArea,
   getSDGMap, getSDOHMap, getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
+import Link from 'next/link'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { SDGBadge } from '@/components/ui/SDGBadge'
 import { SDOHBadge } from '@/components/ui/SDOHBadge'
@@ -32,10 +34,11 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
   if (areas.length === 0) notFound()
   const fa = areas[0]
 
-  const [content, opportunities, policies, sdgMap, sdohMap] = await Promise.all([
+  const [content, opportunities, policies, foundations, sdgMap, sdohMap] = await Promise.all([
     getContentByFocusArea(id),
     getRelatedOpportunities([id]),
     getRelatedPolicies([id]),
+    getFoundationsByFocusArea(fa.focus_area_name),
     fa.sdg_id ? getSDGMap() : Promise.resolve({} as Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }>),
     fa.sdoh_code ? getSDOHMap() : Promise.resolve({} as Record<string, { sdoh_name: string; sdoh_description: string | null }>),
   ])
@@ -202,6 +205,26 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
                       translatedName={pt?.title}
                       translatedSummary={pt?.summary}
                     />
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Foundations */}
+          {foundations.length > 0 && (
+            <div>
+              <h3 className="font-semibold text-brand-text mb-3">Foundations</h3>
+              <div className="space-y-2">
+                {foundations.map(function (f: any) {
+                  return (
+                    <Link key={f.id} href="/foundations" className="block bg-white rounded-lg border border-brand-border p-3 hover:shadow-sm transition-all">
+                      <div className="font-medium text-brand-text text-sm">{f.name}</div>
+                      <div className="flex items-center gap-2 mt-1">
+                        {f.assets && <span className="text-xs font-semibold text-brand-accent">{f.assets}</span>}
+                        {f.annual_giving && <span className="text-xs text-brand-muted">{f.annual_giving}/yr</span>}
+                      </div>
+                    </Link>
                   )
                 })}
               </div>

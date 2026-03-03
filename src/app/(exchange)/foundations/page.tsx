@@ -1,11 +1,11 @@
 import { Metadata } from 'next'
-import FoundationsKnowledgeGraph from './FoundationsKnowledgeGraph'
+import FoundationsGalaxy from './FoundationsGalaxy'
 
 export const metadata: Metadata = {
-  title: 'Foundations | The Change Engine',
-  description: 'Explore the foundations knowledge graph — search by name, city, focus area, ZIP code, pathway, and geographic level.',
+  title: 'Foundations Galaxy | The Change Engine',
+  description: 'Explore Houston-area foundations through an interactive galaxy visualization — discover funding, focus areas, and connections across seven community pathways.',
 }
 
 export default function FoundationsPage() {
-  return <FoundationsKnowledgeGraph />
+  return <FoundationsGalaxy />
 }

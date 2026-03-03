@@ -497,6 +497,37 @@ export async function getRelatedOfficials(focusAreaIds: string[]) {
   return data ?? []
 }
 
+/** Fetch foundations linked to a pathway (theme) via foundation_pathways junction. */
+export async function getFoundationsByPathway(pathwayId: string) {
+  const themeToPathway: Record<string, string> = {
+    THEME_01: 'health', THEME_02: 'families', THEME_03: 'neighborhood',
+    THEME_04: 'voice', THEME_05: 'money', THEME_06: 'planet', THEME_07: 'bigger_we',
+  }
+  const pwId = themeToPathway[pathwayId] || pathwayId
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const hd = { apikey: key, Authorization: `Bearer ${key}` }
+  const jRes = await fetch(`${url}/rest/v1/foundation_pathways?pathway_id=eq.${encodeURIComponent(pwId)}&select=foundation_id`, { headers: hd })
+  const junctions: any[] = jRes.ok ? await jRes.json() : []
+  const ids = Array.from(new Set(junctions.map(j => j.foundation_id)))
+  if (ids.length === 0) return []
+  const fRes = await fetch(`${url}/rest/v1/foundations?id=in.(${ids.join(',')})&select=id,name,mission,assets,annual_giving,website_url,website_display,geo_level,org_id&order=name`, { headers: hd })
+  return fRes.ok ? fRes.json() : []
+}
+
+/** Fetch foundations linked to a focus area name via foundation_focus_areas junction. */
+export async function getFoundationsByFocusArea(focusAreaName: string) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const hd = { apikey: key, Authorization: `Bearer ${key}` }
+  const jRes = await fetch(`${url}/rest/v1/foundation_focus_areas?focus_area=eq.${encodeURIComponent(focusAreaName)}&select=foundation_id`, { headers: hd })
+  const junctions: any[] = jRes.ok ? await jRes.json() : []
+  const ids = Array.from(new Set(junctions.map(j => j.foundation_id)))
+  if (ids.length === 0) return []
+  const fRes = await fetch(`${url}/rest/v1/foundations?id=in.(${ids.join(',')})&select=id,name,mission,assets,annual_giving,website_url,website_display,geo_level,org_id&order=name`, { headers: hd })
+  return fRes.ok ? fRes.json() : []
+}
+
 /**
  * Fetch translations for any table type.
  * Returns a map keyed by content_id with translated title/summary.

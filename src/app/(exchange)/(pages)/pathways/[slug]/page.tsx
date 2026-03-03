@@ -5,7 +5,7 @@ import { THEMES, CENTERS } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway, getLifeSituations, getLearningPaths,
   getRelatedOpportunities, getRelatedPolicies, getRelatedServices, getRelatedOfficials,
-  getFocusAreas,
+  getFocusAreas, getFoundationsByPathway,
   getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { PathwayFilterClient } from './PathwayFilterClient'
@@ -91,11 +91,12 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const themeFocusAreaIds = themeFocusAreas.map(function (fa) { return fa.focus_id })
 
   // Phase 2: fetch all related entities via focus area junctions
-  const [opportunities, policies, relatedServices, relatedOfficials] = await Promise.all([
+  const [opportunities, policies, relatedServices, relatedOfficials, foundations] = await Promise.all([
     getRelatedOpportunities(themeFocusAreaIds),
     getRelatedPolicies(themeFocusAreaIds),
     getRelatedServices(themeFocusAreaIds),
     getRelatedOfficials(themeFocusAreaIds),
+    getFoundationsByPathway(theme.id),
   ])
 
   const relatedSituations = situations.filter(function (s) { return s.theme_id === theme.id })
@@ -217,6 +218,40 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               initialContent={content}
               translations={contentTranslations}
             />
+          </section>
+        )}
+
+        {/* ── Foundations ── */}
+        {foundations.length > 0 && (
+          <section className="py-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: theme.color + '14' }}>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={theme.color}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-xl font-serif font-bold text-brand-text">Foundations</h2>
+                <span className="text-sm text-brand-muted">{foundations.length} {foundations.length === 1 ? 'foundation' : 'foundations'} supporting this pathway</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {foundations.map(function (f: any) {
+                return (
+                  <Link key={f.id} href={'/foundations'} className="group bg-white rounded-xl border border-brand-border p-5 hover:shadow-md hover:border-transparent transition-all duration-200 overflow-hidden relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 transition-all duration-200 group-hover:w-1.5" style={{ backgroundColor: theme.color }} />
+                    <div className="pl-2">
+                      <h3 className="font-semibold text-brand-text text-sm leading-snug mb-1">{f.name}</h3>
+                      <div className="flex items-center gap-3 mb-2">
+                        {f.assets && <span className="text-xs font-bold" style={{ color: theme.color }}>{f.assets}</span>}
+                        {f.annual_giving && <span className="text-xs text-brand-muted">{f.annual_giving}/yr</span>}
+                      </div>
+                      {f.mission && <p className="text-xs text-brand-muted line-clamp-2 leading-relaxed">{f.mission}</p>}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           </section>
         )}
 
