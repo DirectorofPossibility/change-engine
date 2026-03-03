@@ -9,8 +9,9 @@
  *      taxonomy prompt; receive theme, focus-area, SDG, NTEE, AIRS, SDOH,
  *      audience, and action-item classifications.
  *   3. **Review** -- create `content_inbox` and `content_review_queue` rows;
- *      confidence thresholds determine whether content is auto-classified,
- *      flagged, or queued for human review.
+ *      all content goes to `needs_review` by default. Sources with
+ *      `auto_publish` enabled in `source_trust` bypass review and publish
+ *      immediately.
  *   4. **Translate** -- translate the 6th-grade title and summary to Spanish
  *      (LANG-ES) and Vietnamese (LANG-VI) via Claude.
  *   5. **Extract orgs** -- pull organization names/URLs from the Claude
@@ -580,10 +581,23 @@ Return JSON:
   const allNteeCodes = Array.from(new Set([...Array.from(inheritedNtee), ...(classification.ntee_codes || [])]))
   const allAirsCodes = Array.from(new Set([...Array.from(inheritedAirs), ...(classification.airs_codes || [])]))
   const sdohCode = classification.sdoh_code || inheritedSdoh
-  const actions = classification.action_items || {}
   const confidence = classification.confidence ?? 0.85
 
-  const status = confidence >= 0.8 ? 'classified' : confidence >= 0.5 ? 'needs_review' : 'flagged'
+  // All content defaults to needs_review — source_trust auto_publish can override
+  let status = 'needs_review'
+  let reviewStatus = 'pending'
+
+  // Check if source domain has auto_publish enabled
+  const sourceDomain = meta.domain
+  if (sourceDomain) {
+    try {
+      const trustRows = await supaRest('GET', `source_trust?domain=eq.${encodeURIComponent(sourceDomain)}&select=auto_publish&limit=1`)
+      if (trustRows?.[0]?.auto_publish === true) {
+        status = 'classified'
+        reviewStatus = 'auto_approved'
+      }
+    } catch { /* trust lookup failed, continue with needs_review */ }
+  }
 
   // Step 6: Update inbox + create review queue entry
   await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status })
@@ -608,8 +622,45 @@ Return JSON:
     inbox_id: inboxId,
     ai_classification: enrichedClassification,
     confidence,
-    review_status: 'pending',
+    review_status: reviewStatus,
   })
+
+  // If auto-approved, publish immediately (reuse approveItem pattern)
+  if (reviewStatus === 'auto_approved') {
+    try {
+      const actions = classification.action_items || {}
+      await supaRest('POST', 'content_published', {
+        inbox_id: inboxId,
+        source_url: url,
+        source_domain: meta.domain,
+        resource_type: classification.resource_type_id || null,
+        pathway_primary: classification.theme_primary,
+        pathway_secondary: classification.theme_secondary || [],
+        focus_area_ids: validFocusAreaIds,
+        center: classification.center || 'Learning',
+        engagement_level: classification.center || 'Learning',
+        sdg_ids: allSdgIds,
+        sdoh_domain: sdohCode || null,
+        audience_segments: classification.audience_segment_ids || [],
+        life_situations: classification.life_situation_ids || [],
+        geographic_scope: classification.geographic_scope || 'Houston',
+        title_6th_grade: classification.title_6th_grade || meta.title || 'Untitled',
+        summary_6th_grade: classification.summary_6th_grade || meta.description || '',
+        action_donate: actions.donate_url || null,
+        action_volunteer: actions.volunteer_url || null,
+        action_signup: actions.signup_url || null,
+        action_register: actions.register_url || null,
+        action_apply: actions.apply_url || null,
+        action_call: actions.phone || null,
+        action_attend: actions.attend_url || null,
+        confidence,
+        classification_reasoning: classification.reasoning || '',
+        image_url: meta.image || null,
+        is_featured: false,
+        is_active: true,
+      })
+    } catch { /* auto-publish failed, content stays in review queue */ }
+  }
 
   // Step 8: Translate to Spanish + Vietnamese
   const translations: Record<string, any> = {}
@@ -861,11 +912,24 @@ Return JSON:
   const allNteeCodes = Array.from(new Set([...Array.from(inheritedNtee), ...(classification.ntee_codes || [])]))
   const allAirsCodes = Array.from(new Set([...Array.from(inheritedAirs), ...(classification.airs_codes || [])]))
   const sdohCode = classification.sdoh_code || inheritedSdoh
-  const actions = classification.action_items || {}
   const confidence = classification.confidence ?? 0.85
-  const status = confidence >= 0.8 ? 'classified' : confidence >= 0.5 ? 'needs_review' : 'flagged'
 
-  await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status })
+  // All content defaults to needs_review — source_trust auto_publish can override
+  let preScrapedStatus = 'needs_review'
+  let preScrapedReviewStatus = 'pending'
+
+  const itemDomain = item.domain || new URL(item.url).hostname
+  if (itemDomain) {
+    try {
+      const trustRows = await supaRest('GET', `source_trust?domain=eq.${encodeURIComponent(itemDomain)}&select=auto_publish&limit=1`)
+      if (trustRows?.[0]?.auto_publish === true) {
+        preScrapedStatus = 'classified'
+        preScrapedReviewStatus = 'auto_approved'
+      }
+    } catch { /* trust lookup failed, continue with needs_review */ }
+  }
+
+  await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: preScrapedStatus })
 
   const enrichedClassification = {
     ...classification,
@@ -886,8 +950,45 @@ Return JSON:
     inbox_id: inboxId,
     ai_classification: enrichedClassification,
     confidence,
-    review_status: 'pending',
+    review_status: preScrapedReviewStatus,
   })
+
+  // If auto-approved, publish immediately
+  if (preScrapedReviewStatus === 'auto_approved') {
+    try {
+      const actions = classification.action_items || {}
+      await supaRest('POST', 'content_published', {
+        inbox_id: inboxId,
+        source_url: item.url,
+        source_domain: itemDomain,
+        resource_type: classification.resource_type_id || null,
+        pathway_primary: classification.theme_primary,
+        pathway_secondary: classification.theme_secondary || [],
+        focus_area_ids: validFocusAreaIds,
+        center: classification.center || 'Learning',
+        engagement_level: classification.center || 'Learning',
+        sdg_ids: allSdgIds,
+        sdoh_domain: sdohCode || null,
+        audience_segments: classification.audience_segment_ids || [],
+        life_situations: classification.life_situation_ids || [],
+        geographic_scope: classification.geographic_scope || 'Houston',
+        title_6th_grade: classification.title_6th_grade || item.title || 'Untitled',
+        summary_6th_grade: classification.summary_6th_grade || item.description || '',
+        action_donate: actions.donate_url || null,
+        action_volunteer: actions.volunteer_url || null,
+        action_signup: actions.signup_url || null,
+        action_register: actions.register_url || null,
+        action_apply: actions.apply_url || null,
+        action_call: actions.phone || null,
+        action_attend: actions.attend_url || null,
+        confidence,
+        classification_reasoning: classification.reasoning || '',
+        image_url: item.image_url || null,
+        is_featured: false,
+        is_active: true,
+      })
+    } catch { /* auto-publish failed, content stays in review queue */ }
+  }
 
   // Translate
   const translations: Record<string, any> = {}
@@ -950,7 +1051,7 @@ Return JSON:
   return {
     success: true,
     inbox_id: inboxId,
-    stage: status,
+    stage: preScrapedStatus,
     title: classification.title_6th_grade,
     confidence,
     focus_areas: validFocusAreaIds,

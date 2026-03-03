@@ -55,6 +55,43 @@ export async function getReviewStatusBreakdown(): Promise<ReviewStatusBreakdown 
   }
 }
 
+/** Per-stage counts for the pipeline flow visualization. */
+export async function getPipelineFlowStats() {
+  const supabase = await createClient()
+  const [
+    inboxPending, inboxClassified, inboxFlagged, inboxNeedsReview,
+    reviewPending, reviewAutoApproved, reviewApproved, reviewFlagged, reviewRejected,
+    published,
+  ] = await Promise.all([
+    supabase.from('content_inbox').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+    supabase.from('content_inbox').select('id', { count: 'exact', head: true }).eq('status', 'classified'),
+    supabase.from('content_inbox').select('id', { count: 'exact', head: true }).eq('status', 'flagged'),
+    supabase.from('content_inbox').select('id', { count: 'exact', head: true }).eq('status', 'needs_review'),
+    supabase.from('content_review_queue').select('id', { count: 'exact', head: true }).eq('review_status', 'pending'),
+    supabase.from('content_review_queue').select('id', { count: 'exact', head: true }).eq('review_status', 'auto_approved'),
+    supabase.from('content_review_queue').select('id', { count: 'exact', head: true }).eq('review_status', 'approved'),
+    supabase.from('content_review_queue').select('id', { count: 'exact', head: true }).eq('review_status', 'flagged'),
+    supabase.from('content_review_queue').select('id', { count: 'exact', head: true }).eq('review_status', 'rejected'),
+    supabase.from('content_published').select('id', { count: 'exact', head: true }),
+  ])
+  return {
+    inbox: {
+      pending: inboxPending.count ?? 0,
+      classified: inboxClassified.count ?? 0,
+      flagged: inboxFlagged.count ?? 0,
+      needs_review: inboxNeedsReview.count ?? 0,
+    },
+    review: {
+      pending: reviewPending.count ?? 0,
+      auto_approved: reviewAutoApproved.count ?? 0,
+      approved: reviewApproved.count ?? 0,
+      flagged: reviewFlagged.count ?? 0,
+      rejected: reviewRejected.count ?? 0,
+    },
+    published: published.count ?? 0,
+  }
+}
+
 // ── Content distribution ───────────────────────────────────────────────
 
 /** Content count by pathway (THEME_01..THEME_07) for the dashboard bar chart. */

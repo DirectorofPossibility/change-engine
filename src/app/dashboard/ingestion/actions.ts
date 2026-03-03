@@ -191,6 +191,7 @@ export async function addTrustDomain(data: {
   domain: string
   trust_level: string
   notes?: string
+  auto_publish?: boolean
 }) {
   await requireAuth()
   const supabase = await createClient()
@@ -198,6 +199,7 @@ export async function addTrustDomain(data: {
     domain: data.domain,
     trust_level: data.trust_level,
     notes: data.notes || null,
+    auto_publish: data.auto_publish ?? false,
   })
   revalidatePath('/dashboard/ingestion')
   return error ? { error: error.message } : { success: true }
@@ -206,6 +208,7 @@ export async function addTrustDomain(data: {
 export async function updateTrust(id: string, data: {
   trust_level?: string
   notes?: string
+  auto_publish?: boolean
 }) {
   await requireAuth()
   const supabase = await createClient()

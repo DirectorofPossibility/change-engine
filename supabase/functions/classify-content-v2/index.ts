@@ -263,7 +263,7 @@ ${taxonomyPrompt}`;
     const inboxRes = await fetch(`${SUPABASE_URL}/rest/v1/content_inbox`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, Prefer: 'return=representation' },
-      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, status: enriched.confidence >= 0.8 ? 'classified' : enriched.confidence >= 0.5 ? 'needs_review' : 'flagged', source_trust_level: 'unknown' }),
+      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, status: 'needs_review', source_trust_level: 'unknown' }),
     });
     const inboxData = await inboxRes.json();
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
