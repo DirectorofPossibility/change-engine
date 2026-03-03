@@ -1,87 +1,28 @@
-/**
- * @fileoverview Persistent left sidebar for the Community Exchange wayfinder.
- *
- * Renders a fixed-width (280 px) sidebar that stays pinned to the left edge of
- * the viewport. It contains the full wayfinder navigation surface:
- *
- *   - Brand lockup (logo / subtitle)
- *   - ZIP-code personalization input
- *   - Site search
- *   - Home shortcut + live indicator
- *   - 4 Centers filter buttons
- *   - 7 Pathways navigation buttons (with resource counts)
- *   - Collapsible topics pill cloud
- *   - Language switcher, auth, and footer links
- *
- * All user-facing strings are resolved through {@link useTranslation} so the
- * sidebar renders correctly in English, Spanish, and Vietnamese.
- *
- * On mobile (< md), the sidebar is hidden by default and toggled via a
- * hamburger button that renders a slide-in overlay with backdrop.
- *
- * @example
- * ```tsx
- * <WayfinderSidebar
- *   selectedPathway={activePathway}
- *   onSelectPathway={setActivePathway}
- *   activeCenter={activeCenter}
- *   onSelectCenter={setActiveCenter}
- *   totalItems={1247}
- *   newThisWeek={23}
- *   pathwayCounts={{ THEME_01: 184, THEME_02: 201, ... }}
- *   topics={['Housing', 'Transit', 'Food Access']}
- * />
- * ```
- */
-
 'use client'
-
-// -- Imports --
 
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Search, Home, ChevronDown, ChevronRight, Menu, X, Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe, HelpCircle, Compass, BookOpen } from 'lucide-react'
-import { THEMES, CENTERS, BRAND } from '@/lib/constants'
+import {
+  Search, Home, ChevronDown, ChevronRight, Menu, X,
+  Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
+  BookOpen, Calendar, Wrench, FlaskConical, Activity,
+  HelpCircle,
+} from 'lucide-react'
+import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { AuthButton } from './AuthButton'
 
-// -- Types --
-
-/**
- * Props accepted by {@link WayfinderSidebar}.
- *
- * The parent page is responsible for managing selection state and fetching
- * server-side counts; the sidebar is a pure presentation + input surface.
- */
 interface WayfinderSidebarProps {
-  /** Currently selected pathway ID (e.g. `'THEME_01'`), or `null` for home. */
   selectedPathway: string | null
-  /** Callback fired when the user selects a pathway (or `null` to go home). */
   onSelectPathway: (id: string | null) => void
-  /** Currently active center filter key (e.g. `'Learning'`), or `null`. */
-  activeCenter: string | null
-  /** Callback fired when the user selects a center (or `null` to clear). */
-  onSelectCenter: (center: string | null) => void
-  /** Total published resource / content items across the platform. */
   totalItems: number
-  /** Number of items added in the current week (displayed next to live dot). */
   newThisWeek: number
-  /** Map of pathway IDs to their published item counts. */
   pathwayCounts: Record<string, number>
-  /** Focus-area topic labels rendered as small pills. */
   topics: string[]
-}
-
-// -- Constants --
-
-const CENTER_COLORS: Record<string, string> = {
-  Learning: '#3182ce',
-  Action: '#38a169',
-  Resource: '#d69e2e',
-  Accountability: '#805ad5',
+  onSelectTopic?: (topic: string) => void
 }
 
 const PATHWAY_ICONS: Record<string, typeof Heart> = {
@@ -94,48 +35,33 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
   THEME_07: Globe,
 }
 
-// -- Component --
+const DISCOVER_LINKS = [
+  { label: 'Events', icon: Calendar, href: '/search?q=events' },
+  { label: 'Books & Guides', icon: BookOpen, href: '/guides' },
+  { label: 'DIY Kits', icon: Wrench, href: '/search?q=diy+kits' },
+  { label: 'Research', icon: FlaskConical, href: '/search?q=research' },
+  { label: 'Activity Types', icon: Activity, href: '/explore' },
+]
 
-/**
- * Persistent left-hand wayfinder sidebar for the Community Exchange.
- *
- * Renders a vertically-scrollable, fixed-width column with every navigation
- * control the user needs: ZIP personalization, search, pathway/center
- * filtering, topic browsing, language toggle, and auth.
- *
- * On screens narrower than `md` (768 px), the sidebar is hidden behind a
- * hamburger toggle and slides in as a full-height overlay with a translucent
- * backdrop.
- *
- * @param props - See {@link WayfinderSidebarProps}.
- * @returns The sidebar `aside` element plus a mobile hamburger trigger.
- */
 export function WayfinderSidebar({
   selectedPathway,
   onSelectPathway,
-  activeCenter,
-  onSelectCenter,
   totalItems,
   newThisWeek,
   pathwayCounts,
   topics,
+  onSelectTopic,
 }: WayfinderSidebarProps) {
   const { t } = useTranslation()
   const router = useRouter()
   const { zip, neighborhood, lookupZip, clearZip, isLoading } = useNeighborhood()
 
-  // -- Local state --
-
   const [searchQuery, setSearchQuery] = useState('')
   const [zipInput, setZipInput] = useState('')
-  const [centersOpen, setCentersOpen] = useState(true)
   const [topicsOpen, setTopicsOpen] = useState(false)
-  /** Whether the mobile overlay sidebar is open. */
+  const [discoverOpen, setDiscoverOpen] = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  // -- Handlers --
-
-  /** Submit the search form and navigate to the search results page. */
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
     const trimmed = searchQuery.trim()
@@ -146,7 +72,6 @@ export function WayfinderSidebar({
     }
   }
 
-  /** Submit the ZIP input and trigger neighborhood lookup. */
   function handleZipSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (zipInput.length === 5) {
@@ -155,48 +80,40 @@ export function WayfinderSidebar({
     }
   }
 
-  /** Close the mobile sidebar when the user navigates. */
+  function handleTopicClick(topic: string) {
+    if (onSelectTopic) {
+      onSelectTopic(topic)
+    } else {
+      router.push('/search?q=' + encodeURIComponent(topic))
+    }
+    setMobileOpen(false)
+  }
+
   const closeMobile = useCallback(function () {
     setMobileOpen(false)
   }, [])
 
-  /** Lock body scroll when mobile overlay is open. */
   useEffect(function () {
     if (mobileOpen) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
     }
-    return function () {
-      document.body.style.overflow = ''
-    }
+    return function () { document.body.style.overflow = '' }
   }, [mobileOpen])
 
-  // -- Derived values --
-
   const themeEntries = Object.entries(THEMES) as [string, (typeof THEMES)[keyof typeof THEMES]][]
-  const centerEntries = Object.entries(CENTERS)
-  const isHome = selectedPathway === null && activeCenter === null
+  const isHome = selectedPathway === null
 
-  // -- Sidebar content (shared between desktop & mobile) --
-
-  /**
-   * Inner content rendered inside the `<aside>`. Extracted so it can be
-   * rendered identically in both the desktop sticky sidebar and the mobile
-   * slide-in overlay.
-   */
   const sidebarContent = (
     <>
-      {/* -- Brand lockup -- */}
-      <div className="px-5 pt-5 pb-3">
+      {/* Brand lockup */}
+      <div className="px-5 pt-5 pb-2">
         <Link href="/" className="block group" onClick={function () { onSelectPathway(null); closeMobile() }}>
           <span className="block font-serif text-xl font-bold leading-tight text-brand-text group-hover:text-brand-accent transition-colors">
             The Change Engine
           </span>
-          <span
-            className="block font-serif italic text-base leading-tight transition-colors mt-0.5"
-            style={{ color: BRAND.accent }}
-          >
+          <span className="block font-serif italic text-base leading-tight transition-colors mt-0.5" style={{ color: BRAND.accent }}>
             Community Exchange
           </span>
           <span className="block text-xs tracking-[0.12em] uppercase text-brand-muted mt-1">
@@ -205,7 +122,16 @@ export function WayfinderSidebar({
         </Link>
       </div>
 
-      {/* -- ZIP personalization -- */}
+      {/* Language + Auth — at top per user request */}
+      <div className="px-5 py-1.5 flex items-center justify-between">
+        <LanguageSwitcher />
+        <AuthButton />
+      </div>
+
+      {/* Thin divider */}
+      <div className="h-px bg-brand-border mx-5 my-1" />
+
+      {/* ZIP personalization */}
       <div className="px-5 py-2">
         {zip && neighborhood ? (
           <div className="text-sm leading-snug">
@@ -213,11 +139,8 @@ export function WayfinderSidebar({
               {neighborhood.neighborhood_name ?? 'Your'} Edition
             </span>
             <span className="text-brand-muted ml-1.5 text-xs">{zip}</span>
-            <button
-              onClick={clearZip}
-              className="text-brand-accent hover:underline ml-1.5 text-xs"
-            >
-              {t('zip.clear').toLowerCase() === t('zip.clear') ? 'change' : t('zip.clear')}
+            <button onClick={clearZip} className="text-brand-accent hover:underline ml-1.5 text-xs">
+              change
             </button>
           </div>
         ) : (
@@ -230,21 +153,18 @@ export function WayfinderSidebar({
               aria-label="ZIP code"
               maxLength={5}
               disabled={isLoading}
-              className="flex-1 text-sm px-3 py-2 border border-brand-border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+              className="flex-1 text-sm px-3 py-1.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
             />
-            <button
-              type="submit"
-              disabled={zipInput.length !== 5 || isLoading}
-              className="text-xs font-bold uppercase tracking-wider px-3 py-2 rounded-md bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity"
-            >
+            <button type="submit" disabled={zipInput.length !== 5 || isLoading}
+              className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
               Go
             </button>
           </form>
         )}
       </div>
 
-      {/* -- Search -- */}
-      <div className="px-5 py-1.5">
+      {/* Search */}
+      <div className="px-5 py-1">
         <form onSubmit={handleSearch} className="relative">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
           <input
@@ -252,96 +172,44 @@ export function WayfinderSidebar({
             value={searchQuery}
             onChange={function (e) { setSearchQuery(e.target.value) }}
             placeholder={t('nav.search_placeholder')}
-            aria-label="Search resources, officials..."
-            className="w-full pl-9 pr-3 py-2 text-sm border border-brand-border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            aria-label="Search"
+            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
         </form>
       </div>
 
-      {/* -- Home button -- */}
-      <div className="px-4 pt-3">
+      {/* Home button + live indicator */}
+      <div className="px-4 pt-2">
         <button
-          onClick={function () { onSelectPathway(null); onSelectCenter(null); closeMobile() }}
-          className={
-            'flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm transition-colors ' +
+          onClick={function () { onSelectPathway(null); closeMobile() }}
+          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
             (isHome
-              ? 'bg-[#3D5A5A]/[0.07] font-bold text-brand-text'
-              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04]')
-          }
+              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
         >
           <Home size={16} />
           Home
-        </button>
-      </div>
-
-      {/* -- Live indicator -- */}
-      <div className="px-6 py-2 flex items-center gap-2">
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-        </span>
-        <span className="text-xs font-bold tracking-wider text-green-700 uppercase">
-          Live
-        </span>
-        <span className="text-xs text-brand-muted">
-          {totalItems.toLocaleString()} items
-        </span>
-        {newThisWeek > 0 && (
-          <span className="text-xs text-brand-accent font-semibold">
-            +{newThisWeek}
+          <span className="ml-auto flex items-center gap-1.5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+            </span>
+            <span className="text-xs text-brand-muted tabular-nums">{totalItems.toLocaleString()}</span>
+            {newThisWeek > 0 && (
+              <span className="text-xs text-brand-accent font-semibold">+{newThisWeek}</span>
+            )}
           </span>
-        )}
-      </div>
-
-      {/* -- Divider -- */}
-      <div className="h-px bg-brand-border mx-5 my-2" />
-
-      {/* -- 4 Centers -- */}
-      <div className="px-5">
-        <button
-          onClick={function () { setCentersOpen(!centersOpen) }}
-          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.12em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors"
-        >
-          {centersOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-          {t('home.four_centers')}
         </button>
-        {centersOpen && (
-          <div className="space-y-0.5">
-            {centerEntries.map(function ([key, center]) {
-              const isActive = activeCenter === key
-              return (
-                <button
-                  key={key}
-                  onClick={function () { onSelectCenter(isActive ? null : key); closeMobile() }}
-                  className={
-                    'flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm transition-colors ' +
-                    (isActive
-                      ? 'bg-[#3D5A5A]/[0.07] font-bold text-brand-text'
-                      : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04]')
-                  }
-                  title={center.question}
-                >
-                  <span
-                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: CENTER_COLORS[key] ?? BRAND.muted }}
-                  />
-                  {key}
-                </button>
-              )
-            })}
-          </div>
-        )}
       </div>
 
-      {/* -- Divider -- */}
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* -- 7 Pathways -- */}
+      {/* 7 Pathways */}
       <div className="px-5">
-        <p className="text-xs font-bold tracking-[0.12em] uppercase text-brand-muted mb-2">
+        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
           Explore Houston
         </p>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           {themeEntries.map(function ([id, theme]) {
             const isActive = selectedPathway === id
             const count = pathwayCounts[id] ?? 0
@@ -350,23 +218,24 @@ export function WayfinderSidebar({
               <button
                 key={id}
                 onClick={function () { onSelectPathway(isActive ? null : id); closeMobile() }}
-                className={
-                  'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-150 ' +
+                className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
                   (isActive
                     ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
-                    : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-white/60')
-                }
+                    : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
               >
                 <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: isActive ? theme.color + '20' : theme.color + '10' }}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200"
+                  style={{
+                    backgroundColor: isActive ? theme.color + '20' : theme.color + '0C',
+                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                  }}
                 >
                   <Icon size={16} style={{ color: theme.color }} />
                 </div>
                 <span className="flex-1 text-left truncate">{theme.name}</span>
                 {count > 0 && (
                   <span
-                    className="text-xs font-bold tabular-nums px-2 py-0.5 rounded-full"
+                    className="text-xs font-semibold tabular-nums px-2 py-0.5 rounded-full"
                     style={isActive ? { backgroundColor: theme.color + '15', color: theme.color } : {}}
                   >
                     {count}
@@ -378,47 +247,66 @@ export function WayfinderSidebar({
         </div>
       </div>
 
-      {/* -- Quick Links -- */}
       <div className="h-px bg-brand-border mx-5 my-2" />
+
+      {/* Discover */}
       <div className="px-5">
-        <div className="space-y-0.5">
-          <Link href="/help" onClick={closeMobile} className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04] transition-colors">
-            <HelpCircle size={15} />
-            I Need Help Now
-          </Link>
-          <Link href="/explore" onClick={closeMobile} className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04] transition-colors">
-            <Compass size={15} />
-            Browse Topics
-          </Link>
-          <Link href="/services" onClick={closeMobile} className="flex items-center gap-2.5 w-full px-3 py-2 rounded-md text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-[#3D5A5A]/[0.04] transition-colors">
-            <BookOpen size={15} />
-            Services Directory
-          </Link>
-        </div>
+        <button
+          onClick={function () { setDiscoverOpen(!discoverOpen) }}
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+        >
+          {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+          Discover
+        </button>
+        {discoverOpen && (
+          <div className="space-y-0.5">
+            {DISCOVER_LINKS.map(function (item) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={closeMobile}
+                  className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+                >
+                  <item.icon size={15} style={{ color: BRAND.accent }} />
+                  {item.label}
+                </Link>
+              )
+            })}
+            <Link
+              href="/help"
+              onClick={closeMobile}
+              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-accent font-semibold hover:bg-brand-accent/[0.06] transition-colors"
+            >
+              <HelpCircle size={15} />
+              I Need Help Now
+            </Link>
+          </div>
+        )}
       </div>
 
-      {/* -- Divider -- */}
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* -- Topics -- */}
+      {/* Topics — wired up */}
       <div className="px-5">
         <button
           onClick={function () { setTopicsOpen(!topicsOpen) }}
-          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.12em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors"
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
         >
-          {topicsOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-          Topics
+          {topicsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+          Topics ({topics.length})
         </button>
         {topicsOpen && topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
             {topics.map(function (topic) {
               return (
-                <span
+                <button
                   key={topic}
-                  className="text-xs leading-none px-2 py-1 rounded-full bg-brand-border/60 text-brand-muted hover:text-brand-text hover:bg-brand-border cursor-default transition-colors"
+                  onClick={function () { handleTopicClick(topic) }}
+                  className="text-xs leading-none px-2.5 py-1.5 rounded-full bg-brand-border/40 text-brand-muted hover:text-brand-text hover:bg-brand-accent/10 hover:ring-1 hover:ring-brand-accent/20 cursor-pointer transition-all duration-150"
                 >
                   {topic}
-                </span>
+                </button>
               )
             })}
           </div>
@@ -428,42 +316,27 @@ export function WayfinderSidebar({
         )}
       </div>
 
-      {/* -- Spacer to push footer controls to bottom -- */}
+      {/* Spacer */}
       <div className="flex-1 min-h-4" />
 
-      {/* -- Divider -- */}
-      <div className="h-px bg-brand-border mx-5 my-2" />
-
-      {/* -- Language switcher -- */}
-      <div className="px-5 py-1.5 flex justify-center">
-        <LanguageSwitcher />
-      </div>
-
-      {/* -- Auth button -- */}
-      <div className="px-5 py-1.5 flex justify-center">
-        <AuthButton />
-      </div>
-
-      {/* -- Bottom padding -- */}
+      {/* Bottom padding */}
       <div className="pb-4" />
     </>
   )
 
-  // -- Render --
-
   return (
     <>
-      {/* ---- Mobile hamburger trigger (visible < md) ---- */}
+      {/* Mobile hamburger */}
       <button
         type="button"
         onClick={function () { setMobileOpen(true) }}
-        className="md:hidden fixed top-3 left-3 z-50 p-2 rounded-md bg-white shadow-md border border-brand-border text-brand-text hover:bg-gray-50 transition-colors"
+        className="md:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md border border-brand-border text-brand-text hover:bg-gray-50 transition-colors"
         aria-label="Open navigation"
       >
         <Menu size={22} />
       </button>
 
-      {/* ---- Mobile overlay backdrop (visible < md when open) ---- */}
+      {/* Mobile backdrop */}
       {mobileOpen && (
         <div
           className="md:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
@@ -472,29 +345,23 @@ export function WayfinderSidebar({
         />
       )}
 
-      {/* ---- Mobile slide-in sidebar (visible < md when open) ---- */}
+      {/* Mobile slide-in */}
       <aside
-        className={
-          'md:hidden fixed top-0 left-0 z-50 w-[280px] h-screen bg-white border-r border-brand-border flex flex-col overflow-y-auto scrollbar-thin transition-transform duration-300 ease-in-out ' +
-          (mobileOpen ? 'translate-x-0' : '-translate-x-full')
-        }
+        className={'md:hidden fixed top-0 left-0 z-50 w-[280px] h-screen bg-white border-r border-brand-border flex flex-col overflow-y-auto scrollbar-thin transition-transform duration-300 ease-in-out ' +
+          (mobileOpen ? 'translate-x-0' : '-translate-x-full')}
         aria-label="Wayfinder sidebar"
       >
-        {/* Close button for mobile overlay */}
         <div className="flex justify-end px-3 pt-3">
-          <button
-            type="button"
-            onClick={closeMobile}
+          <button type="button" onClick={closeMobile}
             className="p-1.5 rounded-md text-brand-muted hover:text-brand-text hover:bg-gray-100 transition-colors"
-            aria-label="Close navigation"
-          >
+            aria-label="Close navigation">
             <X size={20} />
           </button>
         </div>
         {sidebarContent}
       </aside>
 
-      {/* ---- Desktop sticky sidebar (visible >= md) ---- */}
+      {/* Desktop sticky sidebar */}
       <aside
         className="hidden md:flex w-[280px] min-w-[280px] h-screen sticky top-0 bg-white border-r border-brand-border flex-col overflow-y-auto scrollbar-thin"
         aria-label="Wayfinder sidebar"

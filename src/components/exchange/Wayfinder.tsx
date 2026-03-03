@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe, ArrowRight, Sparkles } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { WayfinderSidebar } from './WayfinderSidebar'
-import { WayfinderCircles } from './WayfinderCircles'
+import { EmbeddableCircles } from './CircleKnowledgeGraph'
 import { BraidedFeed } from './BraidedFeed'
 import { WayfinderPanel } from './WayfinderPanel'
 import type { FeedItem } from './FeedCard'
@@ -197,7 +197,8 @@ export function Wayfinder({
   }, [selectedPathway, feedsByPathway, topics])
 
   const handleSelectPathway = useCallback(function (id: string | null) {
-    setSelectedPathway(id)
+    // EmbeddableCircles passes '' for back/home
+    setSelectedPathway(id === '' ? null : id)
     setActiveCenter(null)
   }, [])
 
@@ -230,8 +231,6 @@ export function Wayfinder({
       <WayfinderSidebar
         selectedPathway={selectedPathway}
         onSelectPathway={handleSelectPathway}
-        activeCenter={activeCenter}
-        onSelectCenter={handleSelectCenter}
         totalItems={totalItems}
         newThisWeek={newThisWeek}
         pathwayCounts={pathwayCounts}
@@ -244,35 +243,37 @@ export function Wayfinder({
           {!selectedPathway && (
             <>
               {/* Hero */}
-              <div className="pt-6 pb-2 relative">
+              <div className="pt-8 pb-2 relative">
                 <div
-                  className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full pointer-events-none"
-                  style={{ background: 'radial-gradient(circle, rgba(198,93,40,0.06) 0%, rgba(61,90,90,0.03) 30%, transparent 60%)' }}
+                  className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
+                  style={{ background: 'radial-gradient(circle, rgba(198,93,40,0.05) 0%, rgba(61,90,90,0.02) 35%, transparent 65%)' }}
                   aria-hidden="true"
                 />
-                <div className="text-center mb-2 relative z-10">
-                  <p className="text-xs tracking-[0.2em] uppercase text-brand-muted font-semibold">The</p>
+                <div className="text-center mb-4 relative z-10">
+                  <p className="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-semibold">The</p>
                   <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight leading-none">
                     Community <span style={{ color: BRAND.accent }}>Exchange</span>
                   </h1>
-                  <p className="font-serif italic text-brand-muted text-lg mt-2">Community Life, Organized</p>
+                  <p className="font-serif italic text-brand-muted text-lg mt-2 max-w-md mx-auto leading-relaxed">
+                    Everything connects. Explore 7 pathways of civic life.
+                  </p>
                 </div>
 
-                <WayfinderCircles
-                  selectedPathway={selectedPathway}
-                  onSelectPathway={handleSelectPathway}
-                  pathwayCounts={pathwayCounts}
-                  bridges={bridges}
-                  compact={false}
-                  stats={stats}
-                />
-                <p className="text-center text-brand-muted/60 text-sm mt-1">
+                {/* CircleKnowledgeGraph — embedded */}
+                <div className="max-w-2xl mx-auto">
+                  <EmbeddableCircles
+                    onSelectPathway={handleSelectPathway}
+                    pathwayCounts={pathwayCounts}
+                    selectedPathway={selectedPathway}
+                  />
+                </div>
+                <p className="text-center text-brand-muted/50 text-xs mt-1 font-serif italic">
                   Tap any circle to explore a pathway
                 </p>
               </div>
 
               {/* Pathway spectrum bar */}
-              <div className="flex h-1.5 max-w-lg mx-auto rounded-full overflow-hidden shadow-sm mb-6 mt-2">
+              <div className="flex h-1 max-w-md mx-auto rounded-full overflow-hidden mb-8 mt-3">
                 {Object.values(THEMES).map(function (theme, i) {
                   return (
                     <div key={i} className="flex-1 transition-all duration-300 hover:flex-[3]" style={{ backgroundColor: theme.color }} title={theme.name} />
@@ -280,11 +281,11 @@ export function Wayfinder({
                 })}
               </div>
 
-              {/* Life Situations: Choose Your Adventure */}
+              {/* Life Situations */}
               <section className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <Sparkles size={20} style={{ color: BRAND.accent }} />
-                  <h2 className="font-serif text-2xl font-bold">I need help with...</h2>
+                  <Sparkles size={18} style={{ color: BRAND.accent }} />
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">I need help with...</h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                   {LIFE_SITUATIONS.map(function (sit) {
@@ -307,10 +308,10 @@ export function Wayfinder({
               </section>
 
               {/* Explore by Pathway */}
-              <section className="mb-8">
+              <section className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-0.5 rounded-full" style={{ background: `linear-gradient(90deg, ${BRAND.accent}, #5B8A8A)` }} />
-                  <h2 className="font-serif text-2xl font-bold">Explore Houston</h2>
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">Explore Houston</h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
                   {(Object.entries(THEMES) as [string, (typeof THEMES)[keyof typeof THEMES]][]).map(function ([id, theme]) {
@@ -334,7 +335,7 @@ export function Wayfinder({
               {/* Latest Content header */}
               <section>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-serif text-2xl font-bold">What&apos;s New</h2>
+                  <h2 className="font-serif text-2xl font-bold tracking-tight">What&apos;s New</h2>
                   {newThisWeek > 0 && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs font-semibold ring-1 ring-green-200">
                       <span className="relative flex h-2 w-2">
@@ -350,51 +351,52 @@ export function Wayfinder({
           )}
 
           {/* PATHWAY SELECTED STATE */}
-          {selectedPathway && (
-            <div className="pt-5 relative">
-              <WayfinderCircles
-                selectedPathway={selectedPathway}
-                onSelectPathway={handleSelectPathway}
-                pathwayCounts={pathwayCounts}
-                bridges={bridges}
-                compact={false}
-              />
-            </div>
-          )}
-
           {selectedPathway && selectedTheme && (
-            <div className="mt-6 mb-5 pb-4" style={{ borderBottom: `2px solid ${selectedTheme.color}20` }}>
-              <div className="flex items-center gap-4 mb-2">
-                {(() => {
-                  const Icon = PATHWAY_ICONS[selectedPathway] || Globe
-                  return (
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: selectedTheme.color + '18' }}>
-                      <Icon size={24} style={{ color: selectedTheme.color }} />
-                    </div>
-                  )
-                })()}
-                <h2 className="font-serif text-3xl font-bold" style={{ color: selectedTheme.color }}>{selectedTheme.name}</h2>
-              </div>
-              {bridges.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 mt-3">
-                  <span className="text-sm text-brand-muted">Connected to</span>
-                  {bridges
-                    .filter(function (b) { return b[0] === selectedPathway || b[1] === selectedPathway })
-                    .slice(0, 5)
-                    .map(function (b, i) {
-                      const otherId = b[0] === selectedPathway ? b[1] : b[0]
-                      const otherTheme = THEMES[otherId as keyof typeof THEMES]
-                      if (!otherTheme) return null
-                      return (
-                        <button key={i} onClick={function () { handleSelectPathway(otherId) }} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold cursor-pointer border transition-colors hover:opacity-80" style={{ backgroundColor: otherTheme.color + '10', color: otherTheme.color, borderColor: otherTheme.color + '25' }}>
-                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: otherTheme.color }} />
-                          {otherTheme.name}
-                          <span className="text-xs opacity-50 ml-1">{b[2]} shared</span>
-                        </button>
-                      )
-                    })}
+            <div className="pt-6 relative">
+              {/* Ambient glow */}
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
+                style={{ background: `radial-gradient(circle, ${selectedTheme.color}08 0%, transparent 70%)` }}
+                aria-hidden="true"
+              />
+              <div className="mb-6 pb-4 relative z-10" style={{ borderBottom: `2px solid ${selectedTheme.color}15` }}>
+                <div className="flex items-center gap-4 mb-3">
+                  {(() => {
+                    const Icon = PATHWAY_ICONS[selectedPathway] || Globe
+                    return (
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: selectedTheme.color + '15' }}>
+                        <Icon size={28} style={{ color: selectedTheme.color }} />
+                      </div>
+                    )
+                  })()}
+                  <div>
+                    <h2 className="font-serif text-3xl font-bold tracking-tight" style={{ color: selectedTheme.color }}>{selectedTheme.name}</h2>
+                    <p className="text-sm text-brand-muted font-serif italic mt-0.5">
+                      {pathwayCounts[selectedPathway] ?? 0} resources across involvement, services, policies & civic life
+                    </p>
+                  </div>
                 </div>
-              )}
+                {bridges.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 mt-3">
+                    <span className="text-xs text-brand-muted font-serif italic">Connected to</span>
+                    {bridges
+                      .filter(function (b) { return b[0] === selectedPathway || b[1] === selectedPathway })
+                      .slice(0, 5)
+                      .map(function (b, i) {
+                        const otherId = b[0] === selectedPathway ? b[1] : b[0]
+                        const otherTheme = THEMES[otherId as keyof typeof THEMES]
+                        if (!otherTheme) return null
+                        return (
+                          <button key={i} onClick={function () { handleSelectPathway(otherId) }} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold cursor-pointer border transition-all duration-200 hover:shadow-sm hover:-translate-y-[1px]" style={{ backgroundColor: otherTheme.color + '08', color: otherTheme.color, borderColor: otherTheme.color + '20' }}>
+                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: otherTheme.color }} />
+                            {otherTheme.name}
+                            <span className="opacity-40 ml-0.5">{b[2]}</span>
+                          </button>
+                        )
+                      })}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -405,13 +407,17 @@ export function Wayfinder({
             policies={currentFeed.policies}
             activeCenter={activeCenter}
             pathwayColor={selectedTheme?.color}
+            onSelectCenter={handleSelectCenter}
             onItemClick={handleItemClick}
           />
         </div>
 
+        {/* Footer */}
         <div className="text-center py-8 border-t border-brand-border bg-white">
-          <p className="text-sm text-brand-muted">The Community Exchange — a product of The Change Engine</p>
-          <p className="text-xs text-brand-muted/60 mt-1">
+          <p className="text-sm text-brand-muted font-serif italic">
+            The Community Exchange — a product of The Change Engine
+          </p>
+          <p className="text-xs text-brand-muted/50 mt-1">
             {stats.resources} resources &middot; {stats.officials} officials &middot; {stats.policies} policies &middot; {stats.focusAreas} focus areas
           </p>
         </div>
