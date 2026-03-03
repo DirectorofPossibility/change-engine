@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo, memo } from 'react'
 
 // ═══════════════════════════════════════════════════════════════
 // THE COMMUNITY EXCHANGE — Circle Knowledge Graph
@@ -189,7 +189,7 @@ function CA({ color = C.orange, s = 20 }: { color?: string; s?: number }) {
 // ═══════════════════════════════════════
 // HOME CIRCLES
 // ═══════════════════════════════════════
-function HomeCircles({ onSelect, hov, setHov, ready, pw: pwOverride }: {
+const HomeCircles = memo(function HomeCirclesInner({ onSelect, hov, setHov, ready, pw: pwOverride }: {
   onSelect: (i: number) => void
   hov: number | null
   setHov: (i: number | null) => void
@@ -246,11 +246,11 @@ function HomeCircles({ onSelect, hov, setHov, ready, pw: pwOverride }: {
             onClick={() => onSelect(i)}
             onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}>
             {isHov && <circle cx={x} cy={y} r={r + 18} fill={p.color} opacity={.06}
-              style={{ transition: 'all .2s' }} />}
+              style={{ transition: 'opacity .2s' }} />}
             <circle cx={x} cy={y} r={r} fill="none" stroke={p.color}
               strokeWidth={isHov ? 3.2 : 2.2} opacity={isHov ? 1 : .45}
               style={{
-                transition: 'all .25s',
+                transition: 'stroke-width .25s, opacity .25s',
                 ...(ready ? { strokeDasharray: 600, animation: `draw .9s ease ${i * .1}s both` } : {}),
               }} />
             <circle cx={x} cy={y} r={r * .52} fill="none" stroke={p.color}
@@ -258,7 +258,7 @@ function HomeCircles({ onSelect, hov, setHov, ready, pw: pwOverride }: {
             <text x={x} y={y - 6} textAnchor="middle" dominantBaseline="middle"
               fill={isHov ? p.color : C.txt}
               fontSize={isHov ? 18 : 16} fontWeight={isHov ? 700 : 600}
-              style={{ fontFamily: "'DM Sans',sans-serif", transition: 'all .2s', pointerEvents: 'none' }}>
+              style={{ fontFamily: "'DM Sans',sans-serif", transition: 'fill .2s, font-size .2s', pointerEvents: 'none' }}>
               {p.name}
             </text>
             <text x={x} y={y + 13} textAnchor="middle" dominantBaseline="middle"
@@ -278,12 +278,12 @@ function HomeCircles({ onSelect, hov, setHov, ready, pw: pwOverride }: {
       })}
     </svg>
   )
-}
+})
 
 // ═══════════════════════════════════════
 // SELECTED PATHWAY — Knowledge Graph Reconfiguration
 // ═══════════════════════════════════════
-function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
+const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onSwitch, ready }: {
   selIdx: number
   onBack: () => void
   onSwitch: (i: number) => void
@@ -291,7 +291,7 @@ function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
 }) {
   const [hov, setHov] = useState<string | null>(null)
   const pw = PW[selIdx]
-  const nodes = getSelectedLayout(selIdx)
+  const nodes = useMemo(() => getSelectedLayout(selIdx), [selIdx])
   const main = nodes[0] as LayoutNode & { type: 'pathway' }
 
   return (
@@ -385,7 +385,7 @@ function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
             {isH && <circle cx={n.x} cy={n.y} r={n.r + 10} fill={meta?.color} opacity={.08} />}
             <circle cx={n.x} cy={n.y} r={n.r} fill="none"
               stroke={meta?.color || '#999'} strokeWidth={isH ? 2.5 : 1.8}
-              opacity={isH ? 1 : .6} style={{ transition: 'all .2s' }} />
+              opacity={isH ? 1 : .6} style={{ transition: 'stroke-width .2s, opacity .2s' }} />
             <text x={n.x} y={n.y - 5} textAnchor="middle" dominantBaseline="middle"
               fill={meta?.color || C.txt} fontSize="11" fontWeight="700"
               style={{ fontFamily: "'DM Sans',sans-serif", pointerEvents: 'none' }}>
@@ -412,7 +412,7 @@ function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
             {isH && <circle cx={n.x} cy={n.y} r={n.r + 8} fill={bpw.color} opacity={.1} />}
             <circle cx={n.x} cy={n.y} r={n.r} fill="none"
               stroke={bpw.color} strokeWidth={isH ? 2.5 : 1.5}
-              opacity={isH ? .9 : .45} style={{ transition: 'all .2s' }} />
+              opacity={isH ? .9 : .45} style={{ transition: 'stroke-width .2s, opacity .2s' }} />
             <text x={n.x} y={n.y - 2} textAnchor="middle" dominantBaseline="middle"
               fill={isH ? bpw.color : C.txt} fontSize="11" fontWeight="600"
               style={{ fontFamily: "'DM Sans',sans-serif", pointerEvents: 'none' }}>
@@ -435,7 +435,7 @@ function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
             style={{ animation: `popIn .35s cubic-bezier(.22,1,.36,1) ${.3 + i * .06}s both` }}
             onMouseEnter={() => setHov(`topic-${n.name}`)} onMouseLeave={() => setHov(null)}>
             <circle cx={n.x} cy={n.y} r={n.r} fill={pw.color}
-              opacity={isH ? .15 : .06} style={{ transition: 'all .2s' }} />
+              opacity={isH ? .15 : .06} style={{ transition: 'opacity .2s' }} />
             <circle cx={n.x} cy={n.y} r={n.r} fill="none"
               stroke={pw.color} strokeWidth={isH ? 1.5 : .8}
               opacity={isH ? .7 : .3} strokeDasharray="3,2" />
@@ -521,7 +521,7 @@ function SelectedCircles({ selIdx, onBack, onSwitch, ready }: {
       </text>
     </svg>
   )
-}
+})
 
 // ═══════════════════════════════════════
 // INDEX-TO-THEME MAPPING
@@ -573,19 +573,23 @@ export function EmbeddableCircles({
     }
   }, [selectedPathway])
 
-  function handleSelect(idx: number) {
+  const handleSelect = useCallback((idx: number) => {
     setSel(idx)
     if (onSelectPathway) {
       onSelectPathway(IDX_TO_THEME[idx])
     }
-  }
+  }, [onSelectPathway])
 
-  function handleBack() {
+  const handleBack = useCallback(() => {
     setSel(null)
     if (onSelectPathway) {
       onSelectPathway('')
     }
-  }
+  }, [onSelectPathway])
+
+  const setHovStable = useCallback((v: number | null) => {
+    setHov(v)
+  }, [])
 
   // Override displayed counts with real data
   const displayPW = pathwayCounts ? PW.map((p, i) => {
@@ -601,10 +605,10 @@ export function EmbeddableCircles({
       <style>{CIRCLE_ANIM_STYLES}</style>
 
       {/* Circles */}
-      <div key={sel === null ? 'home' : `sel-${sel}`}
+      <div
         style={{ animation: 'fin .35s ease both' }}>
         {isHome ? (
-          <HomeCircles onSelect={handleSelect} hov={hov} setHov={setHov} ready={ready} pw={displayPW} />
+          <HomeCircles onSelect={handleSelect} hov={hov} setHov={setHovStable} ready={ready} pw={displayPW} />
         ) : (
           <SelectedCircles
             selIdx={sel}
@@ -648,7 +652,7 @@ export function EmbeddableCircles({
               border: `1.5px solid ${i === sel ? p.color : C.bdr}`,
               background: i === sel ? `${p.color}10` : 'transparent',
               color: i === sel ? p.color : C.mid,
-              cursor: 'pointer', transition: 'all .15s',
+              cursor: 'pointer', transition: 'border-color .15s, background .15s, color .15s',
               fontFamily: "'DM Sans',sans-serif",
             }}>
               {p.name}
@@ -744,7 +748,7 @@ export default function CircleKnowledgeGraph() {
         </div>
 
         {/* Circles */}
-        <div key={sel === null ? 'home' : `sel-${sel}`}
+        <div
           style={{ animation: 'fin .35s ease both' }}>
           {isHome ? (
             <HomeCircles onSelect={setSel} hov={hov} setHov={setHov} ready={ready} />
@@ -805,7 +809,7 @@ export default function CircleKnowledgeGraph() {
                 border: `1.5px solid ${i === sel ? p.color : C.bdr}`,
                 background: i === sel ? `${p.color}10` : 'transparent',
                 color: i === sel ? p.color : C.mid,
-                cursor: 'pointer', transition: 'all .15s',
+                cursor: 'pointer', transition: 'border-color .15s, background .15s, color .15s',
                 fontFamily: "'DM Sans',sans-serif",
               }}>
                 {p.name}

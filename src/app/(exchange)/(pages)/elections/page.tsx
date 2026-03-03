@@ -1,101 +1,71 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { Suspense } from 'react'
+import { getCivicHubData, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
-import { PageHeader } from '@/components/exchange/PageHeader'
-import { ElectionSectionHeader, TurnoutLabel, CertifiedBadge } from './ElectionsSectionHeaders'
+import { PageHero } from '@/components/exchange/PageHero'
+import { PAGE_INTROS } from '@/lib/constants'
+import { CivicHubClient } from './CivicHubClient'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Elections and Voting Guide',
-  description: 'Upcoming elections, candidates, ballot items, and where to vote in Houston.',
+  title: 'Civic Hub — Your Government at Every Level',
+  description: 'Explore elected officials, policies, and elections organized by government level for Houston, Harris County, Texas, and federal.',
 }
 
-export default async function ElectionsPage() {
-  const supabase = await createClient()
-  const today = new Date().toISOString().split('T')[0]
+export default async function CivicHubPage() {
+  const { officials, policies, elections, upcomingElection } = await getCivicHubData()
 
-  // Upcoming election
-  const { data: upcoming } = await supabase
-    .from('elections')
-    .select('*')
-    .eq('is_active', 'Yes')
-    .gte('election_date', today)
-    .order('election_date', { ascending: true })
-    .limit(1)
-
-  // All elections
-  const { data: elections } = await supabase
-    .from('elections')
-    .select('*')
-    .order('election_date', { ascending: false })
-
-  const upcomingElection = upcoming && upcoming.length > 0 ? upcoming[0] : null
-  const allElections = elections || []
-  const futureElections = allElections.filter(function (e) { return e.election_date && e.election_date >= today })
-  const pastElections = allElections.filter(function (e) { return !e.election_date || e.election_date < today })
+  // Fetch translations for non-English visitors
+  const langId = await getLangId()
+  let officialTranslations = {}
+  let policyTranslations = {}
+  if (langId) {
+    const [ot, pt] = await Promise.all([
+      fetchTranslationsForTable('elected_officials', officials.map(function (o) { return o.official_id }), langId),
+      fetchTranslationsForTable('policies', policies.map(function (p) { return p.policy_id }), langId),
+    ])
+    officialTranslations = ot
+    policyTranslations = pt
+  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <PageHeader titleKey="elections.title" subtitleKey="elections.subtitle" />
+    <div>
+      <PageHero
+        variant="editorial"
+        titleKey="elections.title"
+        subtitleKey="elections.subtitle"
+        intro={PAGE_INTROS.elections}
+      />
 
-      {/* Upcoming election banner */}
-      {upcomingElection && (
-        <div className="mb-10">
-          <Link href={'/elections/' + upcomingElection.election_id}>
-            <ElectionCountdown
-              electionName={upcomingElection.election_name}
-              electionDate={upcomingElection.election_date}
-              earlyVotingStart={upcomingElection.early_voting_start}
-              earlyVotingEnd={upcomingElection.early_voting_end}
-              registrationDeadline={upcomingElection.registration_deadline}
-              electionType={upcomingElection.election_type}
-            />
-          </Link>
-        </div>
-      )}
-
-      {/* Upcoming elections */}
-      {futureElections.length > 0 && (
-        <section className="mb-10">
-          <ElectionSectionHeader titleKey="elections.upcoming" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {futureElections.map(function (e) {
-              return (
-                <Link key={e.election_id} href={'/elections/' + e.election_id} className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-semibold text-brand-text">{e.election_name}</h3>
-                  </div>
-                  {e.election_type && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{e.election_type}</span>}
-                  {e.election_date && <p className="text-sm text-brand-muted mt-2">{new Date(e.election_date + 'T00:00:00').toLocaleDateString()}</p>}
-                  {e.jurisdiction && <p className="text-xs text-brand-muted mt-1">{e.jurisdiction}</p>}
-                </Link>
-              )
-            })}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Election countdown banner */}
+        {upcomingElection && (
+          <div className="mb-10">
+            <Link href={'/elections/' + upcomingElection.election_id}>
+              <ElectionCountdown
+                electionName={upcomingElection.election_name}
+                electionDate={upcomingElection.election_date}
+                earlyVotingStart={upcomingElection.early_voting_start}
+                earlyVotingEnd={upcomingElection.early_voting_end}
+                registrationDeadline={upcomingElection.registration_deadline}
+                electionType={upcomingElection.election_type}
+              />
+            </Link>
           </div>
-        </section>
-      )}
+        )}
 
-      {/* Past elections */}
-      {pastElections.length > 0 && (
-        <section>
-          <ElectionSectionHeader titleKey="elections.past" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {pastElections.map(function (e) {
-              return (
-                <Link key={e.election_id} href={'/elections/' + e.election_id} className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow opacity-75">
-                  <h3 className="font-semibold text-brand-text mb-1">{e.election_name}</h3>
-                  {e.election_type && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{e.election_type}</span>}
-                  {e.election_date && <p className="text-sm text-brand-muted mt-2">{new Date(e.election_date + 'T00:00:00').toLocaleDateString()}</p>}
-                  {e.turnout_pct != null && <TurnoutLabel pct={e.turnout_pct} />}
-                  {e.results_certified === 'Yes' && <CertifiedBadge />}
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-      )}
+        <Suspense fallback={<div className="text-brand-muted py-12 text-center">Loading civic data...</div>}>
+          <CivicHubClient
+            officials={officials}
+            policies={policies}
+            elections={elections}
+            officialTranslations={officialTranslations}
+            policyTranslations={policyTranslations}
+          />
+        </Suspense>
+      </div>
     </div>
   )
 }

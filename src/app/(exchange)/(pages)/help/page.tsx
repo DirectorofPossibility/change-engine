@@ -13,6 +13,7 @@ import type { Metadata } from 'next'
 import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { PageHero } from '@/components/exchange/PageHero'
+import { PAGE_INTROS } from '@/lib/constants'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
 import { HelpUrgencyHeader } from './HelpUrgencyHeader'
 
@@ -47,6 +48,7 @@ export default async function HelpPage() {
         subtitleKey="help.subtitle"
         backgroundImage="/images/hero/community-gathering.svg"
         height="sm"
+        intro={PAGE_INTROS.availableResources}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

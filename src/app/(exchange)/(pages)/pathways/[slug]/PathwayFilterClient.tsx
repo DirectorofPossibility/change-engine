@@ -42,7 +42,7 @@ export function PathwayFilterClient({ centerCounts, initialContent, translations
                 activeCenter === name ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
               }`}
             >
-              {config.emoji} {name} ({count})
+              {name} ({count})
             </button>
           )
         })}

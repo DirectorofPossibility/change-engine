@@ -16,7 +16,9 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { PAGE_INTROS } from '@/lib/constants'
 import { searchAll } from '@/lib/data/search'
+import { PageHero } from '@/components/exchange/PageHero'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
@@ -226,12 +228,17 @@ export default async function SearchPage({
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <SearchResultsHeader query={query} totalCount={totalCount} />
-
-      {totalCount > 0 && (
-        <SearchTabs tabs={tabs}>{sections}</SearchTabs>
+    <div>
+      {!query && (
+        <PageHero variant="editorial" titleKey="search.title" intro={PAGE_INTROS.search} height="sm" />
       )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <SearchResultsHeader query={query} totalCount={totalCount} />
+
+        {totalCount > 0 && (
+          <SearchTabs tabs={tabs}>{sections}</SearchTabs>
+        )}
+      </div>
     </div>
   )
 }

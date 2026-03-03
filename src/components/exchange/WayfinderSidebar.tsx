@@ -7,7 +7,7 @@ import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   BookOpen, Calendar, Wrench, FlaskConical, Activity,
-  Landmark, Compass,
+  Landmark, Compass, Vote,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -246,6 +246,18 @@ export function WayfinderSidebar({
             )
           })}
         </div>
+      </div>
+
+      {/* Elections */}
+      <div className="px-4 py-1">
+        <Link
+          href="/elections"
+          onClick={closeMobile}
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+        >
+          <Vote size={16} style={{ color: BRAND.accent }} />
+          {t('sidebar.elections')}
+        </Link>
       </div>
 
       <div className="h-px bg-brand-border mx-5 my-2" />

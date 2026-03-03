@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
-import { THEMES } from '@/lib/constants'
+import { THEMES, PAGE_INTROS } from '@/lib/constants'
 import { getFocusAreas, getSDGs, getSDOHDomains } from '@/lib/data/exchange'
 import { ExploreFilterClient } from './ExploreFilterClient'
-import { PageHeader } from '@/components/exchange/PageHeader'
+import { PageHero } from '@/components/exchange/PageHero'
 
 export const revalidate = 3600
 
@@ -34,7 +34,7 @@ export default async function ExplorePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <PageHeader titleKey="explore.title" />
+      <PageHero variant="editorial" titleKey="explore.title" intro={PAGE_INTROS.explore} />
 
       <ExploreFilterClient
         themes={themes}

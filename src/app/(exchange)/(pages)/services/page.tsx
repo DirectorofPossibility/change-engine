@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ServicesClient } from './ServicesClient'
-import { PageHeader } from '@/components/exchange/PageHeader'
+import { PageHero } from '@/components/exchange/PageHero'
+import { PAGE_INTROS } from '@/lib/constants'
 
 export const revalidate = 300
 
@@ -20,7 +21,7 @@ export default async function ServicesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <PageHeader titleKey="services.title" subtitleKey="services.subtitle" />
+      <PageHero variant="editorial" titleKey="services.title" subtitleKey="services.subtitle" intro={PAGE_INTROS.services} />
 
       <ServicesClient services={services} translations={translations} />
     </div>

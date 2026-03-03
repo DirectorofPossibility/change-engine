@@ -27,7 +27,7 @@ const en: Record<string, string> = {
   'nav.explore': 'Explore',
   'nav.help': 'Available Resources',
   'nav.services': 'Services',
-  'nav.elections': 'Elections',
+  'nav.elections': 'Civic Hub',
   'nav.search_placeholder': 'Search...',
   'nav.zip_prompt': 'Start with your ZIP code',
 
@@ -38,7 +38,7 @@ const en: Record<string, string> = {
   'footer.help': 'Available Resources',
   'footer.officials': 'Officials',
   'footer.services': 'Services',
-  'footer.elections': 'Elections',
+  'footer.elections': 'Civic Hub',
   'footer.explore_link': 'Explore',
   'footer.polling_places': 'Polling Places',
   'footer.policies': 'Policies',
@@ -79,10 +79,12 @@ const en: Record<string, string> = {
   'help.urgency_high': 'Priority Resources',
   'help.urgency_medium': 'Community Resources',
   'help.urgency_low': 'Ongoing Resources',
+  'help.intro': 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',
 
   // Services page
   'services.title': 'Services',
   'services.subtitle': 'Find community services and support organizations in the Houston area.',
+  'services.intro': 'Houston has a deep network of services and organizations dedicated to your well-being. Browse by category, search by need, or explore the map to find what is near you.',
 
   // Officials page
   'officials.title': 'Elected Officials',
@@ -91,20 +93,38 @@ const en: Record<string, string> = {
   // Elections page
   'elections.title': 'Elections & Voting',
   'elections.subtitle': "Know what's on your ballot and where to vote.",
+  'elections.intro': 'Your vote is your voice. Find upcoming elections, learn about candidates, check registration deadlines, and locate your polling place.',
   'elections.upcoming': 'Upcoming Elections',
   'elections.past': 'Past Elections',
   'elections.turnout': 'Turnout:',
   'elections.results_certified': 'Results certified',
+
+  // Civic Hub
+  'civicHub.title': 'Your Civic Hub',
+  'civicHub.subtitle': 'Explore your elected officials, policies, and elections at every level of government.',
+  'civicHub.representatives': 'Your Representatives',
+  'civicHub.policies': 'Policies & Legislation',
+  'civicHub.elections': 'Elections & Voting',
+  'civicHub.no_officials': 'No officials listed at this level yet.',
+  'civicHub.no_policies': 'No policies tracked at this level yet.',
+  'civicHub.no_elections': 'No elections scheduled at this level.',
+  'civicHub.search_officials': 'Search officials...',
+  'civicHub.view_all_officials': 'View all officials',
+  'civicHub.view_all_policies': 'View all policies',
 
   // Explore page
   'explore.title': 'Explore Topics',
   'explore.subtitle_prefix': 'Browse',
   'explore.subtitle_middle': 'focus areas across',
   'explore.subtitle_suffix': 'pathways. Filter by Sustainable Development Goal or Social Determinant of Health.',
+  'explore.intro': 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
 
   // Pathways page
   'pathways.title': 'Seven Pathways',
   'pathways.subtitle': 'Explore community life through seven interconnected themes.',
+  'pathway.centers_title': 'Four Ways to Engage',
+  'pathway.focus_areas_title': 'Explore Topics',
+  'pathway.content_title': 'Resources & Content',
 
   // Search page
   'search.title': 'Search Results',
@@ -126,6 +146,7 @@ const en: Record<string, string> = {
   'search.browse_pathways': 'Browse Pathways',
   'search.find_reps': 'Find My Reps',
   'search.view_resource': 'View resource',
+  'search.intro': 'Explore everything The Change Engine has gathered for Houston — from articles and services to elected officials and community organizations.',
 
   // Polling places page
   'polling.title': 'Find Your Polling Place',
@@ -216,7 +237,8 @@ const en: Record<string, string> = {
   'sidebar.go': 'Go',
   'sidebar.explore_houston': 'Explore Houston',
   'sidebar.discover': 'Discover',
-  'sidebar.quick_resources': 'Quick Resources',
+  'sidebar.quick_resources': 'Available Resources',
+  'sidebar.elections': 'Elections & Voting',
   'sidebar.topics': 'Topics',
   'sidebar.no_topics': 'No topics available',
 
@@ -267,7 +289,7 @@ const es: Record<string, string> = {
   'nav.explore': 'Explorar',
   'nav.help': 'Recursos Disponibles',
   'nav.services': 'Servicios',
-  'nav.elections': 'Elecciones',
+  'nav.elections': 'Centro Cívico',
   'nav.search_placeholder': 'Buscar...',
   'nav.zip_prompt': 'Comience con su código postal',
 
@@ -278,7 +300,7 @@ const es: Record<string, string> = {
   'footer.help': 'Recursos Disponibles',
   'footer.officials': 'Funcionarios',
   'footer.services': 'Servicios',
-  'footer.elections': 'Elecciones',
+  'footer.elections': 'Centro Cívico',
   'footer.explore_link': 'Explorar',
   'footer.polling_places': 'Lugares de Votación',
   'footer.policies': 'Políticas',
@@ -319,10 +341,12 @@ const es: Record<string, string> = {
   'help.urgency_high': 'Recursos Prioritarios',
   'help.urgency_medium': 'Recursos Comunitarios',
   'help.urgency_low': 'Recursos Continuos',
+  'help.intro': 'Sin importar lo que enfrente, Houston tiene recursos listos para usted. Busque por urgencia o situación de vida para encontrar apoyo, servicios y próximos pasos.',
 
   // Services page
   'services.title': 'Servicios',
   'services.subtitle': 'Encuentre servicios comunitarios y organizaciones de apoyo en el área de Houston.',
+  'services.intro': 'Houston cuenta con una amplia red de servicios y organizaciones dedicadas a su bienestar. Busque por categoría, por necesidad o explore el mapa para encontrar lo que está cerca de usted.',
 
   // Officials page
   'officials.title': 'Funcionarios Electos',
@@ -331,20 +355,38 @@ const es: Record<string, string> = {
   // Elections page
   'elections.title': 'Elecciones y Votación',
   'elections.subtitle': 'Conozca qué hay en su boleta y dónde votar.',
+  'elections.intro': 'Su voto es su voz. Encuentre próximas elecciones, conozca a los candidatos, verifique las fechas límite de registro y localice su lugar de votación.',
   'elections.upcoming': 'Próximas Elecciones',
   'elections.past': 'Elecciones Anteriores',
   'elections.turnout': 'Participación:',
   'elections.results_certified': 'Resultados certificados',
+
+  // Civic Hub
+  'civicHub.title': 'Su Centro Cívico',
+  'civicHub.subtitle': 'Explore sus funcionarios electos, políticas y elecciones en todos los niveles de gobierno.',
+  'civicHub.representatives': 'Sus Representantes',
+  'civicHub.policies': 'Políticas y Legislación',
+  'civicHub.elections': 'Elecciones y Votación',
+  'civicHub.no_officials': 'Aún no hay funcionarios listados en este nivel.',
+  'civicHub.no_policies': 'Aún no se rastrean políticas en este nivel.',
+  'civicHub.no_elections': 'No hay elecciones programadas en este nivel.',
+  'civicHub.search_officials': 'Buscar funcionarios...',
+  'civicHub.view_all_officials': 'Ver todos los funcionarios',
+  'civicHub.view_all_policies': 'Ver todas las políticas',
 
   // Explore page
   'explore.title': 'Explorar Temas',
   'explore.subtitle_prefix': 'Explore',
   'explore.subtitle_middle': 'áreas de enfoque en',
   'explore.subtitle_suffix': 'caminos. Filtre por Objetivo de Desarrollo Sostenible o Determinante Social de la Salud.',
+  'explore.intro': 'Cada tema se conecta con algo más grande. Explore áreas de enfoque en los siete caminos, filtre por metas globales y descubra cómo los problemas comunitarios se interrelacionan.',
 
   // Pathways page
   'pathways.title': 'Siete Caminos',
   'pathways.subtitle': 'Explore la vida comunitaria a través de siete temas interconectados.',
+  'pathway.centers_title': 'Cuatro Formas de Participar',
+  'pathway.focus_areas_title': 'Explorar Temas',
+  'pathway.content_title': 'Recursos y Contenido',
 
   // Search page
   'search.title': 'Resultados de Búsqueda',
@@ -366,6 +408,7 @@ const es: Record<string, string> = {
   'search.browse_pathways': 'Explorar Caminos',
   'search.find_reps': 'Encuentre a Sus Representantes',
   'search.view_resource': 'Ver recurso',
+  'search.intro': 'Explore todo lo que The Change Engine ha reunido para Houston — desde artículos y servicios hasta funcionarios electos y organizaciones comunitarias.',
 
   // Polling places page
   'polling.title': 'Encuentre Su Lugar de Votación',
@@ -456,7 +499,8 @@ const es: Record<string, string> = {
   'sidebar.go': 'Ir',
   'sidebar.explore_houston': 'Explorar Houston',
   'sidebar.discover': 'Descubrir',
-  'sidebar.quick_resources': 'Recursos Rápidos',
+  'sidebar.quick_resources': 'Recursos Disponibles',
+  'sidebar.elections': 'Elecciones y Votación',
   'sidebar.topics': 'Temas',
   'sidebar.no_topics': 'No hay temas disponibles',
 
@@ -507,7 +551,7 @@ const vi: Record<string, string> = {
   'nav.explore': 'Khám Phá',
   'nav.help': 'Tài Nguyên Có Sẵn',
   'nav.services': 'Dịch Vụ',
-  'nav.elections': 'Bầu Cử',
+  'nav.elections': 'Trung Tâm Dân Sự',
   'nav.search_placeholder': 'Tìm kiếm...',
   'nav.zip_prompt': 'Bắt đầu với mã bưu điện',
 
@@ -518,7 +562,7 @@ const vi: Record<string, string> = {
   'footer.help': 'Tài Nguyên Có Sẵn',
   'footer.officials': 'Quan Chức',
   'footer.services': 'Dịch Vụ',
-  'footer.elections': 'Bầu Cử',
+  'footer.elections': 'Trung Tâm Dân Sự',
   'footer.explore_link': 'Khám Phá',
   'footer.polling_places': 'Địa Điểm Bỏ Phiếu',
   'footer.policies': 'Chính Sách',
@@ -559,10 +603,12 @@ const vi: Record<string, string> = {
   'help.urgency_high': 'Tài Nguyên Ưu Tiên',
   'help.urgency_medium': 'Tài Nguyên Cộng Đồng',
   'help.urgency_low': 'Tài Nguyên Liên Tục',
+  'help.intro': 'Dù bạn đang đối mặt với điều gì, Houston có tài nguyên sẵn sàng cho bạn. Duyệt theo mức độ khẩn cấp hoặc tình huống cuộc sống để tìm hỗ trợ, dịch vụ và bước tiếp theo.',
 
   // Services page
   'services.title': 'Dịch Vụ',
   'services.subtitle': 'Tìm dịch vụ cộng đồng và tổ chức hỗ trợ trong khu vực Houston.',
+  'services.intro': 'Houston có mạng lưới dịch vụ và tổ chức sâu rộng dành cho sức khỏe của bạn. Duyệt theo danh mục, tìm theo nhu cầu, hoặc khám phá bản đồ để tìm những gì gần bạn.',
 
   // Officials page
   'officials.title': 'Quan Chức Dân Cử',
@@ -571,20 +617,38 @@ const vi: Record<string, string> = {
   // Elections page
   'elections.title': 'Bầu Cử & Bỏ Phiếu',
   'elections.subtitle': 'Biết những gì trên lá phiếu và nơi bỏ phiếu.',
+  'elections.intro': 'Lá phiếu của bạn là tiếng nói của bạn. Tìm các cuộc bầu cử sắp tới, tìm hiểu về ứng cử viên, kiểm tra hạn đăng ký và tìm địa điểm bỏ phiếu của bạn.',
   'elections.upcoming': 'Bầu Cử Sắp Tới',
   'elections.past': 'Bầu Cử Trước Đây',
   'elections.turnout': 'Tỷ lệ tham gia:',
   'elections.results_certified': 'Kết quả đã chứng nhận',
+
+  // Civic Hub
+  'civicHub.title': 'Trung Tâm Dân Sự',
+  'civicHub.subtitle': 'Khám phá quan chức dân cử, chính sách và bầu cử ở mọi cấp chính quyền.',
+  'civicHub.representatives': 'Đại Diện Của Bạn',
+  'civicHub.policies': 'Chính Sách & Luật Pháp',
+  'civicHub.elections': 'Bầu Cử & Bỏ Phiếu',
+  'civicHub.no_officials': 'Chưa có quan chức nào được liệt kê ở cấp này.',
+  'civicHub.no_policies': 'Chưa có chính sách nào được theo dõi ở cấp này.',
+  'civicHub.no_elections': 'Chưa có bầu cử nào được lên lịch ở cấp này.',
+  'civicHub.search_officials': 'Tìm quan chức...',
+  'civicHub.view_all_officials': 'Xem tất cả quan chức',
+  'civicHub.view_all_policies': 'Xem tất cả chính sách',
 
   // Explore page
   'explore.title': 'Khám Phá Chủ Đề',
   'explore.subtitle_prefix': 'Duyệt qua',
   'explore.subtitle_middle': 'lĩnh vực trọng tâm trong',
   'explore.subtitle_suffix': 'lộ trình. Lọc theo Mục Tiêu Phát Triển Bền Vững hoặc Yếu Tố Xã Hội Quyết Định Sức Khỏe.',
+  'explore.intro': 'Mỗi chủ đề kết nối với điều lớn hơn. Duyệt các lĩnh vực trọng tâm trong cả bảy lộ trình, lọc theo mục tiêu toàn cầu và khám phá cách các vấn đề cộng đồng liên quan với nhau.',
 
   // Pathways page
   'pathways.title': 'Bảy Lộ Trình',
   'pathways.subtitle': 'Khám phá đời sống cộng đồng qua bảy chủ đề kết nối.',
+  'pathway.centers_title': 'Bốn Cách Tham Gia',
+  'pathway.focus_areas_title': 'Khám Phá Chủ Đề',
+  'pathway.content_title': 'Tài Nguyên & Nội Dung',
 
   // Search page
   'search.title': 'Kết Quả Tìm Kiếm',
@@ -606,6 +670,7 @@ const vi: Record<string, string> = {
   'search.browse_pathways': 'Duyệt Lộ Trình',
   'search.find_reps': 'Tìm Đại Diện',
   'search.view_resource': 'Xem tài nguyên',
+  'search.intro': 'Khám phá mọi thứ The Change Engine đã thu thập cho Houston — từ bài viết và dịch vụ đến quan chức dân cử và tổ chức cộng đồng.',
 
   // Polling places page
   'polling.title': 'Tìm Địa Điểm Bỏ Phiếu',
@@ -696,7 +761,8 @@ const vi: Record<string, string> = {
   'sidebar.go': 'Đi',
   'sidebar.explore_houston': 'Khám Phá Houston',
   'sidebar.discover': 'Khám Phá',
-  'sidebar.quick_resources': 'Tài Nguyên Nhanh',
+  'sidebar.quick_resources': 'Tài Nguyên Có Sẵn',
+  'sidebar.elections': 'Bầu Cử & Bỏ Phiếu',
   'sidebar.topics': 'Chủ Đề',
   'sidebar.no_topics': 'Không có chủ đề',
 
