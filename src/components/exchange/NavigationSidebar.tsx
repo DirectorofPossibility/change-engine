@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
-  BookOpen, Calendar, Wrench, FlaskConical, Activity,
+  BookOpen, Phone, Scale, GraduationCap, Activity,
   Landmark, Compass, PanelLeftClose, PanelLeftOpen, Vote,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
@@ -26,12 +26,14 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
 }
 
 const DISCOVER_LINKS = [
-  { label: 'discover.elections', icon: Vote, href: '/elections' },
-  { label: 'discover.events', icon: Calendar, href: '/search?q=event+community' },
-  { label: 'discover.books_guides', icon: BookOpen, href: '/search?q=book+guide+toolkit' },
-  { label: 'discover.diy_kits', icon: Wrench, href: '/search?q=toolkit+free+diy' },
-  { label: 'discover.research', icon: FlaskConical, href: '/search?q=research+report+data' },
-  { label: 'discover.activity_types', icon: Activity, href: '/explore' },
+  { label: 'discover.local_resources', icon: Phone, href: '/services' },
+  { label: 'discover.officials', icon: Users, href: '/officials' },
+  { label: 'discover.policy', icon: Scale, href: '/policies' },
+  { label: 'discover.guides', icon: BookOpen, href: '/guides' },
+  { label: 'discover.available_resources', icon: Compass, href: '/help' },
+  { label: 'discover.topics', icon: Activity, href: '/explore' },
+  { label: 'discover.learning', icon: GraduationCap, href: '/learn' },
+  { label: 'discover.neighborhoods', icon: MapPin, href: '/super-neighborhoods' },
   { label: 'discover.foundations', icon: Landmark, href: '/foundations' },
 ]
 
@@ -251,31 +253,27 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
           className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
         >
           {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-          {t('sidebar.discover')}
+          {t('sidebar.your_guide')}
         </button>
         {discoverOpen && (
           <div className="space-y-0.5">
             {DISCOVER_LINKS.map(function (item) {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
               return (
                 <Link
                   key={item.label}
                   href={item.href}
                   onClick={closeMobile}
-                  className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+                  className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                    (isActive
+                      ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                      : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
                 >
                   <item.icon size={15} style={{ color: BRAND.accent }} />
                   {t(item.label)}
                 </Link>
               )
             })}
-            <Link
-              href="/help"
-              onClick={closeMobile}
-              className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-accent font-semibold hover:bg-brand-accent/[0.06] transition-colors"
-            >
-              <Compass size={15} />
-              {t('sidebar.quick_resources')}
-            </Link>
           </div>
         )}
       </div>

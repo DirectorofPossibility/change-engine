@@ -12,9 +12,9 @@ import { AuthButton } from './AuthButton'
 
 const NAV_LINKS = [
   { href: '/pathways', key: 'nav.pathways' },
-  { href: '/explore', key: 'nav.explore' },
-  { href: '/help', key: 'nav.help' },
   { href: '/services', key: 'nav.services' },
+  { href: '/officials', key: 'nav.officials' },
+  { href: '/policies', key: 'nav.policies' },
   { href: '/elections', key: 'nav.elections' },
 ]
 
