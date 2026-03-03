@@ -117,14 +117,24 @@ export async function getIngestionLog(limit = 100) {
   return data || []
 }
 
-/** RSS feed configuration. Cast needed because rss_feeds isn't in auto-generated types. */
+/**
+ * RSS feed configuration.
+ *
+ * Uses the service-role key via REST to bypass RLS — the `rss_feeds` table
+ * has no SELECT policy for the anon/authenticated role.
+ */
 export async function getRssFeeds(): Promise<RssFeed[]> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('rss_feeds' as any)
-    .select('*')
-    .order('feed_name')
-  return (data as unknown as RssFeed[]) || []
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!
+  const res = await fetch(`${url}/rest/v1/rss_feeds?order=feed_name`, {
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+    },
+    cache: 'no-store',
+  })
+  if (!res.ok) return []
+  return res.json()
 }
 
 export async function getSourceTrust() {
