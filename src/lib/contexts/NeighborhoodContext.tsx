@@ -36,30 +36,30 @@ export function NeighborhoodProvider({
     document.cookie = 'zip=' + inputZip + ';path=/;max-age=31536000'
 
     try {
-      var supabase = createClient()
+      const supabase = createClient()
 
       // Look up neighborhood by ZIP
-      var { data: neighborhoods } = await supabase
+      const { data: neighborhoods } = await supabase
         .from('neighborhoods')
         .select('*')
         .ilike('zip_codes', '%' + inputZip + '%')
 
-      var match: Neighborhood | null = null
+      let match: Neighborhood | null = null
       if (neighborhoods) {
         match = neighborhoods.find(function (n) {
           if (!n.zip_codes) return false
-          var zips = n.zip_codes.split(',').map(function (z) { return z.trim() })
+          const zips = n.zip_codes.split(',').map(function (z) { return z.trim() })
           return zips.indexOf(inputZip) !== -1
         }) ?? null
       }
 
       setNeighborhood(match)
-      var district = match?.council_district ?? null
+      const district = match?.council_district ?? null
       setCouncilDistrict(district)
 
       // Look up officials for the council district
       if (district) {
-        var { data: officials } = await supabase
+        const { data: officials } = await supabase
           .from('elected_officials')
           .select('*')
           .eq('district_id', district)
@@ -91,7 +91,7 @@ export function NeighborhoodProvider({
 }
 
 export function useNeighborhood() {
-  var ctx = useContext(NeighborhoodContext)
+  const ctx = useContext(NeighborhoodContext)
   if (!ctx) throw new Error('useNeighborhood must be used within NeighborhoodProvider')
   return ctx
 }

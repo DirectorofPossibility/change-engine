@@ -1,4 +1,4 @@
-import KnowledgeGraphClient from './KnowledgeGraphClient'
+import KnowledgeGraphClient from '@/components/KnowledgeGraphClient'
 
 export default function KnowledgeGraphPage() {
   return <KnowledgeGraphClient />

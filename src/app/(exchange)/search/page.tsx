@@ -75,7 +75,7 @@ export default async function SearchPage({
           return (
             <ServiceCard
               key={svc.service_id}
-              name={svc.service_name}
+              name={svc.service_name || ''}
               orgName={svc.org_name}
               description={svc.description_5th_grade}
               phone={svc.phone}
@@ -99,7 +99,7 @@ export default async function SearchPage({
             <OfficialCard
               key={o.official_id}
               id={o.official_id}
-              name={o.official_name}
+              name={o.official_name || ''}
               title={o.title}
               party={o.party}
               level={o.level}
@@ -137,7 +137,7 @@ export default async function SearchPage({
           return (
             <PolicyCard
               key={p.policy_id}
-              name={p.policy_name}
+              name={p.policy_name || ''}
               summary={p.summary_5th_grade}
               billNumber={p.bill_number}
               status={p.status}
@@ -156,7 +156,7 @@ export default async function SearchPage({
           return (
             <LifeSituationCard
               key={s.situation_id}
-              name={s.situation_name}
+              name={s.situation_name || ''}
               slug={s.situation_slug}
               description={s.description_5th_grade}
               urgency={s.urgency_level}
@@ -191,7 +191,7 @@ export default async function SearchPage({
           return (
             <Link key={p.path_id} href={'/learn/' + p.path_id}>
               <LearningPathCard
-                name={p.path_name}
+                name={p.path_name || ''}
                 description={p.description_5th_grade}
                 themeId={p.theme_id}
                 difficulty={p.difficulty_level}

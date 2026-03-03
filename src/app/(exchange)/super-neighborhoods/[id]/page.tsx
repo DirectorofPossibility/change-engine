@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Users, DollarSign, MapPin } from 'lucide-react'
 import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood } from '@/lib/data/exchange'
-import { GEO_LAYERS } from '@/lib/constants'
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 
@@ -43,22 +42,28 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         address: [s.address, s.city].filter(Boolean).join(', '),
         link: '/services/' + s.service_id,
       })),
-    ...mapData.votingLocations.slice(0, 20).map(v => ({
-      id: 'vote-' + v.location_id,
-      lat: v.latitude as number,
-      lng: v.longitude as number,
-      title: v.location_name,
-      type: 'voting' as const,
-      address: [v.address, v.city].filter(Boolean).join(', '),
-    })),
-    ...mapData.organizations.slice(0, 20).map(o => ({
-      id: 'org-' + o.org_id,
-      lat: o.latitude as number,
-      lng: o.longitude as number,
-      title: o.org_name,
-      type: 'organization' as const,
-      link: '/organizations/' + o.org_id,
-    })),
+    ...mapData.votingLocations
+      .filter(v => v.latitude != null && v.longitude != null)
+      .slice(0, 20)
+      .map(v => ({
+        id: 'vote-' + v.location_id,
+        lat: v.latitude as number,
+        lng: v.longitude as number,
+        title: v.location_name,
+        type: 'voting' as const,
+        address: [v.address, v.city].filter(Boolean).join(', '),
+      })),
+    ...mapData.organizations
+      .filter(o => o.latitude != null && o.longitude != null)
+      .slice(0, 20)
+      .map(o => ({
+        id: 'org-' + o.org_id,
+        lat: o.latitude as number,
+        lng: o.longitude as number,
+        title: o.org_name,
+        type: 'organization' as const,
+        link: '/organizations/' + o.org_id,
+      })),
   ]
 
   const zips = sn.zip_codes ? sn.zip_codes.split(',').map(s => s.trim()).filter(Boolean) : []

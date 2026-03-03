@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Application-wide constants for The Change Engine.
+ *
+ * Architecture overview:
+ *   Content is organized via a dual taxonomy:
+ *     - 7 Pathways (THEMES)  — thematic lenses (health, families, money, etc.)
+ *     - 4 Centers  (CENTERS) — user-intent modes (learning, action, resource, accountability)
+ *   Every piece of content is classified into one pathway + one center during ingestion.
+ *
+ *   The brand palette, supported languages, and geographic boundary layers are also
+ *   defined here so they stay consistent across the public site and admin dashboard.
+ */
+
+/**
+ * The 7 Pathways — thematic lenses through which all content is organized.
+ * IDs (THEME_01–THEME_07) match the `themes` table primary keys in Supabase.
+ * Colors are used for pills, charts, and pathway cards across the UI.
+ */
 export const THEMES = {
   THEME_01: { name: 'Our Health', color: '#e53e3e', slug: 'our-health', emoji: '🏥' },
   THEME_02: { name: 'Our Families', color: '#dd6b20', slug: 'our-families', emoji: '👨‍👩‍👧‍👦' },
@@ -8,6 +26,11 @@ export const THEMES = {
   THEME_07: { name: 'The Bigger We', color: '#805ad5', slug: 'the-bigger-we', emoji: '🤝' },
 } as const;
 
+/**
+ * The 4 Centers — user-intent modes that cut across all pathways.
+ * Each center answers a distinct question a community member might ask.
+ * Used for homepage cards, content filtering, and the classification prompt.
+ */
 export const CENTERS: Record<string, { question: string; emoji: string; slug: string }> = {
   Learning:       { question: 'How can I understand?', emoji: '📚', slug: 'learning' },
   Action:         { question: 'How can I help?', emoji: '✊', slug: 'action' },
@@ -15,6 +38,11 @@ export const CENTERS: Record<string, { question: string; emoji: string; slug: st
   Accountability: { question: 'Who makes decisions?', emoji: '🏛️', slug: 'accountability' },
 };
 
+/**
+ * Brand identity tokens. These map to Tailwind CSS custom colors defined
+ * in tailwind.config.ts (e.g. `text-brand-accent`, `bg-brand-bg`).
+ * Keep these in sync with the Tailwind theme extension.
+ */
 export const BRAND = {
   name: 'The Change Engine',
   tagline: 'Community Life, Organized',
@@ -29,23 +57,22 @@ export const BRAND = {
   danger: '#e53e3e',
 } as const;
 
-export const PERSONAS = [
-  { id: 'starter', name: 'Starter', tagline: 'I want to get involved but don\'t know where to begin.' },
-  { id: 'hard-worker', name: 'Hard Worker', tagline: 'I need resources and I want to give back.' },
-  { id: 'next-steps', name: 'Next Steps', tagline: 'I\'m already active. What\'s next?' },
-  { id: 'looking-for-answers', name: 'Looking for Answers', tagline: 'I have a specific question or need.' },
-  { id: 'spark-plug', name: 'Spark Plug', tagline: 'I want to lead and organize.' },
-  { id: 'bridge-builder', name: 'Bridge Builder', tagline: 'I want to connect across divides.' },
-  { id: 'scout', name: 'Scout', tagline: 'I want to explore what\'s out there.' },
-  { id: 'register', name: 'Register', tagline: 'I want to vote and participate in democracy.' },
-] as const;
-
+/**
+ * Supported UI languages. Houston's top 3 languages.
+ * `langId` maps to the `languages` table PK in Supabase (null = English, no translation needed).
+ * Used by LanguageContext for client-side toggling and by the translation pipeline.
+ */
 export const LANGUAGES = [
   { code: 'en' as const, label: 'EN', name: 'English', langId: null },
   { code: 'es' as const, label: 'ES', name: 'Español', langId: 'LANG-ES' },
   { code: 'vi' as const, label: 'VI', name: 'Tiếng Việt', langId: 'LANG-VI' },
 ] as const;
 
+/**
+ * Configuration for a geographic boundary layer rendered on Google Maps.
+ * Each layer points to a static GeoJSON file in /public/geo/ and specifies
+ * how to identify features (idProperty) and where to link for detail pages.
+ */
 export interface GeoLayerConfig {
   id: string
   label: string
@@ -55,6 +82,15 @@ export interface GeoLayerConfig {
   detailPath: string | null
 }
 
+/**
+ * Available geographic boundary layers for Houston-area maps.
+ * GeoJSON files live in /public/geo/ and are loaded client-side by GeoJsonLayer.
+ * Layers can be toggled on/off via LayerControl in the InteractiveMap component.
+ *
+ * idProperty — which GeoJSON feature property uniquely identifies a polygon
+ *              (used for highlighting and linking to detail pages)
+ * detailPath — if non-null, clicking a polygon navigates to `{detailPath}{featureId}`
+ */
 export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   superNeighborhoods: {
     id: 'superNeighborhoods',

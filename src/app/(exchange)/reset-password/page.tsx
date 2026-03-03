@@ -5,18 +5,18 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function ResetPasswordPage() {
-  var [email, setEmail] = useState('')
-  var [error, setError] = useState<string | null>(null)
-  var [success, setSuccess] = useState(false)
-  var [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
-    var supabase = createClient()
-    var { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+    const supabase = createClient()
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: window.location.origin + '/auth/callback?next=/me/settings',
     })
 

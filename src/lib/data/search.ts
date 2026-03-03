@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase/server'
-import type { SearchResults } from '@/lib/types/exchange'
+import type { SearchResults, SearchResultService } from '@/lib/types/exchange'
 
 export async function searchAll(query: string): Promise<SearchResults> {
-  var empty: SearchResults = { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
+  const empty: SearchResults = { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
   if (!query || query.trim().length === 0) return empty
 
-  var supabase = await createClient()
-  var tsQuery = query.trim().split(/\s+/).join(' & ')
+  const supabase = await createClient()
+  const tsQuery = query.trim().split(/\s+/).join(' & ')
 
-  var [contentRes, servicesRes, officialsRes, orgsRes, policiesRes, situationsRes, resourcesRes, pathsRes] = await Promise.all([
+  const [contentRes, servicesRes, officialsRes, orgsRes, policiesRes, situationsRes, resourcesRes, pathsRes] = await Promise.all([
     supabase
       .from('content_published')
       .select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at')
@@ -56,15 +56,15 @@ export async function searchAll(query: string): Promise<SearchResults> {
   ])
 
   // Enrich services with org names
-  var services: any[] = []
+  let services: SearchResultService[] = []
   if (servicesRes.data && servicesRes.data.length > 0) {
-    var orgIds = Array.from(new Set(servicesRes.data.map(function (s) { return s.org_id }).filter(Boolean)))
+    const orgIds = Array.from(new Set(servicesRes.data.map(function (s) { return s.org_id }).filter(Boolean)))
     if (orgIds.length > 0) {
-      var { data: orgs } = await supabase
+      const { data: orgs } = await supabase
         .from('organizations')
         .select('org_id, org_name')
         .in('org_id', orgIds as string[])
-      var orgMap = new Map(orgs?.map(function (o) { return [o.org_id, o.org_name] as [string, string] }) ?? [])
+      const orgMap = new Map(orgs?.map(function (o) { return [o.org_id, o.org_name] as [string, string] }) ?? [])
       services = servicesRes.data.map(function (s) {
         return Object.assign({}, s, { org_name: orgMap.get(s.org_id!) ?? undefined })
       })

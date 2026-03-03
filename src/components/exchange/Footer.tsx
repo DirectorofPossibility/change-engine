@@ -7,7 +7,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-2">{BRAND.name}</h3>
+            <p className="font-bold text-lg mb-2">{BRAND.name}</p>
             <p className="text-sm text-gray-400">{BRAND.tagline}</p>
           </div>
           <div>
@@ -18,7 +18,8 @@ export function Footer() {
               <Link href="/officials" className="text-sm text-gray-400 hover:text-white">Officials</Link>
               <Link href="/services" className="text-sm text-gray-400 hover:text-white">Services</Link>
               <Link href="/elections" className="text-sm text-gray-400 hover:text-white">Elections</Link>
-              <Link href="/learn" className="text-sm text-gray-400 hover:text-white">Learn</Link>
+              <Link href="/explore" className="text-sm text-gray-400 hover:text-white">Explore</Link>
+              <Link href="/polling-places" className="text-sm text-gray-400 hover:text-white">Polling Places</Link>
               <Link href="/policies" className="text-sm text-gray-400 hover:text-white">Policies</Link>
               <Link href="/search" className="text-sm text-gray-400 hover:text-white">Search</Link>
             </div>
@@ -29,7 +30,7 @@ export function Footer() {
               A civic platform connecting Houston residents with resources, services, and civic participation opportunities.
             </p>
             <div className="space-y-1">
-              <Link href="/search" className="block text-sm text-gray-400 hover:text-white">Accessibility</Link>
+              <Link href="/accessibility" className="block text-sm text-gray-400 hover:text-white">Accessibility</Link>
             </div>
           </div>
         </div>

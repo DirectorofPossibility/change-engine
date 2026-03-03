@@ -1,7 +1,25 @@
+/**
+ * @fileoverview Data-fetching layer for the public exchange site (/(exchange)/*).
+ *
+ * All functions run server-side (RSC or server actions) and use the Supabase
+ * server client. They are organized into sections:
+ *
+ *   1. Language / Translation helpers
+ *   2. Homepage data (stats, center counts, pathway counts, latest content)
+ *   3. Entity queries (officials, services, learning paths, situations)
+ *   4. Pathway + center content filtering
+ *   5. Taxonomy lookups (focus areas, SDGs, SDOH)
+ *   6. Geographic data (neighborhoods, super neighborhoods, ZIP lookups)
+ *   7. Map marker data (services, voting locations, orgs, distribution sites with coords)
+ *
+ * Most pages use ISR (`export const revalidate = N`) so these queries are cached
+ * at the edge and only re-run every N seconds.
+ */
+
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
-import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, VotingLocation, DistributionSite, SuperNeighborhood } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood } from '@/lib/types/exchange'
 
 /**
  * Read language preference from cookie and return the LANG-XX id.
@@ -14,6 +32,9 @@ export async function getLangId(): Promise<string | null> {
   return langConfig?.langId ?? null
 }
 
+// ── Homepage data ──────────────────────────────────────────────────────
+
+/** Aggregate counts for the stats bar at the bottom of the homepage. */
 export async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
   const [resources, services, officials, paths, orgs, policies] = await Promise.all([
@@ -34,6 +55,7 @@ export async function getExchangeStats(): Promise<ExchangeStats> {
   }
 }
 
+/** Count published content per center (Learning/Action/Resource/Accountability) for homepage cards. */
 export async function getCenterCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -49,6 +71,7 @@ export async function getCenterCounts(): Promise<Record<string, number>> {
   return counts
 }
 
+/** Most recently published content for the "Latest Resources" homepage section. */
 export async function getLatestContent(limit = 6) {
   const supabase = await createClient()
   const { data } = await supabase
@@ -60,6 +83,9 @@ export async function getLatestContent(limit = 6) {
   return data ?? []
 }
 
+// ── Life situations ("I Need Help") ────────────────────────────────────
+
+/** All life situations, ordered for display. Featured/critical ones show on the homepage. */
 export async function getLifeSituations() {
   const supabase = await createClient()
   const { data } = await supabase
@@ -79,6 +105,11 @@ export async function getLifeSituation(slug: string) {
   return data
 }
 
+/**
+ * Fetch content + services relevant to a life situation.
+ * Matches via focus_area_ids overlap (content) and service_cat_id (services).
+ * Services are enriched with their parent organization name.
+ */
 export async function getLifeSituationContent(focusAreaIds: string, serviceCatIds: string | null) {
   const supabase = await createClient()
   // focus_area_ids is comma-separated TEXT in life_situations
@@ -120,6 +151,9 @@ export async function getLifeSituationContent(focusAreaIds: string, serviceCatId
   return { content: content ?? [], services }
 }
 
+// ── Entity queries ─────────────────────────────────────────────────────
+
+/** All elected officials with their government levels (for sorting/grouping). */
 export async function getOfficials() {
   const supabase = await createClient()
   const [{ data: officials }, { data: levels }] = await Promise.all([
@@ -129,6 +163,7 @@ export async function getOfficials() {
   return { officials: officials ?? [], levels: levels ?? [] }
 }
 
+/** All active 211 services, enriched with parent org names. */
 export async function getServices(): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()
   const { data: services } = await supabase
@@ -161,6 +196,9 @@ export async function getLearningPaths() {
   return data ?? []
 }
 
+// ── Pathway + center content ───────────────────────────────────────────
+
+/** Published content for a specific pathway, optionally filtered by center. */
 export async function getPathwayContent(themeId: string, center?: string) {
   const supabase = await createClient()
   let query = supabase
@@ -178,6 +216,7 @@ export async function getPathwayContent(themeId: string, center?: string) {
   return data ?? []
 }
 
+/** Count published content per pathway (THEME_01..THEME_07) for homepage pills. */
 export async function getPathwayCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -209,14 +248,16 @@ export async function getCenterContentForPathway(themeId: string): Promise<Recor
   return counts
 }
 
-// --- Sprint 4 fetchers ---
+// ── Taxonomy lookups ───────────────────────────────────────────────────
 
+/** All focus areas (specific topics like "Mental Health" under a pathway). */
 export async function getFocusAreas(): Promise<FocusArea[]> {
   const supabase = await createClient()
   const { data } = await supabase.from('focus_areas').select('*')
   return data ?? []
 }
 
+/** Quick lookup: focus_id → focus_area_name. Used for rendering focus area labels. */
 export async function getFocusAreaMap(): Promise<Record<string, string>> {
   const areas = await getFocusAreas()
   const map: Record<string, string> = {}
@@ -299,10 +340,6 @@ export async function getRelatedPolicies(focusAreaIds: string[]) {
   return data ?? []
 }
 
-export async function getTranslations(inboxIds: string[], langId: string): Promise<TranslationMap> {
-  return fetchTranslationsForTable('content_published', inboxIds, langId)
-}
-
 /**
  * Fetch translations for any table type.
  * Returns a map keyed by content_id with translated title/summary.
@@ -337,6 +374,7 @@ export async function fetchTranslationsForTable(
   return map
 }
 
+/** Check which languages each content item has been translated into. Returns { inboxId: ['LANG-ES', 'LANG-VI'] }. */
 export async function getTranslationAvailability(inboxIds: string[]): Promise<Record<string, string[]>> {
   const supabase = await createClient()
   if (inboxIds.length === 0) return {}
@@ -357,6 +395,13 @@ export async function getTranslationAvailability(inboxIds: string[]): Promise<Re
   return avail
 }
 
+// ── Geographic lookups ─────────────────────────────────────────────────
+
+/**
+ * Find the neighborhood that contains a given ZIP code.
+ * ZIP codes are stored as comma-separated text, so we use ilike + JS validation
+ * to avoid false substring matches (e.g. "7700" matching "77001").
+ */
 export async function getNeighborhoodByZip(zip: string) {
   const supabase = await createClient()
   // zip_codes is comma-separated TEXT — use ilike to find matching ZIP
@@ -414,8 +459,11 @@ export async function getServicesByZip(zip: string): Promise<ServiceWithOrg[]> {
   return services.map(function (s) { return Object.assign({}, s, { org_name: orgMap.get(s.org_id!) ?? undefined }) })
 }
 
-// --- Super Neighborhoods ---
+// ── Super Neighborhoods ────────────────────────────────────────────────
+// Houston has 88 "super neighborhoods" — city-defined groupings of smaller neighborhoods.
+// Each has demographics, ZIP codes, and associated services/organizations.
 
+/** All super neighborhoods, alphabetically. Used for the listing page. */
 export async function getSuperNeighborhoods(): Promise<SuperNeighborhood[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -445,6 +493,11 @@ export async function getNeighborhoodsBySuperNeighborhood(snId: string) {
   return data ?? []
 }
 
+/**
+ * Gather all map markers (services, voting, distribution, orgs) for a super neighborhood.
+ * Aggregates ZIP codes from child neighborhoods, then queries each marker type by ZIP.
+ * Falls back to the super neighborhood's own zip_codes if no child neighborhoods exist.
+ */
 export async function getMapMarkersForSuperNeighborhood(snId: string) {
   const supabase = await createClient()
 
@@ -505,8 +558,15 @@ export async function getMapMarkersForSuperNeighborhood(snId: string) {
   return { services, votingLocations, distributionSites, organizations }
 }
 
-// --- Map data functions ---
+// ── Map marker data ────────────────────────────────────────────────────
+// These functions return entities with lat/lng for rendering on Google Maps.
+// Coordinates come from the entity table or fall back to geocode_cache.
 
+/**
+ * Services with coordinates for map markers.
+ * Joins with organizations for names and geocode_cache for lat/lng.
+ * Optionally filtered by ZIP codes.
+ */
 export async function getServicesWithCoords(zipCodes?: string[]): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()
 
@@ -565,6 +625,7 @@ export async function getServicesWithCoords(zipCodes?: string[]): Promise<Servic
   })
 }
 
+/** Voting locations with coordinates, optionally filtered by ZIP code. */
 export async function getVotingLocationsWithCoords(zipCode?: string) {
   const supabase = await createClient()
   let query = supabase
@@ -582,14 +643,20 @@ export async function getVotingLocationsWithCoords(zipCode?: string) {
   return data ?? []
 }
 
-export async function getOrganizationsWithCoords() {
+/** Organizations with coordinates, optionally filtered by ZIP code. Selects only marker-needed fields. */
+export async function getOrganizationsWithCoords(zipCode?: string) {
   const supabase = await createClient()
-  const { data } = await supabase
+  let query = supabase
     .from('organizations')
-    .select('*')
+    .select('org_id, org_name, description_5th_grade, website, latitude, longitude, zip_code, address, city')
     .not('latitude', 'is', null)
     .not('longitude', 'is', null)
-    .limit(200)
+
+  if (zipCode) {
+    query = query.eq('zip_code', zipCode)
+  }
+
+  const { data } = await query.limit(200)
   return data ?? []
 }
 

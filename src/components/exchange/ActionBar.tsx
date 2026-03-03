@@ -19,7 +19,7 @@ interface ActionBarProps {
 }
 
 export function ActionBar(props: ActionBarProps) {
-  var actions: Action[] = []
+  const actions: Action[] = []
 
   if (props.actionDonate) actions.push({ key: 'donate', label: 'Donate', icon: <Heart size={16} />, value: props.actionDonate })
   if (props.actionVolunteer) actions.push({ key: 'volunteer', label: 'Volunteer', icon: <Users size={16} />, value: props.actionVolunteer })
@@ -34,11 +34,11 @@ export function ActionBar(props: ActionBarProps) {
   return (
     <div className="flex flex-wrap gap-3">
       {actions.map(function (action) {
-        var href = action.value
+        let href = action.value
         if (action.key === 'call' && !href.startsWith('tel:')) {
           href = 'tel:' + href.replace(/[^\d+]/g, '')
         }
-        var isExternal = href.startsWith('http') || href.startsWith('tel:')
+        const isExternal = href.startsWith('http') || href.startsWith('tel:')
         return (
           <Link
             key={action.key}

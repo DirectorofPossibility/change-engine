@@ -1,4 +1,4 @@
-import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getRecentActivity } from '@/lib/data/dashboard'
+import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog } from '@/lib/data/dashboard'
 import { StatsCard } from '@/components/ui/StatsCard'
 import { PipelineFlow } from '@/components/ui/PipelineFlow'
 import { ThemePill } from '@/components/ui/ThemePill'
@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     getReviewStatusBreakdown(),
     getContentByPathway(),
     getContentByCenter(),
-    getRecentActivity(10),
+    getIngestionLog(10),
   ])
 
   return (
@@ -43,7 +43,7 @@ export default async function DashboardPage() {
                   <div className="flex-1 bg-brand-bg rounded-full h-4 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-brand-accent/30"
-                      style={{ width: `${Math.min((count / stats.published) * 100, 100)}%` }}
+                      style={{ width: `${stats.published > 0 ? Math.min((count / stats.published) * 100, 100) : 0}%` }}
                     />
                   </div>
                   <span className="text-sm font-medium w-8 text-right">{count}</span>
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
 
       {/* Cron Status */}
       <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
-        <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Cron Jobs (8 Active)</h3>
+        <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide mb-4">Cron Jobs ({CRON_JOBS.length} Active)</h3>
         <div className="grid grid-cols-2 gap-3">
           {CRON_JOBS.map((job) => (
             <div key={job.name} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3">

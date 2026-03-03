@@ -3,10 +3,21 @@
 import { useEffect } from 'react'
 import { useLanguage } from '@/lib/contexts/LanguageContext'
 import { ContentCard } from './ContentCard'
-import type { ContentPublished } from '@/lib/types/exchange'
+interface ContentGridItem {
+  id: string
+  inbox_id?: string | null
+  title_6th_grade?: string | null
+  summary_6th_grade?: string | null
+  pathway_primary?: string | null
+  center?: string | null
+  source_url?: string | null
+  published_at?: string | null
+  focus_area_ids?: string[] | null
+  image_url?: string | null
+}
 
 interface TranslatedContentGridProps {
-  items: ContentPublished[]
+  items: ContentGridItem[]
   focusAreaMap?: Record<string, string>
 }
 
@@ -45,14 +56,14 @@ export function TranslatedContentGrid({ items, focusAreaMap }: TranslatedContent
           <ContentCard
             key={item.id}
             id={item.id}
-            title={t?.title || item.title_6th_grade}
-            summary={t?.summary || item.summary_6th_grade}
-            pathway={item.pathway_primary}
-            center={item.center}
-            sourceUrl={item.source_url}
-            publishedAt={item.published_at}
+            title={t?.title || item.title_6th_grade || ''}
+            summary={t?.summary || item.summary_6th_grade || ''}
+            pathway={item.pathway_primary ?? null}
+            center={item.center ?? null}
+            sourceUrl={item.source_url || ''}
+            publishedAt={item.published_at ?? null}
             focusAreaNames={focusNames}
-            imageUrl={item.image_url}
+            imageUrl={item.image_url ?? null}
           />
         )
       })}

@@ -1,34 +1,23 @@
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+'use server'
 
-async function callEdgeFunction(name: string, body: Record<string, unknown>) {
-  const res = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, {
+import { createClient } from '@/lib/supabase/server'
+
+/** Trigger batch translation via the internal /api/translate route using the service role key. */
+export async function translateAll() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const CRON_SECRET = process.env.CRON_SECRET
+  if (!CRON_SECRET) throw new Error('Server configuration missing')
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/translate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Authorization': `Bearer ${CRON_SECRET}`,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ tables: ['content_published'], languages: ['es', 'vi'], limit: 50 }),
   })
   return res.json()
-}
-
-export async function classifyUrl(url: string) {
-  return callEdgeFunction('classify-content-v2', { url })
-}
-
-export async function csvUpload(rows: Array<{ url: string; title?: string; description?: string }>) {
-  return callEdgeFunction('csv-upload', { rows })
-}
-
-export async function publishContent() {
-  return callEdgeFunction('publish-content', {})
-}
-
-export async function translateAll() {
-  return callEdgeFunction('translate-content', { mode: 'batch', languages: ['es', 'vi'] })
-}
-
-export async function pollRssFeeds() {
-  return callEdgeFunction('rss-proxy', { mode: 'poll_all' })
 }

@@ -69,14 +69,12 @@ export function ElectionBanner() {
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            <a
-              href={ELECTION.findPollingPlace}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/polling-places"
               className="bg-white text-brand-text px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap"
             >
               Find Your Polling Place
-            </a>
+            </Link>
             <Link
               href="/elections"
               className="hidden sm:inline-flex bg-white/15 border border-white/30 px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"

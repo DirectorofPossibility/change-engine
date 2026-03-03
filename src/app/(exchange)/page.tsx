@@ -46,22 +46,28 @@ export default async function HomePage() {
         address: [s.address, s.city].filter(Boolean).join(', '),
         link: '/services/' + s.service_id,
       })),
-    ...sampleVoting.slice(0, 20).map(v => ({
-      id: 'vote-' + v.location_id,
-      lat: v.latitude as number,
-      lng: v.longitude as number,
-      title: v.location_name,
-      type: 'voting' as const,
-      address: [v.address, v.city].filter(Boolean).join(', '),
-    })),
-    ...sampleOrgs.slice(0, 20).map(o => ({
-      id: 'org-' + o.org_id,
-      lat: o.latitude as number,
-      lng: o.longitude as number,
-      title: o.org_name,
-      type: 'organization' as const,
-      link: '/organizations/' + o.org_id,
-    })),
+    ...sampleVoting
+      .filter(v => v.latitude != null && v.longitude != null)
+      .slice(0, 20)
+      .map(v => ({
+        id: 'vote-' + v.location_id,
+        lat: v.latitude as number,
+        lng: v.longitude as number,
+        title: v.location_name,
+        type: 'voting' as const,
+        address: [v.address, v.city].filter(Boolean).join(', '),
+      })),
+    ...sampleOrgs
+      .filter(o => o.latitude != null && o.longitude != null)
+      .slice(0, 20)
+      .map(o => ({
+        id: 'org-' + o.org_id,
+        lat: o.latitude as number,
+        lng: o.longitude as number,
+        title: o.org_name,
+        type: 'organization' as const,
+        link: '/organizations/' + o.org_id,
+      })),
   ]
 
   const langId = await getLangId()

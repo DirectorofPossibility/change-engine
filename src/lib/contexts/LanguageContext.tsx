@@ -22,7 +22,7 @@ export function LanguageProvider({
   initialLang?: string
   children: ReactNode
 }) {
-  var validLang: SupportedLanguage = 'en'
+  let validLang: SupportedLanguage = 'en'
   if (initialLang === 'es' || initialLang === 'vi') validLang = initialLang
 
   const [language, setLangState] = useState<SupportedLanguage>(validLang)
@@ -41,19 +41,19 @@ export function LanguageProvider({
     if (language === 'en' || inboxIds.length === 0) {
       return
     }
-    var langConfig = LANGUAGES.find(function (l) { return l.code === language })
+    const langConfig = LANGUAGES.find(function (l) { return l.code === language })
     if (!langConfig || !langConfig.langId) return
 
     setIsLoading(true)
     try {
-      var supabase = createClient()
-      var { data } = await supabase
+      const supabase = createClient()
+      const { data } = await supabase
         .from('translations')
         .select('*')
         .in('content_id', inboxIds)
         .eq('language_id', langConfig.langId)
 
-      var map: TranslationMap = {}
+      const map: TranslationMap = {}
       if (data) {
         data.forEach(function (t) {
           if (!t.content_id) return
@@ -62,7 +62,7 @@ export function LanguageProvider({
           if (t.field_name === 'summary' || t.field_name === 'summary_6th_grade') map[t.content_id].summary = t.translated_text ?? undefined
         })
       }
-      setTranslations(map)
+      setTranslations(function (prev) { return Object.assign({}, prev, map) })
     } finally {
       setIsLoading(false)
     }
@@ -76,7 +76,7 @@ export function LanguageProvider({
 }
 
 export function useLanguage() {
-  var ctx = useContext(LanguageContext)
+  const ctx = useContext(LanguageContext)
   if (!ctx) throw new Error('useLanguage must be used within LanguageProvider')
   return ctx
 }

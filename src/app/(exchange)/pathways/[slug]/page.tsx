@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { THEMES, CENTERS } from '@/lib/constants'
+import { THEMES } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway, getLifeSituations, getLearningPaths,
-  getFocusAreaMap, getRelatedOpportunities, getRelatedPolicies,
+  getRelatedOpportunities, getRelatedPolicies,
   getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { ContentCard } from '@/components/exchange/ContentCard'
@@ -38,12 +38,11 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const theme = resolveTheme(slug)
   if (!theme) notFound()
 
-  const [content, centerCounts, situations, paths, focusAreaMap] = await Promise.all([
+  const [content, centerCounts, situations, paths] = await Promise.all([
     getPathwayContent(theme.id),
     getCenterContentForPathway(theme.id),
     getLifeSituations(),
     getLearningPaths(),
-    getFocusAreaMap(),
   ])
 
   // Collect unique focus area IDs from content in this pathway

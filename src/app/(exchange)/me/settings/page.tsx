@@ -5,20 +5,20 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function SettingsPage() {
-  var [profile, setProfile] = useState<any>(null)
-  var [displayName, setDisplayName] = useState('')
-  var [zipCode, setZipCode] = useState('')
-  var [language, setLanguage] = useState('en')
-  var [gamification, setGamification] = useState(true)
-  var [newPassword, setNewPassword] = useState('')
-  var [loading, setLoading] = useState(true)
-  var [saving, setSaving] = useState(false)
-  var [message, setMessage] = useState<string | null>(null)
-  var [error, setError] = useState<string | null>(null)
-  var router = useRouter()
+  const [profile, setProfile] = useState<any>(null)
+  const [displayName, setDisplayName] = useState('')
+  const [zipCode, setZipCode] = useState('')
+  const [language, setLanguage] = useState('en')
+  const [gamification, setGamification] = useState(true)
+  const [newPassword, setNewPassword] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   useEffect(function () {
-    var supabase = createClient()
+    const supabase = createClient()
     supabase.auth.getUser().then(function ({ data }) {
       if (!data.user) {
         router.push('/login?redirect=/me/settings')
@@ -44,12 +44,13 @@ export default function SettingsPage() {
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault()
+    if (!profile) { setError('Profile not found. Please reload the page.'); return }
     setSaving(true)
     setMessage(null)
     setError(null)
 
-    var supabase = createClient()
-    var { error: updateError } = await supabase
+    const supabase = createClient()
+    const { error: updateError } = await supabase
       .from('user_profiles')
       .update({
         display_name: displayName,
@@ -83,8 +84,8 @@ export default function SettingsPage() {
     setMessage(null)
     setError(null)
 
-    var supabase = createClient()
-    var { error: pwError } = await supabase.auth.updateUser({ password: newPassword })
+    const supabase = createClient()
+    const { error: pwError } = await supabase.auth.updateUser({ password: newPassword })
 
     if (pwError) {
       setError(pwError.message)

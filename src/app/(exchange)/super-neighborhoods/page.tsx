@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Users, DollarSign, MapPin } from 'lucide-react'
+import { Users, DollarSign } from 'lucide-react'
 import { getSuperNeighborhoods } from '@/lib/data/exchange'
-import { GEO_LAYERS } from '@/lib/constants'
 import { SuperNeighborhoodsMap } from './SuperNeighborhoodsMap'
 
 export const revalidate = 300

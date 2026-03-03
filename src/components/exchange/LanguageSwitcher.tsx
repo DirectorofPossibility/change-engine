@@ -13,6 +13,7 @@ export function LanguageSwitcher() {
           <button
             key={l.code}
             onClick={function () { setLanguage(l.code) }}
+            aria-label={l.name}
             className={'text-xs px-2 py-1 rounded-full transition-colors ' + (
               language === l.code
                 ? 'bg-brand-accent text-white'

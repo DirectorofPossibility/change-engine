@@ -28,14 +28,15 @@ export function ZipInput() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-1">
-      <MapPin size={14} className="text-brand-muted" />
+    <form onSubmit={handleSubmit} className="flex items-center gap-1.5">
+      <MapPin size={14} className="text-brand-accent" />
       <input
         type="text"
         value={input}
         onChange={function (e) { setInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-        placeholder="ZIP"
-        className="w-16 text-xs px-1.5 py-1 border border-brand-border rounded bg-white focus:outline-none focus:border-brand-accent"
+        placeholder="Enter ZIP"
+        aria-label="ZIP code"
+        className="w-20 text-xs px-2 py-1 border border-brand-accent/30 rounded bg-brand-accent/5 focus:outline-none focus:border-brand-accent focus:bg-white"
         maxLength={5}
         disabled={isLoading}
       />

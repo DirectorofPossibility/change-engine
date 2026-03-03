@@ -26,7 +26,7 @@ export function Sidebar({ pipelineStats }: SidebarProps) {
   const router = useRouter()
 
   function handleSignOut() {
-    var supabase = createClient()
+    const supabase = createClient()
     supabase.auth.signOut().then(function () {
       router.push('/login')
       router.refresh()

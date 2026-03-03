@@ -6,21 +6,25 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
-  var [email, setEmail] = useState('')
-  var [password, setPassword] = useState('')
-  var [error, setError] = useState<string | null>(null)
-  var [loading, setLoading] = useState(false)
-  var router = useRouter()
-  var searchParams = useSearchParams()
-  var redirect = searchParams.get('redirect') || '/me'
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  // Prevent open redirect: only allow relative paths, block protocol-relative URLs
+  let redirect = searchParams.get('redirect') || '/me'
+  if (!redirect.startsWith('/') || redirect.startsWith('//')) {
+    redirect = '/me'
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
-    var supabase = createClient()
-    var { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const supabase = createClient()
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
     if (authError) {
       setError(authError.message)

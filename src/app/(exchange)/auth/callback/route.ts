@@ -2,13 +2,18 @@ import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-  var { searchParams, origin } = new URL(request.url)
-  var code = searchParams.get('code')
-  var next = searchParams.get('next') ?? '/me'
+  const { searchParams, origin } = new URL(request.url)
+  const code = searchParams.get('code')
+  let next = searchParams.get('next') ?? '/me'
+
+  // Prevent open redirect: only allow relative paths, block protocol-relative URLs
+  if (!next.startsWith('/') || next.startsWith('//')) {
+    next = '/me'
+  }
 
   if (code) {
-    var supabase = await createClient()
-    var { error } = await supabase.auth.exchangeCodeForSession(code)
+    const supabase = await createClient()
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
       return NextResponse.redirect(origin + next)
     }

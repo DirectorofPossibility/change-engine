@@ -5,24 +5,24 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 export default function SignupPage() {
-  var [email, setEmail] = useState('')
-  var [password, setPassword] = useState('')
-  var [displayName, setDisplayName] = useState('')
-  var [zipCode, setZipCode] = useState('')
-  var [language, setLanguage] = useState('en')
-  var [error, setError] = useState<string | null>(null)
-  var [success, setSuccess] = useState(false)
-  var [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [displayName, setDisplayName] = useState('')
+  const [zipCode, setZipCode] = useState('')
+  const [language, setLanguage] = useState('en')
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
-    var supabase = createClient()
+    const supabase = createClient()
 
     // Create auth user
-    var { data: authData, error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -38,7 +38,7 @@ export default function SignupPage() {
 
     // Create user profile
     if (authData.user) {
-      var { error: profileError } = await supabase.from('user_profiles').insert({
+      const { error: profileError } = await supabase.from('user_profiles').insert({
         auth_id: authData.user.id,
         display_name: displayName,
         email: email,

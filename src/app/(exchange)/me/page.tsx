@@ -11,36 +11,36 @@ export const metadata: Metadata = {
 }
 
 export default async function MyDashboardPage() {
-  var supabase = await createClient()
-  var { data: { user } } = await supabase.auth.getUser()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirect=/me')
 
   // Fetch profile
-  var { data: profile } = await supabase
+  const { data: profile } = await supabase
     .from('user_profiles')
     .select('*')
     .eq('auth_id', user.id)
     .single()
 
   // Fetch learning progress
-  var { data: progress } = await supabase
+  const { data: progress } = await supabase
     .from('user_progress')
     .select('progress_id, path_id, module_id, status, started_at, completed_at')
     .eq('user_id', user.id)
     .order('last_updated', { ascending: false })
 
   // Fetch badges
-  var { data: userBadges } = await supabase
+  const { data: userBadges } = await supabase
     .from('user_badges')
     .select('user_badge_id, badge_id, earned_date, earned_via, points_at_earning')
     .eq('user_id', user.id)
     .order('earned_date', { ascending: false })
 
   // Fetch badge details
-  var badgeDetails: any[] = []
+  let badgeDetails: any[] = []
   if (userBadges && userBadges.length > 0) {
-    var badgeIds = userBadges.map(function (b) { return b.badge_id }).filter(Boolean) as string[]
-    var { data: badges } = await supabase
+    const badgeIds = userBadges.map(function (b) { return b.badge_id }).filter(Boolean) as string[]
+    const { data: badges } = await supabase
       .from('badges')
       .select('badge_id, badge_name, description_5th_grade, icon_name, color, points')
       .in('badge_id', badgeIds)
@@ -48,7 +48,7 @@ export default async function MyDashboardPage() {
   }
 
   // Fetch recent actions
-  var { data: actions } = await supabase
+  const { data: actions } = await supabase
     .from('user_actions')
     .select('action_log_id, action_type_id, target_name, action_date, impact_points')
     .eq('user_id', user.id)
@@ -56,11 +56,11 @@ export default async function MyDashboardPage() {
     .limit(10)
 
   // Get unique path IDs from progress to fetch path names
-  var pathNames: Record<string, string> = {}
+  const pathNames: Record<string, string> = {}
   if (progress && progress.length > 0) {
-    var pathIds = Array.from(new Set(progress.map(function (p) { return p.path_id }).filter(Boolean))) as string[]
+    const pathIds = Array.from(new Set(progress.map(function (p) { return p.path_id }).filter(Boolean))) as string[]
     if (pathIds.length > 0) {
-      var { data: paths } = await supabase
+      const { data: paths } = await supabase
         .from('learning_paths')
         .select('path_id, path_name')
         .in('path_id', pathIds)
@@ -71,7 +71,7 @@ export default async function MyDashboardPage() {
   }
 
   // Group progress by path
-  var pathProgress: Record<string, { total: number; completed: number; lastActive: string | null }> = {}
+  const pathProgress: Record<string, { total: number; completed: number; lastActive: string | null }> = {}
   if (progress) {
     progress.forEach(function (p) {
       if (!p.path_id) return
@@ -86,8 +86,8 @@ export default async function MyDashboardPage() {
     })
   }
 
-  var displayName = profile?.display_name || user.email?.split('@')[0] || 'User'
-  var totalPoints = (userBadges || []).reduce(function (sum, b) { return sum + (b.points_at_earning || 0) }, 0)
+  const displayName = profile?.display_name || user.email?.split('@')[0] || 'User'
+  const totalPoints = (userBadges || []).reduce(function (sum, b) { return sum + (b.points_at_earning || 0) }, 0)
     + (actions || []).reduce(function (sum, a) { return sum + (a.impact_points || 0) }, 0)
 
   return (
@@ -121,7 +121,7 @@ export default async function MyDashboardPage() {
             ) : (
               <div className="space-y-3">
                 {Object.entries(pathProgress).map(function ([pathId, prog]) {
-                  var pct = prog.total > 0 ? Math.round((prog.completed / prog.total) * 100) : 0
+                  const pct = prog.total > 0 ? Math.round((prog.completed / prog.total) * 100) : 0
                   return (
                     <Link key={pathId} href={'/learn/' + pathId} className="block bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
                       <div className="flex items-center justify-between mb-2">
@@ -187,7 +187,7 @@ export default async function MyDashboardPage() {
             ) : (
               <div className="grid grid-cols-2 gap-3">
                 {userBadges.map(function (ub) {
-                  var detail = badgeDetails.find(function (b) { return b.badge_id === ub.badge_id })
+                  const detail = badgeDetails.find(function (b) { return b.badge_id === ub.badge_id })
                   return (
                     <div key={ub.user_badge_id} className="bg-white rounded-xl border border-brand-border p-3 text-center">
                       <div

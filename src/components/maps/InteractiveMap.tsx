@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useMap } from '@vis.gl/react-google-maps'
 import { MarkerClusterer } from '@googlemaps/markerclusterer'
-import type { Marker } from '@googlemaps/markerclusterer'
 import { MapProvider } from './MapProvider'
 import { HoustonMap } from './HoustonMap'
 import { MapMarker, type MarkerData } from './MapMarker'
@@ -44,7 +43,7 @@ function InteractiveMapInner({
 }: InteractiveMapProps) {
   const map = useMap()
   const clustererRef = useRef<MarkerClusterer | null>(null)
-  const markerRefs = useRef<Map<string, Marker>>(new Map())
+  const markerRefs = useRef<Map<string, google.maps.marker.AdvancedMarkerElement>>(new Map())
 
   // Visible layer state
   const [visibleLayerIds, setVisibleLayerIds] = useState<Set<string>>(
@@ -68,7 +67,7 @@ function InteractiveMapInner({
     map.fitBounds(bounds, 50)
   }, [map, markers])
 
-  const setMarkerRef = useCallback((marker: Marker | null, id: string) => {
+  const setMarkerRef = useCallback((marker: google.maps.marker.AdvancedMarkerElement | null, id: string) => {
     if (!clustererRef.current) return
     if (marker) {
       markerRefs.current.set(id, marker)
@@ -147,7 +146,7 @@ function InteractiveMapInner({
 
           {/* Point markers on top of boundaries */}
           {markers.map(m => (
-            <MapMarker key={m.id} marker={m} />
+            <MapMarker key={m.id} marker={m} onMarkerReady={setMarkerRef} />
           ))}
         </HoustonMap>
 

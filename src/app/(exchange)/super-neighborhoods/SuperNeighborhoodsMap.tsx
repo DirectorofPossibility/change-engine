@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
 import { InteractiveMap } from '@/components/maps'
 import { GEO_LAYERS } from '@/lib/constants'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'

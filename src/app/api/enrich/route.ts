@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateApiRequest } from '@/lib/api-auth'
 
 /**
  * POST /api/enrich
@@ -394,6 +395,9 @@ Return a single JSON object:
 // ── Route handler ───────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const authError = await validateApiRequest(req)
+  if (authError) return authError
+
   if (!ANTHROPIC_KEY) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 })
   }

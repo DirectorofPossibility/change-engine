@@ -3,22 +3,18 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Menu, X, Search } from 'lucide-react'
+import { Menu, X, Search, MapPin } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
 import { AuthButton } from './AuthButton'
 
 const NAV_LINKS = [
-  { href: '/circle', label: 'Circle' },
   { href: '/pathways', label: 'Pathways' },
   { href: '/explore', label: 'Explore' },
   { href: '/help', label: 'I Need Help' },
-  { href: '/officials', label: 'Officials' },
   { href: '/services', label: 'Services' },
   { href: '/elections', label: 'Elections' },
-  { href: '/polling-places', label: 'Polling Places' },
-  { href: '/policies', label: 'Policies' },
 ]
 
 export function Header() {
@@ -62,6 +58,9 @@ export function Header() {
 
           {/* Desktop tools */}
           <div className="hidden md:flex items-center gap-3">
+            <div className="border-l-2 border-brand-accent pl-3">
+              <ZipInput />
+            </div>
             <form onSubmit={handleSearch} className="relative">
               <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-brand-muted" />
               <input
@@ -73,7 +72,6 @@ export function Header() {
                 className="w-36 pl-7 pr-2 py-1 text-xs border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
               />
             </form>
-            <ZipInput />
             <LanguageSwitcher />
             <AuthButton />
           </div>
@@ -91,6 +89,13 @@ export function Header() {
         {/* Mobile nav */}
         {menuOpen && (
           <nav className="md:hidden pb-4 border-t border-brand-border pt-4 space-y-3">
+            <div className="pb-3 border-b border-brand-border">
+              <p className="text-xs text-brand-muted mb-2 flex items-center gap-1">
+                <MapPin size={12} className="text-brand-accent" />
+                Start with your ZIP code
+              </p>
+              <ZipInput />
+            </div>
             {NAV_LINKS.map(function (link) {
               return (
                 <Link
@@ -111,11 +116,11 @@ export function Header() {
                   value={searchQuery}
                   onChange={function (e) { setSearchQuery(e.target.value) }}
                   placeholder="Search..."
+                  aria-label="Search the site"
                   className="w-full pl-7 pr-2 py-2 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
                 />
               </form>
               <div className="flex items-center justify-between">
-                <ZipInput />
                 <LanguageSwitcher />
                 <AuthButton />
               </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateApiRequest } from '@/lib/api-auth'
 
 /**
  * POST /api/translate
@@ -136,6 +137,9 @@ async function translateText(
 // ── Main route ──────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
+  const authError = await validateApiRequest(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const {

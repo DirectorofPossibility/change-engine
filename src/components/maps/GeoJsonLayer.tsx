@@ -86,7 +86,7 @@ export function GeoJsonLayer({
     const dataLayer = dataLayerRef.current
     if (!dataLayer) return
 
-    dataLayer.setStyle((feature) => {
+    dataLayer.setStyle((feature: google.maps.Data.Feature) => {
       const featureId = idProperty ? feature.getProperty(idProperty) : null
       const isHighlighted = highlightFeatureId != null && featureId === highlightFeatureId
 

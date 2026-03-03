@@ -4,19 +4,29 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { AiClassification } from '@/lib/types/dashboard'
 
+/** Verify the calling user is authenticated; returns user for audit trail. */
+async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+  return user
+}
+
 export async function approveItem(reviewId: string, inboxId: string, classification: AiClassification) {
   const supabase = await createClient()
+  const user = await requireAuth(supabase)
 
-  // Update review status
-  await supabase.from('content_review_queue')
-    .update({ review_status: 'approved', reviewed_by: 'admin', reviewed_at: new Date().toISOString() })
+  // Update review status with actual reviewer identity
+  const { error: reviewErr } = await supabase.from('content_review_queue')
+    .update({ review_status: 'approved', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString() })
     .eq('id', reviewId)
+
+  if (reviewErr) return { error: reviewErr.message }
 
   // Get inbox data
   const { data: inbox } = await supabase.from('content_inbox').select('*').eq('id', inboxId).single()
   if (!inbox) return { error: 'Inbox item not found' }
 
-  // Check if already published
+  // Skip if already published
   const { data: existing } = await supabase.from('content_published').select('id').eq('inbox_id', inboxId)
   if (existing && existing.length > 0) return { success: true, message: 'Already published' }
 
@@ -59,9 +69,10 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
 
 export async function rejectItem(reviewId: string, notes?: string) {
   const supabase = await createClient()
+  const user = await requireAuth(supabase)
 
   const { error } = await supabase.from('content_review_queue')
-    .update({ review_status: 'rejected', reviewed_by: 'admin', reviewed_at: new Date().toISOString(), reviewer_notes: notes || null })
+    .update({ review_status: 'rejected', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString(), reviewer_notes: notes || null })
     .eq('id', reviewId)
 
   revalidatePath('/dashboard/review')

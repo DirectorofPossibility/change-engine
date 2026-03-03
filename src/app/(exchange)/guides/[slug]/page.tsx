@@ -7,6 +7,21 @@ import { ThemePill } from '@/components/ui/ThemePill'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { ExternalLink } from 'lucide-react'
 
+/** Strip dangerous HTML tags and attributes to prevent XSS. */
+function sanitizeHtml(html: string): string {
+  return html
+    // Remove script tags and their content
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    // Remove event handler attributes (onclick, onerror, onload, etc.)
+    .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/\s+on\w+\s*=\s*\S+/gi, '')
+    // Remove javascript: protocol in href/src
+    .replace(/(?:href|src)\s*=\s*["']?\s*javascript:/gi, 'data-blocked=')
+    // Remove iframe, object, embed tags
+    .replace(/<(iframe|object|embed|form)[\s\S]*?<\/\1>/gi, '')
+    .replace(/<(iframe|object|embed|form)[^>]*\/?>/gi, '')
+}
+
 export const revalidate = 3600
 
 interface GuideSection {
@@ -112,7 +127,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                     </h2>
                     <div
                       className="prose prose-sm max-w-none text-brand-text"
-                      dangerouslySetInnerHTML={{ __html: section.content }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.content) }}
                     />
                   </section>
                 )
@@ -124,7 +139,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {guide.content_html && (
             <div
               className="prose prose-sm max-w-none text-brand-text mt-8 bg-white rounded-xl border border-brand-border p-6"
-              dangerouslySetInnerHTML={{ __html: guide.content_html }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(guide.content_html) }}
             />
           )}
         </div>

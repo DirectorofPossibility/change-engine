@@ -3,6 +3,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
+/** Verify the calling user is authenticated; throws if not. */
+async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+  return user
+}
+
 export async function updateContent(id: string, data: {
   title_6th_grade?: string
   summary_6th_grade?: string
@@ -12,6 +19,8 @@ export async function updateContent(id: string, data: {
   is_active?: boolean
 }) {
   const supabase = await createClient()
+  await requireAuth(supabase)
+
   const { error } = await supabase.from('content_published')
     .update({ ...data, last_updated: new Date().toISOString() })
     .eq('id', id)
@@ -30,13 +39,14 @@ export async function toggleActive(id: string, value: boolean) {
 
 export async function deleteContent(id: string, inboxId: string | null) {
   const supabase = await createClient()
+  await requireAuth(supabase)
 
-  // Delete associated translations
+  // Clean up associated records
   if (inboxId) {
     await supabase.from('translations').delete().eq('content_id', inboxId)
+    await supabase.from('content_review_queue').delete().eq('inbox_id', inboxId)
   }
 
-  // Delete from content_published
   const { error } = await supabase.from('content_published').delete().eq('id', id)
 
   revalidatePath('/dashboard/content')
@@ -46,6 +56,7 @@ export async function deleteContent(id: string, inboxId: string | null) {
 
 export async function moveToDraft(id: string, inboxId: string) {
   const supabase = await createClient()
+  await requireAuth(supabase)
 
   // Set review queue record back to pending
   const { error: reviewErr } = await supabase

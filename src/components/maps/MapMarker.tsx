@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { AdvancedMarker, InfoWindow, Pin, useAdvancedMarkerRef } from '@vis.gl/react-google-maps'
 import Link from 'next/link'
 
@@ -27,12 +27,22 @@ const MARKER_COLORS: Record<MarkerType, { background: string; glyph: string; bor
 
 interface MapMarkerProps {
   marker: MarkerData
+  onMarkerReady?: (marker: google.maps.marker.AdvancedMarkerElement | null, id: string) => void
 }
 
-export function MapMarker({ marker }: MapMarkerProps) {
+export function MapMarker({ marker, onMarkerReady }: MapMarkerProps) {
   const [infoOpen, setInfoOpen] = useState(false)
   const [markerRef, advancedMarker] = useAdvancedMarkerRef()
   const colors = MARKER_COLORS[marker.type]
+
+  useEffect(() => {
+    if (onMarkerReady) {
+      onMarkerReady(advancedMarker, marker.id)
+    }
+    return () => {
+      if (onMarkerReady) onMarkerReady(null, marker.id)
+    }
+  }, [advancedMarker, marker.id, onMarkerReady])
 
   const handleClick = useCallback(() => setInfoOpen(true), [])
   const handleClose = useCallback(() => setInfoOpen(false), [])

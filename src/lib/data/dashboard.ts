@@ -1,6 +1,26 @@
+/**
+ * @fileoverview Data-fetching layer for the admin dashboard (/dashboard/*).
+ *
+ * All functions use the Supabase server client (inherits the logged-in user's session).
+ * Dashboard pages are server-rendered (no ISR) so data is always fresh.
+ *
+ * Organized by dashboard section:
+ *   1. Pipeline stats (overview cards + pipeline flow chart)
+ *   2. Content by pathway / center (bar charts)
+ *   3. Review queue + published content (data tables)
+ *   4. Ingestion log (activity feed)
+ *   5. RSS feeds + source trust (configuration)
+ *   6. Translation stats + coverage
+ *   7. Taxonomy browser (themes, focus areas, SDGs, SDOH, NTEE, AIRS)
+ *   8. API keys management
+ */
+
 import { createClient } from '@/lib/supabase/server'
 import type { ApiKey, PipelineStats, ReviewStatusBreakdown, RssFeed } from '@/lib/types/dashboard'
 
+// ── Pipeline overview ──────────────────────────────────────────────────
+
+/** Aggregate counts for the 4 dashboard overview cards (ingested, needs review, published, translated). */
 export async function getPipelineStats(): Promise<PipelineStats> {
   const supabase = await createClient()
   const [inbox, review, published, translations] = await Promise.all([
@@ -17,6 +37,7 @@ export async function getPipelineStats(): Promise<PipelineStats> {
   }
 }
 
+/** Breakdown of review queue by status — feeds the pipeline flow visualization. */
 export async function getReviewStatusBreakdown(): Promise<ReviewStatusBreakdown & { total: number }> {
   const supabase = await createClient()
   const [autoApproved, pending, flagged, rejected] = await Promise.all([
@@ -34,6 +55,9 @@ export async function getReviewStatusBreakdown(): Promise<ReviewStatusBreakdown 
   }
 }
 
+// ── Content distribution ───────────────────────────────────────────────
+
+/** Content count by pathway (THEME_01..THEME_07) for the dashboard bar chart. */
 export async function getContentByPathway() {
   const supabase = await createClient()
   const { data } = await supabase.from('content_published').select('pathway_primary')
@@ -45,6 +69,7 @@ export async function getContentByPathway() {
   return counts
 }
 
+/** Content count by center (Learning/Action/Resource/Accountability) for the dashboard. */
 export async function getContentByCenter() {
   const supabase = await createClient()
   const { data } = await supabase.from('content_published').select('center')
@@ -56,16 +81,9 @@ export async function getContentByCenter() {
   return counts
 }
 
-export async function getRecentActivity(limit = 10) {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('ingestion_log')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(limit)
-  return data || []
-}
+// ── Content tables ─────────────────────────────────────────────────────
 
+/** Review queue with joined inbox data, for the review dashboard. Most recent first. */
 export async function getReviewQueue() {
   const supabase = await createClient()
   const { data } = await supabase
@@ -86,6 +104,9 @@ export async function getPublishedContent() {
   return data || []
 }
 
+// ── Activity + configuration ───────────────────────────────────────────
+
+/** Recent ingestion log entries. Displayed as the "Recent Activity" table on the dashboard. */
 export async function getIngestionLog(limit = 100) {
   const supabase = await createClient()
   const { data } = await supabase
@@ -96,6 +117,7 @@ export async function getIngestionLog(limit = 100) {
   return data || []
 }
 
+/** RSS feed configuration. Cast needed because rss_feeds isn't in auto-generated types. */
 export async function getRssFeeds(): Promise<RssFeed[]> {
   const supabase = await createClient()
   const { data } = await supabase
@@ -114,6 +136,9 @@ export async function getSourceTrust() {
   return data || []
 }
 
+// ── Translation coverage ───────────────────────────────────────────────
+
+/** Translation coverage stats: how many titles are translated to ES/VI vs total published. */
 export async function getTranslationStats() {
   const supabase = await createClient()
   const [esCount, viCount, publishedCount] = await Promise.all([

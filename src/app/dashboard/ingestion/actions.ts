@@ -27,7 +27,16 @@ async function feedsRest(method: string, path: string, body?: unknown) {
   return text ? JSON.parse(text) : null
 }
 
+/** Verify the calling user is authenticated. */
+async function requireAuth() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+  return user
+}
+
 export async function pollRssFeedsAction() {
+  await requireAuth()
   if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
     return { error: 'Server configuration missing (SUPABASE_URL or SERVICE_ROLE_KEY)' }
   }
@@ -53,6 +62,7 @@ export async function addFeed(data: {
   source_domain: string
   poll_interval_hours: number
 }) {
+  await requireAuth()
   try {
     await feedsRest('POST', 'rss_feeds', {
       ...data,
@@ -72,6 +82,7 @@ export async function updateFeed(id: string, data: {
   is_active?: boolean
   poll_interval_hours?: number
 }) {
+  await requireAuth()
   try {
     await feedsRest('PATCH', `rss_feeds?id=eq.${id}`, data)
     revalidatePath('/dashboard/ingestion')
@@ -82,6 +93,7 @@ export async function updateFeed(id: string, data: {
 }
 
 export async function deleteFeed(id: string) {
+  await requireAuth()
   try {
     await feedsRest('DELETE', `rss_feeds?id=eq.${id}`)
     revalidatePath('/dashboard/ingestion')
@@ -96,6 +108,7 @@ export async function addTrustDomain(data: {
   trust_level: string
   notes?: string
 }) {
+  await requireAuth()
   const supabase = await createClient()
   const { error } = await supabase.from('source_trust').insert({
     domain: data.domain,
@@ -110,6 +123,7 @@ export async function updateTrust(id: string, data: {
   trust_level?: string
   notes?: string
 }) {
+  await requireAuth()
   const supabase = await createClient()
   const { error } = await supabase.from('source_trust')
     .update(data)

@@ -34,9 +34,11 @@ export function ApiKeysClient({ initialKeys }: { initialKeys: ApiKey[] }) {
       return
     }
 
+    // Show the raw key (only chance for user to copy it) and refresh key list
     setRawKey(result.rawKey || null)
     setShowCreate(false)
-    window.location.reload()
+    // Update keys list without full reload (which would destroy rawKey state)
+    setKeys(prev => [...prev, { id: crypto.randomUUID(), key_prefix: result.keyPrefix || '', label, is_active: true, rate_limit_per_day: rate_limit, expires_at: expires_at || null, total_requests: 0, total_items: 0, last_used_at: null, created_at: new Date().toISOString() } as ApiKey])
   }
 
   async function handleRevoke(id: string) {

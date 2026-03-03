@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateApiRequest } from '@/lib/api-auth'
 
 /**
  * POST /api/ingest
@@ -130,6 +131,35 @@ function extractLinks(html: string, baseUrl: string): { external: Array<{url: st
   return { external, internal }
 }
 
+function validateUrl(url: string): void {
+  let parsed: URL
+  try {
+    parsed = new URL(url)
+  } catch {
+    throw new Error('Invalid URL')
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    throw new Error('Only http/https URLs are allowed')
+  }
+  const hostname = parsed.hostname.toLowerCase()
+  // Block private/internal IPs and localhost
+  if (
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '0.0.0.0' ||
+    hostname === '[::1]' ||
+    hostname.endsWith('.local') ||
+    hostname.endsWith('.internal') ||
+    /^10\./.test(hostname) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(hostname) ||
+    /^192\.168\./.test(hostname) ||
+    /^169\.254\./.test(hostname) ||
+    hostname === 'metadata.google.internal'
+  ) {
+    throw new Error('Internal/private URLs are not allowed')
+  }
+}
+
 async function scrapeUrl(url: string): Promise<{
   fullText: string
   meta: { title: string; description: string; image: string; domain: string }
@@ -137,6 +167,7 @@ async function scrapeUrl(url: string): Promise<{
   internalLinks: Array<{url: string; anchor: string; slug: string}>
   downloadLinks: Array<{url: string; anchor: string}>
 }> {
+  validateUrl(url)
   const res = await fetch(url, {
     headers: { 'User-Agent': 'ChangeEngine/1.0 (+https://changeengine.us)' },
     redirect: 'follow',
@@ -280,7 +311,6 @@ async function ingestUrl(
   url: string,
   taxonomy: Awaited<ReturnType<typeof fetchTaxonomy>>,
   taxonomyPrompt: string,
-  autoPublish: boolean,
 ): Promise<any> {
   const validFocusIds = new Set(taxonomy.focusAreas.map((f: any) => f.focus_id))
 
@@ -439,15 +469,12 @@ Return JSON:
     review_status: 'pending',
   })
 
-  // All items go to pending — no auto-publish
-  let publishedId: string | null = null
-
   // Step 8: Translate to Spanish + Vietnamese
   const translations: Record<string, any> = {}
   const title6 = classification.title_6th_grade || meta.title
   const summary6 = classification.summary_6th_grade || meta.description
 
-  if (title6 && publishedId) {
+  if (title6) {
     const langs = [
       { code: 'es', name: 'Spanish', id: 'LANG-ES' },
       { code: 'vi', name: 'Vietnamese', id: 'LANG-VI' },
@@ -541,8 +568,7 @@ Return JSON:
   return {
     success: true,
     inbox_id: inboxId,
-    published_id: publishedId,
-    stage: publishedId ? 'published' : status,
+    stage: status,
     title: classification.title_6th_grade,
     confidence,
     focus_areas: validFocusAreaIds,
@@ -564,7 +590,6 @@ async function ingestPreScraped(
   item: { url: string; title: string; description: string; image_url: string; full_text: string; source: string; domain: string },
   taxonomy: Awaited<ReturnType<typeof fetchTaxonomy>>,
   taxonomyPrompt: string,
-  autoPublish: boolean,
 ): Promise<any> {
   const validFocusIds = new Set(taxonomy.focusAreas.map((f: any) => f.focus_id))
 
@@ -699,15 +724,12 @@ Return JSON:
     review_status: 'pending',
   })
 
-  // All items go to pending — no auto-publish
-  let publishedId: string | null = null
-
   // Translate
   const translations: Record<string, any> = {}
   const title6 = classification.title_6th_grade || item.title
   const summary6 = classification.summary_6th_grade || item.description
 
-  if (title6 && publishedId) {
+  if (title6) {
     const langs = [
       { code: 'es', name: 'Spanish', id: 'LANG-ES' },
       { code: 'vi', name: 'Vietnamese', id: 'LANG-VI' },
@@ -763,8 +785,7 @@ Return JSON:
   return {
     success: true,
     inbox_id: inboxId,
-    published_id: publishedId,
-    stage: publishedId ? 'published' : status,
+    stage: status,
     title: classification.title_6th_grade,
     confidence,
     focus_areas: validFocusAreaIds,
@@ -775,6 +796,9 @@ Return JSON:
 // ── Route handler ────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const authError = await validateApiRequest(req)
+  if (authError) return authError
+
   if (!ANTHROPIC_KEY) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY not configured' }, { status: 500 })
   }
@@ -797,7 +821,7 @@ export async function POST(req: NextRequest) {
 
     for (const item of body.items) {
       try {
-        const result = await ingestPreScraped(item, taxonomy, taxonomyPrompt, autoPublish)
+        const result = await ingestPreScraped(item, taxonomy, taxonomyPrompt)
         results.push({ url: item.url, ...result })
         if (result.success) succeeded++
         else failed++
@@ -805,7 +829,7 @@ export async function POST(req: NextRequest) {
         results.push({ url: item.url, success: false, error: (err as Error).message })
         failed++
       }
-      if (body.items.indexOf(item) < body.items.length - 1) {
+      if (results.length < body.items.length) {
         await new Promise(r => setTimeout(r, 1000))
       }
     }
@@ -834,7 +858,7 @@ export async function POST(req: NextRequest) {
 
   for (const url of urls) {
     try {
-      const result = await ingestUrl(url, taxonomy, taxonomyPrompt, autoPublish)
+      const result = await ingestUrl(url, taxonomy, taxonomyPrompt)
       results.push({ url, ...result })
       if (result.success) succeeded++
       else failed++
@@ -844,7 +868,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Rate limit between URLs
-    if (urls.indexOf(url) < urls.length - 1) {
+    if (results.length < urls.length) {
       await new Promise(r => setTimeout(r, 1000))
     }
   }

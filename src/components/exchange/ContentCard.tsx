@@ -30,7 +30,7 @@ export function ContentCard({
         <div className="w-full h-40 relative">
           <img
             src={imageUrl}
-            alt=""
+            alt={displayTitle}
             className="w-full h-full object-cover"
           />
         </div>
