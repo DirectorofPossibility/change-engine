@@ -43,7 +43,7 @@ export function ElectionCountdown({
         <span className="text-2xl">🗳️</span>
         <div>
           <h3 className="font-bold text-brand-text text-lg">{electionName}</h3>
-          {electionType && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{electionType}</span>}
+          {electionType && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{electionType}</span>}
         </div>
       </div>
 

@@ -22,11 +22,11 @@ export function CandidateCard({
       <div className="flex items-center gap-2 mb-2">
         <h4 className="font-semibold text-brand-text">{name}</h4>
         {incumbent === 'Yes' && (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent font-medium">Incumbent</span>
+          <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent font-medium">Incumbent</span>
         )}
       </div>
       <div className="flex items-center gap-2 text-xs text-brand-muted mb-2">
-        {party && <span className="bg-brand-bg px-2 py-0.5 rounded-full">{party}</span>}
+        {party && <span className="bg-brand-bg px-2 py-0.5 rounded-lg">{party}</span>}
         {officeSought && <span>{officeSought}</span>}
         {district && <span>({district})</span>}
       </div>

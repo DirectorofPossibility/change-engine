@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Phone, Globe, MapPin, Clock } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { SingleLocationMap } from '@/components/maps'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 
 export const revalidate = 86400
@@ -120,6 +121,23 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </p>
         )}
       </div>
+
+      {/* Location Map */}
+      {(service as any).latitude != null && (service as any).longitude != null && (
+        <div className="mb-8">
+          <SingleLocationMap
+            marker={{
+              id: service.service_id,
+              lat: (service as any).latitude as number,
+              lng: (service as any).longitude as number,
+              title: service.service_name,
+              type: 'service',
+              address: fullAddress || null,
+              phone: service.phone,
+            }}
+          />
+        </div>
+      )}
 
       {/* Details */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">

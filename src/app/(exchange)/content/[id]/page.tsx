@@ -97,14 +97,80 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Related content
-  const { data: related } = await supabase
+  // Fetch cross-references from AI classification (v3 enrichment)
+  var crossRefIds: string[] = []
+  var keywords: string[] = []
+  var extractedOrgs: Array<{ name: string; url: string; description?: string }> = []
+  var downloadLinks: Array<{ url: string; anchor_text: string }> = []
+
+  if (item.inbox_id) {
+    const { data: queueItem } = await supabase
+      .from('content_review_queue')
+      .select('ai_classification')
+      .eq('inbox_id', item.inbox_id)
+      .single()
+
+    if (queueItem?.ai_classification) {
+      const c = queueItem.ai_classification as any
+      keywords = c._keywords || []
+      extractedOrgs = (c._external_orgs || []).filter((o: any) => o && o.name && o.url)
+      downloadLinks = c._download_links || []
+
+      // Resolve internal cross-references to content_published IDs
+      const internalRefs = c._internal_refs || []
+      if (internalRefs.length > 0) {
+        const refInboxIds = internalRefs.map((r: any) => r.inbox_id).filter(Boolean)
+        if (refInboxIds.length > 0) {
+          const { data: refContent } = await supabase
+            .from('content_published')
+            .select('id')
+            .in('inbox_id', refInboxIds)
+            .eq('is_active', true)
+          crossRefIds = (refContent || []).map((r: any) => r.id)
+        }
+      }
+    }
+  }
+
+  // Fetch org info if linked
+  var orgInfo: { org_name: string; website: string | null; description_5th_grade: string | null } | null = null
+  if (item.org_id) {
+    const { data: org } = await supabase
+      .from('organizations')
+      .select('org_name, website, description_5th_grade')
+      .eq('org_id', item.org_id)
+      .single()
+    orgInfo = org
+  }
+
+  // Related content: use focus area overlap for better semantic matching
+  var relatedQuery = supabase
     .from('content_published')
-    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at')
-    .eq('pathway_primary', item.pathway_primary || '')
+    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, focus_area_ids')
     .eq('is_active', true)
     .neq('id', item.id)
-    .limit(4)
+    .limit(20)
+
+  const { data: relatedCandidates } = await relatedQuery
+
+  // Score related items by focus area overlap + cross-reference bonus
+  var related = (relatedCandidates || [])
+    .map(function (r: any) {
+      var score = 0
+      // Cross-reference bonus (strongest signal)
+      if (crossRefIds.includes(r.id)) score += 10
+      // Focus area overlap
+      if (item.focus_area_ids && r.focus_area_ids) {
+        var overlap = item.focus_area_ids.filter(function (fa: string) { return r.focus_area_ids.includes(fa) })
+        score += overlap.length * 3
+      }
+      // Same pathway bonus
+      if (r.pathway_primary === item.pathway_primary) score += 1
+      return { ...r, _score: score }
+    })
+    .filter(function (r: any) { return r._score > 0 })
+    .sort(function (a: any, b: any) { return b._score - a._score })
+    .slice(0, 6)
 
   var title = translatedTitle || item.title_6th_grade
   var summary = translatedSummary || item.summary_6th_grade
@@ -131,7 +197,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             <ThemePill themeId={item.pathway_primary} size="sm" />
             <CenterBadge center={item.center} />
             {isTranslated && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Machine translated</span>
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-blue-100 text-blue-700">Machine translated</span>
             )}
           </div>
 
@@ -184,142 +250,267 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Pathway */}
+        {/* Sidebar — Wayfinder (collapsible sections) */}
+        <div className="space-y-3">
+          {/* Pathway — open by default */}
           {themeSlug && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">Pathway</h3>
-              <Link href={'/pathways/' + themeSlug}>
-                <ThemePill themeId={item.pathway_primary} size="sm" />
-              </Link>
-            </div>
+            <details open className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Pathway
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <Link href={'/pathways/' + themeSlug}>
+                  <ThemePill themeId={item.pathway_primary} size="sm" />
+                </Link>
+              </div>
+            </details>
           )}
 
-          {/* Focus Areas */}
+          {/* Focus Areas — open by default */}
           {focusAreas.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">Focus Areas</h3>
-              <FocusAreaPills focusAreas={focusAreas} />
-            </div>
+            <details open className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Focus Areas
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <FocusAreaPills focusAreas={focusAreas} />
+              </div>
+            </details>
           )}
 
-          {/* SDGs */}
+          {/* Organization — open by default */}
+          {orgInfo && (
+            <details open className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Organization
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <p className="text-sm font-medium text-brand-text">{orgInfo.org_name}</p>
+                {orgInfo.description_5th_grade && (
+                  <p className="text-xs text-brand-muted mt-1">{orgInfo.description_5th_grade}</p>
+                )}
+                {orgInfo.website && (
+                  <Link href={orgInfo.website} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-accent hover:underline mt-1 inline-block">
+                    Visit website &rarr;
+                  </Link>
+                )}
+              </div>
+            </details>
+          )}
+
+          {/* Global Goals — collapsed by default */}
           {item.sdg_ids && item.sdg_ids.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">SDGs</h3>
-              <div className="flex flex-wrap gap-1">
-                {item.sdg_ids.map(function (sdg) {
-                  var info = sdgMap[sdg]
-                  if (info) {
-                    return <SDGBadge key={sdg} sdgNumber={info.sdg_number} sdgName={info.sdg_name} sdgColor={info.sdg_color} linkToExplore />
-                  }
-                  return <span key={sdg} className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">SDG {sdg.replace('SDG_', '')}</span>
-                })}
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Global Goals
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="flex flex-wrap gap-1">
+                  {item.sdg_ids.map(function (sdg) {
+                    var info = sdgMap[sdg]
+                    if (info) {
+                      return <SDGBadge key={sdg} sdgNumber={info.sdg_number} sdgName={info.sdg_name} sdgColor={info.sdg_color} linkToExplore />
+                    }
+                    return <span key={sdg} className="text-xs px-2 py-1 rounded-lg bg-blue-100 text-blue-700">Goal {sdg.replace('SDG_', '')}</span>
+                  })}
+                </div>
               </div>
-            </div>
+            </details>
           )}
 
-          {/* SDOH Domain */}
+          {/* Health & Well-being — collapsed by default */}
           {item.sdoh_domain && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">SDOH Domain</h3>
-              {sdohMap[item.sdoh_domain] ? (
-                <SDOHBadge
-                  sdohCode={item.sdoh_domain}
-                  sdohName={sdohMap[item.sdoh_domain].sdoh_name}
-                  sdohDescription={sdohMap[item.sdoh_domain].sdoh_description}
-                  linkToExplore
-                />
-              ) : (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700">{item.sdoh_domain}</span>
-              )}
-            </div>
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Health &amp; Well-being
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                {sdohMap[item.sdoh_domain] ? (
+                  <SDOHBadge
+                    sdohCode={item.sdoh_domain}
+                    sdohName={sdohMap[item.sdoh_domain].sdoh_name}
+                    sdohDescription={sdohMap[item.sdoh_domain].sdoh_description}
+                    linkToExplore
+                  />
+                ) : (
+                  <span className="text-xs px-2 py-1 rounded-lg bg-green-100 text-green-700">{item.sdoh_domain}</span>
+                )}
+              </div>
+            </details>
           )}
 
-          {/* Audience */}
+          {/* Who This Is For — collapsed by default */}
           {item.audience_segments && item.audience_segments.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">Audience</h3>
-              <div className="flex flex-wrap gap-1">
-                {item.audience_segments.map(function (seg) {
-                  return <span key={seg} className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{seg}</span>
-                })}
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Who This Is For
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="flex flex-wrap gap-1">
+                  {item.audience_segments.map(function (seg) {
+                    return <span key={seg} className="text-xs px-2 py-1 rounded-lg bg-brand-bg text-brand-muted">{seg}</span>
+                  })}
+                </div>
               </div>
-            </div>
+            </details>
           )}
 
-          {/* Life Situations */}
+          {/* Topics — collapsed by default */}
+          {keywords.length > 0 && (
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Topics
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="flex flex-wrap gap-1">
+                  {keywords.slice(0, 10).map(function (kw) {
+                    return <span key={kw} className="text-xs px-2 py-1 rounded-lg bg-brand-bg text-brand-muted">{kw}</span>
+                  })}
+                </div>
+              </div>
+            </details>
+          )}
+
+          {/* Organizations Mentioned — collapsed by default */}
+          {extractedOrgs.length > 0 && (
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Organizations Mentioned
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="space-y-2">
+                  {extractedOrgs.slice(0, 6).map(function (org) {
+                    return (
+                      <div key={org.url}>
+                        <Link href={org.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
+                          {org.name}
+                        </Link>
+                        {org.description && <p className="text-xs text-brand-muted">{org.description}</p>}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </details>
+          )}
+
+          {/* Downloads — collapsed by default */}
+          {downloadLinks.length > 0 && (
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Downloads
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="space-y-1">
+                  {downloadLinks.map(function (dl: any) {
+                    return (
+                      <Link key={dl.url} href={dl.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline">
+                        <span>&#128196;</span> {dl.anchor_text || 'Download'}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </details>
+          )}
+
+          {/* Life Situations — collapsed by default */}
           {lifeSituationLinks.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">Life Situations</h3>
-              <div className="flex flex-wrap gap-1">
-                {lifeSituationLinks.map(function (s) {
-                  return (
-                    <Link key={s.slug} href={'/help/' + s.slug} className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-accent hover:underline">
-                      {s.name}
-                    </Link>
-                  )
-                })}
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Life Situations
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="flex flex-wrap gap-1">
+                  {lifeSituationLinks.map(function (s) {
+                    return (
+                      <Link key={s.slug} href={'/help/' + s.slug} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-accent hover:underline">
+                        {s.name}
+                      </Link>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            </details>
           )}
 
-          {/* Opportunities */}
+          {/* Opportunities — collapsed by default */}
           {opportunities.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">Opportunities</h3>
-              <div className="space-y-3">
-                {opportunities.slice(0, 5).map(function (o) {
-                  return (
-                    <OpportunityCard
-                      key={o.opportunity_id}
-                      name={o.opportunity_name}
-                      description={o.description_5th_grade}
-                      startDate={o.start_date}
-                      endDate={o.end_date}
-                      address={o.address}
-                      city={o.city}
-                      isVirtual={o.is_virtual}
-                      registrationUrl={o.registration_url}
-                      spotsAvailable={o.spots_available}
-                    />
-                  )
-                })}
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Opportunities
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="space-y-3">
+                  {opportunities.slice(0, 5).map(function (o) {
+                    return (
+                      <OpportunityCard
+                        key={o.opportunity_id}
+                        name={o.opportunity_name}
+                        description={o.description_5th_grade}
+                        startDate={o.start_date}
+                        endDate={o.end_date}
+                        address={o.address}
+                        city={o.city}
+                        isVirtual={o.is_virtual}
+                        registrationUrl={o.registration_url}
+                        spotsAvailable={o.spots_available}
+                      />
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            </details>
           )}
 
-          {/* Policies */}
+          {/* Policies — collapsed by default */}
           {policies.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-brand-muted mb-2">Related Policies</h3>
-              <div className="space-y-3">
-                {policies.slice(0, 5).map(function (p) {
-                  return (
-                    <PolicyCard
-                      key={p.policy_id}
-                      name={p.policy_name}
-                      summary={p.summary_5th_grade}
-                      billNumber={p.bill_number}
-                      status={p.status}
-                      level={p.level}
-                      sourceUrl={p.source_url}
-                    />
-                  )
-                })}
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Related Policies
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="space-y-3">
+                  {policies.slice(0, 5).map(function (p) {
+                    return (
+                      <PolicyCard
+                        key={p.policy_id}
+                        name={p.policy_name}
+                        summary={p.summary_5th_grade}
+                        billNumber={p.bill_number}
+                        status={p.status}
+                        level={p.level}
+                        sourceUrl={p.source_url}
+                      />
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            </details>
           )}
         </div>
       </div>
 
-      {/* Related content */}
+      {/* Related content — scored by focus area overlap + explicit cross-references */}
       {related && related.length > 0 && (
         <div className="mt-12">
           <RelatedContent items={related} />
         </div>
-      )}
+      )
+
+      }
     </div>
   )
 }

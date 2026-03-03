@@ -45,3 +45,79 @@ export const LANGUAGES = [
   { code: 'es' as const, label: 'ES', name: 'Español', langId: 'LANG-ES' },
   { code: 'vi' as const, label: 'VI', name: 'Tiếng Việt', langId: 'LANG-VI' },
 ] as const;
+
+export interface GeoLayerConfig {
+  id: string
+  label: string
+  url: string
+  color: string
+  idProperty: string
+  detailPath: string | null
+}
+
+export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
+  superNeighborhoods: {
+    id: 'superNeighborhoods',
+    label: 'Super Neighborhoods',
+    url: '/geo/super-neighborhoods.geojson',
+    color: '#805ad5',
+    idProperty: 'SN_ID',
+    detailPath: '/super-neighborhoods/',
+  },
+  councilDistricts: {
+    id: 'councilDistricts',
+    label: 'Council Districts',
+    url: '/geo/council-districts.geojson',
+    color: '#38a169',
+    idProperty: 'DISTRICT',
+    detailPath: '/officials/',
+  },
+  congressionalDistricts: {
+    id: 'congressionalDistricts',
+    label: 'Congressional Districts',
+    url: '/geo/congressional-districts.geojson',
+    color: '#3182ce',
+    idProperty: 'CD',
+    detailPath: null,
+  },
+  stateSenate: {
+    id: 'stateSenate',
+    label: 'State Senate Districts',
+    url: '/geo/state-senate-districts.geojson',
+    color: '#e53e3e',
+    idProperty: 'SD',
+    detailPath: null,
+  },
+  stateHouse: {
+    id: 'stateHouse',
+    label: 'State House Districts',
+    url: '/geo/state-house-districts.geojson',
+    color: '#dd6b20',
+    idProperty: 'HD',
+    detailPath: null,
+  },
+  schoolDistricts: {
+    id: 'schoolDistricts',
+    label: 'School Districts',
+    url: '/geo/school-districts.geojson',
+    color: '#d69e2e',
+    idProperty: 'SD_ID',
+    detailPath: null,
+  },
+  zipCodes: {
+    id: 'zipCodes',
+    label: 'ZIP Codes',
+    url: '/geo/zip-codes.geojson',
+    color: '#319795',
+    idProperty: 'ZCTA5CE20',
+    detailPath: null,
+  },
+  censusTracts: {
+    id: 'censusTracts',
+    label: 'Census Tracts',
+    url: '/geo/census-tracts.geojson',
+    color: '#718096',
+    idProperty: 'GEOID',
+    detailPath: null,
+  },
+} as const;

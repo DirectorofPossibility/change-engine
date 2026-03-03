@@ -63,7 +63,7 @@ export function LifeSituationCard({ name, slug, description, urgency, iconName, 
         <p className="text-sm text-brand-muted line-clamp-2">{translatedDescription || description}</p>
       )}
       {urgency && (
-        <span className={`inline-block mt-3 text-xs font-medium px-2 py-0.5 rounded-full ${colors.bg} ${colors.text}`}>
+        <span className={`inline-block mt-3 text-xs font-medium px-2 py-0.5 rounded-lg ${colors.bg} ${colors.text}`}>
           {urgency}
         </span>
       )}

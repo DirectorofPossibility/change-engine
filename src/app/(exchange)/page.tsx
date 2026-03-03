@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { THEMES, CENTERS, BRAND } from '@/lib/constants'
-import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getExchangeStats, getCenterCounts, getPathwayCounts, getLatestContent, getLifeSituations, getLangId, fetchTranslationsForTable, getServicesWithCoords, getVotingLocationsWithCoords, getOrganizationsWithCoords } from '@/lib/data/exchange'
 import { CenterCard } from '@/components/exchange/CenterCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { NeighborhoodBanner } from '@/components/exchange/NeighborhoodBanner'
+import { HomeMap } from '@/components/exchange/HomeMap'
+import type { MarkerData } from '@/components/maps'
 
 export const revalidate = 1800
 
@@ -15,17 +17,52 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
-  const [stats, centerCounts, pathwayCounts, latestContent, situations] = await Promise.all([
+  const [stats, centerCounts, pathwayCounts, latestContent, situations, sampleServices, sampleVoting, sampleOrgs] = await Promise.all([
     getExchangeStats(),
     getCenterCounts(),
     getPathwayCounts(),
     getLatestContent(6),
     getLifeSituations(),
+    getServicesWithCoords(),
+    getVotingLocationsWithCoords(),
+    getOrganizationsWithCoords(),
   ])
 
   const featuredSituations = situations
     .filter(function (s) { return s.is_featured === 'Yes' || s.urgency_level === 'Critical' || s.urgency_level === 'High' })
     .slice(0, 6)
+
+  // Build home page map markers (sample from each type, filtering to those with coords)
+  const homeMarkers: MarkerData[] = [
+    ...sampleServices
+      .filter(s => s.latitude != null && s.longitude != null)
+      .slice(0, 30)
+      .map(s => ({
+        id: 'svc-' + s.service_id,
+        lat: s.latitude as number,
+        lng: s.longitude as number,
+        title: s.service_name,
+        type: 'service' as const,
+        address: [s.address, s.city].filter(Boolean).join(', '),
+        link: '/services/' + s.service_id,
+      })),
+    ...sampleVoting.slice(0, 20).map(v => ({
+      id: 'vote-' + v.location_id,
+      lat: v.latitude as number,
+      lng: v.longitude as number,
+      title: v.location_name,
+      type: 'voting' as const,
+      address: [v.address, v.city].filter(Boolean).join(', '),
+    })),
+    ...sampleOrgs.slice(0, 20).map(o => ({
+      id: 'org-' + o.org_id,
+      lat: o.latitude as number,
+      lng: o.longitude as number,
+      title: o.org_name,
+      type: 'organization' as const,
+      link: '/organizations/' + o.org_id,
+    })),
+  ]
 
   const langId = await getLangId()
   const situationTranslations = langId && featuredSituations.length > 0
@@ -35,31 +72,32 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-brand-text text-white py-16 sm:py-24">
+      <section className="bg-brand-text text-white py-14 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl font-bold mb-4">{BRAND.tagline}</h1>
-          <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-            Your civic platform for Houston. Find resources, connect with services, and participate in your community.
+          <p className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-3">Houston, Texas</p>
+          <h1 className="text-3xl sm:text-5xl font-bold mb-3">{BRAND.tagline}</h1>
+          <p className="text-base text-gray-300 mb-8 max-w-xl mx-auto leading-relaxed">
+            Find resources, know your representatives, and participate in shaping your community.
           </p>
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex items-center justify-center gap-3 flex-wrap">
             <Link
               href="/pathways"
-              className="px-6 py-3 rounded-lg text-sm font-semibold text-white"
+              className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white hover:opacity-90 transition-opacity"
               style={{ backgroundColor: BRAND.accent }}
             >
               Explore Pathways
             </Link>
             <Link
               href="/help"
-              className="px-6 py-3 bg-white text-brand-text rounded-lg text-sm font-semibold hover:bg-gray-100"
+              className="px-5 py-2.5 bg-white text-brand-text rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors"
             >
               I Need Help
             </Link>
             <Link
-              href="/explore"
-              className="px-6 py-3 bg-white/10 text-white rounded-lg text-sm font-semibold hover:bg-white/20 border border-white/20"
+              href="/officials"
+              className="px-5 py-2.5 bg-white/10 text-white rounded-lg text-sm font-semibold hover:bg-white/20 border border-white/20 transition-colors"
             >
-              Explore Topics
+              Find Your Reps
             </Link>
           </div>
         </div>
@@ -67,6 +105,9 @@ export default async function HomePage() {
 
       {/* Neighborhood Banner */}
       <NeighborhoodBanner />
+
+      {/* Houston at a Glance Map */}
+      <HomeMap markers={homeMarkers} />
 
       {/* 4 Centers */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -96,12 +137,12 @@ export default async function HomePage() {
               <Link
                 key={id}
                 href={'/pathways/' + theme.slug}
-                className="flex-shrink-0 flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg text-white text-sm font-medium hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: theme.color }}
               >
                 <span>{theme.emoji}</span>
                 <span>{theme.name}</span>
-                <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                <span className="bg-white/20 px-2 py-0.5 rounded text-xs">
                   {pathwayCounts[id] || 0}
                 </span>
               </Link>
@@ -147,30 +188,20 @@ export default async function HomePage() {
       )}
 
       {/* Stats Bar */}
-      <section className="bg-brand-text text-white py-12">
+      <section className="bg-brand-text text-white py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold">{stats.resources}</div>
-              <div className="text-sm text-gray-400 mt-1">Resources</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold">{stats.services}</div>
-              <div className="text-sm text-gray-400 mt-1">Services</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold">{stats.officials}</div>
-              <div className="text-sm text-gray-400 mt-1">Officials</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold">{stats.learningPaths}</div>
-              <div className="text-sm text-gray-400 mt-1">Learning Paths</div>
-            </div>
-          </div>
-          <div className="text-center mt-8">
-            <Link href="/dashboard-live" className="text-sm text-gray-400 hover:text-white transition-colors">
-              View Live Houston Dashboard &rarr;
-            </Link>
+            {[
+              { value: stats.resources, label: 'Resources' },
+              { value: stats.officials, label: 'Officials' },
+              { value: stats.organizations ?? 0, label: 'Organizations' },
+              { value: stats.policies ?? 0, label: 'Policies' },
+            ].filter(s => s.value > 0).map(s => (
+              <div key={s.label}>
+                <div className="text-3xl font-bold">{s.value.toLocaleString()}</div>
+                <div className="text-sm text-gray-400 mt-1">{s.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -13,14 +13,11 @@ const NAV_LINKS = [
   { href: '/circle', label: 'Circle' },
   { href: '/pathways', label: 'Pathways' },
   { href: '/explore', label: 'Explore' },
-  { href: '/guides', label: 'Guides' },
   { href: '/help', label: 'I Need Help' },
   { href: '/officials', label: 'Officials' },
-  { href: '/officials/lookup', label: 'Find Your Reps' },
   { href: '/services', label: 'Services' },
-  { href: '/dashboard-live', label: 'Dashboard' },
   { href: '/elections', label: 'Elections' },
-  { href: '/learn', label: 'Learn' },
+  { href: '/policies', label: 'Policies' },
 ]
 
 export function Header() {

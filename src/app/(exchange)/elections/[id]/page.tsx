@@ -6,6 +6,7 @@ import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { CandidateCard } from '@/components/exchange/CandidateCard'
 import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
+import { VotingLocationsMap } from '@/components/exchange/VotingLocationsMap'
 
 export const revalidate = 3600
 
@@ -157,6 +158,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {votingLocations.length > 0 && (
         <section className="mb-10">
           <h2 className="text-xl font-bold text-brand-text mb-4">Where to Vote</h2>
+          <VotingLocationsMap locations={votingLocations} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {votingLocations.map(function (loc) {
               return (

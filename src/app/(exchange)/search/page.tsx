@@ -98,6 +98,7 @@ export default async function SearchPage({
           return (
             <OfficialCard
               key={o.official_id}
+              id={o.official_id}
               name={o.official_name}
               title={o.title}
               party={o.party}

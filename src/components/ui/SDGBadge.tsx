@@ -11,7 +11,7 @@ export function SDGBadge({ sdgNumber, sdgName, sdgColor, linkToExplore }: SDGBad
   const bg = sdgColor || '#3182ce'
   const pill = (
     <span
-      className="inline-block text-xs px-2 py-0.5 rounded-full text-white font-medium"
+      className="inline-block text-xs px-2 py-0.5 rounded-lg text-white font-medium"
       style={{ backgroundColor: bg }}
     >
       SDG {sdgNumber}: {sdgName}

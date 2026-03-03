@@ -11,6 +11,7 @@ import { SDOHBadge } from '@/components/ui/SDOHBadge'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
+import { ClusteredMap, type MarkerData } from '@/components/maps'
 
 export const revalidate = 3600
 
@@ -53,6 +54,18 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
       polIds.length > 0 ? fetchTranslationsForTable('policies', polIds, langId) : {},
     ])
   }
+
+  // Build opportunity map markers (only if opportunities have coordinates)
+  const opportunityMarkers: MarkerData[] = opportunities
+    .filter(o => (o as any).latitude != null && (o as any).longitude != null)
+    .map(o => ({
+      id: o.opportunity_id,
+      lat: (o as any).latitude as number,
+      lng: (o as any).longitude as number,
+      title: o.opportunity_name,
+      type: 'opportunity' as const,
+      address: [o.address, o.city].filter(Boolean).join(', '),
+    }))
 
   // Theme info
   var themeSlug: string | null = null
@@ -129,6 +142,14 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
         {/* Sidebar */}
         <div className="space-y-8">
+          {/* Opportunities Map */}
+          {opportunityMarkers.length > 0 && (
+            <div>
+              <h3 className="font-semibold text-brand-text mb-3">Opportunities Map</h3>
+              <ClusteredMap markers={opportunityMarkers} className="w-full h-[250px] rounded-xl" showLegend={false} />
+            </div>
+          )}
+
           {/* Opportunities */}
           {opportunities.length > 0 && (
             <div>

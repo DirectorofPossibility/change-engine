@@ -37,7 +37,7 @@ export function LearningPathCard({ name, description, themeId, difficulty, modul
       )}
       <div className="flex items-center gap-3 flex-wrap">
         {difficulty && (
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1 ${DIFFICULTY_COLORS[difficulty] || 'bg-gray-100 text-gray-700'}`}>
+          <span className={`text-xs font-medium px-2 py-0.5 rounded-lg flex items-center gap-1 ${DIFFICULTY_COLORS[difficulty] || 'bg-gray-100 text-gray-700'}`}>
             <BarChart3 size={12} /> {difficulty}
           </span>
         )}

@@ -12,10 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@googlemaps/markerclusterer": "^2.6.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.98.0",
     "@types/node": "^25.3.2",
     "@types/react": "^19.2.14",
+    "@vis.gl/react-google-maps": "^1.7.1",
     "lucide-react": "^0.575.0",
     "mammoth": "^1.11.0",
     "next": "^14.2.35",

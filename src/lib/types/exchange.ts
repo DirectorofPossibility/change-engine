@@ -15,10 +15,14 @@ export interface ExchangeStats {
   services: number
   officials: number
   learningPaths: number
+  organizations: number
+  policies: number
 }
 
 export interface ServiceWithOrg extends Service211 {
   org_name?: string
+  latitude?: number | null
+  longitude?: number | null
 }
 
 // Sprint 4 types
@@ -32,6 +36,10 @@ export type SDOHDomain = Tables<'sdoh_domains'>
 export type Guide = Tables<'guides'>
 
 export type SupportedLanguage = 'en' | 'es' | 'vi'
+
+export type VotingLocation = Tables<'voting_locations'>
+
+export type DistributionSite = Tables<'distribution_sites'>
 
 export interface TranslationMap {
   [inboxId: string]: {
@@ -55,4 +63,19 @@ export interface NeighborhoodInfo {
   neighborhood: Neighborhood
   councilDistrict: string | null
   officials: ElectedOfficial[]
+}
+
+export interface SuperNeighborhood {
+  sn_id: string
+  sn_name: string
+  sn_number: number | null
+  council_districts: string | null
+  zip_codes: string | null
+  population: number | null
+  median_income: number | null
+  description: string | null
+}
+
+export interface GeoFeatureProperties {
+  [key: string]: string | number | null | undefined
 }

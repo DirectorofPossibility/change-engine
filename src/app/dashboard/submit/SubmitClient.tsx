@@ -4,43 +4,65 @@ import { useState } from 'react'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
-import { classifyUrlAction, csvUploadAction, uploadDocumentAction } from './actions'
-import type { AiClassification } from '@/lib/types/dashboard'
+
+interface IngestResult {
+  url: string
+  success: boolean
+  stage?: string
+  inbox_id?: string
+  published_id?: string
+  title?: string
+  confidence?: number
+  focus_areas?: string[]
+  center?: string
+  sdgs?: string[]
+  keywords?: string[]
+  organizations?: string[]
+  translations?: Record<string, any>
+  downloads?: number
+  text_length?: number
+  error?: string
+}
 
 export function SubmitClient() {
   const [url, setUrl] = useState('')
-  const [classifying, setClassifying] = useState(false)
-  const [result, setResult] = useState<AiClassification | null>(null)
+  const [processing, setProcessing] = useState(false)
+  const [result, setResult] = useState<IngestResult | null>(null)
   const [error, setError] = useState('')
 
-  // CSV
-  const [csvRows, setCsvRows] = useState<Array<{ url: string; title?: string; description?: string }>>([])
+  // CSV batch
+  const [csvRows, setCsvRows] = useState<Array<{ url: string }>>([])
   const [csvUploading, setCsvUploading] = useState(false)
-  const [csvResults, setCsvResults] = useState<any[]>([])
+  const [csvResults, setCsvResults] = useState<IngestResult[]>([])
+  const [csvProgress, setCsvProgress] = useState('')
 
-  // Document upload
-  const [docUploading, setDocUploading] = useState(false)
-  const [docResult, setDocResult] = useState<AiClassification | null>(null)
-  const [docError, setDocError] = useState('')
-  const [docFileName, setDocFileName] = useState('')
-
-  async function handleClassify(e: React.FormEvent) {
+  async function handleIngest(e: React.FormEvent) {
     e.preventDefault()
     if (!url.trim()) return
-    setClassifying(true)
+    setProcessing(true)
     setResult(null)
     setError('')
     try {
-      const data = await classifyUrlAction(url.trim())
-      if (data.error) {
+      const res = await fetch('/api/ingest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: url.trim(), auto_publish: true }),
+      })
+      const data = await res.json()
+      if (data.results && data.results.length > 0) {
+        const r = data.results[0]
+        if (r.success) {
+          setResult(r)
+        } else {
+          setError(r.error || 'Ingestion failed')
+        }
+      } else if (data.error) {
         setError(data.error)
-      } else {
-        setResult(data.classification || data)
       }
     } catch (err: any) {
-      setError(err.message || 'Classification failed')
+      setError(err.message || 'Ingestion failed')
     }
-    setClassifying(false)
+    setProcessing(false)
   }
 
   function handleCsvFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -52,8 +74,8 @@ export function SubmitClient() {
       const lines = text.split('\n').filter(Boolean)
       const rows = lines.slice(1).map((line) => {
         const parts = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''))
-        return { url: parts[0], title: parts[1] || undefined, description: parts[2] || undefined }
-      }).filter(r => r.url)
+        return { url: parts[0] }
+      }).filter(r => r.url && r.url.startsWith('http'))
       setCsvRows(rows)
     }
     reader.readAsText(file)
@@ -63,46 +85,47 @@ export function SubmitClient() {
     if (csvRows.length === 0) return
     setCsvUploading(true)
     setCsvResults([])
-    try {
-      const data = await csvUploadAction(csvRows)
-      setCsvResults(data.results || [data])
-    } catch (err: any) {
-      setCsvResults([{ error: err.message }])
+    setCsvProgress('Starting...')
+
+    // Process in batches of 5
+    const allResults: IngestResult[] = []
+    for (let i = 0; i < csvRows.length; i += 5) {
+      const batch = csvRows.slice(i, i + 5)
+      setCsvProgress(`Processing ${i + 1}-${Math.min(i + 5, csvRows.length)} of ${csvRows.length}...`)
+
+      try {
+        const res = await fetch('/api/ingest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ urls: batch.map(r => r.url), auto_publish: true }),
+        })
+        const data = await res.json()
+        allResults.push(...(data.results || []))
+      } catch (err: any) {
+        batch.forEach(r => allResults.push({ url: r.url, success: false, error: err.message }))
+      }
     }
+
+    setCsvResults(allResults)
+    setCsvProgress('')
     setCsvUploading(false)
   }
 
-  async function handleDocUpload(e: React.FormEvent) {
-    e.preventDefault()
-    const form = e.target as HTMLFormElement
-    const formData = new FormData(form)
-    const file = formData.get('file') as File | null
-    if (!file) return
-    setDocUploading(true)
-    setDocResult(null)
-    setDocError('')
-    setDocFileName(file.name)
-    try {
-      const data = await uploadDocumentAction(formData)
-      if (data.error) {
-        setDocError(data.error)
-      } else {
-        setDocResult(data.classification || data)
-      }
-    } catch (err: any) {
-      setDocError(err.message || 'Document upload failed')
-    }
-    setDocUploading(false)
-  }
+  const successCount = csvResults.filter(r => r.success).length
+  const failCount = csvResults.filter(r => !r.success).length
 
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-bold">Submit Content</h1>
+      <p className="text-sm text-brand-muted">
+        Submit a URL to ingest through the full Knowledge Mesh pipeline:
+        scrape, classify, enrich, translate (ES + VI), and publish.
+      </p>
 
       {/* Single URL */}
-      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6 space-y-4">
-        <h2 className="text-lg font-semibold">Classify a URL</h2>
-        <form onSubmit={handleClassify} className="flex gap-3">
+      <div className="bg-white rounded-xl border border-brand-border p-6 space-y-4">
+        <h2 className="text-lg font-semibold">Ingest a URL</h2>
+        <form onSubmit={handleIngest} className="flex gap-3">
           <input
             type="url"
             value={url}
@@ -113,151 +136,102 @@ export function SubmitClient() {
           />
           <button
             type="submit"
-            disabled={classifying}
+            disabled={processing}
             className="px-6 py-2 bg-brand-accent text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
           >
-            {classifying ? 'Classifying...' : 'Classify'}
+            {processing ? 'Processing...' : 'Ingest'}
           </button>
         </form>
-        {classifying && (
+        {processing && (
           <div className="flex items-center gap-2 text-sm text-brand-muted">
             <div className="w-4 h-4 border-2 border-brand-accent border-t-transparent rounded-full animate-spin" />
-            Processing with AI (may take 5-15 seconds)...
+            Running full pipeline: scrape, classify, translate, publish...
           </div>
         )}
         {error && (
           <div className="bg-red-50 text-red-700 rounded-lg p-3 text-sm">{error}</div>
         )}
         {result && (
-          <div className="border border-brand-border rounded-lg p-4 space-y-4">
-            <h3 className="font-semibold">Classification Result</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-brand-muted text-xs block">Title (6th Grade)</span>
-                <p className="font-medium mt-1">{result.title_6th_grade}</p>
-              </div>
-              <div>
-                <span className="text-brand-muted text-xs block">Confidence</span>
-                <div className="mt-1"><ConfidenceBadge confidence={result.confidence} /></div>
-              </div>
-              <div>
-                <span className="text-brand-muted text-xs block">Pathway</span>
-                <div className="mt-1"><ThemePill themeId={result.theme_primary} /></div>
-              </div>
-              <div>
-                <span className="text-brand-muted text-xs block">Center</span>
-                <div className="mt-1"><CenterBadge center={result.center} /></div>
-              </div>
+          <div className="border border-brand-border rounded-xl p-4 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-green-100 text-green-700 font-medium">Published</span>
+              <ConfidenceBadge confidence={result.confidence || 0} />
             </div>
-            <div>
-              <span className="text-brand-muted text-xs block">Summary (6th Grade)</span>
-              <p className="text-sm mt-1">{result.summary_6th_grade}</p>
-            </div>
-            <div>
-              <span className="text-brand-muted text-xs block">Focus Areas</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {(result.focus_area_ids || []).map((id) => (
-                  <span key={id} className="text-xs bg-brand-bg px-2 py-0.5 rounded">{id}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <span className="text-brand-muted text-xs block">SDGs</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {(result.sdg_ids || []).map((id) => (
-                  <span key={id} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{id}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <span className="text-brand-muted text-xs block">Reasoning</span>
-              <p className="text-xs text-brand-muted mt-1">{result.reasoning}</p>
-            </div>
-          </div>
-        )}
-      </div>
 
-      {/* Document Upload */}
-      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6 space-y-4">
-        <h2 className="text-lg font-semibold">Upload Document</h2>
-        <p className="text-sm text-brand-muted">Upload a PDF, DOCX, or TXT file to extract text and classify it.</p>
-        <form onSubmit={handleDocUpload} className="flex gap-3 items-center">
-          <input
-            type="file"
-            name="file"
-            accept=".pdf,.docx,.doc,.txt"
-            className="text-sm"
-          />
-          <button
-            type="submit"
-            disabled={docUploading}
-            className="px-6 py-2 bg-brand-accent text-white rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
-          >
-            {docUploading ? 'Processing...' : 'Upload & Classify'}
-          </button>
-        </form>
-        {docUploading && (
-          <div className="flex items-center gap-2 text-sm text-brand-muted">
-            <div className="w-4 h-4 border-2 border-brand-accent border-t-transparent rounded-full animate-spin" />
-            Extracting text and classifying {docFileName}...
-          </div>
-        )}
-        {docError && (
-          <div className="bg-red-50 text-red-700 rounded-lg p-3 text-sm">{docError}</div>
-        )}
-        {docResult && (
-          <div className="border border-brand-border rounded-lg p-4 space-y-4">
-            <h3 className="font-semibold">Classification Result — {docFileName}</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-brand-muted text-xs block">Title (6th Grade)</span>
-                <p className="font-medium mt-1">{docResult.title_6th_grade}</p>
-              </div>
-              <div>
-                <span className="text-brand-muted text-xs block">Confidence</span>
-                <div className="mt-1"><ConfidenceBadge confidence={docResult.confidence} /></div>
-              </div>
-              <div>
-                <span className="text-brand-muted text-xs block">Pathway</span>
-                <div className="mt-1"><ThemePill themeId={docResult.theme_primary} /></div>
+                <span className="text-brand-muted text-xs block">Title</span>
+                <p className="font-medium mt-1">{result.title}</p>
               </div>
               <div>
                 <span className="text-brand-muted text-xs block">Center</span>
-                <div className="mt-1"><CenterBadge center={docResult.center} /></div>
+                <div className="mt-1"><CenterBadge center={result.center || ''} /></div>
               </div>
             </div>
-            <div>
-              <span className="text-brand-muted text-xs block">Summary (6th Grade)</span>
-              <p className="text-sm mt-1">{docResult.summary_6th_grade}</p>
+
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div>
+                <span className="text-brand-muted text-xs block">Focus Areas</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(result.focus_areas || []).map((id) => (
+                    <span key={id} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg">{id}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs block">Global Goals</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(result.sdgs || []).map((id) => (
+                    <span key={id} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-lg">{id}</span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <span className="text-brand-muted text-xs block">Keywords</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(result.keywords || []).slice(0, 5).map((kw) => (
+                    <span key={kw} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg text-brand-muted">{kw}</span>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div>
-              <span className="text-brand-muted text-xs block">Focus Areas</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {(docResult.focus_area_ids || []).map((id) => (
-                  <span key={id} className="text-xs bg-brand-bg px-2 py-0.5 rounded">{id}</span>
+
+            {/* Pipeline status */}
+            <div className="grid grid-cols-4 gap-2 text-xs">
+              <div className="bg-green-50 rounded-lg p-2 text-center">
+                <span className="block text-green-700 font-medium">Scraped</span>
+                <span className="text-green-600">{result.text_length?.toLocaleString()} chars</span>
+              </div>
+              <div className="bg-green-50 rounded-lg p-2 text-center">
+                <span className="block text-green-700 font-medium">Classified</span>
+                <span className="text-green-600">{(result.focus_areas || []).length} focus areas</span>
+              </div>
+              <div className="bg-green-50 rounded-lg p-2 text-center">
+                <span className="block text-green-700 font-medium">Translated</span>
+                <span className="text-green-600">{result.translations ? Object.keys(result.translations).length : 0} languages</span>
+              </div>
+              <div className="bg-green-50 rounded-lg p-2 text-center">
+                <span className="block text-green-700 font-medium">Orgs</span>
+                <span className="text-green-600">{(result.organizations || []).length} found</span>
+              </div>
+            </div>
+
+            {(result.organizations || []).length > 0 && (
+              <div>
+                <span className="text-brand-muted text-xs block mb-1">Organizations Extracted</span>
+                {result.organizations!.map((org, i) => (
+                  <span key={i} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg mr-1">{org}</span>
                 ))}
               </div>
-            </div>
-            <div>
-              <span className="text-brand-muted text-xs block">SDGs</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {(docResult.sdg_ids || []).map((id) => (
-                  <span key={id} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded">{id}</span>
-                ))}
-              </div>
-            </div>
-            <div>
-              <span className="text-brand-muted text-xs block">Reasoning</span>
-              <p className="text-xs text-brand-muted mt-1">{docResult.reasoning}</p>
-            </div>
+            )}
           </div>
         )}
       </div>
 
       {/* CSV Upload */}
-      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6 space-y-4">
-        <h2 className="text-lg font-semibold">CSV Batch Upload</h2>
-        <p className="text-sm text-brand-muted">Upload a CSV with columns: url, title (optional), description (optional)</p>
+      <div className="bg-white rounded-xl border border-brand-border p-6 space-y-4">
+        <h2 className="text-lg font-semibold">CSV Batch Ingest</h2>
+        <p className="text-sm text-brand-muted">Upload a CSV with a URL column. Each URL goes through the full pipeline.</p>
         <div className="flex gap-3 items-center">
           <input
             type="file"
@@ -273,18 +247,24 @@ export function SubmitClient() {
             disabled={csvRows.length === 0 || csvUploading}
             className="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50"
           >
-            {csvUploading ? 'Uploading...' : 'Upload & Classify'}
+            {csvUploading ? 'Processing...' : 'Ingest All'}
           </button>
         </div>
 
-        {csvRows.length > 0 && csvResults.length === 0 && (
+        {csvProgress && (
+          <div className="flex items-center gap-2 text-sm text-brand-muted">
+            <div className="w-4 h-4 border-2 border-brand-accent border-t-transparent rounded-full animate-spin" />
+            {csvProgress}
+          </div>
+        )}
+
+        {csvRows.length > 0 && csvResults.length === 0 && !csvUploading && (
           <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-brand-border text-left text-brand-muted bg-brand-bg/50">
                   <th className="px-4 py-2 font-medium">#</th>
                   <th className="px-4 py-2 font-medium">URL</th>
-                  <th className="px-4 py-2 font-medium">Title</th>
                 </tr>
               </thead>
               <tbody>
@@ -292,7 +272,6 @@ export function SubmitClient() {
                   <tr key={i} className="border-b border-brand-border/50">
                     <td className="px-4 py-2 text-brand-muted">{i + 1}</td>
                     <td className="px-4 py-2 text-xs max-w-sm truncate">{row.url}</td>
-                    <td className="px-4 py-2 text-xs">{row.title || '-'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -304,33 +283,41 @@ export function SubmitClient() {
         )}
 
         {csvResults.length > 0 && (
-          <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-brand-border text-left text-brand-muted bg-brand-bg/50">
-                  <th className="px-4 py-2 font-medium">#</th>
-                  <th className="px-4 py-2 font-medium">URL</th>
-                  <th className="px-4 py-2 font-medium">Status</th>
-                  <th className="px-4 py-2 font-medium">Result</th>
-                </tr>
-              </thead>
-              <tbody>
-                {csvResults.map((r: any, i: number) => (
-                  <tr key={i} className="border-b border-brand-border/50">
-                    <td className="px-4 py-2 text-brand-muted">{i + 1}</td>
-                    <td className="px-4 py-2 text-xs max-w-sm truncate">{r.url || '-'}</td>
-                    <td className="px-4 py-2">
-                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                        r.error ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-                      }`}>
-                        {r.error ? 'Error' : 'Success'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-xs text-brand-muted">{r.error || r.inbox_id || 'OK'}</td>
+          <div className="space-y-3">
+            <div className="flex gap-3 text-sm">
+              <span className="px-3 py-1 rounded-lg bg-green-100 text-green-700 font-medium">{successCount} succeeded</span>
+              {failCount > 0 && <span className="px-3 py-1 rounded-lg bg-red-100 text-red-700 font-medium">{failCount} failed</span>}
+            </div>
+            <div className="bg-white rounded-lg border border-brand-border overflow-hidden max-h-96 overflow-y-auto">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0">
+                  <tr className="border-b border-brand-border text-left text-brand-muted bg-brand-bg/50">
+                    <th className="px-4 py-2 font-medium">#</th>
+                    <th className="px-4 py-2 font-medium">URL</th>
+                    <th className="px-4 py-2 font-medium">Status</th>
+                    <th className="px-4 py-2 font-medium">Title</th>
+                    <th className="px-4 py-2 font-medium">Confidence</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {csvResults.map((r, i) => (
+                    <tr key={i} className="border-b border-brand-border/50">
+                      <td className="px-4 py-2 text-brand-muted">{i + 1}</td>
+                      <td className="px-4 py-2 text-xs max-w-xs truncate">{r.url}</td>
+                      <td className="px-4 py-2">
+                        <span className={`px-2 py-0.5 rounded-lg text-xs font-medium ${
+                          r.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        }`}>
+                          {r.success ? r.stage || 'OK' : 'Error'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-xs max-w-xs truncate">{r.title || r.error || '-'}</td>
+                      <td className="px-4 py-2 text-xs">{r.confidence ? `${Math.round(r.confidence * 100)}%` : '-'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

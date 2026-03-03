@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
-import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, VotingLocation, DistributionSite, SuperNeighborhood } from '@/lib/types/exchange'
 
 /**
  * Read language preference from cookie and return the LANG-XX id.
@@ -16,17 +16,21 @@ export async function getLangId(): Promise<string | null> {
 
 export async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
-  const [resources, services, officials, paths] = await Promise.all([
+  const [resources, services, officials, paths, orgs, policies] = await Promise.all([
     supabase.from('content_published').select('id', { count: 'exact', head: true }).eq('is_active', true),
     supabase.from('services_211').select('service_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
     supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }),
     supabase.from('learning_paths').select('path_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
+    supabase.from('organizations').select('org_id', { count: 'exact', head: true }),
+    supabase.from('policies').select('policy_id', { count: 'exact', head: true }),
   ])
   return {
     resources: resources.count ?? 0,
     services: services.count ?? 0,
     officials: officials.count ?? 0,
     learningPaths: paths.count ?? 0,
+    organizations: orgs.count ?? 0,
+    policies: policies.count ?? 0,
   }
 }
 
@@ -408,4 +412,232 @@ export async function getServicesByZip(zip: string): Promise<ServiceWithOrg[]> {
     .in('org_id', orgIds as string[])
   const orgMap = new Map(orgs?.map(function (o) { return [o.org_id, o.org_name] as [string, string] }) ?? [])
   return services.map(function (s) { return Object.assign({}, s, { org_name: orgMap.get(s.org_id!) ?? undefined }) })
+}
+
+// --- Super Neighborhoods ---
+
+export async function getSuperNeighborhoods(): Promise<SuperNeighborhood[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('super_neighborhoods')
+    .select('*')
+    .order('sn_name')
+  return data ?? []
+}
+
+export async function getSuperNeighborhood(snId: string): Promise<SuperNeighborhood | null> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('super_neighborhoods')
+    .select('*')
+    .eq('sn_id', snId)
+    .single()
+  return data ?? null
+}
+
+export async function getNeighborhoodsBySuperNeighborhood(snId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('neighborhoods')
+    .select('*')
+    .eq('super_neighborhood_id', snId)
+    .order('neighborhood_name')
+  return data ?? []
+}
+
+export async function getMapMarkersForSuperNeighborhood(snId: string) {
+  const supabase = await createClient()
+
+  // Get all neighborhoods in this super neighborhood, then aggregate ZIP codes
+  const { data: hoods } = await supabase
+    .from('neighborhoods')
+    .select('zip_codes')
+    .eq('super_neighborhood_id', snId)
+
+  if (!hoods || hoods.length === 0) {
+    // Fall back to super_neighborhoods.zip_codes
+    const { data: sn } = await supabase
+      .from('super_neighborhoods')
+      .select('zip_codes')
+      .eq('sn_id', snId)
+      .single()
+    if (!sn?.zip_codes) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
+    const zips = sn.zip_codes.split(',').map(s => s.trim()).filter(Boolean)
+    const [services, votingLocations, distributionSites, organizations] = await Promise.all([
+      getServicesWithCoords(zips),
+      (async () => {
+        const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
+        for (const z of zips) {
+          const locs = await getVotingLocationsWithCoords(z)
+          results.push(...locs)
+        }
+        return results
+      })(),
+      getDistributionSitesWithCoords(zips),
+      getOrganizationsWithCoords(),
+    ])
+    return { services, votingLocations, distributionSites, organizations }
+  }
+
+  const allZips = Array.from(new Set(
+    hoods
+      .flatMap(h => (h.zip_codes || '').split(','))
+      .map(z => z.trim())
+      .filter(Boolean)
+  ))
+
+  if (allZips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
+
+  const [services, votingLocations, distributionSites, organizations] = await Promise.all([
+    getServicesWithCoords(allZips),
+    (async () => {
+      const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
+      for (const z of allZips) {
+        const locs = await getVotingLocationsWithCoords(z)
+        results.push(...locs)
+      }
+      return results
+    })(),
+    getDistributionSitesWithCoords(allZips),
+    getOrganizationsWithCoords(),
+  ])
+
+  return { services, votingLocations, distributionSites, organizations }
+}
+
+// --- Map data functions ---
+
+export async function getServicesWithCoords(zipCodes?: string[]): Promise<ServiceWithOrg[]> {
+  const supabase = await createClient()
+
+  // services_211 may or may not have latitude/longitude columns yet.
+  // Fetch services and join with geocode_cache by address hash if lat/lng not on table.
+  let query = supabase
+    .from('services_211')
+    .select('*')
+    .eq('is_active', 'Yes')
+
+  if (zipCodes && zipCodes.length > 0) {
+    query = query.in('zip_code', zipCodes)
+  }
+
+  const { data: services } = await query.limit(200)
+  if (!services || services.length === 0) return []
+
+  const orgIds = Array.from(new Set(services.map(s => s.org_id).filter(Boolean)))
+  let orgMap = new Map<string, string>()
+  if (orgIds.length > 0) {
+    const { data: orgs } = await supabase
+      .from('organizations')
+      .select('org_id, org_name')
+      .in('org_id', orgIds as string[])
+    orgMap = new Map(orgs?.map(o => [o.org_id, o.org_name]) ?? [])
+  }
+
+  // Try to get coords from geocode_cache for services that have addresses
+  let coordMap = new Map<string, { latitude: number; longitude: number }>()
+  const addressedServices = services.filter(s => s.address)
+  if (addressedServices.length > 0) {
+    const { data: cached } = await supabase
+      .from('geocode_cache')
+      .select('raw_address, latitude, longitude')
+      .not('latitude', 'is', null)
+      .not('longitude', 'is', null)
+      .limit(1000)
+    if (cached) {
+      cached.forEach(c => {
+        if (c.raw_address && c.latitude != null && c.longitude != null) {
+          coordMap.set(c.raw_address.toLowerCase().trim(), { latitude: c.latitude, longitude: c.longitude })
+        }
+      })
+    }
+  }
+
+  return services.map(s => {
+    const fullAddr = [s.address, s.city, s.state, s.zip_code].filter(Boolean).join(', ').toLowerCase().trim()
+    const coords = coordMap.get(fullAddr)
+    return {
+      ...s,
+      org_name: orgMap.get(s.org_id!) ?? undefined,
+      latitude: coords?.latitude ?? null,
+      longitude: coords?.longitude ?? null,
+    }
+  })
+}
+
+export async function getVotingLocationsWithCoords(zipCode?: string) {
+  const supabase = await createClient()
+  let query = supabase
+    .from('voting_locations')
+    .select('*')
+    .eq('is_active', 'Yes')
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+
+  if (zipCode) {
+    query = query.eq('zip_code', parseInt(zipCode))
+  }
+
+  const { data } = await query.limit(200)
+  return data ?? []
+}
+
+export async function getOrganizationsWithCoords() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('organizations')
+    .select('*')
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+    .limit(200)
+  return data ?? []
+}
+
+export async function getDistributionSitesWithCoords(zipCodes?: string[]): Promise<DistributionSite[]> {
+  const supabase = await createClient()
+  let query = supabase
+    .from('distribution_sites')
+    .select('*')
+    .eq('is_active', true)
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+
+  if (zipCodes && zipCodes.length > 0) {
+    query = query.in('zip_code', zipCodes)
+  }
+
+  const { data } = await query.limit(200)
+  return data ?? []
+}
+
+export async function getMapMarkersForNeighborhood(neighborhoodId: string) {
+  const supabase = await createClient()
+
+  // Get neighborhood ZIP codes
+  const { data: hood } = await supabase
+    .from('neighborhoods')
+    .select('zip_codes')
+    .eq('neighborhood_id', neighborhoodId)
+    .single()
+
+  if (!hood?.zip_codes) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
+
+  const zips = hood.zip_codes.split(',').map(s => s.trim()).filter(Boolean)
+
+  const [services, votingLocations, distributionSites, organizations] = await Promise.all([
+    getServicesWithCoords(zips),
+    (async () => {
+      // Voting locations use numeric zip_code
+      const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
+      for (const z of zips) {
+        const locs = await getVotingLocationsWithCoords(z)
+        results.push(...locs)
+      }
+      return results
+    })(),
+    getDistributionSitesWithCoords(zips),
+    getOrganizationsWithCoords(),
+  ])
+
+  return { services, votingLocations, distributionSites, organizations }
 }

@@ -11,6 +11,7 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
+import { HelpMap } from '@/components/exchange/HelpMap'
 
 export const revalidate = 3600
 
@@ -86,6 +87,9 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
       {situation.description_5th_grade && (
         <p className="text-brand-muted mb-8 max-w-3xl">{situation.description_5th_grade}</p>
       )}
+
+      {/* Map of services and opportunities */}
+      <HelpMap services={services} opportunities={opportunities} />
 
       {/* Matched Content */}
       {content.length > 0 && (

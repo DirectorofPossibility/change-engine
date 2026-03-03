@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Search, MapPin, User, Vote } from 'lucide-react'
 import Link from 'next/link'
+import { VotingLocationsMap } from './VotingLocationsMap'
 
 interface Official {
   official_id: string
@@ -29,6 +30,8 @@ interface VotingLocation {
   location_name: string
   address: string | null
   city: string | null
+  latitude: number | null
+  longitude: number | null
   hours_early_voting: string | null
   hours_election_day: string | null
   is_accessible: string | null
@@ -185,6 +188,7 @@ export function ZipLookupForm() {
               <h3 className="text-lg font-bold text-brand-text mb-3 flex items-center gap-2">
                 <Vote size={20} /> Voting Locations
               </h3>
+              <VotingLocationsMap locations={results.votingLocations} />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {results.votingLocations.map(function (loc) {
                   return (
@@ -225,8 +229,8 @@ function renderGroup(title: string, officials: Official[]) {
                 {o.title && <p className="text-xs text-brand-muted">{o.title}</p>}
               </div>
               <div className="flex items-center gap-2 mb-2">
-                {o.party && <span className="text-xs bg-brand-bg px-2 py-0.5 rounded-full text-brand-muted">{o.party}</span>}
-                {o.level && <span className={'text-xs px-2 py-0.5 rounded-full ' + levelColor(o.level)}>{o.level}</span>}
+                {o.party && <span className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg text-brand-muted">{o.party}</span>}
+                {o.level && <span className={'text-xs px-2 py-0.5 rounded-lg ' + levelColor(o.level)}>{o.level}</span>}
               </div>
               <div className="flex items-center gap-3 text-xs">
                 {o.email && <a href={'mailto:' + o.email} className="text-brand-accent hover:underline">Email</a>}

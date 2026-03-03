@@ -18,7 +18,7 @@ export function FocusAreaPills({ focusAreaNames, focusAreas }: FocusAreaPillsPro
     return (
       <div className="flex flex-wrap gap-1">
         {focusAreas.map(function (fa) {
-          var baseClass = 'text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted hover:text-brand-accent transition-colors'
+          var baseClass = 'text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted hover:text-brand-accent transition-colors'
           if (fa.is_bridging) {
             baseClass += ' border border-dashed border-brand-muted'
           } else {
@@ -47,7 +47,7 @@ export function FocusAreaPills({ focusAreaNames, focusAreas }: FocusAreaPillsPro
         return (
           <span
             key={name}
-            className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted border border-brand-border"
+            className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted border border-brand-border"
           >
             {name}
           </span>

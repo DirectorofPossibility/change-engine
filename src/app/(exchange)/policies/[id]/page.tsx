@@ -146,8 +146,9 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             {officials.map(function (o) {
               var ot = officialTranslations[o.official_id]
               return (
-                <Link key={o.official_id} href={'/officials/' + o.official_id}>
-                  <OfficialCard
+                <OfficialCard
+                    key={o.official_id}
+                    id={o.official_id}
                     name={o.official_name}
                     title={o.title}
                     party={o.party}
@@ -157,7 +158,6 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     website={o.website}
                     translatedTitle={ot?.title}
                   />
-                </Link>
               )
             })}
           </div>

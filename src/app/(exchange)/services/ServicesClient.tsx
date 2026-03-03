@@ -3,7 +3,10 @@
 import { useState, useMemo } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { ClusteredMap } from '@/components/maps'
+import type { MarkerData } from '@/components/maps'
 import type { ServiceWithOrg, TranslationMap } from '@/lib/types/exchange'
+import { List, Map as MapIcon } from 'lucide-react'
 
 interface ServicesClientProps {
   services: ServiceWithOrg[]
@@ -13,6 +16,7 @@ interface ServicesClientProps {
 export function ServicesClient({ services, translations = {} }: ServicesClientProps) {
   const [search, setSearch] = useState('')
   const [zipFilter, setZipFilter] = useState('')
+  const [view, setView] = useState<'list' | 'map'>('list')
 
   const filtered = useMemo(() => {
     return services.filter((s) => {
@@ -26,6 +30,21 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
       return true
     })
   }, [services, search, zipFilter])
+
+  const markers: MarkerData[] = useMemo(() => {
+    return filtered
+      .filter(s => s.latitude != null && s.longitude != null)
+      .map(s => ({
+        id: s.service_id,
+        lat: s.latitude as number,
+        lng: s.longitude as number,
+        title: s.service_name,
+        type: 'service' as const,
+        address: [s.address, s.city, s.state, s.zip_code].filter(Boolean).join(', '),
+        phone: s.phone,
+        link: '/services/' + s.service_id,
+      }))
+  }, [filtered])
 
   return (
     <div>
@@ -42,32 +61,60 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
           maxLength={5}
         />
         <span className="text-sm text-brand-muted self-center">{filtered.length} services</span>
+
+        {/* View toggle */}
+        <div className="flex gap-1 ml-auto bg-brand-bg rounded-lg p-1">
+          <button
+            onClick={() => setView('list')}
+            className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'list' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
+          >
+            <List size={16} className="inline mr-1" />
+            List
+          </button>
+          <button
+            onClick={() => setView('map')}
+            className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'map' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
+          >
+            <MapIcon size={16} className="inline mr-1" />
+            Map
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((s) => {
-          var t = translations[s.service_id]
-          return (
-            <ServiceCard
-              key={s.service_id}
-              name={s.service_name}
-              orgName={s.org_name}
-              description={s.description_5th_grade}
-              phone={s.phone}
-              address={s.address}
-              city={s.city}
-              state={s.state}
-              zipCode={s.zip_code}
-              website={s.website}
-              translatedName={t?.title}
-              translatedDescription={t?.summary}
-            />
-          )
-        })}
-      </div>
+      {view === 'map' ? (
+        markers.length > 0 ? (
+          <ClusteredMap markers={markers} showLegend={false} className="w-full h-[500px] rounded-xl" />
+        ) : (
+          <p className="text-center text-brand-muted py-12">No services with location data found.</p>
+        )
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filtered.map((s) => {
+              var t = translations[s.service_id]
+              return (
+                <ServiceCard
+                  key={s.service_id}
+                  name={s.service_name}
+                  orgName={s.org_name}
+                  description={s.description_5th_grade}
+                  phone={s.phone}
+                  address={s.address}
+                  city={s.city}
+                  state={s.state}
+                  zipCode={s.zip_code}
+                  website={s.website}
+                  translatedName={t?.title}
+                  translatedDescription={t?.summary}
+                />
+              )
+            })}
+          </div>
 
-      {filtered.length === 0 && (
-        <p className="text-center text-brand-muted py-12">No services found matching your search.</p>
+          {filtered.length === 0 && (
+            <p className="text-center text-brand-muted py-12">No services found matching your search.</p>
+          )}
+        </>
       )}
     </div>
   )

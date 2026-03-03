@@ -2201,6 +2201,39 @@ export type Database = {
         }
         Relationships: []
       }
+      super_neighborhoods: {
+        Row: {
+          sn_id: string
+          sn_name: string
+          sn_number: number | null
+          council_districts: string | null
+          zip_codes: string | null
+          population: number | null
+          median_income: number | null
+          description: string | null
+        }
+        Insert: {
+          sn_id: string
+          sn_name: string
+          sn_number?: number | null
+          council_districts?: string | null
+          zip_codes?: string | null
+          population?: number | null
+          median_income?: number | null
+          description?: string | null
+        }
+        Update: {
+          sn_id?: string
+          sn_name?: string
+          sn_number?: number | null
+          council_districts?: string | null
+          zip_codes?: string | null
+          population?: number | null
+          median_income?: number | null
+          description?: string | null
+        }
+        Relationships: []
+      }
       notification_templates: {
         Row: {
           body_template: string | null

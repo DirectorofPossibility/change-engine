@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { getHoustonAirQuality, getWeatherAlerts, getBayouLevels } from '@/lib/data/civic-dashboard'
+import { getServicesWithCoords } from '@/lib/data/exchange'
 import { CivicDashboardClient } from './CivicDashboardClient'
+import { DashboardCoverageMap } from './DashboardCoverageMap'
 
 export const revalidate = 900 // 15 minutes
 
@@ -10,10 +12,11 @@ export const metadata: Metadata = {
 }
 
 export default async function LiveDashboardPage() {
-  const [airQuality, alerts, bayouLevels] = await Promise.all([
+  const [airQuality, alerts, bayouLevels, servicesWithCoords] = await Promise.all([
     getHoustonAirQuality(),
     getWeatherAlerts(),
     getBayouLevels(),
+    getServicesWithCoords(),
   ])
 
   return (
@@ -32,6 +35,9 @@ export default async function LiveDashboardPage() {
         alerts={alerts}
         bayouLevels={bayouLevels}
       />
+
+      {/* Service Coverage Map */}
+      <DashboardCoverageMap services={servicesWithCoords} />
     </div>
   )
 }

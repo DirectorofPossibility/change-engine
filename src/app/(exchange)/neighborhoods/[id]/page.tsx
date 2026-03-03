@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { MapPin, Users, DollarSign } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
+import { getMapMarkersForNeighborhood } from '@/lib/data/exchange'
 
 export const revalidate = 86400
 
@@ -43,6 +45,9 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
     services = svcData || []
   }
 
+  // Fetch map markers for neighborhood
+  const mapData = await getMapMarkersForNeighborhood(id)
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-brand-text mb-2">{hood.neighborhood_name}</h1>
@@ -76,6 +81,14 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           <p className="text-brand-muted leading-relaxed">{hood.description}</p>
         </section>
       )}
+
+      {/* Neighborhood Map */}
+      <NeighborhoodMap
+        services={mapData.services}
+        votingLocations={mapData.votingLocations}
+        distributionSites={mapData.distributionSites}
+        organizations={mapData.organizations}
+      />
 
       {/* ZIP code lookup link */}
       {zips.length > 0 && (

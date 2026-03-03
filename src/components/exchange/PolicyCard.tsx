@@ -31,7 +31,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
           <span className="text-xs font-mono text-brand-muted">{billNumber}</span>
         )}
         {status && (
-          <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + statusColor(status)}>
+          <span className={'text-xs px-2 py-0.5 rounded-lg font-medium ' + statusColor(status)}>
             {status}
           </span>
         )}

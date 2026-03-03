@@ -61,6 +61,7 @@ export function OfficialsClient({ officials, levels, translations = {} }: Offici
           return (
             <OfficialCard
               key={o.official_id}
+              id={o.official_id}
               name={o.official_name}
               title={o.title}
               party={o.party}
@@ -68,6 +69,7 @@ export function OfficialsClient({ officials, levels, translations = {} }: Offici
               email={o.email}
               phone={o.office_phone}
               website={o.website}
+              photoUrl={(o as any).photo_url}
               translatedTitle={t?.title}
             />
           )
