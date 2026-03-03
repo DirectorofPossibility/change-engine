@@ -1,17 +1,16 @@
 /**
- * @fileoverview Elected Officials listing page with civic engagement hero banner.
+ * @fileoverview Elected Officials listing page with ZIP code search.
  *
  * Displays all elected officials with filtering by government level,
- * preceded by a hero banner with civic engagement imagery. Fetches
- * officials data and optional translations for non-English display.
+ * preceded by a hero banner and ZIP code search to find your representatives.
  *
- * @datasource Supabase tables: elected_officials, translations
+ * @datasource Supabase tables: elected_officials, translations, zip_codes
  * @caching ISR with `revalidate = 86400` (24 hours)
  * @route GET /officials
  */
 import type { Metadata } from 'next'
 import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
-import { OfficialsClient } from './OfficialsClient'
+import { OfficialsPageClient } from './OfficialsPageClient'
 import { PageHero } from '@/components/exchange/PageHero'
 
 export const revalidate = 86400
@@ -40,7 +39,7 @@ export default async function OfficialsPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <OfficialsClient officials={officials} levels={levels} translations={translations} />
+        <OfficialsPageClient officials={officials} levels={levels} translations={translations} />
       </div>
     </div>
   )

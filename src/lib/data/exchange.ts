@@ -233,6 +233,47 @@ export async function getOfficials() {
   return { officials: officials ?? [], levels: levels ?? [] }
 }
 
+/** Officials matching a ZIP code — looks up districts from zip_codes table, then finds matching officials. */
+export async function getOfficialsByZip(zip: string) {
+  const supabase = await createClient()
+
+  const { data: zipData } = await supabase
+    .from('zip_codes')
+    .select('*')
+    .eq('zip_code', parseInt(zip))
+    .single()
+
+  if (!zipData) return null
+
+  const districts = [
+    zipData.congressional_district,
+    zipData.state_senate_district,
+    zipData.state_house_district,
+    'TX',
+  ].filter(Boolean)
+
+  let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+  filterParts += ',level.eq.City'
+  if (zipData.county_id) {
+    filterParts += ',counties_served.like.%' + zipData.county_id + '%'
+  }
+
+  const { data: officials } = await supabase
+    .from('elected_officials')
+    .select('*')
+    .or(filterParts)
+    .order('official_name')
+
+  const all = officials ?? []
+  return {
+    federal: all.filter(function (o) { return o.level === 'Federal' }),
+    state: all.filter(function (o) { return o.level === 'State' }),
+    county: all.filter(function (o) { return o.level === 'County' }),
+    city: all.filter(function (o) { return o.level === 'City' }),
+    zipData,
+  }
+}
+
 /** Fetch all data for the Civic Hub: officials, policies, elections, government_levels. */
 export async function getCivicHubData() {
   const supabase = await createClient()

@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Mail, Phone, Globe } from 'lucide-react'
+import { Mail, Phone, Globe, MapPin, Calendar, Users } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { OfficialDistrictMap } from './OfficialDistrictMap'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -15,6 +16,18 @@ function levelColor(level: string | null): string {
   if (level === 'County') return 'bg-orange-100 text-orange-700'
   if (level === 'City') return 'bg-teal-100 text-teal-700'
   return 'bg-gray-100 text-gray-700'
+}
+
+function focusAreaColor(index: number): string {
+  const colors = [
+    'bg-blue-50 text-blue-700 border-blue-200',
+    'bg-green-50 text-green-700 border-green-200',
+    'bg-purple-50 text-purple-700 border-purple-200',
+    'bg-orange-50 text-orange-700 border-orange-200',
+    'bg-teal-50 text-teal-700 border-teal-200',
+    'bg-rose-50 text-rose-700 border-rose-200',
+  ]
+  return colors[index % colors.length]
 }
 
 export const revalidate = 86400
@@ -52,18 +65,62 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     ? (await supabase.from('policies').select('*').in('policy_id', policyIds)).data ?? []
     : []
 
-  // Related content via focus areas junction table
+  // Focus areas via junction table
   const { data: focusJunctions } = await supabase
     .from('official_focus_areas')
     .select('focus_id')
     .eq('official_id', id)
-  const focusAreas = (focusJunctions ?? []).map(j => j.focus_id)
+  const focusAreaIds = (focusJunctions ?? []).map(j => j.focus_id)
+  let focusAreas: Array<{ focus_id: string; focus_area_name: string }> = []
+  if (focusAreaIds.length > 0) {
+    const { data: faData } = await supabase
+      .from('focus_areas')
+      .select('focus_id, focus_area_name')
+      .in('focus_id', focusAreaIds)
+    focusAreas = faData ?? []
+  }
+
+  // Counties served via junction table
+  let counties: Array<{ county_id: string; county_name: string }> = []
+  const { data: countyJunctions } = await supabase
+    .from('official_counties')
+    .select('county_id')
+    .eq('official_id', id)
+  const countyIds = (countyJunctions ?? []).map(j => j.county_id)
+  if (countyIds.length > 0) {
+    const { data: countyData } = await supabase
+      .from('counties')
+      .select('county_id, county_name')
+      .in('county_id', countyIds)
+    counties = countyData ?? []
+  }
+
+  // ZIP codes that map to this official's district
+  let districtZips: number[] = []
+  if (official.district_id) {
+    const districtType = official.district_type?.toLowerCase() || ''
+    let column = ''
+    if (districtType.includes('congressional')) column = 'congressional_district'
+    else if (districtType.includes('senate')) column = 'state_senate_district'
+    else if (districtType.includes('house')) column = 'state_house_district'
+
+    if (column) {
+      const { data: zipData } = await supabase
+        .from('zip_codes')
+        .select('zip_code')
+        .eq(column, official.district_id)
+        .limit(50)
+      districtZips = (zipData ?? []).map(z => z.zip_code)
+    }
+  }
+
+  // Related content via focus areas
   let related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null }> = []
-  if (focusAreas.length > 0) {
+  if (focusAreaIds.length > 0) {
     const { data: contentJunctions } = await supabase
       .from('content_focus_areas')
       .select('content_id')
-      .in('focus_id', focusAreas)
+      .in('focus_id', focusAreaIds)
     const contentIds = Array.from(new Set((contentJunctions ?? []).map(j => j.content_id)))
     if (contentIds.length > 0) {
       const { data: contentData } = await supabase
@@ -91,6 +148,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   }
 
   const displayTitle = officialTranslation?.title || official.title
+  const photoUrl = (official as any).photo_url as string | null
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -99,59 +157,147 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         { label: official.official_name }
       ]} />
 
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          {official.level && (
-            <span className={'text-xs px-3 py-1 rounded-full font-medium ' + levelColor(official.level)}>{official.level}</span>
+      {/* Header with photo */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-6">
+        {photoUrl && (
+          <div className="flex-shrink-0">
+            <img
+              src={photoUrl}
+              alt={official.official_name}
+              className="w-24 h-24 rounded-full object-cover border-3 border-brand-border"
+            />
+          </div>
+        )}
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-2">
+            {official.level && (
+              <span className={'text-xs px-3 py-1 rounded-full font-medium ' + levelColor(official.level)}>{official.level}</span>
+            )}
+            {official.party && (
+              <span className="text-xs px-3 py-1 rounded-full font-medium bg-gray-100 text-gray-700">{official.party}</span>
+            )}
+          </div>
+          <h1 className="font-serif text-3xl font-bold text-brand-text mb-1">{official.official_name}</h1>
+          {displayTitle && <p className="text-lg text-brand-muted mb-2">{displayTitle}</p>}
+          <div className="flex items-center gap-2 text-sm text-brand-muted">
+            {official.jurisdiction && <span>{official.jurisdiction}</span>}
+          </div>
+          {official.term_end && (
+            <p className="text-sm text-brand-muted mt-1 flex items-center gap-1">
+              <Calendar size={14} /> Term ends: {new Date(official.term_end).toLocaleDateString()}
+            </p>
           )}
         </div>
-        <h1 className="text-3xl font-bold text-brand-text mb-1">{official.official_name}</h1>
-        {displayTitle && <p className="text-lg text-brand-muted mb-2">{displayTitle}</p>}
-        <div className="flex items-center gap-2 text-sm text-brand-muted">
-          {official.party && <span>{official.party}</span>}
-          {official.party && official.jurisdiction && <span>&bull;</span>}
-          {official.jurisdiction && <span>{official.jurisdiction}</span>}
-        </div>
-        {official.term_end && (
-          <p className="text-sm text-brand-muted mt-1">Term ends: {new Date(official.term_end).toLocaleDateString()}</p>
-        )}
       </div>
 
       {/* Contact card */}
-      <div className="bg-white rounded-xl border border-brand-border p-5 mb-8 flex flex-wrap gap-4">
-        {official.office_phone && (
-          <a href={'tel:' + official.office_phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Phone size={16} /> {official.office_phone}
-          </a>
-        )}
-        {official.email && (
-          <a href={'mailto:' + official.email} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Mail size={16} /> {official.email}
-          </a>
-        )}
-        {official.website && (
-          <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Globe size={16} /> Website
-          </a>
-        )}
+      <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
+        <h3 className="text-sm font-semibold text-brand-text mb-3 uppercase tracking-wide">Contact</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {official.office_phone && (
+            <a href={'tel:' + official.office_phone} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+              <Phone size={18} className="flex-shrink-0" /> {official.office_phone}
+            </a>
+          )}
+          {official.email && (
+            <a href={'mailto:' + official.email} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+              <Mail size={18} className="flex-shrink-0" /> <span className="truncate">{official.email}</span>
+            </a>
+          )}
+          {official.website && (
+            <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+              <Globe size={18} className="flex-shrink-0" /> Website
+            </a>
+          )}
+        </div>
       </div>
+
+      {/* Focus Areas */}
+      {focusAreas.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-brand-text mb-3">Focus Areas</h2>
+          <div className="flex flex-wrap gap-2">
+            {focusAreas.map(function (fa, i) {
+              return (
+                <Link
+                  key={fa.focus_id}
+                  href={'/focus-areas/' + fa.focus_id}
+                  className={'text-sm px-3 py-1.5 rounded-full border font-medium hover:opacity-80 transition-opacity ' + focusAreaColor(i)}
+                >
+                  {fa.focus_area_name}
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
       {/* About */}
       {official.description_5th_grade && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-3">About</h2>
-          <p className="text-brand-muted">{official.description_5th_grade}</p>
+          <p className="text-brand-muted leading-relaxed">{official.description_5th_grade}</p>
         </section>
       )}
 
-      {/* District info */}
+      {/* District info + map */}
       {(official.district_type || official.district_id) && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-3">District</h2>
-          <div className="flex items-center gap-2 text-sm text-brand-muted">
-            {official.district_type && <span>{official.district_type}:</span>}
-            {official.district_id && <span className="font-medium">{official.district_id}</span>}
+          <div className="bg-white rounded-xl border border-brand-border p-5 mb-4">
+            <div className="flex items-center gap-4 mb-3">
+              {official.district_type && (
+                <div>
+                  <span className="text-xs text-brand-muted uppercase tracking-wide">Type</span>
+                  <p className="font-medium text-brand-text">{official.district_type}</p>
+                </div>
+              )}
+              {official.district_id && (
+                <div>
+                  <span className="text-xs text-brand-muted uppercase tracking-wide">District</span>
+                  <p className="font-medium text-brand-text">{official.district_id}</p>
+                </div>
+              )}
+            </div>
+
+            {/* ZIP codes in this district */}
+            {districtZips.length > 0 && (
+              <div className="mt-3">
+                <span className="text-xs text-brand-muted uppercase tracking-wide flex items-center gap-1 mb-2">
+                  <MapPin size={12} /> ZIP Codes Covered
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {districtZips.map(function (z) {
+                    return (
+                      <span key={z} className="text-xs px-2 py-1 bg-brand-bg rounded-md text-brand-muted font-mono">
+                        {String(z).padStart(5, '0')}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* District map */}
+          <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
+        </section>
+      )}
+
+      {/* Counties Served */}
+      {counties.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-brand-text mb-3 flex items-center gap-2">
+            <Users size={20} /> Counties Served
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {counties.map(function (c) {
+              return (
+                <span key={c.county_id} className="text-sm px-3 py-1.5 bg-orange-50 text-orange-700 border border-orange-200 rounded-full font-medium">
+                  {c.county_name}
+                </span>
+              )
+            })}
           </div>
         </section>
       )}
