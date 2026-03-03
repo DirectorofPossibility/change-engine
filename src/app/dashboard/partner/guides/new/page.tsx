@@ -1,0 +1,50 @@
+/**
+ * @fileoverview Create new guide page for partners.
+ *
+ * Fetches available focus areas and renders the GuideFormClient
+ * in create mode (no existing guide data).
+ *
+ * @route GET /dashboard/partner/guides/new
+ */
+
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import GuideFormClient from '../GuideFormClient'
+
+export default async function NewGuidePage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) redirect('/login?redirect=/dashboard/partner/guides/new')
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role, org_id')
+    .eq('auth_id', user.id)
+    .single()
+
+  if (!profile || profile.role !== 'partner' || !profile.org_id) {
+    redirect('/dashboard')
+  }
+
+  // Fetch focus areas for the multi-select
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id, focus_area_name, theme_id')
+    .order('focus_area_name')
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-brand-text font-serif">Create New Guide</h1>
+        <p className="text-brand-muted mt-1">
+          Share your expertise with the community. Guides go through review before publishing.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-xl border border-brand-border p-6">
+        <GuideFormClient focusAreas={focusAreas || []} />
+      </div>
+    </div>
+  )
+}

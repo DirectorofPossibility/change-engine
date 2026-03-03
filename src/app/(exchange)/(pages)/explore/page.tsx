@@ -1,14 +1,27 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { THEMES, PAGE_INTROS } from '@/lib/constants'
 import { getFocusAreas, getSDGs, getSDOHDomains } from '@/lib/data/exchange'
 import { ExploreFilterClient } from './ExploreFilterClient'
 import { PageHero } from '@/components/exchange/PageHero'
+import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Explore Topics — The Change Engine',
   description: 'Browse focus areas, SDGs, and social determinants of health across all pathways.',
+}
+
+/** Map theme IDs to i18n keys */
+const THEME_I18N: Record<string, string> = {
+  THEME_01: 'theme.our_health',
+  THEME_02: 'theme.our_families',
+  THEME_03: 'theme.our_neighborhood',
+  THEME_04: 'theme.our_voice',
+  THEME_05: 'theme.our_money',
+  THEME_06: 'theme.our_planet',
+  THEME_07: 'theme.the_bigger_we',
 }
 
 export default async function ExplorePage() {
@@ -18,11 +31,15 @@ export default async function ExplorePage() {
     getSDOHDomains(),
   ])
 
-  // Group focus areas by theme_id
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
+
+  // Group focus areas by theme_id, using translated theme names
   const themes = Object.entries(THEMES).map(function ([id, theme]) {
     return {
       id,
-      name: theme.name,
+      name: t(THEME_I18N[id] || '') || theme.name,
       color: theme.color,
       emoji: theme.emoji,
       focusAreas: focusAreas.filter(function (fa) { return fa.theme_id === id }),
@@ -34,7 +51,7 @@ export default async function ExplorePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <PageHero variant="editorial" titleKey="explore.title" intro={PAGE_INTROS.explore} />
+      <PageHero variant="editorial" titleKey="explore.title" introKey="explore.intro" />
 
       <ExploreFilterClient
         themes={themes}

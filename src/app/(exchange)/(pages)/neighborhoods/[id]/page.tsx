@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { MapPin, Users, DollarSign } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
-import { getMapMarkersForNeighborhood } from '@/lib/data/exchange'
+import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 86400
 
@@ -52,6 +54,15 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   // Fetch map markers for neighborhood
   const mapData = await getMapMarkersForNeighborhood(id)
 
+  // Translation support
+  const langId = await getLangId()
+  const serviceTranslations = langId && services.length > 0
+    ? await fetchTranslationsForTable('services_211', services.map(s => s.service_id), langId)
+    : {}
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-brand-text mb-2">{hood.neighborhood_name}</h1>
@@ -67,14 +78,14 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <Users size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">{hood.population.toLocaleString()}</div>
-            <div className="text-xs text-brand-muted">Population</div>
+            <div className="text-xs text-brand-muted">{t('neighborhoods.population')}</div>
           </div>
         )}
         {hood.median_income != null && (
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <DollarSign size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">${hood.median_income.toLocaleString()}</div>
-            <div className="text-xs text-brand-muted">Median Income</div>
+            <div className="text-xs text-brand-muted">{t('neighborhoods.median_income')}</div>
           </div>
         )}
       </div>
@@ -100,7 +111,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           <p className="text-sm text-brand-text">
             ZIP codes: {zips.join(', ')} &mdash;{' '}
             <Link href={'/officials/lookup'} className="text-brand-accent hover:underline font-medium">
-              Find your representatives &rarr;
+              {t('neighborhoods.find_reps')} &rarr;
             </Link>
           </p>
         </div>
@@ -109,14 +120,14 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
       {/* Local services */}
       {services.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold text-brand-text mb-4">Services in Your Area</h2>
+          <h2 className="text-xl font-bold text-brand-text mb-4">{t('neighborhoods.services_area')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map(function (svc) {
               return (
                 <Link key={svc.service_id} href={'/services/' + svc.service_id}>
                   <ServiceCard
-                    name={svc.service_name}
-                    description={svc.description_5th_grade}
+                    name={serviceTranslations[svc.service_id]?.title || svc.service_name}
+                    description={serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
                     phone={svc.phone}
                     address={svc.address}
                     city={svc.city}

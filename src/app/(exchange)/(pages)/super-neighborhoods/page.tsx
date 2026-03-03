@@ -12,11 +12,13 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { Users, DollarSign } from 'lucide-react'
-import { getSuperNeighborhoods } from '@/lib/data/exchange'
+import { getSuperNeighborhoods, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
 import { SuperNeighborhoodsMap } from './SuperNeighborhoodsMap'
 import { PageHero } from '@/components/exchange/PageHero'
+import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 300
 
@@ -27,21 +29,29 @@ export const metadata: Metadata = {
 
 export default async function SuperNeighborhoodsPage() {
   const superNeighborhoods = await getSuperNeighborhoods()
+  const langId = await getLangId()
+  const translations = langId
+    ? await fetchTranslationsForTable('super_neighborhoods', superNeighborhoods.map(sn => sn.sn_id), langId)
+    : {}
+
+  // Resolve language for server-side UI strings
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
 
   return (
     <div>
       {/* Hero banner */}
       <PageHero
-        title="Explore Your Neighborhood"
-        subtitle="Houston is divided into 88 super neighborhoods — community areas for civic engagement and resource planning."
+        titleKey="superNeighborhoods.title"
+        subtitleKey="superNeighborhoods.subtitle"
         backgroundImage="/images/hero/neighborhood-map.svg"
         height="sm"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <p className="text-brand-muted mb-8 max-w-2xl">
-          Click a boundary on the map or a card below to explore demographics,
-          resources, and community information for each super neighborhood.
+          {t('superNeighborhoods.intro')}
         </p>
 
         {/* Interactive map with super neighborhood boundaries */}
@@ -50,7 +60,7 @@ export default async function SuperNeighborhoodsPage() {
         {/* Grid of super neighborhoods */}
         <section className="mt-10">
           <h2 className="text-xl font-bold text-brand-text mb-4">
-            All Super Neighborhoods ({superNeighborhoods.length})
+            {t('superNeighborhoods.all_heading')} ({superNeighborhoods.length})
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {superNeighborhoods.map(sn => (
@@ -67,7 +77,9 @@ export default async function SuperNeighborhoodsPage() {
                     {sn.sn_number}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-brand-text text-sm truncate">{sn.sn_name}</h3>
+                    <h3 className="font-semibold text-brand-text text-sm truncate">
+                      {translations[sn.sn_id]?.title || sn.sn_name}
+                    </h3>
                     <div className="flex items-center gap-3 mt-1 text-xs text-brand-muted">
                       {sn.population != null && (
                         <span className="flex items-center gap-1">

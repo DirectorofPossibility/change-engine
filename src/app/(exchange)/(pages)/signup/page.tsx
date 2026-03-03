@@ -45,6 +45,7 @@ export default function SignupPage() {
         zip_code: zipCode || null,
         preferred_language: language,
         gamification_enabled: true,
+        role: 'user',
         created_at: new Date().toISOString(),
         last_active: new Date().toISOString(),
       })

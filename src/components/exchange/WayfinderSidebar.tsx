@@ -115,13 +115,13 @@ export function WayfinderSidebar({
       <div className="px-5 pt-5 pb-2">
         <Link href="/" className="block group" onClick={function () { onSelectPathway(null); closeMobile() }}>
           <span className="block font-serif text-xl font-bold leading-tight text-brand-text group-hover:text-brand-accent transition-colors">
-            The Change Engine
+            {t('brand.name')}
           </span>
           <span className="block font-serif italic text-base leading-tight transition-colors mt-0.5" style={{ color: BRAND.accent }}>
-            Community Exchange
+            {t('brand.subtitle')}
           </span>
           <span className="block text-xs tracking-[0.12em] uppercase text-brand-muted mt-1">
-            Houston, Texas
+            {t('home.location')}
           </span>
         </Link>
       </div>

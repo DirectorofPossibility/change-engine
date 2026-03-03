@@ -6,10 +6,6 @@
  * voting locations, and organizations as markers, a list of child
  * neighborhoods, and a grid of nearby services.
  *
- * Data is fetched in parallel: super neighborhood record, child
- * neighborhoods, and map marker data (services, voting locations,
- * organizations).
- *
  * @datasource Supabase tables: super_neighborhoods, neighborhoods,
  *   services_211, voting_locations, organizations
  * @caching ISR with `revalidate = 300` (5 minutes)
@@ -19,12 +15,14 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { Users, DollarSign, MapPin } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
-import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood } from '@/lib/data/exchange'
+import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
+import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 300
 
@@ -48,6 +46,23 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
 
   if (!sn) notFound()
 
+  // Translation support
+  const langId = await getLangId()
+  const snTranslations = langId
+    ? await fetchTranslationsForTable('super_neighborhoods', [sn.sn_id], langId)
+    : {}
+  const serviceIds = mapData.services.map(s => s.service_id)
+  const serviceTranslations = langId && serviceIds.length > 0
+    ? await fetchTranslationsForTable('services_211', serviceIds, langId)
+    : {}
+
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
+
+  const snName = snTranslations[sn.sn_id]?.title || sn.sn_name
+  const snDescription = snTranslations[sn.sn_id]?.summary || sn.description
+
   // Build marker data for the map
   const markers = [
     ...mapData.services
@@ -57,7 +72,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         id: 'svc-' + s.service_id,
         lat: s.latitude as number,
         lng: s.longitude as number,
-        title: s.service_name,
+        title: serviceTranslations[s.service_id]?.title || s.service_name,
         type: 'service' as const,
         address: [s.address, s.city].filter(Boolean).join(', '),
         link: '/services/' + s.service_id,
@@ -106,9 +121,9 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* ── Breadcrumb ── */}
       <div className="text-sm text-brand-muted mb-4">
-        <Link href="/super-neighborhoods" className="hover:text-brand-accent">Super Neighborhoods</Link>
+        <Link href="/super-neighborhoods" className="hover:text-brand-accent">{t('superNeighborhoods.breadcrumb')}</Link>
         <span className="mx-2">/</span>
-        <span className="text-brand-text">{sn.sn_name}</span>
+        <span className="text-brand-text">{snName}</span>
       </div>
 
       <div className="flex items-center gap-3 mb-2">
@@ -118,7 +133,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
         >
           {sn.sn_number}
         </span>
-        <h1 className="text-3xl font-bold text-brand-text">{sn.sn_name}</h1>
+        <h1 className="text-3xl font-bold text-brand-text">{snName}</h1>
       </div>
 
       {/* ── Demographics ── */}
@@ -127,41 +142,41 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <Users size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">{sn.population.toLocaleString()}</div>
-            <div className="text-xs text-brand-muted">Population</div>
+            <div className="text-xs text-brand-muted">{t('superNeighborhoods.population')}</div>
           </div>
         )}
         {sn.median_income != null && (
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <DollarSign size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">${sn.median_income.toLocaleString()}</div>
-            <div className="text-xs text-brand-muted">Median Income</div>
+            <div className="text-xs text-brand-muted">{t('superNeighborhoods.median_income')}</div>
           </div>
         )}
         {neighborhoods.length > 0 && (
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <MapPin size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">{neighborhoods.length}</div>
-            <div className="text-xs text-brand-muted">Neighborhoods</div>
+            <div className="text-xs text-brand-muted">{t('superNeighborhoods.neighborhoods')}</div>
           </div>
         )}
         {mapData.services.length > 0 && (
           <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <div className="text-xl font-bold text-brand-text">{mapData.services.length}</div>
-            <div className="text-xs text-brand-muted">Services</div>
+            <div className="text-xs text-brand-muted">{t('superNeighborhoods.services')}</div>
           </div>
         )}
       </div>
 
       {/* ── Description ── */}
-      {sn.description && (
+      {snDescription && (
         <section className="mb-8">
-          <p className="text-brand-muted leading-relaxed">{sn.description}</p>
+          <p className="text-brand-muted leading-relaxed">{snDescription}</p>
         </section>
       )}
 
       {/* ── Map ── */}
       <section className="mb-8">
-        <h2 className="text-xl font-bold text-brand-text mb-4">Map</h2>
+        <h2 className="text-xl font-bold text-brand-text mb-4">{t('superNeighborhoods.map')}</h2>
         <SuperNeighborhoodDetailMap markers={markers} snId={sn.sn_id} />
       </section>
 
@@ -171,7 +186,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
           <p className="text-sm text-brand-text">
             ZIP codes: {zips.join(', ')} &mdash;{' '}
             <Link href="/officials/lookup" className="text-brand-accent hover:underline font-medium">
-              Find your representatives &rarr;
+              {t('superNeighborhoods.find_reps')} &rarr;
             </Link>
           </p>
         </div>
@@ -180,7 +195,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
       {/* ── Child Neighborhoods ── */}
       {neighborhoods.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Neighborhoods</h2>
+          <h2 className="text-xl font-bold text-brand-text mb-4">{t('superNeighborhoods.neighborhoods')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {neighborhoods.map(hood => (
               <Link
@@ -207,13 +222,13 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
       {/* ── Services ── */}
       {mapData.services.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold text-brand-text mb-4">Services in This Area</h2>
+          <h2 className="text-xl font-bold text-brand-text mb-4">{t('superNeighborhoods.services_area')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {mapData.services.slice(0, 12).map(svc => (
               <Link key={svc.service_id} href={'/services/' + svc.service_id}>
                 <ServiceCard
-                  name={svc.service_name}
-                  description={svc.description_5th_grade}
+                  name={serviceTranslations[svc.service_id]?.title || svc.service_name}
+                  description={serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
                   phone={svc.phone}
                   address={svc.address}
                   city={svc.city}

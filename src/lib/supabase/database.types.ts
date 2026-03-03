@@ -3338,7 +3338,9 @@ export type Database = {
           is_minor: boolean | null
           last_active: string | null
           neighborhood_id: string | null
+          org_id: string | null
           preferred_language: string | null
+          role: string | null
           zip_code: string | null
         }
         Insert: {
@@ -3356,7 +3358,9 @@ export type Database = {
           is_minor?: boolean | null
           last_active?: string | null
           neighborhood_id?: string | null
+          org_id?: string | null
           preferred_language?: string | null
+          role?: string | null
           zip_code?: string | null
         }
         Update: {
@@ -3374,7 +3378,9 @@ export type Database = {
           is_minor?: boolean | null
           last_active?: string | null
           neighborhood_id?: string | null
+          org_id?: string | null
           preferred_language?: string | null
+          role?: string | null
           zip_code?: string | null
         }
         Relationships: []

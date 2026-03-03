@@ -1404,3 +1404,64 @@ export async function getAllTopics(limit = 24): Promise<string[]> {
     .limit(limit)
   return (data ?? []).map(fa => fa.focus_area_name)
 }
+
+/** Related organizations matching focus area IDs. */
+export async function getRelatedOrgsForGuide(focusAreaIds: string[]) {
+  if (focusAreaIds.length === 0) return []
+  const supabase = await createClient()
+  const { data: junctions } = await supabase
+    .from('organization_focus_areas')
+    .select('org_id')
+    .in('focus_id', focusAreaIds)
+  const orgIds = Array.from(new Set((junctions ?? []).map((j: any) => j.org_id)))
+  if (orgIds.length === 0) return []
+  const { data } = await supabase
+    .from('organizations')
+    .select('org_id, org_name, description_5th_grade, website, logo_url')
+    .in('org_id', orgIds)
+    .limit(8)
+  return data ?? []
+}
+
+/** Related published content matching focus area IDs. */
+export async function getRelatedContentForGuide(focusAreaIds: string[]) {
+  if (focusAreaIds.length === 0) return []
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_published')
+    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url')
+    .overlaps('focus_area_ids', focusAreaIds)
+    .eq('is_active', true)
+    .order('published_at', { ascending: false })
+    .limit(6)
+  return data ?? []
+}
+
+/** Get adjacent guides for prev/next navigation. */
+export async function getAdjacentGuides(currentOrder: number | null, themeId: string | null) {
+  const supabase = await createClient()
+  let prev = null
+  let next = null
+
+  if (currentOrder != null) {
+    const { data: prevData } = await supabase
+      .from('guides')
+      .select('slug, title')
+      .eq('is_active', true)
+      .lt('display_order', currentOrder)
+      .order('display_order', { ascending: false })
+      .limit(1)
+    if (prevData && prevData.length > 0) prev = prevData[0]
+
+    const { data: nextData } = await supabase
+      .from('guides')
+      .select('slug, title')
+      .eq('is_active', true)
+      .gt('display_order', currentOrder)
+      .order('display_order', { ascending: true })
+      .limit(1)
+    if (nextData && nextData.length > 0) next = nextData[0]
+  }
+
+  return { prev, next }
+}

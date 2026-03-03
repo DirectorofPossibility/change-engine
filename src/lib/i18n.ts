@@ -285,6 +285,76 @@ const en: Record<string, string> = {
   'center.action': 'Action',
   'center.resource': 'Resource',
   'center.accountability': 'Accountability',
+
+  // Super neighborhoods
+  'superNeighborhoods.title': 'Explore Your Neighborhood',
+  'superNeighborhoods.subtitle': 'Houston is divided into 88 super neighborhoods — community areas for civic engagement and resource planning.',
+  'superNeighborhoods.intro': 'Click a boundary on the map or a card below to explore demographics, resources, and community information for each super neighborhood.',
+  'superNeighborhoods.all_heading': 'All Super Neighborhoods',
+  'superNeighborhoods.population': 'Population',
+  'superNeighborhoods.median_income': 'Median Income',
+  'superNeighborhoods.neighborhoods': 'Neighborhoods',
+  'superNeighborhoods.services': 'Services',
+  'superNeighborhoods.map': 'Map',
+  'superNeighborhoods.services_area': 'Services in This Area',
+  'superNeighborhoods.find_reps': 'Find your representatives',
+  'superNeighborhoods.breadcrumb': 'Super Neighborhoods',
+
+  // Guides
+  'guides.title': 'Guides',
+  'guides.subtitle': 'Step-by-step guides for civic engagement, voting, community organizing, and connecting with resources.',
+  'guides.coming_soon': 'Guides coming soon.',
+  'guides.focus_areas': 'Focus Areas',
+  'guides.global_goals': 'Global Goals (SDGs)',
+  'guides.social_determinants': 'Social Determinants',
+  'guides.related_orgs': 'Related Organizations',
+  'guides.opportunities': 'Opportunities',
+  'guides.related_policies': 'Related Policies',
+  'guides.related_articles': 'Related Articles',
+  'guides.knowledge_map': 'Knowledge Map',
+  'guides.source': 'Source',
+  'guides.original_source': 'Original source',
+  'guides.learn_more': 'Learn more',
+  'guides.view_source': 'View on The Change Lab',
+
+  // Learning paths
+  'learn.title': 'Learning Paths',
+  'learn.subtitle': 'Free self-guided journeys to deepen your understanding of community issues, civic engagement, and the systems that shape our lives.',
+  'learn.paths': 'paths',
+  'learn.modules': 'modules',
+  'learn.min_content': 'min of content',
+  'learn.coming_soon': 'Learning paths coming soon.',
+  'learn.modules_heading': 'Modules',
+  'learn.badge_earned': 'Badge Earned',
+  'learn.previous_path': 'Previous path',
+  'learn.next_path': 'Next path',
+  'learn.related_focus': 'Related Focus Areas',
+  'learn.sdg': 'Sustainable Development Goals',
+  'learn.sdoh': 'Social Determinants of Health',
+  'learn.related_opportunities': 'Related Opportunities',
+  'learn.related_policies': 'Related Policies',
+  'learn.related_guides': 'Related Guides',
+  'learn.browse_guides': 'Browse all guides',
+  'learn.more_paths': 'More Learning Paths',
+  'learn.view_all': 'View all paths',
+  'learn.prerequisite': 'Before starting this path, complete:',
+  'learn.signup_cta': 'to track your progress and earn badges as you learn.',
+  'learn.create_account': 'Create a free account',
+
+  // Neighborhoods
+  'neighborhoods.find_reps': 'Find your representatives',
+  'neighborhoods.services_area': 'Services in Your Area',
+  'neighborhoods.population': 'Population',
+  'neighborhoods.median_income': 'Median Income',
+
+  // Pathway detail extras
+  'pathway.news_heading': 'News',
+  'pathway.foundations_heading': 'Foundations',
+  'pathway.foundations_subtitle': 'foundations supporting this pathway',
+
+  // Brand
+  'brand.name': 'The Change Engine',
+  'brand.subtitle': 'Community Exchange',
 }
 
 const es: Record<string, string> = {
@@ -551,6 +621,76 @@ const es: Record<string, string> = {
   'center.action': 'Acción',
   'center.resource': 'Recurso',
   'center.accountability': 'Responsabilidad',
+
+  // Super neighborhoods
+  'superNeighborhoods.title': 'Explore Su Vecindario',
+  'superNeighborhoods.subtitle': 'Houston está dividido en 88 súper vecindarios — áreas comunitarias para participación cívica y planificación de recursos.',
+  'superNeighborhoods.intro': 'Haga clic en un límite del mapa o en una tarjeta para explorar datos demográficos, recursos e información comunitaria de cada súper vecindario.',
+  'superNeighborhoods.all_heading': 'Todos los Súper Vecindarios',
+  'superNeighborhoods.population': 'Población',
+  'superNeighborhoods.median_income': 'Ingreso Medio',
+  'superNeighborhoods.neighborhoods': 'Vecindarios',
+  'superNeighborhoods.services': 'Servicios',
+  'superNeighborhoods.map': 'Mapa',
+  'superNeighborhoods.services_area': 'Servicios en Esta Área',
+  'superNeighborhoods.find_reps': 'Encuentre a sus representantes',
+  'superNeighborhoods.breadcrumb': 'Súper Vecindarios',
+
+  // Guides
+  'guides.title': 'Guías',
+  'guides.subtitle': 'Guías paso a paso para participación cívica, votación, organización comunitaria y conexión con recursos.',
+  'guides.coming_soon': 'Guías próximamente.',
+  'guides.focus_areas': 'Áreas de Enfoque',
+  'guides.global_goals': 'Metas Globales (ODS)',
+  'guides.social_determinants': 'Determinantes Sociales',
+  'guides.related_orgs': 'Organizaciones Relacionadas',
+  'guides.opportunities': 'Oportunidades',
+  'guides.related_policies': 'Políticas Relacionadas',
+  'guides.related_articles': 'Artículos Relacionados',
+  'guides.knowledge_map': 'Mapa de Conocimiento',
+  'guides.source': 'Fuente',
+  'guides.original_source': 'Fuente original',
+  'guides.learn_more': 'Más información',
+  'guides.view_source': 'Ver en The Change Lab',
+
+  // Learning paths
+  'learn.title': 'Rutas de Aprendizaje',
+  'learn.subtitle': 'Recorridos autoguiados gratuitos para profundizar su comprensión de los problemas comunitarios, la participación cívica y los sistemas que dan forma a nuestras vidas.',
+  'learn.paths': 'rutas',
+  'learn.modules': 'módulos',
+  'learn.min_content': 'min de contenido',
+  'learn.coming_soon': 'Rutas de aprendizaje próximamente.',
+  'learn.modules_heading': 'Módulos',
+  'learn.badge_earned': 'Insignia Obtenida',
+  'learn.previous_path': 'Ruta anterior',
+  'learn.next_path': 'Siguiente ruta',
+  'learn.related_focus': 'Áreas de Enfoque Relacionadas',
+  'learn.sdg': 'Objetivos de Desarrollo Sostenible',
+  'learn.sdoh': 'Determinantes Sociales de la Salud',
+  'learn.related_opportunities': 'Oportunidades Relacionadas',
+  'learn.related_policies': 'Políticas Relacionadas',
+  'learn.related_guides': 'Guías Relacionadas',
+  'learn.browse_guides': 'Ver todas las guías',
+  'learn.more_paths': 'Más Rutas de Aprendizaje',
+  'learn.view_all': 'Ver todas las rutas',
+  'learn.prerequisite': 'Antes de comenzar esta ruta, complete:',
+  'learn.signup_cta': 'para seguir su progreso y obtener insignias mientras aprende.',
+  'learn.create_account': 'Cree una cuenta gratuita',
+
+  // Neighborhoods
+  'neighborhoods.find_reps': 'Encuentre a sus representantes',
+  'neighborhoods.services_area': 'Servicios en Su Área',
+  'neighborhoods.population': 'Población',
+  'neighborhoods.median_income': 'Ingreso Medio',
+
+  // Pathway detail extras
+  'pathway.news_heading': 'Noticias',
+  'pathway.foundations_heading': 'Fundaciones',
+  'pathway.foundations_subtitle': 'fundaciones que apoyan este camino',
+
+  // Brand
+  'brand.name': 'The Change Engine',
+  'brand.subtitle': 'Intercambio Comunitario',
 }
 
 const vi: Record<string, string> = {
@@ -817,6 +957,76 @@ const vi: Record<string, string> = {
   'center.action': 'Hành Động',
   'center.resource': 'Tài Nguyên',
   'center.accountability': 'Trách Nhiệm',
+
+  // Super neighborhoods
+  'superNeighborhoods.title': 'Khám Phá Khu Phố Của Bạn',
+  'superNeighborhoods.subtitle': 'Houston được chia thành 88 siêu khu phố — khu vực cộng đồng cho tham gia dân sự và lập kế hoạch tài nguyên.',
+  'superNeighborhoods.intro': 'Nhấp vào ranh giới trên bản đồ hoặc thẻ bên dưới để khám phá nhân khẩu học, tài nguyên và thông tin cộng đồng cho mỗi siêu khu phố.',
+  'superNeighborhoods.all_heading': 'Tất Cả Siêu Khu Phố',
+  'superNeighborhoods.population': 'Dân Số',
+  'superNeighborhoods.median_income': 'Thu Nhập Trung Bình',
+  'superNeighborhoods.neighborhoods': 'Khu Phố',
+  'superNeighborhoods.services': 'Dịch Vụ',
+  'superNeighborhoods.map': 'Bản Đồ',
+  'superNeighborhoods.services_area': 'Dịch Vụ Trong Khu Vực',
+  'superNeighborhoods.find_reps': 'Tìm đại diện của bạn',
+  'superNeighborhoods.breadcrumb': 'Siêu Khu Phố',
+
+  // Guides
+  'guides.title': 'Hướng Dẫn',
+  'guides.subtitle': 'Hướng dẫn từng bước cho tham gia dân sự, bỏ phiếu, tổ chức cộng đồng và kết nối với tài nguyên.',
+  'guides.coming_soon': 'Hướng dẫn sắp có.',
+  'guides.focus_areas': 'Lĩnh Vực Trọng Tâm',
+  'guides.global_goals': 'Mục Tiêu Toàn Cầu (SDGs)',
+  'guides.social_determinants': 'Yếu Tố Xã Hội',
+  'guides.related_orgs': 'Tổ Chức Liên Quan',
+  'guides.opportunities': 'Cơ Hội',
+  'guides.related_policies': 'Chính Sách Liên Quan',
+  'guides.related_articles': 'Bài Viết Liên Quan',
+  'guides.knowledge_map': 'Bản Đồ Kiến Thức',
+  'guides.source': 'Nguồn',
+  'guides.original_source': 'Nguồn gốc',
+  'guides.learn_more': 'Tìm hiểu thêm',
+  'guides.view_source': 'Xem trên The Change Lab',
+
+  // Learning paths
+  'learn.title': 'Lộ Trình Học Tập',
+  'learn.subtitle': 'Hành trình tự hướng dẫn miễn phí để hiểu sâu hơn về các vấn đề cộng đồng, tham gia dân sự và hệ thống định hình cuộc sống.',
+  'learn.paths': 'lộ trình',
+  'learn.modules': 'mô-đun',
+  'learn.min_content': 'phút nội dung',
+  'learn.coming_soon': 'Lộ trình học tập sắp có.',
+  'learn.modules_heading': 'Mô-đun',
+  'learn.badge_earned': 'Huy Hiệu Đạt Được',
+  'learn.previous_path': 'Lộ trình trước',
+  'learn.next_path': 'Lộ trình tiếp',
+  'learn.related_focus': 'Lĩnh Vực Trọng Tâm Liên Quan',
+  'learn.sdg': 'Mục Tiêu Phát Triển Bền Vững',
+  'learn.sdoh': 'Yếu Tố Xã Hội Quyết Định Sức Khỏe',
+  'learn.related_opportunities': 'Cơ Hội Liên Quan',
+  'learn.related_policies': 'Chính Sách Liên Quan',
+  'learn.related_guides': 'Hướng Dẫn Liên Quan',
+  'learn.browse_guides': 'Xem tất cả hướng dẫn',
+  'learn.more_paths': 'Thêm Lộ Trình Học Tập',
+  'learn.view_all': 'Xem tất cả lộ trình',
+  'learn.prerequisite': 'Trước khi bắt đầu lộ trình này, hãy hoàn thành:',
+  'learn.signup_cta': 'để theo dõi tiến trình và nhận huy hiệu khi học.',
+  'learn.create_account': 'Tạo tài khoản miễn phí',
+
+  // Neighborhoods
+  'neighborhoods.find_reps': 'Tìm đại diện của bạn',
+  'neighborhoods.services_area': 'Dịch Vụ Trong Khu Vực',
+  'neighborhoods.population': 'Dân Số',
+  'neighborhoods.median_income': 'Thu Nhập Trung Bình',
+
+  // Pathway detail extras
+  'pathway.news_heading': 'Tin Tức',
+  'pathway.foundations_heading': 'Tổ Chức Từ Thiện',
+  'pathway.foundations_subtitle': 'tổ chức từ thiện hỗ trợ lộ trình này',
+
+  // Brand
+  'brand.name': 'The Change Engine',
+  'brand.subtitle': 'Trao Đổi Cộng Đồng',
 }
 
 const dictionaries: Record<SupportedLanguage, Record<string, string>> = { en, es, vi }

@@ -1,14 +1,35 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { THEMES, CENTERS } from '@/lib/constants'
 import { getPathwayCounts, getCenterContentForPathway } from '@/lib/data/exchange'
 import { PathwayCard } from '@/components/exchange/PathwayCard'
 import { PageHero } from '@/components/exchange/PageHero'
+import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Seven Pathways Into Community Life',
   description: 'Explore health, families, neighborhood, voice, money, planet, and bridging divides.',
+}
+
+/** Map theme IDs to i18n keys for theme names */
+const THEME_I18N: Record<string, string> = {
+  THEME_01: 'theme.our_health',
+  THEME_02: 'theme.our_families',
+  THEME_03: 'theme.our_neighborhood',
+  THEME_04: 'theme.our_voice',
+  THEME_05: 'theme.our_money',
+  THEME_06: 'theme.our_planet',
+  THEME_07: 'theme.the_bigger_we',
+}
+
+/** Map center names to i18n keys */
+const CENTER_I18N: Record<string, string> = {
+  Learning: 'center.learning',
+  Action: 'center.action',
+  Resource: 'center.resource',
+  Accountability: 'center.accountability',
 }
 
 export default async function PathwaysPage() {
@@ -21,6 +42,10 @@ export default async function PathwaysPage() {
     })
   )
 
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
+
   return (
     <div>
       <PageHero variant="editorial" titleKey="pathways.title" subtitleKey="pathways.subtitle" />
@@ -31,7 +56,7 @@ export default async function PathwaysPage() {
             <div key={id} className="space-y-3">
               <PathwayCard
                 themeId={id}
-                name={theme.name}
+                name={t(THEME_I18N[id] || '') || theme.name}
                 color={theme.color}
                 emoji={theme.emoji}
                 slug={theme.slug}
@@ -44,7 +69,7 @@ export default async function PathwaysPage() {
                   if (count === 0) return null
                   return (
                     <span key={centerName} className="text-xs text-brand-muted">
-                      {centerName} {count}
+                      {t(CENTER_I18N[centerName] || '') || centerName} {count}
                     </span>
                   )
                 })}

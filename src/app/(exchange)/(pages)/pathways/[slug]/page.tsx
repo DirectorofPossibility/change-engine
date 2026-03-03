@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { THEMES, CENTERS } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway, getLifeSituations, getLearningPaths,
@@ -12,6 +13,15 @@ import { PathwayFilterClient } from './PathwayFilterClient'
 import { PathwayPanelClient } from './PathwayPanelClient'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
+import { getUIStrings } from '@/lib/i18n'
+
+/** Map center names to i18n keys */
+const CENTER_I18N: Record<string, string> = {
+  Learning: 'center.learning',
+  Action: 'center.action',
+  Resource: 'center.resource',
+  Accountability: 'center.accountability',
+}
 
 function resolveTheme(slug: string) {
   for (const [id, theme] of Object.entries(THEMES)) {
@@ -104,6 +114,10 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
   // Translations
   const langId = await getLangId()
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
+
   let contentTranslations: Record<string, { title?: string; summary?: string }> = {}
   let opportunityTranslations: Record<string, { title?: string; summary?: string }> = {}
   let policyTranslations: Record<string, { title?: string; summary?: string }> = {}
@@ -140,13 +154,13 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Breadcrumb items={[
-          { label: 'Pathways', href: '/pathways' },
+          { label: t('nav.pathways'), href: '/pathways' },
           { label: theme.name }
         ]} />
 
         {/* ── 4 Centers / Pillars ── */}
         <section className="py-8">
-          <h2 className="text-xl font-serif font-bold text-brand-text mb-6">Four Ways to Engage</h2>
+          <h2 className="text-xl font-serif font-bold text-brand-text mb-6">{t('pathway.centers_title')}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {centerEntries.map(function ([name, center]) {
               const count = centerCounts[name] ?? 0
@@ -166,7 +180,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                       <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                     </svg>
                   </div>
-                  <h3 className="font-bold text-brand-text text-base mb-1">{name}</h3>
+                  <h3 className="font-bold text-brand-text text-base mb-1">{t(CENTER_I18N[name] || '') || name}</h3>
                   <p className="text-sm text-brand-muted italic leading-snug mb-3">{center.question}</p>
                   {count > 0 && (
                     <span className="text-xs font-semibold tabular-nums" style={{ color }}>{count} resources</span>
@@ -180,7 +194,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         {/* ── Focus Areas / Sub-Topics ── */}
         {themeFocusAreas.length > 0 && (
           <section className="py-6">
-            <h2 className="text-xl font-serif font-bold text-brand-text mb-5">Explore Topics</h2>
+            <h2 className="text-xl font-serif font-bold text-brand-text mb-5">{t('pathway.focus_areas_title')}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {themeFocusAreas.map(function (fa) {
                 return (
@@ -211,7 +225,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         {/* ── News Feed ── */}
         {content.length > 0 && (
           <section className="py-8">
-            <SectionHeading icon={SECTION_ICONS.news} title="News" count={content.length} color={theme.color} />
+            <SectionHeading icon={SECTION_ICONS.news} title={t('pathway.news_heading')} count={content.length} color={theme.color} />
             <PathwayFilterClient
               themeId={theme.id}
               centerCounts={centerCounts}
@@ -231,8 +245,8 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                 </svg>
               </div>
               <div>
-                <h2 className="text-xl font-serif font-bold text-brand-text">Foundations</h2>
-                <span className="text-sm text-brand-muted">{foundations.length} {foundations.length === 1 ? 'foundation' : 'foundations'} supporting this pathway</span>
+                <h2 className="text-xl font-serif font-bold text-brand-text">{t('pathway.foundations_heading')}</h2>
+                <span className="text-sm text-brand-muted">{foundations.length} {t('pathway.foundations_subtitle')}</span>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

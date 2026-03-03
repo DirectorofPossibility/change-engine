@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getGuides } from '@/lib/data/exchange'
+import { cookies } from 'next/headers'
+import { getGuides, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ThemePill } from '@/components/ui/ThemePill'
+import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 3600
 
@@ -19,16 +21,26 @@ const LEVEL_COLORS: Record<string, string> = {
 
 export default async function GuidesPage() {
   const guides = await getGuides()
+  const langId = await getLangId()
+  const translations = langId
+    ? await fetchTranslationsForTable('guides', guides.map(g => g.guide_id), langId)
+    : {}
+
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">Guides</h1>
+      <h1 className="text-3xl font-bold text-brand-text mb-2">{t('guides.title')}</h1>
       <p className="text-brand-muted mb-8">
-        Step-by-step guides for civic engagement, voting, community organizing, and connecting with resources.
+        {t('guides.subtitle')}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {guides.map(function (guide) {
+          const title = translations[guide.guide_id]?.title || guide.title
+          const description = translations[guide.guide_id]?.summary || guide.description
           return (
             <Link
               key={guide.guide_id}
@@ -39,16 +51,16 @@ export default async function GuidesPage() {
                 <div className="relative w-full h-40">
                   <Image
                     src={guide.hero_image_url}
-                    alt={guide.title}
+                    alt={title}
                     fill
                     className="object-cover"
                   />
                 </div>
               )}
               <div className="p-4 flex flex-col flex-1">
-                <h2 className="font-semibold text-brand-text mb-1">{guide.title}</h2>
-                {guide.description && (
-                  <p className="text-sm text-brand-muted mb-3 line-clamp-3">{guide.description}</p>
+                <h2 className="font-semibold text-brand-text mb-1">{title}</h2>
+                {description && (
+                  <p className="text-sm text-brand-muted mb-3 line-clamp-3">{description}</p>
                 )}
                 <div className="mt-auto flex items-center gap-2 flex-wrap">
                   {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
@@ -65,7 +77,7 @@ export default async function GuidesPage() {
       </div>
 
       {guides.length === 0 && (
-        <p className="text-center text-brand-muted py-12">Guides coming soon.</p>
+        <p className="text-center text-brand-muted py-12">{t('guides.coming_soon')}</p>
       )}
     </div>
   )
