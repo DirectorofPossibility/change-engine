@@ -201,6 +201,7 @@ export type Database = {
         Row: {
           against_argument: string | null
           campaign_id: string | null
+          community_impact_summary: string | null
           data_source: string | null
           description: string | null
           description_5th_grade: string | null
@@ -223,6 +224,7 @@ export type Database = {
         Insert: {
           against_argument?: string | null
           campaign_id?: string | null
+          community_impact_summary?: string | null
           data_source?: string | null
           description?: string | null
           description_5th_grade?: string | null
@@ -245,6 +247,7 @@ export type Database = {
         Update: {
           against_argument?: string | null
           campaign_id?: string | null
+          community_impact_summary?: string | null
           data_source?: string | null
           description?: string | null
           description_5th_grade?: string | null
@@ -508,6 +511,7 @@ export type Database = {
       }
       candidates: {
         Row: {
+          advanced_to_runoff: string | null
           bio_summary: string | null
           campaign_email: string | null
           campaign_phone: string | null
@@ -529,8 +533,11 @@ export type Database = {
           photo_url: string | null
           policy_positions: string | null
           primary_date: string | null
+          vote_count: number | null
+          vote_pct: number | null
         }
         Insert: {
+          advanced_to_runoff?: string | null
           bio_summary?: string | null
           campaign_email?: string | null
           campaign_phone?: string | null
@@ -552,8 +559,11 @@ export type Database = {
           photo_url?: string | null
           policy_positions?: string | null
           primary_date?: string | null
+          vote_count?: number | null
+          vote_pct?: number | null
         }
         Update: {
+          advanced_to_runoff?: string | null
           bio_summary?: string | null
           campaign_email?: string | null
           campaign_phone?: string | null
@@ -575,6 +585,8 @@ export type Database = {
           photo_url?: string | null
           policy_positions?: string | null
           primary_date?: string | null
+          vote_count?: number | null
+          vote_pct?: number | null
         }
         Relationships: []
       }
@@ -1418,6 +1430,7 @@ export type Database = {
       elections: {
         Row: {
           ballot_items: string | null
+          community_impact_summary: string | null
           data_source: string | null
           description: string | null
           early_voting_end: string | null
@@ -1435,6 +1448,7 @@ export type Database = {
         }
         Insert: {
           ballot_items?: string | null
+          community_impact_summary?: string | null
           data_source?: string | null
           description?: string | null
           early_voting_end?: string | null
@@ -1452,6 +1466,7 @@ export type Database = {
         }
         Update: {
           ballot_items?: string | null
+          community_impact_summary?: string | null
           data_source?: string | null
           description?: string | null
           early_voting_end?: string | null

@@ -350,6 +350,64 @@ export async function getCivicHubData() {
   }
 }
 
+/** Election dashboard data — past/upcoming elections, candidates, ballot items, civic events, officials. */
+export async function getElectionDashboard(zip?: string) {
+  const supabase = await createClient()
+  const today = new Date().toISOString().split('T')[0]
+
+  const [
+    { data: pastElections },
+    { data: upcomingElections },
+    { data: civicEvents },
+  ] = await Promise.all([
+    supabase.from('elections').select('*').lt('election_date', today).order('election_date', { ascending: false }).limit(5),
+    supabase.from('elections').select('*').gte('election_date', today).eq('is_active', 'Yes').order('election_date', { ascending: true }),
+    supabase.from('civic_calendar').select('*').eq('is_active', 'Yes').order('date_start', { ascending: true }).limit(15),
+  ])
+
+  // Fetch candidates + ballot items for the most recent past election
+  const recentElection = pastElections && pastElections.length > 0 ? pastElections[0] : null
+  const nextElection = upcomingElections && upcomingElections.length > 0 ? upcomingElections[0] : null
+
+  const [
+    { data: recentCandidates },
+    { data: recentBallotItems },
+    { data: upcomingCandidates },
+    { data: upcomingBallotItems },
+  ] = await Promise.all([
+    recentElection
+      ? supabase.from('candidates').select('*').eq('election_id', recentElection.election_id).eq('is_active', 'Yes')
+      : Promise.resolve({ data: [] as any[] }),
+    recentElection
+      ? supabase.from('ballot_items').select('*').eq('election_id', recentElection.election_id)
+      : Promise.resolve({ data: [] as any[] }),
+    nextElection
+      ? supabase.from('candidates').select('*').eq('election_id', nextElection.election_id).eq('is_active', 'Yes')
+      : Promise.resolve({ data: [] as any[] }),
+    nextElection
+      ? supabase.from('ballot_items').select('*').eq('election_id', nextElection.election_id)
+      : Promise.resolve({ data: [] as any[] }),
+  ])
+
+  // If ZIP provided, fetch officials for matching districts
+  let officials: any[] = []
+  if (zip) {
+    const { data } = await supabase.from('elected_officials').select('*').order('official_name')
+    officials = data ?? []
+  }
+
+  return {
+    pastElections: pastElections ?? [],
+    upcomingElections: upcomingElections ?? [],
+    civicEvents: civicEvents ?? [],
+    recentCandidates: recentCandidates ?? [],
+    recentBallotItems: recentBallotItems ?? [],
+    upcomingCandidates: upcomingCandidates ?? [],
+    upcomingBallotItems: upcomingBallotItems ?? [],
+    officials,
+  }
+}
+
 /** All active 211 services, enriched with parent org names. */
 export async function getServices(): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()

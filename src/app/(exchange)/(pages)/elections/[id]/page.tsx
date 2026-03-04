@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
+import { ElectionResultsBar } from '@/components/exchange/ElectionResultsBar'
+import { TurnoutGauge } from '@/components/exchange/TurnoutGauge'
+import { CommunityImpactCard } from '@/components/exchange/CommunityImpactCard'
 import { CandidateCard } from '@/components/exchange/CandidateCard'
 import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
@@ -52,9 +55,13 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
     candidateGroups[office].push(c)
   })
 
-  // Check if before registration deadline
+  // Check if election is in the past (has results)
   const today = new Date().toISOString().split('T')[0]
+  const isPast = election.election_date ? election.election_date < today : false
   const canRegister = election.registration_deadline ? today <= election.registration_deadline : false
+
+  // Check if any candidates have vote_pct (results available)
+  const hasResults = candidates.some(function (c) { return (c as any).vote_pct != null })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -74,6 +81,27 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           electionType={election.election_type}
         />
       </div>
+
+      {/* Turnout + Community Impact for past elections */}
+      {isPast && (election.turnout_pct != null || (election as any).community_impact_summary) && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+          {election.turnout_pct != null && (
+            <TurnoutGauge turnoutPct={election.turnout_pct} />
+          )}
+          {(election as any).community_impact_summary && (
+            <div className="lg:col-span-2">
+              <CommunityImpactCard summary={(election as any).community_impact_summary} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Community Impact for upcoming elections */}
+      {!isPast && (election as any).community_impact_summary && (
+        <div className="mb-8">
+          <CommunityImpactCard summary={(election as any).community_impact_summary} />
+        </div>
+      )}
 
       {/* Register to vote CTA */}
       {canRegister && (
@@ -95,10 +123,39 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
         <p className="text-brand-muted mb-8">{election.description}</p>
       )}
 
+      {/* Election Results (vote percentages) — shown for past elections with results */}
+      {hasResults && (
+        <section className="mb-10">
+          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">Election Results</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Object.entries(candidateGroups).map(function ([office, cands]) {
+              return (
+                <ElectionResultsBar
+                  key={office}
+                  office={office}
+                  district={cands[0]?.district}
+                  candidates={cands.map(function (c) {
+                    return {
+                      candidate_id: c.candidate_id,
+                      candidate_name: c.candidate_name,
+                      party: c.party,
+                      incumbent: c.incumbent,
+                      vote_pct: (c as any).vote_pct,
+                      vote_count: (c as any).vote_count,
+                      advanced_to_runoff: (c as any).advanced_to_runoff,
+                    }
+                  })}
+                />
+              )
+            })}
+          </div>
+        </section>
+      )}
+
       {/* Candidates */}
       {Object.keys(candidateGroups).length > 0 && (
         <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Who&apos;s Running</h2>
+          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">Who&apos;s Running</h2>
           <div className="space-y-6">
             {Object.entries(candidateGroups).map(function ([office, cands]) {
               return (
@@ -133,21 +190,27 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {/* Ballot Items */}
       {ballotItems.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">What&apos;s on the Ballot</h2>
+          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">What&apos;s on the Ballot</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ballotItems.map(function (item) {
               return (
-                <BallotItemCard
-                  key={item.item_id}
-                  name={item.item_name}
-                  itemType={item.item_type}
-                  description={item.description_5th_grade || item.description}
-                  forArgument={item.for_argument}
-                  againstArgument={item.against_argument}
-                  fiscalImpact={item.fiscal_impact}
-                  passed={item.passed}
-                  voteForPct={item.vote_for_pct}
-                />
+                <div key={item.item_id}>
+                  <BallotItemCard
+                    name={item.item_name}
+                    itemType={item.item_type}
+                    description={item.description_5th_grade || item.description}
+                    forArgument={item.for_argument}
+                    againstArgument={item.against_argument}
+                    fiscalImpact={item.fiscal_impact}
+                    passed={item.passed}
+                    voteForPct={item.vote_for_pct}
+                  />
+                  {(item as any).community_impact_summary && (
+                    <div className="mt-2">
+                      <CommunityImpactCard summary={(item as any).community_impact_summary} />
+                    </div>
+                  )}
+                </div>
               )
             })}
           </div>
@@ -157,7 +220,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {/* Voting Locations */}
       {votingLocations.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Where to Vote</h2>
+          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">Where to Vote</h2>
           <VotingLocationsMap locations={votingLocations} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {votingLocations.map(function (loc) {

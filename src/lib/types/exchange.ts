@@ -210,3 +210,22 @@ export interface SuperNeighborhood {
 export interface GeoFeatureProperties {
   [key: string]: string | number | null | undefined
 }
+
+// ── Election Dashboard types ─────────────────────────────────────────
+
+export type Election = Tables<'elections'>
+export type Candidate = Tables<'candidates'>
+export type BallotItem = Tables<'ballot_items'>
+export type CivicCalendarEvent = Tables<'civic_calendar'>
+
+/** Aggregated data for the voting dashboard page. */
+export interface ElectionDashboardData {
+  pastElections: Election[]
+  upcomingElections: Election[]
+  civicEvents: CivicCalendarEvent[]
+  recentCandidates: Candidate[]
+  recentBallotItems: BallotItem[]
+  upcomingCandidates: Candidate[]
+  upcomingBallotItems: BallotItem[]
+  officials: ElectedOfficial[]
+}
