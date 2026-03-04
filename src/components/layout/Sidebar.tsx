@@ -15,7 +15,9 @@ const ADMIN_NAV = [
   { href: '/dashboard/translations', label: 'Translations', icon: '🌐' },
   { href: '/dashboard/taxonomy', label: 'Taxonomy', icon: '🗂️' },
   { href: '/dashboard/knowledge-graph', label: 'Knowledge Graph', icon: '🌌' },
+  { href: '/dashboard/circles', label: 'Circle Graph', icon: '⭕' },
   { href: '/dashboard/users', label: 'Users', icon: '👤' },
+  { href: '/dashboard/manual', label: 'Users Manual', icon: '📘' },
 ]
 
 const PARTNER_NAV = [
@@ -23,6 +25,7 @@ const PARTNER_NAV = [
   { href: '/dashboard/partner/guides', label: 'My Guides', icon: '📖' },
   { href: '/dashboard/partner/events', label: 'My Events', icon: '📅' },
   { href: '/dashboard/partner/organization', label: 'My Organization', icon: '🏢' },
+  { href: '/dashboard/manual', label: 'Users Manual', icon: '📘' },
 ]
 
 interface SidebarProps {
