@@ -53,11 +53,11 @@ export function ImpactMetrics({ stats }: ImpactMetricsProps) {
   const { t } = useTranslation()
 
   return (
-    <section className="mb-8">
-      <h2 className="font-serif text-lg font-semibold text-center text-brand-muted mb-4">
+    <section className="mb-14">
+      <h2 className="font-serif text-lg font-semibold text-center text-brand-muted mb-6">
         {t('home.community_glance')}
       </h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {METRICS.map(function (metric) {
           return <MetricCard key={metric.key} target={stats[metric.key]} icon={metric.icon} label={t(metric.labelKey)} />
         })}
@@ -70,9 +70,9 @@ function MetricCard({ target, icon: Icon, label }: { target: number; icon: typeo
   const { value, ref } = useCountUp(target)
 
   return (
-    <div ref={ref} className="flex flex-col items-center gap-1.5 p-4 rounded-2xl bg-white border border-brand-border">
-      <Icon size={20} style={{ color: BRAND.accent }} strokeWidth={1.5} />
-      <span className="font-serif text-3xl font-bold tracking-tight" style={{ color: BRAND.text }}>
+    <div ref={ref} className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border border-brand-border">
+      <Icon size={24} style={{ color: BRAND.accent }} strokeWidth={1.5} />
+      <span className="font-serif text-5xl font-bold tracking-tight" style={{ color: BRAND.text }}>
         {value.toLocaleString()}
       </span>
       <span className="text-xs font-semibold text-brand-muted uppercase tracking-wider">
