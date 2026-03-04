@@ -155,9 +155,9 @@ export async function POST(req: NextRequest) {
     }
     const pdfBuffer = Buffer.from(await storageRes.arrayBuffer())
 
-    // Parse PDF
+    // Parse PDF — import lib directly to skip pdf-parse's debug test runner
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const pdfParse = require('pdf-parse')
+    const pdfParse = require('pdf-parse/lib/pdf-parse')
     const pdfData = await pdfParse(pdfBuffer)
     const fullText = pdfData.text
     const pageCount = pdfData.numpages
