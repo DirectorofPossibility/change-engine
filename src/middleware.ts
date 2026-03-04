@@ -66,13 +66,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(meLoginUrl)
   }
 
-  // Protect library routes (require login)
-  if (request.nextUrl.pathname.startsWith('/library') && !user) {
-    const libraryLoginUrl = request.nextUrl.clone()
-    libraryLoginUrl.pathname = '/login'
-    libraryLoginUrl.searchParams.set('redirect', request.nextUrl.pathname)
-    return NextResponse.redirect(libraryLoginUrl)
-  }
 
   // Check account status for authenticated users (skip for /account-locked itself)
   if (user && !request.nextUrl.pathname.startsWith('/account-locked')) {
@@ -100,5 +93,5 @@ export async function middleware(request: NextRequest) {
  * these patterns will invoke the {@link middleware} function.
  */
 export const config = {
-  matcher: ['/dashboard/:path*', '/me/:path*', '/library/:path*', '/account-locked'],
+  matcher: ['/dashboard/:path*', '/me/:path*', '/account-locked'],
 }
