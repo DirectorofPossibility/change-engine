@@ -53,7 +53,21 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     .eq('official_id', id)
     .single()
 
+  const { data: profileRow } = await supabase
+    .from('official_profiles' as any)
+    .select('*')
+    .eq('official_id', id)
+    .single()
+
   if (!official) notFound()
+
+  const profile = profileRow as unknown as {
+    bio_short?: string | null; bio_full?: string | null
+    phone_office?: string | null; phone_district?: string | null
+    address_office?: string | null; address_district?: string | null
+    social_twitter?: string | null; social_facebook?: string | null; social_instagram?: string | null
+    photo_url?: string | null
+  } | null
 
   // Policies connected to this official via junction table
   const { data: policyJunctions } = await supabase
@@ -148,7 +162,8 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   }
 
   const displayTitle = officialTranslation?.title || official.title
-  const photoUrl = (official as any).photo_url as string | null
+  const photoUrl = profile?.photo_url || (official as any).photo_url as string | null
+  const bio = profile?.bio_short || official.description_5th_grade
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -194,9 +209,9 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
         <h3 className="text-sm font-semibold text-brand-text mb-3 uppercase tracking-wide">Contact</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {official.office_phone && (
-            <a href={'tel:' + official.office_phone} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-              <Phone size={18} className="flex-shrink-0" /> {official.office_phone}
+          {(profile?.phone_office || official.office_phone) && (
+            <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+              <Phone size={18} className="flex-shrink-0" /> {profile?.phone_office || official.office_phone}
             </a>
           )}
           {official.email && (
@@ -210,6 +225,22 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
             </a>
           )}
         </div>
+        {(profile?.address_office || profile?.address_district) && (
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {profile.address_office && (
+              <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
+                <MapPin size={18} className="flex-shrink-0 mt-0.5" />
+                <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">Office</span><br />{profile.address_office}</div>
+              </div>
+            )}
+            {profile.address_district && (
+              <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
+                <MapPin size={18} className="flex-shrink-0 mt-0.5" />
+                <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">District Office</span><br />{profile.address_district}</div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Focus Areas */}
@@ -233,10 +264,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       )}
 
       {/* About */}
-      {official.description_5th_grade && (
+      {bio && (
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-3">About</h2>
-          <p className="text-brand-muted leading-relaxed">{official.description_5th_grade}</p>
+          <p className="text-brand-muted leading-relaxed">{bio}</p>
         </section>
       )}
 
