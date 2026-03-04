@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, HandHeart, Package, Scale, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 import { CENTERS, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 
@@ -9,11 +10,11 @@ interface CentersGridProps {
   centerCounts: Record<string, number>
 }
 
-const CENTER_ICONS: Record<string, typeof BookOpen> = {
-  Learning: BookOpen,
-  Action: HandHeart,
-  Resource: Package,
-  Accountability: Scale,
+const CENTER_IMAGES: Record<string, string> = {
+  Learning: '/images/centers/learning.svg',
+  Action: '/images/centers/action.svg',
+  Resource: '/images/centers/resource.svg',
+  Accountability: '/images/centers/accountability.svg',
 }
 
 const CENTER_I18N: Record<string, string> = {
@@ -36,36 +37,37 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
         {t('home.centers_subtitle')}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {Object.entries(CENTERS).map(function ([name, center]) {
-          const Icon = CENTER_ICONS[name] || BookOpen
           const count = centerCounts[name] ?? 0
+          const imgSrc = CENTER_IMAGES[name]
 
           return (
             <Link
               key={name}
               href={'/centers/' + center.slug}
-              className="group flex items-start gap-4 p-5 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-              style={{ borderLeft: `3px solid ${BRAND.accent}` }}
+              className="group flex flex-col items-center text-center gap-3 p-5 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 transition-transform group-hover:scale-110"
-                style={{ backgroundColor: BRAND.accent + '15' }}
-              >
-                <Icon size={20} style={{ color: BRAND.accent }} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-serif text-lg font-bold text-brand-text">{t(CENTER_I18N[name])}</h3>
-                  <ArrowRight
-                    size={16}
-                    className="text-brand-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
-                  />
-                </div>
-                <p className="text-sm text-brand-muted mt-0.5 italic font-serif">{center.question}</p>
-                <span className="text-xs font-semibold mt-1.5 inline-block" style={{ color: BRAND.accent }}>
+              {imgSrc && (
+                <Image
+                  src={imgSrc}
+                  alt={name}
+                  width={64}
+                  height={64}
+                  className="transition-transform group-hover:scale-110"
+                />
+              )}
+              <h3 className="font-serif text-lg font-bold text-brand-text">{t(CENTER_I18N[name])}</h3>
+              <p className="text-sm text-brand-muted italic font-serif">{center.question}</p>
+              <div className="flex items-center gap-1.5 mt-auto">
+                <span className="text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: BRAND.accent }}>
                   {count} {t('home.stats_resources').toLowerCase()}
                 </span>
+                <ArrowRight
+                  size={14}
+                  className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all"
+                  style={{ color: BRAND.accent }}
+                />
               </div>
             </Link>
           )

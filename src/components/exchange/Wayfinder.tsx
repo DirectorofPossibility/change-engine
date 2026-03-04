@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useCallback, useMemo } from 'react'
-import Link from 'next/link'
-import { Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe, ArrowRight, Sparkles } from 'lucide-react'
+import { Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 import { WayfinderSidebar } from './WayfinderSidebar'
@@ -85,15 +84,6 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
   THEME_06: Leaf,
   THEME_07: Globe,
 }
-
-const LIFE_SITUATIONS = [
-  { emoji: '\u{1F37D}\uFE0F', label: 'life.food_access', href: '/help/i-need-food-right-now', color: '#e53e3e' },
-  { emoji: '\u{1F3E0}', label: 'life.housing_shelter', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
-  { emoji: '\u{1F4BC}', label: 'life.career_employment', href: '/help/i-lost-my-job', color: '#3182ce' },
-  { emoji: '\u{1F3E5}', label: 'life.health_wellness', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
-  { emoji: '\u{1F6E1}\uFE0F', label: 'life.safety_protection', href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
-  { emoji: '\u{1F4B0}', label: 'life.financial_stability', href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
-]
 
 function feedDataToItems(feed: PathwayFeedData, themeId: string) {
   const themeKey = themeId as keyof typeof THEMES
@@ -250,22 +240,16 @@ export function Wayfinder({
           {/* HOME STATE */}
           {!selectedPathway && (
             <>
-              {/* Hero */}
+              {/* Hero — tagline + flower */}
               <div className="pt-8 pb-2 relative">
                 <div
                   className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
                   style={{ background: 'radial-gradient(circle, rgba(198,93,40,0.05) 0%, rgba(61,90,90,0.02) 35%, transparent 65%)' }}
                   aria-hidden="true"
                 />
-                <div className="text-center mb-4 relative z-10">
-                  <p className="text-[10px] tracking-[0.2em] uppercase text-brand-muted font-semibold">The</p>
-                  <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight leading-none">
-                    Community <span style={{ color: BRAND.accent }}>Exchange</span>
-                  </h1>
-                  <p className="font-serif italic text-brand-muted text-lg mt-2 max-w-md mx-auto leading-relaxed">
-                    {t('wayfinder.hero_subtitle')}
-                  </p>
-                </div>
+                <p className="text-center font-serif italic text-brand-muted text-lg mb-4 relative z-10">
+                  {BRAND.tagline}
+                </p>
 
                 <div className="max-w-2xl mx-auto">
                   <EmbeddableCircles
@@ -280,13 +264,16 @@ export function Wayfinder({
               </div>
 
               {/* Pathway spectrum bar */}
-              <div className="flex h-1 max-w-md mx-auto rounded-full overflow-hidden mb-8 mt-3">
+              <div className="flex h-1 max-w-md mx-auto rounded-full overflow-hidden mb-12 mt-3">
                 {Object.values(THEMES).map(function (theme, i) {
                   return (
                     <div key={i} className="flex-1 transition-all duration-300 hover:flex-[3]" style={{ backgroundColor: theme.color }} title={theme.name} />
                   )
                 })}
               </div>
+
+              {/* Four Centers */}
+              <CentersGrid centerCounts={centerCounts} />
 
               {/* Impact Metrics */}
               <ImpactMetrics stats={{
@@ -295,60 +282,6 @@ export function Wayfinder({
                 officials: stats.officials,
                 policies: stats.policies,
               }} />
-
-              {/* Life Situations */}
-              <section className="mb-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <Sparkles size={18} style={{ color: BRAND.accent }} />
-                  <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.start_journey')}</h2>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                  {LIFE_SITUATIONS.map(function (sit) {
-                    return (
-                      <Link key={sit.href} href={sit.href} className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-1 transition-all duration-200 text-center">
-                        <span className="text-3xl group-hover:scale-110 transition-transform">{sit.emoji}</span>
-                        <span className="text-sm font-semibold text-brand-text leading-tight">{t(sit.label)}</span>
-                        <span className="text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: sit.color }}>
-                          {t('wayfinder.explore')} <ArrowRight className="inline w-3 h-3 ml-0.5" />
-                        </span>
-                      </Link>
-                    )
-                  })}
-                </div>
-                <div className="text-center mt-3">
-                  <Link href="/help" className="text-sm font-semibold hover:underline" style={{ color: BRAND.accent }}>
-                    {t('wayfinder.browse_all')} <ArrowRight className="inline w-3.5 h-3.5 ml-0.5" />
-                  </Link>
-                </div>
-              </section>
-
-              {/* Four Centers */}
-              <CentersGrid centerCounts={centerCounts} />
-
-              {/* Explore by Pathway */}
-              <section className="mb-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-0.5 rounded-full" style={{ background: `linear-gradient(90deg, ${BRAND.accent}, #5B8A8A)` }} />
-                  <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.explore_houston')}</h2>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-                  {(Object.entries(THEMES) as [string, (typeof THEMES)[keyof typeof THEMES]][]).map(function ([id, theme]) {
-                    const Icon = PATHWAY_ICONS[id] || Globe
-                    const count = pathwayCounts[id] ?? 0
-                    return (
-                      <button key={id} onClick={function () { handleSelectPathway(id) }} className="group flex items-center gap-3 p-4 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-1 transition-all duration-200 text-left">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110" style={{ backgroundColor: theme.color + '18' }}>
-                          <Icon size={20} style={{ color: theme.color }} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <span className="block text-sm font-semibold text-brand-text leading-tight truncate">{theme.name}</span>
-                          <span className="block text-xs text-brand-muted mt-0.5">{count} {t('card.resources')}</span>
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
-              </section>
 
               {/* Latest Content header */}
               <section>

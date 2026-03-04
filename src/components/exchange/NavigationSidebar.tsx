@@ -6,9 +6,8 @@ import Link from 'next/link'
 import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
-  BookOpen, Phone, Scale, GraduationCap, Activity,
-  Landmark, Compass, PanelLeftClose, PanelLeftOpen, Vote,
-  Library,
+  Phone, Scale,
+  Landmark, PanelLeftClose, PanelLeftOpen, Vote,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -30,13 +29,8 @@ const DISCOVER_LINKS = [
   { label: 'discover.local_resources', icon: Phone, href: '/services' },
   { label: 'discover.officials', icon: Users, href: '/officials' },
   { label: 'discover.policy', icon: Scale, href: '/policies' },
-  { label: 'discover.guides', icon: BookOpen, href: '/guides' },
-  { label: 'discover.available_resources', icon: Compass, href: '/help' },
-  { label: 'discover.topics', icon: Activity, href: '/explore' },
-  { label: 'discover.learning', icon: GraduationCap, href: '/learn' },
   { label: 'discover.neighborhoods', icon: MapPin, href: '/super-neighborhoods' },
   { label: 'discover.foundations', icon: Landmark, href: '/foundations' },
-  { label: 'library.nav', icon: Library, href: '/library' },
 ]
 
 /**
@@ -111,16 +105,10 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
 
   const sidebarContent = (
     <>
-      {/* Brand lockup */}
+      {/* Location anchor */}
       <div className="px-5 pt-5 pb-2">
         <Link href="/" className="block group" onClick={closeMobile}>
-          <span className="block font-serif text-xl font-bold leading-tight text-brand-text group-hover:text-brand-accent transition-colors">
-            {t('brand.name')}
-          </span>
-          <span className="block font-serif italic text-base leading-tight transition-colors mt-0.5" style={{ color: BRAND.accent }}>
-            {t('brand.subtitle')}
-          </span>
-          <span className="block text-xs tracking-[0.12em] uppercase text-brand-muted mt-1">
+          <span className="block font-serif text-sm tracking-[0.08em] text-brand-muted" style={{ fontVariant: 'small-caps' }}>
             {t('home.location')}
           </span>
         </Link>
