@@ -6,6 +6,7 @@ import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { PageHero } from '@/components/exchange/PageHero'
 import { PAGE_INTROS } from '@/lib/constants'
 import { CivicHubClient } from './CivicHubClient'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -40,6 +41,7 @@ export default async function CivicHubPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Breadcrumb items={[{ label: 'Elections' }]} />
         {/* Election countdown banner */}
         {upcomingElection && (
           <div className="mb-10">

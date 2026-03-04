@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
 import { LibraryChat } from '@/components/exchange/LibraryChat'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const metadata: Metadata = {
   title: 'Ask the Library | Community Research Library',
@@ -11,14 +10,7 @@ export const metadata: Metadata = {
 export default function LibraryChatPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Breadcrumb */}
-      <Link
-        href="/library"
-        className="inline-flex items-center gap-1.5 text-sm text-brand-muted hover:text-brand-accent transition-colors mb-6"
-      >
-        <ArrowLeft size={14} />
-        Back to Library
-      </Link>
+      <Breadcrumb items={[{ label: 'Library', href: '/library' }, { label: 'Chat' }]} />
 
       <div className="mb-6">
         <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-text">

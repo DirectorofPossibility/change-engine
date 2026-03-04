@@ -13,6 +13,7 @@ import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { HelpMap } from '@/components/exchange/HelpMap'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -71,12 +72,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Breadcrumb */}
-      <div className="text-sm text-brand-muted mb-6">
-        <Link href="/help" className="hover:text-brand-accent">Available Resources</Link>
-        <span className="mx-2">/</span>
-        <span>{situation.situation_name}</span>
-      </div>
+      <Breadcrumb items={[{ label: 'Available Resources', href: '/help' }, { label: situation.situation_name }]} />
 
       {/* Crisis banner for Critical */}
       {isCritical && (

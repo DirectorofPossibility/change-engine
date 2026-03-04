@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { FileText, Download, ArrowLeft, Tag, MessageCircle } from 'lucide-react'
+import { FileText, Download, Tag, MessageCircle } from 'lucide-react'
 import { getDocumentById, getRelatedDocuments } from '@/lib/data/library'
 import { THEMES } from '@/lib/constants'
 import { LibraryCard } from '@/components/exchange/LibraryCard'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -41,14 +42,7 @@ export default async function DocumentDetailPage(
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Breadcrumb */}
-      <Link
-        href="/library"
-        className="inline-flex items-center gap-1.5 text-sm text-brand-muted hover:text-brand-accent transition-colors mb-6"
-      >
-        <ArrowLeft size={14} />
-        Back to Library
-      </Link>
+      <Breadcrumb items={[{ label: 'Library', href: '/library' }, { label: doc.title }]} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main content */}

@@ -12,6 +12,7 @@ import type { Metadata } from 'next'
 import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { OfficialsPageClient } from './OfficialsPageClient'
 import { PageHero } from '@/components/exchange/PageHero'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 86400
 
@@ -39,6 +40,7 @@ export default async function OfficialsPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Breadcrumb items={[{ label: 'Officials' }]} />
         <OfficialsPageClient officials={officials} levels={levels} translations={translations} linkedinProfiles={profiles} />
       </div>
     </div>

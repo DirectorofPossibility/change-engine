@@ -3,6 +3,7 @@ import { getHoustonAirQuality, getWeatherAlerts, getBayouLevels } from '@/lib/da
 import { getServicesWithCoords } from '@/lib/data/exchange'
 import { CivicDashboardClient } from './CivicDashboardClient'
 import { DashboardCoverageMap } from './DashboardCoverageMap'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 900 // 15 minutes
 
@@ -21,6 +22,7 @@ export default async function LiveDashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[{ label: 'Dashboard' }]} />
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse" />

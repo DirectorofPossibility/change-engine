@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { PollingPlaceClient } from './PollingPlaceClient'
 import { PageHeader } from '@/components/exchange/PageHeader'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -27,6 +28,7 @@ export default async function PollingPlacesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[{ label: 'Polling Places' }]} />
       <PageHeader titleKey="polling.title" subtitleKey="polling.subtitle" />
 
       {activeElection && (

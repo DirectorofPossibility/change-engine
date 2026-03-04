@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getPublishedDocuments } from '@/lib/data/library'
 import { PageHero } from '@/components/exchange/PageHero'
 import { LibraryBrowse } from './LibraryBrowse'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -24,6 +25,7 @@ export default async function LibraryPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb items={[{ label: 'Library' }]} />
         {/* Action bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <p className="text-sm text-brand-muted">

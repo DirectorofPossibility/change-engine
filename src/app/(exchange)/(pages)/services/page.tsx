@@ -3,6 +3,7 @@ import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/ex
 import { ServicesClient } from './ServicesClient'
 import { PageHero } from '@/components/exchange/PageHero'
 import { PAGE_INTROS } from '@/lib/constants'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -22,6 +23,7 @@ export default async function ServicesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <PageHero variant="editorial" titleKey="services.title" subtitleKey="services.subtitle" intro={PAGE_INTROS.services} />
+      <Breadcrumb items={[{ label: 'Local Resources' }]} />
 
       <ServicesClient services={services} translations={translations} />
     </div>

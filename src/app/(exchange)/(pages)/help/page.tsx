@@ -16,6 +16,7 @@ import { PageHero } from '@/components/exchange/PageHero'
 import { PAGE_INTROS } from '@/lib/constants'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
 import { HelpUrgencyHeader } from './HelpUrgencyHeader'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -52,6 +53,7 @@ export default async function HelpPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Breadcrumb items={[{ label: 'Available Resources' }]} />
         <HelpCrisisBanner />
 
         <div className="space-y-10">

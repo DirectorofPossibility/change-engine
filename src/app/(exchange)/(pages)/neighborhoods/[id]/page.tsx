@@ -8,6 +8,7 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
 import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { getUIStrings } from '@/lib/i18n'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 86400
 
@@ -65,6 +66,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[{ label: 'Neighborhoods' }, { label: hood.neighborhood_name }]} />
       <h1 className="text-3xl font-bold text-brand-text mb-2">{hood.neighborhood_name}</h1>
       <div className="flex items-center gap-3 text-sm text-brand-muted mb-6">
         {hood.neighborhood_type && <span>{hood.neighborhood_type}</span>}

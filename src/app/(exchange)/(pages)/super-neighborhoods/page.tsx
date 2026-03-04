@@ -19,6 +19,7 @@ import { THEMES } from '@/lib/constants'
 import { SuperNeighborhoodsMap } from './SuperNeighborhoodsMap'
 import { PageHero } from '@/components/exchange/PageHero'
 import { getUIStrings } from '@/lib/i18n'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -50,6 +51,7 @@ export default async function SuperNeighborhoodsPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <Breadcrumb items={[{ label: 'Super Neighborhoods' }]} />
         <p className="text-brand-muted mb-8 max-w-2xl">
           {t('superNeighborhoods.intro')}
         </p>

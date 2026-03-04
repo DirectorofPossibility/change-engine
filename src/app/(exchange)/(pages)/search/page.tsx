@@ -28,6 +28,7 @@ import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SearchTabs } from './SearchTabs'
 import { SearchResultsHeader } from './SearchResultsHeader'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const dynamic = 'force-dynamic'
 
@@ -233,6 +234,7 @@ export default async function SearchPage({
         <PageHero variant="editorial" titleKey="search.title" intro={PAGE_INTROS.search} height="sm" />
       )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb items={[{ label: 'Search' }]} />
         <SearchResultsHeader query={query} totalCount={totalCount} />
 
         {totalCount > 0 && (

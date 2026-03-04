@@ -23,14 +23,6 @@ export function PathwayFilterClient({ centerCounts, initialContent, translations
     <div>
       {/* Center filter tabs */}
       <div className="flex gap-2 mb-6 flex-wrap">
-        <button
-          onClick={() => setActiveCenter(null)}
-          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !activeCenter ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
-          }`}
-        >
-          All ({initialContent.length})
-        </button>
         {Object.entries(CENTERS).map(([name, config]) => {
           const count = centerCounts[name] || 0
           if (count === 0) return null
@@ -46,6 +38,14 @@ export function PathwayFilterClient({ centerCounts, initialContent, translations
             </button>
           )
         })}
+        <button
+          onClick={() => setActiveCenter(null)}
+          className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+            !activeCenter ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
+          }`}
+        >
+          All ({initialContent.length})
+        </button>
       </div>
 
       {/* Content grid */}

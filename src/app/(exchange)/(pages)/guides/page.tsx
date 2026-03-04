@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import { getGuides, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { getUIStrings } from '@/lib/i18n'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -32,6 +33,7 @@ export default async function GuidesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[{ label: 'Guides' }]} />
       <h1 className="text-3xl font-bold text-brand-text mb-2">{t('guides.title')}</h1>
       <p className="text-brand-muted mb-8">
         {t('guides.subtitle')}

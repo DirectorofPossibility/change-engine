@@ -5,6 +5,7 @@ import { getPathwayCounts, getCenterContentForPathway } from '@/lib/data/exchang
 import { PathwayCard } from '@/components/exchange/PathwayCard'
 import { PageHero } from '@/components/exchange/PageHero'
 import { getUIStrings } from '@/lib/i18n'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -51,6 +52,7 @@ export default async function PathwaysPage() {
       <PageHero variant="editorial" titleKey="pathways.title" subtitleKey="pathways.subtitle" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb items={[{ label: 'Pathways' }]} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {Object.entries(THEMES).map(([id, theme]) => (
             <div key={id} className="space-y-3">

@@ -23,6 +23,7 @@ import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarker
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { getUIStrings } from '@/lib/i18n'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
 
@@ -119,12 +120,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* ── Breadcrumb ── */}
-      <div className="text-sm text-brand-muted mb-4">
-        <Link href="/super-neighborhoods" className="hover:text-brand-accent">{t('superNeighborhoods.breadcrumb')}</Link>
-        <span className="mx-2">/</span>
-        <span className="text-brand-text">{snName}</span>
-      </div>
+      <Breadcrumb items={[{ label: t('superNeighborhoods.breadcrumb'), href: '/super-neighborhoods' }, { label: snName }]} />
 
       <div className="flex items-center gap-3 mb-2">
         <span

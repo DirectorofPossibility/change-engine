@@ -5,6 +5,7 @@ import { getFocusAreas, getSDGs, getSDOHDomains } from '@/lib/data/exchange'
 import { ExploreFilterClient } from './ExploreFilterClient'
 import { PageHero } from '@/components/exchange/PageHero'
 import { getUIStrings } from '@/lib/i18n'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
@@ -52,6 +53,7 @@ export default async function ExplorePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <PageHero variant="editorial" titleKey="explore.title" introKey="explore.intro" />
+      <Breadcrumb items={[{ label: 'Explore' }]} />
 
       <ExploreFilterClient
         themes={themes}

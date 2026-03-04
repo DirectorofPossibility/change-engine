@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 86400
 
@@ -28,6 +29,7 @@ export default async function PoliciesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb items={[{ label: 'Policy' }]} />
       <h1 className="text-3xl font-bold text-brand-text mb-2">Policies &amp; Legislation</h1>
       <p className="text-brand-muted mb-8">Track bills, executive orders, and policies that affect Houston communities.</p>
 
