@@ -197,6 +197,36 @@ export function WayfinderSidebar({
 
       <div className="h-px bg-brand-border mx-5 my-2" />
 
+      {/* Discover (Your Guide) */}
+      <div className="px-5">
+        <button
+          onClick={function () { setDiscoverOpen(!discoverOpen) }}
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+        >
+          {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+          {t('sidebar.your_guide')}
+        </button>
+        {discoverOpen && (
+          <div className="space-y-0.5">
+            {DISCOVER_LINKS.map(function (item) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  onClick={closeMobile}
+                  className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+                >
+                  <item.icon size={15} style={{ color: BRAND.accent }} />
+                  {t(item.label)}
+                </Link>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="h-px bg-brand-border mx-5 my-2" />
+
       {/* 7 Pathways */}
       <div className="px-5">
         <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
@@ -247,36 +277,6 @@ export function WayfinderSidebar({
           <Vote size={16} style={{ color: BRAND.accent }} />
           {t('sidebar.elections')}
         </Link>
-      </div>
-
-      <div className="h-px bg-brand-border mx-5 my-2" />
-
-      {/* Discover */}
-      <div className="px-5">
-        <button
-          onClick={function () { setDiscoverOpen(!discoverOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
-        >
-          {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-          {t('sidebar.your_guide')}
-        </button>
-        {discoverOpen && (
-          <div className="space-y-0.5">
-            {DISCOVER_LINKS.map(function (item) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={closeMobile}
-                  className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
-                >
-                  <item.icon size={15} style={{ color: BRAND.accent }} />
-                  {t(item.label)}
-                </Link>
-              )
-            })}
-          </div>
-        )}
       </div>
 
       <div className="h-px bg-brand-border mx-5 my-2" />
