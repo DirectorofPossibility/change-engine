@@ -27,6 +27,7 @@ const PARTNER_NAV = [
   { href: '/dashboard/partner/guides', label: 'My Guides', icon: '📖' },
   { href: '/dashboard/partner/events', label: 'My Events', icon: '📅' },
   { href: '/dashboard/partner/organization', label: 'My Organization', icon: '🏢' },
+  { href: '/dashboard/library', label: 'Knowledge Base', icon: '📚' },
   { href: '/dashboard/manual', label: 'Users Manual', icon: '📘' },
 ]
 

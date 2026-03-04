@@ -187,6 +187,18 @@ export async function getAllDocumentsAdmin(): Promise<KBDocument[]> {
   return (data ?? []) as unknown as KBDocument[]
 }
 
+export async function getDocumentsByUploader(userId: string): Promise<KBDocument[]> {
+  const supabase = await createClient()
+
+  const { data } = await supabase
+    .from('kb_documents' as any)
+    .select('*')
+    .eq('uploaded_by', userId)
+    .order('created_at', { ascending: false })
+
+  return (data ?? []) as unknown as KBDocument[]
+}
+
 export async function getRelatedDocuments(
   documentId: string,
   themeIds: string[],
