@@ -83,23 +83,18 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
 }
 
 const LIFE_SITUATIONS = [
-  { emoji: '🍽️', label: 'life.food_access', href: '/help/i-need-food-right-now', color: '#e53e3e' },
-  { emoji: '🏠', label: 'life.housing_shelter', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
-  { emoji: '💼', label: 'life.career_employment', href: '/help/i-lost-my-job', color: '#3182ce' },
-  { emoji: '🏥', label: 'life.health_wellness', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
-  { emoji: '🛡️', label: 'life.safety_protection', href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
-  { emoji: '💰', label: 'life.financial_stability', href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
+  { emoji: '\u{1F37D}\uFE0F', label: 'life.food_access', href: '/help/i-need-food-right-now', color: '#e53e3e' },
+  { emoji: '\u{1F3E0}', label: 'life.housing_shelter', href: '/help/i-need-a-place-to-stay-tonight', color: '#dd6b20' },
+  { emoji: '\u{1F4BC}', label: 'life.career_employment', href: '/help/i-lost-my-job', color: '#3182ce' },
+  { emoji: '\u{1F3E5}', label: 'life.health_wellness', href: '/help/i-need-to-see-a-doctor', color: '#e53e3e' },
+  { emoji: '\u{1F6E1}\uFE0F', label: 'life.safety_protection', href: '/help/i-am-in-danger-at-home', color: '#805ad5' },
+  { emoji: '\u{1F4B0}', label: 'life.financial_stability', href: '/help/i-cannot-afford-my-rent-or-bills', color: '#d69e2e' },
 ]
 
-/**
- * Convert pathway feed data into FeedItems.
- * Includes content_published, services, officials, and policies.
- */
 function feedDataToItems(feed: PathwayFeedData, themeId: string) {
   const themeKey = themeId as keyof typeof THEMES
   const color = THEMES[themeKey]?.color ?? '#8B7E74'
 
-  // Content (articles/resources) + services together
   const contentItems: FeedItem[] = feed.content.map(function (c) {
     return {
       type: 'resource' as const,
@@ -205,7 +200,6 @@ export function Wayfinder({
   }, [selectedPathway, feedsByPathway, topics])
 
   const handleSelectPathway = useCallback(function (id: string | null) {
-    // EmbeddableCircles passes '' for back/home
     setSelectedPathway(id === '' ? null : id)
     setActiveCenter(null)
   }, [])
@@ -267,7 +261,6 @@ export function Wayfinder({
                   </p>
                 </div>
 
-                {/* CircleKnowledgeGraph — embedded */}
                 <div className="max-w-2xl mx-auto">
                   <EmbeddableCircles
                     onSelectPathway={handleSelectPathway}
@@ -301,7 +294,7 @@ export function Wayfinder({
                       <Link key={sit.href} href={sit.href} className="group flex flex-col items-center gap-2 p-4 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-1 transition-all duration-200 text-center">
                         <span className="text-3xl group-hover:scale-110 transition-transform">{sit.emoji}</span>
                         <span className="text-sm font-semibold text-brand-text leading-tight">{t(sit.label)}</span>
-                        <span className="text-xs font-medium rounded-full px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: sit.color, backgroundColor: sit.color + '15' }}>
+                        <span className="text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: sit.color }}>
                           {t('wayfinder.explore')} <ArrowRight className="inline w-3 h-3 ml-0.5" />
                         </span>
                       </Link>
@@ -345,7 +338,7 @@ export function Wayfinder({
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.whats_new')}</h2>
                   {newThisWeek > 0 && (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs font-semibold ring-1 ring-green-200">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
@@ -361,14 +354,12 @@ export function Wayfinder({
           {/* PATHWAY SELECTED STATE */}
           {selectedPathway && selectedTheme && (
             <div className="pt-6 relative">
-              {/* Ambient glow */}
               <div
                 className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
                 style={{ background: `radial-gradient(circle, ${selectedTheme.color}08 0%, transparent 70%)` }}
                 aria-hidden="true"
               />
 
-              {/* Knowledge Graph — evolves to show selected pathway */}
               <div className="max-w-2xl mx-auto mb-4">
                 <EmbeddableCircles
                   onSelectPathway={handleSelectPathway}
@@ -405,10 +396,14 @@ export function Wayfinder({
                         const otherTheme = THEMES[otherId as keyof typeof THEMES]
                         if (!otherTheme) return null
                         return (
-                          <button key={i} onClick={function () { handleSelectPathway(otherId) }} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold cursor-pointer border transition-all duration-200 hover:shadow-sm hover:-translate-y-[1px]" style={{ backgroundColor: otherTheme.color + '08', color: otherTheme.color, borderColor: otherTheme.color + '20' }}>
-                            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: otherTheme.color }} />
+                          <button
+                            key={i}
+                            onClick={function () { handleSelectPathway(otherId) }}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer transition-all duration-200 hover:underline"
+                            style={{ borderLeft: `3px solid ${otherTheme.color}`, paddingLeft: 6, color: otherTheme.color }}
+                          >
                             {otherTheme.name}
-                            <span className="opacity-40 ml-0.5">{b[2]}</span>
+                            <span className="text-brand-muted ml-0.5">({b[2]})</span>
                           </button>
                         )
                       })}

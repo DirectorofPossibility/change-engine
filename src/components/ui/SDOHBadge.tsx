@@ -8,17 +8,20 @@ interface SDOHBadgeProps {
 }
 
 export function SDOHBadge({ sdohCode, sdohName, sdohDescription, linkToExplore }: SDOHBadgeProps) {
-  const pill = (
+  const badge = (
     <span
-      className="inline-block text-xs px-2 py-0.5 rounded-lg bg-green-100 text-green-700 font-medium"
-      title={sdohDescription || undefined}
+      className="inline-flex items-start gap-2 text-xs text-brand-text"
+      style={{ borderLeft: '3px solid #22c55e', paddingLeft: 6 }}
     >
-      {sdohName}
+      <span>
+        <span className="font-medium">{sdohName}</span>
+        {sdohDescription && <span className="text-brand-muted ml-1">{sdohDescription}</span>}
+      </span>
     </span>
   )
 
   if (linkToExplore) {
-    return <Link href={'/explore?sdoh=' + encodeURIComponent(sdohCode)}>{pill}</Link>
+    return <Link href={'/explore?sdoh=' + encodeURIComponent(sdohCode)} className="hover:underline">{badge}</Link>
   }
-  return pill
+  return badge
 }

@@ -1513,7 +1513,7 @@ export async function getKnowledgeGraphData() {
     supabase.from('organizations').select('org_id, org_name, focus_area_ids, website, description_5th_grade'),
     supabase.from('services_211').select('service_id, service_name, focus_area_ids, org_id, description_5th_grade').eq('is_active', 'Yes'),
     supabase.from('guides').select('guide_id, title, slug, theme_id, focus_area_ids, description, hero_image_url').eq('is_active', true),
-    supabase.from('policies').select('policy_id, policy_name, focus_area_ids, summary_5th_grade'),
+    supabase.from('policies').select('policy_id, policy_name, title_6th_grade, focus_area_ids, summary_5th_grade, summary_6th_grade'),
     supabase.from('opportunities').select('opportunity_id, opportunity_name, focus_area_ids, description_5th_grade, org_id').eq('is_active', 'Yes'),
     supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color'),
     supabase.from('sdoh_domains').select('sdoh_code, sdoh_name, sdoh_description'),

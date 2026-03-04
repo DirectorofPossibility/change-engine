@@ -67,7 +67,9 @@ interface OfficialRow {
 interface PolicyRow {
   policy_id: string
   policy_name: string
+  title_6th_grade: string | null
   summary_5th_grade: string | null
+  summary_6th_grade: string | null
   bill_number: string | null
   status: string | null
   level: string | null
@@ -300,8 +302,8 @@ export function PathwayPanelClient({
               return (
                 <PolicyCard
                   key={p.policy_id}
-                  name={p.policy_name}
-                  summary={p.summary_5th_grade}
+                  name={p.title_6th_grade || p.policy_name}
+                  summary={p.summary_6th_grade || p.summary_5th_grade}
                   billNumber={p.bill_number}
                   status={p.status}
                   level={p.level}

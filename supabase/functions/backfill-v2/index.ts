@@ -67,8 +67,10 @@ for(const item of items){
   try{
     const parts=[`Name: ${name}`];if(item[cfg.desc])parts.push(`Desc: ${item[cfg.desc]}`);for(const c of cfg.extra){if(item[c])parts.push(`${c}: ${String(item[c]).substring(0,200)}`);}
     if(item.focus_area_ids)parts.push(`Current focus areas: ${item.focus_area_ids}`);
-    const content=parts.join('\n')+`\nReturn: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"center":"","resource_type_id":"RTYPE_XX","audience_segment_ids":[],"life_situation_ids":[],"service_cat_ids":[],"title_6th_grade":"","summary_6th_grade":"","geographic_scope":"Houston","confidence":0.0,"reasoning":"brief"}`;
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':AK,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,system:sysPrompt,messages:[{role:'user',content}]})});
+    const isPolicies = table === 'policies';
+    if(isPolicies) parts.push('IMPORTANT: Write the title_6th_grade and summary_6th_grade so a 6th-grader can understand. For impact_statement, write 2-3 sentences in asset-based language explaining how this policy connects to your/your family\'s daily life. Focus on opportunities, protections, or resources it provides. Use "you" and "your family".');
+    const content=parts.join('\n')+`\nReturn: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"center":"","resource_type_id":"RTYPE_XX","audience_segment_ids":[],"life_situation_ids":[],"service_cat_ids":[],"title_6th_grade":"","summary_6th_grade":"",${isPolicies?'"impact_statement":"",':''}"geographic_scope":"Houston","confidence":0.0,"reasoning":"brief"}`;
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':AK,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:isPolicies?1000:800,system:sysPrompt,messages:[{role:'user',content}]})});
     if(!r.ok){const e=await r.text();throw new Error(`API ${r.status}: ${e.substring(0,200)}`);}
     const d=await r.json();let txt=(d.content?.[0]?.text||'').trim();
     if(txt.startsWith('```json'))txt=txt.slice(7);if(txt.startsWith('```'))txt=txt.slice(3);if(txt.endsWith('```'))txt=txt.slice(0,-3);txt=txt.trim();
@@ -77,7 +79,11 @@ for(const item of items){
     const efa:any[]=[];
     for(const fid of(raw.focus_area_ids||[])){const f=faLookup.get(fid);if(f){efa.push({id:f.focus_id,name:f.focus_area_name,theme:f.theme_id});}}
     const enriched={...raw,_enriched_focus_areas:efa,_version:'v2-full-matrix'};
-    await patch(table,`${cfg.pk}=eq.${id}`,{classification_v2:enriched,focus_area_ids:(enriched.focus_area_ids||[]).join(',')});
+    const patchBody:any={classification_v2:enriched,focus_area_ids:(enriched.focus_area_ids||[]).join(',')};
+    if(enriched.title_6th_grade)patchBody.title_6th_grade=enriched.title_6th_grade;
+    if(enriched.summary_6th_grade)patchBody.summary_6th_grade=enriched.summary_6th_grade;
+    if(isPolicies&&enriched.impact_statement)patchBody.impact_statement=enriched.impact_statement;
+    await patch(table,`${cfg.pk}=eq.${id}`,patchBody);
     results.push({id,name,status:'done',confidence:enriched.confidence});
   }catch(err){results.push({id,name,status:'error',error:(err as Error).message});}
 }

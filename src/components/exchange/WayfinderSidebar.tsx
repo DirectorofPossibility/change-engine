@@ -7,7 +7,7 @@ import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   BookOpen, Phone, Scale, GraduationCap, Activity,
-  Landmark, Compass, Vote,
+  Landmark, Compass, Vote, Newspaper,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -36,6 +36,7 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
 }
 
 const DISCOVER_LINKS = [
+  { label: 'discover.guide', icon: Newspaper, href: '/guide' },
   { label: 'discover.local_resources', icon: Phone, href: '/services' },
   { label: 'discover.officials', icon: Users, href: '/officials' },
   { label: 'discover.policy', icon: Scale, href: '/policies' },
@@ -126,13 +127,12 @@ export function WayfinderSidebar({
         </Link>
       </div>
 
-      {/* Language + Auth — at top per user request */}
+      {/* Language + Auth */}
       <div className="px-5 py-1.5 flex items-center justify-between">
         <LanguageSwitcher />
         <AuthButton />
       </div>
 
-      {/* Thin divider */}
       <div className="h-px bg-brand-border mx-5 my-1" />
 
       {/* ZIP personalization */}
@@ -238,11 +238,8 @@ export function WayfinderSidebar({
                 </div>
                 <span className="flex-1 text-left truncate">{theme.name}</span>
                 {count > 0 && (
-                  <span
-                    className="text-xs font-semibold tabular-nums px-2 py-0.5 rounded-full"
-                    style={isActive ? { backgroundColor: theme.color + '15', color: theme.color } : {}}
-                  >
-                    {count}
+                  <span className="text-xs font-semibold tabular-nums text-brand-muted">
+                    ({count})
                   </span>
                 )}
               </button>
@@ -295,7 +292,7 @@ export function WayfinderSidebar({
 
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* Topics — wired up */}
+      {/* Topics */}
       <div className="px-5">
         <button
           onClick={function () { setTopicsOpen(!topicsOpen) }}
@@ -305,18 +302,22 @@ export function WayfinderSidebar({
           {t('sidebar.topics')} ({topics.length})
         </button>
         {topicsOpen && topics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
-            {topics.map(function (topic) {
-              return (
-                <button
-                  key={topic}
-                  onClick={function () { handleTopicClick(topic) }}
-                  className="text-xs leading-none px-2.5 py-1.5 rounded-full bg-brand-border/40 text-brand-muted hover:text-brand-text hover:bg-brand-accent/10 hover:ring-1 hover:ring-brand-accent/20 cursor-pointer transition-all duration-150"
-                >
-                  {topic}
-                </button>
-              )
-            })}
+          <div className="max-h-48 overflow-y-auto px-3 py-1">
+            <span className="text-xs italic text-brand-muted leading-relaxed">
+              {topics.map(function (topic, i) {
+                return (
+                  <span key={topic}>
+                    {i > 0 && <span className="mx-1">&middot;</span>}
+                    <button
+                      onClick={function () { handleTopicClick(topic) }}
+                      className="hover:text-brand-accent transition-colors"
+                    >
+                      {topic}
+                    </button>
+                  </span>
+                )
+              })}
+            </span>
           </div>
         )}
         {topicsOpen && topics.length === 0 && (

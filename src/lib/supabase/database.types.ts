@@ -2545,6 +2545,7 @@ export type Database = {
           classification_v2: Json | null
           data_source: string | null
           focus_area_ids: string | null
+          impact_statement: string | null
           introduced_date: string | null
           last_action: string | null
           last_action_date: string | null
@@ -2557,12 +2558,15 @@ export type Database = {
           source_url: string | null
           status: string | null
           summary_5th_grade: string | null
+          summary_6th_grade: string | null
+          title_6th_grade: string | null
         }
         Insert: {
           bill_number?: string | null
           classification_v2?: Json | null
           data_source?: string | null
           focus_area_ids?: string | null
+          impact_statement?: string | null
           introduced_date?: string | null
           last_action?: string | null
           last_action_date?: string | null
@@ -2575,12 +2579,15 @@ export type Database = {
           source_url?: string | null
           status?: string | null
           summary_5th_grade?: string | null
+          summary_6th_grade?: string | null
+          title_6th_grade?: string | null
         }
         Update: {
           bill_number?: string | null
           classification_v2?: Json | null
           data_source?: string | null
           focus_area_ids?: string | null
+          impact_statement?: string | null
           introduced_date?: string | null
           last_action?: string | null
           last_action_date?: string | null
@@ -2593,6 +2600,8 @@ export type Database = {
           source_url?: string | null
           status?: string | null
           summary_5th_grade?: string | null
+          summary_6th_grade?: string | null
+          title_6th_grade?: string | null
         }
         Relationships: []
       }

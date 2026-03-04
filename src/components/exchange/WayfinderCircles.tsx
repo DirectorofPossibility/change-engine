@@ -17,6 +17,7 @@
 
 import { useCallback, useMemo } from 'react'
 import { THEMES, BRAND } from '@/lib/constants'
+import { usePanZoom } from '@/lib/hooks/usePanZoom'
 
 // ── Types ────────────────────────────────────────────────────────────
 
@@ -185,15 +186,23 @@ export function WayfinderCircles({
   // Determine viewBox height based on mode
   const viewHeight = compact ? 120 : VB_HEIGHT
   const showStats = !compact && !selectedPathway && stats
+  const pz = usePanZoom({ minZoom: 0.5, maxZoom: 4 })
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* SVG visualization */}
+      {/* SVG visualization — pan/zoom container */}
+      <div
+        ref={pz.containerRef}
+        {...pz.containerHandlers}
+        className="w-full max-w-[640px] relative"
+        style={{ overflow: 'hidden', cursor: pz.cursor, touchAction: 'none' }}
+      >
       <svg
         viewBox={`0 0 ${VB_WIDTH} ${viewHeight}`}
-        className="w-full max-w-[640px]"
+        className="w-full"
         role="img"
         aria-label="Community Exchange pathway navigation"
+        style={pz.svgStyle}
       >
         {/* Bridge lines between connected pathways */}
         {!compact &&
@@ -350,6 +359,15 @@ export function WayfinderCircles({
           )
         })}
       </svg>
+      {pz.zoom !== 1 && (
+        <button onClick={pz.resetView} style={{
+          position: 'absolute', bottom: 8, right: 8, zIndex: 10,
+          padding: '4px 10px', borderRadius: 6, fontSize: 10, fontWeight: 600,
+          background: '#fff', border: '1px solid #e5e0d8', color: '#6b6157',
+          cursor: 'pointer',
+        }}>Reset zoom</button>
+      )}
+      </div>
 
       {/* Stats bar — visible only in home state */}
       {showStats && (

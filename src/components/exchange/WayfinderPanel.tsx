@@ -1,49 +1,27 @@
-/**
- * @fileoverview Slide-out detail panel for the Community Exchange wayfinder.
- *
- * Opens from the right edge of the viewport when a user clicks a feed card.
- * Displays full entity details (resource, official, policy, or service) along
- * with its knowledge-mesh connections -- related items from other entity types
- * that share focus areas or organizational links.
- *
- * Accessibility: focus trap, Escape key dismissal, backdrop click to close,
- * body scroll lock, `role="dialog"` + `aria-modal="true"`.
- *
- * The panel accepts an `onNavigate` callback so the parent can swap in a
- * different entity without unmounting the panel (drill-through navigation).
- */
 'use client'
 
 import { useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { X, ExternalLink, Phone, Mail, Globe, MapPin, Clock, DollarSign, Users, Calendar, BookOpen, BarChart3, AlertTriangle } from 'lucide-react'
 
-// ── Types ────────────────────────────────────────────────────────────
-
-/** Shape of a single entity displayed in the panel, including mesh connections. */
 export interface PanelData {
   type: 'resource' | 'official' | 'policy' | 'service' | 'opportunity' | 'situation' | 'path'
   id: string
   title: string
   summary?: string
-  /** Full description. */
   description?: string
-  /** For resources. */
   center?: string
   orgName?: string
   orgId?: string
   sourceUrl?: string
-  /** For officials. */
   role?: string
   party?: string
   phone?: string
   email?: string
   website?: string
-  /** For policies. */
   status?: string
   body?: string
   billNumber?: string
-  /** For services. */
   address?: string
   city?: string
   state?: string
@@ -51,43 +29,31 @@ export interface PanelData {
   eligibility?: string
   fees?: string
   hours?: string
-  /** For opportunities. */
   startDate?: string | null
   endDate?: string | null
   isVirtual?: string | null
   registrationUrl?: string | null
   spotsAvailable?: number | null
-  /** For situations. */
   urgency?: string | null
   slug?: string | null
-  /** For learning paths. */
   difficulty?: string | null
   moduleCount?: number | null
   estimatedMinutes?: number | null
   themeId?: string | null
-  /** Shared -- pathway color used for accent treatments. */
   pathwayColor?: string
   focusAreas?: Array<{ id: string; name: string }>
-  /** Related entities from the knowledge mesh. */
   relatedOfficials?: Array<{ id: string; name: string; role?: string }>
   relatedPolicies?: Array<{ id: string; name: string; status?: string }>
   relatedResources?: Array<{ id: string; title: string; center?: string }>
   relatedServices?: Array<{ id: string; name: string; orgName?: string }>
 }
 
-/** Props accepted by {@link WayfinderPanel}. */
 export interface WayfinderPanelProps {
-  /** The entity to display, or `null` when the panel is closed. */
   panel: PanelData | null
-  /** Callback invoked when the user dismisses the panel. */
   onClose: () => void
-  /** Navigate to a related item within the panel (drill-through). */
   onNavigate?: (type: string, id: string) => void
 }
 
-// ── Constants ────────────────────────────────────────────────────────
-
-/** Human-readable labels for entity types, used in the header badge. */
 const TYPE_LABELS: Record<PanelData['type'], string> = {
   resource: 'Resource',
   official: 'Official',
@@ -98,7 +64,6 @@ const TYPE_LABELS: Record<PanelData['type'], string> = {
   path: 'Learning Path',
 }
 
-/** Detail page path prefixes, keyed by entity type. */
 const DETAIL_PATHS: Record<PanelData['type'], string | null> = {
   resource: '/content/',
   official: '/officials/',
@@ -109,55 +74,34 @@ const DETAIL_PATHS: Record<PanelData['type'], string | null> = {
   path: '/learn/',
 }
 
-/** Default accent color when no pathway color is provided. */
 const DEFAULT_ACCENT = '#319795'
 
-// ── Helpers ──────────────────────────────────────────────────────────
-
-/**
- * Derive an inline style for a focus-area pill using the pathway color
- * at 10% opacity for the background.
- *
- * @param color - Hex pathway color (e.g. `'#e53e3e'`).
- * @returns React CSSProperties with `backgroundColor` and `color`.
- */
-function pillStyle(color: string): React.CSSProperties {
+function labelStyle(color: string): React.CSSProperties {
   return {
-    backgroundColor: color + '1a', // hex + 10% alpha
+    borderLeft: `3px solid ${color}`,
+    paddingLeft: 6,
     color: color,
   }
 }
 
-/**
- * Format a policy status string into a compact badge color class.
- *
- * @param status - Raw status value from the database.
- * @returns Tailwind color classes for the status badge.
- */
-function statusBadgeClasses(status?: string): string {
-  if (!status) return 'bg-gray-100 text-gray-600'
+function statusDotColor(status?: string): string {
+  if (!status) return 'bg-gray-400'
   const lower = status.toLowerCase()
-  if (lower.includes('enacted') || lower.includes('signed') || lower.includes('passed')) {
-    return 'bg-green-100 text-green-700'
-  }
-  if (lower.includes('introduced') || lower.includes('pending') || lower.includes('committee')) {
-    return 'bg-yellow-100 text-yellow-700'
-  }
-  if (lower.includes('vetoed') || lower.includes('failed') || lower.includes('dead')) {
-    return 'bg-red-100 text-red-700'
-  }
-  return 'bg-gray-100 text-gray-600'
+  if (lower.includes('enacted') || lower.includes('signed') || lower.includes('passed')) return 'bg-green-500'
+  if (lower.includes('introduced') || lower.includes('pending') || lower.includes('committee')) return 'bg-yellow-500'
+  if (lower.includes('vetoed') || lower.includes('failed') || lower.includes('dead')) return 'bg-red-500'
+  return 'bg-gray-400'
 }
 
-// ── Sub-components ───────────────────────────────────────────────────
+function statusTextColor(status?: string): string {
+  if (!status) return 'text-gray-600'
+  const lower = status.toLowerCase()
+  if (lower.includes('enacted') || lower.includes('signed') || lower.includes('passed')) return 'text-green-700'
+  if (lower.includes('introduced') || lower.includes('pending') || lower.includes('committee')) return 'text-yellow-700'
+  if (lower.includes('vetoed') || lower.includes('failed') || lower.includes('dead')) return 'text-red-700'
+  return 'text-gray-600'
+}
 
-/**
- * Collapsible section within the panel that groups related entities.
- *
- * @param props.title - Section heading text (uppercase).
- * @param props.accentColor - Small circle indicator color.
- * @param props.children - Mini-card content.
- */
 function PanelSection({
   title,
   accentColor,
@@ -183,12 +127,6 @@ function PanelSection({
   )
 }
 
-/**
- * Compact clickable card for a related entity within a {@link PanelSection}.
- *
- * @param props.onClick - Fires when the user clicks the card body.
- * @param props.children - Card content (name, subtitle, etc.).
- */
 function MiniCard({
   onClick,
   children,
@@ -210,23 +148,9 @@ function MiniCard({
   )
 }
 
-// ── Main Component ───────────────────────────────────────────────────
-
-/**
- * Slide-out detail panel for the Community Exchange wayfinder.
- *
- * Renders a fixed right-edge overlay panel with full entity details and
- * knowledge-mesh connections. Supports drill-through navigation via
- * `onNavigate` so users can explore related items without leaving the panel.
- *
- * @param props - See {@link WayfinderPanelProps}.
- * @returns The panel dialog element, or `null` when closed.
- */
 export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const isOpen = panel !== null
-
-  // ── Body scroll lock + auto-focus ──
 
   useEffect(function () {
     if (isOpen) {
@@ -239,8 +163,6 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
       document.body.style.overflow = ''
     }
   }, [isOpen])
-
-  // ── Keyboard handling: Escape dismissal + focus trap ──
 
   const handleKeyDown = useCallback(function (e: React.KeyboardEvent) {
     if (e.key === 'Escape') {
@@ -264,18 +186,13 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
     }
   }, [onClose])
 
-  // ── Derived values ──
-
   const accent = panel?.pathwayColor ?? DEFAULT_ACCENT
 
-  /** Navigate to a related entity via the parent callback. */
   function handleNavigate(type: string, id: string) {
     if (onNavigate) {
       onNavigate(type, id)
     }
   }
-
-  // ── Render ──
 
   return (
     <>
@@ -305,7 +222,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
       >
         {panel && (
           <>
-            {/* ── Header bar ── */}
+            {/* Header bar */}
             <div className="flex-shrink-0 sticky top-0 bg-white border-b border-brand-border px-5 py-4 flex items-center gap-3 z-10">
               <button
                 onClick={onClose}
@@ -315,8 +232,8 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 <X size={16} />
               </button>
               <span
-                className="text-xs font-bold tracking-[0.12em] uppercase px-2 py-0.5 rounded-full flex-shrink-0"
-                style={pillStyle(accent)}
+                className="text-xs font-bold tracking-[0.12em] uppercase flex-shrink-0"
+                style={labelStyle(accent)}
               >
                 {TYPE_LABELS[panel.type]}
               </span>
@@ -325,26 +242,22 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
               </h2>
             </div>
 
-            {/* ── Scrollable body ── */}
+            {/* Scrollable body */}
             <div className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
 
-              {/* ── Main content ── */}
               <div className="space-y-3">
-                {/* Summary */}
                 {panel.summary && (
                   <p className="text-sm leading-relaxed text-brand-muted">
                     {panel.summary}
                   </p>
                 )}
 
-                {/* Description */}
                 {panel.description && (
                   <p className="text-sm leading-relaxed text-brand-text">
                     {panel.description}
                   </p>
                 )}
 
-                {/* Resource: center + org + source URL */}
                 {panel.type === 'resource' && (
                   <div className="space-y-2">
                     {panel.center && (
@@ -381,7 +294,6 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                   </div>
                 )}
 
-                {/* Official: contact info */}
                 {panel.type === 'official' && (
                   <div className="space-y-1.5">
                     {panel.role && (
@@ -426,17 +338,12 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                   </div>
                 )}
 
-                {/* Policy: status + bill number + body */}
                 {panel.type === 'policy' && (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       {panel.status && (
-                        <span
-                          className={
-                            'text-xs font-semibold px-2 py-0.5 rounded-full ' +
-                            statusBadgeClasses(panel.status)
-                          }
-                        >
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${statusTextColor(panel.status)}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${statusDotColor(panel.status)}`} />
                           {panel.status}
                         </span>
                       )}
@@ -454,7 +361,6 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                   </div>
                 )}
 
-                {/* Service: address, hours, eligibility, fees */}
                 {panel.type === 'service' && (
                   <div className="space-y-1.5">
                     {(panel.address || panel.city) && (
@@ -492,7 +398,6 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                   </div>
                 )}
 
-                {/* Opportunity: dates, location, registration, spots */}
                 {panel.type === 'opportunity' && (
                   <div className="space-y-1.5">
                     {panel.startDate && (
@@ -534,7 +439,6 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                   </div>
                 )}
 
-                {/* Situation: urgency */}
                 {panel.type === 'situation' && (
                   <div className="space-y-2">
                     {panel.urgency && (
@@ -546,7 +450,6 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                   </div>
                 )}
 
-                {/* Learning Path: difficulty, modules, duration */}
                 {panel.type === 'path' && (
                   <div className="space-y-1.5">
                     {panel.difficulty && (
@@ -571,29 +474,26 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 )}
               </div>
 
-              {/* ── Focus areas ── */}
+              {/* Focus areas — comma-separated text */}
               {panel.focusAreas && panel.focusAreas.length > 0 && (
                 <div className="border-t border-brand-border pt-4">
                   <h3 className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2">
                     Focus Areas
                   </h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {panel.focusAreas.map(function (fa) {
+                  <p className="text-xs italic text-brand-muted leading-relaxed">
+                    {panel.focusAreas.map(function (fa, i) {
                       return (
-                        <span
-                          key={fa.id}
-                          className="text-xs font-medium px-2.5 py-1 rounded-full"
-                          style={pillStyle(accent)}
-                        >
-                          {fa.name}
+                        <span key={fa.id}>
+                          {i > 0 && <span className="mx-1">&middot;</span>}
+                          <span style={{ color: accent }}>{fa.name}</span>
                         </span>
                       )
                     })}
-                  </div>
+                  </p>
                 </div>
               )}
 
-              {/* ── Related Officials ── */}
+              {/* Related Officials */}
               {panel.relatedOfficials && panel.relatedOfficials.length > 0 && (
                 <PanelSection title="Related Officials" accentColor={accent}>
                   {panel.relatedOfficials.map(function (official) {
@@ -616,7 +516,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 </PanelSection>
               )}
 
-              {/* ── Related Policies ── */}
+              {/* Related Policies */}
               {panel.relatedPolicies && panel.relatedPolicies.length > 0 && (
                 <PanelSection title="Related Policies" accentColor={accent}>
                   {panel.relatedPolicies.map(function (policy) {
@@ -630,12 +530,8 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                             {policy.name}
                           </p>
                           {policy.status && (
-                            <span
-                              className={
-                                'text-xs font-semibold px-1.5 py-0.5 rounded-full flex-shrink-0 ' +
-                                statusBadgeClasses(policy.status)
-                              }
-                            >
+                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold flex-shrink-0 ${statusTextColor(policy.status)}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${statusDotColor(policy.status)}`} />
                               {policy.status}
                             </span>
                           )}
@@ -646,7 +542,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 </PanelSection>
               )}
 
-              {/* ── Related Resources ── */}
+              {/* Related Resources */}
               {panel.relatedResources && panel.relatedResources.length > 0 && (
                 <PanelSection title="Related Resources" accentColor={accent}>
                   {panel.relatedResources.map(function (resource) {
@@ -673,7 +569,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                 </PanelSection>
               )}
 
-              {/* ── Related Services ── */}
+              {/* Related Services */}
               {panel.relatedServices && panel.relatedServices.length > 0 && (
                 <PanelSection title="Related Services" accentColor={accent}>
                   {panel.relatedServices.map(function (service) {
@@ -697,16 +593,14 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
               )}
             </div>
 
-            {/* ── Footer action ── */}
+            {/* Footer action */}
             {(function () {
               const detailPath = DETAIL_PATHS[panel.type]
-              // Situation uses slug, not id
               const detailHref = panel.type === 'situation'
                 ? (detailPath + (panel.slug || ''))
                 : detailPath
                   ? (detailPath + panel.id)
                   : null
-              // Opportunity with registration URL shows Register button
               if (panel.type === 'opportunity' && panel.registrationUrl) {
                 return (
                   <div className="flex-shrink-0 border-t border-brand-border px-5 py-4">

@@ -25,10 +25,11 @@ export function BallotItemCard({
     <div className="bg-white rounded-xl border border-brand-border p-4">
       <div className="flex items-center gap-2 mb-2">
         {itemType && (
-          <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted font-medium">{itemType}</span>
+          <span className="text-xs uppercase tracking-wide font-semibold text-brand-muted">{itemType}</span>
         )}
         {passed != null && (
-          <span className={'text-xs px-2 py-0.5 rounded-lg font-medium ' + (passed === 'Yes' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700')}>
+          <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${passed === 'Yes' ? 'text-green-700' : 'text-red-700'}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${passed === 'Yes' ? 'bg-green-500' : 'bg-red-500'}`} />
             {passed === 'Yes' ? 'Passed' : 'Failed'}
           </span>
         )}

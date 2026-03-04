@@ -158,8 +158,8 @@ export default async function SearchPage({
           return (
             <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
               <PolicyCard
-                name={p.policy_name || ''}
-                summary={p.summary_5th_grade}
+                name={p.title_6th_grade || p.policy_name || ''}
+                summary={p.summary_6th_grade || p.summary_5th_grade}
                 billNumber={p.bill_number}
                 status={p.status}
                 level={p.level}

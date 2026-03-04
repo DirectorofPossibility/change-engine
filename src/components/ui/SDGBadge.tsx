@@ -8,18 +8,16 @@ interface SDGBadgeProps {
 }
 
 export function SDGBadge({ sdgNumber, sdgName, sdgColor, linkToExplore }: SDGBadgeProps) {
-  const bg = sdgColor || '#3182ce'
-  const pill = (
-    <span
-      className="inline-block text-xs px-2 py-0.5 rounded-lg text-white font-medium"
-      style={{ backgroundColor: bg }}
-    >
-      SDG {sdgNumber}: {sdgName}
+  const color = sdgColor || '#3182ce'
+  const badge = (
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-text">
+      <span className="w-4 h-4 rounded-sm flex-shrink-0" style={{ backgroundColor: color }} />
+      {sdgNumber}. {sdgName}
     </span>
   )
 
   if (linkToExplore) {
-    return <Link href={'/explore?sdg=SDG_' + sdgNumber}>{pill}</Link>
+    return <Link href={'/explore?sdg=SDG_' + sdgNumber} className="hover:underline">{badge}</Link>
   }
-  return pill
+  return badge
 }

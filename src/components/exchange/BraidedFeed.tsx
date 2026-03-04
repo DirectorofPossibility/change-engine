@@ -100,7 +100,7 @@ export function BraidedFeed({
     <div className="w-full">
       {/* Filter bar + view toggle */}
       <div className="flex items-center justify-between mb-5">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 border-b border-brand-border">
           {CENTER_FILTERS.map(({ key, label, icon: Icon }) => {
             const count = countForCenter(coloredResources, officials, policies, key)
             const isActive = activeCenter === key
@@ -110,23 +110,18 @@ export function BraidedFeed({
                 type="button"
                 onClick={() => onSelectCenter ? onSelectCenter(key) : setInternalCenter(key)}
                 className={`
-                  inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold
-                  transition-all duration-150
+                  inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold
+                  transition-all duration-150 border-b-2 -mb-px
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent
                   ${isActive
-                    ? 'bg-brand-text text-white shadow-sm'
-                    : 'bg-white text-brand-muted border border-brand-border hover:border-brand-accent/30 hover:text-brand-text'
+                    ? 'border-brand-accent text-brand-text'
+                    : 'border-transparent text-brand-muted hover:text-brand-text hover:border-brand-muted/30'
                   }
                 `}
               >
                 {Icon && <Icon size={13} />}
                 {t(label)}
-                <span className={`
-                  inline-flex items-center justify-center min-w-[20px] h-[20px] rounded-full text-[10px] font-bold leading-none px-1
-                  ${isActive ? 'bg-white/20 text-white' : 'bg-brand-bg text-brand-muted'}
-                `}>
-                  {count}
-                </span>
+                <span className="text-brand-muted ml-0.5">({count})</span>
               </button>
             )
           })}

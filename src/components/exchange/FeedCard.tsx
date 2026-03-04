@@ -62,13 +62,22 @@ function policyAccentColor(status?: string): string {
   return DEFAULT_ACCENT
 }
 
-function statusBadgeClasses(status?: string): string {
-  if (!status) return 'bg-gray-100 text-gray-600'
+function statusDotColor(status?: string): string {
+  if (!status) return 'bg-gray-400'
   const s = status.toLowerCase()
-  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-50 text-green-700 ring-1 ring-green-200'
-  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
-  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-50 text-red-700 ring-1 ring-red-200'
-  return 'bg-gray-100 text-gray-600'
+  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-500'
+  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-amber-500'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-500'
+  return 'bg-gray-400'
+}
+
+function statusTextColor(status?: string): string {
+  if (!status) return 'text-gray-600'
+  const s = status.toLowerCase()
+  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return 'text-green-700'
+  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return 'text-amber-700'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'text-red-700'
+  return 'text-gray-600'
 }
 
 function getInitials(name: string): string {
@@ -110,10 +119,10 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
           )}
           {/* Gradient overlay at bottom */}
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
-          {/* Center badge */}
+          {/* Center label */}
           {item.center && CenterIcon && (
             <div
-              className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-white text-xs font-semibold backdrop-blur-sm"
+              className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-md text-white text-xs font-semibold backdrop-blur-sm"
               style={{ backgroundColor: centerColor + 'CC' }}
             >
               <CenterIcon size={12} />
@@ -218,7 +227,8 @@ function PolicyCard({ item, t }: { item: FeedItem; t: (key: string) => string })
           <Scale size={14} style={{ color: accent }} />
           <span className="text-xs uppercase tracking-wider font-bold" style={{ color: accent }}>{t('card.policy')}</span>
           {item.status && (
-            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusBadgeClasses(item.status)}`}>
+            <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${statusTextColor(item.status)}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${statusDotColor(item.status)}`} />
               {item.status}
             </span>
           )}

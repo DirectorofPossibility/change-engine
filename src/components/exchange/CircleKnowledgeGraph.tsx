@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo, memo } from 'react'
+import { usePanZoom } from '@/lib/hooks/usePanZoom'
 
 // ═══════════════════════════════════════════════════════════════
 // THE COMMUNITY EXCHANGE — Circle Knowledge Graph
@@ -600,22 +601,37 @@ export function EmbeddableCircles({
 
   const isHome = sel === null
 
+  const pz = usePanZoom({ minZoom: 0.5, maxZoom: 4 })
+
   return (
     <div style={{ fontFamily: "'DM Sans',sans-serif" }}>
       <style>{CIRCLE_ANIM_STYLES}</style>
 
-      {/* Circles */}
+      {/* Circles — pan/zoom container */}
       <div
-        style={{ animation: 'fin .35s ease both' }}>
-        {isHome ? (
-          <HomeCircles onSelect={handleSelect} hov={hov} setHov={setHovStable} ready={ready} pw={displayPW} />
-        ) : (
-          <SelectedCircles
-            selIdx={sel}
-            onBack={handleBack}
-            onSwitch={handleSelect}
-            ready={ready}
-          />
+        ref={pz.containerRef}
+        {...pz.containerHandlers}
+        style={{ animation: 'fin .35s ease both', overflow: 'hidden', cursor: pz.cursor, touchAction: 'none', position: 'relative' }}>
+        <div style={pz.svgStyle}>
+          {isHome ? (
+            <HomeCircles onSelect={handleSelect} hov={hov} setHov={setHovStable} ready={ready} pw={displayPW} />
+          ) : (
+            <SelectedCircles
+              selIdx={sel}
+              onBack={handleBack}
+              onSwitch={handleSelect}
+              ready={ready}
+            />
+          )}
+        </div>
+        {/* Reset zoom button */}
+        {pz.zoom !== 1 && (
+          <button onClick={pz.resetView} style={{
+            position: 'absolute', bottom: 8, right: 8, zIndex: 10,
+            padding: '4px 10px', borderRadius: 6, fontSize: 10, fontWeight: 600,
+            background: C.white, border: `1px solid ${C.bdr}`, color: C.mid,
+            cursor: 'pointer',
+          }}>Reset zoom</button>
         )}
       </div>
 
@@ -671,6 +687,7 @@ export default function CircleKnowledgeGraph() {
   const [ready, setReady] = useState(false)
   const [sel, setSel] = useState<number | null>(null)
   const [hov, setHov] = useState<number | null>(null)
+  const pz = usePanZoom({ minZoom: 0.5, maxZoom: 4 })
 
   useEffect(() => { setTimeout(() => setReady(true), 80) }, [])
 
@@ -747,18 +764,30 @@ export default function CircleKnowledgeGraph() {
           )}
         </div>
 
-        {/* Circles */}
+        {/* Circles — pan/zoom container */}
         <div
-          style={{ animation: 'fin .35s ease both' }}>
-          {isHome ? (
-            <HomeCircles onSelect={setSel} hov={hov} setHov={setHov} ready={ready} />
-          ) : (
-            <SelectedCircles
-              selIdx={sel}
-              onBack={() => setSel(null)}
-              onSwitch={(i) => setSel(i)}
-              ready={ready}
-            />
+          ref={pz.containerRef}
+          {...pz.containerHandlers}
+          style={{ animation: 'fin .35s ease both', overflow: 'hidden', cursor: pz.cursor, touchAction: 'none', position: 'relative' }}>
+          <div style={pz.svgStyle}>
+            {isHome ? (
+              <HomeCircles onSelect={setSel} hov={hov} setHov={setHov} ready={ready} />
+            ) : (
+              <SelectedCircles
+                selIdx={sel}
+                onBack={() => setSel(null)}
+                onSwitch={(i) => setSel(i)}
+                ready={ready}
+              />
+            )}
+          </div>
+          {pz.zoom !== 1 && (
+            <button onClick={pz.resetView} style={{
+              position: 'absolute', bottom: 8, right: 8, zIndex: 10,
+              padding: '4px 10px', borderRadius: 6, fontSize: 10, fontWeight: 600,
+              background: C.white, border: `1px solid ${C.bdr}`, color: C.mid,
+              cursor: 'pointer',
+            }}>Reset zoom</button>
           )}
         </div>
 

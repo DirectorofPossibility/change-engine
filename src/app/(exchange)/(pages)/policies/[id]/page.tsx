@@ -22,11 +22,11 @@ export const revalidate = 86400
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const supabase = await createClient()
-  const { data } = await supabase.from('policies').select('policy_name, summary_5th_grade').eq('policy_id', id).single()
+  const { data } = await supabase.from('policies').select('policy_name, title_6th_grade, summary_5th_grade, summary_6th_grade').eq('policy_id', id).single()
   if (!data) return { title: 'Not Found' }
   return {
-    title: data.policy_name,
-    description: data.summary_5th_grade || 'Details on The Change Engine.',
+    title: data.title_6th_grade || data.policy_name,
+    description: data.summary_6th_grade || data.summary_5th_grade || 'Details on The Change Engine.',
   }
 }
 
@@ -60,7 +60,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
   // Related policies (same level)
   const { data: related } = await supabase
     .from('policies')
-    .select('policy_id, policy_name, policy_type, level, status, summary_5th_grade, bill_number, source_url')
+    .select('policy_id, policy_name, title_6th_grade, policy_type, level, status, summary_5th_grade, summary_6th_grade, bill_number, source_url')
     .neq('policy_id', id)
     .eq('level', policy.level || '')
     .limit(4)
@@ -85,8 +85,8 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
     relatedPolicyTranslations = results[2]
   }
 
-  const displayName = translatedName || policy.policy_name
-  const displaySummary = translatedSummary || policy.summary_5th_grade
+  const displayName = translatedName || policy.title_6th_grade || policy.policy_name
+  const displaySummary = translatedSummary || policy.summary_6th_grade || policy.summary_5th_grade
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -142,6 +142,16 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         </section>
       )}
 
+      {/* Impact Statement */}
+      {policy.impact_statement && (
+        <section className="mb-8">
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-6">
+            <h2 className="text-xl font-bold text-brand-text mb-3">How This Affects Your Life</h2>
+            <p className="text-brand-text leading-relaxed">{policy.impact_statement}</p>
+          </div>
+        </section>
+      )}
+
       {/* Connected Officials */}
       {officials.length > 0 && (
         <section className="mb-10">
@@ -178,8 +188,8 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               return (
                 <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
                   <PolicyCard
-                    name={p.policy_name}
-                    summary={p.summary_5th_grade}
+                    name={p.title_6th_grade || p.policy_name}
+                    summary={p.summary_6th_grade || p.summary_5th_grade}
                     billNumber={p.bill_number}
                     status={p.status}
                     level={p.level}

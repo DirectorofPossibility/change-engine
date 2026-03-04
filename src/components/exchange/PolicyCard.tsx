@@ -12,19 +12,29 @@ interface PolicyCardProps {
   sourceUrl: string | null
   translatedName?: string
   translatedSummary?: string
+  impactPreview?: string | null
   onSelect?: () => void
 }
 
-function statusColor(status: string | null): string {
-  if (!status) return 'bg-gray-100 text-gray-600'
+function statusDot(status: string | null): string {
+  if (!status) return 'bg-gray-400'
   const s = status.toLowerCase()
-  if (s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-100 text-green-700'
-  if (s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-yellow-100 text-yellow-700'
-  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-100 text-red-700'
-  return 'bg-gray-100 text-gray-600'
+  if (s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-500'
+  if (s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-yellow-500'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-500'
+  return 'bg-gray-400'
 }
 
-export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary, onSelect }: PolicyCardProps) {
+function statusText(status: string | null): string {
+  if (!status) return 'text-gray-600'
+  const s = status.toLowerCase()
+  if (s === 'passed' || s === 'enacted' || s === 'signed') return 'text-green-700'
+  if (s === 'pending' || s === 'introduced' || s === 'in committee') return 'text-yellow-700'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'text-red-700'
+  return 'text-gray-600'
+}
+
+export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary, impactPreview, onSelect }: PolicyCardProps) {
   const { t } = useTranslation()
   const displayName = translatedName || name
   const displaySummary = translatedSummary || summary
@@ -39,7 +49,8 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
           <span className="text-xs font-mono text-brand-muted">{billNumber}</span>
         )}
         {status && (
-          <span className={'text-xs px-2 py-0.5 rounded-lg font-medium ' + statusColor(status)}>
+          <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${statusText(status)}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${statusDot(status)}`} />
             {status}
           </span>
         )}
@@ -47,6 +58,9 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
       <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{displayName}</h4>
       {displaySummary && (
         <p className="text-xs text-brand-muted mb-2 line-clamp-2">{displaySummary}</p>
+      )}
+      {impactPreview && (
+        <p className="text-xs text-amber-700 bg-amber-50 rounded px-2 py-1 mb-2 line-clamp-1">{impactPreview}</p>
       )}
       <div className="flex items-center justify-between">
         {level && (

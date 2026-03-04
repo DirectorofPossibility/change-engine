@@ -1,10 +1,16 @@
 import { THEMES } from '@/lib/constants'
 import { BookOpen, Clock, BarChart3 } from 'lucide-react'
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  Beginner: 'bg-green-100 text-green-700',
-  Intermediate: 'bg-yellow-100 text-yellow-700',
-  Advanced: 'bg-red-100 text-red-700',
+const DIFFICULTY_DOTS: Record<string, string> = {
+  Beginner: 'bg-green-500',
+  Intermediate: 'bg-yellow-500',
+  Advanced: 'bg-red-500',
+}
+
+const DIFFICULTY_TEXT: Record<string, string> = {
+  Beginner: 'text-green-700',
+  Intermediate: 'text-yellow-700',
+  Advanced: 'text-red-700',
 }
 
 interface LearningPathCardProps {
@@ -41,7 +47,8 @@ export function LearningPathCard({ name, description, themeId, difficulty, modul
       )}
       <div className="flex items-center gap-3 flex-wrap">
         {difficulty && (
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-lg flex items-center gap-1 ${DIFFICULTY_COLORS[difficulty] || 'bg-gray-100 text-gray-700'}`}>
+          <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${DIFFICULTY_TEXT[difficulty] || 'text-gray-700'}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${DIFFICULTY_DOTS[difficulty] || 'bg-gray-400'}`} />
             <BarChart3 size={12} /> {difficulty}
           </span>
         )}

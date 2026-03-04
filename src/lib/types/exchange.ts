@@ -139,10 +139,12 @@ export interface SearchResultOrganization {
 export interface SearchResultPolicy {
   policy_id: string
   policy_name: string | null
+  title_6th_grade: string | null
   policy_type: string | null
   level: string | null
   status: string | null
   summary_5th_grade: string | null
+  summary_6th_grade: string | null
   bill_number: string | null
   source_url: string | null
 }

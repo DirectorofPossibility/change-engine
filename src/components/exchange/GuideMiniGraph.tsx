@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { usePanZoom } from '@/lib/hooks/usePanZoom'
 
 interface GuideMiniGraphProps {
   guideTitle: string
@@ -30,6 +31,7 @@ function truncate(text: string, max: number): string {
 
 export function GuideMiniGraph({ guideTitle, focusAreas, relatedOrgs, relatedServices, relatedContent }: GuideMiniGraphProps) {
   const router = useRouter()
+  const pz = usePanZoom({ minZoom: 0.5, maxZoom: 4 })
   const cx = 150
   const cy = 150
   const r1 = 70
@@ -54,7 +56,21 @@ export function GuideMiniGraph({ guideTitle, focusAreas, relatedOrgs, relatedSer
   })
 
   return (
-    <svg viewBox="0 0 300 300" className="w-full" role="img" aria-label={'Knowledge graph for ' + guideTitle}>
+    <div
+      ref={pz.containerRef}
+      {...pz.containerHandlers}
+      className="w-full relative"
+      style={{ overflow: 'hidden', cursor: pz.cursor, touchAction: 'none' }}
+    >
+    {pz.zoom !== 1 && (
+      <button onClick={pz.resetView} style={{
+        position: 'absolute', bottom: 4, right: 4, zIndex: 10,
+        padding: '3px 8px', borderRadius: 6, fontSize: 9, fontWeight: 600,
+        background: '#fff', border: '1px solid #e2e8f0', color: '#718096',
+        cursor: 'pointer',
+      }}>Reset</button>
+    )}
+    <svg viewBox="0 0 300 300" className="w-full" role="img" aria-label={'Knowledge graph for ' + guideTitle} style={pz.svgStyle}>
       {/* Lines: center to focus areas */}
       {faPoints.map(fa => (
         <line key={'lc-' + fa.focus_id} x1={cx} y1={cy} x2={fa.x} y2={fa.y} stroke="#e2e8f0" strokeWidth={1} />
@@ -104,5 +120,6 @@ export function GuideMiniGraph({ guideTitle, focusAreas, relatedOrgs, relatedSer
         {truncate(guideTitle, 20)}
       </text>
     </svg>
+    </div>
   )
 }

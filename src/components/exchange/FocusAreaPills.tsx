@@ -13,46 +13,38 @@ interface FocusAreaPillsProps {
 }
 
 export function FocusAreaPills({ focusAreaNames, focusAreas }: FocusAreaPillsProps) {
-  // Prefer rich focusAreas prop when available
   if (focusAreas && focusAreas.length > 0) {
     return (
-      <div className="flex flex-wrap gap-1">
-        {focusAreas.map(function (fa) {
-          let baseClass = 'text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted hover:text-brand-accent transition-colors'
-          if (fa.is_bridging) {
-            baseClass += ' border border-dashed border-brand-muted'
-          } else {
-            baseClass += ' border border-brand-border'
-          }
+      <span className="text-xs italic text-brand-muted">
+        {focusAreas.map(function (fa, i) {
           return (
-            <Link
-              key={fa.focus_id}
-              href={'/explore/focus/' + fa.focus_id}
-              className={baseClass}
-            >
-              {fa.focus_area_name}
-            </Link>
+            <span key={fa.focus_id}>
+              {i > 0 && <span className="mx-1">&middot;</span>}
+              <Link
+                href={'/explore/focus/' + fa.focus_id}
+                className="hover:text-brand-accent transition-colors"
+              >
+                {fa.focus_area_name}
+              </Link>
+            </span>
           )
         })}
-      </div>
+      </span>
     )
   }
 
-  // Fallback: plain string names (backward-compatible)
   if (!focusAreaNames || focusAreaNames.length === 0) return null
 
   return (
-    <div className="flex flex-wrap gap-1">
-      {focusAreaNames.map(function (name) {
+    <span className="text-xs italic text-brand-muted">
+      {focusAreaNames.map(function (name, i) {
         return (
-          <span
-            key={name}
-            className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted border border-brand-border"
-          >
+          <span key={name}>
+            {i > 0 && <span className="mx-1">&middot;</span>}
             {name}
           </span>
         )
       })}
-    </div>
+    </span>
   )
 }

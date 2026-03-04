@@ -1,19 +1,9 @@
-/**
- * @fileoverview Official card component with enlarged circular photo and color ring.
- *
- * Displays an elected official with a large circular photo (or initial avatar),
- * surrounded by a subtle ring in the official's government level color. Shows
- * the official's name, title, party, level, and contact links.
- *
- * Links to the official detail page at `/officials/[id]`.
- */
 'use client'
 
 import Link from 'next/link'
 import { Mail, Phone, Globe } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
 
-/** Color assignments for each government level, used for the circular ring. */
 const LEVEL_COLORS: Record<string, string> = {
   Federal: '#3182ce',
   State: '#805ad5',
@@ -22,42 +12,22 @@ const LEVEL_COLORS: Record<string, string> = {
   'School District': '#dd6b20',
 }
 
-/** Default ring color when the level is unknown. */
 const DEFAULT_LEVEL_COLOR = '#8B7E74'
 
 interface OfficialCardProps {
-  /** Unique ID used to build the official detail route. */
   id: string
-  /** Official's full name. */
   name: string
-  /** Official's position title (e.g., 'U.S. Senator'). */
   title: string | null
-  /** Political party affiliation. */
   party: string | null
-  /** Government level (Federal, State, County, City). */
   level: string | null
-  /** Contact email address. */
   email: string | null
-  /** Contact phone number. */
   phone: string | null
-  /** Official's website URL. */
   website: string | null
-  /** URL to the official's photo. */
   photoUrl?: string | null
-  /** Optional translated title for non-English display. */
   translatedTitle?: string
   onSelect?: () => void
 }
 
-/**
- * Official card with enlarged circular photo/avatar and government-level color ring.
- *
- * The photo or initial avatar is displayed at 64x64px with a 3px ring in the
- * government level's assigned color. Contact links (email, phone, website) are
- * shown below the official's details.
- *
- * @param props - {@link OfficialCardProps}
- */
 export function OfficialCard({ id, name, title, party, level, email, phone, website, photoUrl, translatedTitle, onSelect }: OfficialCardProps) {
   const { t } = useTranslation()
   const displayTitle = translatedTitle || title
@@ -72,7 +42,6 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
     <div className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
       <NameWrapper {...nameProps as any}>
         <div className="flex items-start gap-4">
-          {/* Enlarged circular photo with level-colored ring */}
           <div
             className="w-16 h-16 rounded-full flex-shrink-0 p-[3px]"
             style={{ backgroundColor: ringColor }}
@@ -92,15 +61,11 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
           <div className="min-w-0">
             <h3 className="font-semibold text-brand-text hover:text-brand-accent transition-colors">{name}</h3>
             {displayTitle && <p className="text-sm text-brand-muted line-clamp-1">{displayTitle}</p>}
-            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-              {party && (
-                <span className="text-xs bg-brand-bg px-2 py-0.5 rounded-full text-brand-muted">{party}</span>
-              )}
+            <div className="flex items-center gap-1.5 mt-1.5 text-xs text-brand-muted">
+              {party && <span>{party}</span>}
+              {party && level && <span>&middot;</span>}
               {level && (
-                <span
-                  className="text-xs px-2 py-0.5 rounded-full text-white font-medium"
-                  style={{ backgroundColor: ringColor }}
-                >
+                <span className="uppercase tracking-wide font-semibold" style={{ color: ringColor }}>
                   {level}
                 </span>
               )}

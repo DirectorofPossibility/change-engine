@@ -1,35 +1,12 @@
-/**
- * @fileoverview Knowledge mesh connections panel for entity profile pages.
- *
- * Shows how an entity (content, official, policy, service, or organization)
- * connects to other entities through shared focus areas. Renders focus area
- * pills and linked cards for related content, officials, policies, and services.
- *
- * This is a server component — it fetches mesh data directly from Supabase.
- * Embed it in any entity detail page to show the wayfinder mesh.
- *
- * @datasource {@link getEntityMeshProfile} from `@/lib/data/exchange`
- */
-
 import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
 import { getEntityMeshProfile } from '@/lib/data/exchange'
 
 interface EntityMeshProps {
-  /** Entity type for junction table lookup. */
   entityType: 'content' | 'official' | 'policy' | 'service' | 'organization'
-  /** Entity ID to look up focus areas. */
   entityId: string
 }
 
-/**
- * Knowledge mesh connections for an entity.
- *
- * Fetches related entities via shared focus areas and renders them as
- * linked cards grouped by type. Shows focus area pills with pathway colors.
- *
- * @param props - {@link EntityMeshProps}
- */
 export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
   const mesh = await getEntityMeshProfile(entityType, entityId)
 
@@ -46,31 +23,27 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
     <section className="mt-10 pt-8 border-t border-brand-border">
       <h3 className="font-serif text-xl font-semibold mb-4">Connected Through the Community</h3>
 
-      {/* Focus area pills */}
+      {/* Focus areas — comma-separated italic text */}
       {hasFocusAreas && (
-        <div className="flex flex-wrap gap-2 mb-6">
-          {mesh.focusAreas.map(function (fa) {
-            const themeKey = fa.theme_id as keyof typeof THEMES | null
-            const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
-            return (
-              <Link
-                key={fa.focus_id}
-                href={'/explore/focus/' + fa.focus_id}
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border transition-colors hover:shadow-sm"
-                style={{
-                  backgroundColor: (color || '#8B7E74') + '10',
-                  color: color || '#8B7E74',
-                  borderColor: (color || '#8B7E74') + '25',
-                }}
-              >
-                <span
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ backgroundColor: color || '#8B7E74' }}
-                />
-                {fa.focus_area_name}
-              </Link>
-            )
-          })}
+        <div className="mb-6">
+          <span className="text-xs italic text-brand-muted leading-relaxed">
+            {mesh.focusAreas.map(function (fa, i) {
+              const themeKey = fa.theme_id as keyof typeof THEMES | null
+              const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
+              return (
+                <span key={fa.focus_id}>
+                  {i > 0 && <span className="mx-1">&middot;</span>}
+                  <Link
+                    href={'/explore/focus/' + fa.focus_id}
+                    className="hover:underline transition-colors"
+                    style={{ color: color || '#8B7E74' }}
+                  >
+                    {fa.focus_area_name}
+                  </Link>
+                </span>
+              )
+            })}
+          </span>
         </div>
       )}
 
