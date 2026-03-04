@@ -2,13 +2,15 @@
  * @fileoverview API route authentication middleware.
  *
  * Provides a single entry-point -- {@link validateApiRequest} -- that API
- * route handlers call to gate access. Two authentication strategies are
- * supported:
+ * route handlers call to gate access. Three authentication strategies are
+ * supported (checked in order):
  *
  * 1. **CRON_SECRET bearer token** -- used by Vercel Cron jobs.
  * 2. **x-api-key header** -- the raw key is SHA-256 hashed and compared
  *    against the `api_keys` table in Supabase. Expired or revoked keys are
  *    rejected and a fire-and-forget PATCH bumps usage counters on success.
+ * 3. **Supabase session** -- falls back to checking the logged-in user's
+ *    session via cookies, allowing dashboard users to call API routes.
  *
  * Returns `null` when the request is authorized, or a `NextResponse` JSON
  * error (401) when it is not.
@@ -17,6 +19,7 @@
 // ── Imports ──
 
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
 // ── Environment ──
 
@@ -35,6 +38,8 @@ const CRON_SECRET = process.env.CRON_SECRET
  *    `api_keys` table. Expired or inactive keys are rejected. On success the
  *    row's `total_requests` and `last_used_at` fields are bumped
  *    (fire-and-forget).
+ * 3. Supabase session -- if no API key is present, checks for a valid
+ *    logged-in user session via cookies (dashboard users).
  *
  * @param req - The incoming Next.js API request.
  * @returns `null` if the request is authorised, otherwise a `NextResponse`
@@ -50,6 +55,13 @@ export async function validateApiRequest(req: NextRequest): Promise<NextResponse
   // Validate API key
   const apiKey = req.headers.get('x-api-key')
   if (!apiKey) {
+    // Fallback: check for a valid Supabase session (dashboard users)
+    try {
+      const supabase = await createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) return null
+    } catch { /* session check failed, fall through to 401 */ }
+
     return NextResponse.json({ error: 'Missing x-api-key header' }, { status: 401 })
   }
 

@@ -79,6 +79,54 @@ async function supaUpsert(table: string, body: Record<string, unknown>, conflict
   return text ? JSON.parse(text) : null
 }
 
+async function supaJunctionInsert(table: string, rows: Record<string, unknown>[]) {
+  if (!rows.length) return
+  await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=ignore-duplicates,return=minimal',
+    },
+    body: JSON.stringify(rows),
+  }).catch(() => {})
+}
+
+/**
+ * Populate all junction tables for a newly published content item.
+ */
+async function populateJunctionTables(contentId: string, classification: any) {
+  const focusAreaIds: string[] = classification.focus_area_ids || []
+  const sdgIds: string[] = classification.sdg_ids || []
+  const lifeSituationIds: string[] = classification.life_situation_ids || []
+  const audienceSegmentIds: string[] = classification.audience_segment_ids || []
+  const serviceCatIds: string[] = classification.service_cat_ids || []
+  const skillIds: string[] = classification.skill_ids || []
+  const neighborhoods: string[] = classification.locations?.neighborhoods || []
+  const zipCodes: string[] = classification.locations?.zip_codes || []
+
+  const pathwayRows: Record<string, unknown>[] = []
+  if (classification.theme_primary) {
+    pathwayRows.push({ content_id: contentId, theme_id: classification.theme_primary, is_primary: true })
+  }
+  for (const themeId of (classification.theme_secondary || [])) {
+    pathwayRows.push({ content_id: contentId, theme_id: themeId, is_primary: false })
+  }
+
+  await Promise.allSettled([
+    supaJunctionInsert('content_focus_areas', focusAreaIds.map(fid => ({ content_id: contentId, focus_id: fid }))),
+    supaJunctionInsert('content_sdgs', sdgIds.map(sid => ({ content_id: contentId, sdg_id: sid }))),
+    supaJunctionInsert('content_life_situations', lifeSituationIds.map(lid => ({ content_id: contentId, situation_id: lid }))),
+    supaJunctionInsert('content_audience_segments', audienceSegmentIds.map(aid => ({ content_id: contentId, segment_id: aid }))),
+    supaJunctionInsert('content_pathways', pathwayRows),
+    supaJunctionInsert('content_service_categories', serviceCatIds.map(scId => ({ content_id: contentId, service_cat_id: scId }))),
+    supaJunctionInsert('content_skills', skillIds.map(skId => ({ content_id: contentId, skill_id: skId }))),
+    supaJunctionInsert('content_neighborhoods', neighborhoods.map(n => ({ content_id: contentId, neighborhood: n }))),
+    supaJunctionInsert('content_zip_codes', zipCodes.map(z => ({ content_id: contentId, zip_code: z }))),
+  ])
+}
+
 // ── URL scraping ──────────────────────────────────────────────────────
 
 function stripHtml(html: string): string {
@@ -101,21 +149,50 @@ function stripHtml(html: string): string {
   return text.trim()
 }
 
-function extractMeta(html: string): { title: string; description: string; image: string; domain: string } {
+function extractMeta(html: string, pageUrl?: string): { title: string; description: string; image: string; domain: string } {
   const ogTitle = html.match(/<meta[^>]*property="og:title"[^>]*content="([^"]*)"[^>]*>/i)?.[1]
     || html.match(/<meta[^>]*content="([^"]*)"[^>]*property="og:title"[^>]*>/i)?.[1]
   const ogDesc = html.match(/<meta[^>]*property="og:description"[^>]*content="([^"]*)"[^>]*>/i)?.[1]
     || html.match(/<meta[^>]*content="([^"]*)"[^>]*property="og:description"[^>]*>/i)?.[1]
     || html.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/i)?.[1]
     || html.match(/<meta[^>]*content="([^"]*)"[^>]*name="description"[^>]*>/i)?.[1]
-  const ogImage = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"[^>]*>/i)?.[1]
+  let image = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]*)"[^>]*>/i)?.[1]
     || html.match(/<meta[^>]*content="([^"]*)"[^>]*property="og:image"[^>]*>/i)?.[1]
+    || ''
   const titleTag = html.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]
+
+  // Fallback: scan <img> tags if no og:image found
+  if (!image) {
+    const skipPattern = /1x1|pixel|track|logo|icon|avatar|favicon|badge|spacer|spinner|button/i
+    const imgRegex = /<img[^>]+src="([^"]+)"[^>]*>/gi
+    let imgMatch
+    while ((imgMatch = imgRegex.exec(html)) !== null) {
+      const src = imgMatch[0]
+      const imgSrc = imgMatch[1]
+      // Skip tiny/utility images
+      if (skipPattern.test(imgSrc) || skipPattern.test(src)) continue
+      // Skip data URIs and SVGs
+      if (imgSrc.startsWith('data:') || imgSrc.endsWith('.svg')) continue
+      // Skip images with explicit tiny dimensions
+      const widthMatch = src.match(/width="(\d+)"/i)
+      const heightMatch = src.match(/height="(\d+)"/i)
+      if (widthMatch && parseInt(widthMatch[1]) < 50) continue
+      if (heightMatch && parseInt(heightMatch[1]) < 50) continue
+
+      // Resolve relative URLs
+      try {
+        image = pageUrl ? new URL(imgSrc, pageUrl).href : imgSrc
+        break
+      } catch {
+        continue
+      }
+    }
+  }
 
   return {
     title: ogTitle || titleTag || '',
     description: ogDesc || '',
-    image: ogImage || '',
+    image,
     domain: '',
   }
 }
@@ -217,7 +294,7 @@ async function scrapeUrl(url: string): Promise<{
   if (!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText}`)
 
   const html = await res.text()
-  const meta = extractMeta(html)
+  const meta = extractMeta(html, url)
   meta.domain = new URL(url).hostname
 
   const fullText = stripHtml(html)
@@ -629,7 +706,7 @@ Return JSON:
   if (reviewStatus === 'auto_approved') {
     try {
       const actions = classification.action_items || {}
-      await supaRest('POST', 'content_published', {
+      const published = await supaRest('POST', 'content_published', {
         inbox_id: inboxId,
         source_url: url,
         source_domain: meta.domain,
@@ -659,6 +736,16 @@ Return JSON:
         is_featured: false,
         is_active: true,
       })
+
+      // Populate junction tables for knowledge mesh
+      const contentId = published?.[0]?.id
+      if (contentId) {
+        await populateJunctionTables(contentId, {
+          ...classification,
+          focus_area_ids: validFocusAreaIds,
+          sdg_ids: allSdgIds,
+        })
+      }
     } catch { /* auto-publish failed, content stays in review queue */ }
   }
 
@@ -957,7 +1044,7 @@ Return JSON:
   if (preScrapedReviewStatus === 'auto_approved') {
     try {
       const actions = classification.action_items || {}
-      await supaRest('POST', 'content_published', {
+      const published = await supaRest('POST', 'content_published', {
         inbox_id: inboxId,
         source_url: item.url,
         source_domain: itemDomain,
@@ -987,6 +1074,16 @@ Return JSON:
         is_featured: false,
         is_active: true,
       })
+
+      // Populate junction tables for knowledge mesh
+      const contentId = published?.[0]?.id
+      if (contentId) {
+        await populateJunctionTables(contentId, {
+          ...classification,
+          focus_area_ids: validFocusAreaIds,
+          sdg_ids: allSdgIds,
+        })
+      }
     } catch { /* auto-publish failed, content stays in review queue */ }
   }
 
