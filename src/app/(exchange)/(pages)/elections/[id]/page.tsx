@@ -116,6 +116,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
                           district={c.district}
                           bioSummary={c.bio_summary}
                           campaignWebsite={c.campaign_website}
+                          linkedinUrl={(c as any).linkedin_url}
                           policyPositions={c.policy_positions}
                           endorsements={c.endorsements}
                         />

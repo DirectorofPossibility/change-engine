@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Globe } from 'lucide-react'
+import { Globe, Linkedin } from 'lucide-react'
 
 interface CandidateCardProps {
   name: string
@@ -9,13 +9,14 @@ interface CandidateCardProps {
   district: string | null
   bioSummary: string | null
   campaignWebsite: string | null
+  linkedinUrl?: string | null
   policyPositions: string | null
   endorsements: string | null
 }
 
 export function CandidateCard({
   name, party, incumbent, officeSought, district,
-  bioSummary, campaignWebsite, policyPositions, endorsements,
+  bioSummary, campaignWebsite, linkedinUrl, policyPositions, endorsements,
 }: CandidateCardProps) {
   return (
     <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
@@ -34,11 +35,18 @@ export function CandidateCard({
       {bioSummary && <p className="text-sm text-brand-muted mb-2 line-clamp-3">{bioSummary}</p>}
       {policyPositions && <p className="text-xs text-brand-muted mb-2 line-clamp-2">Positions: {policyPositions}</p>}
       {endorsements && <p className="text-xs text-brand-muted mb-2 line-clamp-1">Endorsements: {endorsements}</p>}
-      {campaignWebsite && (
-        <Link href={campaignWebsite} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-brand-accent hover:underline">
-          <Globe size={12} /> Campaign website
-        </Link>
-      )}
+      <div className="flex items-center gap-3 flex-wrap">
+        {campaignWebsite && (
+          <Link href={campaignWebsite} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-brand-accent hover:underline">
+            <Globe size={12} /> Campaign website
+          </Link>
+        )}
+        {linkedinUrl && (
+          <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-brand-accent hover:underline">
+            <Linkedin size={12} /> LinkedIn
+          </Link>
+        )}
+      </div>
     </div>
   )
 }

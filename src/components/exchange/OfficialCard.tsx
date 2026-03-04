@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Mail, Phone, Globe } from 'lucide-react'
+import { Mail, Phone, Globe, Linkedin } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
 
 const LEVEL_COLORS: Record<string, string> = {
@@ -24,11 +24,12 @@ interface OfficialCardProps {
   phone: string | null
   website: string | null
   photoUrl?: string | null
+  linkedinUrl?: string | null
   translatedTitle?: string
   onSelect?: () => void
 }
 
-export function OfficialCard({ id, name, title, party, level, email, phone, website, photoUrl, translatedTitle, onSelect }: OfficialCardProps) {
+export function OfficialCard({ id, name, title, party, level, email, phone, website, photoUrl, linkedinUrl, translatedTitle, onSelect }: OfficialCardProps) {
   const { t } = useTranslation()
   const displayTitle = translatedTitle || title
   const ringColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
@@ -87,6 +88,11 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
         {website && (
           <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline">
             <Globe size={14} /> {t('card.website')}
+          </a>
+        )}
+        {linkedinUrl && (
+          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline">
+            <Linkedin size={14} /> LinkedIn
           </a>
         )}
       </div>

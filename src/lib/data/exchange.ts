@@ -246,14 +246,22 @@ export async function getLifeSituationContent(situationId: string, serviceCatIds
 
 // ── Entity queries ─────────────────────────────────────────────────────
 
-/** All elected officials with their government levels (for sorting/grouping). */
+/** All elected officials with their government levels and LinkedIn profiles. */
 export async function getOfficials() {
   const supabase = await createClient()
   const [{ data: officials }, { data: levels }] = await Promise.all([
     supabase.from('elected_officials').select('*').order('official_name'),
     supabase.from('government_levels').select('*').order('level_order'),
   ])
-  return { officials: officials ?? [], levels: levels ?? [] }
+  const { data: profileRows } = await supabase
+    .from('official_profiles' as any)
+    .select('official_id, social_linkedin')
+  const profiles = ((profileRows ?? []) as unknown as Array<{ official_id: string; social_linkedin: string | null }>)
+    .reduce<Record<string, string>>(function (acc, p) {
+      if (p.social_linkedin) acc[p.official_id] = p.social_linkedin
+      return acc
+    }, {})
+  return { officials: officials ?? [], levels: levels ?? [], profiles }
 }
 
 /** Officials matching a ZIP code — looks up districts from zip_codes table, then finds matching officials. */
@@ -322,12 +330,22 @@ export async function getCivicHubData() {
       .limit(1),
   ])
 
+  const { data: profileRows } = await supabase
+    .from('official_profiles' as any)
+    .select('official_id, social_linkedin')
+  const linkedinProfiles = ((profileRows ?? []) as unknown as Array<{ official_id: string; social_linkedin: string | null }>)
+    .reduce<Record<string, string>>(function (acc, p) {
+      if (p.social_linkedin) acc[p.official_id] = p.social_linkedin
+      return acc
+    }, {})
+
   return {
     officials: officials ?? [],
     policies: policies ?? [],
     elections: elections ?? [],
     levels: levels ?? [],
     upcomingElection: upcoming && upcoming.length > 0 ? upcoming[0] : null,
+    linkedinProfiles,
   }
 }
 

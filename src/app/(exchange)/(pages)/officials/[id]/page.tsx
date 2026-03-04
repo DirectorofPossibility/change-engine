@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Mail, Phone, Globe, MapPin, Calendar, Users } from 'lucide-react'
+import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
@@ -66,7 +66,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     phone_office?: string | null; phone_district?: string | null
     address_office?: string | null; address_district?: string | null
     social_twitter?: string | null; social_facebook?: string | null; social_instagram?: string | null
-    photo_url?: string | null
+    social_linkedin?: string | null; photo_url?: string | null
   } | null
 
   // Policies connected to this official via junction table
@@ -222,6 +222,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           {official.website && (
             <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
               <Globe size={18} className="flex-shrink-0" /> Website
+            </a>
+          )}
+          {profile?.social_linkedin && (
+            <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+              <Linkedin size={18} className="flex-shrink-0" /> LinkedIn
             </a>
           )}
         </div>

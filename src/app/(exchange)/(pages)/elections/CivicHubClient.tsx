@@ -35,6 +35,7 @@ interface CivicHubClientProps {
   elections: any[]
   officialTranslations: TranslationMap
   policyTranslations: TranslationMap
+  linkedinProfiles?: Record<string, string>
 }
 
 /* ── Component ── */
@@ -45,6 +46,7 @@ export function CivicHubClient({
   elections,
   officialTranslations,
   policyTranslations,
+  linkedinProfiles = {},
 }: CivicHubClientProps) {
   const { t } = useTranslation()
   const router = useRouter()
@@ -176,6 +178,7 @@ export function CivicHubClient({
                   phone={o.office_phone}
                   website={o.website}
                   photoUrl={(o as any).photo_url}
+                  linkedinUrl={linkedinProfiles[o.official_id]}
                   translatedTitle={tr?.title}
                 />
               )

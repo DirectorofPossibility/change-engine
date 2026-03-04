@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 }
 
 export default async function CivicHubPage() {
-  const { officials, policies, elections, upcomingElection } = await getCivicHubData()
+  const { officials, policies, elections, upcomingElection, linkedinProfiles } = await getCivicHubData()
 
   // Fetch translations for non-English visitors
   const langId = await getLangId()
@@ -63,6 +63,7 @@ export default async function CivicHubPage() {
             elections={elections}
             officialTranslations={officialTranslations}
             policyTranslations={policyTranslations}
+            linkedinProfiles={linkedinProfiles}
           />
         </Suspense>
       </div>

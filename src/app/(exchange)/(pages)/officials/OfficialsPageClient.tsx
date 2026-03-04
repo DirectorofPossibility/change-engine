@@ -25,9 +25,10 @@ interface Props {
   officials: ElectedOfficial[]
   levels: GovernmentLevel[]
   translations?: TranslationMap
+  linkedinProfiles?: Record<string, string>
 }
 
-export function OfficialsPageClient({ officials, levels, translations = {} }: Props) {
+export function OfficialsPageClient({ officials, levels, translations = {}, linkedinProfiles = {} }: Props) {
   const [zip, setZip] = useState('')
   const [zipResults, setZipResults] = useState<ZipResults | null>(null)
   const [loading, setLoading] = useState(false)
@@ -153,6 +154,7 @@ export function OfficialsPageClient({ officials, levels, translations = {} }: Pr
                         phone={o.office_phone}
                         website={o.website}
                         photoUrl={(o as any).photo_url}
+                        linkedinUrl={linkedinProfiles[o.official_id]}
                         translatedTitle={t?.title}
                       />
                     )
@@ -173,7 +175,7 @@ export function OfficialsPageClient({ officials, levels, translations = {} }: Pr
 
       {/* Full Officials Listing */}
       <h2 className="font-serif text-2xl font-bold text-brand-text mb-6">All Civic Leaders</h2>
-      <OfficialsClient officials={officials} levels={levels} translations={translations} />
+      <OfficialsClient officials={officials} levels={levels} translations={translations} linkedinProfiles={linkedinProfiles} />
     </div>
   )
 }

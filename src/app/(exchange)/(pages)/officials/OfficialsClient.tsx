@@ -9,9 +9,10 @@ interface OfficialsClientProps {
   officials: ElectedOfficial[]
   levels: GovernmentLevel[]
   translations?: TranslationMap
+  linkedinProfiles?: Record<string, string>
 }
 
-export function OfficialsClient({ officials, levels, translations = {} }: OfficialsClientProps) {
+export function OfficialsClient({ officials, levels, translations = {}, linkedinProfiles = {} }: OfficialsClientProps) {
   const [search, setSearch] = useState('')
   const [activeLevel, setActiveLevel] = useState<string | null>(null)
 
@@ -70,6 +71,7 @@ export function OfficialsClient({ officials, levels, translations = {} }: Offici
               phone={o.office_phone}
               website={o.website}
               photoUrl={(o as any).photo_url}
+              linkedinUrl={linkedinProfiles[o.official_id]}
               translatedTitle={t?.title}
             />
           )

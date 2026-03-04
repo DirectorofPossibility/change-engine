@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 }
 
 export default async function OfficialsPage() {
-  const { officials, levels } = await getOfficials()
+  const { officials, levels, profiles } = await getOfficials()
 
   // Fetch translations for non-English
   const langId = await getLangId()
@@ -39,7 +39,7 @@ export default async function OfficialsPage() {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <OfficialsPageClient officials={officials} levels={levels} translations={translations} />
+        <OfficialsPageClient officials={officials} levels={levels} translations={translations} linkedinProfiles={profiles} />
       </div>
     </div>
   )
