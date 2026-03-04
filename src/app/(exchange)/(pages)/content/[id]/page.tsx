@@ -287,11 +287,42 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             <p className="text-brand-text leading-relaxed">{summary}</p>
           </div>
 
-          {/* Body content */}
+          {/* Body content — renders structured markdown sections or plain paragraphs */}
           {(translatedBody || item.body) && (
-            <div className="mb-8 space-y-4">
-              {(translatedBody || item.body)!.split(/\n\n+/).map(function (paragraph, i) {
-                return <p key={i} className="text-brand-text leading-relaxed">{paragraph.trim()}</p>
+            <div className="mb-8 space-y-6">
+              {(translatedBody || item.body)!.split(/\n\n+/).map(function (block, i) {
+                const trimmed = block.trim()
+                if (!trimmed) return null
+                // Render ## headings as styled section headers
+                if (trimmed.startsWith('## ')) {
+                  return <h2 key={i} className="text-xl font-serif font-bold text-brand-text mt-2">{trimmed.replace(/^## /, '')}</h2>
+                }
+                // Render bullet lists
+                if (trimmed.match(/^[-•*] /m)) {
+                  const items = trimmed.split(/\n/).filter(function (l) { return l.trim() })
+                  return (
+                    <ul key={i} className="list-disc list-inside space-y-1 text-brand-text leading-relaxed">
+                      {items.map(function (li, j) {
+                        return <li key={j}>{li.replace(/^[-•*]\s*/, '').trim()}</li>
+                      })}
+                    </ul>
+                  )
+                }
+                // Bold labels like **Author:** Mark Lefebvre
+                if (trimmed.match(/\*\*[^*]+\*\*/)) {
+                  const parts = trimmed.split(/(\*\*[^*]+\*\*)/)
+                  return (
+                    <p key={i} className="text-brand-text leading-relaxed">
+                      {parts.map(function (part, j) {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                          return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
+                        }
+                        return <span key={j}>{part}</span>
+                      })}
+                    </p>
+                  )
+                }
+                return <p key={i} className="text-brand-text leading-relaxed">{trimmed}</p>
               })}
             </div>
           )}

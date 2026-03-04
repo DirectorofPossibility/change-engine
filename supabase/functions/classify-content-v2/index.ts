@@ -189,7 +189,18 @@ Deno.serve(async (req: Request) => {
     const systemPrompt = `You are the Change Engine v2 classifier for Houston, Texas civic content.
 Classify content against the EXACT taxonomy below. Return ONLY valid IDs. Respond with a single JSON object, no markdown, no backticks.
 
-Also produce a 'body_6th_grade' field: 3-5 paragraphs (200-400 words) at 6th-grade reading level. Preserve key details: author/creator names, organization names, specific programs or frameworks, why it matters, key takeaways. Use asset-based language — focus on strengths, opportunities, and what's available.
+Also produce a 'body_6th_grade' field using this structured markdown template (200-500 words total, 6th-grade reading level). Use asset-based language — focus on strengths, opportunities, and what's available.
+
+## Overview
+Author/creator name, organization, what it is, and who it's for. Include website URL if available.
+
+## Why It Matters
+Why this resource is valuable. How it connects to community wellbeing, equity, or civic life in Houston. Frame challenges as opportunities.
+
+## How It Works
+Key programs, frameworks, methods, or strategies. Use bullet points for specific items when appropriate.
+
+Omit any section that doesn't apply. Preserve specific names, organizations, URLs, and details from the source.
 
 ${taxonomyPrompt}`;
 
