@@ -46,7 +46,7 @@ export function SubmitClient() {
       const res = await fetch('/api/ingest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim(), auto_publish: true }),
+        body: JSON.stringify({ url: url.trim() }),
       })
       const data = await res.json()
       if (data.results && data.results.length > 0) {
@@ -97,7 +97,7 @@ export function SubmitClient() {
         const res = await fetch('/api/ingest', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ urls: batch.map(r => r.url), auto_publish: true }),
+          body: JSON.stringify({ urls: batch.map(r => r.url) }),
         })
         const data = await res.json()
         allResults.push(...(data.results || []))
@@ -119,7 +119,7 @@ export function SubmitClient() {
       <h1 className="text-2xl font-bold">Submit Content</h1>
       <p className="text-sm text-brand-muted">
         Submit a URL to ingest through the full Knowledge Mesh pipeline:
-        scrape, classify, enrich, translate (ES + VI), and publish.
+        scrape, classify, enrich, and translate (ES + VI). Content goes to the review queue for approval before publishing.
       </p>
 
       {/* Single URL */}
@@ -145,7 +145,7 @@ export function SubmitClient() {
         {processing && (
           <div className="flex items-center gap-2 text-sm text-brand-muted">
             <div className="w-4 h-4 border-2 border-brand-accent border-t-transparent rounded-full animate-spin" />
-            Running full pipeline: scrape, classify, translate, publish...
+            Running full pipeline: scrape, classify, translate, queue for review...
           </div>
         )}
         {error && (
@@ -154,7 +154,7 @@ export function SubmitClient() {
         {result && (
           <div className="border border-brand-border rounded-xl p-4 space-y-4">
             <div className="flex items-center gap-2">
-              <span className="text-xs px-2 py-0.5 rounded-lg bg-green-100 text-green-700 font-medium">Published</span>
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-yellow-100 text-yellow-700 font-medium">Queued for Review</span>
               <ConfidenceBadge confidence={result.confidence || 0} />
             </div>
 
