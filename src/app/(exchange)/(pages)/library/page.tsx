@@ -13,7 +13,15 @@ export const metadata: Metadata = {
 }
 
 export default async function LibraryPage() {
-  const { documents, total } = await getPublishedDocuments(1, 24)
+  let documents: Awaited<ReturnType<typeof getPublishedDocuments>>['documents'] = []
+  let total = 0
+  try {
+    const result = await getPublishedDocuments(1, 24)
+    documents = result.documents
+    total = result.total
+  } catch (err) {
+    console.error('Library page data fetch error:', err)
+  }
 
   return (
     <div>
