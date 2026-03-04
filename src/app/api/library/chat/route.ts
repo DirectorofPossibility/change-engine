@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
     let sessionId = session_id
     if (!sessionId) {
       const sessions = await supaRest('POST', 'kb_chat_sessions', {
+        user_id: user.id,
         title: message.slice(0, 100),
       })
       sessionId = sessions?.[0]?.id
