@@ -2,7 +2,7 @@
   "framework": "nextjs",
   "crons": [
     { "path": "/api/cron/sync-polling-places", "schedule": "0 6 * * *" },
-    { "path": "/api/cron/poll-rss", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/poll-rss", "schedule": "0 3 * * *" },
     { "path": "/api/cron/batch-translate", "schedule": "0 1 * * *" },
     { "path": "/api/cron/sync-city-houston", "schedule": "0 7 * * *" },
     { "path": "/api/cron/sync-state-texas", "schedule": "0 9 * * *" }
