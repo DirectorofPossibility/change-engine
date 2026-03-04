@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { BookOpen, Building2, Users, ScrollText } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -43,10 +44,10 @@ function useCountUp(target: number, duration = 800) {
 }
 
 const METRICS = [
-  { key: 'resources' as const, icon: BookOpen, labelKey: 'home.stats_resources' },
-  { key: 'organizations' as const, icon: Building2, labelKey: 'home.stats_organizations' },
-  { key: 'officials' as const, icon: Users, labelKey: 'home.stats_officials' },
-  { key: 'policies' as const, icon: ScrollText, labelKey: 'home.stats_policies' },
+  { key: 'resources' as const, icon: BookOpen, labelKey: 'home.stats_resources', href: '/library' },
+  { key: 'organizations' as const, icon: Building2, labelKey: 'home.stats_organizations', href: '/services' },
+  { key: 'officials' as const, icon: Users, labelKey: 'home.stats_officials', href: '/officials' },
+  { key: 'policies' as const, icon: ScrollText, labelKey: 'home.stats_policies', href: '/policies' },
 ] as const
 
 export function ImpactMetrics({ stats }: ImpactMetricsProps) {
@@ -59,25 +60,27 @@ export function ImpactMetrics({ stats }: ImpactMetricsProps) {
       </h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
         {METRICS.map(function (metric) {
-          return <MetricCard key={metric.key} target={stats[metric.key]} icon={metric.icon} label={t(metric.labelKey)} />
+          return <MetricCard key={metric.key} target={stats[metric.key]} icon={metric.icon} label={t(metric.labelKey)} href={metric.href} />
         })}
       </div>
     </section>
   )
 }
 
-function MetricCard({ target, icon: Icon, label }: { target: number; icon: typeof BookOpen; label: string }) {
+function MetricCard({ target, icon: Icon, label, href }: { target: number; icon: typeof BookOpen; label: string; href: string }) {
   const { value, ref } = useCountUp(target)
 
   return (
-    <div ref={ref} className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border border-brand-border">
-      <Icon size={24} style={{ color: BRAND.accent }} strokeWidth={1.5} />
-      <span className="font-serif text-5xl font-bold tracking-tight" style={{ color: BRAND.text }}>
-        {value.toLocaleString()}
-      </span>
-      <span className="text-xs font-semibold text-brand-muted uppercase tracking-wider">
-        {label}
-      </span>
+    <div ref={ref}>
+      <Link href={href} className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer h-full">
+        <Icon size={24} style={{ color: BRAND.accent }} strokeWidth={1.5} />
+        <span className="font-serif text-5xl font-bold tracking-tight" style={{ color: BRAND.text }}>
+          {value.toLocaleString()}
+        </span>
+        <span className="text-xs font-semibold text-brand-muted uppercase tracking-wider">
+          {label}
+        </span>
+      </Link>
     </div>
   )
 }
