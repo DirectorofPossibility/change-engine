@@ -60,8 +60,8 @@ Deno.serve(async (req: Request) => {
     if (!force) {
       q += '&classification_v2=is.null';
     }
-    if (body.start_from) q += `&${cfg.pk}=gte.${body.start_from}`;
-    if (body.ids) q += `&${cfg.pk}=in.(${body.ids.join(',')})`;
+    if (body.start_from) q += `&${cfg.pk}=gte.${encodeURIComponent(body.start_from)}`;
+    if (body.ids && Array.isArray(body.ids)) q += `&${cfg.pk}=in.(${body.ids.map((id: string) => encodeURIComponent(id)).join(',')})`;
 
     const items = await db(q);
     if (!items || !items.length) {

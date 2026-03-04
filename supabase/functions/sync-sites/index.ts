@@ -444,8 +444,13 @@ Deno.serve(async (req: Request) => {
     let taxonomy: any = null;
     let siteSystemPrompt = '';
     if (classifyWithAi && rawSites.length > 0) {
-      taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
-      siteSystemPrompt = buildPromptForEntity(taxonomy, 'service');
+      try {
+        taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
+        siteSystemPrompt = buildPromptForEntity(taxonomy, 'service');
+      } catch (taxErr) {
+        console.error('Failed to load taxonomy for classification:', (taxErr as Error).message);
+        taxonomy = null;
+      }
     }
 
     const results: any[] = [];
@@ -485,7 +490,7 @@ Deno.serve(async (req: Request) => {
         longitude: raw.longitude || null,
         phone: raw.phone || null,
         hours_of_operation: typeof raw.hours_of_operation === 'string'
-          ? JSON.parse(raw.hours_of_operation)
+          ? (() => { try { return JSON.parse(raw.hours_of_operation); } catch { return { raw: raw.hours_of_operation }; } })()
           : raw.hours_of_operation,
         requirements: raw.requirements || null,
         languages: raw.languages || ['en'],

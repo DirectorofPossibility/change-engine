@@ -93,6 +93,9 @@ async function pollAllFeeds(): Promise<{ feeds_polled: number; new_items: number
             existingUrls.add(item.link);
             classified++;
             newItems++;
+          } else {
+            const errText = await classifyRes.text().catch(() => '');
+            errors.push(`${feed.feed_name}/${item.link}: classify HTTP ${classifyRes.status} ${errText.substring(0, 100)}`);
           }
         } catch (e) {
           errors.push(`${feed.feed_name}/${item.link}: ${(e as Error).message}`);

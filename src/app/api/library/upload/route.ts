@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-const MAX_FILE_SIZE = 25 * 1024 * 1024 // 25MB
+const MAX_FILE_SIZE = 35 * 1024 * 1024 // 35MB
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     // Validate file size
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: 'File size exceeds 25MB limit' }, { status: 400 })
+      return NextResponse.json({ error: 'File size exceeds 35MB limit' }, { status: 400 })
     }
 
     // Generate storage path
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
 
     // Create document record
     const { data: doc, error: insertError } = await supabase
-      .from('kb_documents' as any)
+      .from('kb_documents')
       .insert({
         title: title || file.name.replace(/\.pdf$/i, ''),
         file_path: storagePath,
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      document_id: (doc as any).id,
+      document_id: doc?.id,
       message: 'Document uploaded and pending review',
     })
   } catch (err) {

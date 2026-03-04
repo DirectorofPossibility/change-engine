@@ -156,7 +156,13 @@ async function translateText(
   });
   const data = await res.json();
   const text = data.content?.[0]?.text || '{}';
-  return JSON.parse(text);
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Strip markdown fences if present
+    const cleaned = text.replace(/```(?:json)?\s*/g, '').replace(/```\s*$/g, '').trim();
+    return JSON.parse(cleaned);
+  }
 }
 
 async function supabaseGet(path: string, params: string) {

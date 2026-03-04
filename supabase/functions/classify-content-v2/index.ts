@@ -167,6 +167,13 @@ Return JSON only. No markdown fences.`;
         content_type: enriched.content_type || null,
       }),
     });
+    if (!inboxRes.ok) {
+      const errText = await inboxRes.text();
+      console.error(`content_inbox POST failed: ${inboxRes.status} ${errText}`);
+      return new Response(JSON.stringify({ error: 'Failed to create inbox entry', detail: errText }), {
+        status: 500, headers: { ...CORS, 'Content-Type': 'application/json' },
+      });
+    }
     const inboxData = await inboxRes.json();
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
 

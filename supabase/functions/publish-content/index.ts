@@ -30,15 +30,21 @@ async function supabasePost(table: string, body: Record<string, unknown>) {
 }
 
 async function supabasePatch(table: string, params: string, body: Record<string, unknown>) {
-  return fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_KEY,
       'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Prefer': 'return=representation',
     },
     body: JSON.stringify(body),
   });
+  if (!res.ok) {
+    const err = await res.text();
+    console.error(`PATCH ${table} failed: ${res.status} ${err}`);
+  }
+  return res;
 }
 
 Deno.serve(async (req: Request) => {
