@@ -30,7 +30,11 @@ export function FidelityClient({ overview }: Props) {
   async function handleScore() {
     setScoring(true)
     try {
-      await scoreAllEntities()
+      const result = await scoreAllEntities()
+      if (!result.ok) {
+        alert('Scoring failed: ' + result.error)
+        return
+      }
       window.location.reload()
     } catch (err) {
       alert('Scoring failed: ' + (err as Error).message)

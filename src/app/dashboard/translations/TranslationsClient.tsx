@@ -45,7 +45,10 @@ export function TranslationsClient({
   async function handleTranslateAll() {
     setTranslating(true)
     try {
-      await translateAll()
+      const result = await translateAll()
+      if (!result.ok) {
+        console.warn('Translation issue:', result.error)
+      }
     } catch {
       // Edge function may timeout on large batches — that's ok
     }

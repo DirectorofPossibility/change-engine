@@ -89,6 +89,133 @@ const CENTER_META = [
   { key: 'Responsible', color: '#8B6BA8', q: 'Who makes decisions?' },
 ]
 
+// ── Info Pane types ──
+type NodeInfo =
+  | { type: 'pathway'; idx: number }
+  | { type: 'center'; key: string; count: number; question: string; color: string; pathwayName: string }
+  | { type: 'bridge'; idx: number; shared: number }
+  | { type: 'topic'; name: string; pathwayName: string; pathwayColor: string }
+  | { type: 'sdoh'; name: string; pct: number; pathwayName: string; pathwayColor: string }
+  | { type: 'sdg'; id: number; name: string; n: number; pathwayColor: string }
+
+// ── Bottom Sheet Info Pane ──
+function InfoPane({ info, onClose }: { info: NodeInfo; onClose: () => void }) {
+  let title = ''
+  let subtitle = ''
+  let color = C.orange
+  let details: { label: string; value: string }[] = []
+
+  switch (info.type) {
+    case 'pathway': {
+      const pw = PW[info.idx]
+      title = pw.name
+      subtitle = pw.sub
+      color = pw.color
+      details = [
+        { label: 'Resources', value: String(pw.count) },
+        { label: 'Focus Areas', value: String(pw.focus) },
+        { label: 'Topics', value: pw.topics.join(', ') },
+        { label: 'Bridges to', value: pw.bridgeTo.map(i => PW[i].name).join(', ') },
+      ]
+      break
+    }
+    case 'center':
+      title = info.key
+      subtitle = info.question
+      color = info.color
+      details = [
+        { label: 'Count', value: String(info.count) },
+        { label: 'Pathway', value: info.pathwayName },
+      ]
+      break
+    case 'bridge': {
+      const bpw = PW[info.idx]
+      title = bpw.name
+      subtitle = bpw.sub
+      color = bpw.color
+      details = [
+        { label: 'Shared Focus Areas', value: String(info.shared) },
+        { label: 'Resources', value: String(bpw.count) },
+        { label: 'Topics', value: bpw.topics.join(', ') },
+      ]
+      break
+    }
+    case 'topic':
+      title = info.name
+      subtitle = `Topic within ${info.pathwayName}`
+      color = info.pathwayColor
+      break
+    case 'sdoh':
+      title = info.name
+      subtitle = 'Social Determinant of Health'
+      color = info.pathwayColor
+      details = [
+        { label: 'Relevance', value: `${info.pct}% of ${info.pathwayName}` },
+      ]
+      break
+    case 'sdg':
+      title = `${info.id}. ${info.name}`
+      subtitle = 'UN Sustainable Development Goal'
+      color = info.pathwayColor
+      details = [
+        { label: 'Connected Resources', value: String(info.n) },
+      ]
+      break
+  }
+
+  return (
+    <div style={{
+      position: 'relative',
+      background: C.white, borderTop: `3px solid ${color}`,
+      borderRadius: '12px 12px 0 0', padding: '16px 20px 20px',
+      boxShadow: '0 -4px 24px rgba(0,0,0,.08)',
+      animation: 'sheetUp .3s cubic-bezier(.22,1,.36,1) both',
+      fontFamily: "'DM Sans',sans-serif",
+    }}>
+      {/* Drag handle */}
+      <div style={{
+        width: 32, height: 3, borderRadius: 2, background: C.bdr,
+        margin: '0 auto 12px', opacity: .6,
+      }} />
+      {/* Close button */}
+      <button onClick={onClose} style={{
+        position: 'absolute', top: 12, right: 16,
+        width: 28, height: 28, borderRadius: '50%',
+        border: `1px solid ${C.bdr}`, background: C.cream,
+        fontSize: 14, color: C.mid, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>&times;</button>
+      {/* Title */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: color, opacity: .7 }} />
+        <span style={{
+          fontFamily: 'Georgia,serif', fontSize: 18, fontWeight: 700, color: C.charcoal,
+        }}>{title}</span>
+      </div>
+      {subtitle && (
+        <div style={{
+          fontFamily: 'Georgia,serif', fontStyle: 'italic', fontSize: 12,
+          color: C.mid, marginBottom: details.length ? 12 : 0, paddingLeft: 18,
+        }}>{subtitle}</div>
+      )}
+      {/* Details grid */}
+      {details.length > 0 && (
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '6px 16px',
+          paddingLeft: 18,
+        }}>
+          {details.map(d => (
+            <div key={d.label} style={{ display: 'contents' }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: C.lt, textTransform: 'uppercase', letterSpacing: '.08em' }}>{d.label}</span>
+              <span style={{ fontSize: 12, color: C.txt }}>{d.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Circle Geometry ──
 const VBW = 700, VBH = 520
 const CX = VBW / 2, CY = 250
@@ -284,11 +411,12 @@ const HomeCircles = memo(function HomeCirclesInner({ onSelect, hov, setHov, read
 // ═══════════════════════════════════════
 // SELECTED PATHWAY — Knowledge Graph Reconfiguration
 // ═══════════════════════════════════════
-const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onSwitch, ready }: {
+const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onSwitch, ready, onNodeClick }: {
   selIdx: number
   onBack: () => void
   onSwitch: (i: number) => void
   ready: boolean
+  onNodeClick?: (info: NodeInfo) => void
 }) {
   const [hov, setHov] = useState<string | null>(null)
   const pw = PW[selIdx]
@@ -382,6 +510,7 @@ const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onS
         return (
           <g key={`c${i}`}
             style={{ cursor: 'pointer', animation: `popIn .4s cubic-bezier(.22,1,.36,1) ${.15 + i * .08}s both` }}
+            onClick={() => onNodeClick?.({ type: 'center', key: n.key, count: n.count, question: meta?.q || '', color: meta?.color || '#999', pathwayName: pw.name })}
             onMouseEnter={() => setHov(`center-${n.key}`)} onMouseLeave={() => setHov(null)}>
             {isH && <circle cx={n.x} cy={n.y} r={n.r + 10} fill={meta?.color} opacity={.08} />}
             <circle cx={n.x} cy={n.y} r={n.r} fill="none"
@@ -405,10 +534,13 @@ const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onS
       {nodes.filter((n): n is LayoutNode & { type: 'bridge' } => n.type === 'bridge').map((n, i) => {
         const bpw = PW[n.idx]
         const isH = hov === `bridge-${n.idx}`
+        const shared = BRIDGES.find(b =>
+          (b[0] === selIdx && b[1] === n.idx) || (b[1] === selIdx && b[0] === n.idx)
+        )
         return (
           <g key={`br${i}`}
             style={{ cursor: 'pointer', animation: `popIn .4s cubic-bezier(.22,1,.36,1) ${.25 + i * .08}s both` }}
-            onClick={() => onSwitch(n.idx)}
+            onClick={() => onNodeClick?.({ type: 'bridge', idx: n.idx, shared: shared?.[2] || 0 })}
             onMouseEnter={() => setHov(`bridge-${n.idx}`)} onMouseLeave={() => setHov(null)}>
             {isH && <circle cx={n.x} cy={n.y} r={n.r + 8} fill={bpw.color} opacity={.1} />}
             <circle cx={n.x} cy={n.y} r={n.r} fill="none"
@@ -433,7 +565,8 @@ const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onS
         const isH = hov === `topic-${n.name}`
         return (
           <g key={`t${i}`}
-            style={{ animation: `popIn .35s cubic-bezier(.22,1,.36,1) ${.3 + i * .06}s both` }}
+            style={{ cursor: 'pointer', animation: `popIn .35s cubic-bezier(.22,1,.36,1) ${.3 + i * .06}s both` }}
+            onClick={() => onNodeClick?.({ type: 'topic', name: n.name, pathwayName: pw.name, pathwayColor: pw.color })}
             onMouseEnter={() => setHov(`topic-${n.name}`)} onMouseLeave={() => setHov(null)}>
             <circle cx={n.x} cy={n.y} r={n.r} fill={pw.color}
               opacity={isH ? .15 : .06} style={{ transition: 'opacity .2s' }} />
@@ -456,7 +589,8 @@ const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onS
         Social Determinants
       </text>
       {nodes.filter((n): n is LayoutNode & { type: 'sdoh' } => n.type === 'sdoh').map((n, i) => (
-        <g key={`sd${i}`} style={{ animation: `popIn .35s ease ${.45 + i * .08}s both` }}>
+        <g key={`sd${i}`} style={{ cursor: 'pointer', animation: `popIn .35s ease ${.45 + i * .08}s both` }}
+          onClick={() => onNodeClick?.({ type: 'sdoh', name: n.name, pct: n.pct, pathwayName: pw.name, pathwayColor: pw.color })}>
           <circle cx={n.x} cy={n.y} r={n.r} fill={pw.color} opacity={.12} />
           <circle cx={n.x} cy={n.y} r={n.r} fill="none" stroke={pw.color}
             strokeWidth={1} opacity={.4} />
@@ -483,7 +617,8 @@ const SelectedCircles = memo(function SelectedCirclesInner({ selIdx, onBack, onS
         const isH = hov === `sdg-${n.id}`
         return (
           <g key={`sg${i}`}
-            style={{ animation: `popIn .35s ease ${.4 + i * .08}s both` }}
+            style={{ cursor: 'pointer', animation: `popIn .35s ease ${.4 + i * .08}s both` }}
+            onClick={() => onNodeClick?.({ type: 'sdg', id: n.id, name: n.name, n: n.n, pathwayColor: pw.color })}
             onMouseEnter={() => setHov(`sdg-${n.id}`)} onMouseLeave={() => setHov(null)}>
             <circle cx={n.x} cy={n.y} r={n.r} fill={pw.color} opacity={isH ? .18 : .08} />
             <circle cx={n.x} cy={n.y} r={n.r} fill="none"
@@ -542,6 +677,7 @@ const CIRCLE_ANIM_STYLES = `
   @keyframes scaleIn { from { opacity: 0; transform: scale(.85) } to { opacity: 1; transform: scale(1) } }
   @keyframes popIn { from { opacity: 0; transform: scale(.7) } to { opacity: 1; transform: scale(1) } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+  @keyframes sheetUp { from { opacity: 0; transform: translateY(100%) } to { opacity: 1; transform: translateY(0) } }
 `
 
 // ═══════════════════════════════════════
@@ -561,6 +697,7 @@ export function EmbeddableCircles({
   const [ready, setReady] = useState(false)
   const [sel, setSel] = useState<number | null>(null)
   const [hov, setHov] = useState<number | null>(null)
+  const [nodeInfo, setNodeInfo] = useState<NodeInfo | null>(null)
 
   useEffect(() => { setTimeout(() => setReady(true), 80) }, [])
 
@@ -576,6 +713,7 @@ export function EmbeddableCircles({
 
   const handleSelect = useCallback((idx: number) => {
     setSel(idx)
+    setNodeInfo(null)
     if (onSelectPathway) {
       onSelectPathway(IDX_TO_THEME[idx])
     }
@@ -583,6 +721,7 @@ export function EmbeddableCircles({
 
   const handleBack = useCallback(() => {
     setSel(null)
+    setNodeInfo(null)
     if (onSelectPathway) {
       onSelectPathway('')
     }
@@ -621,6 +760,7 @@ export function EmbeddableCircles({
               onBack={handleBack}
               onSwitch={handleSelect}
               ready={ready}
+              onNodeClick={(info) => setNodeInfo(info)}
             />
           )}
         </div>
@@ -634,6 +774,9 @@ export function EmbeddableCircles({
           }}>Reset zoom</button>
         )}
       </div>
+
+      {/* Bottom sheet info pane */}
+      {nodeInfo && <InfoPane info={nodeInfo} onClose={() => setNodeInfo(null)} />}
 
       {/* Bottom legend (selected state) */}
       {!isHome && sel !== null && (
@@ -687,6 +830,7 @@ export default function CircleKnowledgeGraph() {
   const [ready, setReady] = useState(false)
   const [sel, setSel] = useState<number | null>(null)
   const [hov, setHov] = useState<number | null>(null)
+  const [nodeInfo, setNodeInfo] = useState<NodeInfo | null>(null)
   const pz = usePanZoom({ minZoom: 0.5, maxZoom: 4 })
 
   useEffect(() => { setTimeout(() => setReady(true), 80) }, [])
@@ -778,6 +922,7 @@ export default function CircleKnowledgeGraph() {
                 onBack={() => setSel(null)}
                 onSwitch={(i) => setSel(i)}
                 ready={ready}
+                onNodeClick={(info) => setNodeInfo(info)}
               />
             )}
           </div>
@@ -790,6 +935,9 @@ export default function CircleKnowledgeGraph() {
             }}>Reset zoom</button>
           )}
         </div>
+
+        {/* Bottom sheet info pane */}
+        {nodeInfo && <InfoPane info={nodeInfo} onClose={() => setNodeInfo(null)} />}
 
         {/* ── Bottom legend (selected state) ── */}
         {!isHome && sel !== null && (
