@@ -66,6 +66,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(meLoginUrl)
   }
 
+  // Protect library routes (require login)
+  if (request.nextUrl.pathname.startsWith('/library') && !user) {
+    const libraryLoginUrl = request.nextUrl.clone()
+    libraryLoginUrl.pathname = '/login'
+    libraryLoginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+    return NextResponse.redirect(libraryLoginUrl)
+  }
+
   return supabaseResponse
 }
 
@@ -76,5 +84,5 @@ export async function middleware(request: NextRequest) {
  * these patterns will invoke the {@link middleware} function.
  */
 export const config = {
-  matcher: ['/dashboard/:path*', '/me/:path*'],
+  matcher: ['/dashboard/:path*', '/me/:path*', '/library/:path*'],
 }
