@@ -8,6 +8,7 @@ interface RelatedItem {
   center: string | null
   source_url: string
   published_at: string | null
+  image_url?: string | null
 }
 
 interface RelatedContentProps {
@@ -33,6 +34,7 @@ export function RelatedContent({ title, items }: RelatedContentProps) {
               center={item.center}
               sourceUrl={item.source_url}
               publishedAt={item.published_at}
+              imageUrl={item.image_url ?? null}
             />
           )
         })}

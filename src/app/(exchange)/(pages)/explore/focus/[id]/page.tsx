@@ -136,6 +136,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
                       center={c.center}
                       sourceUrl={c.source_url}
                       publishedAt={c.published_at}
+                      imageUrl={c.image_url ?? null}
                       translatedTitle={t?.title}
                       translatedSummary={t?.summary}
                     />

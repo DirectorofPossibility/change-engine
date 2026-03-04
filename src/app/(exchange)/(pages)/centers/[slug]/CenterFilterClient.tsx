@@ -62,6 +62,7 @@ export function CenterFilterClient({ items, pathwayCounts, translations = {} }: 
               center={item.center}
               sourceUrl={item.source_url}
               publishedAt={item.published_at}
+              imageUrl={item.image_url ?? null}
               translatedTitle={t?.title}
               translatedSummary={t?.summary}
             />

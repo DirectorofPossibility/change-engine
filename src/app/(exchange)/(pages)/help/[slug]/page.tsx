@@ -115,6 +115,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
                   center={item.center}
                   sourceUrl={item.source_url}
                   publishedAt={item.published_at}
+                  imageUrl={item.image_url ?? null}
                   translatedTitle={ct?.title}
                   translatedSummary={ct?.summary}
                 />

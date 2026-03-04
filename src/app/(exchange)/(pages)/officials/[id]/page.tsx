@@ -129,7 +129,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   }
 
   // Related content via focus areas
-  let related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null }> = []
+  let related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null; image_url: string | null }> = []
   if (focusAreaIds.length > 0) {
     const { data: contentJunctions } = await supabase
       .from('content_focus_areas')
@@ -139,7 +139,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     if (contentIds.length > 0) {
       const { data: contentData } = await supabase
         .from('content_published')
-        .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at')
+        .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, image_url')
         .eq('is_active', true)
         .in('id', contentIds)
         .limit(4)

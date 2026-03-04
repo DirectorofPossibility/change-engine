@@ -194,7 +194,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   // Related content: use focus area overlap for better semantic matching
   const relatedQuery = supabase
     .from('content_published')
-    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, focus_area_ids')
+    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, focus_area_ids, image_url')
     .eq('is_active', true)
     .neq('id', item.id)
     .limit(20)
