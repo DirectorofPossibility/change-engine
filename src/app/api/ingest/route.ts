@@ -80,16 +80,24 @@ async function supaUpsert(table: string, body: Record<string, unknown>, conflict
 
 async function supaJunctionInsert(table: string, rows: Record<string, unknown>[]) {
   if (!rows.length) return
-  await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'resolution=ignore-duplicates,return=minimal',
-    },
-    body: JSON.stringify(rows),
-  }).catch(() => {})
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=ignore-duplicates,return=minimal',
+      },
+      body: JSON.stringify(rows),
+    })
+    if (!res.ok) {
+      const errText = await res.text()
+      console.error(`Junction insert ${table} failed: ${res.status} ${errText}`)
+    }
+  } catch (e) {
+    console.error(`Junction insert ${table} error:`, (e as Error).message)
+  }
 }
 
 /**
