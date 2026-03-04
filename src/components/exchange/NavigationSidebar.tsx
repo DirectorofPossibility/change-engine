@@ -58,6 +58,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [zipInput, setZipInput] = useState('')
   const [discoverOpen, setDiscoverOpen] = useState(true)
+  const [pathwaysOpen, setPathwaysOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
 
@@ -196,41 +197,6 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
 
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* 7 Pathways — as links */}
-      <div className="px-5">
-        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
-          {t('sidebar.explore_houston')}
-        </p>
-        <div className="space-y-0.5">
-          {themeEntries.map(function ([id, theme]) {
-            const isActive = activePathway === id
-            const Icon = PATHWAY_ICONS[id] || Globe
-            return (
-              <Link
-                key={id}
-                href={'/pathways/' + theme.slug}
-                onClick={closeMobile}
-                className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
-                  (isActive
-                    ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
-                    : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
-              >
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200"
-                  style={{
-                    backgroundColor: isActive ? theme.color + '20' : theme.color + '0C',
-                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                  }}
-                >
-                  <Icon size={16} style={{ color: theme.color }} />
-                </div>
-                <span className="flex-1 text-left truncate">{theme.name}</span>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-
       {/* Elections */}
       <div className="px-4 py-1">
         <Link
@@ -246,9 +212,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         </Link>
       </div>
 
-      <div className="h-px bg-brand-border mx-5 my-2" />
-
-      {/* Discover */}
+      {/* Discover (Your Guide) */}
       <div className="px-5">
         <button
           onClick={function () { setDiscoverOpen(!discoverOpen) }}
@@ -273,6 +237,49 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon size={15} style={{ color: BRAND.accent }} />
                   {t(item.label)}
+                </Link>
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="h-px bg-brand-border mx-5 my-2" />
+
+      {/* Explore Houston — 7 Pathways (collapsible) */}
+      <div className="px-5">
+        <button
+          onClick={function () { setPathwaysOpen(!pathwaysOpen) }}
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+        >
+          {pathwaysOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+          {t('sidebar.explore_houston')}
+        </button>
+        {pathwaysOpen && (
+          <div className="space-y-0.5">
+            {themeEntries.map(function ([id, theme]) {
+              const isActive = activePathway === id
+              const Icon = PATHWAY_ICONS[id] || Globe
+              return (
+                <Link
+                  key={id}
+                  href={'/pathways/' + theme.slug}
+                  onClick={closeMobile}
+                  className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
+                    (isActive
+                      ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
+                      : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
+                >
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200"
+                    style={{
+                      backgroundColor: isActive ? theme.color + '20' : theme.color + '0C',
+                      transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                    }}
+                  >
+                    <Icon size={16} style={{ color: theme.color }} />
+                  </div>
+                  <span className="flex-1 text-left truncate">{theme.name}</span>
                 </Link>
               )
             })}

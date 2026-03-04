@@ -15,7 +15,7 @@ import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getFocusAreasByIds, getSDGMap, getSDOHMap, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
-import { FileText } from 'lucide-react'
+import { FileText, Users } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 function resolveThemeSlug(themeId: string | null) {
@@ -191,6 +191,23 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
+  // Resolve related officials via shared focus areas
+  let relatedOfficials: Array<{ official_id: string; official_name: string; title: string | null }> = []
+  if (focusAreaIds.length > 0) {
+    const { data: officialJunctions } = await supabase
+      .from('official_focus_areas')
+      .select('official_id')
+      .in('focus_id', focusAreaIds)
+    const officialIds = Array.from(new Set((officialJunctions ?? []).map(j => j.official_id)))
+    if (officialIds.length > 0) {
+      const { data: officials } = await supabase
+        .from('elected_officials')
+        .select('official_id, official_name, title')
+        .in('official_id', officialIds.slice(0, 3))
+      relatedOfficials = officials ?? []
+    }
+  }
+
   // Related content: use focus area overlap for better semantic matching
   const relatedQuery = supabase
     .from('content_published')
@@ -304,6 +321,45 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
         {/* Sidebar — Wayfinder (collapsible sections) */}
         <div className="space-y-3">
+          {/* At a Glance — always visible */}
+          <div className="bg-white rounded-xl border border-brand-border p-4">
+            <h3 className="text-sm font-semibold text-brand-muted mb-3">At a Glance</h3>
+            <div className="space-y-2.5">
+              {item.source_domain && (
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-brand-muted">Source</span>
+                  <span className="font-medium text-brand-text">{item.source_domain}</span>
+                </div>
+              )}
+              {item.published_at && (
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-brand-muted">Published</span>
+                  <span className="font-medium text-brand-text">{new Date(item.published_at).toLocaleDateString()}</span>
+                </div>
+              )}
+              {item.confidence != null && (
+                <div>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-brand-muted">Confidence</span>
+                    <span className="font-medium text-brand-text">{Math.round(item.confidence * 100)}%</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-brand-bg rounded-full overflow-hidden">
+                    <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: Math.round(item.confidence * 100) + '%' }} />
+                  </div>
+                </div>
+              )}
+              {(() => {
+                const actions = [item.action_donate, item.action_volunteer, item.action_signup, item.action_register, item.action_apply, item.action_call, item.action_attend].filter(Boolean)
+                return actions.length > 0 ? (
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-muted">Actions available</span>
+                    <span className="font-medium text-brand-text">{actions.length}</span>
+                  </div>
+                ) : null
+              })()}
+            </div>
+          </div>
+
           {/* Pathway — open by default */}
           {themeSlug && (
             <details open className="bg-white rounded-xl border border-brand-border group">
@@ -393,9 +449,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             </details>
           )}
 
-          {/* Who This Is For — collapsed by default, shows human-readable names */}
+          {/* Who This Is For — open by default */}
           {segmentIds.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
+            <details open className="bg-white rounded-xl border border-brand-border group">
               <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
                 Who This Is For
                 <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -411,9 +467,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             </details>
           )}
 
-          {/* Topics — collapsed by default */}
+          {/* Topics — open by default */}
           {keywords.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
+            <details open className="bg-white rounded-xl border border-brand-border group">
               <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
                 Topics
                 <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -482,9 +538,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             </details>
           )}
 
-          {/* Life Situations — collapsed by default */}
+          {/* Life Situations — open by default */}
           {lifeSituationLinks.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
+            <details open className="bg-white rounded-xl border border-brand-border group">
               <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
                 Life Situations
                 <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -559,6 +615,44 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </div>
             </details>
           )}
+
+          {/* Related Officials — collapsed by default */}
+          {relatedOfficials.length > 0 && (
+            <details className="bg-white rounded-xl border border-brand-border group">
+              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                Related Officials
+                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </summary>
+              <div className="px-4 pb-4">
+                <div className="space-y-3">
+                  {relatedOfficials.map(function (o) {
+                    return (
+                      <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-3 group/official">
+                        <div className="w-9 h-9 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
+                          <Users size={14} className="text-brand-muted" />
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-sm font-medium text-brand-accent group-hover/official:underline block truncate">{o.official_name}</span>
+                          {o.title && <span className="text-xs text-brand-muted block truncate">{o.title}</span>}
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </details>
+          )}
+
+          {/* Suggest an Edit */}
+          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+            <Link
+              href={'/dashboard/submit?ref=' + encodeURIComponent(id)}
+              className="text-sm text-brand-accent hover:underline font-medium"
+            >
+              Suggest an edit to this content
+            </Link>
+            <p className="text-xs text-brand-muted mt-1">Help us keep information accurate and up to date</p>
+          </div>
         </div>
       </div>
 
