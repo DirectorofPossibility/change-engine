@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useCallback, useMemo } from 'react'
+import { HomeTopBar } from './HomeTopBar'
 import { Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
-import { WayfinderSidebar } from './WayfinderSidebar'
+
 import { EmbeddableCircles } from './CircleKnowledgeGraph'
 import { BraidedFeed } from './BraidedFeed'
 import { WayfinderPanel } from './WayfinderPanel'
@@ -149,7 +150,7 @@ export function Wayfinder({
   stats,
   pathwayCounts,
   bridges,
-  topics,
+  topics: _topics,
   feedsByPathway,
   totalItems,
   newThisWeek,
@@ -188,13 +189,6 @@ export function Wayfinder({
     return feedDataToItems(feedsByPathway[selectedPathway], selectedPathway)
   }, [selectedPathway, feedsByPathway, latestContent])
 
-  const currentTopics = useMemo(function () {
-    if (!selectedPathway || !feedsByPathway[selectedPathway]) return topics
-    return feedsByPathway[selectedPathway].focusAreas.map(function (fa) {
-      return fa.focus_area_name
-    })
-  }, [selectedPathway, feedsByPathway, topics])
-
   const handleSelectPathway = useCallback(function (id: string | null) {
     setSelectedPathway(id === '' ? null : id)
     setActiveCenter(null)
@@ -225,18 +219,11 @@ export function Wayfinder({
   }, [])
 
   return (
-    <div className="flex min-h-screen">
-      <WayfinderSidebar
-        selectedPathway={selectedPathway}
-        onSelectPathway={handleSelectPathway}
-        totalItems={totalItems}
-        newThisWeek={newThisWeek}
-        pathwayCounts={pathwayCounts}
-        topics={currentTopics}
-      />
+    <div className="min-h-screen bg-brand-bg">
+      <HomeTopBar />
 
-      <main className="flex-1 min-w-0 overflow-y-auto bg-brand-bg">
-        <div className="max-w-5xl mx-auto px-4 sm:px-8 pb-20">
+      <main className="bg-brand-bg">
+        <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-20">
           {/* HOME STATE */}
           {!selectedPathway && (
             <>

@@ -37,7 +37,7 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
         {t('home.centers_subtitle')}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {Object.entries(CENTERS).map(function ([name, center]) {
           const count = centerCounts[name] ?? 0
           const imgSrc = CENTER_IMAGES[name]
@@ -46,18 +46,18 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
             <Link
               key={name}
               href={'/centers/' + center.slug}
-              className="group flex flex-col items-center text-center gap-3 p-5 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              className="group flex flex-col items-center text-center gap-4 p-7 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
               {imgSrc && (
                 <Image
                   src={imgSrc}
                   alt={name}
-                  width={64}
-                  height={64}
+                  width={80}
+                  height={80}
                   className="transition-transform group-hover:scale-110"
                 />
               )}
-              <h3 className="font-serif text-lg font-bold text-brand-text">{t(CENTER_I18N[name])}</h3>
+              <h3 className="font-serif text-xl font-bold text-brand-text">{t(CENTER_I18N[name])}</h3>
               <p className="text-sm text-brand-muted italic font-serif">{center.question}</p>
               <div className="flex items-center gap-1.5 mt-auto">
                 <span className="text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: BRAND.accent }}>
