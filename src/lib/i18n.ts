@@ -92,6 +92,20 @@ const en: Record<string, string> = {
   'officials.title': 'Elected Officials',
   'officials.subtitle': 'Find and contact your elected representatives at every level of government.',
 
+  // Lookup page
+  'lookup.address_or_zip': 'Enter your address or ZIP code',
+  'lookup.showing_results': 'Showing results for',
+  'lookup.essential_services': 'Essential Services',
+  'lookup.emergency': 'Emergency',
+  'lookup.police': 'Police & Law Enforcement',
+  'lookup.fire': 'Fire & EMS',
+  'lookup.medical': 'Medical & Health',
+  'lookup.parks': 'Parks & Recreation',
+  'lookup.library': 'Libraries',
+  'lookup.utilities': 'Utilities',
+  'lookup.your_representatives': 'Your Representatives',
+  'lookup.call': 'Call',
+
   // Elections page
   'elections.title': 'Elections & Voting',
   'elections.subtitle': "Know what's on your ballot and where to vote.",
@@ -481,6 +495,20 @@ const es: Record<string, string> = {
   'officials.title': 'Funcionarios Electos',
   'officials.subtitle': 'Encuentre y contacte a sus representantes electos en todos los niveles de gobierno.',
 
+  // Lookup page
+  'lookup.address_or_zip': 'Ingrese su dirección o código postal',
+  'lookup.showing_results': 'Mostrando resultados para',
+  'lookup.essential_services': 'Servicios Esenciales',
+  'lookup.emergency': 'Emergencia',
+  'lookup.police': 'Policía y Orden Público',
+  'lookup.fire': 'Bomberos y Servicios de Emergencia',
+  'lookup.medical': 'Salud y Servicios Médicos',
+  'lookup.parks': 'Parques y Recreación',
+  'lookup.library': 'Bibliotecas',
+  'lookup.utilities': 'Servicios Públicos',
+  'lookup.your_representatives': 'Sus Representantes',
+  'lookup.call': 'Llamar',
+
   // Elections page
   'elections.title': 'Elecciones y Votación',
   'elections.subtitle': 'Conozca qué hay en su boleta y dónde votar.',
@@ -869,6 +897,20 @@ const vi: Record<string, string> = {
   // Officials page
   'officials.title': 'Quan Chức Dân Cử',
   'officials.subtitle': 'Tìm và liên hệ đại diện dân cử của bạn ở mọi cấp chính quyền.',
+
+  // Lookup page
+  'lookup.address_or_zip': 'Nhập địa chỉ hoặc mã bưu điện của bạn',
+  'lookup.showing_results': 'Hiển thị kết quả cho',
+  'lookup.essential_services': 'Dịch Vụ Thiết Yếu',
+  'lookup.emergency': 'Khẩn Cấp',
+  'lookup.police': 'Cảnh Sát và Thực Thi Pháp Luật',
+  'lookup.fire': 'Cứu Hỏa và Cấp Cứu',
+  'lookup.medical': 'Y Tế và Sức Khỏe',
+  'lookup.parks': 'Công Viên và Giải Trí',
+  'lookup.library': 'Thư Viện',
+  'lookup.utilities': 'Tiện Ích Công Cộng',
+  'lookup.your_representatives': 'Đại Diện Của Bạn',
+  'lookup.call': 'Gọi',
 
   // Elections page
   'elections.title': 'Bầu Cử & Bỏ Phiếu',

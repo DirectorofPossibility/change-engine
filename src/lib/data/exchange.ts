@@ -50,6 +50,7 @@ import type { Database } from '@/lib/supabase/database.types'
 import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood } from '@/lib/types/exchange'
 
 type ContentRow = Database['public']['Tables']['content_published']['Row']
+type MunicipalServiceRow = Database['public']['Tables']['municipal_services']['Row']
 
 /**
  * Read language preference from cookie and return the LANG-XX id.
@@ -1779,5 +1780,54 @@ export async function getFocusAreaDrillDown(focusId: string) {
     services: services || [],
     guides: guides || [],
     opportunities: opportunities || [],
+  }
+}
+
+// ── Municipal Services ──
+
+export interface MunicipalServicesResult {
+  emergency: MunicipalServiceRow[]
+  police: MunicipalServiceRow[]
+  fire: MunicipalServiceRow[]
+  medical: MunicipalServiceRow[]
+  parks: MunicipalServiceRow[]
+  library: MunicipalServiceRow[]
+  utilities: MunicipalServiceRow[]
+}
+
+export async function getMunicipalServices(zip: string): Promise<MunicipalServicesResult> {
+  const supabase = await createClient()
+
+  // Get zip_code row for county_id and city
+  const { data: zipData } = await supabase
+    .from('zip_codes')
+    .select('county_id, city')
+    .eq('zip_code', parseInt(zip))
+    .single()
+
+  const countyId = zipData?.county_id ?? null
+  const city = zipData?.city ?? 'Houston'
+
+  // Build OR filter: match county, city, or citywide coverage
+  const filters: string[] = ['coverage_area.eq.citywide']
+  if (countyId) filters.push('county_id.eq.' + countyId)
+  if (city) filters.push('city.eq.' + city)
+
+  const { data: services } = await supabase
+    .from('municipal_services')
+    .select('*')
+    .or(filters.join(','))
+    .order('display_order')
+
+  const all = services || []
+
+  return {
+    emergency: all.filter(s => s.service_type === 'emergency'),
+    police: all.filter(s => s.service_type === 'police'),
+    fire: all.filter(s => s.service_type === 'fire'),
+    medical: all.filter(s => s.service_type === 'medical'),
+    parks: all.filter(s => s.service_type === 'parks'),
+    library: all.filter(s => s.service_type === 'library'),
+    utilities: all.filter(s => s.service_type === 'utilities'),
   }
 }

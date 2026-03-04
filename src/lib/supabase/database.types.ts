@@ -2147,6 +2147,54 @@ export type Database = {
         }
         Relationships: []
       }
+      municipal_services: {
+        Row: {
+          id: string
+          service_type: string
+          service_name: string
+          phone: string | null
+          address: string | null
+          city: string | null
+          zip_code: string | null
+          county_id: string | null
+          website: string | null
+          hours: string | null
+          coverage_area: string | null
+          is_emergency: boolean
+          display_order: number
+        }
+        Insert: {
+          id?: string
+          service_type: string
+          service_name: string
+          phone?: string | null
+          address?: string | null
+          city?: string | null
+          zip_code?: string | null
+          county_id?: string | null
+          website?: string | null
+          hours?: string | null
+          coverage_area?: string | null
+          is_emergency?: boolean
+          display_order?: number
+        }
+        Update: {
+          id?: string
+          service_type?: string
+          service_name?: string
+          phone?: string | null
+          address?: string | null
+          city?: string | null
+          zip_code?: string | null
+          county_id?: string | null
+          website?: string | null
+          hours?: string | null
+          coverage_area?: string | null
+          is_emergency?: boolean
+          display_order?: number
+        }
+        Relationships: []
+      }
       neighborhoods: {
         Row: {
           city: string | null
