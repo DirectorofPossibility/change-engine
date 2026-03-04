@@ -141,22 +141,25 @@ export async function searchChunks(query: string, limit = 10): Promise<KBChunkSe
 
   if (!chunks || chunks.length === 0) return []
 
+  const typedChunks = chunks as unknown as Array<{ id: string; document_id: string; chunk_index: number; content: string; page_start: number | null; page_end: number | null }>
+
   // Enrich with document titles
-  const docIds = Array.from(new Set(chunks.map(c => c.document_id)))
+  const docIds = Array.from(new Set(typedChunks.map(c => c.document_id)))
   const { data: docs } = await supabase
     .from('kb_documents' as any)
     .select('id, title')
     .in('id', docIds)
     .eq('status', 'published')
 
-  const titleMap = new Map((docs ?? []).map(d => [d.id, d.title]))
+  const typedDocs = (docs ?? []) as unknown as Array<{ id: string; title: string }>
+  const titleMap = new Map(typedDocs.map(d => [d.id, d.title]))
 
-  return chunks
+  return typedChunks
     .filter(c => titleMap.has(c.document_id))
     .map(c => ({
       ...c,
       document_title: titleMap.get(c.document_id),
-    })) as unknown as KBChunkSearchResult[]
+    })) as KBChunkSearchResult[]
 }
 
 // ── Admin queries ──
