@@ -8,8 +8,9 @@ import { useTranslation } from '@/lib/i18n'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { AuthButton } from './AuthButton'
+import { LiveIndicator } from './LiveIndicator'
 
-export function HomeTopBar() {
+export function HomeTopBar({ liveCount }: { liveCount?: number }) {
   const { t } = useTranslation()
   const router = useRouter()
   const { zip, neighborhood, lookupZip, clearZip, isLoading } = useNeighborhood()
@@ -59,6 +60,7 @@ export function HomeTopBar() {
 
         {/* Right: Language + Auth + ZIP */}
         <div className="flex items-center gap-3 shrink-0">
+          {liveCount != null && liveCount > 0 && <LiveIndicator count={liveCount} />}
           <LanguageSwitcher />
           <AuthButton />
 

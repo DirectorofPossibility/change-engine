@@ -38,10 +38,11 @@ const TABLE_CONFIGS: Record<string, {
   },
   policies: {
     idCol: 'policy_id',
-    nameCol: 'policy_name',
-    descCol: 'summary_5th_grade',
+    nameCol: 'title_6th_grade',
+    descCol: 'summary_6th_grade',
     contentType: 'policies',
-    selectCols: 'policy_id,policy_name,summary_5th_grade',
+    selectCols: 'policy_id,title_6th_grade,summary_6th_grade,policy_name',
+    activeFilter: { col: 'is_published', val: 'true' },
   },
   opportunities: {
     idCol: 'opportunity_id',
@@ -194,8 +195,8 @@ Deno.serve(async (req: Request) => {
 
       for (const row of rows) {
         const contentId = row[config.idCol];
-        const titleText = row[config.nameCol] || '';
-        const descText = row[config.descCol] || '';
+        const titleText = row[config.nameCol] || row['policy_name'] || row['org_name'] || '';
+        const descText = row[config.descCol] || row['summary_5th_grade'] || row['description_5th_grade'] || '';
         if (!contentId || !titleText) { skipped++; continue; }
 
         for (const langCode of languages) {

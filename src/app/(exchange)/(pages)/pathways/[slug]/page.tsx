@@ -6,9 +6,10 @@ import { THEMES, CENTERS } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway, getLifeSituations, getLearningPaths,
   getRelatedOpportunities, getRelatedPolicies, getRelatedServices, getRelatedOfficials,
-  getFocusAreas, getFoundationsByPathway,
+  getFocusAreas, getFoundationsByPathway, getBridgesForPathway,
   getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
+import { BridgePills } from '@/components/exchange/BridgePills'
 import { PathwayFilterClient } from './PathwayFilterClient'
 import { PathwayPanelClient } from './PathwayPanelClient'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -88,13 +89,14 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const theme = resolveTheme(slug)
   if (!theme) notFound()
 
-  // Phase 1: fetch content + focus areas
-  const [content, centerCounts, situations, paths, allFocusAreas] = await Promise.all([
+  // Phase 1: fetch content + focus areas + bridges
+  const [content, centerCounts, situations, paths, allFocusAreas, bridgeData] = await Promise.all([
     getPathwayContent(theme.id),
     getCenterContentForPathway(theme.id),
     getLifeSituations(),
     getLearningPaths(),
     getFocusAreas(),
+    getBridgesForPathway(theme.id),
   ])
 
   const themeFocusAreas = allFocusAreas.filter(function (fa) { return fa.theme_id === theme.id })
@@ -157,6 +159,18 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           { label: t('nav.pathways'), href: '/pathways' },
           { label: theme.name }
         ]} />
+
+        {/* ── Bridge connections ── */}
+        {bridgeData.length > 0 && (
+          <div className="pt-4 pb-2">
+            <BridgePills
+              bridges={bridgeData.map(function (b) {
+                return { themeId: b.targetThemeId, name: b.targetName, color: b.targetColor, slug: b.targetSlug, count: b.sharedCount }
+              })}
+              currentColor={theme.color}
+            />
+          </div>
+        )}
 
         {/* ── 4 Centers / Pillars ── */}
         <section className="py-8">

@@ -5,6 +5,7 @@ import {
   Building, Leaf, Vote, Megaphone, Landmark, CircleHelp,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
+import { URGENCY_COLORS } from '@/lib/constants'
 
 const ICON_MAP: Record<string, ComponentType<{ size?: number; className?: string }>> = {
   'alert-triangle': AlertTriangle,
@@ -27,13 +28,6 @@ const ICON_MAP: Record<string, ComponentType<{ size?: number; className?: string
   'megaphone': Megaphone,
   'landmark': Landmark,
   'circle-help': CircleHelp,
-}
-
-const URGENCY_COLORS: Record<string, { bg: string; border: string; text: string; gradientFrom: string; gradientTo: string }> = {
-  Critical: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', gradientFrom: '#e53e3e', gradientTo: '#c53030' },
-  High:     { bg: 'bg-orange-50', border: 'border-orange-300', text: 'text-orange-700', gradientFrom: '#dd6b20', gradientTo: '#c05621' },
-  Medium:   { bg: 'bg-yellow-50', border: 'border-yellow-300', text: 'text-yellow-700', gradientFrom: '#d69e2e', gradientTo: '#b7791f' },
-  Low:      { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-700', gradientFrom: '#38a169', gradientTo: '#2f855a' },
 }
 
 interface LifeSituationCardProps {

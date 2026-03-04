@@ -29,7 +29,7 @@ const DISCOVER_LINKS = [
   { label: 'discover.local_resources', icon: Phone, href: '/services' },
   { label: 'discover.officials', icon: Users, href: '/officials' },
   { label: 'discover.policy', icon: Scale, href: '/policies' },
-  { label: 'discover.neighborhoods', icon: MapPin, href: '/super-neighborhoods' },
+  { label: 'discover.geography', icon: MapPin, href: '/geography' },
   { label: 'discover.foundations', icon: Landmark, href: '/foundations' },
 ]
 

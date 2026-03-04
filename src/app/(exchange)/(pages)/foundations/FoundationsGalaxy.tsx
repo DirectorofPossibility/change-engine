@@ -47,7 +47,7 @@ interface Foundation {
   last_people_sync?: string
   ppl: Person[]; pws: string[]; fas: string[]
 }
-interface Person { foundation_id: string; name: string; role: string; role_type: string }
+interface Person { foundation_id: string; name: string; role: string; role_type: string; linkedin_url?: string; linkedin_status?: string }
 
 /* ── Helpers ── */
 function parseAssets(s?: string): number {
@@ -252,13 +252,21 @@ function FoundationDrawer({ f, onClose, faIdMap }: { f: Foundation; onClose: () 
                 <div style={{ maxHeight: 200, overflowY: "auto" }}>
                   {f.ppl.map((p, i) => {
                     const rs = RS[p.role_type] || RS.executive
+                    const hasLinkedIn = p.linkedin_status === 'verified' && p.linkedin_url
                     return (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 8px", background: rs.c + "06", borderLeft: "2px solid " + rs.c, borderRadius: "0 8px 8px 0", marginBottom: 3 }}>
                         <div style={{ width: 24, height: 24, borderRadius: "50%", background: rs.c + "12", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: rs.c, flexShrink: 0 }}>
                           {p.name.split(" ").map(w => w[0]).slice(0, 2).join("")}
                         </div>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: C.tx }}>{p.name}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            <span style={{ fontSize: 12, fontWeight: 600, color: C.tx }}>{p.name}</span>
+                            {hasLinkedIn && (
+                              <a href={p.linkedin_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} title="LinkedIn Profile" style={{ display: "inline-flex", color: "#0A66C2", flexShrink: 0 }}>
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                              </a>
+                            )}
+                          </div>
                           <div style={{ fontSize: 10, color: C.t3 }}>{p.role}</div>
                         </div>
                         <span style={{ padding: "2px 6px", borderRadius: 6, fontSize: 8, fontWeight: 600, background: rs.c + "08", color: rs.c }}>{rs.l}</span>

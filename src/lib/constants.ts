@@ -36,6 +36,7 @@ export const PAGE_INTROS = {
   explore: 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
   elections: 'Your voting dashboard — see what just happened, what\'s coming up, who represents you, and where to vote. Start with your ZIP code to personalize your experience.',
   availableResources: 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',
+  geography: 'Explore Houston through its neighborhoods, districts, and civic boundaries. Start with a ZIP code or select a super neighborhood to see the services, officials, and organizations that serve your area.',
 } as const;
 
 /**
@@ -169,3 +170,50 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     detailPath: null,
   },
 } as const;
+
+// ── Shared color systems ─────────────────────────────────────────────
+
+/** Government level → hex color. Used by OfficialCard, policy pages, etc. */
+export const LEVEL_COLORS: Record<string, string> = {
+  Federal: '#3182ce',
+  State: '#805ad5',
+  County: '#d69e2e',
+  City: '#38a169',
+  'School District': '#dd6b20',
+}
+
+export const DEFAULT_LEVEL_COLOR = '#8B7E74'
+
+/** Urgency level → Tailwind classes + gradient hex. Used by LifeSituationCard, help page, etc. */
+export const URGENCY_COLORS: Record<string, { bg: string; border: string; text: string; gradientFrom: string; gradientTo: string }> = {
+  Critical: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', gradientFrom: '#e53e3e', gradientTo: '#c53030' },
+  High:     { bg: 'bg-orange-50', border: 'border-orange-300', text: 'text-orange-700', gradientFrom: '#dd6b20', gradientTo: '#c05621' },
+  Medium:   { bg: 'bg-yellow-50', border: 'border-yellow-300', text: 'text-yellow-700', gradientFrom: '#d69e2e', gradientTo: '#b7791f' },
+  Low:      { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-700', gradientFrom: '#38a169', gradientTo: '#2f855a' },
+}
+
+/** Ordered urgency levels for rendering sections. */
+export const URGENCY_LEVELS = ['Critical', 'High', 'Medium', 'Low'] as const
+
+/** Urgency level → i18n key + Tailwind color classes. Used by HelpUrgencyHeader. */
+export const URGENCY_CONFIG: Record<string, { key: string; color: string }> = {
+  Critical: { key: 'help.urgency_critical', color: 'text-red-700 border-red-300 bg-red-50' },
+  High:     { key: 'help.urgency_high', color: 'text-orange-700 border-orange-300 bg-orange-50' },
+  Medium:   { key: 'help.urgency_medium', color: 'text-yellow-700 border-yellow-300 bg-yellow-50' },
+  Low:      { key: 'help.urgency_low', color: 'text-green-700 border-green-300 bg-green-50' },
+}
+
+/** Guide engagement level → Tailwind badge classes. */
+export const ENGAGEMENT_LEVEL_COLORS: Record<string, string> = {
+  'On the Couch': 'bg-green-100 text-green-800',
+  'Off the Couch': 'bg-blue-100 text-blue-800',
+  'Use Your Superpower': 'bg-purple-100 text-purple-800',
+}
+
+/** Center → hex color. Used by FeedCard, CentersGrid, etc. */
+export const CENTER_COLORS: Record<string, string> = {
+  Learning: '#3182ce',
+  Action: '#38a169',
+  Resource: '#d69e2e',
+  Accountability: '#805ad5',
+}

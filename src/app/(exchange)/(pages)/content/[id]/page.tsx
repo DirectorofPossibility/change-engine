@@ -15,8 +15,10 @@ import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getFocusAreasByIds, getSDGMap, getSDOHMap, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
-import { FileText, Users } from 'lucide-react'
+import { FileText, Users, ExternalLink } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { PageHero } from '@/components/exchange/PageHero'
+import { BreakItDown } from '@/components/exchange/BreakItDown'
 
 function resolveThemeSlug(themeId: string | null) {
   if (!themeId) return null
@@ -117,6 +119,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   let keywords: string[] = []
   let extractedOrgs: Array<{ name: string; url: string; description?: string }> = []
   let downloadLinks: Array<{ url: string; anchor_text: string }> = []
+  let heroQuote: string | null = null
+  let programs: Array<{ name: string; description: string }> = []
 
   if (item.inbox_id) {
     const { data: queueItem } = await supabase
@@ -128,6 +132,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     if (queueItem?.ai_classification) {
       const c = queueItem.ai_classification as any
       keywords = c._keywords || []
+      heroQuote = c.hero_quote || null
+      programs = Array.isArray(c.programs) ? c.programs.filter((p: any) => p && p.name) : []
       const rawOrgs = (c._external_orgs || c.organizations || []).filter((o: any) => o && o.name)
       extractedOrgs = rawOrgs.map((o: any) => ({ name: o.name, url: o.url || '', description: o.description }))
       downloadLinks = c._download_links || []
@@ -242,470 +248,537 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const title = translatedTitle || item.title_6th_grade
   const summary = translatedSummary || item.summary_6th_grade
   const themeSlug = resolveThemeSlug(item.pathway_primary)
+  const themeEntry = item.pathway_primary ? (THEMES as Record<string, { name: string; color: string; slug: string }>)[item.pathway_primary] : null
+  const themeColor = themeEntry?.color || '#C75B2A'
+
+  // Parse body into sections for numbered rendering
+  const bodyText = translatedBody || item.body || ''
+  const bodyBlocks = bodyText.split(/\n\n+/).map(function (b) { return b.trim() }).filter(Boolean)
+  let sectionNumber = 0
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Breadcrumb items={[
-        { label: 'Content', href: '/content' },
-        { label: title }
-      ]} />
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main content */}
-        <div className="lg:col-span-2">
-          {/* Hero image */}
-          {item.image_url && (
-            <div className="w-full mb-6 rounded-xl overflow-hidden">
-              <img
-                src={item.image_url}
-                alt=""
-                className="w-full h-64 sm:h-80 object-cover"
-              />
+    <div>
+      {/* Breadcrumb */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <Breadcrumb items={[
+          { label: 'Content', href: '/content' },
+          { label: title }
+        ]} />
+      </div>
+
+      {/* Hero Section */}
+      <PageHero
+        variant="content"
+        title={title}
+        subtitle={summary}
+        gradientColor={themeColor}
+        imageUrl={item.image_url || undefined}
+        sourceDomain={item.source_domain || undefined}
+        publishedDate={item.published_at ? new Date(item.published_at).toLocaleDateString() : undefined}
+        sourceUrl={item.source_url || undefined}
+      >
+        <ThemePill themeId={item.pathway_primary} size="sm" />
+        <CenterBadge center={item.center} />
+        {isTranslated && (
+          <span className="text-xs px-2 py-0.5 rounded-lg bg-blue-100 text-blue-700">Machine translated</span>
+        )}
+      </PageHero>
+
+      {/* Quote Banner */}
+      {heroQuote && (
+        <div className="bg-brand-bg border-b border-brand-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+            <div className="flex gap-4">
+              <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
+              <blockquote className="text-lg sm:text-xl font-serif italic text-brand-text leading-relaxed">
+                &ldquo;{heroQuote}&rdquo;
+              </blockquote>
             </div>
-          )}
-
-          {/* Header */}
-          <div className="flex items-center gap-2 mb-4">
-            <ThemePill themeId={item.pathway_primary} size="sm" />
-            <CenterBadge center={item.center} />
-            {isTranslated && (
-              <span className="text-xs px-2 py-0.5 rounded-lg bg-blue-100 text-blue-700">Machine translated</span>
-            )}
-          </div>
-
-          <h1 className="text-3xl font-bold text-brand-text mb-3">{title}</h1>
-
-          <div className="flex items-center gap-3 text-sm text-brand-muted mb-6">
-            {item.source_domain && <span>{item.source_domain}</span>}
-            {item.published_at && <span>{new Date(item.published_at).toLocaleDateString()}</span>}
-            {item.confidence != null && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg">{Math.round(item.confidence * 100)}% confidence</span>
-            )}
-          </div>
-
-          {/* Summary */}
-          <div className="prose max-w-none mb-8">
-            <p className="text-brand-text leading-relaxed">{summary}</p>
-          </div>
-
-          {/* Body content — renders structured markdown sections or plain paragraphs */}
-          {(translatedBody || item.body) && (
-            <div className="mb-8 space-y-6">
-              {(translatedBody || item.body)!.split(/\n\n+/).map(function (block, i) {
-                const trimmed = block.trim()
-                if (!trimmed) return null
-                // Render ## headings as styled section headers
-                if (trimmed.startsWith('## ')) {
-                  return <h2 key={i} className="text-xl font-serif font-bold text-brand-text mt-2">{trimmed.replace(/^## /, '')}</h2>
-                }
-                // Render bullet lists
-                if (trimmed.match(/^[-•*] /m)) {
-                  const items = trimmed.split(/\n/).filter(function (l) { return l.trim() })
-                  return (
-                    <ul key={i} className="list-disc list-inside space-y-1 text-brand-text leading-relaxed">
-                      {items.map(function (li, j) {
-                        return <li key={j}>{li.replace(/^[-•*]\s*/, '').trim()}</li>
-                      })}
-                    </ul>
-                  )
-                }
-                // Bold labels like **Author:** Mark Lefebvre
-                if (trimmed.match(/\*\*[^*]+\*\*/)) {
-                  const parts = trimmed.split(/(\*\*[^*]+\*\*)/)
-                  return (
-                    <p key={i} className="text-brand-text leading-relaxed">
-                      {parts.map(function (part, j) {
-                        if (part.startsWith('**') && part.endsWith('**')) {
-                          return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
-                        }
-                        return <span key={j}>{part}</span>
-                      })}
-                    </p>
-                  )
-                }
-                return <p key={i} className="text-brand-text leading-relaxed">{trimmed}</p>
-              })}
-            </div>
-          )}
-
-          {/* Classification reasoning */}
-          {item.classification_reasoning && (
-            <details className="mb-8 bg-brand-bg rounded-xl p-4">
-              <summary className="cursor-pointer text-sm font-medium text-brand-muted">Why was this classified here?</summary>
-              <p className="text-sm text-brand-muted mt-2">{item.classification_reasoning}</p>
-            </details>
-          )}
-
-          {/* Action bar */}
-          <div className="mb-8">
-            <ActionBar
-              actionDonate={item.action_donate}
-              actionVolunteer={item.action_volunteer}
-              actionSignup={item.action_signup}
-              actionRegister={item.action_register}
-              actionApply={item.action_apply}
-              actionCall={item.action_call}
-              actionAttend={item.action_attend}
-            />
-          </div>
-
-          {/* Source link */}
-          <div className="mb-8">
-            <Link
-              href={item.source_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 border border-brand-border rounded-lg text-sm text-brand-accent hover:bg-brand-bg transition-colors"
-            >
-              View original source &rarr;
-            </Link>
           </div>
         </div>
+      )}
 
-        {/* Sidebar — Wayfinder (collapsible sections) */}
-        <div className="space-y-3">
-          {/* At a Glance — always visible */}
-          <div className="bg-white rounded-xl border border-brand-border p-4">
-            <h3 className="text-sm font-semibold text-brand-muted mb-3">At a Glance</h3>
-            <div className="space-y-2.5">
-              {item.source_domain && (
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-brand-muted">Source</span>
-                  <span className="font-medium text-brand-text">{item.source_domain}</span>
-                </div>
-              )}
-              {item.published_at && (
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-brand-muted">Published</span>
-                  <span className="font-medium text-brand-text">{new Date(item.published_at).toLocaleDateString()}</span>
-                </div>
-              )}
-              {item.confidence != null && (
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="text-brand-muted">Confidence</span>
-                    <span className="font-medium text-brand-text">{Math.round(item.confidence * 100)}%</span>
-                  </div>
-                  <div className="w-full h-1.5 bg-brand-bg rounded-full overflow-hidden">
-                    <div className="h-full rounded-full bg-brand-accent transition-all" style={{ width: Math.round(item.confidence * 100) + '%' }} />
-                  </div>
-                </div>
-              )}
-              {(() => {
-                const actions = [item.action_donate, item.action_volunteer, item.action_signup, item.action_register, item.action_apply, item.action_call, item.action_attend].filter(Boolean)
-                return actions.length > 0 ? (
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-brand-muted">Actions available</span>
-                    <span className="font-medium text-brand-text">{actions.length}</span>
-                  </div>
-                ) : null
-              })()}
-            </div>
-          </div>
-
-          {/* Pathway — open by default */}
-          {themeSlug && (
-            <details open className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Pathway
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <Link href={'/pathways/' + themeSlug}>
-                  <ThemePill themeId={item.pathway_primary} size="sm" />
-                </Link>
-              </div>
-            </details>
-          )}
-
-          {/* Focus Areas — open by default */}
-          {focusAreas.length > 0 && (
-            <details open className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Focus Areas
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <FocusAreaPills focusAreas={focusAreas} />
-              </div>
-            </details>
-          )}
-
-          {/* Organization — open by default, links to internal profile */}
-          {orgInfo && (
-            <details open className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Organization
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <Link href={'/organizations/' + orgInfo.org_id} className="text-sm font-medium text-brand-accent hover:underline">
-                  {orgInfo.org_name}
-                </Link>
-                {orgInfo.description_5th_grade && (
-                  <p className="text-xs text-brand-muted mt-1">{orgInfo.description_5th_grade}</p>
-                )}
-              </div>
-            </details>
-          )}
-
-          {/* Global Goals — collapsed by default */}
-          {item.sdg_ids && item.sdg_ids.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Global Goals
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="flex flex-wrap gap-1">
-                  {item.sdg_ids.map(function (sdg) {
-                    const info = sdgMap[sdg]
-                    if (info) {
-                      return <SDGBadge key={sdg} sdgNumber={info.sdg_number} sdgName={info.sdg_name} sdgColor={info.sdg_color} linkToExplore />
-                    }
-                    return <span key={sdg} className="text-xs px-2 py-1 rounded-lg bg-blue-100 text-blue-700">Goal {sdg.replace('SDG_', '')}</span>
-                  })}
-                </div>
-              </div>
-            </details>
-          )}
-
-          {/* Health & Well-being — collapsed by default */}
-          {item.sdoh_domain && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Health &amp; Well-being
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                {sdohMap[item.sdoh_domain] ? (
-                  <SDOHBadge
-                    sdohCode={item.sdoh_domain}
-                    sdohName={sdohMap[item.sdoh_domain].sdoh_name}
-                    sdohDescription={sdohMap[item.sdoh_domain].sdoh_description}
-                    linkToExplore
-                  />
-                ) : (
-                  <span className="text-xs px-2 py-1 rounded-lg bg-green-100 text-green-700">{item.sdoh_domain}</span>
-                )}
-              </div>
-            </details>
-          )}
-
-          {/* Who This Is For — open by default */}
-          {segmentIds.length > 0 && (
-            <details open className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Who This Is For
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="flex flex-wrap gap-1">
-                  {segmentIds.map(function (seg) {
-                    const name = segmentNames[seg] || seg.replace('SEG_', '').replace(/_/g, ' ')
-                    return <span key={seg} className="text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-700">{name}</span>
-                  })}
-                </div>
-              </div>
-            </details>
-          )}
-
-          {/* Topics — open by default */}
-          {keywords.length > 0 && (
-            <details open className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Topics
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="flex flex-wrap gap-1">
-                  {keywords.slice(0, 10).map(function (kw) {
-                    return <span key={kw} className="text-xs px-2 py-1 rounded-lg bg-brand-bg text-brand-muted">{kw}</span>
-                  })}
-                </div>
-              </div>
-            </details>
-          )}
-
-          {/* Organizations Mentioned — links to internal profiles when available */}
-          {extractedOrgs.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Organizations Mentioned
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="space-y-2">
-                  {extractedOrgs.slice(0, 6).map(function (org) {
-                    let orgDomain = ''
-                    try { orgDomain = new URL(org.url).hostname } catch {}
-                    const internalOrgId = orgDomain ? orgProfileMap[orgDomain] : undefined
+      {/* Main content + Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Main content */}
+          <div className="lg:col-span-2">
+            {/* Body Sections — numbered headings */}
+            {bodyBlocks.length > 0 && (
+              <div className="space-y-6">
+                {bodyBlocks.map(function (block, i) {
+                  if (!block) return null
+                  // Render ## headings with numbered badges
+                  if (block.startsWith('## ')) {
+                    sectionNumber++
                     return (
-                      <div key={org.name}>
-                        {internalOrgId ? (
-                          <Link href={'/organizations/' + internalOrgId} className="text-xs font-medium text-brand-accent hover:underline">
-                            {org.name}
-                          </Link>
-                        ) : (
-                          <Link href={org.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
-                            {org.name}
-                          </Link>
-                        )}
-                        {org.description && <p className="text-xs text-brand-muted">{org.description}</p>}
+                      <div key={i} className="flex items-center gap-3 mt-8 first:mt-0">
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                          style={{ backgroundColor: themeColor }}
+                        >
+                          {sectionNumber}
+                        </div>
+                        <h2 className="text-xl font-serif font-bold text-brand-text">{block.replace(/^## /, '')}</h2>
+                      </div>
+                    )
+                  }
+                  // Render bullet lists
+                  if (block.match(/^[-•*] /m)) {
+                    const items = block.split(/\n/).filter(function (l) { return l.trim() })
+                    return (
+                      <ul key={i} className="list-disc list-inside space-y-1.5 text-brand-text leading-relaxed pl-11">
+                        {items.map(function (li, j) {
+                          return <li key={j}>{li.replace(/^[-•*]\s*/, '').trim()}</li>
+                        })}
+                      </ul>
+                    )
+                  }
+                  // Bold labels
+                  if (block.match(/\*\*[^*]+\*\*/)) {
+                    const parts = block.split(/(\*\*[^*]+\*\*)/)
+                    return (
+                      <p key={i} className="text-brand-text leading-relaxed pl-11">
+                        {parts.map(function (part, j) {
+                          if (part.startsWith('**') && part.endsWith('**')) {
+                            return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
+                          }
+                          return <span key={j}>{part}</span>
+                        })}
+                      </p>
+                    )
+                  }
+                  return <p key={i} className="text-brand-text leading-relaxed pl-11">{block}</p>
+                })}
+              </div>
+            )}
+
+            {/* AI Break It Down */}
+            <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
+
+            {/* Visual separator */}
+            {bodyBlocks.length > 0 && (programs.length > 0 || item.classification_reasoning) && (
+              <div className="my-8 border-t border-brand-border" />
+            )}
+
+            {/* Programs Grid */}
+            {programs.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-lg font-serif font-bold text-brand-text mb-4">Programs &amp; Initiatives</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {programs.map(function (prog, i) {
+                    return (
+                      <div
+                        key={i}
+                        className="bg-white rounded-xl border border-brand-border p-4 flex gap-3"
+                      >
+                        <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
+                        <div>
+                          <p className="font-semibold text-sm text-brand-text">{prog.name}</p>
+                          <p className="text-xs text-brand-muted mt-1 leading-relaxed">{prog.description}</p>
+                        </div>
                       </div>
                     )
                   })}
                 </div>
               </div>
-            </details>
-          )}
+            )}
 
-          {/* Downloads — collapsed by default */}
-          {downloadLinks.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Downloads
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="space-y-1">
-                  {downloadLinks.map(function (dl: any) {
-                    return (
-                      <Link key={dl.url} href={dl.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline">
-                        <FileText size={14} /> {dl.anchor_text || 'Download'}
+            {/* Classification reasoning */}
+            {item.classification_reasoning && (
+              <details className="mb-8 bg-brand-bg rounded-xl p-4">
+                <summary className="cursor-pointer text-sm font-medium text-brand-muted">Why was this classified here?</summary>
+                <p className="text-sm text-brand-muted mt-2">{item.classification_reasoning}</p>
+              </details>
+            )}
+
+            {/* Action bar */}
+            <div className="mb-8">
+              <ActionBar
+                actionDonate={item.action_donate}
+                actionVolunteer={item.action_volunteer}
+                actionSignup={item.action_signup}
+                actionRegister={item.action_register}
+                actionApply={item.action_apply}
+                actionCall={item.action_call}
+                actionAttend={item.action_attend}
+              />
+            </div>
+
+            {/* Source link */}
+            <div className="mb-8">
+              <Link
+                href={item.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white transition-colors"
+                style={{ backgroundColor: themeColor }}
+              >
+                <ExternalLink size={16} />
+                View original source
+              </Link>
+            </div>
+          </div>
+
+          {/* Sidebar — Wayfinder */}
+          <div className="space-y-3">
+            {/* At a Glance */}
+            <div className="bg-white rounded-xl border border-brand-border p-4">
+              <h3 className="text-sm font-semibold text-brand-muted mb-3">At a Glance</h3>
+              <div className="space-y-2.5">
+                {item.source_domain && (
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-muted">Source</span>
+                    <span className="font-medium text-brand-text">{item.source_domain}</span>
+                  </div>
+                )}
+                {item.published_at && (
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-brand-muted">Published</span>
+                    <span className="font-medium text-brand-text">{new Date(item.published_at).toLocaleDateString()}</span>
+                  </div>
+                )}
+                {item.confidence != null && (
+                  <div>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className="text-brand-muted">Confidence</span>
+                      <span className="font-medium text-brand-text">{Math.round(item.confidence * 100)}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-brand-bg rounded-full overflow-hidden">
+                      <div className="h-full rounded-full transition-all" style={{ width: Math.round(item.confidence * 100) + '%', backgroundColor: themeColor }} />
+                    </div>
+                  </div>
+                )}
+                {(() => {
+                  const actions = [item.action_donate, item.action_volunteer, item.action_signup, item.action_register, item.action_apply, item.action_call, item.action_attend].filter(Boolean)
+                  return actions.length > 0 ? (
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-brand-muted">Actions available</span>
+                      <span className="font-medium text-brand-text">{actions.length}</span>
+                    </div>
+                  ) : null
+                })()}
+              </div>
+            </div>
+
+            {/* Pathway */}
+            {themeSlug && (
+              <details open className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Pathway
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <Link href={'/pathways/' + themeSlug}>
+                    <ThemePill themeId={item.pathway_primary} size="sm" />
+                  </Link>
+                </div>
+              </details>
+            )}
+
+            {/* Organization — enhanced card */}
+            {orgInfo && (
+              <details open className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Organization
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="flex gap-3">
+                    <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
+                    <div className="min-w-0">
+                      <Link href={'/organizations/' + orgInfo.org_id} className="text-sm font-semibold text-brand-accent hover:underline block">
+                        {orgInfo.org_name}
                       </Link>
-                    )
-                  })}
+                      {orgInfo.description_5th_grade && (
+                        <p className="text-xs text-brand-muted mt-1 leading-relaxed">{orgInfo.description_5th_grade}</p>
+                      )}
+                      {orgInfo.website && (
+                        <Link
+                          href={orgInfo.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-brand-accent hover:underline mt-2"
+                        >
+                          <ExternalLink size={12} /> Website
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </details>
-          )}
+              </details>
+            )}
 
-          {/* Life Situations — open by default */}
-          {lifeSituationLinks.length > 0 && (
-            <details open className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Life Situations
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="flex flex-wrap gap-1">
-                  {lifeSituationLinks.map(function (s) {
-                    return (
-                      <Link key={s.slug} href={'/help/' + s.slug} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-accent hover:underline">
-                        {s.name}
-                      </Link>
-                    )
-                  })}
+            {/* Focus Areas */}
+            {focusAreas.length > 0 && (
+              <details open className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Focus Areas
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <FocusAreaPills focusAreas={focusAreas} />
                 </div>
-              </div>
-            </details>
-          )}
+              </details>
+            )}
 
-          {/* Opportunities — collapsed by default */}
-          {opportunities.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Opportunities
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="space-y-3">
-                  {opportunities.slice(0, 5).map(function (o) {
-                    return (
-                      <OpportunityCard
-                        key={o.opportunity_id}
-                        name={o.opportunity_name}
-                        description={o.description_5th_grade}
-                        startDate={o.start_date}
-                        endDate={o.end_date}
-                        address={o.address}
-                        city={o.city}
-                        isVirtual={o.is_virtual}
-                        registrationUrl={o.registration_url}
-                        spotsAvailable={o.spots_available}
-                      />
-                    )
-                  })}
+            {/* Who This Is For */}
+            {segmentIds.length > 0 && (
+              <details open className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Who This Is For
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="flex flex-wrap gap-1">
+                    {segmentIds.map(function (seg) {
+                      const name = segmentNames[seg] || seg.replace('SEG_', '').replace(/_/g, ' ')
+                      return <span key={seg} className="text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-700">{name}</span>
+                    })}
+                  </div>
                 </div>
-              </div>
-            </details>
-          )}
+              </details>
+            )}
 
-          {/* Policies — collapsed by default */}
-          {policies.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Related Policies
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="space-y-3">
-                  {policies.slice(0, 5).map(function (p) {
-                    return (
-                      <PolicyCard
-                        key={p.policy_id}
-                        name={p.title_6th_grade || p.policy_name}
-                        summary={p.summary_6th_grade || p.summary_5th_grade}
-                        billNumber={p.bill_number}
-                        status={p.status}
-                        level={p.level}
-                        sourceUrl={p.source_url}
-                      />
-                    )
-                  })}
+            {/* Topics */}
+            {keywords.length > 0 && (
+              <details open className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Topics
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="flex flex-wrap gap-1">
+                    {keywords.slice(0, 10).map(function (kw) {
+                      return <span key={kw} className="text-xs px-2 py-1 rounded-lg bg-brand-bg text-brand-muted">{kw}</span>
+                    })}
+                  </div>
                 </div>
-              </div>
-            </details>
-          )}
+              </details>
+            )}
 
-          {/* Related Officials — collapsed by default */}
-          {relatedOfficials.length > 0 && (
-            <details className="bg-white rounded-xl border border-brand-border group">
-              <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
-                Related Officials
-                <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <div className="px-4 pb-4">
-                <div className="space-y-3">
-                  {relatedOfficials.map(function (o) {
-                    return (
-                      <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-3 group/official">
-                        <div className="w-9 h-9 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
-                          <Users size={14} className="text-brand-muted" />
+            {/* Global Goals */}
+            {item.sdg_ids && item.sdg_ids.length > 0 && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Global Goals
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="flex flex-wrap gap-1">
+                    {item.sdg_ids.map(function (sdg) {
+                      const info = sdgMap[sdg]
+                      if (info) {
+                        return <SDGBadge key={sdg} sdgNumber={info.sdg_number} sdgName={info.sdg_name} sdgColor={info.sdg_color} linkToExplore />
+                      }
+                      return <span key={sdg} className="text-xs px-2 py-1 rounded-lg bg-blue-100 text-blue-700">Goal {sdg.replace('SDG_', '')}</span>
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Health & Well-being */}
+            {item.sdoh_domain && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Health &amp; Well-being
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  {sdohMap[item.sdoh_domain] ? (
+                    <SDOHBadge
+                      sdohCode={item.sdoh_domain}
+                      sdohName={sdohMap[item.sdoh_domain].sdoh_name}
+                      sdohDescription={sdohMap[item.sdoh_domain].sdoh_description}
+                      linkToExplore
+                    />
+                  ) : (
+                    <span className="text-xs px-2 py-1 rounded-lg bg-green-100 text-green-700">{item.sdoh_domain}</span>
+                  )}
+                </div>
+              </details>
+            )}
+
+            {/* Organizations Mentioned */}
+            {extractedOrgs.length > 0 && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Organizations Mentioned
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="space-y-2">
+                    {extractedOrgs.slice(0, 6).map(function (org) {
+                      let orgDomain = ''
+                      try { orgDomain = new URL(org.url).hostname } catch {}
+                      const internalOrgId = orgDomain ? orgProfileMap[orgDomain] : undefined
+                      return (
+                        <div key={org.name}>
+                          {internalOrgId ? (
+                            <Link href={'/organizations/' + internalOrgId} className="text-xs font-medium text-brand-accent hover:underline">
+                              {org.name}
+                            </Link>
+                          ) : (
+                            <Link href={org.url} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-brand-accent hover:underline">
+                              {org.name}
+                            </Link>
+                          )}
+                          {org.description && <p className="text-xs text-brand-muted">{org.description}</p>}
                         </div>
-                        <div className="min-w-0">
-                          <span className="text-sm font-medium text-brand-accent group-hover/official:underline block truncate">{o.official_name}</span>
-                          {o.title && <span className="text-xs text-brand-muted block truncate">{o.title}</span>}
-                        </div>
-                      </Link>
-                    )
-                  })}
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-            </details>
-          )}
+              </details>
+            )}
 
-          {/* Suggest an Edit */}
-          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-            <Link
-              href={'/dashboard/submit?ref=' + encodeURIComponent(id)}
-              className="text-sm text-brand-accent hover:underline font-medium"
-            >
-              Suggest an edit to this content
-            </Link>
-            <p className="text-xs text-brand-muted mt-1">Help us keep information accurate and up to date</p>
+            {/* Life Situations */}
+            {lifeSituationLinks.length > 0 && (
+              <details open className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Life Situations
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="flex flex-wrap gap-1">
+                    {lifeSituationLinks.map(function (s) {
+                      return (
+                        <Link key={s.slug} href={'/help/' + s.slug} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-accent hover:underline">
+                          {s.name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Downloads */}
+            {downloadLinks.length > 0 && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Downloads
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="space-y-1">
+                    {downloadLinks.map(function (dl: any) {
+                      return (
+                        <Link key={dl.url} href={dl.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline">
+                          <FileText size={14} /> {dl.anchor_text || 'Download'}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Opportunities */}
+            {opportunities.length > 0 && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Opportunities
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="space-y-3">
+                    {opportunities.slice(0, 5).map(function (o) {
+                      return (
+                        <OpportunityCard
+                          key={o.opportunity_id}
+                          name={o.opportunity_name}
+                          description={o.description_5th_grade}
+                          startDate={o.start_date}
+                          endDate={o.end_date}
+                          address={o.address}
+                          city={o.city}
+                          isVirtual={o.is_virtual}
+                          registrationUrl={o.registration_url}
+                          spotsAvailable={o.spots_available}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Policies */}
+            {policies.length > 0 && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Related Policies
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="space-y-3">
+                    {policies.slice(0, 5).map(function (p) {
+                      return (
+                        <PolicyCard
+                          key={p.policy_id}
+                          name={p.title_6th_grade || p.policy_name}
+                          summary={p.summary_6th_grade || p.summary_5th_grade}
+                          billNumber={p.bill_number}
+                          status={p.status}
+                          level={p.level}
+                          sourceUrl={p.source_url}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Related Officials */}
+            {relatedOfficials.length > 0 && (
+              <details className="bg-white rounded-xl border border-brand-border group">
+                <summary className="flex items-center justify-between cursor-pointer p-4 text-sm font-semibold text-brand-muted select-none">
+                  Related Officials
+                  <svg className="w-4 h-4 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                </summary>
+                <div className="px-4 pb-4">
+                  <div className="space-y-3">
+                    {relatedOfficials.map(function (o) {
+                      return (
+                        <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-3 group/official">
+                          <div className="w-9 h-9 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
+                            <Users size={14} className="text-brand-muted" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="text-sm font-medium text-brand-accent group-hover/official:underline block truncate">{o.official_name}</span>
+                            {o.title && <span className="text-xs text-brand-muted block truncate">{o.title}</span>}
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              </details>
+            )}
+
+            {/* Suggest an Edit */}
+            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+              <Link
+                href={'/dashboard/submit?ref=' + encodeURIComponent(id)}
+                className="text-sm text-brand-accent hover:underline font-medium"
+              >
+                Suggest an edit to this content
+              </Link>
+              <p className="text-xs text-brand-muted mt-1">Help us keep information accurate and up to date</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Related content — scored by focus area overlap + explicit cross-references */}
+      {/* Related content */}
       {related && related.length > 0 && (
-        <div className="mt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
           <RelatedContent items={related} />
         </div>
-      )
-
-      }
+      )}
 
       <EntityMesh entityType="content" entityId={id} />
     </div>

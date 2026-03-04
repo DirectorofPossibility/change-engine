@@ -47,7 +47,7 @@ import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
 import type { Database } from '@/lib/supabase/database.types'
-import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData } from '@/lib/types/exchange'
 
 type ContentRow = Database['public']['Tables']['content_published']['Row']
 type MunicipalServiceRow = Database['public']['Tables']['municipal_services']['Row']
@@ -61,6 +61,40 @@ export async function getLangId(): Promise<string | null> {
   const langCode = cookieStore.get('lang')?.value || 'en'
   const langConfig = LANGUAGES.find(function (l) { return l.code === langCode })
   return langConfig?.langId ?? null
+}
+
+// ── Election banner ───────────────────────────────────────────────────
+
+/** Fetch the next upcoming active election, or null if none. */
+export async function getNextElection(): Promise<{
+  election_name: string
+  election_date: string
+  election_type: string | null
+  polls_open: string | null
+  polls_close: string | null
+  find_polling_url: string | null
+  register_url: string | null
+} | null> {
+  const supabase = await createClient()
+  const today = new Date().toISOString().split('T')[0]
+  const { data } = await supabase
+    .from('elections')
+    .select('*')
+    .eq('is_active', 'Yes')
+    .gte('election_date', today)
+    .order('election_date', { ascending: true })
+    .limit(1)
+  if (!data || data.length === 0) return null
+  const row = data[0] as any
+  return {
+    election_name: row.election_name,
+    election_date: row.election_date,
+    election_type: row.election_type ?? null,
+    polls_open: row.polls_open ?? null,
+    polls_close: row.polls_close ?? null,
+    find_polling_url: row.find_polling_url ?? null,
+    register_url: row.register_url ?? null,
+  }
 }
 
 // ── Homepage data ──────────────────────────────────────────────────────
@@ -256,10 +290,10 @@ export async function getOfficials() {
   ])
   const { data: profileRows } = await supabase
     .from('official_profiles' as any)
-    .select('official_id, social_linkedin')
-  const profiles = ((profileRows ?? []) as unknown as Array<{ official_id: string; social_linkedin: string | null }>)
+    .select('official_id, social_linkedin, linkedin_status')
+  const profiles = ((profileRows ?? []) as unknown as Array<{ official_id: string; social_linkedin: string | null; linkedin_status: string | null }>)
     .reduce<Record<string, string>>(function (acc, p) {
-      if (p.social_linkedin) acc[p.official_id] = p.social_linkedin
+      if (p.social_linkedin && (!p.linkedin_status || p.linkedin_status === 'verified')) acc[p.official_id] = p.social_linkedin
       return acc
     }, {})
   return { officials: officials ?? [], levels: levels ?? [], profiles }
@@ -333,10 +367,10 @@ export async function getCivicHubData() {
 
   const { data: profileRows } = await supabase
     .from('official_profiles' as any)
-    .select('official_id, social_linkedin')
-  const linkedinProfiles = ((profileRows ?? []) as unknown as Array<{ official_id: string; social_linkedin: string | null }>)
+    .select('official_id, social_linkedin, linkedin_status')
+  const linkedinProfiles = ((profileRows ?? []) as unknown as Array<{ official_id: string; social_linkedin: string | null; linkedin_status: string | null }>)
     .reduce<Record<string, string>>(function (acc, p) {
-      if (p.social_linkedin) acc[p.official_id] = p.social_linkedin
+      if (p.social_linkedin && (!p.linkedin_status || p.linkedin_status === 'verified')) acc[p.official_id] = p.social_linkedin
       return acc
     }, {})
 
@@ -1391,6 +1425,31 @@ export async function getPathwayBridges(): Promise<Array<[string, string, number
 }
 
 /**
+ * Get bridge connections for a single pathway.
+ * Filters the global bridge data and maps to theme names/colors/slugs.
+ */
+export async function getBridgesForPathway(themeId: string): Promise<Array<{ targetThemeId: string; targetName: string; targetColor: string; targetSlug: string; sharedCount: number }>> {
+  const { THEMES } = await import('@/lib/constants')
+  const allBridges = await getPathwayBridges()
+  const relevant = allBridges.filter(function (b) { return b[0] === themeId || b[1] === themeId })
+  return relevant
+    .map(function (b) {
+      const otherId = b[0] === themeId ? b[1] : b[0]
+      const otherTheme = THEMES[otherId as keyof typeof THEMES]
+      if (!otherTheme) return null
+      return {
+        targetThemeId: otherId,
+        targetName: otherTheme.name,
+        targetColor: otherTheme.color,
+        targetSlug: otherTheme.slug,
+        sharedCount: b[2],
+      }
+    })
+    .filter(function (b): b is NonNullable<typeof b> { return b !== null })
+    .sort(function (a, b) { return b.sharedCount - a.sharedCount })
+}
+
+/**
  * Get the full entity profile with mesh connections for the wayfinder panel.
  * Every entity type returns its focus areas + related entities from other types.
  *
@@ -1888,4 +1947,258 @@ export async function getMunicipalServices(zip: string): Promise<MunicipalServic
     library: all.filter(s => s.service_type === 'library'),
     utilities: all.filter(s => s.service_type === 'utilities'),
   }
+}
+
+// ── Policy geography queries ──────────────────────────────────────────
+
+/** Get published policies affecting a ZIP code's districts. */
+export async function getPoliciesByZip(zip: string) {
+  const supabase = await createClient()
+
+  // Look up the ZIP's district assignments
+  const { data: zipDataRaw } = await supabase
+    .from('zip_codes')
+    .select('*')
+    .eq('zip_code', parseInt(zip))
+    .single()
+
+  if (!zipDataRaw) return { federal: [], state: [], city: [] }
+  const zipData = zipDataRaw as any
+
+  // Build geo filters from district assignments
+  const geoFilters: string[] = []
+  geoFilters.push(`and(geo_type.eq.zip_code,geo_id.eq.${zip})`)
+  if (zipData.congressional_district) geoFilters.push(`and(geo_type.eq.congressional,geo_id.eq.${zipData.congressional_district})`)
+  if (zipData.state_senate_district) geoFilters.push(`and(geo_type.eq.state_senate,geo_id.eq.${zipData.state_senate_district})`)
+  if (zipData.state_house_district) geoFilters.push(`and(geo_type.eq.state_house,geo_id.eq.${zipData.state_house_district})`)
+  if (zipData.council_district) geoFilters.push(`and(geo_type.eq.council_district,geo_id.eq.${zipData.council_district})`)
+
+  if (geoFilters.length === 0) return { federal: [], state: [], city: [] }
+
+  // Get policy IDs from policy_geography
+  const { data: geoRows } = await (supabase as any)
+    .from('policy_geography')
+    .select('policy_id')
+    .or(geoFilters.join(','))
+
+  const policyIds: string[] = Array.from(new Set(((geoRows || []) as any[]).map((r: any) => r.policy_id as string)))
+  if (policyIds.length === 0) return { federal: [], state: [], city: [] }
+
+  // Fetch published policies
+  const { data: policies } = await (supabase as any)
+    .from('policies')
+    .select('*')
+    .in('policy_id', policyIds)
+    .eq('is_published', true)
+    .order('last_action_date', { ascending: false })
+
+  const all: any[] = policies || []
+  return {
+    federal: all.filter(function (p: any) { return p.level === 'Federal' }),
+    state: all.filter(function (p: any) { return p.level === 'State' }),
+    city: all.filter(function (p: any) { return p.level === 'City' }),
+  }
+}
+
+/** Get published policies for a super neighborhood via its ZIP codes. */
+export async function getPoliciesForNeighborhood(snId: string) {
+  const supabase = await createClient()
+
+  // Get ZIP codes that belong to this super neighborhood
+  const { data: zipRows } = await (supabase as any)
+    .from('zip_codes')
+    .select('zip_code, council_district')
+    .eq('neighborhood_id', parseInt(snId) || 0)
+
+  if (!zipRows || zipRows.length === 0) return []
+
+  // Get council districts for this SN
+  const councilDistricts = Array.from(new Set(zipRows.map(function (z: any) { return z.council_district }).filter(Boolean)))
+
+  // Query policy_geography for council district matches
+  const geoFilters: string[] = []
+  for (const cd of councilDistricts) {
+    geoFilters.push(`and(geo_type.eq.council_district,geo_id.eq.${cd})`)
+  }
+
+  if (geoFilters.length === 0) return []
+
+  const { data: geoRows } = await (supabase as any)
+    .from('policy_geography')
+    .select('policy_id')
+    .or(geoFilters.join(','))
+
+  const policyIds = (geoRows || []).map(function (r: any) { return r.policy_id as string })
+  const uniquePolicyIds = Array.from(new Set(policyIds)) as string[]
+  if (uniquePolicyIds.length === 0) return []
+
+  const { data: policies } = await (supabase as any)
+    .from('policies')
+    .select('*')
+    .in('policy_id', uniquePolicyIds)
+    .eq('is_published', true)
+    .order('last_action_date', { ascending: false })
+    .limit(20)
+
+  return (policies || []) as any[]
+}
+
+/** Combined civic profile: officials + policies + geographic context for a ZIP. */
+export async function getCivicProfileByZip(zip: string) {
+  const [officials, policies] = await Promise.all([
+    getOfficialsByZip(zip),
+    getPoliciesByZip(zip),
+  ])
+
+  return { zip, officials, policies }
+}
+
+/** Get focus areas linked to a policy via policy_focus_areas. */
+export async function getPolicyFocusAreas(policyId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('policy_focus_areas')
+    .select('focus_id')
+    .eq('policy_id', policyId)
+
+  if (!data || data.length === 0) return []
+
+  const focusIds = data.map(r => r.focus_id)
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id, focus_area_name, theme_id')
+    .in('focus_id', focusIds)
+
+  return focusAreas || []
+}
+
+// ── Geography page data ───────────────────────────────────────────────
+
+/** Map municipal service_type to marker type for the geography map. */
+const SERVICE_TYPE_TO_MARKER: Record<string, string> = {
+  emergency: 'fire',
+  police: 'police',
+  fire: 'fire',
+  medical: 'medical',
+  parks: 'park',
+  library: 'library',
+  utilities: 'service',
+}
+
+/** Get municipal services as map markers (only those with lat/lng). */
+export async function getMunicipalServiceMarkers(): Promise<MapMarkerData[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('municipal_services')
+    .select('id, service_name, service_type, address, city, phone, website, latitude, longitude')
+    .not('latitude', 'is', null)
+    .not('longitude', 'is', null)
+    .order('display_order')
+  return (data ?? []).map(function (s) {
+    return {
+      id: s.id,
+      lat: Number(s.latitude),
+      lng: Number(s.longitude),
+      title: s.service_name,
+      type: SERVICE_TYPE_TO_MARKER[s.service_type] || 'service',
+      address: s.address ? (s.address + (s.city ? ', ' + s.city : '')) : null,
+      phone: s.phone,
+      link: s.website,
+    }
+  })
+}
+
+/** Fetch everything the geography page needs. */
+export async function getGeographyData(zip?: string, superNeighborhoodId?: string): Promise<GeographyData> {
+  const supabase = await createClient()
+
+  // Parallel base queries
+  const [snResult, hoodResult, svcMarkers, orgResult] = await Promise.all([
+    supabase.from('super_neighborhoods').select('*').order('sn_name'),
+    supabase.from('neighborhoods').select('neighborhood_id, neighborhood_name, super_neighborhood_id').order('neighborhood_name'),
+    getMunicipalServiceMarkers(),
+    supabase.from('organizations')
+      .select('org_id, org_name, address, city, latitude, longitude, website, phone')
+      .not('latitude', 'is', null)
+      .not('longitude', 'is', null)
+      .limit(200),
+  ])
+
+  const orgMarkers: MapMarkerData[] = (orgResult.data ?? []).map(function (o: any) {
+    return {
+      id: o.org_id,
+      lat: Number(o.latitude),
+      lng: Number(o.longitude),
+      title: o.org_name || 'Organization',
+      type: 'organization',
+      address: o.address ? (o.address + (o.city ? ', ' + o.city : '')) : null,
+      phone: o.phone,
+      link: '/services?org=' + o.org_id,
+    }
+  })
+
+  // Officials + policies if ZIP provided
+  let officials: GeographyData['officials'] = []
+  let policies: GeographyData['policies'] = []
+
+  if (zip) {
+    const { data: zipData } = await supabase
+      .from('zip_codes')
+      .select('*')
+      .eq('zip_code', parseInt(zip))
+      .single()
+
+    if (zipData) {
+      const districts = [
+        zipData.congressional_district,
+        zipData.state_senate_district,
+        zipData.state_house_district,
+        'TX',
+      ].filter(Boolean)
+
+      let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+      filterParts += ',level.eq.City'
+      if (zipData.county_id) {
+        filterParts += ',counties_served.like.%' + zipData.county_id + '%'
+      }
+
+      const { data: officialData } = await supabase
+        .from('elected_officials')
+        .select('official_id, official_name, title, level, party, email, office_phone, website')
+        .or(filterParts)
+      officials = (officialData || []).map(function (o) {
+        return { ...o, photo_url: null as string | null }
+      })
+
+      // Policies
+      const { data: policyData } = await supabase
+        .from('policies')
+        .select('policy_id, policy_name, title_6th_grade, status, level, source_url')
+        .limit(30)
+      policies = (policyData || []).map(function (p) {
+        return { policy_id: p.policy_id, policy_name: p.policy_name, title_6th_grade: p.title_6th_grade, status: p.status, level: p.level, source_url: p.source_url }
+      })
+    }
+  }
+
+  return {
+    superNeighborhoods: (snResult.data ?? []) as SuperNeighborhood[],
+    neighborhoods: hoodResult.data ?? [],
+    serviceMarkers: svcMarkers,
+    organizationMarkers: orgMarkers,
+    officials,
+    policies,
+  }
+}
+
+/** Get geography rows for a policy. */
+export async function getPolicyGeography(policyId: string): Promise<Array<{ geo_type: string; geo_id: string }>> {
+  const supabase = await createClient()
+  const { data } = await (supabase as any)
+    .from('policy_geography')
+    .select('geo_type, geo_id')
+    .eq('policy_id', policyId)
+  return (data || []).map(function (row: any) {
+    return { geo_type: row.geo_type, geo_id: row.geo_id }
+  })
 }

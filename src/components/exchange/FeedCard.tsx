@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ChevronRight, BookOpen, Zap, Package, Scale } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
+import { CENTER_COLORS } from '@/lib/constants'
 
 export interface FeedItem {
   type: 'resource' | 'official' | 'policy' | 'service'
@@ -34,13 +35,6 @@ const CENTER_ICONS: Record<string, typeof BookOpen> = {
   Action: Zap,
   Resource: Package,
   Accountability: Scale,
-}
-
-const CENTER_COLORS: Record<string, string> = {
-  Learning: '#3182ce',
-  Action: '#38a169',
-  Resource: '#d69e2e',
-  Accountability: '#805ad5',
 }
 
 const GRADIENT_PAIRS: Record<string, [string, string]> = {

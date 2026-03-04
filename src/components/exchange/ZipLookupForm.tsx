@@ -1,77 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { MapPin, Vote, Landmark, Star, Home, Building2, Phone, Globe, Shield, Flame, Heart, Trees, BookOpen, Zap, AlertTriangle } from 'lucide-react'
+import { MapPin, Vote, Landmark, Star, Home, Building2, Phone, Globe, Shield, Flame, Heart, Trees, BookOpen, Zap, AlertTriangle, Scale } from 'lucide-react'
 import Link from 'next/link'
 import { VotingLocationsMap } from './VotingLocationsMap'
 import { useTranslation } from '@/lib/i18n'
-
-interface Official {
-  official_id: string
-  official_name: string
-  title: string | null
-  party: string | null
-  level: string | null
-  email: string | null
-  office_phone: string | null
-  website: string | null
-  district_id: string | null
-}
-
-interface Neighborhood {
-  neighborhood_name: string
-  city: string | null
-  population: number | null
-  median_income: number | null
-}
-
-interface VotingLocation {
-  location_id: string
-  location_name: string
-  address: string | null
-  city: string | null
-  latitude: number | null
-  longitude: number | null
-  hours_early_voting: string | null
-  hours_election_day: string | null
-  is_accessible: string | null
-}
-
-interface MunicipalService {
-  id: string
-  service_type: string
-  service_name: string
-  phone: string | null
-  address: string | null
-  city: string | null
-  zip_code: string | null
-  website: string | null
-  hours: string | null
-  coverage_area: string | null
-  is_emergency: boolean
-  display_order: number
-}
-
-interface MunicipalServicesByType {
-  emergency: MunicipalService[]
-  police: MunicipalService[]
-  fire: MunicipalService[]
-  medical: MunicipalService[]
-  parks: MunicipalService[]
-  library: MunicipalService[]
-  utilities: MunicipalService[]
-}
-
-interface LookupResults {
-  federal: Official[]
-  state: Official[]
-  county: Official[]
-  city: Official[]
-  neighborhood: Neighborhood | null
-  votingLocations: VotingLocation[]
-  services: MunicipalServicesByType | null
-}
+import { lookupCivicProfile, type CivicProfileResult } from '@/app/(exchange)/(pages)/officials/lookup/actions'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -81,16 +15,9 @@ function levelColor(level: string | null): string {
   return 'bg-gray-100 text-gray-700'
 }
 
-function extractZip(input: string): string | null {
-  const trimmed = input.trim()
-  // Pure 5-digit ZIP
-  if (/^\d{5}$/.test(trimmed)) return trimmed
-  // Extract ZIP from an address string
-  const match = trimmed.match(/\b(\d{5})\b/)
-  return match ? match[1] : null
-}
+type ServicesByType = NonNullable<CivicProfileResult['services']>
 
-const SERVICE_SECTIONS: Array<{ key: keyof MunicipalServicesByType; i18nKey: string; Icon: typeof Shield; color: string }> = [
+const SERVICE_SECTIONS: Array<{ key: keyof ServicesByType; i18nKey: string; Icon: typeof Shield; color: string }> = [
   { key: 'emergency', i18nKey: 'lookup.emergency', Icon: AlertTriangle, color: 'text-red-600' },
   { key: 'police', i18nKey: 'lookup.police', Icon: Shield, color: 'text-blue-600' },
   { key: 'fire', i18nKey: 'lookup.fire', Icon: Flame, color: 'text-orange-600' },
@@ -102,104 +29,29 @@ const SERVICE_SECTIONS: Array<{ key: keyof MunicipalServicesByType; i18nKey: str
 
 export function ZipLookupForm() {
   const [input, setInput] = useState('')
-  const [resolvedZip, setResolvedZip] = useState('')
-  const [results, setResults] = useState<LookupResults | null>(null)
+  const [results, setResults] = useState<CivicProfileResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { t } = useTranslation()
 
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault()
-    const zip = extractZip(input)
-    if (!zip) { setError('Please enter a valid address with ZIP code or a 5-digit ZIP code'); return }
+    if (input.trim().length === 0) return
     setError('')
     setLoading(true)
     setResults(null)
-    setResolvedZip(zip)
 
     try {
-      const supabase = createClient()
-
-      // Step 1: Get district info
-      const { data: zipData } = await supabase
-        .from('zip_codes')
-        .select('*')
-        .eq('zip_code', parseInt(zip))
-        .single()
-
-      if (!zipData) { setError('ZIP code not found in our database'); setLoading(false); return }
-
-      // Step 2: Find matching officials
-      const districts = [
-        zipData.congressional_district,
-        zipData.state_senate_district,
-        zipData.state_house_district,
-        'TX',
-      ].filter(Boolean)
-
-      let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-      filterParts += ',level.eq.City'
-      if (zipData.county_id) {
-        filterParts += ',counties_served.like.%' + zipData.county_id + '%'
+      const res = await lookupCivicProfile(input)
+      if (res.error === 'no_zip') {
+        setError('Please enter a valid address with ZIP code or a 5-digit ZIP code')
+      } else if (res.error === 'zip_not_found') {
+        setError('ZIP code not found in our database')
+      } else if (res.error) {
+        setError('Something went wrong. Please try again.')
+      } else if (res.data) {
+        setResults(res.data)
       }
-
-      const { data: officials } = await supabase
-        .from('elected_officials')
-        .select('*')
-        .or(filterParts)
-
-      // Step 3: Municipal services
-      const svcFilters: string[] = ['coverage_area.eq.citywide']
-      if (zipData.county_id) svcFilters.push('county_id.eq.' + zipData.county_id)
-      if (zipData.city) svcFilters.push('city.eq.' + zipData.city)
-
-      const { data: svcData } = await supabase
-        .from('municipal_services')
-        .select('*')
-        .or(svcFilters.join(','))
-        .order('display_order')
-
-      const svcAll = (svcData || []) as MunicipalService[]
-      const servicesByType: MunicipalServicesByType = {
-        emergency: svcAll.filter(s => s.service_type === 'emergency'),
-        police: svcAll.filter(s => s.service_type === 'police'),
-        fire: svcAll.filter(s => s.service_type === 'fire'),
-        medical: svcAll.filter(s => s.service_type === 'medical'),
-        parks: svcAll.filter(s => s.service_type === 'parks'),
-        library: svcAll.filter(s => s.service_type === 'library'),
-        utilities: svcAll.filter(s => s.service_type === 'utilities'),
-      }
-
-      const all = officials || []
-      const grouped: LookupResults = {
-        federal: all.filter(function (o) { return o.level === 'Federal' }),
-        state: all.filter(function (o) { return o.level === 'State' }),
-        county: all.filter(function (o) { return o.level === 'County' }),
-        city: all.filter(function (o) { return o.level === 'City' }),
-        neighborhood: null,
-        votingLocations: [],
-        services: servicesByType,
-      }
-
-      // Step 4: Neighborhood lookup
-      if (zipData.neighborhood_id != null) {
-        const { data: hood } = await supabase
-          .from('neighborhoods')
-          .select('*')
-          .eq('neighborhood_id', zipData.neighborhood_id.toString())
-          .single()
-        if (hood) grouped.neighborhood = hood
-      }
-
-      // Step 5: Voting locations
-      const { data: locations } = await supabase
-        .from('voting_locations')
-        .select('*')
-        .eq('zip_code', parseInt(zip))
-        .eq('is_active', 'Yes')
-      grouped.votingLocations = locations || []
-
-      setResults(grouped)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
@@ -208,7 +60,7 @@ export function ZipLookupForm() {
   }
 
   const hasOfficials = results && (results.federal.length > 0 || results.state.length > 0 || results.county.length > 0 || results.city.length > 0)
-  const hasServices = results?.services && SERVICE_SECTIONS.some(s => (results.services as MunicipalServicesByType)[s.key].length > 0)
+  const hasServices = results?.services && SERVICE_SECTIONS.some(s => (results.services as ServicesByType)[s.key].length > 0)
 
   return (
     <div>
@@ -234,8 +86,8 @@ export function ZipLookupForm() {
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
-      {results && resolvedZip && (
-        <p className="text-sm text-brand-muted mb-6">{t('lookup.showing_results')} <span className="font-semibold text-brand-text">{resolvedZip}</span></p>
+      {results && (
+        <p className="text-sm text-brand-muted mb-6">{t('lookup.showing_results')} <span className="font-semibold text-brand-text">{results.zip}</span></p>
       )}
 
       {results && (
@@ -278,7 +130,7 @@ export function ZipLookupForm() {
               </h2>
               <div className="space-y-4">
                 {SERVICE_SECTIONS.map(function (section) {
-                  const items = (results.services as MunicipalServicesByType)[section.key]
+                  const items = (results.services as ServicesByType)[section.key]
                   if (items.length === 0) return null
                   return (
                     <div key={section.key}>
@@ -319,6 +171,20 @@ export function ZipLookupForm() {
             </div>
           )}
 
+          {/* ── Policies Affecting Your Area ── */}
+          {results.policies && (results.policies.federal.length > 0 || results.policies.state.length > 0 || results.policies.city.length > 0) && (
+            <div>
+              <h2 className="text-xl font-serif font-bold text-brand-text mb-4 flex items-center gap-2 border-b border-brand-border pb-2">
+                <Scale size={22} className="text-brand-accent" /> Policies Affecting Your Area
+              </h2>
+              <div className="space-y-4">
+                {renderPolicyGroup('Federal Policies', results.policies.federal)}
+                {renderPolicyGroup('State Policies', results.policies.state)}
+                {renderPolicyGroup('City Policies', results.policies.city)}
+              </div>
+            </div>
+          )}
+
           {/* Voting locations */}
           {results.votingLocations.length > 0 && (
             <div>
@@ -351,7 +217,34 @@ export function ZipLookupForm() {
   )
 }
 
-function renderGroup(title: string, officials: Official[]) {
+function renderPolicyGroup(title: string, policies: NonNullable<CivicProfileResult['policies']>['federal']) {
+  if (policies.length === 0) return null
+  return (
+    <div>
+      <h3 className="text-base font-semibold text-brand-text mb-2 flex items-center gap-2">
+        <Scale size={16} className="text-brand-muted" /> {title} <span className="text-xs text-brand-muted font-normal">({policies.length})</span>
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {policies.slice(0, 6).map(function (p) {
+          return (
+            <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
+              <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{p.title_6th_grade || p.policy_name}</h4>
+              {p.bill_number && <p className="text-xs font-mono text-brand-muted mb-1">{p.bill_number}</p>}
+              <div className="flex items-center gap-2">
+                {p.status && <span className="text-xs text-brand-muted">{p.status}</span>}
+              </div>
+              {p.impact_statement && (
+                <p className="text-xs text-amber-700 mt-2 line-clamp-2">{p.impact_statement}</p>
+              )}
+            </Link>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function renderGroup(title: string, officials: CivicProfileResult['federal']) {
   if (officials.length === 0) return null
   const LevelIcon = title.indexOf('Federal') !== -1 ? Landmark : title.indexOf('State') !== -1 ? Star : title.indexOf('County') !== -1 ? Home : Building2
   return (

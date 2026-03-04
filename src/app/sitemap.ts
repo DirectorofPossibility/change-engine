@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages = [
     '', '/pathways', '/help', '/officials', '/officials/lookup',
-    '/elections', '/services', '/learn', '/search', '/policies',
+    '/elections', '/services', '/learn', '/search', '/policies', '/geography',
   ].map(function (path) {
     return {
       url: baseUrl + path,

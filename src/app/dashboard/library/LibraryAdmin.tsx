@@ -18,7 +18,7 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: 'bg-red-100 text-red-800',
 }
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
+const MAX_FILE_SIZE = 25 * 1024 * 1024 // 25MB
 
 export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: LibraryAdminProps) {
   const [documents, setDocuments] = useState(initialDocs)
@@ -50,7 +50,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
 
   function validateFile(file: File): string | null {
     if (file.type !== 'application/pdf') return 'Only PDF files are accepted.'
-    if (file.size > MAX_FILE_SIZE) return 'File size exceeds 50MB limit.'
+    if (file.size > MAX_FILE_SIZE) return 'File size exceeds 25MB limit.'
     return null
   }
 
@@ -316,7 +316,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
               <p className="text-sm text-gray-600">
                 Drag and drop a PDF here, or click to browse
               </p>
-              <p className="text-xs text-gray-400 mt-1">PDF only, up to 50MB</p>
+              <p className="text-xs text-gray-400 mt-1">PDF only, up to 25MB</p>
             </>
           )}
         </div>

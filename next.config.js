@@ -8,6 +8,21 @@ const nextConfig = {
         destination: '/search?q=:slug',
         permanent: false,
       },
+      {
+        source: '/neighborhoods',
+        destination: '/geography',
+        permanent: true,
+      },
+      {
+        source: '/super-neighborhoods',
+        destination: '/geography',
+        permanent: true,
+      },
+      {
+        source: '/super-neighborhoods/:path*',
+        destination: '/geography?superNeighborhood=:path*',
+        permanent: true,
+      },
     ]
   },
 }

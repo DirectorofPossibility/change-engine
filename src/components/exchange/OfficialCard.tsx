@@ -3,16 +3,7 @@
 import Link from 'next/link'
 import { Mail, Phone, Globe, Linkedin } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
-
-const LEVEL_COLORS: Record<string, string> = {
-  Federal: '#3182ce',
-  State: '#805ad5',
-  County: '#d69e2e',
-  City: '#38a169',
-  'School District': '#dd6b20',
-}
-
-const DEFAULT_LEVEL_COLOR = '#8B7E74'
+import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 
 interface OfficialCardProps {
   id: string

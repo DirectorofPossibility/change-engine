@@ -202,6 +202,10 @@ Key programs, frameworks, methods, or strategies. Use bullet points for specific
 
 Omit any section that doesn't apply. Preserve specific names, organizations, URLs, and details from the source.
 
+Also produce:
+- "hero_quote": A short (1-2 sentence) inspirational or mission-oriented quote extracted or paraphrased from the source content. Use asset-based framing — focus on possibility, community strength, or vision. Null if no suitable quote found.
+- "programs": An array of {"name":"...","description":"..."} objects for key programs or initiatives mentioned in the content. Max 4 items. Empty array if none apply.
+
 ${taxonomyPrompt}`;
 
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -213,9 +217,9 @@ ${taxonomyPrompt}`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 2500,
+        max_tokens: 3000,
         system: systemPrompt,
-        messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","body_6th_grade":"3-5 paragraphs with key details preserved","action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
+        messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","body_6th_grade":"3-5 paragraphs with key details preserved","hero_quote":"...or null","programs":[{"name":"...","description":"..."}],"action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
       }),
     });
 

@@ -1,3 +1,25 @@
+// Houston current weather from NWS forecast API (no key needed)
+export async function getHoustonWeather(): Promise<{ temperature: number; shortForecast: string } | null> {
+  try {
+    // NWS gridpoint for central Houston (office: HGX, grid: 65,97)
+    const res = await fetch('https://api.weather.gov/gridpoints/HGX/65,97/forecast', {
+      next: { revalidate: 1800 },
+      headers: { 'User-Agent': 'TheChangeEngine/1.0 (hello@thechangelab.net)' },
+    })
+    const json = await res.json()
+    const period = json.properties?.periods?.[0]
+    if (period) {
+      return {
+        temperature: period.temperature as number,
+        shortForecast: period.shortForecast as string,
+      }
+    }
+    return null
+  } catch {
+    return null
+  }
+}
+
 // Air Quality - using AQICN public API (no key needed for basic feed)
 export async function getHoustonAirQuality() {
   try {

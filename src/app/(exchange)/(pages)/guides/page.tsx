@@ -6,18 +6,13 @@ import { getGuides, getLangId, fetchTranslationsForTable } from '@/lib/data/exch
 import { ThemePill } from '@/components/ui/ThemePill'
 import { getUIStrings } from '@/lib/i18n'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { ENGAGEMENT_LEVEL_COLORS } from '@/lib/constants'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Guides — The Change Engine',
   description: 'Civic engagement guides for Houston — contacting officials, voting, community organizing, and local resources.',
-}
-
-const LEVEL_COLORS: Record<string, string> = {
-  'On the Couch': 'bg-green-100 text-green-800',
-  'Off the Couch': 'bg-blue-100 text-blue-800',
-  'Use Your Superpower': 'bg-purple-100 text-purple-800',
 }
 
 export default async function GuidesPage() {
@@ -67,7 +62,7 @@ export default async function GuidesPage() {
                 <div className="mt-auto flex items-center gap-2 flex-wrap">
                   {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
                   {guide.engagement_level && (
-                    <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + (LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
+                    <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
                       {guide.engagement_level}
                     </span>
                   )}

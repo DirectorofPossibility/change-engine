@@ -13,7 +13,7 @@ import type { Metadata } from 'next'
 import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { PageHero } from '@/components/exchange/PageHero'
-import { PAGE_INTROS } from '@/lib/constants'
+import { PAGE_INTROS, URGENCY_LEVELS } from '@/lib/constants'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
 import { HelpUrgencyHeader } from './HelpUrgencyHeader'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -24,8 +24,6 @@ export const metadata: Metadata = {
   title: 'Available Resources',
   description: 'Find services and resources for food, housing, healthcare, jobs, and more in Houston.',
 }
-
-const URGENCY_LEVELS = ['Critical', 'High', 'Medium', 'Low']
 
 export default async function HelpPage() {
   const situations = await getLifeSituations()

@@ -16,10 +16,10 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { Users, DollarSign, MapPin } from 'lucide-react'
+import { Users, DollarSign, MapPin, Scale } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
-import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood, getLangId, fetchTranslationsForTable, getPoliciesForNeighborhood } from '@/lib/data/exchange'
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { getUIStrings } from '@/lib/i18n'
@@ -39,10 +39,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function SuperNeighborhoodDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [sn, neighborhoods, mapData] = await Promise.all([
+  const [sn, neighborhoods, mapData, snPolicies] = await Promise.all([
     getSuperNeighborhood(id),
     getNeighborhoodsBySuperNeighborhood(id),
     getMapMarkersForSuperNeighborhood(id),
+    getPoliciesForNeighborhood(id),
   ])
 
   if (!sn) notFound()
@@ -211,6 +212,37 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
                 </div>
               </Link>
             ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Policies Affecting This Neighborhood ── */}
+      {snPolicies.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
+            <Scale size={20} className="text-brand-accent" />
+            Policies Affecting This Neighborhood
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {snPolicies.slice(0, 6).map(function (p: any) {
+              return (
+                <Link
+                  key={p.policy_id}
+                  href={'/policies/' + p.policy_id}
+                  className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    {p.level && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{p.level}</span>}
+                    {p.status && <span className="text-xs text-brand-muted">{p.status}</span>}
+                  </div>
+                  <h3 className="font-semibold text-brand-text text-sm line-clamp-2">{p.title_6th_grade || p.policy_name}</h3>
+                  {p.bill_number && <p className="text-xs font-mono text-brand-muted mt-1">{p.bill_number}</p>}
+                  {p.impact_statement && (
+                    <p className="text-xs text-amber-700 mt-2 line-clamp-2">{p.impact_statement}</p>
+                  )}
+                </Link>
+              )
+            })}
           </div>
         </section>
       )}

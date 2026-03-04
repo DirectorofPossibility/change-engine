@@ -8,7 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
+const MAX_FILE_SIZE = 25 * 1024 * 1024 // 25MB
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     // Validate file size
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: 'File size exceeds 50MB limit' }, { status: 400 })
+      return NextResponse.json({ error: 'File size exceeds 25MB limit' }, { status: 400 })
     }
 
     // Generate storage path

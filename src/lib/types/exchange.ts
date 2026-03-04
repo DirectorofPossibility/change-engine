@@ -211,6 +211,45 @@ export interface GeoFeatureProperties {
   [key: string]: string | number | null | undefined
 }
 
+/** Unified marker format for the geography map. */
+export interface MapMarkerData {
+  id: string
+  lat: number
+  lng: number
+  title: string
+  type: string
+  address?: string | null
+  phone?: string | null
+  link?: string | null
+}
+
+/** Data bundle returned by getGeographyData(). */
+export interface GeographyData {
+  superNeighborhoods: SuperNeighborhood[]
+  neighborhoods: Array<{ neighborhood_id: string; neighborhood_name: string; super_neighborhood_id: string | null }>
+  serviceMarkers: MapMarkerData[]
+  organizationMarkers: MapMarkerData[]
+  officials: Array<{
+    official_id: string
+    official_name: string
+    title: string | null
+    level: string | null
+    party: string | null
+    email: string | null
+    office_phone: string | null
+    website: string | null
+    photo_url: string | null
+  }>
+  policies: Array<{
+    policy_id: string
+    policy_name: string
+    title_6th_grade: string | null
+    status: string | null
+    level: string | null
+    source_url: string | null
+  }>
+}
+
 // ── Election Dashboard types ─────────────────────────────────────────
 
 export type Election = Tables<'elections'>

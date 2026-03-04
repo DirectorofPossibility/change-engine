@@ -126,6 +126,7 @@ Deno.serve(async (req: Request) => {
           title_6th_grade: c.title_6th_grade || (inboxItem.title as string) || 'Untitled',
           summary_6th_grade: c.summary_6th_grade || (inboxItem.description as string) || '',
           body: c.body_6th_grade || null,
+          org_id: null,
           action_donate: actions.donate_url || null,
           action_volunteer: actions.volunteer_url || null,
           action_signup: actions.signup_url || null,
@@ -186,6 +187,17 @@ Deno.serve(async (req: Request) => {
         for (const field of ['action_donate', 'action_volunteer', 'action_signup',
           'action_register', 'action_apply', 'action_call', 'action_attend']) {
           if (c[field]) publishData[field] = c[field];
+        }
+      }
+
+      // Auto-link organization via source domain
+      if (!publishData.org_id && inboxItem.source_domain) {
+        const domainRes = await supabaseGet(
+          'org_domains',
+          `domain=eq.${encodeURIComponent(inboxItem.source_domain as string)}&select=org_id`
+        );
+        if (Array.isArray(domainRes) && domainRes.length > 0) {
+          publishData.org_id = domainRes[0].org_id;
         }
       }
 

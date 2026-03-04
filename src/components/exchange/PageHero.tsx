@@ -20,13 +20,23 @@ interface PageHeroProps {
   /** Height preset. Defaults to 'md'. */
   height?: 'sm' | 'md' | 'lg'
   /** Visual variant */
-  variant?: 'image' | 'gradient' | 'editorial'
+  variant?: 'image' | 'gradient' | 'editorial' | 'content'
   /** For image variant: background image path */
   backgroundImage?: string
   /** For gradient variant: primary theme color */
   gradientColor?: string
   /** Show decorative circle mesh on gradient heroes */
   showCircleMesh?: boolean
+  /** For content variant: hero image URL */
+  imageUrl?: string
+  /** For content variant: source domain */
+  sourceDomain?: string
+  /** For content variant: published date string */
+  publishedDate?: string
+  /** For content variant: original source URL */
+  sourceUrl?: string
+  /** Slot for badge/pill elements rendered inside the hero */
+  children?: React.ReactNode
 }
 
 /** Decorative SVG circles for gradient heroes — echoes the circle knowledge graph */
@@ -60,13 +70,18 @@ export function PageHero({
   backgroundImage,
   gradientColor,
   showCircleMesh,
+  imageUrl,
+  sourceDomain,
+  publishedDate,
+  sourceUrl,
+  children,
 }: PageHeroProps) {
   const { t } = useTranslation()
   const displayTitle = titleKey ? t(titleKey) : (title ?? '')
   const displaySubtitle = subtitleKey ? t(subtitleKey) : subtitle
   const displayIntro = introKey ? t(introKey) : intro
 
-  // Auto-detect variant
+  // Auto-detect variant (content variant must be explicitly set)
   const resolvedVariant = variant ?? (backgroundImage ? 'image' : gradientColor ? 'gradient' : 'editorial')
 
   if (resolvedVariant === 'image') {
@@ -119,6 +134,76 @@ export function PageHero({
           {displayIntro && (
             <p className="text-sm sm:text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
           )}
+        </div>
+      </section>
+    )
+  }
+
+  if (resolvedVariant === 'content') {
+    const gc = gradientColor || '#C75B2A'
+    return (
+      <section className="relative w-full overflow-hidden">
+        {/* Gradient background */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, ${gc}18 0%, ${gc}08 50%, transparent 80%)`,
+          }}
+        />
+        <CircleMeshDecoration color={gc} />
+        {/* Bottom accent line */}
+        <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${gc}, transparent 60%)` }} />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
+            {/* Text content */}
+            <div className="flex-1 min-w-0">
+              {/* Badge slot */}
+              {children && <div className="flex items-center gap-2 mb-4">{children}</div>}
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
+                {displayTitle}
+              </h1>
+
+              {displaySubtitle && (
+                <p className="text-base sm:text-lg text-brand-muted mt-3 max-w-2xl leading-relaxed">{displaySubtitle}</p>
+              )}
+
+              {/* Metadata line */}
+              <div className="flex items-center gap-3 text-sm text-brand-muted mt-4">
+                {sourceDomain && <span className="font-medium">{sourceDomain}</span>}
+                {sourceDomain && publishedDate && <span className="opacity-40">·</span>}
+                {publishedDate && <span>{publishedDate}</span>}
+              </div>
+
+              {/* CTA */}
+              {sourceUrl && (
+                <a
+                  href={sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-lg text-sm font-medium text-white transition-colors"
+                  style={{ backgroundColor: gc }}
+                >
+                  Visit source
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                </a>
+              )}
+            </div>
+
+            {/* Hero image */}
+            {imageUrl && (
+              <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80 xl:w-96">
+                <div className="rounded-xl overflow-hidden shadow-lg">
+                  <img
+                    src={imageUrl}
+                    alt=""
+                    className="w-full h-48 sm:h-56 lg:h-64 object-cover"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </section>
     )

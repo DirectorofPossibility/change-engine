@@ -2180,6 +2180,8 @@ export type Database = {
           coverage_area: string | null
           is_emergency: boolean
           display_order: number
+          latitude: number | null
+          longitude: number | null
         }
         Insert: {
           id?: string
@@ -2195,6 +2197,8 @@ export type Database = {
           coverage_area?: string | null
           is_emergency?: boolean
           display_order?: number
+          latitude?: number | null
+          longitude?: number | null
         }
         Update: {
           id?: string
@@ -2210,6 +2214,8 @@ export type Database = {
           coverage_area?: string | null
           is_emergency?: boolean
           display_order?: number
+          latitude?: number | null
+          longitude?: number | null
         }
         Relationships: []
       }

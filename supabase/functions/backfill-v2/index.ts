@@ -7,6 +7,18 @@ const CORS = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'
 
 async function db(p:string){const r=await fetch(`${SB}/rest/v1/${p}`,{headers:{apikey:SK,Authorization:`Bearer ${SK}`}});return r.json();}
 async function patch(t:string,m:string,b:any){await fetch(`${SB}/rest/v1/${t}?${m}`,{method:'PATCH',headers:{apikey:SK,Authorization:`Bearer ${SK}`,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(b)});}
+async function upsertRows(table:string,rows:any[]){if(!rows.length)return;await fetch(`${SB}/rest/v1/${table}`,{method:'POST',headers:{apikey:SK,Authorization:`Bearer ${SK}`,'Content-Type':'application/json',Prefer:'return=minimal,resolution=merge-duplicates'},body:JSON.stringify(rows)});}
+
+/** After classification, populate junction tables to wire entities into the knowledge mesh. */
+async function populateJunctions(table:string,id:string,classification:any){
+  const focusIds:string[]=(classification.focus_area_ids||[]).filter((f:string)=>f.startsWith('FA_'));
+  if(focusIds.length===0)return;
+  if(table==='policies'){
+    await upsertRows('policy_focus_areas',focusIds.map(fid=>({policy_id:id,focus_id:fid})));
+  }else if(table==='elected_officials'){
+    await upsertRows('official_focus_areas',focusIds.map(fid=>({official_id:id,focus_id:fid})));
+  }
+}
 
 Deno.serve(async(req:Request)=>{
 if(req.method==='OPTIONS')return new Response('ok',{headers:CORS});
@@ -84,6 +96,7 @@ for(const item of items){
     if(enriched.summary_6th_grade)patchBody.summary_6th_grade=enriched.summary_6th_grade;
     if(isPolicies&&enriched.impact_statement)patchBody.impact_statement=enriched.impact_statement;
     await patch(table,`${cfg.pk}=eq.${id}`,patchBody);
+    await populateJunctions(table,id,enriched);
     results.push({id,name,status:'done',confidence:enriched.confidence});
   }catch(err){results.push({id,name,status:'error',error:(err as Error).message});}
 }

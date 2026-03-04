@@ -12,7 +12,7 @@ import { Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import Link from 'next/link'
 
-export type MarkerType = 'service' | 'voting' | 'organization' | 'distribution' | 'opportunity'
+export type MarkerType = 'service' | 'voting' | 'organization' | 'distribution' | 'opportunity' | 'park' | 'police' | 'fire' | 'school' | 'medical' | 'library' | 'official'
 
 export interface MarkerData {
   id: string
@@ -31,6 +31,13 @@ const MARKER_COLORS: Record<MarkerType, { background: string; border: string }> 
   organization: { background: '#38a169', border: '#276749' },
   distribution: { background: '#d69e2e', border: '#b7791f' },
   opportunity:  { background: '#805ad5', border: '#6b46c1' },
+  park:         { background: '#38a169', border: '#276749' },
+  police:       { background: '#3182ce', border: '#2c5282' },
+  fire:         { background: '#e53e3e', border: '#c53030' },
+  school:       { background: '#dd6b20', border: '#c05621' },
+  medical:      { background: '#805ad5', border: '#6b46c1' },
+  library:      { background: '#d69e2e', border: '#b7791f' },
+  official:     { background: '#319795', border: '#285e61' },
 }
 
 /**

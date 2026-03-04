@@ -27,6 +27,7 @@ import { GuideMiniGraph } from '@/components/exchange/GuideMiniGraph'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { ExternalLink, Building2, Newspaper, FileText, Scale } from 'lucide-react'
 import { getUIStrings } from '@/lib/i18n'
+import { ENGAGEMENT_LEVEL_COLORS } from '@/lib/constants'
 
 /** Strip dangerous HTML tags and attributes to prevent XSS. */
 function sanitizeHtml(html: string): string {
@@ -46,12 +47,6 @@ interface GuideSection {
   title: string
   content: string
   icon?: string
-}
-
-const LEVEL_COLORS: Record<string, string> = {
-  'On the Couch': 'bg-green-100 text-green-800',
-  'Off the Couch': 'bg-blue-100 text-blue-800',
-  'Use Your Superpower': 'bg-purple-100 text-purple-800',
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -157,7 +152,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
         <div className="flex items-center gap-3 flex-wrap mb-6">
           {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
           {guide.engagement_level && (
-            <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + (LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
+            <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
               {guide.engagement_level}
             </span>
           )}

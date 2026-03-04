@@ -7,14 +7,7 @@
 'use client'
 
 import { useTranslation } from '@/lib/i18n'
-
-/** Maps urgency levels to their i18n key and Tailwind color classes. */
-const URGENCY_CONFIG: Record<string, { key: string; color: string }> = {
-  Critical: { key: 'help.urgency_critical', color: 'text-red-700 border-red-300 bg-red-50' },
-  High:     { key: 'help.urgency_high', color: 'text-orange-700 border-orange-300 bg-orange-50' },
-  Medium:   { key: 'help.urgency_medium', color: 'text-yellow-700 border-yellow-300 bg-yellow-50' },
-  Low:      { key: 'help.urgency_low', color: 'text-green-700 border-green-300 bg-green-50' },
-}
+import { URGENCY_CONFIG } from '@/lib/constants'
 
 interface HelpUrgencyHeaderProps {
   level: string
