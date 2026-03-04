@@ -29,6 +29,7 @@ import {
   getPathwayBridges,
   getAllTopics,
   getLatestContent,
+  getCenterCounts,
 } from '@/lib/data/exchange'
 import { Wayfinder } from '@/components/exchange/Wayfinder'
 import type { PathwayFeedData } from '@/components/exchange/Wayfinder'
@@ -42,12 +43,13 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   // Fetch all data in parallel
-  const [stats, pathwayCounts, bridges, topics, latestContent] = await Promise.all([
+  const [stats, pathwayCounts, bridges, topics, latestContent, centerCounts] = await Promise.all([
     getExchangeStats(),
     getPathwayCounts(),
     getPathwayBridges(),
     getAllTopics(30),
     getLatestContent(24),
+    getCenterCounts(),
   ])
 
   // Fetch braided feed for each pathway in parallel
@@ -98,6 +100,8 @@ export default async function HomePage() {
       totalItems={totalItems}
       newThisWeek={newThisWeek}
       latestContent={latestContent}
+      centerCounts={centerCounts}
+      organizations={stats.organizations || 0}
     />
   )
 }

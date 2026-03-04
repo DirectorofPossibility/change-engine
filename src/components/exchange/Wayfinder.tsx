@@ -9,6 +9,8 @@ import { WayfinderSidebar } from './WayfinderSidebar'
 import { EmbeddableCircles } from './CircleKnowledgeGraph'
 import { BraidedFeed } from './BraidedFeed'
 import { WayfinderPanel } from './WayfinderPanel'
+import { ImpactMetrics } from './ImpactMetrics'
+import { CentersGrid } from './CentersGrid'
 import type { FeedItem } from './FeedCard'
 import type { PanelData } from './WayfinderPanel'
 
@@ -70,6 +72,8 @@ interface WayfinderProps {
     source_domain: string | null
     image_url: string | null
   }>
+  centerCounts: Record<string, number>
+  organizations: number
 }
 
 const PATHWAY_ICONS: Record<string, typeof Heart> = {
@@ -160,6 +164,8 @@ export function Wayfinder({
   totalItems,
   newThisWeek,
   latestContent,
+  centerCounts,
+  organizations,
 }: WayfinderProps) {
   const { t } = useTranslation()
   const [selectedPathway, setSelectedPathway] = useState<string | null>(null)
@@ -282,6 +288,14 @@ export function Wayfinder({
                 })}
               </div>
 
+              {/* Impact Metrics */}
+              <ImpactMetrics stats={{
+                resources: stats.resources,
+                organizations: organizations,
+                officials: stats.officials,
+                policies: stats.policies,
+              }} />
+
               {/* Life Situations */}
               <section className="mb-10">
                 <div className="flex items-center gap-3 mb-4">
@@ -307,6 +321,9 @@ export function Wayfinder({
                   </Link>
                 </div>
               </section>
+
+              {/* Four Centers */}
+              <CentersGrid centerCounts={centerCounts} />
 
               {/* Explore by Pathway */}
               <section className="mb-10">
