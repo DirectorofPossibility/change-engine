@@ -1,32 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
+import {
+  fetchFullTaxonomy,
+  buildPromptForEntity,
+  classifyEntity,
+  validateAndEnrich,
+  populateAllJunctions,
+  parseClaudeJson,
+  buildUserPrompt,
+  TABLE_CONFIGS,
+} from '@/lib/classification'
 
 /**
- * @fileoverview POST /api/enrich-entity — Entity enrichment (separate from content pipeline).
+ * @fileoverview POST /api/enrich-entity — Unified entity enrichment.
  *
- * Enriches non-content knowledge graph entities (officials, policies, organizations)
- * through the full classification matrix. Unlike /api/enrich (which handles content),
- * this route processes entities that exist independently in the graph.
- *
- * For each entity, Claude reads the name + description and classifies it with:
- * - Focus areas, SDGs, SDOH, NTEE codes, AIRS codes
- * - A confidence score
- * - Writes `classification_v2` JSON column on the entity row
+ * Classifies ANY entity type across all 16 taxonomy dimensions using
+ * the shared classification module. Supports all entity tables:
+ *   elected_officials, policies, organizations, services_211,
+ *   opportunities, agencies, benefit_programs, campaigns, ballot_items
  *
  * Auth: Requires API key (x-api-key) or cron secret (Bearer token).
  *
  * Body:
  *   { "table": "elected_officials", "limit": 10, "ids": ["OFFICIAL_001"] }
- *   { "table": "policies", "limit": 10, "force": true }
- *
- * Env: ANTHROPIC_API_KEY, SUPABASE_SECRET_KEY
+ *   { "table": "organizations", "limit": 10, "force": true }
  */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || ''
-
-// ── Supabase REST helper ──────────────────────────────────────────────
 
 async function supaRest(method: string, path: string, body?: unknown) {
   const headers: Record<string, string> = {
@@ -45,278 +47,6 @@ async function supaRest(method: string, path: string, body?: unknown) {
   const text = await res.text()
   return text ? JSON.parse(text) : null
 }
-
-// ── Table configs ─────────────────────────────────────────────────────
-
-const TABLE_CONFIGS: Record<string, {
-  idCol: string
-  nameCol: string
-  descCol: string
-  contextCols: string[] // extra columns for richer classification
-  entityType: string
-}> = {
-  elected_officials: {
-    idCol: 'official_id',
-    nameCol: 'official_name',
-    descCol: 'description_5th_grade',
-    contextCols: ['title', 'party', 'level', 'jurisdiction', 'district_type', 'website', 'counties_served'],
-    entityType: 'elected_official',
-  },
-  policies: {
-    idCol: 'policy_id',
-    nameCol: 'policy_name',
-    descCol: 'summary_5th_grade',
-    contextCols: ['bill_number', 'policy_type', 'level', 'status', 'source_url', 'official_ids'],
-    entityType: 'policy',
-  },
-  organizations: {
-    idCol: 'org_id',
-    nameCol: 'org_name',
-    descCol: 'description_5th_grade',
-    contextCols: ['website', 'data_source'],
-    entityType: 'organization',
-  },
-}
-
-// ── Taxonomy ──────────────────────────────────────────────────────────
-
-async function fetchTaxonomy() {
-  const get = (table: string, select = '*') =>
-    supaRest('GET', `${table}?select=${select}&limit=500`)
-
-  const [themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills] = await Promise.all([
-    get('themes', 'theme_id,theme_name'),
-    get('focus_areas', 'focus_id,focus_area_name,theme_id,sdg_id,ntee_code,airs_code,sdoh_code,is_bridging'),
-    get('sdgs', 'sdg_id,sdg_number,sdg_name'),
-    get('sdoh_domains', 'sdoh_code,sdoh_name'),
-    get('ntee_codes', 'ntee_code,ntee_name'),
-    get('airs_codes', 'airs_code,airs_name'),
-    get('audience_segments', 'segment_id,segment_name,description'),
-    get('life_situations', 'situation_id,situation_name,theme_id,urgency_level'),
-    get('resource_types', 'resource_type_id,resource_type_name,center'),
-    get('service_categories', 'service_cat_id,service_cat_name'),
-    get('skills', 'skill_id,skill_name,skill_category'),
-  ])
-
-  return { themes, focusAreas, sdgs, sdoh, ntee, airs, segments, situations, resourceTypes, serviceCats, skills }
-}
-
-function buildTaxonomyPrompt(tax: Awaited<ReturnType<typeof fetchTaxonomy>>): string {
-  const themeList = tax.themes.map((t: any) => `${t.theme_id}: ${t.theme_name}`).join('\n')
-
-  const faByTheme: Record<string, string[]> = {}
-  for (const fa of tax.focusAreas) {
-    const key = fa.theme_id || 'NONE'
-    if (!faByTheme[key]) faByTheme[key] = []
-    faByTheme[key].push(`${fa.focus_id}|${fa.focus_area_name}|sdg:${fa.sdg_id}|ntee:${fa.ntee_code}|airs:${fa.airs_code}|sdoh:${fa.sdoh_code}${fa.is_bridging ? '|BRIDGING' : ''}`)
-  }
-  let faText = ''
-  for (const [themeId, fas] of Object.entries(faByTheme)) {
-    const themeName = tax.themes.find((t: any) => t.theme_id === themeId)?.theme_name || themeId
-    faText += `\n[${themeName}]\n${fas.join('\n')}\n`
-  }
-
-  const segList = tax.segments.map((s: any) => `${s.segment_id}: ${s.segment_name}`).join('\n')
-  const sitList = tax.situations.map((s: any) => `${s.situation_id}: "${s.situation_name}" [${s.urgency_level}]`).join('\n')
-  const rtList = tax.resourceTypes.map((r: any) => `${r.resource_type_id}: ${r.resource_type_name} (${r.center})`).join('\n')
-
-  return `THEMES (pick 1 primary + 0-2 secondary):\n${themeList}\n\nFOCUS AREAS (pick 1-5 by ID):\n${faText}\n\nAUDIENCE SEGMENTS (pick 1-3):\n${segList}\n\nLIFE SITUATIONS (pick 0-3):\n${sitList}\n\nRESOURCE TYPES (pick 1):\n${rtList}\n\nCENTERS (pick 1): Learning | Action | Resource | Accountability`
-}
-
-// ── Claude ─────────────────────────────────────────────────────────────
-
-function parseClaudeJson(raw: string): any {
-  let text = raw.trim()
-  if (text.startsWith('```json')) text = text.slice(7)
-  else if (text.startsWith('```')) text = text.slice(3)
-  if (text.endsWith('```')) text = text.slice(0, -3)
-  text = text.trim()
-  const start = text.indexOf('{')
-  const end = text.lastIndexOf('}')
-  if (start === -1 || end === -1) throw new Error('No JSON found')
-  return JSON.parse(text.substring(start, end + 1))
-}
-
-async function callClaude(system: string, user: string, maxTokens = 2000): Promise<string> {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': ANTHROPIC_KEY,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: maxTokens,
-          system,
-          messages: [{ role: 'user', content: user }],
-        }),
-        signal: AbortSignal.timeout(30000),
-      })
-      const data = await res.json()
-      if (data.error) {
-        if (attempt < 2) { await new Promise(r => setTimeout(r, 2000 * (attempt + 1))); continue }
-        throw new Error(data.error.message || 'Claude API error')
-      }
-      return data.content?.[0]?.text || ''
-    } catch (e) {
-      if (attempt < 2) { await new Promise(r => setTimeout(r, 2000 * (attempt + 1))); continue }
-      throw e
-    }
-  }
-  throw new Error('Max retries')
-}
-
-// ── Enrich a single entity ────────────────────────────────────────────
-
-async function enrichEntity(
-  row: any,
-  config: typeof TABLE_CONFIGS[string],
-  taxonomy: Awaited<ReturnType<typeof fetchTaxonomy>>,
-  taxonomyPrompt: string,
-) {
-  const validFocusIds = new Set(taxonomy.focusAreas.map((f: any) => f.focus_id))
-
-  const entityId = row[config.idCol]
-  const name = row[config.nameCol] || ''
-  const desc = row[config.descCol] || ''
-
-  // Build context from extra columns
-  const context = config.contextCols
-    .map(col => row[col] ? `${col}: ${row[col]}` : '')
-    .filter(Boolean)
-    .join('\n')
-
-  if (!name) return { success: false, error: 'No name', id: entityId }
-
-  const systemPrompt = `You are the Change Engine v2 classifier for Houston, Texas civic data.
-You are classifying a ${config.entityType}. Map it onto the knowledge graph taxonomy.
-Return ONLY valid taxonomy IDs. Respond with a single JSON object, no markdown.
-
-${taxonomyPrompt}`
-
-  const userPrompt = `Entity type: ${config.entityType}
-Name: ${name}
-Description: ${desc}
-${context}
-
-Classify this ${config.entityType} into the knowledge graph. Return JSON:
-{
-  "theme_primary": "THEME_XX",
-  "theme_secondary": [],
-  "focus_area_ids": ["FA_XXX"],
-  "sdg_ids": ["SDG_XX"],
-  "sdoh_code": "SDOH_XX or null",
-  "ntee_codes": ["X"],
-  "airs_codes": ["X"],
-  "center": "Learning|Action|Resource|Accountability",
-  "resource_type_id": "RTYPE_XX",
-  "audience_segment_ids": ["SEG_XX"],
-  "life_situation_ids": ["SIT_XXX"],
-  "keywords": ["keyword1", "keyword2"],
-  "geographic_scope": "Houston|National|Texas|Global",
-  "confidence": 0.0,
-  "reasoning": "..."
-}`
-
-  const rawResponse = await callClaude(systemPrompt, userPrompt)
-  const classification = parseClaudeJson(rawResponse)
-
-  // Validate + enrich focus areas with inherited codes
-  const enrichedFocusAreas: any[] = []
-  const inheritedSdgs = new Set<string>()
-  const inheritedNtee = new Set<string>()
-  const inheritedAirs = new Set<string>()
-  let inheritedSdoh = ''
-
-  for (const faId of (classification.focus_area_ids || [])) {
-    if (validFocusIds.has(faId)) {
-      const fa = taxonomy.focusAreas.find((f: any) => f.focus_id === faId)
-      if (fa) {
-        enrichedFocusAreas.push(fa)
-        if (fa.sdg_id) inheritedSdgs.add(fa.sdg_id)
-        if (fa.ntee_code) inheritedNtee.add(fa.ntee_code)
-        if (fa.airs_code) inheritedAirs.add(fa.airs_code)
-        if (fa.sdoh_code && !inheritedSdoh) inheritedSdoh = fa.sdoh_code
-      }
-    }
-  }
-
-  const validFocusAreaIds = enrichedFocusAreas.map((fa: any) => fa.focus_id)
-  const allSdgIds = Array.from(new Set([...Array.from(inheritedSdgs), ...(classification.sdg_ids || [])]))
-  const sdohCode = classification.sdoh_code || inheritedSdoh
-
-  const enrichedClassification = {
-    ...classification,
-    sdg_ids: allSdgIds,
-    ntee_codes: Array.from(new Set([...Array.from(inheritedNtee), ...(classification.ntee_codes || [])])),
-    airs_codes: Array.from(new Set([...Array.from(inheritedAirs), ...(classification.airs_codes || [])])),
-    sdoh_code: sdohCode,
-    _enriched_focus_areas: enrichedFocusAreas.map((fa: any) => ({
-      id: fa.focus_id, name: fa.focus_area_name, theme: fa.theme_id,
-      sdg: fa.sdg_id, ntee: fa.ntee_code, airs: fa.airs_code, sdoh: fa.sdoh_code, bridging: fa.is_bridging,
-    })),
-    _keywords: classification.keywords || [],
-    _version: 'v3-entity-enrich',
-  }
-
-  // Update the entity — code to theme, pathway, focus areas, and center
-  const updateData: Record<string, unknown> = {
-    classification_v2: enrichedClassification,
-    focus_area_ids: validFocusAreaIds.join(','),
-  }
-
-  // Write theme/pathway/center if the classification provides them
-  if (classification.theme_primary) {
-    updateData.theme_id = classification.theme_primary
-  }
-  if (classification.center) {
-    updateData.engagement_level = classification.center
-  }
-
-  // Map entity type to table name
-  const tableMap: Record<string, string> = {
-    elected_official: 'elected_officials',
-    policy: 'policies',
-    organization: 'organizations',
-  }
-  const tblName = tableMap[config.entityType] || config.entityType + 's'
-  await supaRest('PATCH', `${tblName}?${config.idCol}=eq.${entityId}`, updateData)
-
-  // Write to entity-specific focus area junction table
-  const junctionMap: Record<string, { table: string; idCol: string }> = {
-    elected_official: { table: 'official_focus_areas', idCol: 'official_id' },
-    policy: { table: 'policy_focus_areas', idCol: 'policy_id' },
-    organization: { table: 'organization_focus_areas', idCol: 'org_id' },
-  }
-  const junction = junctionMap[config.entityType]
-  if (junction) {
-    // Delete existing junctions then re-insert (idempotent)
-    await supaRest('DELETE', `${junction.table}?${junction.idCol}=eq.${entityId}`).catch(() => {})
-    for (const focusId of validFocusAreaIds) {
-      await supaRest('POST', junction.table, {
-        [junction.idCol]: entityId,
-        focus_id: focusId,
-      }).catch(() => {}) // Ignore duplicates
-    }
-  }
-
-  return {
-    success: true,
-    id: entityId,
-    name,
-    focus_areas: validFocusAreaIds,
-    sdgs: allSdgIds,
-    center: classification.center,
-    theme: classification.theme_primary,
-    confidence: classification.confidence,
-    keywords: classification.keywords || [],
-  }
-}
-
-// ── Route handler ────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   const authError = await validateApiRequest(req)
@@ -338,9 +68,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Unknown table: ${tableName}. Supported: ${Object.keys(TABLE_CONFIGS).join(', ')}` }, { status: 400 })
   }
 
-  // Fetch taxonomy once
-  const taxonomy = await fetchTaxonomy()
-  const taxonomyPrompt = buildTaxonomyPrompt(taxonomy)
+  // Fetch full 16-dimension taxonomy once
+  const taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY)
+  const systemPrompt = buildPromptForEntity(taxonomy, config.entityType)
 
   // Get entities to enrich
   const selectCols = [config.idCol, config.nameCol, config.descCol, 'classification_v2', 'focus_area_ids', ...config.contextCols].join(',')
@@ -363,19 +93,65 @@ export async function POST(req: NextRequest) {
   let skipped = 0
 
   for (const row of rows) {
-    // Skip if already enriched (v3) unless force
-    if (!force && row.classification_v2?._version === 'v3-entity-enrich') {
+    const entityId = row[config.idCol]
+
+    // Skip if already enriched (v4) unless force
+    if (!force && (row.classification_v2?._version === 'v4-unified' || row.classification_v2?._version === 'v3-entity-enrich')) {
       skipped++
       continue
     }
 
+    const name = row[config.nameCol] || ''
+    if (!name) {
+      results.push({ id: entityId, success: false, error: 'No name' })
+      failed++
+      continue
+    }
+
+    const desc = row[config.descCol] || ''
+    const context = config.contextCols
+      .map(col => row[col] ? `${col}: ${row[col]}` : '')
+      .filter(Boolean)
+      .join('\n')
+
     try {
-      const result = await enrichEntity(row, config, taxonomy, taxonomyPrompt)
-      results.push(result)
-      if (result.success) succeeded++
-      else failed++
+      const userPromptText = buildUserPrompt(config.entityType, { name, description: desc, context })
+      const rawResponse = await classifyEntity(systemPrompt, userPromptText, ANTHROPIC_KEY)
+      const classification = parseClaudeJson(rawResponse)
+      const enriched = validateAndEnrich(classification, taxonomy, config.entityType)
+
+      // Update the entity row
+      const updateData: Record<string, unknown> = {
+        classification_v2: enriched,
+        focus_area_ids: enriched.focus_area_ids.join(','),
+      }
+      if (enriched.theme_primary) updateData.theme_id = enriched.theme_primary
+      if (enriched.center) updateData.engagement_level = enriched.center
+      if (enriched.title_6th_grade) updateData.title_6th_grade = enriched.title_6th_grade
+      if (enriched.summary_6th_grade) updateData.summary_6th_grade = enriched.summary_6th_grade
+      if (config.entityType === 'policy' && enriched.impact_statement) {
+        updateData.impact_statement = enriched.impact_statement
+      }
+
+      await supaRest('PATCH', `${tableName}?${config.idCol}=eq.${entityId}`, updateData)
+
+      // Populate ALL junction tables (not just focus areas)
+      await populateAllJunctions(config.entityType, entityId, enriched, SUPABASE_URL, SUPABASE_KEY)
+
+      results.push({
+        success: true,
+        id: entityId,
+        name,
+        focus_areas: enriched.focus_area_ids,
+        sdgs: enriched.sdg_ids,
+        center: enriched.center,
+        theme: enriched.theme_primary,
+        confidence: enriched.confidence,
+        keywords: enriched.keywords || [],
+      })
+      succeeded++
     } catch (err) {
-      results.push({ id: row[config.idCol], success: false, error: (err as Error).message })
+      results.push({ id: entityId, success: false, error: (err as Error).message })
       failed++
     }
 
@@ -385,6 +161,7 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     table: tableName,
+    version: 'v4-unified',
     processed: succeeded + failed,
     succeeded,
     failed,

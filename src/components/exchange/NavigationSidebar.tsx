@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
-  Phone, Scale,
+  Phone, Scale, Map,
   Landmark, PanelLeftClose, PanelLeftOpen, Vote,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
@@ -29,7 +29,7 @@ const DISCOVER_LINKS = [
   { label: 'discover.local_resources', icon: Phone, href: '/services' },
   { label: 'discover.officials', icon: Users, href: '/officials' },
   { label: 'discover.policy', icon: Scale, href: '/policies' },
-  { label: 'discover.geography', icon: MapPin, href: '/geography' },
+  { label: 'discover.map_view', icon: Map, href: '/geography' },
   { label: 'discover.foundations', icon: Landmark, href: '/foundations' },
 ]
 

@@ -54,7 +54,7 @@ function buildTaxonomyPrompt(tax: Awaited<ReturnType<typeof fetchTaxonomy>>): st
   const scList = tax.serviceCats.map((s: any) => `${s.service_cat_id}: ${s.service_cat_name}`).join('\n');
   const skillList = tax.skills.map((s: any) => `${s.skill_id}: ${s.skill_name}`).join('\n');
 
-  return `THEMES (pick 1 primary + 0-2 secondary):\n${themeList}\n\nFOCUS AREAS (pick 1-4 by ID):\n${faText}\n\nAUDIENCE SEGMENTS (pick 1-3):\n${segList}\n\nLIFE SITUATIONS (pick 0-3):\n${sitList}\n\nRESOURCE TYPES (pick 1):\n${rtList}\n\nSERVICE CATEGORIES (pick 0-2):\n${scList}\n\nSKILLS (pick 0-3):\n${skillList}\n\nCENTERS (pick 1): Learning | Action | Resource | Accountability`;
+  return `THEMES (pick 1 primary + 0-2 secondary):\n${themeList}\n\nFOCUS AREAS (pick 1-4 by ID):\n${faText}\n\nAUDIENCE SEGMENTS (pick 1-3):\n${segList}\n\nLIFE SITUATIONS (pick 0-3):\n${sitList}\n\nRESOURCE TYPES (pick 1):\n${rtList}\n\nSERVICE CATEGORIES (pick 0-2):\n${scList}\n\nSKILLS (pick 0-3):\n${skillList}\n\nCONTENT TYPE (pick 1 — REQUIRED): article | event | report | video | opportunity | guide | course | announcement | campaign | tool\n\nCENTERS (pick 1): Learning | Action | Resource | Accountability`;
 }
 
 function parseClaudeJson(raw: string): any {
@@ -219,7 +219,7 @@ ${taxonomyPrompt}`;
         model: 'claude-sonnet-4-20250514',
         max_tokens: 3000,
         system: systemPrompt,
-        messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","body_6th_grade":"3-5 paragraphs with key details preserved","hero_quote":"...or null","programs":[{"name":"...","description":"..."}],"action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
+        messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","content_type":"article|event|report|video|opportunity|guide|course|announcement|campaign|tool","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","body_6th_grade":"3-5 paragraphs with key details preserved","hero_quote":"...or null","programs":[{"name":"...","description":"..."}],"action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
       }),
     });
 
@@ -292,7 +292,7 @@ ${taxonomyPrompt}`;
     const inboxRes = await fetch(`${SUPABASE_URL}/rest/v1/content_inbox`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, Prefer: 'return=representation' },
-      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, extracted_text: extractedBody || null, scraped_at: new Date().toISOString(), status: 'needs_review', source_trust_level: 'unknown' }),
+      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, extracted_text: extractedBody || null, scraped_at: new Date().toISOString(), status: 'needs_review', source_trust_level: 'unknown', content_type: enriched.content_type || null }),
     });
     const inboxData = await inboxRes.json();
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;

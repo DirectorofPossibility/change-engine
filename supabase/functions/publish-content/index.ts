@@ -114,6 +114,7 @@ Deno.serve(async (req: Request) => {
           source_domain: (inboxItem.source_domain as string) || '',
           image_url: (inboxItem.image_url as string) || null,
           resource_type: c.resource_type_id || null,
+          content_type: c.content_type || null,
           pathway_primary: c.theme_primary,
           pathway_secondary: c.theme_secondary || [],
           focus_area_ids: c.focus_area_ids || [],

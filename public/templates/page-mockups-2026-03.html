@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Engine — Page Template Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB;
+    --text: #2C2C2C;
+    --accent: #C75B2A;
+    --muted: #8B7E74;
+    --border: #E8E3DB;
+    --card: #FFFFFF;
+    --health: #e53e3e;
+    --families: #dd6b20;
+    --neighborhood: #d69e2e;
+    --voice: #38a169;
+    --money: #3182ce;
+    --planet: #319795;
+    --bigger: #805ad5;
+    --learning: #3182ce;
+    --action: #38a169;
+    --resource: #d69e2e;
+    --accountability: #805ad5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1a1a; color: var(--text); }
+  .serif { font-family: 'DM Serif Display', serif; }
+
+  /* Mockup chrome */
+  .mockup-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #111; border-bottom: 1px solid #333;
+    padding: 12px 24px;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .mockup-nav a {
+    color: #999; text-decoration: none; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
+  }
+  .mockup-nav a:hover, .mockup-nav a.active { color: #fff; background: #333; }
+  .mockup-nav .title { color: #fff; font-family: 'DM Serif Display', serif; font-size: 16px; margin-right: 16px; }
+
+  .page-mockup {
+    max-width: 1100px; margin: 40px auto;
+    background: var(--bg); border-radius: 16px;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .page-mockup + .page-mockup { margin-top: 60px; }
+
+  .page-label {
+    background: #222; color: #aaa; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 8px 20px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .page-label .route { color: #6cf; font-family: monospace; font-size: 12px; }
+
+  /* Shared page styles */
+  .page-content { padding: 0; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  .breadcrumb { font-size: 12px; color: var(--muted); padding: 16px 0 0; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+  .compact-hero { padding: 32px 0 16px; }
+  .compact-hero h1 { font-size: 32px; display: flex; align-items: center; gap: 12px; }
+  .compact-hero .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .compact-hero .desc { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--muted); margin-top: 8px; font-size: 15px; max-width: 600px; line-height: 1.5; }
+  .color-rule { height: 2px; width: 48px; border-radius: 2px; margin-top: 16px; }
+
+  .connected { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; }
+  .connected .label { color: var(--muted); font-family: 'DM Serif Display', serif; font-style: italic; }
+  .connected a { text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+  .connected .cdot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* Shelf */
+  .shelf { padding: 16px 0; }
+  .shelf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .shelf-header .left { display: flex; align-items: center; gap: 10px; }
+  .shelf-header .icon-box { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .shelf-header .title-row { display: flex; align-items: baseline; gap: 8px; }
+  .shelf-header h3 { font-size: 15px; font-weight: 700; }
+  .shelf-header .count { font-size: 11px; color: var(--muted); }
+  .shelf-header .question { font-size: 12px; font-family: 'DM Serif Display', serif; font-style: italic; color: var(--muted); margin-top: 2px; }
+  .shelf-header .see-all { font-size: 12px; font-weight: 600; text-decoration: none; }
+  .shelf-rule { height: 2px; width: 48px; border-radius: 2px; margin-bottom: 12px; }
+
+  .scroll-row { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; position: relative; }
+  .scroll-row::-webkit-scrollbar { display: none; }
+
+  .content-card {
+    flex-shrink: 0; width: 240px; background: var(--card);
+    border-radius: 12px; border: 1px solid var(--border);
+    overflow: hidden; transition: all 0.2s;
+  }
+  .content-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .content-card .img { height: 120px; background: linear-gradient(135deg, #ddd 0%, #ccc 100%); position: relative; }
+  .content-card .img.has-img { background-size: cover; background-position: center; }
+  .content-card .body { padding: 12px; }
+  .content-card .body h4 { font-size: 13px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .content-card .body p { font-size: 11px; color: var(--muted); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .content-card .body .date { font-size: 10px; color: var(--muted); margin-top: 6px; }
+
+  .entity-card {
+    flex-shrink: 0; width: 240px; background: var(--card);
+    border-radius: 12px; border: 1px solid var(--border);
+    overflow: hidden; transition: all 0.2s;
+  }
+  .entity-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .entity-card .top-bar { height: 4px; }
+  .entity-card .body { padding: 12px; }
+  .entity-card .type-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); }
+  .entity-card .body h4 { font-size: 13px; font-weight: 600; margin-top: 4px; line-height: 1.3; }
+  .entity-card .body .subtitle { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .entity-card .body p { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+
+  /* Focus areas grid */
+  .focus-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 20px 0; }
+  .focus-card {
+    background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+    padding: 14px; position: relative; overflow: hidden; transition: all 0.2s;
+  }
+  .focus-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  .focus-card .left-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .focus-card .name { font-size: 13px; font-weight: 500; padding-left: 8px; line-height: 1.3; }
+
+  /* Foundations grid */
+  .foundation-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding: 20px 0; }
+  .foundation-card {
+    background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+    padding: 16px; position: relative; overflow: hidden; transition: all 0.2s;
+  }
+  .foundation-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+  .foundation-card .left-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .foundation-card .inner { padding-left: 10px; }
+  .foundation-card h4 { font-size: 13px; font-weight: 600; }
+  .foundation-card .amount { font-size: 12px; font-weight: 700; margin-top: 4px; }
+  .foundation-card .mission { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* Section heading */
+  .section-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .section-heading h2 { font-size: 20px; }
+
+  /* ─── HOMEPAGE HERO ─── */
+  .hero-section {
+    padding: 64px 24px 80px; text-align: center;
+    position: relative;
+    background: radial-gradient(circle at 50% 40%, rgba(199,91,42,0.06) 0%, rgba(61,90,90,0.02) 40%, transparent 70%);
+  }
+  .hero-section .location { font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 20px; }
+  .hero-section h1 { font-size: 48px; line-height: 1.1; margin-bottom: 12px; }
+  .hero-section h1 span { color: var(--accent); }
+  .hero-section .tagline { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--muted); font-size: 18px; margin-bottom: 28px; }
+  .spectrum-bar { display: flex; height: 4px; border-radius: 4px; max-width: 200px; margin: 0 auto 28px; overflow: hidden; }
+  .spectrum-bar div { flex: 1; }
+  .hero-section .scroll-prompt { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  /* ─── PERSONA SELECTOR ─── */
+  .persona-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; padding: 20px 0; }
+  .persona-card {
+    background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+    padding: 14px; position: relative; overflow: hidden; transition: all 0.2s; cursor: pointer;
+  }
+  .persona-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); transform: translateY(-2px); }
+  .persona-card .left-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; }
+  .persona-card .inner { padding-left: 8px; }
+  .persona-card .name { font-size: 13px; font-weight: 700; }
+  .persona-card .q { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .persona-card .centers { display: flex; gap: 4px; margin-top: 6px; }
+  .persona-card .center-tag { font-size: 9px; padding: 2px 6px; border-radius: 4px; background: var(--bg); color: var(--muted); }
+
+  .persona-expanded {
+    margin-top: 4px; border-radius: 12px; padding: 16px; border: 1px solid;
+  }
+  .persona-expanded .first-move-label { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .persona-expanded .first-move { font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
+  .persona-expanded .cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px; color: #fff;
+    font-size: 13px; font-weight: 600; text-decoration: none;
+    margin-bottom: 14px;
+  }
+  .persona-expanded .pathways-label { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+  .pathway-card-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 12px; font-weight: 500;
+    text-decoration: none; color: var(--text); margin-bottom: 6px; transition: all 0.2s;
+  }
+  .pathway-card-link:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); transform: translateY(-1px); }
+  .pathway-card-link .bar { width: 3px; height: 24px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ─── CONTENT DETAIL ─── */
+  .detail-hero {
+    display: flex; gap: 20px; align-items: flex-start; padding: 24px 0 16px;
+  }
+  .detail-hero .thumb {
+    width: 120px; height: 90px; border-radius: 10px; background: linear-gradient(135deg, #e8e0d4, #d5ccc0);
+    flex-shrink: 0; overflow: hidden;
+  }
+  .detail-hero .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .detail-hero .info h1 { font-size: 22px; line-height: 1.2; margin-bottom: 6px; }
+  .detail-hero .info .meta { font-size: 11px; color: var(--muted); }
+  .detail-hero .info .meta span { margin-right: 8px; }
+
+  .action-strip { display: flex; gap: 10px; margin: 12px 0 20px; flex-wrap: wrap; }
+  .action-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    text-decoration: none; transition: all 0.2s; border: 1px solid var(--border);
+    background: var(--card); color: var(--text);
+  }
+  .action-btn:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); transform: translateY(-1px); }
+  .action-btn.primary { background: var(--health); color: #fff; border-color: var(--health); }
+
+  .two-col { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; padding: 20px 0; }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+  .body-section { margin-bottom: 20px; }
+  .body-section .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%; color: #fff; font-size: 12px; font-weight: 700;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .body-section h2 { font-size: 18px; display: inline; vertical-align: middle; }
+  .body-section p { font-size: 14px; color: var(--text); line-height: 1.6; margin-top: 8px; padding-left: 36px; }
+  .body-section ul { padding-left: 52px; margin-top: 8px; }
+  .body-section li { font-size: 13px; line-height: 1.6; margin-bottom: 4px; }
+
+  /* Wayfinder card */
+  .wayfinder {
+    background: var(--card); border-radius: 12px; border: 1px solid var(--border);
+    padding: 16px; position: sticky; top: 80px;
+  }
+  .wayfinder h3 { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 12px; }
+  .wayfinder .wf-section { margin-bottom: 12px; }
+  .wayfinder .wf-section .wf-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .wayfinder .wf-pathway { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+  .wayfinder .wf-pathway .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .wayfinder .wf-pathway .arrow { color: var(--muted); margin: 0 2px; }
+  .wayfinder .wf-rule { height: 2px; width: 32px; border-radius: 2px; margin: 6px 0 12px; }
+  .wayfinder .wf-item { font-size: 12px; color: var(--text); padding: 2px 0; display: flex; align-items: center; gap: 4px; }
+  .wayfinder .wf-item::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .wayfinder .wf-divider { height: 1px; background: var(--border); margin: 12px 0; }
+  .wayfinder .wf-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); padding: 3px 0; }
+  .wayfinder .suggest { text-align: center; padding-top: 8px; border-top: 1px solid var(--border); margin-top: 12px; }
+  .wayfinder .suggest a { font-size: 12px; color: var(--accent); text-decoration: none; font-weight: 500; }
+
+  /* Related row */
+  .related-section { padding: 24px 0; }
+  .related-section h2 { font-size: 18px; margin-bottom: 16px; }
+  .related-grid { display: flex; gap: 16px; overflow-x: auto; }
+  .related-grid::-webkit-scrollbar { display: none; }
+
+  /* ─── CENTER DETAIL ─── */
+  .center-hero { text-align: center; padding: 32px 0 16px; }
+  .center-hero .emoji { font-size: 56px; margin-bottom: 8px; }
+  .center-hero h1 { font-size: 32px; margin-bottom: 8px; }
+  .center-hero .question { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--muted); font-size: 15px; }
+  .center-hero .rule { height: 2px; width: 48px; border-radius: 2px; margin: 16px auto 8px; }
+  .center-hero .count { font-size: 13px; color: var(--muted); }
+
+  /* Scroll fade */
+  .scroll-container { position: relative; }
+  .scroll-fade { position: absolute; right: 0; top: 0; bottom: 8px; width: 48px; background: linear-gradient(to left, var(--bg), transparent); pointer-events: none; }
+</style>
+</head>
+<body>
+
+<nav class="mockup-nav">
+  <span class="title">Change Engine Mockups</span>
+  <a href="#hero">Homepage Hero</a>
+  <a href="#persona">Persona Selector</a>
+  <a href="#pathway">Pathway Detail</a>
+  <a href="#center">Center Detail</a>
+  <a href="#content-detail">Content Detail</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- HOMEPAGE HERO                                       -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="hero" class="page-mockup">
+  <div class="page-label">
+    <span>Homepage Hero</span>
+    <span class="route">/</span>
+  </div>
+  <div class="page-content">
+    <div class="hero-section">
+      <p class="location">Houston, Texas</p>
+      <h1 class="serif">Your Community, <span>Your Choice</span></h1>
+      <p class="tagline">Community Life, Organized</p>
+      <div class="spectrum-bar">
+        <div style="background:var(--health)"></div>
+        <div style="background:var(--families)"></div>
+        <div style="background:var(--neighborhood)"></div>
+        <div style="background:var(--voice)"></div>
+        <div style="background:var(--money)"></div>
+        <div style="background:var(--planet)"></div>
+        <div style="background:var(--bigger)"></div>
+      </div>
+      <p class="scroll-prompt">Where would you like to begin?</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PERSONA SELECTOR                                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="persona" class="page-mockup">
+  <div class="page-label">
+    <span>Persona Selector (Homepage Section)</span>
+    <span class="route">/ #choose-your-path</span>
+  </div>
+  <div class="page-content" style="padding: 32px 24px;">
+    <div class="container">
+      <h2 class="serif" style="font-size:24px; margin-bottom:4px;">Choose Your Path</h2>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-family:'DM Serif Display',serif; font-style:italic;">Every journey through community life starts with a question</p>
+
+      <div class="persona-grid">
+        <!-- Starter (collapsed) -->
+        <div class="persona-card">
+          <div class="left-bar" style="background:#4A6A8A"></div>
+          <div class="inner">
+            <p class="name">Starter</p>
+            <p class="q">"Where do I even start?"</p>
+            <div class="centers">
+              <span class="center-tag">Learning</span>
+              <span class="center-tag">Resource</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hard Worker (collapsed) -->
+        <div class="persona-card">
+          <div class="left-bar" style="background:#7A6E8A"></div>
+          <div class="inner">
+            <p class="name">Hard Worker</p>
+            <p class="q">"I need resources and I want to give back."</p>
+            <div class="centers">
+              <span class="center-tag">Resource</span>
+              <span class="center-tag">Action</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Steps (collapsed) -->
+        <div class="persona-card">
+          <div class="left-bar" style="background:#A85C3B"></div>
+          <div class="inner">
+            <p class="name">Next Steps</p>
+            <p class="q">"I just finished something. What now?"</p>
+            <div class="centers">
+              <span class="center-tag">Action</span>
+              <span class="center-tag">Learning</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spark Plug (collapsed) -->
+        <div class="persona-card">
+          <div class="left-bar" style="background:#4A6B52"></div>
+          <div class="inner">
+            <p class="name">Spark Plug</p>
+            <p class="q">"5 minutes. What can I do?"</p>
+            <div class="centers">
+              <span class="center-tag">Action</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Starter expanded -->
+      <div style="max-width:320px;">
+        <div class="persona-card" style="border-color:#4A6A8A60;">
+          <div class="left-bar" style="background:#4A6A8A; width:3px;"></div>
+          <div class="inner">
+            <p class="name">Starter</p>
+            <p class="q">"Where do I even start?"</p>
+            <div class="centers">
+              <span class="center-tag">Learning</span>
+              <span class="center-tag">Resource</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-expanded" style="border-color:#4A6A8A30; background:#4A6A8A08;">
+          <p class="first-move-label" style="color:#4A6A8A;">Your First Move</p>
+          <p class="first-move">Start with Voice — voter registration and community events are the quickest on-ramp. Then explore The Bigger We for connection.</p>
+          <a href="#" class="cta" style="background:#4A6A8A;">Start your journey &rarr;</a>
+          <p class="pathways-label">Explore these pathways:</p>
+          <a href="#" class="pathway-card-link">
+            <div class="bar" style="background:var(--voice)"></div>
+            Our Voice
+          </a>
+          <a href="#" class="pathway-card-link">
+            <div class="bar" style="background:var(--bigger)"></div>
+            The Bigger We
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- PATHWAY DETAIL                                      -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="pathway" class="page-mockup">
+  <div class="page-label">
+    <span>Pathway Detail — Shelf Braid</span>
+    <span class="route">/pathways/our-health</span>
+  </div>
+  <div class="page-content">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb"><a href="#">Pathways</a> / Our Health</div>
+
+      <!-- Compact Hero -->
+      <div class="compact-hero">
+        <h1 class="serif">
+          <span class="dot" style="background:var(--health)"></span>
+          Our Health
+        </h1>
+        <p class="desc">Wellness, healing, and care for every Houstonian. Explore clinics, mental health support, nutrition programs, and insurance options.</p>
+        <div class="color-rule" style="background:var(--health)"></div>
+      </div>
+
+      <!-- Connected pathways -->
+      <div class="connected">
+        <span class="label">Connected to</span>
+        <a href="#" style="color:var(--families)"><span class="cdot" style="background:var(--families)"></span> Our Families <span style="color:var(--muted)">(3)</span></a>
+        <a href="#" style="color:var(--planet)"><span class="cdot" style="background:var(--planet)"></span> Our Planet <span style="color:var(--muted)">(2)</span></a>
+        <a href="#" style="color:var(--bigger)"><span class="cdot" style="background:var(--bigger)"></span> The Bigger We <span style="color:var(--muted)">(1)</span></a>
+      </div>
+
+      <!-- ── Learning Shelf ── -->
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(49,130,206,0.08); color:var(--learning);">&#x1F4D6;</div>
+            <div>
+              <div class="title-row">
+                <h3>Learning</h3>
+                <span class="count">8</span>
+              </div>
+              <p class="question">How can I understand?</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--learning)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--learning)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #e8d5d0, #d4b8b0)"></div>
+              <div class="body">
+                <h4>Colorado expands naloxone access to fight overdose deaths</h4>
+                <p>A new law lets pharmacies give out naloxone without a prescription...</p>
+                <div class="date">Mar 4, 2026</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #d5dde8, #b8c4d4)"></div>
+              <div class="body">
+                <h4>Understanding Medicare open enrollment changes for 2026</h4>
+                <p>Key deadlines and new coverage options you should know about...</p>
+                <div class="date">Mar 3, 2026</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #dde8d5, #c4d4b8)"></div>
+              <div class="body">
+                <h4>Mental health resources guide for Harris County</h4>
+                <p>A comprehensive look at free and low-cost counseling services...</p>
+                <div class="date">Mar 2, 2026</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #e8e0d4, #d5ccc0)"></div>
+              <div class="body">
+                <h4>How Houston clinics are expanding telehealth access</h4>
+                <p>Virtual visits now available at 40+ community health centers...</p>
+                <div class="date">Mar 1, 2026</div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #e0d4e8, #ccbfd5)"></div>
+              <div class="body">
+                <h4>WIC nutrition programs updated for spring 2026</h4>
+                <p>Expanded food packages and new enrollment locations...</p>
+                <div class="date">Feb 28, 2026</div>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <!-- ── Action Shelf ── -->
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(56,161,105,0.08); color:var(--action);">&#x2B50;</div>
+            <div>
+              <div class="title-row">
+                <h3>Action</h3>
+                <span class="count">5</span>
+              </div>
+              <p class="question">How can I help?</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--action)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--action)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #d5e8dd, #b8d4c4)"></div>
+              <div class="body">
+                <h4>Volunteer at the Houston Food Bank this spring</h4>
+                <p>Sign up for shifts sorting and distributing food to families...</p>
+                <div class="date">Mar 3, 2026</div>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--action)"></div>
+              <div class="body">
+                <span class="type-label">Opportunity</span>
+                <h4>Community Health Fair at TSU</h4>
+                <p class="subtitle">Starts Apr 12, 2026</p>
+                <p>Free screenings, vaccine access, and wellness workshops for all ages.</p>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--action)"></div>
+              <div class="body">
+                <span class="type-label">Opportunity</span>
+                <h4>Blood Drive at UH Student Center</h4>
+                <p class="subtitle">Starts Mar 20, 2026</p>
+                <p>Gulf Coast Regional Blood Center needs 200 donors this month.</p>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <!-- ── Resource Shelf ── -->
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(214,158,46,0.08); color:var(--resource);">&#x1F4E6;</div>
+            <div>
+              <div class="title-row">
+                <h3>Resource</h3>
+                <span class="count">10</span>
+              </div>
+              <p class="question">What's available to me?</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--resource)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--resource)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #e8e0d0, #d5ccb8)"></div>
+              <div class="body">
+                <h4>Texas WIC program expands eligibility for 2026</h4>
+                <p>Higher income thresholds and simplified enrollment process...</p>
+                <div class="date">Mar 2, 2026</div>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--resource)"></div>
+              <div class="body">
+                <span class="type-label">Service</span>
+                <h4>Harris Health System</h4>
+                <p class="subtitle">Healthcare</p>
+                <p>County hospital system providing primary care, specialty services, and community health.</p>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--resource)"></div>
+              <div class="body">
+                <span class="type-label">Service</span>
+                <h4>Lone Star Legal Aid</h4>
+                <p class="subtitle">Legal Services</p>
+                <p>Free civil legal help for low-income residents in 72 Texas counties.</p>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--resource)"></div>
+              <div class="body">
+                <span class="type-label">Service</span>
+                <h4>Mental Health Houston</h4>
+                <p class="subtitle">Mental Health</p>
+                <p>Counseling, crisis support, and peer groups at sliding-scale fees.</p>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <!-- ── Accountability Shelf ── -->
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(128,90,213,0.08); color:var(--accountability);">&#x1F3DB;</div>
+            <div>
+              <div class="title-row">
+                <h3>Accountability</h3>
+                <span class="count">6</span>
+              </div>
+              <p class="question">Who makes decisions?</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--accountability)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--accountability)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card">
+              <div class="img" style="background:linear-gradient(135deg, #e0d4e8, #ccbfd5)"></div>
+              <div class="body">
+                <h4>FDA changes drug pricing rules: what it means for Houston</h4>
+                <p>New regulations could lower costs for insulin and common prescriptions...</p>
+                <div class="date">Mar 1, 2026</div>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--accountability)"></div>
+              <div class="body">
+                <span class="type-label">Official</span>
+                <h4>Rep. Sheila Jackson Lee</h4>
+                <p class="subtitle">U.S. House, TX-18</p>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--accountability)"></div>
+              <div class="body">
+                <span class="type-label">Policy</span>
+                <h4>HB 1234: Mental Health Parity Act</h4>
+                <p class="subtitle">TX State &middot; Pending</p>
+                <p>Requires insurers to cover mental health at the same level as physical health.</p>
+              </div>
+            </div>
+            <div class="entity-card">
+              <div class="top-bar" style="background:var(--accountability)"></div>
+              <div class="body">
+                <span class="type-label">Official</span>
+                <h4>Sen. John Cornyn</h4>
+                <p class="subtitle">U.S. Senate, Texas</p>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ── Focus Areas ── -->
+      <div class="section-heading">
+        <h2 class="serif">Explore Topics</h2>
+      </div>
+      <div class="color-rule" style="background:var(--health)"></div>
+      <div class="focus-grid">
+        <div class="focus-card"><div class="left-bar" style="background:var(--health)"></div><span class="name">Mental Health</span></div>
+        <div class="focus-card"><div class="left-bar" style="background:var(--health)"></div><span class="name">Nutrition Programs</span></div>
+        <div class="focus-card"><div class="left-bar" style="background:var(--health)"></div><span class="name">Insurance Access</span></div>
+        <div class="focus-card"><div class="left-bar" style="background:var(--health)"></div><span class="name">Clinics &amp; Care</span></div>
+        <div class="focus-card"><div class="left-bar" style="background:var(--health)"></div><span class="name">Maternal Health</span></div>
+        <div class="focus-card"><div class="left-bar" style="background:var(--health)"></div><span class="name">Substance Use</span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ── Foundations ── -->
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Foundations</h2>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin:4px 0 0;">3 foundations supporting this pathway</p>
+      <div class="foundation-grid">
+        <div class="foundation-card">
+          <div class="left-bar" style="background:var(--health)"></div>
+          <div class="inner">
+            <h4>Houston Endowment</h4>
+            <p class="amount" style="color:var(--health)">$2.1B</p>
+            <p class="mission">Supporting community well-being through grants to health, education, and civic organizations.</p>
+          </div>
+        </div>
+        <div class="foundation-card">
+          <div class="left-bar" style="background:var(--health)"></div>
+          <div class="inner">
+            <h4>Memorial Hermann Foundation</h4>
+            <p class="amount" style="color:var(--health)">$890M</p>
+            <p class="mission">Healthcare innovation and access for underserved communities in Greater Houston.</p>
+          </div>
+        </div>
+        <div class="foundation-card">
+          <div class="left-bar" style="background:var(--health)"></div>
+          <div class="inner">
+            <h4>Methodist Hospital Foundation</h4>
+            <p class="amount" style="color:var(--health)">$340M</p>
+            <p class="mission">Advancing community wellness through research, education, and patient care programs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:32px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CENTER DETAIL                                       -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="center" class="page-mockup">
+  <div class="page-label">
+    <span>Center Detail — Inverse Braid (by pathway)</span>
+    <span class="route">/centers/learning</span>
+  </div>
+  <div class="page-content">
+    <div class="container">
+      <div class="breadcrumb"><a href="#">Centers</a> / Learning</div>
+
+      <div class="center-hero">
+        <div class="emoji">&#x1F4D6;</div>
+        <h1 class="serif">Learning</h1>
+        <p class="question">How can I understand?</p>
+        <div class="rule" style="background:var(--learning)"></div>
+        <p class="count">42 resources</p>
+      </div>
+
+      <!-- Pathway shelves -->
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(229,62,62,0.08);">&#x2764;&#xFE0F;</div>
+            <div>
+              <div class="title-row"><h3>Our Health</h3><span class="count">12</span></div>
+              <p class="question">Wellness, healing, and care for every Houstonian...</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--health)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--health)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e8d5d0, #d4b8b0)"></div><div class="body"><h4>Naloxone access expands in Colorado</h4><p>New state law removes prescription requirement...</p><div class="date">Mar 4</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #d5dde8, #b8c4d4)"></div><div class="body"><h4>Mental health guide for Harris County</h4><p>Free and low-cost counseling services map...</p><div class="date">Mar 3</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #dde8d5, #c4d4b8)"></div><div class="body"><h4>Medicare open enrollment changes</h4><p>Key deadlines and new coverage options...</p><div class="date">Mar 2</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e8e0d4, #d5ccc0)"></div><div class="body"><h4>Telehealth expansion at Houston clinics</h4><p>Virtual visits now at 40+ community centers...</p><div class="date">Mar 1</div></div></div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(221,107,32,0.08);">&#x1F9E1;</div>
+            <div>
+              <div class="title-row"><h3>Our Families</h3><span class="count">8</span></div>
+              <p class="question">Strong foundations for every family...</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--families)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--families)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e8ddd5, #d4c4b8)"></div><div class="body"><h4>School choice guide for Houston parents</h4><p>Compare public, charter, and magnet options...</p><div class="date">Mar 3</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e0d5e8, #ccb8d4)"></div><div class="body"><h4>Childcare assistance programs updated</h4><p>Income thresholds raised for spring 2026...</p><div class="date">Mar 1</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #d5e8e0, #b8d4cc)"></div><div class="body"><h4>Youth mentorship programs in Third Ward</h4><p>New partnerships bring after-school tutoring...</p><div class="date">Feb 28</div></div></div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <div class="shelf">
+        <div class="shelf-header">
+          <div class="left">
+            <div class="icon-box" style="background:rgba(56,161,105,0.08);">&#x1F49A;</div>
+            <div>
+              <div class="title-row"><h3>Our Voice</h3><span class="count">15</span></div>
+              <p class="question">Your civic power, amplified...</p>
+            </div>
+          </div>
+          <a href="#" class="see-all" style="color:var(--voice)">See all &rarr;</a>
+        </div>
+        <div class="shelf-rule" style="background:var(--voice)"></div>
+        <div class="scroll-container">
+          <div class="scroll-row">
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #d5e8d5, #b8d4b8)"></div><div class="body"><h4>Voter registration deadlines for May runoff</h4><p>Last day to register is April 7th...</p><div class="date">Mar 4</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e8e8d5, #d4d4b8)"></div><div class="body"><h4>Redistricting 101: what changed in Houston</h4><p>New district maps affect representation...</p><div class="date">Mar 2</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #d5d5e8, #b8b8d4)"></div><div class="body"><h4>Town hall guide: how to make your voice heard</h4><p>Tips for effective civic engagement...</p><div class="date">Mar 1</div></div></div>
+            <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e8d5e0, #d4b8cc)"></div><div class="body"><h4>Civic engagement 101 for new residents</h4><p>Getting involved in Houston's civic life...</p><div class="date">Feb 28</div></div></div>
+          </div>
+          <div class="scroll-fade"></div>
+        </div>
+      </div>
+
+      <div style="height:32px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CONTENT DETAIL                                      -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="content-detail" class="page-mockup">
+  <div class="page-label">
+    <span>Content Detail — Compact Hero + Wayfinder</span>
+    <span class="route">/content/7e0fabfd-...</span>
+  </div>
+  <div class="page-content">
+    <div class="container">
+      <div class="breadcrumb"><a href="#">Content</a> / Our Health</div>
+
+      <!-- Compact Hero -->
+      <div class="detail-hero">
+        <div class="thumb" style="background:linear-gradient(135deg, #e8d0d0, #d4b0b0)"></div>
+        <div class="info">
+          <h1 class="serif">Colorado expands naloxone access to fight maternal overdose deaths</h1>
+          <div class="meta">
+            <span>goodgoodgood.co</span>
+            <span>&middot;</span>
+            <span>Mar 4, 2026</span>
+          </div>
+          <div class="color-rule" style="background:var(--health)"></div>
+        </div>
+      </div>
+
+      <!-- Action strip — ABOVE THE FOLD -->
+      <div class="action-strip">
+        <a href="#" class="action-btn primary">&#x1F4CE; Read original source</a>
+        <a href="#" class="action-btn">&#x1F91D; Volunteer</a>
+        <a href="#" class="action-btn">&#x1F4DE; Call</a>
+        <a href="#" class="action-btn">&#x1F4DD; Sign up</a>
+      </div>
+
+      <!-- Two column layout -->
+      <div class="two-col">
+        <!-- Main body -->
+        <div>
+          <div class="body-section">
+            <span class="num" style="background:var(--health)">1</span>
+            <h2 class="serif">New state law makes naloxone available without prescription</h2>
+            <p>Colorado passed a law that lets pharmacies give out naloxone to anyone who asks. This medicine can reverse an opioid overdose and has already saved thousands of lives nationwide.</p>
+          </div>
+
+          <div class="body-section">
+            <span class="num" style="background:var(--health)">2</span>
+            <h2 class="serif">Why this matters for families</h2>
+            <p>Pregnant women face a higher risk of overdose. Having naloxone nearby saves lives. The new law means families can keep this life-saving medication in their homes without navigating complex medical systems.</p>
+          </div>
+
+          <div class="body-section">
+            <span class="num" style="background:var(--health)">3</span>
+            <h2 class="serif">What you can do</h2>
+            <ul>
+              <li>Ask your local pharmacy if they carry naloxone</li>
+              <li>Share this information with family and friends</li>
+              <li>Contact your representative to support similar Texas legislation</li>
+            </ul>
+          </div>
+
+          <div style="margin-top:24px;">
+            <h3 class="serif" style="font-size:16px; margin-bottom:12px;">Programs &amp; Initiatives</h3>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px; display:flex; gap:8px;">
+                <div style="width:3px; border-radius:2px; background:var(--health); flex-shrink:0;"></div>
+                <div>
+                  <p style="font-size:13px; font-weight:600;">CO Naloxone Program</p>
+                  <p style="font-size:11px; color:var(--muted); margin-top:2px;">State-funded distribution of naloxone kits to pharmacies and community orgs.</p>
+                </div>
+              </div>
+              <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px; display:flex; gap:8px;">
+                <div style="width:3px; border-radius:2px; background:var(--health); flex-shrink:0;"></div>
+                <div>
+                  <p style="font-size:13px; font-weight:600;">SAMHSA Grant Program</p>
+                  <p style="font-size:11px; color:var(--muted); margin-top:2px;">Federal grants supporting overdose prevention and recovery services.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <details style="margin-top:20px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px;">
+            <summary style="cursor:pointer; font-size:12px; font-weight:500; color:var(--muted);">Why was this classified here?</summary>
+            <p style="font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5;">This article discusses naloxone policy, a substance abuse and maternal health topic. It maps to Our Health pathway, Learning center, with focus areas in Substance Abuse, Maternal Health, and Pharmacy Access.</p>
+          </details>
+        </div>
+
+        <!-- Wayfinder sidebar -->
+        <div>
+          <div class="wayfinder">
+            <h3>&#x1F4CD; Where this lives</h3>
+
+            <div class="wf-section">
+              <div class="wf-pathway">
+                <span class="dot" style="background:var(--health)"></span>
+                Our Health
+                <span class="arrow">&rarr;</span>
+                Learning
+              </div>
+              <div class="wf-rule" style="background:var(--health)"></div>
+            </div>
+
+            <div class="wf-section">
+              <div class="wf-label">Topics</div>
+              <div class="wf-item">Substance Abuse</div>
+              <div class="wf-item">Maternal Health</div>
+              <div class="wf-item">Pharmacy Access</div>
+            </div>
+
+            <div class="wf-section">
+              <div class="wf-label">For</div>
+              <div class="wf-item">Parents / Caregivers</div>
+              <div class="wf-item">Health Workers</div>
+            </div>
+
+            <div class="wf-section">
+              <div class="wf-badge">&#x1F30D; SDG 3: Good Health &amp; Well-being</div>
+            </div>
+
+            <div class="wf-section">
+              <div class="wf-badge">&#x1F4CD; National scope</div>
+            </div>
+
+            <div class="wf-divider"></div>
+
+            <div class="wf-section">
+              <div class="wf-label">Related Officials</div>
+              <div class="wf-item">Rep. Sheila Jackson Lee</div>
+            </div>
+
+            <div class="wf-section">
+              <div class="wf-label">Related Policies</div>
+              <div class="wf-item">HB 1234: Mental Health Parity</div>
+            </div>
+
+            <div class="suggest">
+              <a href="#">Suggest an edit &#x270F;&#xFE0F;</a>
+              <p style="font-size:10px; color:var(--muted); margin-top:4px;">Help keep information accurate</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related content -->
+      <div class="related-section">
+        <h2 class="serif">Related</h2>
+        <div class="related-grid">
+          <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #d5dde8, #b8c4d4)"></div><div class="body"><h4>Mental health resources guide for Harris County</h4><p>Free counseling services map...</p><div class="date">Mar 2</div></div></div>
+          <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #dde8d5, #c4d4b8)"></div><div class="body"><h4>Medicare enrollment changes for 2026</h4><p>New coverage options...</p><div class="date">Mar 1</div></div></div>
+          <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e8e0d4, #d5ccc0)"></div><div class="body"><h4>Telehealth expansion at Houston clinics</h4><p>40+ community centers now offer virtual visits...</p><div class="date">Feb 28</div></div></div>
+          <div class="content-card"><div class="img" style="background:linear-gradient(135deg, #e0d4e8, #ccbfd5)"></div><div class="body"><h4>WIC nutrition programs updated</h4><p>Expanded food packages...</p><div class="date">Feb 27</div></div></div>
+        </div>
+      </div>
+
+      <div style="height:32px"></div>
+    </div>
+  </div>
+</div>
+
+<div style="height:80px; text-align:center; padding:24px; color:#666; font-size:12px;">
+  The Change Engine &mdash; Page Template Mockups &mdash; March 2026
+</div>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('.mockup-nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>

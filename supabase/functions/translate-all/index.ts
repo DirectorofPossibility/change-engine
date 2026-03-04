@@ -80,6 +80,41 @@ const TABLE_CONFIGS: Record<string, {
     contentType: 'life_situations',
     selectCols: 'situation_id,situation_name,description_5th_grade',
   },
+  agencies: {
+    idCol: 'agency_id',
+    nameCol: 'agency_name',
+    descCol: 'description_5th_grade',
+    contentType: 'agencies',
+    selectCols: 'agency_id,agency_name,description_5th_grade',
+  },
+  benefit_programs: {
+    idCol: 'benefit_id',
+    nameCol: 'benefit_name',
+    descCol: 'description_5th_grade',
+    contentType: 'benefit_programs',
+    selectCols: 'benefit_id,benefit_name,description_5th_grade',
+  },
+  campaigns: {
+    idCol: 'campaign_id',
+    nameCol: 'campaign_name',
+    descCol: 'description_5th_grade',
+    contentType: 'campaigns',
+    selectCols: 'campaign_id,campaign_name,description_5th_grade',
+  },
+  ballot_items: {
+    idCol: 'item_id',
+    nameCol: 'item_name',
+    descCol: 'description_5th_grade',
+    contentType: 'ballot_items',
+    selectCols: 'item_id,item_name,description_5th_grade',
+  },
+  guides: {
+    idCol: 'guide_id',
+    nameCol: 'title',
+    descCol: 'description',
+    contentType: 'guides',
+    selectCols: 'guide_id,title,description',
+  },
 };
 
 const SYSTEM_PROMPT = `You are a professional translator for The Change Engine, a civic engagement platform in Houston, Texas.

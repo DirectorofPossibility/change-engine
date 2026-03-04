@@ -423,6 +423,8 @@ ${actionList}
 GOVERNMENT LEVELS (pick 0-1 — if accountability content, which level):
 ${govList}
 
+CONTENT TYPE (pick 1 — REQUIRED): article | event | report | video | opportunity | guide | course | announcement | campaign | tool
+
 GEOGRAPHIC SCOPE: Houston | Harris County | Texas | National | Global`
 }
 
@@ -614,6 +616,7 @@ Return JSON:
   "time_commitment_id": "TIME_XX or null",
   "action_type_ids": ["ATYPE_XX"],
   "gov_level_id": "GOV_XX or null",
+  "content_type": "article|event|report|video|opportunity|guide|course|announcement|campaign|tool",
   "action_items": {"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},
   "organizations": [{"name":"...","url":"https://...","description":"..."}],
   "locations": {"neighborhoods":[],"zip_codes":[],"city":"Houston","district":""},
@@ -664,7 +667,7 @@ Return JSON:
   const reviewStatus = 'pending'
 
   // Step 6: Update inbox + create review queue entry
-  await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status })
+  await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status, content_type: classification.content_type || null })
 
   const enrichedClassification = {
     ...classification,
@@ -897,6 +900,7 @@ Return JSON:
   "life_situation_ids": ["SIT_XXX"],
   "service_cat_ids": ["SCAT_XX"],
   "skill_ids": ["SKILL_XX"],
+  "content_type": "article|event|report|video|opportunity|guide|course|announcement|campaign|tool",
   "action_items": {"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},
   "organizations": [{"name":"...","url":"https://...","description":"..."}],
   "keywords": ["keyword1","keyword2"],
@@ -945,7 +949,7 @@ Return JSON:
   const preScrapedStatus = 'needs_review'
   const preScrapedReviewStatus = 'pending'
 
-  await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: preScrapedStatus })
+  await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: preScrapedStatus, content_type: classification.content_type || null })
 
   const enrichedClassification = {
     ...classification,

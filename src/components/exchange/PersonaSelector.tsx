@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
 import { PERSONAS } from '@/lib/data/personas'
-import type { Persona } from '@/lib/data/personas'
 
 export function PersonaSelector() {
   const [expanded, setExpanded] = useState<string | null>(null)
@@ -18,6 +17,8 @@ export function PersonaSelector() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
         {PERSONAS.map(function (persona) {
           const isOpen = expanded === persona.id
+          const firstThemeId = persona.matchedPathways[0]
+          const firstTheme = firstThemeId ? THEMES[firstThemeId as keyof typeof THEMES] : null
           return (
             <div key={persona.id}>
               <button
@@ -44,7 +45,14 @@ export function PersonaSelector() {
                 </div>
               </button>
 
-              {isOpen && (
+              {/* Expandable detail — smooth max-height transition */}
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight: isOpen ? '400px' : '0',
+                  opacity: isOpen ? 1 : 0,
+                }}
+              >
                 <div
                   className="mt-1 rounded-xl border p-4 space-y-3"
                   style={{ borderColor: persona.color + '30', backgroundColor: persona.color + '06' }}
@@ -55,10 +63,21 @@ export function PersonaSelector() {
                     <p className="text-sm text-brand-text leading-relaxed">{persona.firstMove}</p>
                   </div>
 
-                  {/* Matched Pathways */}
+                  {/* CTA Button */}
+                  {firstTheme && (
+                    <Link
+                      href={'/pathways/' + firstTheme.slug}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:shadow-md hover:-translate-y-0.5"
+                      style={{ backgroundColor: persona.color }}
+                    >
+                      Start your journey &rarr;
+                    </Link>
+                  )}
+
+                  {/* Matched Pathways — compact cards instead of pills */}
                   <div>
                     <p className="text-xs font-bold text-brand-muted mb-2">Explore these pathways:</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="space-y-1.5">
                       {persona.matchedPathways.map(function (themeId) {
                         const theme = THEMES[themeId as keyof typeof THEMES]
                         if (!theme) return null
@@ -66,13 +85,9 @@ export function PersonaSelector() {
                           <Link
                             key={themeId}
                             href={'/pathways/' + theme.slug}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors hover:shadow-sm"
-                            style={{
-                              backgroundColor: theme.color + '14',
-                              color: theme.color,
-                              border: `1.5px solid ${theme.color}30`,
-                            }}
+                            className="flex items-center gap-2.5 px-3 py-2 bg-white rounded-lg border border-brand-border text-xs font-medium text-brand-text transition-all hover:shadow-sm hover:-translate-y-0.5"
                           >
+                            <div className="w-1 h-6 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                             {theme.name}
                           </Link>
                         )
@@ -80,7 +95,7 @@ export function PersonaSelector() {
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )
         })}

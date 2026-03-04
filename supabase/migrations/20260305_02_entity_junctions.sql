@@ -1,0 +1,22 @@
+-- Multi-dimensional junction tables for all entity types
+-- Extends the original 27 junction tables (20260303_01) with SDG, audience,
+-- life situation, service category, and pathway junctions per entity type.
+-- Applied via Supabase MCP as migration: entity_multi_dimensional_junctions_v3
+
+-- See the full SQL in the Supabase migration history.
+-- This file is a local record of what was applied remotely.
+
+-- Tables created:
+-- organization_sdgs, organization_audience_segments, organization_life_situations,
+-- organization_service_categories, organization_pathways
+-- official_sdgs, official_audience_segments, official_pathways
+-- policy_sdgs, policy_audience_segments, policy_life_situations, policy_pathways
+-- service_sdgs, service_audience_segments, service_life_situations, service_pathways
+-- opportunity_sdgs, opportunity_audience_segments, opportunity_life_situations,
+-- opportunity_pathways, opportunity_action_types
+-- agency_sdgs, agency_audience_segments, agency_service_categories, agency_pathways
+-- benefit_sdgs, benefit_audience_segments, benefit_life_situations,
+-- benefit_service_categories, benefit_pathways
+-- campaign_sdgs, campaign_audience_segments, campaign_pathways
+-- ballot_item_sdgs, ballot_item_audience_segments, ballot_item_pathways
+-- content_service_categories, content_skills

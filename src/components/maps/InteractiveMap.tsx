@@ -37,6 +37,7 @@ interface InteractiveMapProps {
   highlightFeatureId?: string
   zoom?: number
   center?: { lat: number; lng: number }
+  onFeatureClick?: (layerConfig: GeoLayerConfig, properties: GeoFeatureProperties) => void
 }
 
 interface SelectedFeature {
@@ -71,6 +72,7 @@ function InteractiveMapInner({
   highlightFeatureId,
   zoom,
   center,
+  onFeatureClick,
 }: InteractiveMapProps) {
   const [visibleLayerIds, setVisibleLayerIds] = useState<Set<string>>(
     new Set(defaultVisibleLayers)
@@ -92,8 +94,11 @@ function InteractiveMapInner({
   const handleLayerClick = useCallback(
     (layerConfig: GeoLayerConfig) => (properties: GeoFeatureProperties) => {
       setSelectedFeature({ properties, layerConfig })
+      if (onFeatureClick) {
+        onFeatureClick(layerConfig, properties)
+      }
     },
-    []
+    [onFeatureClick]
   )
 
   const layerOptions: LayerOption[] = useMemo(

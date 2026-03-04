@@ -1,14 +1,25 @@
 'use client'
 
-import { ChevronDown } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
-import { BRAND } from '@/lib/constants'
+import { BRAND, THEMES } from '@/lib/constants'
+
+/** Spectrum bar showing all 7 pathway colors */
+function SpectrumBar() {
+  const colors = Object.values(THEMES).map(function (t) { return t.color })
+  return (
+    <div className="flex h-1 rounded-full max-w-xs mx-auto overflow-hidden">
+      {colors.map(function (color) {
+        return <div key={color} className="flex-1" style={{ backgroundColor: color }} />
+      })}
+    </div>
+  )
+}
 
 export function HeroBook() {
   const { t } = useTranslation()
 
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4 text-center">
+    <section className="relative flex flex-col items-center justify-center py-16 sm:py-24 px-4 text-center">
       {/* Warm radial gradient background */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -31,19 +42,18 @@ export function HeroBook() {
         </h1>
 
         {/* Tagline */}
-        <p className="text-lg sm:text-xl font-serif italic text-brand-muted mb-16">
+        <p className="text-lg sm:text-xl font-serif italic text-brand-muted mb-8">
           {BRAND.tagline}
         </p>
 
+        {/* Spectrum bar — 7 pathway colors */}
+        <SpectrumBar />
+
         {/* Scroll prompt */}
-        <div className="flex flex-col items-center gap-3">
+        <div className="mt-8">
           <p className="text-sm text-brand-muted font-medium">
             {t('hero.scroll_prompt')}
           </p>
-          <ChevronDown
-            size={24}
-            className="text-brand-muted/60 animate-bounce-slow"
-          />
         </div>
       </div>
     </section>

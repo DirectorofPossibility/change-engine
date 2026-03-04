@@ -1,7 +1,16 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import {
+  fetchFullTaxonomy,
+  buildPromptForEntity,
+  callClaude,
+  parseClaudeJson,
+  validateAndEnrich,
+  populateAllJunctions,
+} from '../_shared/classifier.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const ANTHROPIC_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 const GOOGLE_CIVIC_API_KEY = Deno.env.get('GOOGLE_CIVIC_API_KEY')!;
 const CONGRESS_API_KEY = Deno.env.get('CONGRESS_API_KEY')!;
 const CORS = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Access-Control-Allow-Methods':'POST, OPTIONS'};
@@ -216,14 +225,34 @@ Deno.serve(async (req: Request) => {
       item_count: upserted,
     });
 
-    // Optionally trigger backfill-v2
-    if (triggerClassify && upserted > 0) {
+    // Inline classification for newly upserted officials
+    let classified = 0;
+    if (triggerClassify && upserted > 0 && ANTHROPIC_KEY) {
       try {
-        await fetch(`${SUPABASE_URL}/functions/v1/backfill-v2`, {
-          method: 'POST', headers: { Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ table: 'elected_officials', batch_size: 3 }),
-        });
-      } catch (err) { console.error('Failed to trigger backfill-v2:', (err as Error).message); }
+        const taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
+        const systemPrompt = buildPromptForEntity(taxonomy, 'elected_official');
+
+        // Classify officials that don't have v4-unified classification yet
+        const unclassified = await db(`elected_officials?select=official_id,official_name,title,party,level,jurisdiction,description_5th_grade&classification_v2=is.null&limit=5`);
+        if (unclassified && unclassified.length > 0) {
+          for (const official of unclassified) {
+            try {
+              const userContent = `Name: ${official.official_name}\nTitle: ${official.title || ''}\nParty: ${official.party || ''}\nLevel: ${official.level || ''}\nJurisdiction: ${official.jurisdiction || ''}\nDescription: ${official.description_5th_grade || ''}\n\nReturn JSON with: theme_primary, theme_secondary, focus_area_ids, sdg_ids, sdoh_code, ntee_codes, airs_codes, center, audience_segment_ids, life_situation_ids, gov_level_id, keywords, geographic_scope, title_6th_grade, summary_6th_grade, confidence, reasoning`;
+              const rawText = await callClaude(systemPrompt, userContent, ANTHROPIC_KEY, 1000);
+              const raw = parseClaudeJson(rawText);
+              const enriched = validateAndEnrich(raw, taxonomy);
+
+              await db(`elected_officials?official_id=eq.${official.official_id}`, 'PATCH', {
+                classification_v2: enriched,
+                focus_area_ids: (enriched.focus_area_ids || []).join(','),
+              });
+              await populateAllJunctions('elected_official', official.official_id, enriched, SUPABASE_URL, SUPABASE_KEY);
+              classified++;
+              await sleep(1000);
+            } catch (err) { console.error(`Classify error for ${official.official_id}:`, (err as Error).message); }
+          }
+        }
+      } catch (err) { console.error('Inline classification error:', (err as Error).message); }
     }
 
     return new Response(JSON.stringify({
@@ -237,7 +266,8 @@ Deno.serve(async (req: Request) => {
       member_api_calls: memberResult.memberApiCalls,
       member_api_errors: memberResult.memberApiErrors,
       next_offset: offset + zipsProcessed,
-      message: `Synced ${upserted} officials, ${districtResult.zipsUpdated} ZIP districts updated`,
+      classified,
+      message: `Synced ${upserted} officials, ${districtResult.zipsUpdated} ZIP districts updated, ${classified} classified inline`,
     }), { headers: { ...CORS, 'Content-Type': 'application/json' } });
 
   } catch (err) {

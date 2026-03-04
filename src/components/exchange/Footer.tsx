@@ -41,6 +41,8 @@ export function Footer() {
               {t('footer.tagline')}
             </p>
             <div className="space-y-1">
+              <Link href="/privacy" className="block text-sm text-gray-400 hover:text-white">{t('footer.privacy')}</Link>
+              <Link href="/terms" className="block text-sm text-gray-400 hover:text-white">{t('footer.terms')}</Link>
               <Link href="/accessibility" className="block text-sm text-gray-400 hover:text-white">{t('footer.accessibility')}</Link>
             </div>
           </div>

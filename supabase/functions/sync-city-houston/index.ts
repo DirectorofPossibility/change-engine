@@ -1,4 +1,12 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import {
+  fetchFullTaxonomy,
+  buildPromptForEntity,
+  callClaude,
+  parseClaudeJson,
+  validateAndEnrich,
+  populateAllJunctions,
+} from '../_shared/classifier.ts';
 
 /**
  * sync-city-houston — Ingests Houston City Council members and ordinances/resolutions
@@ -13,6 +21,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const ANTHROPIC_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 const LEGISTAR_TOKEN = Deno.env.get('LEGISTAR_TOKEN') || '';
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -252,28 +261,68 @@ Deno.serve(async (req: Request) => {
       item_count: stats.officials_upserted + stats.policies_upserted,
     });
 
-    // ── 5. Optionally trigger classification ────────────────────────
+    // ── 5. Inline classification for new policies + officials ──────
 
-    if (triggerClassify && stats.policies_upserted > 0) {
+    let classified = 0;
+    if (triggerClassify && ANTHROPIC_KEY) {
       try {
-        await fetch(`${SUPABASE_URL}/functions/v1/backfill-v2`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ table: 'policies', batch_size: 3 }),
-        });
-      } catch (err) {
-        console.error('Failed to trigger backfill-v2:', (err as Error).message);
-      }
+        const taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
+
+        // Classify unclassified policies (up to 5)
+        if (stats.policies_upserted > 0) {
+          const policyPrompt = buildPromptForEntity(taxonomy, 'policy');
+          const unclassifiedPolicies = await db(`policies?select=policy_id,policy_name,summary_5th_grade,policy_type,level,status,bill_number&classification_v2=is.null&limit=5`);
+          if (unclassifiedPolicies && unclassifiedPolicies.length > 0) {
+            for (const pol of unclassifiedPolicies) {
+              try {
+                const userContent = `Name: ${pol.policy_name}\nDescription: ${pol.summary_5th_grade || ''}\npolicy_type: ${pol.policy_type || ''}\nlevel: ${pol.level || ''}\nstatus: ${pol.status || ''}\nbill_number: ${pol.bill_number || ''}\nIMPORTANT: Write title_6th_grade, summary_6th_grade, and impact_statement.\n\nReturn JSON with all classification fields.`;
+                const rawText = await callClaude(policyPrompt, userContent, ANTHROPIC_KEY, 1200);
+                const raw = parseClaudeJson(rawText);
+                const enriched = validateAndEnrich(raw, taxonomy);
+                await db(`policies?policy_id=eq.${pol.policy_id}`, 'PATCH', {
+                  classification_v2: enriched, focus_area_ids: (enriched.focus_area_ids || []).join(','),
+                  ...(enriched.title_6th_grade ? { title_6th_grade: enriched.title_6th_grade } : {}),
+                  ...(enriched.summary_6th_grade ? { summary_6th_grade: enriched.summary_6th_grade } : {}),
+                  ...(enriched.impact_statement ? { impact_statement: enriched.impact_statement } : {}),
+                });
+                await populateAllJunctions('policy', pol.policy_id, enriched, SUPABASE_URL, SUPABASE_KEY);
+                classified++;
+                await sleep(1000);
+              } catch (err) { console.error(`Classify policy error ${pol.policy_id}:`, (err as Error).message); }
+            }
+          }
+        }
+
+        // Classify unclassified officials (up to 3)
+        if (stats.officials_upserted > 0) {
+          const officialPrompt = buildPromptForEntity(taxonomy, 'elected_official');
+          const unclassifiedOfficials = await db(`elected_officials?select=official_id,official_name,title,party,level,jurisdiction,description_5th_grade&classification_v2=is.null&limit=3`);
+          if (unclassifiedOfficials && unclassifiedOfficials.length > 0) {
+            for (const off of unclassifiedOfficials) {
+              try {
+                const userContent = `Name: ${off.official_name}\nTitle: ${off.title || ''}\nParty: ${off.party || ''}\nLevel: ${off.level || ''}\nJurisdiction: ${off.jurisdiction || ''}\nDescription: ${off.description_5th_grade || ''}\n\nReturn JSON with all classification fields.`;
+                const rawText = await callClaude(officialPrompt, userContent, ANTHROPIC_KEY, 1000);
+                const raw = parseClaudeJson(rawText);
+                const enriched = validateAndEnrich(raw, taxonomy);
+                await db(`elected_officials?official_id=eq.${off.official_id}`, 'PATCH', {
+                  classification_v2: enriched, focus_area_ids: (enriched.focus_area_ids || []).join(','),
+                });
+                await populateAllJunctions('elected_official', off.official_id, enriched, SUPABASE_URL, SUPABASE_KEY);
+                classified++;
+                await sleep(1000);
+              } catch (err) { console.error(`Classify official error ${off.official_id}:`, (err as Error).message); }
+            }
+          }
+        }
+      } catch (err) { console.error('Inline classification error:', (err as Error).message); }
     }
 
     return new Response(JSON.stringify({
       success: true,
       mode,
       ...stats,
-      message: `Houston sync complete: ${stats.officials_upserted} officials, ${stats.policies_upserted} policies`,
+      classified,
+      message: `Houston sync complete: ${stats.officials_upserted} officials, ${stats.policies_upserted} policies, ${classified} classified`,
     }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     });

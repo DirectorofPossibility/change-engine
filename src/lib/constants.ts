@@ -36,7 +36,7 @@ export const PAGE_INTROS = {
   explore: 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
   elections: 'Your voting dashboard — see what just happened, what\'s coming up, who represents you, and where to vote. Start with your ZIP code to personalize your experience.',
   availableResources: 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',
-  geography: 'Explore Houston through its neighborhoods, districts, and civic boundaries. Start with a ZIP code or select a super neighborhood to see the services, officials, and organizations that serve your area.',
+  geography: 'Explore Houston through its neighborhoods, districts, and civic boundaries. Toggle boundary layers, click any area, or search by ZIP code to discover services, officials, organizations, and foundations near you.',
 } as const;
 
 /**

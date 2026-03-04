@@ -46,6 +46,8 @@ const en: Record<string, string> = {
   'footer.polling_places': 'Polling Places',
   'footer.policies': 'Policies',
   'footer.search': 'Search',
+  'footer.privacy': 'Privacy Policy',
+  'footer.terms': 'Terms of Use',
   'footer.accessibility': 'Accessibility',
   'footer.tagline': 'A civic platform connecting Houston residents with resources, services, and civic participation opportunities.',
   'footer.built_in': 'Built with care in Houston, TX',
@@ -136,8 +138,8 @@ const en: Record<string, string> = {
   'civicHub.view_all_officials': 'View all officials',
   'civicHub.view_all_policies': 'View all policies',
 
-  // Geography page
-  'geo.title': 'Geography',
+  // Geography / Map View page
+  'geo.title': 'Map View',
   'geo.subtitle': 'Explore Your Community',
   'geo.select_super': 'Select a super neighborhood',
   'geo.select_neighborhood': 'Select a neighborhood',
@@ -152,6 +154,10 @@ const en: Record<string, string> = {
   'geo.filter_markers': 'Filter Markers',
   'geo.show_all_layers': 'Show All',
   'geo.hide_all_layers': 'Hide All',
+  'geo.click_to_explore': 'Toggle a boundary layer, then click any area to explore',
+  'geo.loading_content': 'Loading nearby content...',
+  'geo.foundations_nearby': 'Foundations Serving This Area',
+  'geo.exploring': 'Exploring',
 
   // Explore page
   'explore.title': 'Explore Topics',
@@ -292,6 +298,7 @@ const en: Record<string, string> = {
   'discover.topics': 'Explore Topics',
   'discover.learning': 'Learning Paths',
   'discover.geography': 'Geography',
+  'discover.map_view': 'Map View',
   'discover.foundations': 'Foundations',
 
   // Guide page
@@ -496,6 +503,8 @@ const es: Record<string, string> = {
   'footer.polling_places': 'Lugares de Votación',
   'footer.policies': 'Políticas',
   'footer.search': 'Buscar',
+  'footer.privacy': 'Política de Privacidad',
+  'footer.terms': 'Términos de Uso',
   'footer.accessibility': 'Accesibilidad',
   'footer.tagline': 'Una plataforma cívica que conecta a los residentes de Houston con recursos, servicios y oportunidades de participación cívica.',
   'footer.built_in': 'Hecho con cariño en Houston, TX',
@@ -586,8 +595,8 @@ const es: Record<string, string> = {
   'civicHub.view_all_officials': 'Ver todos los funcionarios',
   'civicHub.view_all_policies': 'Ver todas las políticas',
 
-  // Geography page
-  'geo.title': 'Geografía',
+  // Geography / Map View page
+  'geo.title': 'Vista del Mapa',
   'geo.subtitle': 'Explore Su Comunidad',
   'geo.select_super': 'Seleccione un super vecindario',
   'geo.select_neighborhood': 'Seleccione un vecindario',
@@ -602,6 +611,10 @@ const es: Record<string, string> = {
   'geo.filter_markers': 'Filtrar Marcadores',
   'geo.show_all_layers': 'Mostrar Todo',
   'geo.hide_all_layers': 'Ocultar Todo',
+  'geo.click_to_explore': 'Active una capa de límites, luego haga clic en cualquier área para explorar',
+  'geo.loading_content': 'Cargando contenido cercano...',
+  'geo.foundations_nearby': 'Fundaciones que Sirven Esta Área',
+  'geo.exploring': 'Explorando',
 
   // Explore page
   'explore.title': 'Explorar Temas',
@@ -742,6 +755,7 @@ const es: Record<string, string> = {
   'discover.topics': 'Explorar Temas',
   'discover.learning': 'Rutas de Aprendizaje',
   'discover.geography': 'Geografía',
+  'discover.map_view': 'Vista del Mapa',
   'discover.foundations': 'Fundaciones',
 
   // Guide page
@@ -946,6 +960,8 @@ const vi: Record<string, string> = {
   'footer.polling_places': 'Địa Điểm Bỏ Phiếu',
   'footer.policies': 'Chính Sách',
   'footer.search': 'Tìm Kiếm',
+  'footer.privacy': 'Chính Sách Bảo Mật',
+  'footer.terms': 'Điều Khoản Sử Dụng',
   'footer.accessibility': 'Trợ Năng',
   'footer.tagline': 'Nền tảng dân sự kết nối cư dân Houston với tài nguyên, dịch vụ và cơ hội tham gia cộng đồng.',
   'footer.built_in': 'Được xây dựng tận tâm tại Houston, TX',
@@ -1036,8 +1052,8 @@ const vi: Record<string, string> = {
   'civicHub.view_all_officials': 'Xem tất cả quan chức',
   'civicHub.view_all_policies': 'Xem tất cả chính sách',
 
-  // Geography page
-  'geo.title': 'Địa Lý',
+  // Geography / Map View page
+  'geo.title': 'Chế Độ Xem Bản Đồ',
   'geo.subtitle': 'Khám Phá Cộng Đồng Của Bạn',
   'geo.select_super': 'Chọn một siêu khu phố',
   'geo.select_neighborhood': 'Chọn một khu phố',
@@ -1052,6 +1068,10 @@ const vi: Record<string, string> = {
   'geo.filter_markers': 'Lọc Điểm Đánh Dấu',
   'geo.show_all_layers': 'Hiện Tất Cả',
   'geo.hide_all_layers': 'Ẩn Tất Cả',
+  'geo.click_to_explore': 'Bật một lớp ranh giới, sau đó nhấp vào bất kỳ khu vực nào để khám phá',
+  'geo.loading_content': 'Đang tải nội dung gần đây...',
+  'geo.foundations_nearby': 'Tổ Chức Từ Thiện Phục Vụ Khu Vực Này',
+  'geo.exploring': 'Đang khám phá',
 
   // Explore page
   'explore.title': 'Khám Phá Chủ Đề',
@@ -1192,6 +1212,7 @@ const vi: Record<string, string> = {
   'discover.topics': 'Khám Phá Chủ Đề',
   'discover.learning': 'Lộ Trình Học Tập',
   'discover.geography': 'Địa Lý',
+  'discover.map_view': 'Chế Độ Xem Bản Đồ',
   'discover.foundations': 'Tổ Chức Từ Thiện',
 
   // Guide page

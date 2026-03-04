@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Exchange — Design System Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB;
+    --text: #2C2C2C;
+    --accent: #C65D28;
+    --muted: #8B7E74;
+    --border: #E8E3DB;
+    --card: #FFFFFF;
+    --sidebar-w: 280px;
+    --topbar-h: 56px;
+    --health: #D4654A;
+    --families: #C4943C;
+    --neighborhood: #7B6BA8;
+    --voice: #3D7A7A;
+    --money: #4A7A8A;
+    --planet: #5A8E5A;
+    --bigger-we: #8B6BA8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ══════════════════════════════════════════════
+     ANIMATIONS — shared flower-of-life draw system
+     ══════════════════════════════════════════════ */
+  @keyframes draw {
+    from { stroke-dashoffset: 502; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.25; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(1.02); }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  /* ══════════════════════════════════════════════
+     REUSABLE FLOWER-OF-LIFE SVG GEOMETRY
+     Center: 50,50  Orbit: 26  Radius: 26
+     ViewBox: -4 -4 108 108  (no clipping!)
+     ══════════════════════════════════════════════ */
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--topbar-h);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    z-index: 100;
+  }
+
+  .topbar-left {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .topbar-brand {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+  }
+
+  .topbar-brand .logo-mark { width: 40px; height: 40px; }
+
+  .topbar-brand-text {
+    display: flex; flex-direction: column; line-height: 1.1;
+  }
+
+  .topbar-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 2px; color: var(--text);
+  }
+
+  .topbar-brand-sub {
+    font-size: 9px; letter-spacing: 2.5px;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  .topbar-center { flex: 1; max-width: 480px; margin: 0 24px; }
+
+  .search-bar {
+    display: flex; align-items: center;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 24px; padding: 7px 16px; gap: 8px;
+    transition: border-color 0.2s;
+  }
+  .search-bar:focus-within { border-color: var(--accent); }
+
+  .search-bar input {
+    flex: 1; border: none; background: transparent;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    color: var(--text); outline: none;
+  }
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .search-icon { width: 16px; height: 16px; color: var(--muted); }
+
+  .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+  .social-link {
+    color: var(--muted); transition: color 0.2s;
+    display: flex; align-items: center;
+  }
+  .social-link:hover { color: var(--accent); }
+
+  .lang-btn {
+    font-size: 11px; padding: 4px 12px;
+    border: 1px solid var(--border); border-radius: 14px;
+    background: transparent; color: var(--muted); cursor: pointer;
+    font-family: 'DM Sans'; transition: all 0.2s;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .sign-in-btn {
+    font-size: 12px; padding: 6px 16px; border: none;
+    border-radius: 16px; background: var(--accent);
+    color: white; cursor: pointer; font-family: 'DM Sans';
+    font-weight: 600; transition: background 0.2s;
+  }
+  .sign-in-btn:hover { background: #b5511f; }
+
+  /* ── LEFT SIDEBAR ── */
+  .sidebar {
+    position: fixed; top: var(--topbar-h); left: 0;
+    width: var(--sidebar-w);
+    height: calc(100vh - var(--topbar-h));
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; z-index: 90;
+    display: flex; flex-direction: column;
+  }
+
+  .sidebar-logo-area {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px 20px 16px;
+    position: relative; overflow: visible;
+  }
+
+  .sidebar-logo-area .flower-large {
+    width: 100px; height: 100px; margin-bottom: 10px;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .sidebar-logo-area h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px; letter-spacing: 2.5px;
+    color: var(--text); text-align: center; line-height: 1;
+  }
+
+  .sidebar-logo-area .tagline {
+    font-family: 'DM Serif Display', serif;
+    font-size: 11px; color: var(--muted);
+    margin-top: 3px; font-style: italic;
+  }
+
+  /* circle divider instead of a line */
+  .circle-divider {
+    display: flex; align-items: center; justify-content: center;
+    padding: 6px 20px; gap: 0;
+  }
+  .circle-divider svg { width: 240px; height: 12px; }
+
+  .sidebar-section-label {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); padding: 12px 20px 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* small 3-circle accent next to section labels */
+  .section-accent {
+    width: 18px; height: 12px; flex-shrink: 0;
+  }
+
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 20px; color: var(--text); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    transition: all 0.15s; cursor: pointer;
+    position: relative;
+  }
+  .sidebar-link:hover { background: rgba(198, 93, 40, 0.05); }
+
+  .sidebar-link.active {
+    background: rgba(198, 93, 40, 0.08);
+    color: var(--accent); font-weight: 600;
+  }
+  .sidebar-link.active::before {
+    content: '';
+    position: absolute; left: 0; top: 4px; bottom: 4px;
+    width: 3px; border-radius: 0 3px 3px 0;
+    background: var(--accent);
+  }
+
+  .sidebar-link .icon { width: 18px; height: 18px; flex-shrink: 0; }
+
+  .sidebar-link .count {
+    margin-left: auto; font-size: 11px; color: var(--muted);
+    background: var(--bg); padding: 1px 7px; border-radius: 10px;
+  }
+
+  .pathway-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0; border: 1.5px solid;
+    transition: transform 0.2s;
+  }
+  .sidebar-link:hover .pathway-dot { transform: scale(1.3); }
+
+  .sidebar-link .pathway-name { flex: 1; }
+
+  .location-widget {
+    margin: 8px 20px; padding: 10px 14px;
+    background: var(--bg); border-radius: 12px; font-size: 12px;
+    position: relative; overflow: hidden;
+  }
+  /* subtle flower watermark in location widget */
+  .location-widget .widget-watermark {
+    position: absolute; right: -8px; top: -8px;
+    width: 50px; height: 50px; opacity: 0.06;
+  }
+  .location-widget .loc-label {
+    font-family: 'DM Serif Display', serif;
+    font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+  }
+  .location-widget .loc-value {
+    font-weight: 600; color: var(--text); position: relative;
+  }
+
+  .sidebar-social {
+    display: flex; gap: 12px; padding: 14px 20px;
+    margin-top: auto; border-top: 1px solid var(--border);
+    align-items: center;
+  }
+  .sidebar-social a { color: var(--muted); transition: color 0.2s; }
+  .sidebar-social a:hover { color: var(--accent); }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    margin-left: var(--sidebar-w); margin-top: var(--topbar-h);
+    min-height: calc(100vh - var(--topbar-h));
+    position: relative;
+  }
+
+  /* large background watermark flower */
+  .bg-watermark {
+    position: fixed;
+    right: -120px; top: 50%;
+    transform: translateY(-50%);
+    width: 500px; height: 500px;
+    opacity: 0.025;
+    pointer-events: none;
+    animation: spin-slow 120s linear infinite;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero-section {
+    text-align: center; padding: 48px 32px 40px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-section .flower-hero {
+    width: 180px; height: 180px;
+    margin: 0 auto 24px; display: block;
+  }
+
+  .hero-section h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; letter-spacing: 4px;
+    color: var(--text); margin-bottom: 4px;
+  }
+
+  .hero-section .hero-tagline {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px; color: var(--muted);
+    font-style: italic; margin-bottom: 16px;
+  }
+
+  .hero-section .hero-sub {
+    font-size: 14px; color: var(--muted);
+    max-width: 480px; margin: 0 auto; line-height: 1.7;
+  }
+
+  /* ── SECTION HEADERS with circle motif ── */
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 32px; margin-top: 40px; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .section-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 1.5px; color: var(--text);
+  }
+  .section-header .header-circles {
+    width: 32px; height: 20px;
+  }
+  .section-header .header-line {
+    flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── CONTENT GRID ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px; padding: 0 32px;
+    position: relative; z-index: 1;
+  }
+
+  .content-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    transition: all 0.25s; position: relative;
+  }
+  .content-card:hover {
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+  }
+
+  .card-thumb {
+    height: 140px; display: flex;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+
+  /* flower watermark in card thumb */
+  .card-thumb .card-flower {
+    position: absolute; right: -20px; bottom: -20px;
+    width: 100px; height: 100px; opacity: 0.07;
+  }
+
+  .card-thumb .card-pathway-label {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 10px; font-weight: 600; color: white;
+    padding: 3px 10px; border-radius: 12px; letter-spacing: 0.5px;
+  }
+
+  .card-body { padding: 16px 18px; }
+  .card-body h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px; margin-bottom: 6px; color: var(--text);
+  }
+  .card-body p {
+    font-size: 13px; color: var(--muted); line-height: 1.55;
+  }
+
+  /* ── PATHWAY PILLS ROW ── */
+  .pathway-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 0 32px; margin-top: 40px; margin-bottom: 24px;
+    position: relative; z-index: 1;
+  }
+  .pathway-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--card); font-size: 12px;
+    color: var(--text); cursor: pointer;
+    transition: all 0.2s; text-decoration: none;
+  }
+  .pathway-pill:hover {
+    border-color: currentColor; transform: scale(1.03);
+  }
+  .pathway-pill .pill-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  /* ── STATS ROW with circle motifs ── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; padding: 0 32px; margin-top: 40px;
+    position: relative; z-index: 1;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .stat-card .stat-bg {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px; height: 80px; opacity: 0.04;
+  }
+  .stat-card .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; color: var(--text); line-height: 1;
+    position: relative;
+  }
+  .stat-card .stat-label {
+    font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-top: 4px; position: relative;
+  }
+
+  /* ── CIRCLE DIVIDER between sections ── */
+  .page-divider {
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px; position: relative; z-index: 1;
+  }
+  .page-divider svg { width: 200px; height: 24px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-left: var(--sidebar-w);
+    background: var(--text); color: white;
+    padding: 48px 32px 24px;
+    position: relative; overflow: hidden;
+  }
+
+  .footer .footer-bg-flower {
+    position: absolute; right: -60px; top: -60px;
+    width: 300px; height: 300px; opacity: 0.03;
+  }
+
+  .footer-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 40px; max-width: 900px; position: relative;
+  }
+
+  .footer h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px; letter-spacing: 2px;
+    margin-bottom: 12px; color: rgba(255,255,255,0.8);
+  }
+  .footer p, .footer a {
+    font-size: 12px; color: rgba(255,255,255,0.45);
+    line-height: 1.7; text-decoration: none;
+  }
+  .footer a:hover { color: rgba(255,255,255,0.9); }
+
+  .footer .footer-brand {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+  }
+  .footer .footer-brand .flower-footer { width: 36px; height: 36px; }
+  .footer .footer-brand span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 2px;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .footer-social { display: flex; gap: 16px; margin-top: 14px; }
+  .footer-social a { color: rgba(255,255,255,0.4); transition: color 0.2s; }
+  .footer-social a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 32px; padding-top: 20px;
+    text-align: center; position: relative;
+  }
+  .footer-bottom p { font-size: 11px; color: rgba(255,255,255,0.25); }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+     REUSABLE SVG: Flower of Life — viewBox="-4 -4 108 108"
+     This geometry is used everywhere at different sizes
+     ════════════════════════════════════════════════════ -->
+
+<!-- BACKGROUND WATERMARK (huge, spinning slowly) -->
+<svg class="bg-watermark" viewBox="-4 -4 108 108" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="24" r="26" fill="none" stroke="var(--health)" stroke-width="0.8"/>
+  <circle cx="72.5" cy="37" r="26" fill="none" stroke="var(--families)" stroke-width="0.8"/>
+  <circle cx="72.5" cy="63" r="26" fill="none" stroke="var(--neighborhood)" stroke-width="0.8"/>
+  <circle cx="50" cy="76" r="26" fill="none" stroke="var(--voice)" stroke-width="0.8"/>
+  <circle cx="27.5" cy="63" r="26" fill="none" stroke="var(--money)" stroke-width="0.8"/>
+  <circle cx="27.5" cy="37" r="26" fill="none" stroke="var(--planet)" stroke-width="0.8"/>
+  <circle cx="50" cy="50" r="26" fill="none" stroke="var(--bigger-we)" stroke-width="1"/>
+  <circle cx="50" cy="37" r="14" fill="none" stroke="var(--health)" stroke-width="0.4"/>
+  <circle cx="61" cy="43.5" r="14" fill="none" stroke="var(--families)" stroke-width="0.4"/>
+  <circle cx="61" cy="56.5" r="14" fill="none" stroke="var(--neighborhood)" stroke-width="0.4"/>
+  <circle cx="50" cy="63" r="14" fill="none" stroke="var(--voice)" stroke-width="0.4"/>
+  <circle cx="39" cy="56.5" r="14" fill="none" stroke="var(--money)" stroke-width="0.4"/>
+  <circle cx="39" cy="43.5" r="14" fill="none" stroke="var(--planet)" stroke-width="0.4"/>
+  <circle cx="50" cy="50" r="14" fill="none" stroke="var(--bigger-we)" stroke-width="0.5"/>
+</svg>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TOP BAR                                    -->
+<!-- ══════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="#" class="topbar-brand">
+      <svg class="logo-mark" viewBox="-4 -4 108 108" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          .tb-ring { fill: none; stroke-width: 1.6; stroke-dasharray: 502; stroke-dashoffset: 502; animation: draw 1.2s ease forwards; }
+        </style>
+        <circle class="tb-ring" cx="50" cy="24" r="26" stroke="#D4654A" style="animation-delay:0s"/>
+        <circle class="tb-ring" cx="72.5" cy="37" r="26" stroke="#C4943C" style="animation-delay:.08s"/>
+        <circle class="tb-ring" cx="72.5" cy="63" r="26" stroke="#7B6BA8" style="animation-delay:.16s"/>
+        <circle class="tb-ring" cx="50" cy="76" r="26" stroke="#3D7A7A" style="animation-delay:.24s"/>
+        <circle class="tb-ring" cx="27.5" cy="63" r="26" stroke="#4A7A8A" style="animation-delay:.32s"/>
+        <circle class="tb-ring" cx="27.5" cy="37" r="26" stroke="#5A8E5A" style="animation-delay:.40s"/>
+        <circle class="tb-ring" cx="50" cy="50" r="26" stroke="#8B6BA8" stroke-width="2" style="animation-delay:.48s"/>
+        <!-- inner petals -->
+        <circle cx="50" cy="37" r="14" fill="none" stroke="#D4654A" stroke-width="0.5" opacity="0" style="animation: fadeIn .6s ease .7s forwards"/>
+        <circle cx="61" cy="43.5" r="14" fill="none" stroke="#C4943C" stroke-width="0.5" opacity="0" style="animation: fadeIn .6s ease .75s forwards"/>
+        <circle cx="61" cy="56.5" r="14" fill="none" stroke="#7B6BA8" stroke-width="0.5" opacity="0" style="animation: fadeIn .6s ease .8s forwards"/>
+        <circle cx="50" cy="63" r="14" fill="none" stroke="#3D7A7A" stroke-width="0.5" opacity="0" style="animation: fadeIn .6s ease .85s forwards"/>
+        <circle cx="39" cy="56.5" r="14" fill="none" stroke="#4A7A8A" stroke-width="0.5" opacity="0" style="animation: fadeIn .6s ease .9s forwards"/>
+        <circle cx="39" cy="43.5" r="14" fill="none" stroke="#5A8E5A" stroke-width="0.5" opacity="0" style="animation: fadeIn .6s ease .95s forwards"/>
+        <circle cx="50" cy="50" r="14" fill="none" stroke="#8B6BA8" stroke-width="0.6" opacity="0" style="animation: fadeIn .6s ease 1s forwards"/>
+      </svg>
+      <div class="topbar-brand-text">
+        <span class="topbar-brand-name">COMMUNITY EXCHANGE</span>
+        <span class="topbar-brand-sub">by The Change Lab</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="topbar-center">
+    <div class="search-bar">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search resources, services, topics..." />
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <a href="#" class="social-link" title="Facebook">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+    <a href="#" class="social-link" title="Instagram">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <button class="lang-btn">ES / VI</button>
+    <button class="sign-in-btn">Sign In</button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- LEFT SIDEBAR                               -->
+<!-- ══════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo-area">
+    <!-- Full flower of life — properly sized viewBox, no clipping -->
+    <svg class="flower-large" viewBox="-4 -4 108 108" xmlns="http://www.w3.org/2000/svg">
+      <!-- outer 6 + center -->
+      <circle cx="50" cy="24" r="26" fill="none" stroke="#D4654A" stroke-width="1.3" opacity="0.55"/>
+      <circle cx="72.5" cy="37" r="26" fill="none" stroke="#C4943C" stroke-width="1.3" opacity="0.55"/>
+      <circle cx="72.5" cy="63" r="26" fill="none" stroke="#7B6BA8" stroke-width="1.3" opacity="0.55"/>
+      <circle cx="50" cy="76" r="26" fill="none" stroke="#3D7A7A" stroke-width="1.3" opacity="0.55"/>
+      <circle cx="27.5" cy="63" r="26" fill="none" stroke="#4A7A8A" stroke-width="1.3" opacity="0.55"/>
+      <circle cx="27.5" cy="37" r="26" fill="none" stroke="#5A8E5A" stroke-width="1.3" opacity="0.55"/>
+      <circle cx="50" cy="50" r="26" fill="none" stroke="#8B6BA8" stroke-width="1.8" opacity="0.75"/>
+      <!-- inner petals -->
+      <circle cx="50" cy="37" r="14" fill="none" stroke="#D4654A" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="61" cy="43.5" r="14" fill="none" stroke="#C4943C" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="61" cy="56.5" r="14" fill="none" stroke="#7B6BA8" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="50" cy="63" r="14" fill="none" stroke="#3D7A7A" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="39" cy="56.5" r="14" fill="none" stroke="#4A7A8A" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="39" cy="43.5" r="14" fill="none" stroke="#5A8E5A" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="50" cy="50" r="14" fill="none" stroke="#8B6BA8" stroke-width="0.6" opacity="0.25"/>
+      <!-- center seed -->
+      <circle cx="50" cy="50" r="5" fill="none" stroke="#8B6BA8" stroke-width="0.4" opacity="0.2"/>
+    </svg>
+    <h2>COMMUNITY EXCHANGE</h2>
+    <span class="tagline">Community Life, Organized</span>
+  </div>
+
+  <!-- circle divider -->
+  <div class="circle-divider">
+    <svg viewBox="0 0 240 12" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="6" x2="90" y2="6" stroke="var(--border)" stroke-width="0.5"/>
+      <circle cx="105" cy="6" r="4" fill="none" stroke="var(--health)" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="115" cy="6" r="4" fill="none" stroke="var(--families)" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="120" cy="6" r="4" fill="none" stroke="var(--bigger-we)" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="125" cy="6" r="4" fill="none" stroke="var(--voice)" stroke-width="0.6" opacity="0.4"/>
+      <circle cx="135" cy="6" r="4" fill="none" stroke="var(--planet)" stroke-width="0.6" opacity="0.4"/>
+      <line x1="150" y1="6" x2="240" y2="6" stroke="var(--border)" stroke-width="0.5"/>
+    </svg>
+  </div>
+
+  <!-- Location -->
+  <div class="location-widget">
+    <svg class="widget-watermark" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="var(--text)" stroke-width="1"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="var(--text)" stroke-width="1"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="var(--text)" stroke-width="1"/><circle cx="50" cy="76" r="26" fill="none" stroke="var(--text)" stroke-width="1"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="var(--text)" stroke-width="1"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="var(--text)" stroke-width="1"/><circle cx="50" cy="50" r="26" fill="none" stroke="var(--text)" stroke-width="1.2"/></svg>
+    <div class="loc-label">Your Location</div>
+    <div class="loc-value">Greater Third Ward &middot; 77004</div>
+  </div>
+
+  <!-- Home -->
+  <a href="#" class="sidebar-link active">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+    <span class="count" style="background: #38a169; color: white; font-weight: 600;">142</span>
+  </a>
+
+  <div class="circle-divider">
+    <svg viewBox="0 0 240 12"><line x1="0" y1="6" x2="100" y2="6" stroke="var(--border)" stroke-width="0.5"/><circle cx="120" cy="6" r="3" fill="none" stroke="var(--muted)" stroke-width="0.5" opacity="0.3"/><line x1="140" y1="6" x2="240" y2="6" stroke="var(--border)" stroke-width="0.5"/></svg>
+  </div>
+
+  <!-- Your Guide -->
+  <div class="sidebar-section-label">
+    <svg class="section-accent" viewBox="0 0 24 16"><circle cx="6" cy="8" r="5" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.35"/><circle cx="14" cy="8" r="5" fill="none" stroke="var(--bigger-we)" stroke-width="0.8" opacity="0.25"/><circle cx="18" cy="8" r="4" fill="none" stroke="var(--voice)" stroke-width="0.6" opacity="0.2"/></svg>
+    Your Guide
+  </div>
+  <a href="#" class="sidebar-link"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Local Resources<span class="count">89</span></a>
+  <a href="#" class="sidebar-link"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Officials</a>
+  <a href="#" class="sidebar-link"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Policy</a>
+  <a href="#" class="sidebar-link"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Elections</a>
+  <a href="#" class="sidebar-link"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Neighborhoods</a>
+
+  <div class="circle-divider">
+    <svg viewBox="0 0 240 12"><line x1="0" y1="6" x2="100" y2="6" stroke="var(--border)" stroke-width="0.5"/><circle cx="120" cy="6" r="3" fill="none" stroke="var(--muted)" stroke-width="0.5" opacity="0.3"/><line x1="140" y1="6" x2="240" y2="6" stroke="var(--border)" stroke-width="0.5"/></svg>
+  </div>
+
+  <!-- 7 Pathways -->
+  <div class="sidebar-section-label">
+    <svg class="section-accent" viewBox="0 0 24 16"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--health)" stroke-width="0.7" opacity="0.3"/><circle cx="16" cy="8" r="6" fill="none" stroke="var(--planet)" stroke-width="0.7" opacity="0.3"/><circle cx="12" cy="8" r="4" fill="none" stroke="var(--bigger-we)" stroke-width="0.6" opacity="0.25"/></svg>
+    Explore Houston
+  </div>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--health); background: rgba(212,101,74,0.12);"></span><span class="pathway-name">Health</span><span class="count">26</span></a>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--families); background: rgba(196,148,60,0.12);"></span><span class="pathway-name">Families</span><span class="count">21</span></a>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--neighborhood); background: rgba(123,107,168,0.12);"></span><span class="pathway-name">Neighborhood</span><span class="count">21</span></a>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--voice); background: rgba(61,122,122,0.12);"></span><span class="pathway-name">Voice</span><span class="count">75</span></a>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--money); background: rgba(74,122,138,0.12);"></span><span class="pathway-name">Money</span><span class="count">22</span></a>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--planet); background: rgba(90,142,90,0.12);"></span><span class="pathway-name">Planet</span><span class="count">14</span></a>
+  <a href="#" class="sidebar-link"><span class="pathway-dot" style="border-color: var(--bigger-we); background: rgba(139,107,168,0.12);"></span><span class="pathway-name">The Bigger We</span><span class="count">128</span></a>
+
+  <!-- Sidebar footer -->
+  <div class="sidebar-social">
+    <a href="#" title="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+    <a href="#" title="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    <a href="#" title="Website"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></a>
+    <span style="font-size: 10px; color: var(--muted); margin-left: auto; opacity: 0.7;">thechangelab.net</span>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- MAIN CONTENT                               -->
+<!-- ══════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- HERO with large animated flower -->
+  <div class="hero-section">
+    <svg class="flower-hero" viewBox="-8 -8 216 216" xmlns="http://www.w3.org/2000/svg">
+      <style>
+        .hr { fill: none; stroke-width: 1.4; stroke-dasharray: 502; stroke-dashoffset: 502; animation: draw 1.6s ease forwards; }
+        .hi { fill: none; opacity: 0; animation: fadeIn .8s ease forwards; }
+        .hb { animation: breathe 4s ease-in-out infinite; }
+      </style>
+      <!-- outer boundary circle -->
+      <circle cx="100" cy="100" r="98" fill="none" stroke="var(--border)" stroke-width="0.3" opacity="0.4"/>
+      <!-- 6 petals + center — FULL flower of life -->
+      <circle class="hr" cx="100" cy="48" r="52" stroke="#D4654A" style="animation-delay:0s"/>
+      <circle class="hr" cx="145" cy="74" r="52" stroke="#C4943C" style="animation-delay:.12s"/>
+      <circle class="hr" cx="145" cy="126" r="52" stroke="#7B6BA8" style="animation-delay:.24s"/>
+      <circle class="hr" cx="100" cy="152" r="52" stroke="#3D7A7A" style="animation-delay:.36s"/>
+      <circle class="hr" cx="55" cy="126" r="52" stroke="#4A7A8A" style="animation-delay:.48s"/>
+      <circle class="hr" cx="55" cy="74" r="52" stroke="#5A8E5A" style="animation-delay:.60s"/>
+      <circle class="hr" cx="100" cy="100" r="52" stroke="#8B6BA8" stroke-width="1.8" style="animation-delay:.72s"/>
+      <!-- inner petals -->
+      <circle class="hi hb" cx="100" cy="74" r="28" stroke="#D4654A" stroke-width="0.6" style="animation-delay:1s"/>
+      <circle class="hi hb" cx="122.5" cy="87" r="28" stroke="#C4943C" stroke-width="0.6" style="animation-delay:1.08s"/>
+      <circle class="hi hb" cx="122.5" cy="113" r="28" stroke="#7B6BA8" stroke-width="0.6" style="animation-delay:1.16s"/>
+      <circle class="hi hb" cx="100" cy="126" r="28" stroke="#3D7A7A" stroke-width="0.6" style="animation-delay:1.24s"/>
+      <circle class="hi hb" cx="77.5" cy="113" r="28" stroke="#4A7A8A" stroke-width="0.6" style="animation-delay:1.32s"/>
+      <circle class="hi hb" cx="77.5" cy="87" r="28" stroke="#5A8E5A" stroke-width="0.6" style="animation-delay:1.40s"/>
+      <circle class="hi" cx="100" cy="100" r="28" stroke="#8B6BA8" stroke-width="0.8" style="animation-delay:1.48s"/>
+      <!-- seed of life center -->
+      <circle class="hi" cx="100" cy="100" r="10" stroke="#8B6BA8" stroke-width="0.4" style="animation-delay:1.6s"/>
+    </svg>
+
+    <h1>COMMUNITY EXCHANGE</h1>
+    <p class="hero-tagline">Community Life, Organized</p>
+    <p class="hero-sub">
+      Connecting Houston residents with resources, opportunities, and each other.
+      Explore pathways to health, family, civic voice, and more.
+    </p>
+  </div>
+
+  <!-- PATHWAY PILLS — circle motif as navigation -->
+  <div class="pathway-pills">
+    <a href="#" class="pathway-pill" style="color: var(--health);"><span class="pill-dot" style="background: var(--health);"></span>Health</a>
+    <a href="#" class="pathway-pill" style="color: var(--families);"><span class="pill-dot" style="background: var(--families);"></span>Families</a>
+    <a href="#" class="pathway-pill" style="color: var(--neighborhood);"><span class="pill-dot" style="background: var(--neighborhood);"></span>Neighborhood</a>
+    <a href="#" class="pathway-pill" style="color: var(--voice);"><span class="pill-dot" style="background: var(--voice);"></span>Voice</a>
+    <a href="#" class="pathway-pill" style="color: var(--money);"><span class="pill-dot" style="background: var(--money);"></span>Money</a>
+    <a href="#" class="pathway-pill" style="color: var(--planet);"><span class="pill-dot" style="background: var(--planet);"></span>Planet</a>
+    <a href="#" class="pathway-pill" style="color: var(--bigger-we);"><span class="pill-dot" style="background: var(--bigger-we);"></span>The Bigger We</a>
+  </div>
+
+  <!-- STATS ROW — flower watermark behind each stat -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <svg class="stat-bg" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="var(--health)" stroke-width="1"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="var(--families)" stroke-width="1"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="var(--neighborhood)" stroke-width="1"/><circle cx="50" cy="76" r="26" fill="none" stroke="var(--voice)" stroke-width="1"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="var(--money)" stroke-width="1"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="var(--planet)" stroke-width="1"/><circle cx="50" cy="50" r="26" fill="none" stroke="var(--bigger-we)" stroke-width="1"/></svg>
+      <div class="stat-number">142</div>
+      <div class="stat-label">Resources</div>
+    </div>
+    <div class="stat-card">
+      <svg class="stat-bg" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="var(--voice)" stroke-width="1"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="var(--money)" stroke-width="1"/><circle cx="50" cy="50" r="26" fill="none" stroke="var(--bigger-we)" stroke-width="1"/></svg>
+      <div class="stat-number">89</div>
+      <div class="stat-label">Services</div>
+    </div>
+    <div class="stat-card">
+      <svg class="stat-bg" viewBox="-4 -4 108 108"><circle cx="50" cy="37" r="26" fill="none" stroke="var(--families)" stroke-width="1"/><circle cx="61" cy="56" r="26" fill="none" stroke="var(--planet)" stroke-width="1"/><circle cx="39" cy="56" r="26" fill="none" stroke="var(--health)" stroke-width="1"/></svg>
+      <div class="stat-number">7</div>
+      <div class="stat-label">Pathways</div>
+    </div>
+    <div class="stat-card">
+      <svg class="stat-bg" viewBox="-4 -4 108 108"><circle cx="50" cy="50" r="26" fill="none" stroke="var(--accent)" stroke-width="1.2"/><circle cx="50" cy="50" r="14" fill="none" stroke="var(--accent)" stroke-width="0.6"/></svg>
+      <div class="stat-number">88</div>
+      <div class="stat-label">Neighborhoods</div>
+    </div>
+  </div>
+
+  <!-- SECTION HEADER with circle accent -->
+  <div class="section-header">
+    <svg class="header-circles" viewBox="0 0 40 24">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.4"/>
+      <circle cx="24" cy="12" r="8" fill="none" stroke="var(--bigger-we)" stroke-width="1" opacity="0.3"/>
+      <circle cx="18" cy="12" r="5" fill="none" stroke="var(--voice)" stroke-width="0.7" opacity="0.25"/>
+    </svg>
+    <h2>LATEST RESOURCES</h2>
+    <div class="header-line"></div>
+  </div>
+
+  <!-- CONTENT CARDS with flower watermark -->
+  <div class="content-grid">
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(212,101,74,0.12), rgba(212,101,74,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#D4654A" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#D4654A" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#D4654A" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#D4654A" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#D4654A" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#D4654A" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#D4654A" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--health);">Health</span>
+      </div>
+      <div class="card-body">
+        <h3>Community Health Fair</h3>
+        <p>Free health screenings and wellness resources at Hermann Park this Saturday.</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(196,148,60,0.12), rgba(196,148,60,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#C4943C" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#C4943C" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#C4943C" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#C4943C" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#C4943C" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#C4943C" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#C4943C" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--families);">Families</span>
+      </div>
+      <div class="card-body">
+        <h3>After-School Programs Guide</h3>
+        <p>Updated directory of youth enrichment programs across Houston neighborhoods.</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(61,122,122,0.12), rgba(61,122,122,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#3D7A7A" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#3D7A7A" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#3D7A7A" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#3D7A7A" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#3D7A7A" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#3D7A7A" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#3D7A7A" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--voice);">Voice</span>
+      </div>
+      <div class="card-body">
+        <h3>Voter Registration Deadline</h3>
+        <p>Make sure your voice is heard. Registration closes March 15 for the spring election.</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(123,107,168,0.12), rgba(123,107,168,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#7B6BA8" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#7B6BA8" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#7B6BA8" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#7B6BA8" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#7B6BA8" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#7B6BA8" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#7B6BA8" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--neighborhood);">Neighborhood</span>
+      </div>
+      <div class="card-body">
+        <h3>Super Neighborhood Meetings</h3>
+        <p>Connect with your neighbors and shape local priorities. Find your next meeting.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CIRCLE PAGE DIVIDER -->
+  <div class="page-divider">
+    <svg viewBox="0 0 200 24" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="12" x2="60" y2="12" stroke="var(--border)" stroke-width="0.5"/>
+      <circle cx="78" cy="12" r="6" fill="none" stroke="var(--health)" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="88" cy="12" r="6" fill="none" stroke="var(--families)" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="100" cy="12" r="8" fill="none" stroke="var(--bigger-we)" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="112" cy="12" r="6" fill="none" stroke="var(--voice)" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="122" cy="12" r="6" fill="none" stroke="var(--planet)" stroke-width="0.6" opacity="0.3"/>
+      <line x1="140" y1="12" x2="200" y2="12" stroke="var(--border)" stroke-width="0.5"/>
+    </svg>
+  </div>
+
+  <!-- ANOTHER SECTION -->
+  <div class="section-header">
+    <svg class="header-circles" viewBox="0 0 40 24">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="var(--planet)" stroke-width="1" opacity="0.35"/>
+      <circle cx="24" cy="12" r="8" fill="none" stroke="var(--families)" stroke-width="1" opacity="0.3"/>
+      <circle cx="18" cy="12" r="5" fill="none" stroke="var(--health)" stroke-width="0.7" opacity="0.25"/>
+    </svg>
+    <h2>YOUR COMMUNITY</h2>
+    <div class="header-line"></div>
+  </div>
+
+  <div class="content-grid">
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(90,142,90,0.12), rgba(90,142,90,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#5A8E5A" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#5A8E5A" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#5A8E5A" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#5A8E5A" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#5A8E5A" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#5A8E5A" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#5A8E5A" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--planet);">Planet</span>
+      </div>
+      <div class="card-body">
+        <h3>Bayou Greenway Trail Update</h3>
+        <p>New trail sections connecting neighborhoods along Buffalo Bayou now open for walking.</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(74,122,138,0.12), rgba(74,122,138,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#4A7A8A" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#4A7A8A" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#4A7A8A" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#4A7A8A" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#4A7A8A" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#4A7A8A" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#4A7A8A" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--money);">Money</span>
+      </div>
+      <div class="card-body">
+        <h3>Free Tax Prep Sites Open</h3>
+        <p>VITA sites offering free tax preparation across Harris County through April 15.</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, rgba(139,107,168,0.12), rgba(139,107,168,0.03));">
+        <svg class="card-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="#8B6BA8" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="#8B6BA8" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="#8B6BA8" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="#8B6BA8" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="#8B6BA8" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="#8B6BA8" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="#8B6BA8" stroke-width="1"/></svg>
+        <span class="card-pathway-label" style="background: var(--bigger-we);">The Bigger We</span>
+      </div>
+      <div class="card-body">
+        <h3>Bridging Differences Workshop</h3>
+        <p>Join a facilitated dialogue building trust across communities at the Third Ward library.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 48px;"></div>
+</main>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- FOOTER                                     -->
+<!-- ══════════════════════════════════════════ -->
+<footer class="footer">
+  <!-- background flower watermark -->
+  <svg class="footer-bg-flower" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="white" stroke-width="0.8"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="white" stroke-width="0.8"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="white" stroke-width="0.8"/><circle cx="50" cy="76" r="26" fill="none" stroke="white" stroke-width="0.8"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="white" stroke-width="0.8"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="white" stroke-width="0.8"/><circle cx="50" cy="50" r="26" fill="none" stroke="white" stroke-width="1"/><circle cx="50" cy="37" r="14" fill="none" stroke="white" stroke-width="0.4"/><circle cx="61" cy="43.5" r="14" fill="none" stroke="white" stroke-width="0.4"/><circle cx="61" cy="56.5" r="14" fill="none" stroke="white" stroke-width="0.4"/><circle cx="50" cy="63" r="14" fill="none" stroke="white" stroke-width="0.4"/><circle cx="39" cy="56.5" r="14" fill="none" stroke="white" stroke-width="0.4"/><circle cx="39" cy="43.5" r="14" fill="none" stroke="white" stroke-width="0.4"/><circle cx="50" cy="50" r="14" fill="none" stroke="white" stroke-width="0.5"/></svg>
+
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <svg class="flower-footer" viewBox="-4 -4 108 108"><circle cx="50" cy="24" r="26" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="72.5" cy="37" r="26" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="72.5" cy="63" r="26" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="50" cy="76" r="26" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="27.5" cy="63" r="26" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="27.5" cy="37" r="26" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/><circle cx="50" cy="50" r="26" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/></svg>
+        <span>COMMUNITY EXCHANGE</span>
+      </div>
+      <p style="font-family: 'DM Serif Display', serif; font-style: italic;">Community Life, Organized</p>
+      <p style="margin-top: 6px;">A project of <a href="https://www.thechangelab.net" style="color: rgba(255,255,255,0.65);">The Change Lab</a> &middot; Houston, TX</p>
+      <div class="footer-social">
+        <a href="#" title="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="#" title="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4>EXPLORE</h4>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+        <a href="#">Pathways</a><a href="#">Services</a>
+        <a href="#">Officials</a><a href="#">Elections</a>
+        <a href="#">Neighborhoods</a><a href="#">Policies</a>
+        <a href="#">Search</a><a href="#">Foundations</a>
+      </div>
+    </div>
+    <div>
+      <h4>ABOUT</h4>
+      <p>Connecting Houston residents with resources, opportunities, and civic participation.</p>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 The Change Lab &middot; Community Exchange &middot; Houston, TX</p>
+  </div>
+</footer>
+
+</body>
+</html>

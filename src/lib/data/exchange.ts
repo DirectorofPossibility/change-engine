@@ -49,7 +49,7 @@ import { LANGUAGES } from '@/lib/constants'
 import type { Database } from '@/lib/supabase/database.types'
 import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData } from '@/lib/types/exchange'
 
-type ContentRow = Database['public']['Tables']['content_published']['Row']
+type ContentRow = Database['public']['Tables']['content_published']['Row'] & { content_type?: string | null }
 type MunicipalServiceRow = Database['public']['Tables']['municipal_services']['Row']
 
 /**
@@ -153,6 +153,52 @@ export async function getLatestContent(limit = 6) {
     .from('content_published')
     .select('*')
     .eq('is_active', true)
+    .order('published_at', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+/**
+ * News feed — articles, reports, announcements (excludes events and evergreen resources).
+ */
+export async function getNewsFeed(limit = 20) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_published')
+    .select('*')
+    .eq('is_active', true)
+    .in('content_type', ['article', 'report', 'announcement'])
+    .order('published_at', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+/**
+ * Events feed — items classified as content_type = 'event'.
+ */
+export async function getEventsFeed(limit = 20) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_published')
+    .select('*')
+    .eq('is_active', true)
+    .eq('content_type', 'event')
+    .order('published_at', { ascending: false })
+    .limit(limit)
+  return data ?? []
+}
+
+/**
+ * Evergreen resource feed — guides, courses, tools, videos, opportunities.
+ * Excludes news (articles/reports/announcements) and events.
+ */
+export async function getResourceFeed(limit = 20) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_published')
+    .select('*')
+    .eq('is_active', true)
+    .in('content_type', ['guide', 'course', 'tool', 'video', 'opportunity', 'campaign'])
     .order('published_at', { ascending: false })
     .limit(limit)
   return data ?? []
@@ -830,6 +876,16 @@ export async function getSuperNeighborhoods(): Promise<SuperNeighborhood[]> {
   const { data } = await supabase
     .from('super_neighborhoods')
     .select('*')
+    .order('sn_name')
+  return data ?? []
+}
+
+/** Lightweight super neighborhoods list for dropdowns (id + name only). */
+export async function getSuperNeighborhoodsList(): Promise<Array<{ sn_id: string; sn_name: string }>> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('super_neighborhoods')
+    .select('sn_id, sn_name')
     .order('sn_name')
   return data ?? []
 }
