@@ -181,3 +181,43 @@ export const CRON_JOBS: CronJob[] = [
   { name: 'auto-publish', schedule: 'Every 30 min', description: 'Publish auto-approved content' },
   { name: 'batch-translate', schedule: 'Daily 2am CT', description: 'Translate new content to ES/VI' },
 ]
+
+// ── Entity Fidelity types ─────────────────────────────────────────
+
+export interface EntityCompleteness {
+  entity_type: string
+  entity_id: string
+  entity_name: string
+  completeness_score: number
+  completeness_tier: 'platinum' | 'gold' | 'silver' | 'bronze'
+  total_fields: number
+  filled_fields: number
+  missing_fields: string[]
+  critical_missing: string[]
+  field_scores: Record<string, { weight: number; filled: boolean; category: string }>
+  scored_at: string
+}
+
+export interface FidelityOverview {
+  entityType: string
+  count: number
+  avgScore: number
+  tiers: { platinum: number; gold: number; silver: number; bronze: number }
+  topMissing: Array<{ field: string; count: number; pct: number }>
+}
+
+export const ENTITY_TYPE_META: Record<string, { label: string; singular: string }> = {
+  organization:   { label: 'Organizations',      singular: 'Organization' },
+  official:       { label: 'Elected Officials',   singular: 'Official' },
+  content:        { label: 'Published Content',   singular: 'Content' },
+  service:        { label: '211 Services',         singular: 'Service' },
+  resource:       { label: 'Resources',            singular: 'Resource' },
+  life_situation: { label: 'Life Situations',      singular: 'Life Situation' },
+}
+
+export const TIER_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {
+  platinum: { label: 'Platinum', bg: 'bg-purple-100', text: 'text-purple-700', dot: 'bg-purple-500' },
+  gold:     { label: 'Gold',     bg: 'bg-amber-100',  text: 'text-amber-700',  dot: 'bg-amber-500' },
+  silver:   { label: 'Silver',   bg: 'bg-gray-100',   text: 'text-gray-600',   dot: 'bg-gray-400' },
+  bronze:   { label: 'Bronze',   bg: 'bg-orange-100', text: 'text-orange-700',  dot: 'bg-orange-500' },
+}

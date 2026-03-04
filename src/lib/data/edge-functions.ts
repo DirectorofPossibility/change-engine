@@ -36,3 +36,31 @@ export async function translateAll() {
   }
   return res.json()
 }
+
+/**
+ * Trigger entity completeness scoring for all entity types.
+ * Authenticates the user, then calls /api/score-entities with a CRON_SECRET bearer token.
+ * Called from the "Score Now" button on /dashboard/fidelity.
+ */
+export async function scoreAllEntities() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  const CRON_SECRET = process.env.CRON_SECRET
+  if (!CRON_SECRET) throw new Error('Server configuration missing')
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/score-entities`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${CRON_SECRET}`,
+    },
+    body: JSON.stringify({ force: true }),
+  })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`scoreAllEntities failed: ${res.status} ${text}`)
+  }
+  return res.json()
+}

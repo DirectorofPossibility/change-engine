@@ -247,3 +247,74 @@ export async function getApiKeys(): Promise<ApiKey[]> {
     .order('created_at', { ascending: false })
   return (data as unknown as ApiKey[]) || []
 }
+
+// ── Entity Fidelity ─────────────────────────────────────────────────
+
+import type { EntityCompleteness, FidelityOverview } from '@/lib/types/dashboard'
+
+export async function getFidelityOverview(): Promise<FidelityOverview[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('entity_completeness' as any)
+    .select('*')
+
+  const rows = (data as unknown as EntityCompleteness[]) || []
+
+  // Group by entity_type
+  const grouped: Record<string, EntityCompleteness[]> = {}
+  for (const row of rows) {
+    if (!grouped[row.entity_type]) grouped[row.entity_type] = []
+    grouped[row.entity_type].push(row)
+  }
+
+  const overviews: FidelityOverview[] = []
+
+  for (const [entityType, entities] of Object.entries(grouped)) {
+    const count = entities.length
+    const avgScore = Math.round(entities.reduce((sum, e) => sum + e.completeness_score, 0) / count)
+    const tiers = { platinum: 0, gold: 0, silver: 0, bronze: 0 }
+    const missingCounts: Record<string, number> = {}
+
+    for (const e of entities) {
+      tiers[e.completeness_tier as keyof typeof tiers] = (tiers[e.completeness_tier as keyof typeof tiers] || 0) + 1
+      for (const field of e.critical_missing || []) {
+        missingCounts[field] = (missingCounts[field] || 0) + 1
+      }
+    }
+
+    const topMissing = Object.entries(missingCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([field, cnt]) => ({ field, count: cnt, pct: Math.round((cnt / count) * 100) }))
+
+    overviews.push({ entityType, count, avgScore, tiers, topMissing })
+  }
+
+  return overviews
+}
+
+export async function getFidelityEntities(
+  entityType: string,
+  tier?: string,
+  limit = 50,
+  offset = 0,
+): Promise<{ entities: EntityCompleteness[]; total: number }> {
+  const supabase = await createClient()
+  let query = supabase
+    .from('entity_completeness' as any)
+    .select('*', { count: 'exact' })
+    .eq('entity_type', entityType)
+    .order('completeness_score', { ascending: true })
+    .range(offset, offset + limit - 1)
+
+  if (tier) {
+    query = query.eq('completeness_tier', tier)
+  }
+
+  const { data, count } = await query
+
+  return {
+    entities: (data as unknown as EntityCompleteness[]) || [],
+    total: count ?? 0,
+  }
+}
