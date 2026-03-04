@@ -35,12 +35,15 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
   if (!hood) notFound()
 
-  // Get ZIP codes from junction table
-  const { data: zipJunctions } = await supabase
-    .from('neighborhood_zip_codes')
-    .select('zip_code')
-    .eq('neighborhood_id', id)
-  const zips = (zipJunctions ?? []).map(j => j.zip_code)
+  // Get ZIP codes from junction table (REST API — table not in generated types)
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const zipRes = await fetch(
+    url + '/rest/v1/neighborhood_zip_codes?neighborhood_id=eq.' + id + '&select=zip_code',
+    { headers: { apikey: key, Authorization: 'Bearer ' + key } }
+  )
+  const zipJunctions: Array<{ zip_code: string }> = zipRes.ok ? await zipRes.json() : []
+  const zips = zipJunctions.map(j => j.zip_code)
   let services: Array<{ service_id: string; service_name: string; description_5th_grade: string | null; phone: string | null; address: string | null; city: string | null; state: string | null; zip_code: string | null; website: string | null }> = []
   if (zips.length > 0) {
     const { data: svcData } = await supabase

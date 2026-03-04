@@ -98,6 +98,129 @@ export type Database = {
         }
         Relationships: []
       }
+      agency_audience_segments: {
+        Row: {
+          agency_id: string
+          segment_id: string
+        }
+        Insert: {
+          agency_id: string
+          segment_id: string
+        }
+        Update: {
+          agency_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_audience_segments_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["agency_id"]
+          },
+          {
+            foreignKeyName: "agency_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      agency_pathways: {
+        Row: {
+          agency_id: string
+          is_primary: boolean
+          theme_id: string
+        }
+        Insert: {
+          agency_id: string
+          is_primary?: boolean
+          theme_id: string
+        }
+        Update: {
+          agency_id?: string
+          is_primary?: boolean
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_pathways_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["agency_id"]
+          },
+          {
+            foreignKeyName: "agency_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      agency_sdgs: {
+        Row: {
+          agency_id: string
+          sdg_id: string
+        }
+        Insert: {
+          agency_id: string
+          sdg_id: string
+        }
+        Update: {
+          agency_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_sdgs_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["agency_id"]
+          },
+          {
+            foreignKeyName: "agency_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
+      agency_service_categories: {
+        Row: {
+          agency_id: string
+          service_cat_id: string
+        }
+        Insert: {
+          agency_id: string
+          service_cat_id: string
+        }
+        Update: {
+          agency_id?: string
+          service_cat_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_service_categories_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["agency_id"]
+          },
+          {
+            foreignKeyName: "agency_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+        ]
+      }
       airs_codes: {
         Row: {
           airs_code: string
@@ -115,6 +238,94 @@ export type Database = {
           airs_name?: string
         }
         Relationships: []
+      }
+      api_key_usage: {
+        Row: {
+          api_key_id: string
+          id: string
+          item_count: number | null
+          request_count: number | null
+          window_start: string
+        }
+        Insert: {
+          api_key_id: string
+          id?: string
+          item_count?: number | null
+          request_count?: number | null
+          window_start: string
+        }
+        Update: {
+          api_key_id?: string
+          id?: string
+          item_count?: number | null
+          request_count?: number | null
+          window_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_key_usage_api_key_id_fkey"
+            columns: ["api_key_id"]
+            isOneToOne: false
+            referencedRelation: "api_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      api_keys: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          key_hash: string
+          key_prefix: string
+          label: string
+          last_used_at: string | null
+          org_id: string | null
+          rate_limit_per_day: number | null
+          total_items: number | null
+          total_requests: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_hash: string
+          key_prefix: string
+          label: string
+          last_used_at?: string | null
+          org_id?: string | null
+          rate_limit_per_day?: number | null
+          total_items?: number | null
+          total_requests?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_hash?: string
+          key_prefix?: string
+          label?: string
+          last_used_at?: string | null
+          org_id?: string | null
+          rate_limit_per_day?: number | null
+          total_items?: number | null
+          total_requests?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+        ]
       }
       audience_segments: {
         Row: {
@@ -197,6 +408,99 @@ export type Database = {
         }
         Relationships: []
       }
+      ballot_item_audience_segments: {
+        Row: {
+          item_id: string
+          segment_id: string
+        }
+        Insert: {
+          item_id: string
+          segment_id: string
+        }
+        Update: {
+          item_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ballot_item_audience_segments_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "ballot_items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "ballot_item_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      ballot_item_pathways: {
+        Row: {
+          is_primary: boolean
+          item_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean
+          item_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean
+          item_id?: string
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ballot_item_pathways_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "ballot_items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "ballot_item_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      ballot_item_sdgs: {
+        Row: {
+          item_id: string
+          sdg_id: string
+        }
+        Insert: {
+          item_id: string
+          sdg_id: string
+        }
+        Update: {
+          item_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ballot_item_sdgs_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "ballot_items"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "ballot_item_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
       ballot_items: {
         Row: {
           against_argument: string | null
@@ -268,6 +572,99 @@ export type Database = {
           vote_for_pct?: number | null
         }
         Relationships: []
+      }
+      benefit_audience_segments: {
+        Row: {
+          benefit_id: string
+          segment_id: string
+        }
+        Insert: {
+          benefit_id: string
+          segment_id: string
+        }
+        Update: {
+          benefit_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_audience_segments_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+          {
+            foreignKeyName: "benefit_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      benefit_life_situations: {
+        Row: {
+          benefit_id: string
+          situation_id: string
+        }
+        Insert: {
+          benefit_id: string
+          situation_id: string
+        }
+        Update: {
+          benefit_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_life_situations_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+          {
+            foreignKeyName: "benefit_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      benefit_pathways: {
+        Row: {
+          benefit_id: string
+          is_primary: boolean
+          theme_id: string
+        }
+        Insert: {
+          benefit_id: string
+          is_primary?: boolean
+          theme_id: string
+        }
+        Update: {
+          benefit_id?: string
+          is_primary?: boolean
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_pathways_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+          {
+            foreignKeyName: "benefit_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
       }
       benefit_programs: {
         Row: {
@@ -343,6 +740,122 @@ export type Database = {
           renewal_frequency?: string | null
         }
         Relationships: []
+      }
+      benefit_sdgs: {
+        Row: {
+          benefit_id: string
+          sdg_id: string
+        }
+        Insert: {
+          benefit_id: string
+          sdg_id: string
+        }
+        Update: {
+          benefit_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_sdgs_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+          {
+            foreignKeyName: "benefit_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
+      benefit_service_categories: {
+        Row: {
+          benefit_id: string
+          service_cat_id: string
+        }
+        Insert: {
+          benefit_id: string
+          service_cat_id: string
+        }
+        Update: {
+          benefit_id?: string
+          service_cat_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benefit_service_categories_benefit_id_fkey"
+            columns: ["benefit_id"]
+            isOneToOne: false
+            referencedRelation: "benefit_programs"
+            referencedColumns: ["benefit_id"]
+          },
+          {
+            foreignKeyName: "benefit_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+        ]
+      }
+      bill_sponsors: {
+        Row: {
+          created_at: string | null
+          data_source: string | null
+          id: string
+          official_id: string
+          policy_id: string
+          role: string
+        }
+        Insert: {
+          created_at?: string | null
+          data_source?: string | null
+          id?: string
+          official_id: string
+          policy_id: string
+          role?: string
+        }
+        Update: {
+          created_at?: string | null
+          data_source?: string | null
+          id?: string
+          official_id?: string
+          policy_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bill_sponsors_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "bill_sponsors_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "bill_sponsors_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "bill_sponsors_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+        ]
       }
       calls_to_action: {
         Row: {
@@ -427,6 +940,99 @@ export type Database = {
           urgency_reason?: string | null
         }
         Relationships: []
+      }
+      campaign_audience_segments: {
+        Row: {
+          campaign_id: string
+          segment_id: string
+        }
+        Insert: {
+          campaign_id: string
+          segment_id: string
+        }
+        Update: {
+          campaign_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_audience_segments_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["campaign_id"]
+          },
+          {
+            foreignKeyName: "campaign_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      campaign_pathways: {
+        Row: {
+          campaign_id: string
+          is_primary: boolean
+          theme_id: string
+        }
+        Insert: {
+          campaign_id: string
+          is_primary?: boolean
+          theme_id: string
+        }
+        Update: {
+          campaign_id?: string
+          is_primary?: boolean
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_pathways_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["campaign_id"]
+          },
+          {
+            foreignKeyName: "campaign_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      campaign_sdgs: {
+        Row: {
+          campaign_id: string
+          sdg_id: string
+        }
+        Insert: {
+          campaign_id: string
+          sdg_id: string
+        }
+        Update: {
+          campaign_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_sdgs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["campaign_id"]
+          },
+          {
+            foreignKeyName: "campaign_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
       }
       campaigns: {
         Row: {
@@ -527,6 +1133,7 @@ export type Database = {
           incumbent: string | null
           is_active: string | null
           last_updated: string | null
+          linkedin_url: string | null
           office_level: string | null
           office_sought: string | null
           party: string | null
@@ -553,6 +1160,7 @@ export type Database = {
           incumbent?: string | null
           is_active?: string | null
           last_updated?: string | null
+          linkedin_url?: string | null
           office_level?: string | null
           office_sought?: string | null
           party?: string | null
@@ -579,6 +1187,7 @@ export type Database = {
           incumbent?: string | null
           is_active?: string | null
           last_updated?: string | null
+          linkedin_url?: string | null
           office_level?: string | null
           office_sought?: string | null
           party?: string | null
@@ -833,6 +1442,111 @@ export type Database = {
         }
         Relationships: []
       }
+      committee_assignments: {
+        Row: {
+          chamber: string | null
+          committee_id: string | null
+          committee_name: string
+          created_at: string | null
+          data_source: string | null
+          end_date: string | null
+          id: string
+          jurisdiction_focus: string[] | null
+          official_id: string
+          pathway_ids: string[] | null
+          role: string | null
+          start_date: string | null
+        }
+        Insert: {
+          chamber?: string | null
+          committee_id?: string | null
+          committee_name: string
+          created_at?: string | null
+          data_source?: string | null
+          end_date?: string | null
+          id?: string
+          jurisdiction_focus?: string[] | null
+          official_id: string
+          pathway_ids?: string[] | null
+          role?: string | null
+          start_date?: string | null
+        }
+        Update: {
+          chamber?: string | null
+          committee_id?: string | null
+          committee_name?: string
+          created_at?: string | null
+          data_source?: string | null
+          end_date?: string | null
+          id?: string
+          jurisdiction_focus?: string[] | null
+          official_id?: string
+          pathway_ids?: string[] | null
+          role?: string | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "committee_assignments_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "committee_assignments_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+        ]
+      }
+      community_edits: {
+        Row: {
+          created_at: string | null
+          edit_id: string
+          entity_id: string
+          entity_name: string | null
+          entity_type: string
+          field_name: string | null
+          reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          submitter_email: string | null
+          suggested_value: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          edit_id?: string
+          entity_id: string
+          entity_name?: string | null
+          entity_type: string
+          field_name?: string | null
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitter_email?: string | null
+          suggested_value?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          edit_id?: string
+          entity_id?: string
+          entity_name?: string | null
+          entity_type?: string
+          field_name?: string | null
+          reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitter_email?: string | null
+          suggested_value?: string | null
+        }
+        Relationships: []
+      }
       contact_scripts: {
         Row: {
           body_template: string | null
@@ -896,8 +1610,62 @@ export type Database = {
         }
         Relationships: []
       }
+      content_audience_segments: {
+        Row: {
+          content_id: string
+          segment_id: string
+        }
+        Insert: {
+          content_id: string
+          segment_id: string
+        }
+        Update: {
+          content_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_audience_segments_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      content_focus_areas: {
+        Row: {
+          content_id: string
+          focus_id: string
+        }
+        Insert: {
+          content_id: string
+          focus_id: string
+        }
+        Update: {
+          content_id?: string
+          focus_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+        ]
+      }
       content_inbox: {
         Row: {
+          content_type: string | null
           created_at: string | null
           description: string | null
           extracted_text: string | null
@@ -912,6 +1680,7 @@ export type Database = {
           title: string | null
         }
         Insert: {
+          content_type?: string | null
           created_at?: string | null
           description?: string | null
           extracted_text?: string | null
@@ -926,6 +1695,7 @@ export type Database = {
           title?: string | null
         }
         Update: {
+          content_type?: string | null
           created_at?: string | null
           description?: string | null
           extracted_text?: string | null
@@ -949,6 +1719,92 @@ export type Database = {
           },
         ]
       }
+      content_life_situations: {
+        Row: {
+          content_id: string
+          situation_id: string
+        }
+        Insert: {
+          content_id: string
+          situation_id: string
+        }
+        Update: {
+          content_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_life_situations_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      content_neighborhoods: {
+        Row: {
+          content_id: string
+          neighborhood: string
+        }
+        Insert: {
+          content_id: string
+          neighborhood: string
+        }
+        Update: {
+          content_id?: string
+          neighborhood?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_neighborhoods_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_pathways: {
+        Row: {
+          content_id: string
+          is_primary: boolean | null
+          theme_id: string
+        }
+        Insert: {
+          content_id: string
+          is_primary?: boolean | null
+          theme_id: string
+        }
+        Update: {
+          content_id?: string
+          is_primary?: boolean | null
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_pathways_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
       content_published: {
         Row: {
           action_apply: string | null
@@ -963,8 +1819,11 @@ export type Database = {
           center: string | null
           classification_reasoning: string | null
           confidence: number | null
+          content_type: string | null
+          curator_org_id: string | null
           engagement_level: string | null
           focus_area_ids: string[] | null
+          fts: unknown
           geographic_scope: string | null
           id: string
           image_url: string | null
@@ -973,6 +1832,7 @@ export type Database = {
           is_featured: boolean | null
           last_updated: string | null
           life_situations: string[] | null
+          object_type: string | null
           org_id: string | null
           pathway_primary: string | null
           pathway_secondary: string[] | null
@@ -981,8 +1841,10 @@ export type Database = {
           sdg_ids: string[] | null
           sdoh_domain: string | null
           source_domain: string | null
+          source_org_name: string | null
           source_url: string
           summary_6th_grade: string
+          time_duration: string | null
           title_6th_grade: string
         }
         Insert: {
@@ -998,8 +1860,11 @@ export type Database = {
           center?: string | null
           classification_reasoning?: string | null
           confidence?: number | null
+          content_type?: string | null
+          curator_org_id?: string | null
           engagement_level?: string | null
           focus_area_ids?: string[] | null
+          fts?: unknown
           geographic_scope?: string | null
           id?: string
           image_url?: string | null
@@ -1008,6 +1873,7 @@ export type Database = {
           is_featured?: boolean | null
           last_updated?: string | null
           life_situations?: string[] | null
+          object_type?: string | null
           org_id?: string | null
           pathway_primary?: string | null
           pathway_secondary?: string[] | null
@@ -1016,8 +1882,10 @@ export type Database = {
           sdg_ids?: string[] | null
           sdoh_domain?: string | null
           source_domain?: string | null
+          source_org_name?: string | null
           source_url: string
           summary_6th_grade: string
+          time_duration?: string | null
           title_6th_grade: string
         }
         Update: {
@@ -1033,8 +1901,11 @@ export type Database = {
           center?: string | null
           classification_reasoning?: string | null
           confidence?: number | null
+          content_type?: string | null
+          curator_org_id?: string | null
           engagement_level?: string | null
           focus_area_ids?: string[] | null
+          fts?: unknown
           geographic_scope?: string | null
           id?: string
           image_url?: string | null
@@ -1043,6 +1914,7 @@ export type Database = {
           is_featured?: boolean | null
           last_updated?: string | null
           life_situations?: string[] | null
+          object_type?: string | null
           org_id?: string | null
           pathway_primary?: string | null
           pathway_secondary?: string[] | null
@@ -1051,8 +1923,10 @@ export type Database = {
           sdg_ids?: string[] | null
           sdoh_domain?: string | null
           source_domain?: string | null
+          source_org_name?: string | null
           source_url?: string
           summary_6th_grade?: string
+          time_duration?: string | null
           title_6th_grade?: string
         }
         Relationships: [
@@ -1076,6 +1950,7 @@ export type Database = {
         Row: {
           ai_classification: Json | null
           confidence: number | null
+          content_type: string | null
           created_at: string | null
           id: string
           inbox_id: string | null
@@ -1088,6 +1963,7 @@ export type Database = {
         Insert: {
           ai_classification?: Json | null
           confidence?: number | null
+          content_type?: string | null
           created_at?: string | null
           id?: string
           inbox_id?: string | null
@@ -1100,6 +1976,7 @@ export type Database = {
         Update: {
           ai_classification?: Json | null
           confidence?: number | null
+          content_type?: string | null
           created_at?: string | null
           id?: string
           inbox_id?: string | null
@@ -1123,6 +2000,119 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["org_id"]
+          },
+        ]
+      }
+      content_sdgs: {
+        Row: {
+          content_id: string
+          sdg_id: string
+        }
+        Insert: {
+          content_id: string
+          sdg_id: string
+        }
+        Update: {
+          content_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_sdgs_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
+      content_service_categories: {
+        Row: {
+          content_id: string
+          service_cat_id: string
+        }
+        Insert: {
+          content_id: string
+          service_cat_id: string
+        }
+        Update: {
+          content_id?: string
+          service_cat_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_service_categories_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+        ]
+      }
+      content_skills: {
+        Row: {
+          content_id: string
+          skill_id: string
+        }
+        Insert: {
+          content_id: string
+          skill_id: string
+        }
+        Update: {
+          content_id?: string
+          skill_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_skills_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["skill_id"]
+          },
+        ]
+      }
+      content_zip_codes: {
+        Row: {
+          content_id: string
+          zip_code: string
+        }
+        Insert: {
+          content_id: string
+          zip_code: string
+        }
+        Update: {
+          content_id?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_zip_codes_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1363,6 +2353,9 @@ export type Database = {
       }
       elected_officials: {
         Row: {
+          address: string | null
+          bio: string | null
+          bioguide_id: string | null
           classification_v2: Json | null
           counties_served: string | null
           data_source: string | null
@@ -1371,19 +2364,27 @@ export type Database = {
           district_type: string | null
           email: string | null
           focus_area_ids: string | null
+          fts: unknown
           gov_level_id: string | null
           jurisdiction: string | null
           last_updated: string | null
           level: string | null
+          office_address: string | null
           office_phone: string | null
           official_id: string
           official_name: string
+          openstates_id: string | null
           party: string | null
+          photo_url: string | null
+          social_media: Json | null
           term_end: string | null
           title: string | null
           website: string | null
         }
         Insert: {
+          address?: string | null
+          bio?: string | null
+          bioguide_id?: string | null
           classification_v2?: Json | null
           counties_served?: string | null
           data_source?: string | null
@@ -1392,19 +2393,27 @@ export type Database = {
           district_type?: string | null
           email?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           gov_level_id?: string | null
           jurisdiction?: string | null
           last_updated?: string | null
           level?: string | null
+          office_address?: string | null
           office_phone?: string | null
           official_id: string
           official_name: string
+          openstates_id?: string | null
           party?: string | null
+          photo_url?: string | null
+          social_media?: Json | null
           term_end?: string | null
           title?: string | null
           website?: string | null
         }
         Update: {
+          address?: string | null
+          bio?: string | null
+          bioguide_id?: string | null
           classification_v2?: Json | null
           counties_served?: string | null
           data_source?: string | null
@@ -1413,14 +2422,19 @@ export type Database = {
           district_type?: string | null
           email?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           gov_level_id?: string | null
           jurisdiction?: string | null
           last_updated?: string | null
           level?: string | null
+          office_address?: string | null
           office_phone?: string | null
           official_id?: string
           official_name?: string
+          openstates_id?: string | null
           party?: string | null
+          photo_url?: string | null
+          social_media?: Json | null
           term_end?: string | null
           title?: string | null
           website?: string | null
@@ -1481,6 +2495,48 @@ export type Database = {
           registration_deadline?: string | null
           results_certified?: string | null
           turnout_pct?: number | null
+        }
+        Relationships: []
+      }
+      entity_completeness: {
+        Row: {
+          completeness_score: number
+          completeness_tier: string
+          critical_missing: string[]
+          entity_id: string
+          entity_name: string
+          entity_type: string
+          field_scores: Json
+          filled_fields: number
+          missing_fields: string[]
+          scored_at: string
+          total_fields: number
+        }
+        Insert: {
+          completeness_score?: number
+          completeness_tier?: string
+          critical_missing?: string[]
+          entity_id: string
+          entity_name?: string
+          entity_type: string
+          field_scores?: Json
+          filled_fields?: number
+          missing_fields?: string[]
+          scored_at?: string
+          total_fields?: number
+        }
+        Update: {
+          completeness_score?: number
+          completeness_tier?: string
+          critical_missing?: string[]
+          entity_id?: string
+          entity_name?: string
+          entity_type?: string
+          field_scores?: Json
+          filled_fields?: number
+          missing_fields?: string[]
+          scored_at?: string
+          total_fields?: number
         }
         Relationships: []
       }
@@ -1718,6 +2774,302 @@ export type Database = {
         }
         Relationships: []
       }
+      foundation_expansion_log: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          error_message: string | null
+          foundations_added: number | null
+          id: string
+          people_added: number | null
+          started_at: string | null
+          state_code: string
+          state_name: string
+          status: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          foundations_added?: number | null
+          id?: string
+          people_added?: number | null
+          started_at?: string | null
+          state_code: string
+          state_name: string
+          status?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          foundations_added?: number | null
+          id?: string
+          people_added?: number | null
+          started_at?: string | null
+          state_code?: string
+          state_name?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      foundation_fidelity_log: {
+        Row: {
+          duration_ms: number | null
+          foundations_checked: number | null
+          id: string
+          issues_found: number | null
+          issues_resolved: number | null
+          notes: string | null
+          run_at: string | null
+          status: string | null
+          websites_verified: number | null
+        }
+        Insert: {
+          duration_ms?: number | null
+          foundations_checked?: number | null
+          id?: string
+          issues_found?: number | null
+          issues_resolved?: number | null
+          notes?: string | null
+          run_at?: string | null
+          status?: string | null
+          websites_verified?: number | null
+        }
+        Update: {
+          duration_ms?: number | null
+          foundations_checked?: number | null
+          id?: string
+          issues_found?: number | null
+          issues_resolved?: number | null
+          notes?: string | null
+          run_at?: string | null
+          status?: string | null
+          websites_verified?: number | null
+        }
+        Relationships: []
+      }
+      foundation_focus_areas: {
+        Row: {
+          focus_area: string
+          foundation_id: string
+        }
+        Insert: {
+          focus_area: string
+          foundation_id: string
+        }
+        Update: {
+          focus_area?: string
+          foundation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "foundation_focus_areas_foundation_id_fkey"
+            columns: ["foundation_id"]
+            isOneToOne: false
+            referencedRelation: "foundations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      foundation_pathways: {
+        Row: {
+          foundation_id: string
+          pathway_id: string
+        }
+        Insert: {
+          foundation_id: string
+          pathway_id: string
+        }
+        Update: {
+          foundation_id?: string
+          pathway_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "foundation_pathways_foundation_id_fkey"
+            columns: ["foundation_id"]
+            isOneToOne: false
+            referencedRelation: "foundations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      foundation_people: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          foundation_id: string
+          id: string
+          is_current: boolean | null
+          last_verified_at: string | null
+          linkedin_status: string | null
+          linkedin_url: string | null
+          name: string
+          phone: string | null
+          role: string
+          role_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          foundation_id: string
+          id?: string
+          is_current?: boolean | null
+          last_verified_at?: string | null
+          linkedin_status?: string | null
+          linkedin_url?: string | null
+          name: string
+          phone?: string | null
+          role: string
+          role_type: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          foundation_id?: string
+          id?: string
+          is_current?: boolean | null
+          last_verified_at?: string | null
+          linkedin_status?: string | null
+          linkedin_url?: string | null
+          name?: string
+          phone?: string | null
+          role?: string
+          role_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "foundation_people_foundation_id_fkey"
+            columns: ["foundation_id"]
+            isOneToOne: false
+            referencedRelation: "foundations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      foundation_zip_coverage: {
+        Row: {
+          coverage_type: string | null
+          foundation_id: string
+          zip_code: string
+        }
+        Insert: {
+          coverage_type?: string | null
+          foundation_id: string
+          zip_code: string
+        }
+        Update: {
+          coverage_type?: string | null
+          foundation_id?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "foundation_zip_coverage_foundation_id_fkey"
+            columns: ["foundation_id"]
+            isOneToOne: false
+            referencedRelation: "foundations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      foundations: {
+        Row: {
+          address: string | null
+          annual_giving: string | null
+          assets: string | null
+          batch_added: string | null
+          city: string | null
+          coverage_states: string[] | null
+          coverage_zips: string[] | null
+          created_at: string | null
+          data_source: string | null
+          email: string | null
+          founded_year: number | null
+          geo_level: string
+          id: string
+          last_people_sync: string | null
+          last_updated_at: string | null
+          last_verified_at: string | null
+          mission: string | null
+          name: string
+          org_id: string | null
+          phone: string | null
+          slug: string
+          source_state: string | null
+          state_code: string | null
+          type: string
+          verification_notes: string | null
+          verification_status: string | null
+          website_display: string | null
+          website_url: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          annual_giving?: string | null
+          assets?: string | null
+          batch_added?: string | null
+          city?: string | null
+          coverage_states?: string[] | null
+          coverage_zips?: string[] | null
+          created_at?: string | null
+          data_source?: string | null
+          email?: string | null
+          founded_year?: number | null
+          geo_level: string
+          id?: string
+          last_people_sync?: string | null
+          last_updated_at?: string | null
+          last_verified_at?: string | null
+          mission?: string | null
+          name: string
+          org_id?: string | null
+          phone?: string | null
+          slug: string
+          source_state?: string | null
+          state_code?: string | null
+          type?: string
+          verification_notes?: string | null
+          verification_status?: string | null
+          website_display?: string | null
+          website_url?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          annual_giving?: string | null
+          assets?: string | null
+          batch_added?: string | null
+          city?: string | null
+          coverage_states?: string[] | null
+          coverage_zips?: string[] | null
+          created_at?: string | null
+          data_source?: string | null
+          email?: string | null
+          founded_year?: number | null
+          geo_level?: string
+          id?: string
+          last_people_sync?: string | null
+          last_updated_at?: string | null
+          last_verified_at?: string | null
+          mission?: string | null
+          name?: string
+          org_id?: string | null
+          phone?: string | null
+          slug?: string
+          source_state?: string | null
+          state_code?: string | null
+          type?: string
+          verification_notes?: string | null
+          verification_status?: string | null
+          website_display?: string | null
+          website_url?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
       geocode_cache: {
         Row: {
           address_hash: string
@@ -1846,54 +3198,63 @@ export type Database = {
       }
       guides: {
         Row: {
-          guide_id: string
-          title: string
-          slug: string
-          description: string | null
-          hero_image_url: string | null
           content_html: string | null
-          sections: Json | null
-          theme_id: string | null
-          focus_area_ids: string[] | null
-          engagement_level: string | null
-          is_active: boolean | null
-          display_order: number | null
-          source_url: string | null
           created_at: string | null
+          created_by: string | null
+          description: string | null
+          display_order: number | null
+          engagement_level: string | null
+          focus_area_ids: string[] | null
+          guide_id: string
+          hero_image_url: string | null
+          is_active: boolean | null
+          org_id: string | null
+          review_status: string | null
+          sections: Json | null
+          slug: string
+          source_url: string | null
+          theme_id: string | null
+          title: string
           updated_at: string | null
         }
         Insert: {
-          guide_id: string
-          title: string
-          slug: string
-          description?: string | null
-          hero_image_url?: string | null
           content_html?: string | null
-          sections?: Json | null
-          theme_id?: string | null
-          focus_area_ids?: string[] | null
-          engagement_level?: string | null
-          is_active?: boolean | null
-          display_order?: number | null
-          source_url?: string | null
           created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          display_order?: number | null
+          engagement_level?: string | null
+          focus_area_ids?: string[] | null
+          guide_id: string
+          hero_image_url?: string | null
+          is_active?: boolean | null
+          org_id?: string | null
+          review_status?: string | null
+          sections?: Json | null
+          slug: string
+          source_url?: string | null
+          theme_id?: string | null
+          title: string
           updated_at?: string | null
         }
         Update: {
-          guide_id?: string
-          title?: string
-          slug?: string
-          description?: string | null
-          hero_image_url?: string | null
           content_html?: string | null
-          sections?: Json | null
-          theme_id?: string | null
-          focus_area_ids?: string[] | null
-          engagement_level?: string | null
-          is_active?: boolean | null
-          display_order?: number | null
-          source_url?: string | null
           created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          display_order?: number | null
+          engagement_level?: string | null
+          focus_area_ids?: string[] | null
+          guide_id?: string
+          hero_image_url?: string | null
+          is_active?: boolean | null
+          org_id?: string | null
+          review_status?: string | null
+          sections?: Json | null
+          slug?: string
+          source_url?: string | null
+          theme_id?: string | null
+          title?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -1958,6 +3319,154 @@ export type Database = {
           irs_code?: string
           irs_name?: string
           irs_subsection_id?: string
+        }
+        Relationships: []
+      }
+      kb_chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          role: string
+          session_id: string
+          sources: Json | null
+        }
+        Insert: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          role: string
+          session_id: string
+          sources?: Json | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          role?: string
+          session_id?: string
+          sources?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_chat_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "kb_chat_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kb_chat_sessions: {
+        Row: {
+          created_at: string | null
+          id: string
+          title: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          title?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          title?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      kb_chunks: {
+        Row: {
+          chunk_index: number
+          content: string
+          document_id: string
+          id: string
+          page_end: number | null
+          page_start: number | null
+          search_vector: unknown
+        }
+        Insert: {
+          chunk_index?: number
+          content?: string
+          document_id: string
+          id?: string
+          page_end?: number | null
+          page_start?: number | null
+          search_vector?: unknown
+        }
+        Update: {
+          chunk_index?: number
+          content?: string
+          document_id?: string
+          id?: string
+          page_end?: number | null
+          page_start?: number | null
+          search_vector?: unknown
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "kb_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kb_documents: {
+        Row: {
+          created_at: string | null
+          file_path: string
+          file_size: number | null
+          focus_area_ids: string[] | null
+          id: string
+          key_points: string[] | null
+          page_count: number | null
+          published_at: string | null
+          search_vector: unknown
+          status: string
+          summary: string | null
+          tags: string[] | null
+          theme_ids: string[] | null
+          title: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_path: string
+          file_size?: number | null
+          focus_area_ids?: string[] | null
+          id?: string
+          key_points?: string[] | null
+          page_count?: number | null
+          published_at?: string | null
+          search_vector?: unknown
+          status?: string
+          summary?: string | null
+          tags?: string[] | null
+          theme_ids?: string[] | null
+          title?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          file_path?: string
+          file_size?: number | null
+          focus_area_ids?: string[] | null
+          id?: string
+          key_points?: string[] | null
+          page_count?: number | null
+          published_at?: string | null
+          search_vector?: unknown
+          status?: string
+          summary?: string | null
+          tags?: string[] | null
+          theme_ids?: string[] | null
+          title?: string
+          uploaded_by?: string | null
         }
         Relationships: []
       }
@@ -2051,6 +3560,7 @@ export type Database = {
           display_order: number | null
           estimated_minutes: number | null
           focus_area_ids: string | null
+          fts: unknown
           is_active: string | null
           is_featured: string | null
           journey_id: string | null
@@ -2070,6 +3580,7 @@ export type Database = {
           display_order?: number | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
+          fts?: unknown
           is_active?: string | null
           is_featured?: string | null
           journey_id?: string | null
@@ -2089,6 +3600,7 @@ export type Database = {
           display_order?: number | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
+          fts?: unknown
           is_active?: string | null
           is_featured?: string | null
           journey_id?: string | null
@@ -2102,6 +3614,66 @@ export type Database = {
         }
         Relationships: []
       }
+      life_situation_focus_areas: {
+        Row: {
+          focus_id: string
+          situation_id: string
+        }
+        Insert: {
+          focus_id: string
+          situation_id: string
+        }
+        Update: {
+          focus_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+          {
+            foreignKeyName: "life_situation_focus_areas_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      life_situation_service_categories: {
+        Row: {
+          service_cat_id: string
+          situation_id: string
+        }
+        Insert: {
+          service_cat_id: string
+          situation_id: string
+        }
+        Update: {
+          service_cat_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "life_situation_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+          {
+            foreignKeyName: "life_situation_service_categories_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
       life_situations: {
         Row: {
           agency_ids: string | null
@@ -2111,6 +3683,7 @@ export type Database = {
           description_5th_grade: string | null
           display_order: number | null
           focus_area_ids: string | null
+          fts: unknown
           icon_name: string | null
           is_featured: string | null
           last_updated: string | null
@@ -2131,6 +3704,7 @@ export type Database = {
           description_5th_grade?: string | null
           display_order?: number | null
           focus_area_ids?: string | null
+          fts?: unknown
           icon_name?: string | null
           is_featured?: string | null
           last_updated?: string | null
@@ -2151,6 +3725,7 @@ export type Database = {
           description_5th_grade?: string | null
           display_order?: number | null
           focus_area_ids?: string | null
+          fts?: unknown
           icon_name?: string | null
           is_featured?: string | null
           last_updated?: string | null
@@ -2167,57 +3742,80 @@ export type Database = {
       }
       municipal_services: {
         Row: {
-          id: string
-          service_type: string
-          service_name: string
-          phone: string | null
           address: string | null
           city: string | null
-          zip_code: string | null
           county_id: string | null
-          website: string | null
-          hours: string | null
           coverage_area: string | null
-          is_emergency: boolean
-          display_order: number
+          display_order: number | null
+          hours: string | null
+          id: string
+          is_emergency: boolean | null
           latitude: number | null
           longitude: number | null
+          phone: string | null
+          service_name: string
+          service_type: string
+          website: string | null
+          zip_code: string | null
         }
         Insert: {
-          id?: string
-          service_type: string
-          service_name: string
-          phone?: string | null
           address?: string | null
           city?: string | null
-          zip_code?: string | null
           county_id?: string | null
-          website?: string | null
-          hours?: string | null
           coverage_area?: string | null
-          is_emergency?: boolean
-          display_order?: number
+          display_order?: number | null
+          hours?: string | null
+          id?: string
+          is_emergency?: boolean | null
           latitude?: number | null
           longitude?: number | null
+          phone?: string | null
+          service_name: string
+          service_type: string
+          website?: string | null
+          zip_code?: string | null
         }
         Update: {
-          id?: string
-          service_type?: string
-          service_name?: string
-          phone?: string | null
           address?: string | null
           city?: string | null
-          zip_code?: string | null
           county_id?: string | null
-          website?: string | null
-          hours?: string | null
           coverage_area?: string | null
-          is_emergency?: boolean
-          display_order?: number
+          display_order?: number | null
+          hours?: string | null
+          id?: string
+          is_emergency?: boolean | null
           latitude?: number | null
           longitude?: number | null
+          phone?: string | null
+          service_name?: string
+          service_type?: string
+          website?: string | null
+          zip_code?: string | null
         }
         Relationships: []
+      }
+      neighborhood_zip_codes: {
+        Row: {
+          neighborhood_id: string
+          zip_code: string
+        }
+        Insert: {
+          neighborhood_id: string
+          zip_code: string
+        }
+        Update: {
+          neighborhood_id?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "neighborhood_zip_codes_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["neighborhood_id"]
+          },
+        ]
       }
       neighborhoods: {
         Row: {
@@ -2270,39 +3868,6 @@ export type Database = {
           super_neighborhood_id?: string | null
           website?: string | null
           zip_codes?: string | null
-        }
-        Relationships: []
-      }
-      super_neighborhoods: {
-        Row: {
-          sn_id: string
-          sn_name: string
-          sn_number: number | null
-          council_districts: string | null
-          zip_codes: string | null
-          population: number | null
-          median_income: number | null
-          description: string | null
-        }
-        Insert: {
-          sn_id: string
-          sn_name: string
-          sn_number?: number | null
-          council_districts?: string | null
-          zip_codes?: string | null
-          population?: number | null
-          median_income?: number | null
-          description?: string | null
-        }
-        Update: {
-          sn_id?: string
-          sn_name?: string
-          sn_number?: number | null
-          council_districts?: string | null
-          zip_codes?: string | null
-          population?: number | null
-          median_income?: number | null
-          description?: string | null
         }
         Relationships: []
       }
@@ -2381,6 +3946,314 @@ export type Database = {
         }
         Relationships: []
       }
+      official_aliases: {
+        Row: {
+          alias_id: string
+          canonical_id: string
+          created_at: string | null
+          data_source: string | null
+        }
+        Insert: {
+          alias_id: string
+          canonical_id: string
+          created_at?: string | null
+          data_source?: string | null
+        }
+        Update: {
+          alias_id?: string
+          canonical_id?: string
+          created_at?: string | null
+          data_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_aliases_canonical_id_fkey"
+            columns: ["canonical_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_aliases_canonical_id_fkey"
+            columns: ["canonical_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+        ]
+      }
+      official_audience_segments: {
+        Row: {
+          official_id: string
+          segment_id: string
+        }
+        Insert: {
+          official_id: string
+          segment_id: string
+        }
+        Update: {
+          official_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_audience_segments_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_audience_segments_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      official_counties: {
+        Row: {
+          county_id: string
+          official_id: string
+        }
+        Insert: {
+          county_id: string
+          official_id: string
+        }
+        Update: {
+          county_id?: string
+          official_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_counties_county_id_fkey"
+            columns: ["county_id"]
+            isOneToOne: false
+            referencedRelation: "counties"
+            referencedColumns: ["county_id"]
+          },
+          {
+            foreignKeyName: "official_counties_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_counties_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+        ]
+      }
+      official_focus_areas: {
+        Row: {
+          focus_id: string
+          official_id: string
+        }
+        Insert: {
+          focus_id: string
+          official_id: string
+        }
+        Update: {
+          focus_id?: string
+          official_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+          {
+            foreignKeyName: "official_focus_areas_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_focus_areas_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+        ]
+      }
+      official_pathways: {
+        Row: {
+          is_primary: boolean
+          official_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean
+          official_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean
+          official_id?: string
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_pathways_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_pathways_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      official_profiles: {
+        Row: {
+          address_district: string | null
+          address_office: string | null
+          bio_full: string | null
+          bio_short: string | null
+          data_source: string | null
+          education: string | null
+          email: string | null
+          last_updated: string | null
+          linkedin_status: string | null
+          next_election: string | null
+          official_id: string
+          phone_district: string | null
+          phone_office: string | null
+          photo_url: string | null
+          prior_roles: string | null
+          social_facebook: string | null
+          social_instagram: string | null
+          social_linkedin: string | null
+          social_twitter: string | null
+          years_in_office: number | null
+        }
+        Insert: {
+          address_district?: string | null
+          address_office?: string | null
+          bio_full?: string | null
+          bio_short?: string | null
+          data_source?: string | null
+          education?: string | null
+          email?: string | null
+          last_updated?: string | null
+          linkedin_status?: string | null
+          next_election?: string | null
+          official_id: string
+          phone_district?: string | null
+          phone_office?: string | null
+          photo_url?: string | null
+          prior_roles?: string | null
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_twitter?: string | null
+          years_in_office?: number | null
+        }
+        Update: {
+          address_district?: string | null
+          address_office?: string | null
+          bio_full?: string | null
+          bio_short?: string | null
+          data_source?: string | null
+          education?: string | null
+          email?: string | null
+          last_updated?: string | null
+          linkedin_status?: string | null
+          next_election?: string | null
+          official_id?: string
+          phone_district?: string | null
+          phone_office?: string | null
+          photo_url?: string | null
+          prior_roles?: string | null
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_linkedin?: string | null
+          social_twitter?: string | null
+          years_in_office?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_profiles_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: true
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_profiles_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: true
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+        ]
+      }
+      official_sdgs: {
+        Row: {
+          official_id: string
+          sdg_id: string
+        }
+        Insert: {
+          official_id: string
+          sdg_id: string
+        }
+        Update: {
+          official_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "official_sdgs_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_sdgs_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "official_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
       opportunities: {
         Row: {
           action_type_id: string | null
@@ -2388,10 +4261,12 @@ export type Database = {
           city: string | null
           classification_v2: Json | null
           county_id: string | null
+          created_by: string | null
           data_source: string | null
           description_5th_grade: string | null
           end_date: string | null
           focus_area_ids: string | null
+          fts: unknown
           is_active: string | null
           is_virtual: string | null
           last_updated: string | null
@@ -2400,6 +4275,7 @@ export type Database = {
           opportunity_name: string
           org_id: string | null
           registration_url: string | null
+          review_status: string | null
           skill_ids: string | null
           spots_available: number | null
           start_date: string | null
@@ -2413,10 +4289,12 @@ export type Database = {
           city?: string | null
           classification_v2?: Json | null
           county_id?: string | null
+          created_by?: string | null
           data_source?: string | null
           description_5th_grade?: string | null
           end_date?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           is_active?: string | null
           is_virtual?: string | null
           last_updated?: string | null
@@ -2425,6 +4303,7 @@ export type Database = {
           opportunity_name: string
           org_id?: string | null
           registration_url?: string | null
+          review_status?: string | null
           skill_ids?: string | null
           spots_available?: number | null
           start_date?: string | null
@@ -2438,10 +4317,12 @@ export type Database = {
           city?: string | null
           classification_v2?: Json | null
           county_id?: string | null
+          created_by?: string | null
           data_source?: string | null
           description_5th_grade?: string | null
           end_date?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           is_active?: string | null
           is_virtual?: string | null
           last_updated?: string | null
@@ -2450,6 +4331,7 @@ export type Database = {
           opportunity_name?: string
           org_id?: string | null
           registration_url?: string | null
+          review_status?: string | null
           skill_ids?: string | null
           spots_available?: number | null
           start_date?: string | null
@@ -2458,6 +4340,189 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      opportunity_action_types: {
+        Row: {
+          action_type_id: string
+          opportunity_id: string
+        }
+        Insert: {
+          action_type_id: string
+          opportunity_id: string
+        }
+        Update: {
+          action_type_id?: string
+          opportunity_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_action_types_action_type_id_fkey"
+            columns: ["action_type_id"]
+            isOneToOne: false
+            referencedRelation: "action_types"
+            referencedColumns: ["action_type_id"]
+          },
+          {
+            foreignKeyName: "opportunity_action_types_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+        ]
+      }
+      opportunity_audience_segments: {
+        Row: {
+          opportunity_id: string
+          segment_id: string
+        }
+        Insert: {
+          opportunity_id: string
+          segment_id: string
+        }
+        Update: {
+          opportunity_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_audience_segments_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+          {
+            foreignKeyName: "opportunity_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      opportunity_focus_areas: {
+        Row: {
+          focus_id: string
+          opportunity_id: string
+        }
+        Insert: {
+          focus_id: string
+          opportunity_id: string
+        }
+        Update: {
+          focus_id?: string
+          opportunity_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+          {
+            foreignKeyName: "opportunity_focus_areas_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+        ]
+      }
+      opportunity_life_situations: {
+        Row: {
+          opportunity_id: string
+          situation_id: string
+        }
+        Insert: {
+          opportunity_id: string
+          situation_id: string
+        }
+        Update: {
+          opportunity_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_life_situations_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+          {
+            foreignKeyName: "opportunity_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      opportunity_pathways: {
+        Row: {
+          is_primary: boolean
+          opportunity_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean
+          opportunity_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean
+          opportunity_id?: string
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_pathways_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+          {
+            foreignKeyName: "opportunity_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      opportunity_sdgs: {
+        Row: {
+          opportunity_id: string
+          sdg_id: string
+        }
+        Insert: {
+          opportunity_id: string
+          sdg_id: string
+        }
+        Update: {
+          opportunity_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opportunity_sdgs_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["opportunity_id"]
+          },
+          {
+            foreignKeyName: "opportunity_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
       }
       org_domains: {
         Row: {
@@ -2488,6 +4553,219 @@ export type Database = {
           },
         ]
       }
+      organization_audience_segments: {
+        Row: {
+          org_id: string
+          segment_id: string
+        }
+        Insert: {
+          org_id: string
+          segment_id: string
+        }
+        Update: {
+          org_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_audience_segments_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      organization_focus_areas: {
+        Row: {
+          focus_id: string
+          org_id: string
+        }
+        Insert: {
+          focus_id: string
+          org_id: string
+        }
+        Update: {
+          focus_id?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+          {
+            foreignKeyName: "organization_focus_areas_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+        ]
+      }
+      organization_life_situations: {
+        Row: {
+          org_id: string
+          situation_id: string
+        }
+        Insert: {
+          org_id: string
+          situation_id: string
+        }
+        Update: {
+          org_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_life_situations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      organization_neighborhoods: {
+        Row: {
+          neighborhood_id: string
+          org_id: string
+        }
+        Insert: {
+          neighborhood_id: string
+          org_id: string
+        }
+        Update: {
+          neighborhood_id?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_neighborhoods_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["neighborhood_id"]
+          },
+          {
+            foreignKeyName: "organization_neighborhoods_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+        ]
+      }
+      organization_pathways: {
+        Row: {
+          is_primary: boolean
+          org_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean
+          org_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean
+          org_id?: string
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_pathways_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      organization_sdgs: {
+        Row: {
+          org_id: string
+          sdg_id: string
+        }
+        Insert: {
+          org_id: string
+          sdg_id: string
+        }
+        Update: {
+          org_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_sdgs_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
+      organization_service_categories: {
+        Row: {
+          org_id: string
+          service_cat_id: string
+        }
+        Insert: {
+          org_id: string
+          service_cat_id: string
+        }
+        Update: {
+          org_id?: string
+          service_cat_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_service_categories_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "organization_service_categories_service_cat_id_fkey"
+            columns: ["service_cat_id"]
+            isOneToOne: false
+            referencedRelation: "service_categories"
+            referencedColumns: ["service_cat_id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           address: string | null
@@ -2503,6 +4781,7 @@ export type Database = {
           ein: string | null
           email: string | null
           focus_area_ids: string | null
+          fts: unknown
           google_play_url: string | null
           hero_image_url: string | null
           hours_of_operation: Json | null
@@ -2543,6 +4822,7 @@ export type Database = {
           ein?: string | null
           email?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           google_play_url?: string | null
           hero_image_url?: string | null
           hours_of_operation?: Json | null
@@ -2583,6 +4863,7 @@ export type Database = {
           ein?: string | null
           email?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           google_play_url?: string | null
           hero_image_url?: string | null
           hours_of_operation?: Json | null
@@ -2617,8 +4898,10 @@ export type Database = {
           classification_v2: Json | null
           data_source: string | null
           focus_area_ids: string | null
+          fts: unknown
           impact_statement: string | null
           introduced_date: string | null
+          is_published: boolean | null
           last_action: string | null
           last_action_date: string | null
           last_updated: string | null
@@ -2627,6 +4910,8 @@ export type Database = {
           policy_id: string
           policy_name: string
           policy_type: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           source_url: string | null
           status: string | null
           summary_5th_grade: string | null
@@ -2638,8 +4923,10 @@ export type Database = {
           classification_v2?: Json | null
           data_source?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           impact_statement?: string | null
           introduced_date?: string | null
+          is_published?: boolean | null
           last_action?: string | null
           last_action_date?: string | null
           last_updated?: string | null
@@ -2648,6 +4935,8 @@ export type Database = {
           policy_id: string
           policy_name: string
           policy_type?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           source_url?: string | null
           status?: string | null
           summary_5th_grade?: string | null
@@ -2659,8 +4948,10 @@ export type Database = {
           classification_v2?: Json | null
           data_source?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           impact_statement?: string | null
           introduced_date?: string | null
+          is_published?: boolean | null
           last_action?: string | null
           last_action_date?: string | null
           last_updated?: string | null
@@ -2669,6 +4960,8 @@ export type Database = {
           policy_id?: string
           policy_name?: string
           policy_type?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           source_url?: string | null
           status?: string | null
           summary_5th_grade?: string | null
@@ -2676,6 +4969,297 @@ export type Database = {
           title_6th_grade?: string | null
         }
         Relationships: []
+      }
+      policy_audience_segments: {
+        Row: {
+          policy_id: string
+          segment_id: string
+        }
+        Insert: {
+          policy_id: string
+          segment_id: string
+        }
+        Update: {
+          policy_id?: string
+          segment_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_audience_segments_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_audience_segments_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+        ]
+      }
+      policy_focus_areas: {
+        Row: {
+          focus_id: string
+          policy_id: string
+        }
+        Insert: {
+          focus_id: string
+          policy_id: string
+        }
+        Update: {
+          focus_id?: string
+          policy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_focus_areas_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_focus_areas_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+        ]
+      }
+      policy_geography: {
+        Row: {
+          geo_id: string
+          geo_type: string
+          id: string
+          policy_id: string
+        }
+        Insert: {
+          geo_id: string
+          geo_type: string
+          id?: string
+          policy_id: string
+        }
+        Update: {
+          geo_id?: string
+          geo_type?: string
+          id?: string
+          policy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_geography_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_geography_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+        ]
+      }
+      policy_life_situations: {
+        Row: {
+          policy_id: string
+          situation_id: string
+        }
+        Insert: {
+          policy_id: string
+          situation_id: string
+        }
+        Update: {
+          policy_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_life_situations_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_life_situations_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      policy_officials: {
+        Row: {
+          official_id: string
+          policy_id: string
+        }
+        Insert: {
+          official_id: string
+          policy_id: string
+        }
+        Update: {
+          official_id?: string
+          policy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_officials_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "policy_officials_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "policy_officials_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_officials_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+        ]
+      }
+      policy_pathways: {
+        Row: {
+          is_primary: boolean
+          policy_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean
+          policy_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean
+          policy_id?: string
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_pathways_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_pathways_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      policy_sdgs: {
+        Row: {
+          policy_id: string
+          sdg_id: string
+        }
+        Insert: {
+          policy_id: string
+          sdg_id: string
+        }
+        Update: {
+          policy_id?: string
+          sdg_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "policy_sdgs_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_sdgs_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "policy_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+        ]
+      }
+      precinct_neighborhoods: {
+        Row: {
+          neighborhood_id: string
+          precinct_id: string
+        }
+        Insert: {
+          neighborhood_id: string
+          precinct_id: string
+        }
+        Update: {
+          neighborhood_id?: string
+          precinct_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "precinct_neighborhoods_neighborhood_id_fkey"
+            columns: ["neighborhood_id"]
+            isOneToOne: false
+            referencedRelation: "neighborhoods"
+            referencedColumns: ["neighborhood_id"]
+          },
+          {
+            foreignKeyName: "precinct_neighborhoods_precinct_id_fkey"
+            columns: ["precinct_id"]
+            isOneToOne: false
+            referencedRelation: "precincts"
+            referencedColumns: ["precinct_id"]
+          },
+        ]
       }
       precincts: {
         Row: {
@@ -2734,6 +5318,42 @@ export type Database = {
           tract_ids?: string | null
           voting_location_ids?: string | null
           zip_codes?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          badge_ids: string[] | null
+          created_at: string | null
+          display_name: string | null
+          id: string
+          interests: string[] | null
+          neighborhood_id: string | null
+          role: string
+          updated_at: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          badge_ids?: string[] | null
+          created_at?: string | null
+          display_name?: string | null
+          id: string
+          interests?: string[] | null
+          neighborhood_id?: string | null
+          role?: string
+          updated_at?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          badge_ids?: string[] | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          interests?: string[] | null
+          neighborhood_id?: string | null
+          role?: string
+          updated_at?: string | null
+          zip_code?: string | null
         }
         Relationships: []
       }
@@ -2810,6 +5430,7 @@ export type Database = {
           engagement_levels: string | null
           estimated_minutes: number | null
           focus_area_ids: string | null
+          fts: unknown
           image_url: string | null
           is_active: string | null
           is_community_partner: boolean | null
@@ -2839,6 +5460,7 @@ export type Database = {
           engagement_levels?: string | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
+          fts?: unknown
           image_url?: string | null
           is_active?: string | null
           is_community_partner?: boolean | null
@@ -2868,6 +5490,7 @@ export type Database = {
           engagement_levels?: string | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
+          fts?: unknown
           image_url?: string | null
           is_active?: string | null
           is_community_partner?: boolean | null
@@ -2887,6 +5510,42 @@ export type Database = {
           resource_type_id?: string | null
           source_org?: string | null
           source_url?: string | null
+        }
+        Relationships: []
+      }
+      rss_feeds: {
+        Row: {
+          created_at: string | null
+          feed_name: string
+          feed_url: string
+          id: string
+          is_active: boolean | null
+          last_item_count: number | null
+          last_polled: string | null
+          poll_interval_hours: number | null
+          source_domain: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          feed_name: string
+          feed_url: string
+          id?: string
+          is_active?: boolean | null
+          last_item_count?: number | null
+          last_polled?: string | null
+          poll_interval_hours?: number | null
+          source_domain?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          feed_name?: string
+          feed_url?: string
+          id?: string
+          is_active?: boolean | null
+          last_item_count?: number | null
+          last_polled?: string | null
+          poll_interval_hours?: number | null
+          source_domain?: string | null
         }
         Relationships: []
       }
@@ -2956,6 +5615,36 @@ export type Database = {
         }
         Relationships: []
       }
+      service_audience_segments: {
+        Row: {
+          segment_id: string
+          service_id: string
+        }
+        Insert: {
+          segment_id: string
+          service_id: string
+        }
+        Update: {
+          segment_id?: string
+          service_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_audience_segments_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "audience_segments"
+            referencedColumns: ["segment_id"]
+          },
+          {
+            foreignKeyName: "service_audience_segments_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services_211"
+            referencedColumns: ["service_id"]
+          },
+        ]
+      }
       service_categories: {
         Row: {
           airs_codes: string | null
@@ -2980,6 +5669,129 @@ export type Database = {
         }
         Relationships: []
       }
+      service_focus_areas: {
+        Row: {
+          focus_id: string
+          service_id: string
+        }
+        Insert: {
+          focus_id: string
+          service_id: string
+        }
+        Update: {
+          focus_id?: string
+          service_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_focus_areas_focus_id_fkey"
+            columns: ["focus_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+          {
+            foreignKeyName: "service_focus_areas_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services_211"
+            referencedColumns: ["service_id"]
+          },
+        ]
+      }
+      service_life_situations: {
+        Row: {
+          service_id: string
+          situation_id: string
+        }
+        Insert: {
+          service_id: string
+          situation_id: string
+        }
+        Update: {
+          service_id?: string
+          situation_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_life_situations_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services_211"
+            referencedColumns: ["service_id"]
+          },
+          {
+            foreignKeyName: "service_life_situations_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "life_situations"
+            referencedColumns: ["situation_id"]
+          },
+        ]
+      }
+      service_pathways: {
+        Row: {
+          is_primary: boolean
+          service_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean
+          service_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean
+          service_id?: string
+          theme_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_pathways_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services_211"
+            referencedColumns: ["service_id"]
+          },
+          {
+            foreignKeyName: "service_pathways_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
+      }
+      service_sdgs: {
+        Row: {
+          sdg_id: string
+          service_id: string
+        }
+        Insert: {
+          sdg_id: string
+          service_id: string
+        }
+        Update: {
+          sdg_id?: string
+          service_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_sdgs_sdg_id_fkey"
+            columns: ["sdg_id"]
+            isOneToOne: false
+            referencedRelation: "sdgs"
+            referencedColumns: ["sdg_id"]
+          },
+          {
+            foreignKeyName: "service_sdgs_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services_211"
+            referencedColumns: ["service_id"]
+          },
+        ]
+      }
       services_211: {
         Row: {
           address: string | null
@@ -2992,6 +5804,7 @@ export type Database = {
           eligibility: string | null
           fees: string | null
           focus_area_ids: string | null
+          fts: unknown
           hours: string | null
           is_active: string | null
           languages: string | null
@@ -3016,6 +5829,7 @@ export type Database = {
           eligibility?: string | null
           fees?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           hours?: string | null
           is_active?: string | null
           languages?: string | null
@@ -3040,6 +5854,7 @@ export type Database = {
           eligibility?: string | null
           fees?: string | null
           focus_area_ids?: string | null
+          fts?: unknown
           hours?: string | null
           is_active?: string | null
           languages?: string | null
@@ -3172,6 +5987,39 @@ export type Database = {
           story_summary?: string | null
           story_title?: string
           theme_id?: string | null
+        }
+        Relationships: []
+      }
+      super_neighborhoods: {
+        Row: {
+          council_districts: string | null
+          description: string | null
+          median_income: number | null
+          population: number | null
+          sn_id: string
+          sn_name: string
+          sn_number: number | null
+          zip_codes: string | null
+        }
+        Insert: {
+          council_districts?: string | null
+          description?: string | null
+          median_income?: number | null
+          population?: number | null
+          sn_id: string
+          sn_name: string
+          sn_number?: number | null
+          zip_codes?: string | null
+        }
+        Update: {
+          council_districts?: string | null
+          description?: string | null
+          median_income?: number | null
+          population?: number | null
+          sn_id?: string
+          sn_name?: string
+          sn_number?: number | null
+          zip_codes?: string | null
         }
         Relationships: []
       }
@@ -3405,6 +6253,7 @@ export type Database = {
       }
       user_profiles: {
         Row: {
+          account_status: string
           age_range: string | null
           auth_id: string | null
           county_id: string | null
@@ -3421,10 +6270,11 @@ export type Database = {
           neighborhood_id: string | null
           org_id: string | null
           preferred_language: string | null
-          role: string | null
+          role: string
           zip_code: string | null
         }
         Insert: {
+          account_status?: string
           age_range?: string | null
           auth_id?: string | null
           county_id?: string | null
@@ -3441,10 +6291,11 @@ export type Database = {
           neighborhood_id?: string | null
           org_id?: string | null
           preferred_language?: string | null
-          role?: string | null
+          role?: string
           zip_code?: string | null
         }
         Update: {
+          account_status?: string
           age_range?: string | null
           auth_id?: string | null
           county_id?: string | null
@@ -3461,7 +6312,7 @@ export type Database = {
           neighborhood_id?: string | null
           org_id?: string | null
           preferred_language?: string | null
-          role?: string | null
+          role?: string
           zip_code?: string | null
         }
         Relationships: []
@@ -3558,6 +6409,74 @@ export type Database = {
           zip_code?: number | null
         }
         Relationships: []
+      }
+      vote_records: {
+        Row: {
+          bill_number: string | null
+          chamber: string | null
+          created_at: string | null
+          data_source: string | null
+          id: string
+          official_id: string
+          policy_id: string | null
+          roll_call_number: string | null
+          vote: string
+          vote_date: string | null
+        }
+        Insert: {
+          bill_number?: string | null
+          chamber?: string | null
+          created_at?: string | null
+          data_source?: string | null
+          id?: string
+          official_id: string
+          policy_id?: string | null
+          roll_call_number?: string | null
+          vote: string
+          vote_date?: string | null
+        }
+        Update: {
+          bill_number?: string | null
+          chamber?: string | null
+          created_at?: string | null
+          data_source?: string | null
+          id?: string
+          official_id?: string
+          policy_id?: string | null
+          roll_call_number?: string | null
+          vote?: string
+          vote_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vote_records_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "elected_officials"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "vote_records_official_id_fkey"
+            columns: ["official_id"]
+            isOneToOne: false
+            referencedRelation: "officials_braided"
+            referencedColumns: ["official_id"]
+          },
+          {
+            foreignKeyName: "vote_records_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies"
+            referencedColumns: ["policy_id"]
+          },
+          {
+            foreignKeyName: "vote_records_policy_id_fkey"
+            columns: ["policy_id"]
+            isOneToOne: false
+            referencedRelation: "policies_braided"
+            referencedColumns: ["policy_id"]
+          },
+        ]
       }
       voting_locations: {
         Row: {
@@ -3688,736 +6607,154 @@ export type Database = {
         }
         Relationships: []
       }
-      // ============================================================
-      // Junction tables for the Civic Knowledge Mesh
-      // ============================================================
-      agency_focus_areas: {
-        Row: { agency_id: string; focus_id: string }
-        Insert: { agency_id: string; focus_id: string }
-        Update: { agency_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "agency_focus_areas_agency_id_fkey"
-            columns: ["agency_id"]
-            isOneToOne: false
-            referencedRelation: "agencies"
-            referencedColumns: ["agency_id"]
-          },
-          {
-            foreignKeyName: "agency_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      ballot_item_focus_areas: {
-        Row: { item_id: string; focus_id: string }
-        Insert: { item_id: string; focus_id: string }
-        Update: { item_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "ballot_item_focus_areas_item_id_fkey"
-            columns: ["item_id"]
-            isOneToOne: false
-            referencedRelation: "ballot_items"
-            referencedColumns: ["item_id"]
-          },
-          {
-            foreignKeyName: "ballot_item_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      benefit_focus_areas: {
-        Row: { benefit_id: string; focus_id: string }
-        Insert: { benefit_id: string; focus_id: string }
-        Update: { benefit_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "benefit_focus_areas_benefit_id_fkey"
-            columns: ["benefit_id"]
-            isOneToOne: false
-            referencedRelation: "benefit_programs"
-            referencedColumns: ["benefit_id"]
-          },
-          {
-            foreignKeyName: "benefit_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      campaign_ctas: {
-        Row: { campaign_id: string; cta_id: string }
-        Insert: { campaign_id: string; cta_id: string }
-        Update: { campaign_id?: string; cta_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "campaign_ctas_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["campaign_id"]
-          },
-          {
-            foreignKeyName: "campaign_ctas_cta_id_fkey"
-            columns: ["cta_id"]
-            isOneToOne: false
-            referencedRelation: "calls_to_action"
-            referencedColumns: ["cta_id"]
-          },
-        ]
-      }
-      campaign_focus_areas: {
-        Row: { campaign_id: string; focus_id: string }
-        Insert: { campaign_id: string; focus_id: string }
-        Update: { campaign_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "campaign_focus_areas_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["campaign_id"]
-          },
-          {
-            foreignKeyName: "campaign_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      campaign_partner_orgs: {
-        Row: { campaign_id: string; org_id: string }
-        Insert: { campaign_id: string; org_id: string }
-        Update: { campaign_id?: string; org_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "campaign_partner_orgs_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["campaign_id"]
-          },
-          {
-            foreignKeyName: "campaign_partner_orgs_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["org_id"]
-          },
-        ]
-      }
-      content_audience_segments: {
-        Row: { content_id: string; segment_id: string }
-        Insert: { content_id: string; segment_id: string }
-        Update: { content_id?: string; segment_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "content_audience_segments_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_audience_segments_segment_id_fkey"
-            columns: ["segment_id"]
-            isOneToOne: false
-            referencedRelation: "audience_segments"
-            referencedColumns: ["segment_id"]
-          },
-        ]
-      }
-      content_focus_areas: {
-        Row: { content_id: string; focus_id: string }
-        Insert: { content_id: string; focus_id: string }
-        Update: { content_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "content_focus_areas_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      content_life_situations: {
-        Row: { content_id: string; situation_id: string }
-        Insert: { content_id: string; situation_id: string }
-        Update: { content_id?: string; situation_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "content_life_situations_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_life_situations_situation_id_fkey"
-            columns: ["situation_id"]
-            isOneToOne: false
-            referencedRelation: "life_situations"
-            referencedColumns: ["situation_id"]
-          },
-        ]
-      }
-      content_pathways: {
-        Row: { content_id: string; theme_id: string; is_primary: boolean }
-        Insert: { content_id: string; theme_id: string; is_primary?: boolean }
-        Update: { content_id?: string; theme_id?: string; is_primary?: boolean }
-        Relationships: [
-          {
-            foreignKeyName: "content_pathways_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_pathways_theme_id_fkey"
-            columns: ["theme_id"]
-            isOneToOne: false
-            referencedRelation: "themes"
-            referencedColumns: ["theme_id"]
-          },
-        ]
-      }
-      content_sdgs: {
-        Row: { content_id: string; sdg_id: string }
-        Insert: { content_id: string; sdg_id: string }
-        Update: { content_id?: string; sdg_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "content_sdgs_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_sdgs_sdg_id_fkey"
-            columns: ["sdg_id"]
-            isOneToOne: false
-            referencedRelation: "sdgs"
-            referencedColumns: ["sdg_id"]
-          },
-        ]
-      }
-      cta_focus_areas: {
-        Row: { cta_id: string; focus_id: string }
-        Insert: { cta_id: string; focus_id: string }
-        Update: { cta_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "cta_focus_areas_cta_id_fkey"
-            columns: ["cta_id"]
-            isOneToOne: false
-            referencedRelation: "calls_to_action"
-            referencedColumns: ["cta_id"]
-          },
-          {
-            foreignKeyName: "cta_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      life_situation_benefits: {
-        Row: { situation_id: string; benefit_id: string }
-        Insert: { situation_id: string; benefit_id: string }
-        Update: { situation_id?: string; benefit_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "life_situation_benefits_situation_id_fkey"
-            columns: ["situation_id"]
-            isOneToOne: false
-            referencedRelation: "life_situations"
-            referencedColumns: ["situation_id"]
-          },
-          {
-            foreignKeyName: "life_situation_benefits_benefit_id_fkey"
-            columns: ["benefit_id"]
-            isOneToOne: false
-            referencedRelation: "benefit_programs"
-            referencedColumns: ["benefit_id"]
-          },
-        ]
-      }
-      life_situation_focus_areas: {
-        Row: { situation_id: string; focus_id: string }
-        Insert: { situation_id: string; focus_id: string }
-        Update: { situation_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "life_situation_focus_areas_situation_id_fkey"
-            columns: ["situation_id"]
-            isOneToOne: false
-            referencedRelation: "life_situations"
-            referencedColumns: ["situation_id"]
-          },
-          {
-            foreignKeyName: "life_situation_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      life_situation_service_categories: {
-        Row: { situation_id: string; service_cat_id: string }
-        Insert: { situation_id: string; service_cat_id: string }
-        Update: { situation_id?: string; service_cat_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "life_situation_service_categories_situation_id_fkey"
-            columns: ["situation_id"]
-            isOneToOne: false
-            referencedRelation: "life_situations"
-            referencedColumns: ["situation_id"]
-          },
-          {
-            foreignKeyName: "life_situation_service_categories_service_cat_id_fkey"
-            columns: ["service_cat_id"]
-            isOneToOne: false
-            referencedRelation: "service_categories"
-            referencedColumns: ["service_cat_id"]
-          },
-        ]
-      }
-      neighborhood_zip_codes: {
-        Row: { neighborhood_id: string; zip_code: string }
-        Insert: { neighborhood_id: string; zip_code: string }
-        Update: { neighborhood_id?: string; zip_code?: string }
-        Relationships: [
-          {
-            foreignKeyName: "neighborhood_zip_codes_neighborhood_id_fkey"
-            columns: ["neighborhood_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhoods"
-            referencedColumns: ["neighborhood_id"]
-          },
-        ]
-      }
-      official_counties: {
-        Row: { official_id: string; county_id: string }
-        Insert: { official_id: string; county_id: string }
-        Update: { official_id?: string; county_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "official_counties_official_id_fkey"
-            columns: ["official_id"]
-            isOneToOne: false
-            referencedRelation: "elected_officials"
-            referencedColumns: ["official_id"]
-          },
-          {
-            foreignKeyName: "official_counties_county_id_fkey"
-            columns: ["county_id"]
-            isOneToOne: false
-            referencedRelation: "counties"
-            referencedColumns: ["county_id"]
-          },
-        ]
-      }
-      official_focus_areas: {
-        Row: { official_id: string; focus_id: string }
-        Insert: { official_id: string; focus_id: string }
-        Update: { official_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "official_focus_areas_official_id_fkey"
-            columns: ["official_id"]
-            isOneToOne: false
-            referencedRelation: "elected_officials"
-            referencedColumns: ["official_id"]
-          },
-          {
-            foreignKeyName: "official_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      opportunity_focus_areas: {
-        Row: { opportunity_id: string; focus_id: string }
-        Insert: { opportunity_id: string; focus_id: string }
-        Update: { opportunity_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "opportunity_focus_areas_opportunity_id_fkey"
-            columns: ["opportunity_id"]
-            isOneToOne: false
-            referencedRelation: "opportunities"
-            referencedColumns: ["opportunity_id"]
-          },
-          {
-            foreignKeyName: "opportunity_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      opportunity_skills: {
-        Row: { opportunity_id: string; skill_id: string }
-        Insert: { opportunity_id: string; skill_id: string }
-        Update: { opportunity_id?: string; skill_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "opportunity_skills_opportunity_id_fkey"
-            columns: ["opportunity_id"]
-            isOneToOne: false
-            referencedRelation: "opportunities"
-            referencedColumns: ["opportunity_id"]
-          },
-          {
-            foreignKeyName: "opportunity_skills_skill_id_fkey"
-            columns: ["skill_id"]
-            isOneToOne: false
-            referencedRelation: "skills"
-            referencedColumns: ["skill_id"]
-          },
-        ]
-      }
-      organization_focus_areas: {
-        Row: { org_id: string; focus_id: string }
-        Insert: { org_id: string; focus_id: string }
-        Update: { org_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "organization_focus_areas_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["org_id"]
-          },
-          {
-            foreignKeyName: "organization_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      organization_neighborhoods: {
-        Row: { org_id: string; neighborhood_id: string }
-        Insert: { org_id: string; neighborhood_id: string }
-        Update: { org_id?: string; neighborhood_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "organization_neighborhoods_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["org_id"]
-          },
-          {
-            foreignKeyName: "organization_neighborhoods_neighborhood_id_fkey"
-            columns: ["neighborhood_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhoods"
-            referencedColumns: ["neighborhood_id"]
-          },
-        ]
-      }
-      policy_focus_areas: {
-        Row: { policy_id: string; focus_id: string }
-        Insert: { policy_id: string; focus_id: string }
-        Update: { policy_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "policy_focus_areas_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policies"
-            referencedColumns: ["policy_id"]
-          },
-          {
-            foreignKeyName: "policy_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      policy_officials: {
-        Row: { policy_id: string; official_id: string }
-        Insert: { policy_id: string; official_id: string }
-        Update: { policy_id?: string; official_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "policy_officials_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policies"
-            referencedColumns: ["policy_id"]
-          },
-          {
-            foreignKeyName: "policy_officials_official_id_fkey"
-            columns: ["official_id"]
-            isOneToOne: false
-            referencedRelation: "elected_officials"
-            referencedColumns: ["official_id"]
-          },
-        ]
-      }
-      precinct_neighborhoods: {
-        Row: { precinct_id: string; neighborhood_id: string }
-        Insert: { precinct_id: string; neighborhood_id: string }
-        Update: { precinct_id?: string; neighborhood_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "precinct_neighborhoods_precinct_id_fkey"
-            columns: ["precinct_id"]
-            isOneToOne: false
-            referencedRelation: "precincts"
-            referencedColumns: ["precinct_id"]
-          },
-          {
-            foreignKeyName: "precinct_neighborhoods_neighborhood_id_fkey"
-            columns: ["neighborhood_id"]
-            isOneToOne: false
-            referencedRelation: "neighborhoods"
-            referencedColumns: ["neighborhood_id"]
-          },
-        ]
-      }
-      precinct_zip_codes: {
-        Row: { precinct_id: string; zip_code: string }
-        Insert: { precinct_id: string; zip_code: string }
-        Update: { precinct_id?: string; zip_code?: string }
-        Relationships: [
-          {
-            foreignKeyName: "precinct_zip_codes_precinct_id_fkey"
-            columns: ["precinct_id"]
-            isOneToOne: false
-            referencedRelation: "precincts"
-            referencedColumns: ["precinct_id"]
-          },
-        ]
-      }
-      service_focus_areas: {
-        Row: { service_id: string; focus_id: string }
-        Insert: { service_id: string; focus_id: string }
-        Update: { service_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "service_focus_areas_service_id_fkey"
-            columns: ["service_id"]
-            isOneToOne: false
-            referencedRelation: "services_211"
-            referencedColumns: ["service_id"]
-          },
-          {
-            foreignKeyName: "service_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      guide_focus_areas: {
-        Row: { guide_id: string; focus_id: string }
-        Insert: { guide_id: string; focus_id: string }
-        Update: { guide_id?: string; focus_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "guide_focus_areas_guide_id_fkey"
-            columns: ["guide_id"]
-            isOneToOne: false
-            referencedRelation: "guides"
-            referencedColumns: ["guide_id"]
-          },
-          {
-            foreignKeyName: "guide_focus_areas_focus_id_fkey"
-            columns: ["focus_id"]
-            isOneToOne: false
-            referencedRelation: "focus_areas"
-            referencedColumns: ["focus_id"]
-          },
-        ]
-      }
-      life_situation_agencies: {
-        Row: { situation_id: string; agency_id: string }
-        Insert: { situation_id: string; agency_id: string }
-        Update: { situation_id?: string; agency_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "life_situation_agencies_situation_id_fkey"
-            columns: ["situation_id"]
-            isOneToOne: false
-            referencedRelation: "life_situations"
-            referencedColumns: ["situation_id"]
-          },
-          {
-            foreignKeyName: "life_situation_agencies_agency_id_fkey"
-            columns: ["agency_id"]
-            isOneToOne: false
-            referencedRelation: "agencies"
-            referencedColumns: ["agency_id"]
-          },
-        ]
-      }
-      life_situation_resources: {
-        Row: { situation_id: string; resource_id: string }
-        Insert: { situation_id: string; resource_id: string }
-        Update: { situation_id?: string; resource_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "life_situation_resources_situation_id_fkey"
-            columns: ["situation_id"]
-            isOneToOne: false
-            referencedRelation: "life_situations"
-            referencedColumns: ["situation_id"]
-          },
-          {
-            foreignKeyName: "life_situation_resources_resource_id_fkey"
-            columns: ["resource_id"]
-            isOneToOne: false
-            referencedRelation: "resources"
-            referencedColumns: ["resource_id"]
-          },
-        ]
-      }
-      school_district_counties: {
-        Row: { district_id: string; county_id: string }
-        Insert: { district_id: string; county_id: string }
-        Update: { district_id?: string; county_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "school_district_counties_district_id_fkey"
-            columns: ["district_id"]
-            isOneToOne: false
-            referencedRelation: "school_districts"
-            referencedColumns: ["school_district_id"]
-          },
-          {
-            foreignKeyName: "school_district_counties_county_id_fkey"
-            columns: ["county_id"]
-            isOneToOne: false
-            referencedRelation: "counties"
-            referencedColumns: ["county_id"]
-          },
-        ]
-      }
-      precinct_census_tracts: {
-        Row: { precinct_id: string; tract_id: string }
-        Insert: { precinct_id: string; tract_id: string }
-        Update: { precinct_id?: string; tract_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "precinct_census_tracts_precinct_id_fkey"
-            columns: ["precinct_id"]
-            isOneToOne: false
-            referencedRelation: "precincts"
-            referencedColumns: ["precinct_id"]
-          },
-          {
-            foreignKeyName: "precinct_census_tracts_tract_id_fkey"
-            columns: ["tract_id"]
-            isOneToOne: false
-            referencedRelation: "census_tracts"
-            referencedColumns: ["tract_id"]
-          },
-        ]
-      }
-      precinct_voting_locations: {
-        Row: { precinct_id: string; location_id: string }
-        Insert: { precinct_id: string; location_id: string }
-        Update: { precinct_id?: string; location_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "precinct_voting_locations_precinct_id_fkey"
-            columns: ["precinct_id"]
-            isOneToOne: false
-            referencedRelation: "precincts"
-            referencedColumns: ["precinct_id"]
-          },
-          {
-            foreignKeyName: "precinct_voting_locations_location_id_fkey"
-            columns: ["location_id"]
-            isOneToOne: false
-            referencedRelation: "voting_locations"
-            referencedColumns: ["location_id"]
-          },
-        ]
-      }
-      content_service_categories: {
-        Row: { content_id: string; service_cat_id: string }
-        Insert: { content_id: string; service_cat_id: string }
-        Update: { content_id?: string; service_cat_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "content_service_categories_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_service_categories_service_cat_id_fkey"
-            columns: ["service_cat_id"]
-            isOneToOne: false
-            referencedRelation: "service_categories"
-            referencedColumns: ["service_cat_id"]
-          },
-        ]
-      }
-      content_skills: {
-        Row: { content_id: string; skill_id: string }
-        Insert: { content_id: string; skill_id: string }
-        Update: { content_id?: string; skill_id?: string }
-        Relationships: [
-          {
-            foreignKeyName: "content_skills_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "content_published"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "content_skills_skill_id_fkey"
-            columns: ["skill_id"]
-            isOneToOne: false
-            referencedRelation: "skills"
-            referencedColumns: ["skill_id"]
-          },
-        ]
-      }
     }
     Views: {
-      [_ in never]: never
+      officials_braided: {
+        Row: {
+          address: string | null
+          bio: string | null
+          classification_v2: Json | null
+          committees: Json | null
+          description_5th_grade: string | null
+          district_id: string | null
+          district_type: string | null
+          email: string | null
+          focus_area_ids: string | null
+          jurisdiction: string | null
+          level: string | null
+          office_phone: string | null
+          official_id: string | null
+          official_name: string | null
+          party: string | null
+          photo_url: string | null
+          policy_connections: Json | null
+          social_media: Json | null
+          title: string | null
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          bio?: string | null
+          classification_v2?: Json | null
+          committees?: never
+          description_5th_grade?: string | null
+          district_id?: string | null
+          district_type?: string | null
+          email?: string | null
+          focus_area_ids?: string | null
+          jurisdiction?: string | null
+          level?: string | null
+          office_phone?: string | null
+          official_id?: string | null
+          official_name?: string | null
+          party?: string | null
+          photo_url?: string | null
+          policy_connections?: never
+          social_media?: Json | null
+          title?: string | null
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          bio?: string | null
+          classification_v2?: Json | null
+          committees?: never
+          description_5th_grade?: string | null
+          district_id?: string | null
+          district_type?: string | null
+          email?: string | null
+          focus_area_ids?: string | null
+          jurisdiction?: string | null
+          level?: string | null
+          office_phone?: string | null
+          official_id?: string | null
+          official_name?: string | null
+          party?: string | null
+          photo_url?: string | null
+          policy_connections?: never
+          social_media?: Json | null
+          title?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      policies_braided: {
+        Row: {
+          bill_number: string | null
+          classification_v2: Json | null
+          data_source: string | null
+          focus_area_ids: string | null
+          fts: unknown
+          introduced_date: string | null
+          last_action: string | null
+          last_action_date: string | null
+          last_updated: string | null
+          level: string | null
+          official_ids: string | null
+          policy_id: string | null
+          policy_name: string | null
+          policy_type: string | null
+          source_url: string | null
+          sponsors: Json | null
+          status: string | null
+          summary_5th_grade: string | null
+        }
+        Insert: {
+          bill_number?: string | null
+          classification_v2?: Json | null
+          data_source?: string | null
+          focus_area_ids?: string | null
+          fts?: unknown
+          introduced_date?: string | null
+          last_action?: string | null
+          last_action_date?: string | null
+          last_updated?: string | null
+          level?: string | null
+          official_ids?: string | null
+          policy_id?: string | null
+          policy_name?: string | null
+          policy_type?: string | null
+          source_url?: string | null
+          sponsors?: never
+          status?: string | null
+          summary_5th_grade?: string | null
+        }
+        Update: {
+          bill_number?: string | null
+          classification_v2?: Json | null
+          data_source?: string | null
+          focus_area_ids?: string | null
+          fts?: unknown
+          introduced_date?: string | null
+          last_action?: string | null
+          last_action_date?: string | null
+          last_updated?: string | null
+          level?: string | null
+          official_ids?: string | null
+          policy_id?: string | null
+          policy_name?: string | null
+          policy_type?: string | null
+          source_url?: string | null
+          sponsors?: never
+          status?: string | null
+          summary_5th_grade?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      upsert_translation: {
+        Args: {
+          p_content_id: string
+          p_content_type: string
+          p_field_name: string
+          p_language_id: string
+          p_translated_text: string
+          p_translation_id: string
+        }
+        Returns: undefined
+      }
+      user_role: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never

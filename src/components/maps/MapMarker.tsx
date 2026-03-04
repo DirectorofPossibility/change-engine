@@ -11,6 +11,7 @@
 import { Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import Link from 'next/link'
+import { THEMES } from '@/lib/constants'
 
 export type MarkerType = 'service' | 'voting' | 'organization' | 'distribution' | 'opportunity' | 'park' | 'police' | 'fire' | 'school' | 'medical' | 'library' | 'official'
 
@@ -23,6 +24,9 @@ export interface MarkerData {
   address?: string | null
   phone?: string | null
   link?: string | null
+  primaryPathway?: string | null
+  pathways?: string[]
+  focusAreas?: Array<{ id: string; name: string }>
 }
 
 const MARKER_COLORS: Record<MarkerType, { background: string; border: string }> = {
@@ -65,6 +69,7 @@ function createPinIcon(bg: string, border: string) {
 
 interface MapMarkerProps {
   marker: MarkerData
+  onClick?: (marker: MarkerData) => void
 }
 
 /**
@@ -72,12 +77,20 @@ interface MapMarkerProps {
  *
  * @param props.marker - Data object describing the marker's position, title, type, and optional contact info.
  */
-export function MapMarker({ marker }: MapMarkerProps) {
-  const colors = MARKER_COLORS[marker.type]
+export function MapMarker({ marker, onClick }: MapMarkerProps) {
+  // Use pathway color if available, otherwise fall back to type-based color
+  const themeEntry = marker.primaryPathway ? (THEMES as Record<string, { color: string }>)[marker.primaryPathway] : null
+  const colors = themeEntry
+    ? { background: themeEntry.color, border: themeEntry.color }
+    : MARKER_COLORS[marker.type]
   const icon = createPinIcon(colors.background, colors.border)
 
   return (
-    <Marker position={[marker.lat, marker.lng]} icon={icon}>
+    <Marker
+      position={[marker.lat, marker.lng]}
+      icon={icon}
+      eventHandlers={onClick ? { click: () => onClick(marker) } : undefined}
+    >
       <Popup>
         <div className="max-w-[240px] text-sm">
           <h3 className="font-semibold text-brand-text mb-1">{marker.title}</h3>

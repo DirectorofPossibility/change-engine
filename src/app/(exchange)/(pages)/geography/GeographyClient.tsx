@@ -3,11 +3,11 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
-import { Search, ChevronDown, Users, Landmark, Loader2, Map } from 'lucide-react'
+import { Search, ChevronDown, Users, Loader2, Map } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
-import { GEO_LAYERS } from '@/lib/constants'
+import { GEO_LAYERS, THEMES } from '@/lib/constants'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
+import { MapEntityDrawer } from '@/components/maps/MapEntityDrawer'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { GeoLayerConfig } from '@/lib/constants'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'
@@ -43,14 +43,15 @@ interface Official {
   office_phone: string | null
   website: string | null
   photo_url: string | null
+  primaryPathway?: string | null
+  pathways?: string[]
 }
 
-interface Foundation {
-  id: string
-  name: string
-  mission: string | null
-  assets: number | null
-  website_url: string | null
+interface EntityCounts {
+  organizations: number
+  services: number
+  voting: number
+  officials: number
 }
 
 interface SelectedRegion {
@@ -58,6 +59,9 @@ interface SelectedRegion {
   id: string
   label: string
 }
+
+/** Pathway entries for the filter chip bar. */
+const PATHWAY_ENTRIES = Object.entries(THEMES) as Array<[string, { name: string; color: string }]>
 
 export function GeographyClient({
   superNeighborhoods,
@@ -73,28 +77,38 @@ export function GeographyClient({
   const [selectedRegion, setSelectedRegion] = useState<SelectedRegion | null>(null)
   const [markers, setMarkers] = useState<MarkerData[]>([])
   const [officials, setOfficials] = useState<Official[]>([])
-  const [foundations, setFoundations] = useState<Foundation[]>([])
+  const [entityCounts, setEntityCounts] = useState<EntityCounts>({ organizations: 0, services: 0, voting: 0, officials: 0 })
   const [loading, setLoading] = useState(false)
+
+  // Pathway filter
+  const [activePathway, setActivePathway] = useState<string | null>(null)
+
+  // Drawer state
+  const [drawerEntity, setDrawerEntity] = useState<MarkerData | null>(null)
 
   const layers: GeoLayerConfig[] = useMemo(function () {
     return Object.values(GEO_LAYERS)
   }, [])
 
   /** Fetch content from the map-markers API. */
-  const loadContent = useCallback(async function (type: string, id: string, label: string) {
+  const loadContent = useCallback(async function (type: string, id: string, label: string, pathway?: string | null) {
     setSelectedRegion({ type, id, label })
     setLoading(true)
     try {
-      const res = await fetch('/api/map-markers?type=' + encodeURIComponent(type) + '&id=' + encodeURIComponent(id))
+      let url = '/api/map-markers?type=' + encodeURIComponent(type) + '&id=' + encodeURIComponent(id)
+      if (pathway) {
+        url += '&pathway=' + encodeURIComponent(pathway)
+      }
+      const res = await fetch(url)
       if (!res.ok) throw new Error('API error')
       const data = await res.json()
       setMarkers(data.markers || [])
       setOfficials(data.officials || [])
-      setFoundations(data.foundations || [])
+      setEntityCounts(data.entityCounts || { organizations: 0, services: 0, voting: 0, officials: 0 })
     } catch {
       setMarkers([])
       setOfficials([])
-      setFoundations([])
+      setEntityCounts({ organizations: 0, services: 0, voting: 0, officials: 0 })
     } finally {
       setLoading(false)
     }
@@ -108,20 +122,43 @@ export function GeographyClient({
     const featureId = String(properties[layerConfig.idProperty] || '')
     if (!featureId) return
 
-    // Build a human-readable label from the properties
     const label = String(
       properties['SN_NAME'] || properties['NAME'] || properties['NAMELSAD'] ||
       properties['DISTRICT'] || properties['CD'] || properties['SD'] || properties['HD'] ||
       properties[layerConfig.idProperty] || featureId
     )
 
+    setActivePathway(null)
     loadContent(apiType, featureId, layerConfig.label + ': ' + label)
   }, [loadContent])
+
+  /** Handle marker clicks — open the drawer. */
+  const handleMarkerClick = useCallback(function (marker: MarkerData) {
+    setDrawerEntity(marker)
+  }, [])
+
+  /** Handle pathway chip click in the drawer — re-filter the map. */
+  const handleDrawerPathwayClick = useCallback(function (themeId: string) {
+    setActivePathway(themeId)
+    setDrawerEntity(null)
+    if (selectedRegion) {
+      loadContent(selectedRegion.type, selectedRegion.id, selectedRegion.label, themeId)
+    }
+  }, [selectedRegion, loadContent])
+
+  /** Handle pathway chip bar click. */
+  const handlePathwayFilter = useCallback(function (themeId: string | null) {
+    setActivePathway(themeId)
+    if (selectedRegion) {
+      loadContent(selectedRegion.type, selectedRegion.id, selectedRegion.label, themeId)
+    }
+  }, [selectedRegion, loadContent])
 
   /** Handle ZIP submit. */
   const handleZipSubmit = useCallback(function (e: React.FormEvent) {
     e.preventDefault()
     if (zip.length === 5) {
+      setActivePathway(null)
       loadContent('zip', zip, 'ZIP Code ' + zip)
       router.push('/geography?zip=' + zip, { scroll: false })
     }
@@ -133,6 +170,7 @@ export function GeographyClient({
     setSelectedSN(value)
     if (value) {
       const snInfo = superNeighborhoods.find(function (sn) { return sn.sn_id === value })
+      setActivePathway(null)
       loadContent('superNeighborhood', value, snInfo?.sn_name || value)
       router.push('/geography?superNeighborhood=' + value, { scroll: false })
     }
@@ -148,6 +186,8 @@ export function GeographyClient({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const totalCount = entityCounts.organizations + entityCounts.services + entityCounts.voting + entityCounts.officials
 
   return (
     <div className="space-y-8">
@@ -193,6 +233,69 @@ export function GeographyClient({
         </div>
       </div>
 
+      {/* Pathway filter bar — shown when a region is selected */}
+      {selectedRegion && !loading && (
+        <div className="bg-white rounded-xl border border-brand-border p-4 shadow-sm">
+          <p className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-3">{t('geo.filter_by_pathway')}</p>
+          <div className="flex flex-wrap gap-2">
+            {/* All chip */}
+            <button
+              onClick={function () { handlePathwayFilter(null) }}
+              className={
+                'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ' +
+                (activePathway === null
+                  ? 'bg-brand-text text-white shadow-sm'
+                  : 'bg-brand-border/40 text-brand-muted hover:bg-brand-border')
+              }
+            >
+              {t('geo.all_pathways')}
+              {totalCount > 0 && <span className="opacity-70">({totalCount})</span>}
+            </button>
+
+            {/* Pathway chips */}
+            {PATHWAY_ENTRIES.map(function ([themeId, theme]) {
+              const isActive = activePathway === themeId
+              return (
+                <button
+                  key={themeId}
+                  onClick={function () { handlePathwayFilter(themeId) }}
+                  className={
+                    'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ' +
+                    (isActive
+                      ? 'text-white shadow-sm'
+                      : 'hover:shadow-sm')
+                  }
+                  style={
+                    isActive
+                      ? { backgroundColor: theme.color, color: '#fff' }
+                      : { backgroundColor: theme.color + '15', color: theme.color, border: '1px solid ' + theme.color + '25' }
+                  }
+                >
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: isActive ? '#fff' : theme.color }}
+                  />
+                  {theme.name}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Entity count summary */}
+          {totalCount > 0 && (
+            <p className="mt-3 text-xs text-brand-muted">
+              {entityCounts.organizations > 0 && (entityCounts.organizations + ' organization' + (entityCounts.organizations !== 1 ? 's' : ''))}
+              {entityCounts.organizations > 0 && entityCounts.services > 0 && ' · '}
+              {entityCounts.services > 0 && (entityCounts.services + ' service' + (entityCounts.services !== 1 ? 's' : ''))}
+              {(entityCounts.organizations > 0 || entityCounts.services > 0) && entityCounts.officials > 0 && ' · '}
+              {entityCounts.officials > 0 && (entityCounts.officials + ' official' + (entityCounts.officials !== 1 ? 's' : ''))}
+              {(entityCounts.organizations > 0 || entityCounts.services > 0 || entityCounts.officials > 0) && entityCounts.voting > 0 && ' · '}
+              {entityCounts.voting > 0 && (entityCounts.voting + ' voting location' + (entityCounts.voting !== 1 ? 's' : ''))}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Interactive Map — always visible, all layers OFF by default */}
       <div className="bg-white rounded-xl border border-brand-border overflow-hidden shadow-sm relative">
         <InteractiveMap
@@ -202,6 +305,7 @@ export function GeographyClient({
           className="w-full h-[500px]"
           showLegend={true}
           onFeatureClick={handleFeatureClick}
+          onMarkerClick={handleMarkerClick}
         />
 
         {/* Prompt overlay — only when no region selected */}
@@ -225,7 +329,7 @@ export function GeographyClient({
         )}
       </div>
 
-      {/* Content Panels — shown when region is selected */}
+      {/* Officials panel — shown when region is selected */}
       {selectedRegion && !loading && (
         <div className="space-y-6">
           {/* Region header */}
@@ -233,92 +337,52 @@ export function GeographyClient({
             <h2 className="font-serif text-xl font-bold text-brand-text">
               {t('geo.exploring')}: {selectedRegion.label}
             </h2>
-            <span className="text-xs text-brand-muted">
-              ({markers.length} marker{markers.length !== 1 ? 's' : ''})
-            </span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Officials */}
-            {officials.length > 0 && (
-              <div className="bg-white rounded-xl border border-brand-border p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <Users size={18} className="text-brand-accent" />
-                  <h3 className="font-serif text-lg font-bold text-brand-text">{t('geo.officials_here')}</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {officials.map(function (o) {
-                    return (
-                      <OfficialCard
-                        key={o.official_id}
-                        id={o.official_id}
-                        name={o.official_name}
-                        title={o.title}
-                        party={o.party}
-                        level={o.level}
-                        email={o.email}
-                        phone={o.office_phone}
-                        website={o.website}
-                        photoUrl={o.photo_url}
-                      />
-                    )
-                  })}
-                </div>
+          {/* Officials */}
+          {officials.length > 0 && (
+            <div className="bg-white rounded-xl border border-brand-border p-6 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <Users size={18} className="text-brand-accent" />
+                <h3 className="font-serif text-lg font-bold text-brand-text">{t('geo.officials_here')}</h3>
               </div>
-            )}
-
-            {/* Foundations */}
-            {foundations.length > 0 && (
-              <div className="bg-white rounded-xl border border-brand-border p-6 shadow-sm">
-                <div className="flex items-center gap-2 mb-4">
-                  <Landmark size={18} className="text-brand-accent" />
-                  <h3 className="font-serif text-lg font-bold text-brand-text">{t('geo.foundations_nearby')}</h3>
-                </div>
-                <ul className="space-y-3">
-                  {foundations.map(function (f) {
-                    return (
-                      <li key={f.id} className="text-sm">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <Link
-                              href={'/foundations?highlight=' + f.id}
-                              className="font-medium text-brand-accent hover:underline"
-                            >
-                              {f.name}
-                            </Link>
-                            {f.mission && (
-                              <p className="text-brand-muted text-xs mt-0.5 line-clamp-2">{f.mission}</p>
-                            )}
-                          </div>
-                          {f.website_url && (
-                            <a
-                              href={f.website_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-brand-accent/70 hover:underline flex-shrink-0"
-                            >
-                              website
-                            </a>
-                          )}
-                        </div>
-                        {f.assets && (
-                          <span className="text-xs text-brand-muted">Assets: ${f.assets.toLocaleString()}</span>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {officials.map(function (o) {
+                  return (
+                    <OfficialCard
+                      key={o.official_id}
+                      id={o.official_id}
+                      name={o.official_name}
+                      title={o.title}
+                      party={o.party}
+                      level={o.level}
+                      email={o.email}
+                      phone={o.office_phone}
+                      website={o.website}
+                      photoUrl={o.photo_url}
+                    />
+                  )
+                })}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Empty content message */}
-          {officials.length === 0 && foundations.length === 0 && markers.length === 0 && (
+          {officials.length === 0 && markers.length === 0 && (
             <div className="text-center py-8">
               <p className="text-brand-muted text-sm">{t('geo.no_selection')}</p>
             </div>
           )}
         </div>
+      )}
+
+      {/* Entity detail drawer */}
+      {drawerEntity && (
+        <MapEntityDrawer
+          entity={drawerEntity}
+          onClose={function () { setDrawerEntity(null) }}
+          onPathwayClick={handleDrawerPathwayClick}
+        />
       )}
     </div>
   )

@@ -156,8 +156,9 @@ const en: Record<string, string> = {
   'geo.hide_all_layers': 'Hide All',
   'geo.click_to_explore': 'Toggle a boundary layer, then click any area to explore',
   'geo.loading_content': 'Loading nearby content...',
-  'geo.foundations_nearby': 'Foundations Serving This Area',
   'geo.exploring': 'Exploring',
+  'geo.all_pathways': 'All',
+  'geo.filter_by_pathway': 'Filter by pathway',
 
   // Explore page
   'explore.title': 'Explore Topics',
@@ -613,8 +614,9 @@ const es: Record<string, string> = {
   'geo.hide_all_layers': 'Ocultar Todo',
   'geo.click_to_explore': 'Active una capa de límites, luego haga clic en cualquier área para explorar',
   'geo.loading_content': 'Cargando contenido cercano...',
-  'geo.foundations_nearby': 'Fundaciones que Sirven Esta Área',
   'geo.exploring': 'Explorando',
+  'geo.all_pathways': 'Todos',
+  'geo.filter_by_pathway': 'Filtrar por camino',
 
   // Explore page
   'explore.title': 'Explorar Temas',
@@ -1070,8 +1072,9 @@ const vi: Record<string, string> = {
   'geo.hide_all_layers': 'Ẩn Tất Cả',
   'geo.click_to_explore': 'Bật một lớp ranh giới, sau đó nhấp vào bất kỳ khu vực nào để khám phá',
   'geo.loading_content': 'Đang tải nội dung gần đây...',
-  'geo.foundations_nearby': 'Tổ Chức Từ Thiện Phục Vụ Khu Vực Này',
   'geo.exploring': 'Đang khám phá',
+  'geo.all_pathways': 'Tất cả',
+  'geo.filter_by_pathway': 'Lọc theo lộ trình',
 
   // Explore page
   'explore.title': 'Khám Phá Chủ Đề',

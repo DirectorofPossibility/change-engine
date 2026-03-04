@@ -2,12 +2,11 @@
  * @fileoverview Dynamic map marker + content API for the Map View page.
  *
  * Resolves a region (ZIP, super neighborhood, council district, etc.) to ZIP
- * codes, then fetches all content types in parallel: services, organizations,
- * voting locations, municipal services, officials, and foundations.
+ * codes, then fetches organizations, services, voting locations, municipal
+ * services, and officials — optionally filtered by a pathway (THEME_XX).
  *
  * GET /api/map-markers?type=zip&id=77001
- * GET /api/map-markers?type=superNeighborhood&id=SN-01
- * GET /api/map-markers?type=councilDistrict&id=C
+ * GET /api/map-markers?type=superNeighborhood&id=SN-01&pathway=THEME_01
  */
 
 import { NextResponse } from 'next/server'
@@ -44,7 +43,6 @@ async function resolveZipCodes(
       return [id]
 
     case 'superNeighborhood': {
-      // neighborhoods WHERE super_neighborhood_id = id → neighborhood_zip_codes → zip_codes
       const { data: hoods } = await supabase
         .from('neighborhoods')
         .select('neighborhood_id')
@@ -95,10 +93,87 @@ async function resolveZipCodes(
   }
 }
 
+/**
+ * Fetch pathway classifications for a set of entity IDs from a junction table.
+ * Returns a map of entityId → { primaryPathway, pathways }.
+ */
+async function fetchPathwaysForEntities(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  junctionTable: string,
+  idColumn: string,
+  entityIds: string[]
+): Promise<Map<string, { primaryPathway: string | null; pathways: string[] }>> {
+  const result = new Map<string, { primaryPathway: string | null; pathways: string[] }>()
+  if (entityIds.length === 0) return result
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const headers = { apikey: key, Authorization: 'Bearer ' + key }
+
+  // Use REST API for junction tables that may not be in generated types
+  const idsParam = entityIds.slice(0, 200).join(',')
+  const res = await fetch(
+    url + '/rest/v1/' + junctionTable + '?' + idColumn + '=in.(' + idsParam + ')&select=' + idColumn + ',theme_id,is_primary',
+    { headers }
+  )
+  if (!res.ok) return result
+
+  const rows: Array<Record<string, string | boolean>> = await res.json()
+  for (const row of rows) {
+    const entityId = String(row[idColumn])
+    const themeId = String(row.theme_id)
+    const isPrimary = row.is_primary === true
+
+    let entry = result.get(entityId)
+    if (!entry) {
+      entry = { primaryPathway: null, pathways: [] }
+      result.set(entityId, entry)
+    }
+    if (!entry.pathways.includes(themeId)) {
+      entry.pathways.push(themeId)
+    }
+    if (isPrimary) {
+      entry.primaryPathway = themeId
+    }
+  }
+
+  // For entities with pathways but no explicit primary, use first pathway
+  Array.from(result.values()).forEach(function (entry) {
+    if (!entry.primaryPathway && entry.pathways.length > 0) {
+      entry.primaryPathway = entry.pathways[0]
+    }
+  })
+
+  return result
+}
+
+/**
+ * Get entity IDs that are classified under a specific pathway.
+ */
+async function getEntityIdsForPathway(
+  junctionTable: string,
+  idColumn: string,
+  pathwayId: string
+): Promise<Set<string>> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const headers = { apikey: key, Authorization: 'Bearer ' + key }
+
+  const res = await fetch(
+    url + '/rest/v1/' + junctionTable + '?theme_id=eq.' + pathwayId + '&select=' + idColumn,
+    { headers }
+  )
+  if (!res.ok) return new Set()
+
+  const rows: Array<Record<string, string>> = await res.json()
+  return new Set(rows.map(function (r) { return String(r[idColumn]) }))
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const type = searchParams.get('type') as RegionType | null
   const id = searchParams.get('id')
+  const pathway = searchParams.get('pathway')
 
   if (!type || !id || !VALID_TYPES.includes(type)) {
     return NextResponse.json(
@@ -112,18 +187,25 @@ export async function GET(req: Request) {
   // 1. Resolve region → ZIP codes
   const zips = await resolveZipCodes(supabase, type, id)
 
-  // 2. Fetch all content in parallel
-  const [services, municipalMarkers, officials, foundations] = await Promise.all([
-    // Services with coords filtered by ZIP
+  // 2. If pathway filter is active, pre-fetch allowed entity IDs
+  let allowedOrgIds: Set<string> | null = null
+  let allowedServiceIds: Set<string> | null = null
+  let allowedOfficialIds: Set<string> | null = null
+
+  if (pathway) {
+    ;[allowedOrgIds, allowedServiceIds, allowedOfficialIds] = await Promise.all([
+      getEntityIdsForPathway('organization_pathways', 'org_id', pathway),
+      getEntityIdsForPathway('service_pathways', 'service_id', pathway),
+      getEntityIdsForPathway('official_pathways', 'official_id', pathway),
+    ])
+  }
+
+  // 3. Fetch all content in parallel
+  const [services, municipalMarkers, officials] = await Promise.all([
     getServicesWithCoords(zips.length > 0 ? zips : undefined),
-
-    // Municipal services (citywide, no ZIP filter)
     getMunicipalServiceMarkers(),
-
-    // Officials — query by district assignments from the resolved ZIP
     (async function () {
       if (zips.length === 0) return []
-      // Get district info from first ZIP
       const { data: zipData } = await supabase
         .from('zip_codes')
         .select('*')
@@ -150,30 +232,9 @@ export async function GET(req: Request) {
         .or(filterParts)
       return data ?? []
     })(),
-
-    // Foundations via foundation_zip_coverage (REST API — table not in generated types)
-    (async function () {
-      if (zips.length === 0) return []
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      const hd = { apikey: key, Authorization: 'Bearer ' + key }
-      const zipParams = zips.slice(0, 20).join(',')
-      const covRes = await fetch(
-        url + '/rest/v1/foundation_zip_coverage?zip_code=in.(' + zipParams + ')&select=foundation_id',
-        { headers: hd }
-      )
-      const coverage: Array<{ foundation_id: string }> = covRes.ok ? await covRes.json() : []
-      const foundationIds = Array.from(new Set(coverage.map(function (c) { return c.foundation_id })))
-      if (foundationIds.length === 0) return []
-      const fRes = await fetch(
-        url + '/rest/v1/foundations?id=in.(' + foundationIds.join(',') + ')&select=id,name,mission,assets,website_url&order=name&limit=50',
-        { headers: hd }
-      )
-      return fRes.ok ? fRes.json() : []
-    })(),
   ])
 
-  // 3. Fetch orgs + voting per-ZIP in parallel
+  // 4. Fetch orgs + voting per-ZIP in parallel
   const orgResults = await Promise.all(
     zips.slice(0, 10).map(function (z) { return getOrganizationsWithCoords(z) })
   )
@@ -181,14 +242,54 @@ export async function GET(req: Request) {
     zips.slice(0, 10).map(function (z) { return getVotingLocationsWithCoords(z) })
   )
 
-  // 4. Build markers array
-  const markers: MarkerData[] = []
+  // 5. Collect entity IDs for pathway lookup
+  const allOrgIds: string[] = []
+  const allServiceIds: string[] = []
+  const allOfficialIds: string[] = []
 
-  // Service markers from services_211
+  const seenOrgIds = new Set<string>()
+  orgResults.flat().forEach(function (o) {
+    if (!seenOrgIds.has(o.org_id)) {
+      seenOrgIds.add(o.org_id)
+      allOrgIds.push(o.org_id)
+    }
+  })
+
+  services.forEach(function (s) {
+    const serviceId = s.service_id || s.org_id
+    if (serviceId) allServiceIds.push(serviceId)
+  })
+
+  const officialsList = officials as Array<{
+    official_id: string; official_name: string; title: string | null
+    level: string | null; party: string | null; email: string | null
+    office_phone: string | null; website: string | null; photo_url: string | null
+  }>
+  officialsList.forEach(function (o) {
+    allOfficialIds.push(o.official_id)
+  })
+
+  // 6. Fetch pathway data for all entities in parallel
+  const [orgPathways, servicePathways, officialPathways] = await Promise.all([
+    fetchPathwaysForEntities(supabase, 'organization_pathways', 'org_id', allOrgIds),
+    fetchPathwaysForEntities(supabase, 'service_pathways', 'service_id', allServiceIds),
+    fetchPathwaysForEntities(supabase, 'official_pathways', 'official_id', allOfficialIds),
+  ])
+
+  // 7. Build markers array
+  const markers: MarkerData[] = []
+  const entityCounts = { organizations: 0, services: 0, voting: 0, officials: 0 }
+
+  // Service markers
   services.forEach(function (s) {
     if (s.latitude && s.longitude) {
+      const serviceId = s.service_id || s.org_id || ('svc-' + markers.length)
+      // Skip if pathway filter is active and this service isn't classified under it
+      if (allowedServiceIds && !allowedServiceIds.has(serviceId)) return
+
+      const pw = servicePathways.get(serviceId)
       markers.push({
-        id: s.service_id || s.org_id || ('svc-' + markers.length),
+        id: serviceId,
         lat: Number(s.latitude),
         lng: Number(s.longitude),
         title: s.service_name || s.org_name || 'Service',
@@ -196,29 +297,39 @@ export async function GET(req: Request) {
         address: [s.address, s.city].filter(Boolean).join(', ') || null,
         phone: s.phone || null,
         link: s.org_id ? '/services?org=' + s.org_id : null,
+        primaryPathway: pw?.primaryPathway || null,
+        pathways: pw?.pathways || [],
       })
+      entityCounts.services++
     }
   })
 
-  // Municipal service markers
-  municipalMarkers.forEach(function (m) {
-    markers.push({
-      id: m.id,
-      lat: m.lat,
-      lng: m.lng,
-      title: m.title,
-      type: m.type as MarkerData['type'],
-      address: m.address,
-      phone: m.phone,
-      link: m.link,
+  // Municipal service markers (not pathway-filtered — they're citywide infrastructure)
+  if (!pathway) {
+    municipalMarkers.forEach(function (m) {
+      markers.push({
+        id: m.id,
+        lat: m.lat,
+        lng: m.lng,
+        title: m.title,
+        type: m.type as MarkerData['type'],
+        address: m.address,
+        phone: m.phone,
+        link: m.link,
+      })
     })
-  })
+  }
 
   // Organization markers
-  const seenOrgIds = new Set<string>()
+  const seenOrgIdsForMarkers = new Set<string>()
   orgResults.flat().forEach(function (o) {
-    if (seenOrgIds.has(o.org_id)) return
-    seenOrgIds.add(o.org_id)
+    if (seenOrgIdsForMarkers.has(o.org_id)) return
+    seenOrgIdsForMarkers.add(o.org_id)
+
+    // Skip if pathway filter is active and this org isn't classified under it
+    if (allowedOrgIds && !allowedOrgIds.has(o.org_id)) return
+
+    const pw = orgPathways.get(o.org_id)
     markers.push({
       id: o.org_id,
       lat: Number(o.latitude),
@@ -228,26 +339,48 @@ export async function GET(req: Request) {
       address: [o.address, o.city].filter(Boolean).join(', ') || null,
       phone: null,
       link: '/services?org=' + o.org_id,
+      primaryPathway: pw?.primaryPathway || null,
+      pathways: pw?.pathways || [],
     })
+    entityCounts.organizations++
   })
 
-  // Voting location markers
-  votingResults.flat().forEach(function (v) {
-    markers.push({
-      id: v.location_id || ('vote-' + markers.length),
-      lat: Number(v.latitude),
-      lng: Number(v.longitude),
-      title: v.location_name || 'Voting Location',
-      type: 'voting',
-      address: [v.address, v.city].filter(Boolean).join(', ') || null,
-      phone: null,
-      link: '/elections',
+  // Voting location markers (not pathway-filtered)
+  if (!pathway) {
+    votingResults.flat().forEach(function (v) {
+      markers.push({
+        id: v.location_id || ('vote-' + markers.length),
+        lat: Number(v.latitude),
+        lng: Number(v.longitude),
+        title: v.location_name || 'Voting Location',
+        type: 'voting',
+        address: [v.address, v.city].filter(Boolean).join(', ') || null,
+        phone: null,
+        link: '/elections',
+      })
+      entityCounts.voting++
     })
+  }
+
+  // Filter officials by pathway if active
+  const filteredOfficials = pathway
+    ? officialsList.filter(function (o) { return allowedOfficialIds!.has(o.official_id) })
+    : officialsList
+
+  // Enrich officials with pathway data
+  const enrichedOfficials = filteredOfficials.map(function (o) {
+    const pw = officialPathways.get(o.official_id)
+    return {
+      ...o,
+      primaryPathway: pw?.primaryPathway || null,
+      pathways: pw?.pathways || [],
+    }
   })
+  entityCounts.officials = enrichedOfficials.length
 
   return NextResponse.json({
     markers,
-    officials,
-    foundations,
+    officials: enrichedOfficials,
+    entityCounts,
   })
 }

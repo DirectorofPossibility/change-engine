@@ -38,6 +38,7 @@ interface InteractiveMapProps {
   zoom?: number
   center?: { lat: number; lng: number }
   onFeatureClick?: (layerConfig: GeoLayerConfig, properties: GeoFeatureProperties) => void
+  onMarkerClick?: (marker: MarkerData) => void
 }
 
 interface SelectedFeature {
@@ -73,6 +74,7 @@ function InteractiveMapInner({
   zoom,
   center,
   onFeatureClick,
+  onMarkerClick,
 }: InteractiveMapProps) {
   const [visibleLayerIds, setVisibleLayerIds] = useState<Set<string>>(
     new Set(defaultVisibleLayers)
@@ -151,7 +153,7 @@ function InteractiveMapInner({
           {/* Clustered point markers on top of boundaries */}
           <MarkerClusterGroup chunkedLoading>
             {markers.map(m => (
-              <MapMarker key={m.id} marker={m} />
+              <MapMarker key={m.id} marker={m} onClick={onMarkerClick} />
             ))}
           </MarkerClusterGroup>
         </HoustonMap>

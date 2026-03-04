@@ -1,6 +1,14 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { getCallerRole, requireRole } from '../_shared/auth.ts';
 import { CORS } from '../_shared/cors.ts';
+import {
+  fetchFullTaxonomy,
+  buildPromptForEntity,
+  callClaude,
+  parseClaudeJson,
+  validateAndEnrich,
+  populateAllJunctions,
+} from '../_shared/classifier.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -47,76 +55,15 @@ async function logSync(orgId: string, source: string, status: string, message: s
 }
 
 // ============================================
-// TAXONOMY LOADER (for AI classification of sites)
+// AI SITE CLASSIFIER — uses shared classifier module
 // ============================================
-async function loadTaxonomy() {
-  const [focusAreas, audiences, situations] = await Promise.all([
-    db('focus_areas?select=focus_area_id,name,theme_id&limit=200'),
-    db('audience_segments?select=segment_id,name&limit=50'),
-    db('life_situations?select=situation_id,situation_label&limit=50'),
-  ]);
-
-  const faList = (focusAreas || []).map((f: any) => `${f.focus_area_id}: ${f.name}`).join('\n');
-  const audList = (audiences || []).map((a: any) => `${a.segment_id}: ${a.name}`).join('\n');
-  const sitList = (situations || []).map((s: any) => `${s.situation_id}: ${s.situation_label}`).join('\n');
-
-  return { faList, audList, sitList };
-}
-
-// ============================================
-// AI SITE CLASSIFIER
-// Classifies a distribution site against the matrix
-// ============================================
-async function classifySite(site: { name: string; type: string; description: string; requirements?: string }, taxonomy: any): Promise<any> {
-  const prompt = `You are a social services classifier for The Change Engine platform in Houston, TX.
-
-Classify this food distribution site against our taxonomy. Return ONLY a JSON object.
-
-SITE:
-Name: ${site.name}
-Type: ${site.type}
-Description: ${site.description}
-${site.requirements ? `Requirements: ${site.requirements}` : ''}
-
-FOCUS AREAS (pick 1-5 most relevant):
-${taxonomy.faList}
-
-AUDIENCE SEGMENTS (pick 1-4):
-${taxonomy.audList}
-
-LIFE SITUATIONS (pick 1-4):
-${taxonomy.sitList}
-
-RETURN JSON:
-{
-  "focus_area_ids": ["FA_XXX"],
-  "audience_segment_ids": ["SEG_XX"],
-  "life_situation_ids": ["LS_XXX"],
-  "resource_type_id": "RTYPE_21"
-}`;
+async function classifySite(site: { name: string; type: string; description: string; requirements?: string }, taxonomy: any, systemPrompt: string): Promise<any> {
+  const userContent = `Name: ${site.name}\nType: ${site.type}\nDescription: ${site.description}${site.requirements ? `\nRequirements: ${site.requirements}` : ''}\n\nReturn JSON with: theme_primary, focus_area_ids, audience_segment_ids, life_situation_ids, service_cat_ids, resource_type_id, geographic_scope, confidence`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }],
-      }),
-    });
-
-    if (!res.ok) return null;
-    const data = await res.json();
-    const text = data.content?.[0]?.text || '';
-    // Strip markdown fences
-    const clean = text.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-    const match = clean.match(/\{[\s\S]*\}/);
-    return match ? JSON.parse(match[0]) : null;
+    const rawText = await callClaude(systemPrompt, userContent, ANTHROPIC_API_KEY, 500);
+    const raw = parseClaudeJson(rawText);
+    return validateAndEnrich(raw, taxonomy);
   } catch (err) {
     console.error('AI classify error:', err);
     return null;
@@ -495,8 +442,10 @@ Deno.serve(async (req: Request) => {
     rawSites = rawSites.filter(s => s.name && (s.address || (s.latitude && s.longitude)));
 
     let taxonomy: any = null;
+    let siteSystemPrompt = '';
     if (classifyWithAi && rawSites.length > 0) {
-      taxonomy = await loadTaxonomy();
+      taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
+      siteSystemPrompt = buildPromptForEntity(taxonomy, 'service');
     }
 
     const results: any[] = [];
@@ -516,7 +465,7 @@ Deno.serve(async (req: Request) => {
           type: raw.site_type,
           description: raw.description,
           requirements: raw.requirements,
-        }, taxonomy);
+        }, taxonomy, siteSystemPrompt);
         if (aiTags) classified++;
 
         if (i < rawSites.length - 1) await sleep(3000);
