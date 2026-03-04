@@ -66,6 +66,11 @@ export function DocumentUpload() {
         body: formData,
       })
 
+      if (!res.ok) {
+        const errText = await res.text().catch(() => 'Upload failed')
+        setResult({ success: false, message: errText })
+        return
+      }
       const data = await res.json()
 
       if (data.success) {

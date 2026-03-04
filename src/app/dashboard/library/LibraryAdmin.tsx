@@ -105,9 +105,13 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
         body: formData,
       })
 
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text().catch(() => 'Upload failed')
+        throw new Error(errText)
+      }
       const uploadData = await uploadRes.json()
 
-      if (!uploadRes.ok || !uploadData.success) {
+      if (!uploadData.success) {
         throw new Error(uploadData.error || 'Upload failed')
       }
 
@@ -141,6 +145,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
         body: JSON.stringify({ document_id: docId }),
       })
 
+      if (!processRes.ok) throw new Error(`Processing failed: ${processRes.status}`)
       const processData = await processRes.json()
 
       if (processData.success) {
@@ -197,6 +202,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
         body: JSON.stringify({ document_id: docId }),
       })
 
+      if (!res.ok) throw new Error(`Processing failed: ${res.status}`)
       const data = await res.json()
 
       if (data.success) {

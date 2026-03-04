@@ -44,6 +44,7 @@ export function LibraryBrowse({ initialDocuments, initialTotal }: LibraryBrowseP
       if (activeTheme) params.set('theme', activeTheme)
 
       const res = await fetch('/api/library/search?' + params.toString())
+      if (!res.ok) throw new Error(`Search failed: ${res.status}`)
       const data = await res.json()
       setDocuments(data.documents?.map(function (d: SearchResult) {
         return {

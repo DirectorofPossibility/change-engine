@@ -4,6 +4,8 @@ import { getPublishedDocuments } from '@/lib/data/library'
 import { PageHero } from '@/components/exchange/PageHero'
 import { LibraryBrowse } from './LibraryBrowse'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DocumentUpload } from '@/components/exchange/DocumentUpload'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
 
@@ -23,6 +25,12 @@ export default async function LibraryPage() {
     console.error('Library page data fetch error:', err)
   }
 
+  let canUpload = false
+  try {
+    const profile = await getUserProfile()
+    canUpload = profile !== null && (profile.role === 'partner' || profile.role === 'admin')
+  } catch { /* not logged in */ }
+
   return (
     <div>
       <PageHero
@@ -34,6 +42,15 @@ export default async function LibraryPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Library' }]} />
+
+        {/* Upload section — partners and admins only */}
+        {canUpload && (
+          <div className="mb-8 bg-white rounded-xl border border-brand-border p-6">
+            <h2 className="font-serif text-lg font-bold text-brand-text mb-4">Share a Document</h2>
+            <DocumentUpload />
+          </div>
+        )}
+
         {/* Action bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <p className="text-sm text-brand-muted">

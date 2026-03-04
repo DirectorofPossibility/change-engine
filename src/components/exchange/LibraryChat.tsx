@@ -57,6 +57,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
         }),
       })
 
+      if (!res.ok) throw new Error(`Chat failed: ${res.status}`)
       const data = await res.json()
 
       if (data.error) {
