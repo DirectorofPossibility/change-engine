@@ -25,7 +25,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SECRET_KEY!
 
 /**
  * Low-level REST helper for `rss_feeds` table operations.

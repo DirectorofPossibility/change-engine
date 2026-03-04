@@ -8,6 +8,7 @@ import {
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   BookOpen, Phone, Scale, GraduationCap, Activity,
   Landmark, Compass, PanelLeftClose, PanelLeftOpen, Vote,
+  Library,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -35,6 +36,7 @@ const DISCOVER_LINKS = [
   { label: 'discover.learning', icon: GraduationCap, href: '/learn' },
   { label: 'discover.neighborhoods', icon: MapPin, href: '/super-neighborhoods' },
   { label: 'discover.foundations', icon: Landmark, href: '/foundations' },
+  { label: 'library.nav', icon: Library, href: '/library' },
 ]
 
 /**

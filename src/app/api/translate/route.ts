@@ -21,7 +21,7 @@ import { validateApiRequest } from '@/lib/api-auth'
  */
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const SUPABASE_KEY = process.env.SUPABASE_SECRET_KEY!
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || ''
 
 const LANGUAGE_MAP: Record<string, { name: string; id: string }> = {
