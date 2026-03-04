@@ -162,7 +162,7 @@ export async function getIngestionLog(limit = 100) {
  */
 export async function getRssFeeds(): Promise<RssFeed[]> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const key = process.env.SUPABASE_SECRET_KEY!
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
   const res = await fetch(`${url}/rest/v1/rss_feeds?order=feed_name`, {
     headers: {
       apikey: key,
