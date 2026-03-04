@@ -199,3 +199,62 @@ export async function rejectItem(reviewId: string, notes?: string) {
   revalidatePath('/dashboard')
   return { success: true }
 }
+
+/**
+ * Bulk approve multiple review queue items.
+ * Each item must have an inbox_id and ai_classification to publish.
+ */
+export async function bulkApproveItems(
+  items: Array<{ reviewId: string; inboxId: string; classification: AiClassification }>
+) {
+  const results = []
+  for (const item of items) {
+    const result = await approveItem(item.reviewId, item.inboxId, item.classification)
+    results.push({ reviewId: item.reviewId, ...result })
+  }
+  revalidatePath('/dashboard/review')
+  revalidatePath('/dashboard/content')
+  revalidatePath('/dashboard')
+  return results
+}
+
+/**
+ * Bulk reject multiple review queue items.
+ */
+export async function bulkRejectItems(reviewIds: string[], notes?: string) {
+  const supabase = await createClient()
+  const user = await requireAuth(supabase)
+
+  const { error } = await supabase.from('content_review_queue')
+    .update({
+      review_status: 'rejected',
+      reviewed_by: user.email || user.id,
+      reviewed_at: new Date().toISOString(),
+      reviewer_notes: notes || null,
+    })
+    .in('id', reviewIds)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/dashboard/review')
+  revalidatePath('/dashboard')
+  return { success: true, count: reviewIds.length }
+}
+
+/**
+ * Bulk flag multiple review queue items for manual review.
+ */
+export async function bulkFlagItems(reviewIds: string[]) {
+  const supabase = await createClient()
+  await requireAuth(supabase)
+
+  const { error } = await supabase.from('content_review_queue')
+    .update({ review_status: 'flagged' })
+    .in('id', reviewIds)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/dashboard/review')
+  revalidatePath('/dashboard')
+  return { success: true, count: reviewIds.length }
+}

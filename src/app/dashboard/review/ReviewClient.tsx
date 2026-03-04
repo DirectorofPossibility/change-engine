@@ -6,7 +6,7 @@ import { CenterBadge } from '@/components/ui/CenterBadge'
 import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { SlidePanel } from '@/components/ui/SlidePanel'
-import { approveItem, rejectItem } from './actions'
+import { approveItem, rejectItem, bulkApproveItems, bulkRejectItems, bulkFlagItems } from './actions'
 import type { AiClassification } from '@/lib/types/dashboard'
 
 /** Review queue item from the Supabase join between content_review_queue and content_inbox. */
@@ -33,6 +33,8 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
   const [acting, setActing] = useState(false)
   const [rejectNotes, setRejectNotes] = useState('')
   const [page, setPage] = useState(1)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [bulkActing, setBulkActing] = useState(false)
   const PAGE_SIZE = 25
 
   const filtered = activeTab === 'all'
@@ -71,6 +73,69 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
     window.location.reload()
   }
 
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAll() {
+    const pageIds = paginated.map((i) => i.id)
+    const allSelected = pageIds.every((id) => selectedIds.has(id))
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (allSelected) {
+        pageIds.forEach((id) => next.delete(id))
+      } else {
+        pageIds.forEach((id) => next.add(id))
+      }
+      return next
+    })
+  }
+
+  const selectedItems = items.filter((i) => selectedIds.has(i.id))
+
+  async function handleBulkApprove() {
+    const approvable = selectedItems.filter(
+      (i) => i.inbox_id && i.ai_classification && (i.review_status === 'pending' || i.review_status === 'flagged' || i.review_status === 'auto_approved')
+    )
+    if (approvable.length === 0) return
+    setBulkActing(true)
+    await bulkApproveItems(
+      approvable.map((i) => ({
+        reviewId: i.id,
+        inboxId: i.inbox_id!,
+        classification: i.ai_classification as AiClassification,
+      }))
+    )
+    setSelectedIds(new Set())
+    setBulkActing(false)
+    window.location.reload()
+  }
+
+  async function handleBulkReject() {
+    const ids = Array.from(selectedIds)
+    if (ids.length === 0) return
+    setBulkActing(true)
+    await bulkRejectItems(ids)
+    setSelectedIds(new Set())
+    setBulkActing(false)
+    window.location.reload()
+  }
+
+  async function handleBulkFlag() {
+    const ids = Array.from(selectedIds)
+    if (ids.length === 0) return
+    setBulkActing(true)
+    await bulkFlagItems(ids)
+    setSelectedIds(new Set())
+    setBulkActing(false)
+    window.location.reload()
+  }
+
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Review Queue</h1>
@@ -80,7 +145,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         {STATUS_TABS.map((tab) => (
           <button
             key={tab}
-            onClick={() => { setActiveTab(tab); setPage(1) }}
+            onClick={() => { setActiveTab(tab); setPage(1); setSelectedIds(new Set()) }}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab
                 ? 'bg-brand-accent text-white'
@@ -93,11 +158,57 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         ))}
       </div>
 
+      {/* Bulk Action Bar */}
+      {selectedIds.size > 0 && (
+        <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
+          <span className="text-sm font-medium text-blue-800">
+            {selectedIds.size} selected
+          </span>
+          <div className="flex gap-2 ml-auto">
+            <button
+              onClick={handleBulkApprove}
+              disabled={bulkActing}
+              className="px-3 py-1.5 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+            >
+              {bulkActing ? 'Processing...' : 'Approve All'}
+            </button>
+            <button
+              onClick={handleBulkFlag}
+              disabled={bulkActing}
+              className="px-3 py-1.5 text-sm font-medium rounded-md bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50"
+            >
+              {bulkActing ? 'Processing...' : 'Flag All'}
+            </button>
+            <button
+              onClick={handleBulkReject}
+              disabled={bulkActing}
+              className="px-3 py-1.5 text-sm font-medium rounded-md bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {bulkActing ? 'Processing...' : 'Reject All'}
+            </button>
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              className="px-3 py-1.5 text-sm font-medium rounded-md border border-brand-border hover:bg-brand-bg"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Table */}
       <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-brand-border text-left text-brand-muted bg-brand-bg/50">
+              <th className="px-3 py-3 w-10">
+                <input
+                  type="checkbox"
+                  checked={paginated.length > 0 && paginated.every((i) => selectedIds.has(i.id))}
+                  onChange={toggleSelectAll}
+                  className="rounded border-brand-border"
+                />
+              </th>
               <th className="px-4 py-3 font-medium">Title</th>
               <th className="px-4 py-3 font-medium">Source</th>
               <th className="px-4 py-3 font-medium">Confidence</th>
@@ -114,8 +225,16 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
                 <tr
                   key={item.id}
                   onClick={() => setSelected(item)}
-                  className="border-b border-brand-border/50 hover:bg-brand-bg/50 cursor-pointer"
+                  className={`border-b border-brand-border/50 hover:bg-brand-bg/50 cursor-pointer ${selectedIds.has(item.id) ? 'bg-blue-50/50' : ''}`}
                 >
+                  <td className="px-3 py-3" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(item.id)}
+                      onChange={() => toggleSelect(item.id)}
+                      className="rounded border-brand-border"
+                    />
+                  </td>
                   <td className="px-4 py-3 font-medium max-w-xs truncate">
                     {c?.title_6th_grade || item.content_inbox?.title || 'Untitled'}
                   </td>
