@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
-import { HomeTopBar } from './HomeTopBar'
-import { Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe } from 'lucide-react'
-import { THEMES, BRAND } from '@/lib/constants'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
+import { BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 
-import { EmbeddableCircles } from './CircleKnowledgeGraph'
-import { BraidedFeed } from './BraidedFeed'
-import { WayfinderPanel } from './WayfinderPanel'
+import { HomeTopBar } from './HomeTopBar'
+import { HeroBook } from './HeroBook'
+import { CenterDoorways } from './CenterDoorways'
+import { PersonaSelector } from './PersonaSelector'
 import { ImpactMetrics } from './ImpactMetrics'
-import { CentersGrid } from './CentersGrid'
+import { PathwayRibbons } from './PathwayRibbons'
+import { FeedCard } from './FeedCard'
 import type { FeedItem } from './FeedCard'
-import type { PanelData } from './WayfinderPanel'
 
 export interface PathwayFeedData {
   themeId: string
@@ -58,10 +58,6 @@ export interface PathwayFeedData {
 interface WayfinderProps {
   stats: { resources: number; officials: number; policies: number; focusAreas: number }
   pathwayCounts: Record<string, number>
-  bridges: Array<[string, string, number]>
-  topics: string[]
-  feedsByPathway: Record<string, PathwayFeedData>
-  totalItems: number
   newThisWeek: number
   latestContent: Array<{
     id: string
@@ -76,206 +72,68 @@ interface WayfinderProps {
   organizations: number
 }
 
-const PATHWAY_ICONS: Record<string, typeof Heart> = {
-  THEME_01: Heart,
-  THEME_02: Users,
-  THEME_03: MapPin,
-  THEME_04: Megaphone,
-  THEME_05: Wallet,
-  THEME_06: Leaf,
-  THEME_07: Globe,
-}
-
-function feedDataToItems(feed: PathwayFeedData, themeId: string) {
-  const themeKey = themeId as keyof typeof THEMES
-  const color = THEMES[themeKey]?.color ?? '#8B7E74'
-
-  const contentItems: FeedItem[] = feed.content.map(function (c) {
-    return {
-      type: 'resource' as const,
-      id: c.id,
-      title: c.title_6th_grade || 'Untitled',
-      summary: c.summary_6th_grade || undefined,
-      center: c.center || undefined,
-      orgName: c.source_domain || undefined,
-      pathwayColor: color,
-      imageUrl: c.image_url || undefined,
-      href: '/content/' + c.id,
-    }
-  })
-
-  const serviceItems: FeedItem[] = feed.services.map(function (s) {
-    return {
-      type: 'service' as const,
-      id: s.service_id,
-      title: s.service_name,
-      summary: s.description_5th_grade || undefined,
-      orgName: s.org_id || undefined,
-      pathwayColor: color,
-      href: '/services/' + s.service_id,
-    }
-  })
-
-  const resources: FeedItem[] = contentItems.concat(serviceItems)
-
-  const officials: FeedItem[] = feed.officials.map(function (o) {
-    return {
-      type: 'official' as const,
-      id: o.official_id,
-      title: o.official_name,
-      role: o.title || undefined,
-      relevance: o.description_5th_grade || undefined,
-      pathwayColor: color,
-      href: '/officials/' + o.official_id,
-    }
-  })
-
-  const policies: FeedItem[] = feed.policies.map(function (p) {
-    return {
-      type: 'policy' as const,
-      id: p.policy_id,
-      title: p.policy_name,
-      summary: p.summary_5th_grade || undefined,
-      status: p.status || undefined,
-      body: p.level || undefined,
-      pathwayColor: color,
-      href: '/policies/' + p.policy_id,
-    }
-  })
-
-  return { resources, officials, policies }
-}
-
 export function Wayfinder({
   stats,
   pathwayCounts,
-  bridges,
-  topics: _topics,
-  feedsByPathway,
-  totalItems,
   newThisWeek,
   latestContent,
   centerCounts,
   organizations,
 }: WayfinderProps) {
   const { t } = useTranslation()
-  const [selectedPathway, setSelectedPathway] = useState<string | null>(null)
-  const [activeCenter, setActiveCenter] = useState<string | null>(null)
-  const [panel, setPanel] = useState<PanelData | null>(null)
 
-  const selectedTheme = selectedPathway
-    ? THEMES[selectedPathway as keyof typeof THEMES]
-    : null
-
-  const currentFeed = useMemo(function () {
-    if (!selectedPathway || !feedsByPathway[selectedPathway]) {
-      const homeResources: FeedItem[] = latestContent.map(function (c) {
-        const themeKey = c.pathway_primary as keyof typeof THEMES | null
-        const color = themeKey ? THEMES[themeKey]?.color : BRAND.accent
-        return {
-          type: 'resource' as const,
-          id: c.id,
-          title: c.title_6th_grade || t('card.untitled'),
-          summary: c.summary_6th_grade || undefined,
-          center: c.center || undefined,
-          orgName: c.source_domain || undefined,
-          pathwayColor: color ?? BRAND.accent,
-          imageUrl: c.image_url || undefined,
-          href: '/content/' + c.id,
-        }
-      })
-      return { resources: homeResources, officials: [] as FeedItem[], policies: [] as FeedItem[] }
+  const feedItems: FeedItem[] = latestContent.map(function (c) {
+    return {
+      type: 'resource' as const,
+      id: c.id,
+      title: c.title_6th_grade || t('card.untitled'),
+      summary: c.summary_6th_grade || undefined,
+      center: c.center || undefined,
+      orgName: c.source_domain || undefined,
+      pathwayColor: BRAND.accent,
+      imageUrl: c.image_url || undefined,
+      href: '/content/' + c.id,
     }
-    return feedDataToItems(feedsByPathway[selectedPathway], selectedPathway)
-  }, [selectedPathway, feedsByPathway, latestContent])
-
-  const handleSelectPathway = useCallback(function (id: string | null) {
-    setSelectedPathway(id === '' ? null : id)
-    setActiveCenter(null)
-  }, [])
-
-  const handleSelectCenter = useCallback(function (center: string | null) {
-    setActiveCenter(center)
-  }, [])
-
-  const handleItemClick = useCallback(function (item: FeedItem) {
-    setPanel({
-      type: item.type,
-      id: item.id,
-      title: item.title,
-      summary: item.summary,
-      center: item.center,
-      orgName: item.orgName,
-      role: item.role,
-      status: item.status,
-      body: item.body,
-      pathwayColor: item.pathwayColor,
-      focusAreas: [],
-    })
-  }, [])
-
-  const handleClosePanel = useCallback(function () {
-    setPanel(null)
-  }, [])
+  })
 
   return (
     <div className="min-h-screen bg-brand-bg">
-      <HomeTopBar />
+      <HomeTopBar liveCount={stats.resources} />
 
       <main className="bg-brand-bg">
+        {/* 1. Full-viewport hero */}
+        <HeroBook />
+
         <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-20">
-          {/* HOME STATE */}
-          {!selectedPathway && (
-            <>
-              {/* Hero — tagline + flower */}
-              <div className="pt-8 pb-2 relative">
-                <div
-                  className="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
-                  style={{ background: 'radial-gradient(circle, rgba(198,93,40,0.05) 0%, rgba(61,90,90,0.02) 35%, transparent 65%)' }}
-                  aria-hidden="true"
-                />
-                <p className="text-center font-serif italic text-brand-muted text-lg mb-4 relative z-10">
-                  {BRAND.tagline}
-                </p>
+          {/* 2. Four Center doorways */}
+          <CenterDoorways centerCounts={centerCounts} />
 
-                <div className="max-w-2xl mx-auto">
-                  <EmbeddableCircles
-                    onSelectPathway={handleSelectPathway}
-                    pathwayCounts={pathwayCounts}
-                    selectedPathway={selectedPathway}
-                  />
-                </div>
-                <p className="text-center text-brand-muted/50 text-xs mt-1 font-serif italic">
-                  {t('wayfinder.tap_hint')}
-                </p>
-              </div>
+          {/* 3. Persona selector */}
+          <section className="py-10">
+            <h2 className="font-serif text-xl font-bold tracking-tight mb-1">Not sure where to start?</h2>
+            <p className="text-sm text-brand-muted mb-4 font-serif italic">Find your path — pick the one that sounds like you.</p>
+            <PersonaSelector />
+          </section>
 
-              {/* Pathway spectrum bar */}
-              <div className="flex h-1 max-w-md mx-auto rounded-full overflow-hidden mb-12 mt-3">
-                {Object.values(THEMES).map(function (theme, i) {
-                  return (
-                    <div key={i} className="flex-1 transition-all duration-300 hover:flex-[3]" style={{ backgroundColor: theme.color }} title={theme.name} />
-                  )
-                })}
-              </div>
+          {/* 4. Impact metrics */}
+          <ImpactMetrics stats={{
+            resources: stats.resources,
+            organizations: organizations,
+            officials: stats.officials,
+            policies: stats.policies,
+          }} />
 
-              {/* Four Centers */}
-              <CentersGrid centerCounts={centerCounts} />
+          {/* 5. Pathway ribbons */}
+          <PathwayRibbons pathwayCounts={pathwayCounts} />
 
-              {/* Impact Metrics */}
-              <ImpactMetrics stats={{
-                resources: stats.resources,
-                organizations: organizations,
-                officials: stats.officials,
-                policies: stats.policies,
-              }} />
-
-              {/* Latest Content header */}
-              <section>
-                <div className="flex items-center justify-between mb-4">
+          {/* 6. Latest content preview */}
+          {feedItems.length > 0 && (
+            <section className="py-12">
+              <div className="flex items-center justify-between mb-6">
+                <div>
                   <h2 className="font-serif text-2xl font-bold tracking-tight">{t('wayfinder.whats_new')}</h2>
                   {newThisWeek > 0 && (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700 mt-1">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
@@ -284,82 +142,22 @@ export function Wayfinder({
                     </span>
                   )}
                 </div>
-              </section>
-            </>
-          )}
-
-          {/* PATHWAY SELECTED STATE */}
-          {selectedPathway && selectedTheme && (
-            <div className="pt-6 relative">
-              <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${selectedTheme.color}08 0%, transparent 70%)` }}
-                aria-hidden="true"
-              />
-
-              <div className="max-w-2xl mx-auto mb-4">
-                <EmbeddableCircles
-                  onSelectPathway={handleSelectPathway}
-                  pathwayCounts={pathwayCounts}
-                  selectedPathway={selectedPathway}
-                />
+                <Link
+                  href="/library"
+                  className="inline-flex items-center gap-1 text-sm font-semibold hover:underline"
+                  style={{ color: BRAND.accent }}
+                >
+                  {t('home.see_all')} <ArrowRight size={14} />
+                </Link>
               </div>
 
-              <div className="mb-6 pb-4 relative z-10" style={{ borderBottom: `2px solid ${selectedTheme.color}15` }}>
-                <div className="flex items-center gap-4 mb-3">
-                  {(() => {
-                    const Icon = PATHWAY_ICONS[selectedPathway] || Globe
-                    return (
-                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: selectedTheme.color + '15' }}>
-                        <Icon size={28} style={{ color: selectedTheme.color }} />
-                      </div>
-                    )
-                  })()}
-                  <div>
-                    <h2 className="font-serif text-3xl font-bold tracking-tight" style={{ color: selectedTheme.color }}>{selectedTheme.name}</h2>
-                    <p className="text-sm text-brand-muted font-serif italic mt-0.5">
-                      {pathwayCounts[selectedPathway] ?? 0} {t('wayfinder.pathway_desc')}
-                    </p>
-                  </div>
-                </div>
-                {bridges.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 mt-3">
-                    <span className="text-xs text-brand-muted font-serif italic">{t('wayfinder.connected_to')}</span>
-                    {bridges
-                      .filter(function (b) { return b[0] === selectedPathway || b[1] === selectedPathway })
-                      .slice(0, 5)
-                      .map(function (b, i) {
-                        const otherId = b[0] === selectedPathway ? b[1] : b[0]
-                        const otherTheme = THEMES[otherId as keyof typeof THEMES]
-                        if (!otherTheme) return null
-                        return (
-                          <button
-                            key={i}
-                            onClick={function () { handleSelectPathway(otherId) }}
-                            className="inline-flex items-center gap-1.5 text-xs font-semibold cursor-pointer transition-all duration-200 hover:underline"
-                            style={{ borderLeft: `3px solid ${otherTheme.color}`, paddingLeft: 6, color: otherTheme.color }}
-                          >
-                            {otherTheme.name}
-                            <span className="text-brand-muted ml-0.5">({b[2]})</span>
-                          </button>
-                        )
-                      })}
-                  </div>
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {feedItems.map(function (item) {
+                  return <FeedCard key={item.id} item={item} variant="grid" />
+                })}
               </div>
-            </div>
+            </section>
           )}
-
-          {/* BRAIDED FEED */}
-          <BraidedFeed
-            resources={currentFeed.resources}
-            officials={currentFeed.officials}
-            policies={currentFeed.policies}
-            activeCenter={activeCenter}
-            pathwayColor={selectedTheme?.color}
-            onSelectCenter={handleSelectCenter}
-            onItemClick={handleItemClick}
-          />
         </div>
 
         {/* Footer */}
@@ -372,8 +170,6 @@ export function Wayfinder({
           </p>
         </div>
       </main>
-
-      <WayfinderPanel panel={panel} onClose={handleClosePanel} />
     </div>
   )
 }

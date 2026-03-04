@@ -70,6 +70,13 @@ const en: Record<string, string> = {
   'home.stats_officials': 'Officials',
   'home.stats_organizations': 'Organizations',
   'home.stats_policies': 'Policies',
+  'home.choose_path': 'Choose Your Path',
+  'home.choose_subtitle': 'Every journey through community life starts with a question',
+  'home.begin_here': 'Begin here',
+  'home.see_all': 'See all',
+  'hero.title_line1': 'Your Community,',
+  'hero.title_line2': 'Your Choice',
+  'hero.scroll_prompt': 'Where would you like to begin?',
 
   // Help page
   'help.title': 'Available Resources',
@@ -128,6 +135,23 @@ const en: Record<string, string> = {
   'civicHub.search_officials': 'Search officials...',
   'civicHub.view_all_officials': 'View all officials',
   'civicHub.view_all_policies': 'View all policies',
+
+  // Geography page
+  'geo.title': 'Geography',
+  'geo.subtitle': 'Explore Your Community',
+  'geo.select_super': 'Select a super neighborhood',
+  'geo.select_neighborhood': 'Select a neighborhood',
+  'geo.map_layers': 'Map Layers',
+  'geo.services_nearby': 'Services Nearby',
+  'geo.officials_here': 'Officials Representing This Area',
+  'geo.organizations_here': 'Organizations in This Area',
+  'geo.policies_impacting': 'Policies Impacting This Area',
+  'geo.census_info': 'Census & Demographics',
+  'geo.no_selection': 'Enter a ZIP code or select a neighborhood to explore your community.',
+  'geo.explore_prompt': 'Start exploring by entering your ZIP code or choosing a super neighborhood above.',
+  'geo.filter_markers': 'Filter Markers',
+  'geo.show_all_layers': 'Show All',
+  'geo.hide_all_layers': 'Hide All',
 
   // Explore page
   'explore.title': 'Explore Topics',
@@ -267,7 +291,7 @@ const en: Record<string, string> = {
   'discover.available_resources': 'Available Resources',
   'discover.topics': 'Explore Topics',
   'discover.learning': 'Learning Paths',
-  'discover.neighborhoods': 'Neighborhoods',
+  'discover.geography': 'Geography',
   'discover.foundations': 'Foundations',
 
   // Guide page
@@ -496,6 +520,13 @@ const es: Record<string, string> = {
   'home.stats_officials': 'Funcionarios',
   'home.stats_organizations': 'Organizaciones',
   'home.stats_policies': 'Políticas',
+  'home.choose_path': 'Elige Tu Camino',
+  'home.choose_subtitle': 'Cada viaje por la vida comunitaria comienza con una pregunta',
+  'home.begin_here': 'Comience aquí',
+  'home.see_all': 'Ver todos',
+  'hero.title_line1': 'Tu Comunidad,',
+  'hero.title_line2': 'Tu Elección',
+  'hero.scroll_prompt': '¿Por dónde le gustaría comenzar?',
 
   // Help page
   'help.title': 'Recursos Disponibles',
@@ -554,6 +585,23 @@ const es: Record<string, string> = {
   'civicHub.search_officials': 'Buscar funcionarios...',
   'civicHub.view_all_officials': 'Ver todos los funcionarios',
   'civicHub.view_all_policies': 'Ver todas las políticas',
+
+  // Geography page
+  'geo.title': 'Geografía',
+  'geo.subtitle': 'Explore Su Comunidad',
+  'geo.select_super': 'Seleccione un super vecindario',
+  'geo.select_neighborhood': 'Seleccione un vecindario',
+  'geo.map_layers': 'Capas del Mapa',
+  'geo.services_nearby': 'Servicios Cercanos',
+  'geo.officials_here': 'Funcionarios que Representan Esta Área',
+  'geo.organizations_here': 'Organizaciones en Esta Área',
+  'geo.policies_impacting': 'Políticas que Impactan Esta Área',
+  'geo.census_info': 'Censo y Demografía',
+  'geo.no_selection': 'Ingrese un código postal o seleccione un vecindario para explorar su comunidad.',
+  'geo.explore_prompt': 'Comience explorando ingresando su código postal o eligiendo un super vecindario arriba.',
+  'geo.filter_markers': 'Filtrar Marcadores',
+  'geo.show_all_layers': 'Mostrar Todo',
+  'geo.hide_all_layers': 'Ocultar Todo',
 
   // Explore page
   'explore.title': 'Explorar Temas',
@@ -693,7 +741,7 @@ const es: Record<string, string> = {
   'discover.available_resources': 'Recursos Disponibles',
   'discover.topics': 'Explorar Temas',
   'discover.learning': 'Rutas de Aprendizaje',
-  'discover.neighborhoods': 'Vecindarios',
+  'discover.geography': 'Geografía',
   'discover.foundations': 'Fundaciones',
 
   // Guide page
@@ -922,6 +970,13 @@ const vi: Record<string, string> = {
   'home.stats_officials': 'Quan Chức',
   'home.stats_organizations': 'Tổ Chức',
   'home.stats_policies': 'Chính Sách',
+  'home.choose_path': 'Chọn Con Đường Của Bạn',
+  'home.choose_subtitle': 'Mỗi hành trình qua đời sống cộng đồng bắt đầu bằng một câu hỏi',
+  'home.begin_here': 'Bắt đầu tại đây',
+  'home.see_all': 'Xem tất cả',
+  'hero.title_line1': 'Cộng Đồng Của Bạn,',
+  'hero.title_line2': 'Sự Lựa Chọn Của Bạn',
+  'hero.scroll_prompt': 'Bạn muốn bắt đầu từ đâu?',
 
   // Help page
   'help.title': 'Tài Nguyên Có Sẵn',
@@ -980,6 +1035,23 @@ const vi: Record<string, string> = {
   'civicHub.search_officials': 'Tìm quan chức...',
   'civicHub.view_all_officials': 'Xem tất cả quan chức',
   'civicHub.view_all_policies': 'Xem tất cả chính sách',
+
+  // Geography page
+  'geo.title': 'Địa Lý',
+  'geo.subtitle': 'Khám Phá Cộng Đồng Của Bạn',
+  'geo.select_super': 'Chọn một siêu khu phố',
+  'geo.select_neighborhood': 'Chọn một khu phố',
+  'geo.map_layers': 'Lớp Bản Đồ',
+  'geo.services_nearby': 'Dịch Vụ Gần Đây',
+  'geo.officials_here': 'Quan Chức Đại Diện Khu Vực Này',
+  'geo.organizations_here': 'Tổ Chức Trong Khu Vực Này',
+  'geo.policies_impacting': 'Chính Sách Ảnh Hưởng Khu Vực Này',
+  'geo.census_info': 'Điều Tra Dân Số & Nhân Khẩu Học',
+  'geo.no_selection': 'Nhập mã bưu điện hoặc chọn một khu phố để khám phá cộng đồng của bạn.',
+  'geo.explore_prompt': 'Bắt đầu khám phá bằng cách nhập mã bưu điện hoặc chọn một siêu khu phố ở trên.',
+  'geo.filter_markers': 'Lọc Điểm Đánh Dấu',
+  'geo.show_all_layers': 'Hiện Tất Cả',
+  'geo.hide_all_layers': 'Ẩn Tất Cả',
 
   // Explore page
   'explore.title': 'Khám Phá Chủ Đề',
@@ -1119,7 +1191,7 @@ const vi: Record<string, string> = {
   'discover.available_resources': 'Tài Nguyên Có Sẵn',
   'discover.topics': 'Khám Phá Chủ Đề',
   'discover.learning': 'Lộ Trình Học Tập',
-  'discover.neighborhoods': 'Khu Phố',
+  'discover.geography': 'Địa Lý',
   'discover.foundations': 'Tổ Chức Từ Thiện',
 
   // Guide page
