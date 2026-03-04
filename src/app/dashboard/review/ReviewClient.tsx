@@ -32,10 +32,15 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
   const [selected, setSelected] = useState<ReviewItem | null>(null)
   const [acting, setActing] = useState(false)
   const [rejectNotes, setRejectNotes] = useState('')
+  const [page, setPage] = useState(1)
+  const PAGE_SIZE = 25
 
   const filtered = activeTab === 'all'
     ? items
     : items.filter((i: ReviewItem) => i.review_status === activeTab)
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   const tabCounts: Record<string, number> = {
     all: items.length,
@@ -75,7 +80,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         {STATUS_TABS.map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => { setActiveTab(tab); setPage(1) }}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab
                 ? 'bg-brand-accent text-white'
@@ -103,7 +108,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
             </tr>
           </thead>
           <tbody>
-            {filtered.map((item: ReviewItem) => {
+            {paginated.map((item: ReviewItem) => {
               const c = item.ai_classification as AiClassification | null
               return (
                 <tr
@@ -133,6 +138,55 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
           <div className="text-center py-12 text-brand-muted">No items in this category.</div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between bg-white rounded-lg border border-brand-border px-4 py-3">
+          <span className="text-sm text-brand-muted">
+            Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page <= 1}
+              className="px-3 py-1.5 text-sm font-medium rounded-md border border-brand-border hover:bg-brand-bg disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((p) => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+              .reduce<(number | string)[]>((acc, p, i, arr) => {
+                if (i > 0 && p - (arr[i - 1] as number) > 1) acc.push('...')
+                acc.push(p)
+                return acc
+              }, [])
+              .map((p, i) =>
+                typeof p === 'string' ? (
+                  <span key={'ellipsis-' + i} className="text-brand-muted text-sm px-1">...</span>
+                ) : (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`w-8 h-8 text-sm font-medium rounded-md ${
+                      p === page
+                        ? 'bg-brand-accent text-white'
+                        : 'border border-brand-border hover:bg-brand-bg'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                )
+              )}
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page >= totalPages}
+              className="px-3 py-1.5 text-sm font-medium rounded-md border border-brand-border hover:bg-brand-bg disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Detail Panel */}
       <SlidePanel open={!!selected} onClose={() => setSelected(null)} title="Review Detail">

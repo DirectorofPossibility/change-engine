@@ -127,7 +127,7 @@ export async function getReviewQueue() {
     .from('content_review_queue')
     .select('*, content_inbox(*)')
     .order('created_at', { ascending: false })
-    .limit(200)
+    .limit(1000)
   return data || []
 }
 
