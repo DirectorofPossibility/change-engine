@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: '/officials', key: 'nav.officials' },
   { href: '/policies', key: 'nav.policies' },
   { href: '/elections', key: 'nav.elections' },
+  { href: '/library', key: 'nav.library' },
 ]
 
 export function Header() {

@@ -30,6 +30,7 @@ const en: Record<string, string> = {
   'nav.officials': 'Officials',
   'nav.policies': 'Policy',
   'nav.elections': 'Elections',
+  'nav.library': 'Library',
   'nav.search_placeholder': 'Search...',
   'nav.zip_prompt': 'Start with your ZIP code',
 
@@ -433,6 +434,7 @@ const es: Record<string, string> = {
   'nav.officials': 'Funcionarios',
   'nav.policies': 'Políticas',
   'nav.elections': 'Elecciones',
+  'nav.library': 'Biblioteca',
   'nav.search_placeholder': 'Buscar...',
   'nav.zip_prompt': 'Comience con su código postal',
 
@@ -836,6 +838,7 @@ const vi: Record<string, string> = {
   'nav.officials': 'Quan Chức',
   'nav.policies': 'Chính Sách',
   'nav.elections': 'Bầu Cử',
+  'nav.library': 'Thư Viện',
   'nav.search_placeholder': 'Tìm kiếm...',
   'nav.zip_prompt': 'Bắt đầu với mã bưu điện',
 
