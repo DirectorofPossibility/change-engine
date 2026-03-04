@@ -50,6 +50,79 @@ export async function translateAll(): Promise<{ ok: true; data: unknown } | { ok
  * Calls the scoring logic directly — no HTTP self-fetch needed.
  * Called from the "Score Now" button on /dashboard/fidelity.
  */
+/**
+ * Enrich entities via the appropriate API route.
+ * Maps fidelity entity_type → API route + params.
+ *
+ * - organization → /api/enrich-entity (table: organizations)
+ * - official     → /api/enrich-entity (table: elected_officials)
+ * - content      → /api/enrich         (inbox_ids)
+ */
+export async function enrichEntities(
+  entityType: string,
+  entityIds: string[],
+): Promise<{ ok: true; data: unknown } | { ok: false; error: string }> {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { ok: false, error: 'Unauthorized' }
+
+    const CRON_SECRET = process.env.CRON_SECRET
+    if (!CRON_SECRET) return { ok: false, error: 'Server configuration missing (CRON_SECRET)' }
+
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+      || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+
+    const ENTITY_API_MAP: Record<string, { route: string; body: (ids: string[]) => unknown }> = {
+      organization: {
+        route: '/api/enrich-entity',
+        body: (ids) => ({ table: 'organizations', ids, force: true }),
+      },
+      official: {
+        route: '/api/enrich-entity',
+        body: (ids) => ({ table: 'elected_officials', ids, force: true }),
+      },
+      content: {
+        route: '/api/enrich',
+        body: (ids) => ({ inbox_ids: ids }),
+      },
+    }
+
+    const mapping = ENTITY_API_MAP[entityType]
+    if (!mapping) return { ok: false, error: `No enrichment API for entity type: ${entityType}` }
+
+    // For content entities, entity_id = content_published.id but the enrich API needs inbox_id
+    let apiIds = entityIds
+    if (entityType === 'content') {
+      const { data: rows } = await supabase
+        .from('content_published' as any)
+        .select('inbox_id')
+        .in('id', entityIds)
+      apiIds = (rows || []).map((r: any) => r.inbox_id).filter(Boolean)
+      if (apiIds.length === 0) return { ok: false, error: 'No matching inbox_ids found for content entities' }
+    }
+
+    const res = await fetch(`${baseUrl}${mapping.route}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${CRON_SECRET}`,
+      },
+      body: JSON.stringify(mapping.body(apiIds)),
+    })
+
+    if (!res.ok) {
+      const text = await res.text()
+      return { ok: false, error: `Enrich API returned ${res.status}: ${text}` }
+    }
+
+    const data = await res.json()
+    return { ok: true, data }
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : 'Unknown error' }
+  }
+}
+
 export async function scoreAllEntities(): Promise<{ ok: true; data: unknown } | { ok: false; error: string }> {
   try {
     const supabase = await createClient()

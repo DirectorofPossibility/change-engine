@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { scoreAllEntities } from '@/lib/data/edge-functions'
+import { scoreAllEntities, enrichEntities } from '@/lib/data/edge-functions'
 import { TierBadge } from '@/components/ui/TierBadge'
 import {
   ENTITY_TYPE_META,
@@ -17,6 +17,7 @@ interface Props {
 
 const TIERS = ['platinum', 'gold', 'silver', 'bronze'] as const
 const PAGE_SIZE = 50
+const ENRICHABLE_TYPES = new Set(['organization', 'official', 'content'])
 
 export function FidelityClient({ overview }: Props) {
   const [scoring, setScoring] = useState(false)
@@ -26,6 +27,8 @@ export function FidelityClient({ overview }: Props) {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [enriching, setEnriching] = useState<string | null>(null) // 'bronze-{type}' or entity_id
+  const [enrichResult, setEnrichResult] = useState<string | null>(null)
 
   async function handleScore() {
     setScoring(true)
@@ -40,6 +43,60 @@ export function FidelityClient({ overview }: Props) {
       alert('Scoring failed: ' + (err as Error).message)
     } finally {
       setScoring(false)
+    }
+  }
+
+  async function handleEnrichBronze(entityType: string, e: React.MouseEvent) {
+    e.stopPropagation()
+    const key = `bronze-${entityType}`
+    setEnriching(key)
+    setEnrichResult(null)
+    try {
+      // Fetch bronze entity IDs for this type
+      const supabase = createClient()
+      const { data: bronzeRows } = await supabase
+        .from('entity_completeness' as any)
+        .select('entity_id')
+        .eq('entity_type', entityType)
+        .eq('completeness_tier', 'bronze')
+        .limit(20)
+      const ids = (bronzeRows as unknown as { entity_id: string }[] || []).map(r => r.entity_id)
+      if (ids.length === 0) {
+        setEnrichResult('No bronze entities to enrich.')
+        return
+      }
+      const result = await enrichEntities(entityType, ids)
+      if (!result.ok) {
+        setEnrichResult(`Enrichment failed: ${result.error}`)
+        return
+      }
+      // Re-score and refresh
+      await scoreAllEntities()
+      window.location.reload()
+    } catch (err) {
+      setEnrichResult(`Error: ${(err as Error).message}`)
+    } finally {
+      setEnriching(null)
+    }
+  }
+
+  async function handleEnrichRow(entityType: string, entityId: string) {
+    setEnriching(entityId)
+    setEnrichResult(null)
+    try {
+      const result = await enrichEntities(entityType, [entityId])
+      if (!result.ok) {
+        setEnrichResult(`Enrichment failed: ${result.error}`)
+        return
+      }
+      // Re-score then refresh the drilldown
+      await scoreAllEntities()
+      fetchEntities(entityType, tierFilter, page)
+      setEnrichResult('Enriched successfully.')
+    } catch (err) {
+      setEnrichResult(`Error: ${(err as Error).message}`)
+    } finally {
+      setEnriching(null)
     }
   }
 
@@ -118,6 +175,16 @@ export function FidelityClient({ overview }: Props) {
         </button>
       </div>
 
+      {/* Enrich status */}
+      {enrichResult && (
+        <div className="flex items-center justify-between px-4 py-2 rounded-lg bg-gray-50 border border-brand-border text-sm text-brand-muted">
+          <span>{enrichResult}</span>
+          <button onClick={() => setEnrichResult(null)} className="text-xs text-brand-muted hover:text-brand-text ml-4">
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Overview Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {overview.map((o) => {
@@ -181,6 +248,17 @@ export function FidelityClient({ overview }: Props) {
                     </div>
                   ))}
                 </div>
+              )}
+
+              {/* Enrich Bronze button */}
+              {ENRICHABLE_TYPES.has(o.entityType) && o.tiers.bronze > 0 && (
+                <button
+                  onClick={(e) => handleEnrichBronze(o.entityType, e)}
+                  disabled={enriching === `bronze-${o.entityType}`}
+                  className="mt-3 w-full px-3 py-1.5 text-xs font-medium rounded-lg border border-orange-300 text-orange-700 bg-orange-50 hover:bg-orange-100 disabled:opacity-50 transition-colors"
+                >
+                  {enriching === `bronze-${o.entityType}` ? 'Enriching...' : `Enrich ${o.tiers.bronze} Bronze`}
+                </button>
               )}
             </button>
           )
@@ -251,6 +329,9 @@ export function FidelityClient({ overview }: Props) {
                       <th className="text-center px-4 py-3 font-medium text-brand-muted w-24">Tier</th>
                       <th className="text-center px-4 py-3 font-medium text-brand-muted w-24">Filled</th>
                       <th className="text-left px-4 py-3 font-medium text-brand-muted">Critical Missing</th>
+                      {selectedType && ENRICHABLE_TYPES.has(selectedType) && (
+                        <th className="text-center px-4 py-3 font-medium text-brand-muted w-24">Action</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -282,6 +363,17 @@ export function FidelityClient({ overview }: Props) {
                             ))}
                           </div>
                         </td>
+                        {selectedType && ENRICHABLE_TYPES.has(selectedType) && (
+                          <td className="px-4 py-3 text-center">
+                            <button
+                              onClick={() => handleEnrichRow(selectedType, e.entity_id)}
+                              disabled={enriching === e.entity_id}
+                              className="px-2.5 py-1 text-[11px] font-medium rounded border border-brand-accent/30 text-brand-accent hover:bg-brand-accent/10 disabled:opacity-50 transition-colors"
+                            >
+                              {enriching === e.entity_id ? 'Enriching...' : 'Enrich'}
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
