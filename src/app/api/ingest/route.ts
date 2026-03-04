@@ -692,6 +692,9 @@ Return JSON:
     review_status: reviewStatus,
   })
 
+  // Step 7b: Populate junction tables for this content
+  await populateJunctionTables(inboxId, enrichedClassification)
+
   // Step 8: Translate to Spanish + Vietnamese
   const translations: Record<string, any> = {}
   const title6 = classification.title_6th_grade || meta.title
@@ -972,6 +975,9 @@ Return JSON:
     confidence,
     review_status: preScrapedReviewStatus,
   })
+
+  // Populate junction tables for this content
+  await populateJunctionTables(inboxId, enrichedClassification)
 
   // Translate
   const translations: Record<string, any> = {}
