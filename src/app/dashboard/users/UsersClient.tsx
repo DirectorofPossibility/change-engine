@@ -10,7 +10,7 @@
 'use client'
 
 import { useState } from 'react'
-import { assignPartnerRole, assignAdminRole, revokeToUser, promoteToNeighbor } from './actions'
+import { assignPartnerRole, assignAdminRole, revokeToUser, promoteToNeighbor, setAccountStatus } from './actions'
 import type { UserProfile, Organization } from './page'
 
 const ROLES = ['all', 'user', 'neighbor', 'partner', 'admin'] as const
@@ -20,6 +20,18 @@ const ROLE_BADGE_STYLES: Record<string, string> = {
   neighbor: 'bg-blue-100 text-blue-700',
   partner: 'bg-green-100 text-green-700',
   admin: 'bg-red-100 text-red-700',
+}
+
+const STATUS_BADGE_STYLES: Record<string, string> = {
+  active: 'bg-green-100 text-green-700',
+  read_only: 'bg-yellow-100 text-yellow-700',
+  locked: 'bg-red-100 text-red-700',
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  active: 'Active',
+  read_only: 'Read-Only',
+  locked: 'Locked',
 }
 
 export function UsersClient({
@@ -104,6 +116,18 @@ export function UsersClient({
     setLoading(null)
   }
 
+  async function handleSetStatus(userId: string, status: 'active' | 'read_only' | 'locked') {
+    if (status === 'locked' && !window.confirm('Lock this account? The user will be blocked from logging in.')) return
+    setLoading(userId)
+    const res = await setAccountStatus(userId, status)
+    if ('error' in res) {
+      alert(res.error)
+    } else {
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, account_status: status } : u))
+    }
+    setLoading(null)
+  }
+
   // Count by role for the filter bar
   const roleCounts: Record<string, number> = { all: users.length }
   for (const u of users) {
@@ -168,6 +192,7 @@ export function UsersClient({
             ) : (
               filtered.map((user) => {
                 const role = (user.role || 'user') as string
+                const status = (user.account_status || 'active') as string
                 const isLoading = loading === user.id
                 const isAssigningPartner = assigningPartner === user.id
 
@@ -186,11 +211,18 @@ export function UsersClient({
                       {user.email || '-'}
                     </td>
 
-                    {/* Role Badge */}
+                    {/* Role & Status Badges */}
                     <td className="px-4 py-3">
-                      <span className={`inline-block text-xs font-medium px-2.5 py-0.5 rounded-full capitalize ${ROLE_BADGE_STYLES[role] || ROLE_BADGE_STYLES.user}`}>
-                        {role}
-                      </span>
+                      <div className="flex gap-1.5 flex-wrap">
+                        <span className={`inline-block text-xs font-medium px-2.5 py-0.5 rounded-full capitalize ${ROLE_BADGE_STYLES[role] || ROLE_BADGE_STYLES.user}`}>
+                          {role}
+                        </span>
+                        {status !== 'active' && (
+                          <span className={`inline-block text-xs font-medium px-2.5 py-0.5 rounded-full ${STATUS_BADGE_STYLES[status] || ''}`}>
+                            {STATUS_LABELS[status] || status}
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     {/* Organization */}
@@ -240,7 +272,7 @@ export function UsersClient({
                       ) : (
                         /* Action buttons */
                         <div className="flex gap-2 flex-wrap">
-                          {role !== 'partner' && (
+                          {role !== 'admin' && (
                             <button
                               onClick={() => setAssigningPartner(user.id)}
                               className="text-xs text-green-700 bg-green-50 hover:bg-green-100 px-2 py-1 rounded-md transition-colors"
@@ -270,6 +302,47 @@ export function UsersClient({
                               className="text-xs text-gray-700 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-md transition-colors"
                             >
                               Revoke Role
+                            </button>
+                          )}
+                          {/* Account status actions */}
+                          {status === 'active' && (
+                            <>
+                              <button
+                                onClick={() => handleSetStatus(user.id, 'read_only')}
+                                className="text-xs text-yellow-700 bg-yellow-50 hover:bg-yellow-100 px-2 py-1 rounded-md transition-colors"
+                              >
+                                Set Read-Only
+                              </button>
+                              <button
+                                onClick={() => handleSetStatus(user.id, 'locked')}
+                                className="text-xs text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md transition-colors"
+                              >
+                                Lock Account
+                              </button>
+                            </>
+                          )}
+                          {status === 'read_only' && (
+                            <>
+                              <button
+                                onClick={() => handleSetStatus(user.id, 'active')}
+                                className="text-xs text-green-700 bg-green-50 hover:bg-green-100 px-2 py-1 rounded-md transition-colors"
+                              >
+                                Activate
+                              </button>
+                              <button
+                                onClick={() => handleSetStatus(user.id, 'locked')}
+                                className="text-xs text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md transition-colors"
+                              >
+                                Lock Account
+                              </button>
+                            </>
+                          )}
+                          {status === 'locked' && (
+                            <button
+                              onClick={() => handleSetStatus(user.id, 'active')}
+                              className="text-xs text-green-700 bg-green-50 hover:bg-green-100 px-2 py-1 rounded-md transition-colors"
+                            >
+                              Activate
                             </button>
                           )}
                         </div>

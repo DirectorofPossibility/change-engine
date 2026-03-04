@@ -220,6 +220,11 @@ export default async function MyDashboardPage() {
               <Link href="/officials/lookup" className="block bg-white rounded-lg border border-brand-border p-3 text-sm text-brand-text hover:bg-brand-bg">
                 Find My Representatives
               </Link>
+              {profile?.role && ['neighbor', 'partner', 'admin'].includes(profile.role) && (
+                <Link href="/me/submit" className="block bg-brand-accent/5 rounded-lg border border-brand-accent/20 p-3 text-sm text-brand-accent hover:bg-brand-accent/10">
+                  Share a Resource
+                </Link>
+              )}
             </div>
           </section>
         </div>

@@ -10,6 +10,7 @@ export interface UserProfile {
   role: string
   org_id: string | null
   created_at: string | null
+  account_status: string
 }
 
 export interface Organization {
@@ -24,7 +25,7 @@ export default async function UsersPage() {
 
   const { data: users, error: usersError } = await supabase
     .from('user_profiles')
-    .select('id, auth_id, display_name, email, role, org_id, created_at')
+    .select('id, auth_id, display_name, email, role, org_id, created_at, account_status')
     .order('created_at', { ascending: false })
 
   const { data: orgs } = await supabase
@@ -43,7 +44,7 @@ export default async function UsersPage() {
 
   return (
     <UsersClient
-      initialUsers={(users ?? []) as UserProfile[]}
+      initialUsers={(users ?? []) as unknown as UserProfile[]}
       organizations={(orgs ?? []) as Organization[]}
     />
   )

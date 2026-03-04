@@ -74,6 +74,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(libraryLoginUrl)
   }
 
+  // Check account status for authenticated users (skip for /account-locked itself)
+  if (user && !request.nextUrl.pathname.startsWith('/account-locked')) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('account_status')
+      .eq('auth_id', user.id)
+      .single()
+
+    if ((profile as any)?.account_status === 'locked') {
+      const lockedUrl = request.nextUrl.clone()
+      lockedUrl.pathname = '/account-locked'
+      lockedUrl.search = ''
+      return NextResponse.redirect(lockedUrl)
+    }
+  }
+
   return supabaseResponse
 }
 
@@ -84,5 +100,5 @@ export async function middleware(request: NextRequest) {
  * these patterns will invoke the {@link middleware} function.
  */
 export const config = {
-  matcher: ['/dashboard/:path*', '/me/:path*', '/library/:path*'],
+  matcher: ['/dashboard/:path*', '/me/:path*', '/library/:path*', '/account-locked'],
 }

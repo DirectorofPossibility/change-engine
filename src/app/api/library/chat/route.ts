@@ -7,6 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 import { searchChunks } from '@/lib/data/library'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -35,6 +36,24 @@ async function supaRest(method: string, path: string, body?: unknown) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth + account status check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    }
+
+    const { data: profileRow } = await supabase
+      .from('user_profiles')
+      .select('account_status')
+      .eq('auth_id', user.id)
+      .single()
+
+    const acctStatus = (profileRow as any)?.account_status
+    if (acctStatus === 'read_only' || acctStatus === 'locked') {
+      return NextResponse.json({ error: 'Your account does not have chat permissions' }, { status: 403 })
+    }
+
     const body = await req.json()
     const { message, session_id } = body
 

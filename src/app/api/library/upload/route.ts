@@ -20,6 +20,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
     }
 
+    // Check account status
+    const { data: profileRow } = await supabase
+      .from('user_profiles')
+      .select('account_status')
+      .eq('auth_id', user.id)
+      .single()
+
+    const acctStatus = (profileRow as any)?.account_status
+    if (acctStatus === 'read_only' || acctStatus === 'locked') {
+      return NextResponse.json({ error: 'Your account does not have upload permissions' }, { status: 403 })
+    }
+
     const formData = await req.formData()
     const file = formData.get('file') as File | null
     const title = (formData.get('title') as string) || ''

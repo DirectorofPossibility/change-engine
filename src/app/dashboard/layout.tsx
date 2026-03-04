@@ -24,12 +24,36 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login?redirect=/dashboard')
   }
 
+  // ── Fetch user role & org ──
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role, org_id')
+    .eq('auth_id', user.id)
+    .single()
+
+  const role = profile?.role || 'user'
+
+  // Restrict dashboard to admins and partners only
+  if (role !== 'admin' && role !== 'partner') {
+    redirect('/me')
+  }
+
+  let orgName: string | null = null
+  if (role === 'partner' && profile?.org_id) {
+    const { data: org } = await supabase
+      .from('organizations')
+      .select('org_name')
+      .eq('org_id', profile.org_id)
+      .single()
+    orgName = org?.org_name || null
+  }
+
   // ── Sidebar data ──
   const stats = await getPipelineStats()
 
   return (
     <div className="min-h-screen bg-brand-bg">
-      <Sidebar pipelineStats={stats} />
+      <Sidebar pipelineStats={stats} role={role} orgName={orgName} />
       <main className="ml-60 min-h-screen p-8">
         {children}
       </main>

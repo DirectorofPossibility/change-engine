@@ -59,3 +59,17 @@ export async function revokeToUser(userId: string) {
   revalidatePath('/dashboard/users')
   return { success: true }
 }
+
+export async function setAccountStatus(userId: string, status: 'active' | 'read_only' | 'locked') {
+  await requireAdmin()
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('user_profiles')
+    .update({ account_status: status } as any)
+    .eq('id', userId)
+
+  if (error) return { error: error.message }
+  revalidatePath('/dashboard/users')
+  return { success: true }
+}
