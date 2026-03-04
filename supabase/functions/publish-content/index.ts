@@ -68,7 +68,7 @@ Deno.serve(async (req: Request) => {
     const inboxIds = queue.map((q: { inbox_id: string }) => q.inbox_id);
     const inbox = await supabaseGet(
       'content_inbox',
-      `id=in.(${inboxIds.join(',')})&select=id,source_url,source_domain,title,description,image_url`
+      `id=in.(${inboxIds.join(',')})&select=id,source_url,source_domain,title,description,extracted_text,image_url`
     );
 
     const inboxMap: Record<string, Record<string, unknown>> = {};
@@ -125,6 +125,7 @@ Deno.serve(async (req: Request) => {
           geographic_scope: c.geographic_scope || 'Houston',
           title_6th_grade: c.title_6th_grade || (inboxItem.title as string) || 'Untitled',
           summary_6th_grade: c.summary_6th_grade || (inboxItem.description as string) || '',
+          body: c.body_6th_grade || null,
           action_donate: actions.donate_url || null,
           action_volunteer: actions.volunteer_url || null,
           action_signup: actions.signup_url || null,
@@ -174,6 +175,7 @@ Deno.serve(async (req: Request) => {
           geographic_scope: 'Houston Metro',
           title_6th_grade: c.title_6th_grade || (inboxItem.title as string) || 'Untitled',
           summary_6th_grade: c.summary_6th_grade || (inboxItem.description as string) || '',
+          body: c.body_6th_grade || null,
           confidence: item.confidence,
           classification_reasoning: c.reasoning || '',
           is_featured: false,

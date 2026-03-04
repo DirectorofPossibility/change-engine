@@ -58,6 +58,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   // Fetch translations if non-English
   let translatedTitle: string | null = null
   let translatedSummary: string | null = null
+  let translatedBody: string | null = null
   let isTranslated = false
   if (langConfig && langConfig.langId && item.inbox_id) {
     const { data: translations } = await supabase
@@ -69,6 +70,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       translations.forEach(function (t) {
         if ((t.field_name === 'title' || t.field_name === 'title_6th_grade') && t.translated_text) { translatedTitle = t.translated_text; isTranslated = true }
         if ((t.field_name === 'summary' || t.field_name === 'summary_6th_grade') && t.translated_text) { translatedSummary = t.translated_text; isTranslated = true }
+        if ((t.field_name === 'body') && t.translated_text) { translatedBody = t.translated_text; isTranslated = true }
       })
     }
   }
@@ -284,6 +286,15 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           <div className="prose max-w-none mb-8">
             <p className="text-brand-text leading-relaxed">{summary}</p>
           </div>
+
+          {/* Body content */}
+          {(translatedBody || item.body) && (
+            <div className="mb-8 space-y-4">
+              {(translatedBody || item.body)!.split(/\n\n+/).map(function (paragraph, i) {
+                return <p key={i} className="text-brand-text leading-relaxed">{paragraph.trim()}</p>
+              })}
+            </div>
+          )}
 
           {/* Classification reasoning */}
           {item.classification_reasoning && (

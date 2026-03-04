@@ -947,6 +947,7 @@ export type Database = {
           action_signup: string | null
           action_volunteer: string | null
           audience_segments: string[] | null
+          body: string | null
           center: string | null
           classification_reasoning: string | null
           confidence: number | null
@@ -981,6 +982,7 @@ export type Database = {
           action_signup?: string | null
           action_volunteer?: string | null
           audience_segments?: string[] | null
+          body?: string | null
           center?: string | null
           classification_reasoning?: string | null
           confidence?: number | null
@@ -1015,6 +1017,7 @@ export type Database = {
           action_signup?: string | null
           action_volunteer?: string | null
           audience_segments?: string[] | null
+          body?: string | null
           center?: string | null
           classification_reasoning?: string | null
           confidence?: number | null

@@ -28,9 +28,16 @@ Respond with JSON only. No markdown, no backticks.`;
 async function translateText(
   title: string,
   summary: string,
-  langCode: string
-): Promise<{ title: string; summary: string }> {
+  langCode: string,
+  body?: string
+): Promise<{ title: string; summary: string; body?: string }> {
   const lang = LANGUAGE_MAP[langCode];
+
+  const hasBody = body && body.length > 0;
+  const keysInstruction = hasBody
+    ? 'Return JSON with "title", "summary", and "body" keys only.'
+    : 'Return JSON with "title" and "summary" keys only.';
+  const bodySection = hasBody ? `\nBody: ${body}` : '';
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -41,11 +48,11 @@ async function translateText(
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 500,
+      max_tokens: hasBody ? 1500 : 500,
       system: SYSTEM_PROMPT,
       messages: [{
         role: 'user',
-        content: `Translate the following to ${lang.name}. Return JSON with "title" and "summary" keys only.\n\nTitle: ${title}\nSummary: ${summary}`,
+        content: `Translate the following to ${lang.name}. ${keysInstruction}\n\nTitle: ${title}\nSummary: ${summary}${bodySection}`,
       }],
     }),
   });
@@ -124,7 +131,8 @@ Deno.serve(async (req: Request) => {
             const result = await translateText(
               classification.title_6th_grade,
               classification.summary_6th_grade || '',
-              langCode
+              langCode,
+              classification.body_6th_grade || undefined
             );
 
             // Store title translation
@@ -154,6 +162,22 @@ Deno.serve(async (req: Request) => {
               data_source: 'Claude API',
               last_updated: new Date().toISOString(),
             });
+
+            // Store body translation if present
+            if (result.body) {
+              await supabasePost('translations', {
+                translation_id: `TR-${item.inbox_id.substring(0, 8)}-${langCode}-body`,
+                content_type: 'content_published',
+                content_id: item.inbox_id,
+                field_name: 'body',
+                language_id: LANGUAGE_MAP[langCode].id,
+                translated_text: result.body,
+                is_verified: 'No',
+                machine_translated: 'Yes',
+                data_source: 'Claude API',
+                last_updated: new Date().toISOString(),
+              });
+            }
 
             translated++;
           } catch (e) {
@@ -205,13 +229,14 @@ Deno.serve(async (req: Request) => {
     }
 
     const classification = queueItems[0].ai_classification;
-    const results: Record<string, { title: string; summary: string }> = {};
+    const results: Record<string, { title: string; summary: string; body?: string }> = {};
 
     for (const langCode of languages) {
       const result = await translateText(
         classification.title_6th_grade,
         classification.summary_6th_grade || '',
-        langCode
+        langCode,
+        classification.body_6th_grade || undefined
       );
 
       results[langCode] = result;
@@ -242,6 +267,22 @@ Deno.serve(async (req: Request) => {
         data_source: 'Claude API',
         last_updated: new Date().toISOString(),
       });
+
+      // Store body translation if present
+      if (result.body) {
+        await supabasePost('translations', {
+          translation_id: `TR-${inbox_id.substring(0, 8)}-${langCode}-body`,
+          content_type: 'content_published',
+          content_id: inbox_id,
+          field_name: 'body',
+          language_id: LANGUAGE_MAP[langCode].id,
+          translated_text: result.body,
+          is_verified: 'No',
+          machine_translated: 'Yes',
+          data_source: 'Claude API',
+          last_updated: new Date().toISOString(),
+        });
+      }
     }
 
     return new Response(JSON.stringify({

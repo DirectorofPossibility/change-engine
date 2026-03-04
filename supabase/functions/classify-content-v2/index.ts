@@ -107,6 +107,7 @@ Deno.serve(async (req: Request) => {
     let pageText = inputDesc;
     let sourceDomain = '';
     let imageUrl = '';
+    let extractedBody = '';
 
     if (url) {
       try {
@@ -147,21 +148,32 @@ Deno.serve(async (req: Request) => {
           }
         }
 
+        // Always extract full body text for rich content generation
+        const stripHtmlNoise = (rawHtml: string) =>
+          rawHtml
+            .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+            .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+            .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '')
+            .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '')
+            .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '')
+            .replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, '')
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        // Prefer <article> or <main> content over full <body> to avoid nav/sidebar noise
+        const articleMatch = html.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
+        const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+        const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+
+        const contentSource = articleMatch?.[1] || mainMatch?.[1] || bodyMatch?.[1] || '';
+        if (contentSource) {
+          extractedBody = stripHtmlNoise(contentSource).substring(0, 5000);
+        }
+
+        // Fall back to body text for pageText if og:description was too short
         if (!pageText || pageText.length < 100) {
-          const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-          if (bodyMatch) {
-            const bodyText = bodyMatch[1]
-              .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-              .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-              .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '')
-              .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '')
-              .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '')
-              .replace(/<[^>]+>/g, ' ')
-              .replace(/\s+/g, ' ')
-              .trim()
-              .substring(0, 2500);
-            if (bodyText.length > (pageText?.length || 0)) pageText = bodyText;
-          }
+          if (extractedBody.length > (pageText?.length || 0)) pageText = extractedBody.substring(0, 2500);
         }
       } catch (fetchErr) {
         console.error('Scrape error:', (fetchErr as Error).message);
@@ -177,6 +189,8 @@ Deno.serve(async (req: Request) => {
     const systemPrompt = `You are the Change Engine v2 classifier for Houston, Texas civic content.
 Classify content against the EXACT taxonomy below. Return ONLY valid IDs. Respond with a single JSON object, no markdown, no backticks.
 
+Also produce a 'body_6th_grade' field: 3-5 paragraphs (200-400 words) at 6th-grade reading level. Preserve key details: author/creator names, organization names, specific programs or frameworks, why it matters, key takeaways. Use asset-based language — focus on strengths, opportunities, and what's available.
+
 ${taxonomyPrompt}`;
 
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -188,9 +202,9 @@ ${taxonomyPrompt}`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
+        max_tokens: 2500,
         system: systemPrompt,
-        messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
+        messages: [{ role: 'user', content: `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON: {"theme_primary":"THEME_XX","theme_secondary":[],"focus_area_ids":["FA_XXX"],"sdg_ids":["SDG_XX"],"sdoh_code":"SDOH_XX","ntee_codes":["X"],"airs_codes":["X"],"center":"Learning|Action|Resource|Accountability","resource_type_id":"RTYPE_XX","audience_segment_ids":["SEG_XX"],"life_situation_ids":["SIT_XXX"],"service_cat_ids":["SCAT_XX"],"skill_ids":["SKILL_XX"],"title_6th_grade":"...","summary_6th_grade":"...","body_6th_grade":"3-5 paragraphs with key details preserved","action_items":{"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null},"geographic_scope":"Houston","confidence":0.0,"reasoning":"..."}` }],
       }),
     });
 
@@ -263,7 +277,7 @@ ${taxonomyPrompt}`;
     const inboxRes = await fetch(`${SUPABASE_URL}/rest/v1/content_inbox`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, Prefer: 'return=representation' },
-      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, status: 'needs_review', source_trust_level: 'unknown' }),
+      body: JSON.stringify({ source_url: url, source_domain: sourceDomain, title: pageTitle, description: (pageText || '').substring(0, 1000), image_url: imageUrl || null, extracted_text: extractedBody || null, scraped_at: new Date().toISOString(), status: 'needs_review', source_trust_level: 'unknown' }),
     });
     const inboxData = await inboxRes.json();
     const inboxId = Array.isArray(inboxData) ? inboxData[0]?.id : inboxData?.id;
