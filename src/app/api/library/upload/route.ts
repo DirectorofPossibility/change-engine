@@ -1,14 +1,13 @@
 /**
  * @fileoverview Upload API for Knowledge Base documents.
  *
- * Accepts multipart form data with a PDF file, uploads to Supabase Storage,
- * and creates a kb_documents row with status 'pending'.
+ * Creates a kb_documents row with status 'pending'. The actual PDF is
+ * uploaded directly to Supabase Storage from the client to avoid
+ * Vercel's 4.5MB serverless body size limit.
  */
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-
-const MAX_FILE_SIZE = 35 * 1024 * 1024 // 35MB
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,48 +31,30 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Your account does not have upload permissions' }, { status: 403 })
     }
 
-    const formData = await req.formData()
-    const file = formData.get('file') as File | null
-    const title = (formData.get('title') as string) || ''
-    const tagsRaw = (formData.get('tags') as string) || ''
-
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    const body = await req.json()
+    const { storagePath, fileName, fileSize, title, tags } = body as {
+      storagePath: string
+      fileName: string
+      fileSize: number
+      title?: string
+      tags?: string
     }
 
-    // Validate file type
-    if (file.type !== 'application/pdf') {
-      return NextResponse.json({ error: 'Only PDF files are accepted' }, { status: 400 })
+    if (!storagePath || !fileName) {
+      return NextResponse.json({ error: 'storagePath and fileName are required' }, { status: 400 })
     }
 
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: 'File size exceeds 35MB limit' }, { status: 400 })
-    }
-
-    // Generate storage path
-    const timestamp = Date.now()
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
-    const storagePath = `${user.id}/${timestamp}_${safeName}`
-
-    // Upload to Supabase Storage
-    const fileBuffer = Buffer.from(await file.arrayBuffer())
-    const { error: uploadError } = await supabase.storage
+    // Verify the file actually exists in storage
+    const { data: fileCheck } = await supabase.storage
       .from('kb-documents')
-      .upload(storagePath, fileBuffer, {
-        contentType: 'application/pdf',
-        upsert: false,
-      })
+      .createSignedUrl(storagePath, 10)
 
-    if (uploadError) {
-      return NextResponse.json(
-        { error: 'Upload failed: ' + uploadError.message },
-        { status: 500 }
-      )
+    if (!fileCheck?.signedUrl) {
+      return NextResponse.json({ error: 'File not found in storage. Upload the file first.' }, { status: 400 })
     }
 
     // Parse user-provided tags
-    const tags = tagsRaw
+    const parsedTags = (tags || '')
       .split(',')
       .map(t => t.trim())
       .filter(Boolean)
@@ -82,12 +63,12 @@ export async function POST(req: NextRequest) {
     const { data: doc, error: insertError } = await supabase
       .from('kb_documents')
       .insert({
-        title: title || file.name.replace(/\.pdf$/i, ''),
+        title: title || fileName.replace(/\.pdf$/i, ''),
         file_path: storagePath,
-        file_size: file.size,
+        file_size: fileSize,
         status: 'pending',
         uploaded_by: user.id,
-        tags,
+        tags: parsedTags,
       })
       .select('id')
       .single()

@@ -3,6 +3,16 @@
 import { useState, useRef } from 'react'
 import { Upload, FileText, X, Check } from 'lucide-react'
 import { useTranslation } from '@/lib/i18n'
+import { createBrowserClient } from '@supabase/ssr'
+
+const MAX_FILE_SIZE = 35 * 1024 * 1024 // 35MB
+
+function getSupabase() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
 
 export function DocumentUpload() {
   const { t } = useTranslation()
@@ -12,6 +22,7 @@ export function DocumentUpload() {
   const [tags, setTags] = useState('')
   const [isDragging, setIsDragging] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [progress, setProgress] = useState('')
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null)
 
   function handleDragOver(e: React.DragEvent) {
@@ -29,6 +40,10 @@ export function DocumentUpload() {
     setIsDragging(false)
     const droppedFile = e.dataTransfer.files[0]
     if (droppedFile && droppedFile.type === 'application/pdf') {
+      if (droppedFile.size > MAX_FILE_SIZE) {
+        setResult({ success: false, message: 'File size exceeds 35MB limit' })
+        return
+      }
       setFile(droppedFile)
       if (!title) setTitle(droppedFile.name.replace(/\.pdf$/i, ''))
     }
@@ -37,6 +52,10 @@ export function DocumentUpload() {
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFile = e.target.files?.[0]
     if (selectedFile) {
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        setResult({ success: false, message: 'File size exceeds 35MB limit' })
+        return
+      }
       setFile(selectedFile)
       if (!title) setTitle(selectedFile.name.replace(/\.pdf$/i, ''))
     }
@@ -45,6 +64,7 @@ export function DocumentUpload() {
   function clearFile() {
     setFile(null)
     setResult(null)
+    setProgress('')
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -56,28 +76,60 @@ export function DocumentUpload() {
     setResult(null)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('title', title)
-      formData.append('tags', tags)
+      const supabase = getSupabase()
 
+      // Check auth
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        setResult({ success: false, message: 'Please sign in to upload documents.' })
+        return
+      }
+
+      // Step 1: Upload PDF directly to Supabase Storage (bypasses Vercel 4.5MB limit)
+      setProgress('Uploading file...')
+      const timestamp = Date.now()
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+      const storagePath = `${user.id}/${timestamp}_${safeName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('kb-documents')
+        .upload(storagePath, file, {
+          contentType: 'application/pdf',
+          upsert: false,
+        })
+
+      if (uploadError) {
+        setResult({ success: false, message: 'Upload failed: ' + uploadError.message })
+        return
+      }
+
+      // Step 2: Create the database record via API route (small JSON body, no file)
+      setProgress('Saving record...')
       const res = await fetch('/api/library/upload', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          storagePath,
+          fileName: file.name,
+          fileSize: file.size,
+          title,
+          tags,
+        }),
       })
 
       if (!res.ok) {
-        const errText = await res.text().catch(() => 'Upload failed')
-        setResult({ success: false, message: errText })
+        const errData = await res.json().catch(() => ({ error: 'Upload failed' }))
+        setResult({ success: false, message: errData.error || 'Failed to save record' })
         return
       }
-      const data = await res.json()
 
+      const data = await res.json()
       if (data.success) {
         setResult({ success: true, message: t('library.upload_success') })
         setFile(null)
         setTitle('')
         setTags('')
+        setProgress('')
         if (fileInputRef.current) fileInputRef.current.value = ''
       } else {
         setResult({ success: false, message: data.error || 'Upload failed' })
@@ -86,6 +138,7 @@ export function DocumentUpload() {
       setResult({ success: false, message: 'Upload failed. Please try again.' })
     } finally {
       setIsUploading(false)
+      setProgress('')
     }
   }
 
@@ -170,7 +223,13 @@ export function DocumentUpload() {
         />
       </div>
 
-      {/* Result message */}
+      {/* Progress / result message */}
+      {progress && !result && (
+        <div className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm bg-blue-50 text-blue-700">
+          <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+          {progress}
+        </div>
+      )}
       {result && (
         <div className={'flex items-center gap-2 px-4 py-3 rounded-lg text-sm ' +
           (result.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700')}>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { FileText, Check, X, RefreshCw, Eye, Upload, CloudUpload } from 'lucide-react'
+import { createBrowserClient } from '@supabase/ssr'
 import type { KBDocument } from '@/lib/data/library'
 
 interface LibraryAdminProps {
@@ -94,15 +95,38 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
     setUploadError('')
 
     try {
-      // Step 1: Upload
-      const formData = new FormData()
-      formData.append('file', selectedFile)
-      if (title.trim()) formData.append('title', title.trim())
-      if (tags.trim()) formData.append('tags', tags.trim())
+      // Step 1: Upload PDF directly to Supabase Storage (bypasses Vercel 4.5MB limit)
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
 
+      const timestamp = Date.now()
+      const safeName = selectedFile.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+      const storagePath = `${user.id}/${timestamp}_${safeName}`
+
+      const { error: storageError } = await supabase.storage
+        .from('kb-documents')
+        .upload(storagePath, selectedFile, {
+          contentType: 'application/pdf',
+          upsert: false,
+        })
+
+      if (storageError) throw new Error('Storage upload failed: ' + storageError.message)
+
+      // Step 2: Create database record via API route (small JSON body)
       const uploadRes = await fetch('/api/library/upload', {
         method: 'POST',
-        body: formData,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          storagePath,
+          fileName: selectedFile.name,
+          fileSize: selectedFile.size,
+          title: title.trim() || undefined,
+          tags: tags.trim() || undefined,
+        }),
       })
 
       if (!uploadRes.ok) {
