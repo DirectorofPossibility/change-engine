@@ -155,6 +155,7 @@ export function ContentShelf({
                     sourceUrl={item.sourceUrl || ''}
                     publishedAt={item.publishedAt || null}
                     imageUrl={item.imageUrl || null}
+                    href={item.href}
                     translatedTitle={t?.title}
                     translatedSummary={t?.summary}
                   />

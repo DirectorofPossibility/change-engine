@@ -75,7 +75,7 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
 
             const shelfItems: ShelfItem[] = pathwayItems.map((item) => ({
               type: 'content' as const,
-              id: item.inbox_id || item.id,
+              id: item.inbox_id || item.id,  // inbox_id for translation lookup
               title: item.title_6th_grade,
               summary: item.summary_6th_grade,
               pathway: item.pathway_primary,
@@ -83,7 +83,7 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
               sourceUrl: item.source_url,
               publishedAt: item.published_at,
               imageUrl: item.image_url,
-              href: '/content/' + item.id,
+              href: '/content/' + item.id,   // always route by content_published.id
             }))
 
             return (

@@ -165,6 +165,13 @@ git push origin master
 - **Field names**: `title`, `summary`
 - **Join**: `translations.content_id` = `content_published.inbox_id`
 
+## Routing Rules (IMPORTANT — prevents 404s)
+
+1. **Every `href` in a Link or `<a>` tag must point to an existing `page.tsx` route.** Before adding a link to `/foo/bar`, verify that `src/app/(exchange)/(pages)/foo/bar/page.tsx` (or `[slug]/page.tsx`, `[id]/page.tsx`) exists. If it doesn't, create the page first.
+2. **`content_published.id` (UUID) is the routing key for content.** Always use `item.id` in hrefs like `/content/{id}`. Never use `inbox_id` for routing — `inbox_id` is only for translation lookups and pipeline joins.
+3. **`inbox_id` vs `id` rule:** When building component props (ShelfItem, ContentCard, etc.), if a field is used to construct a URL, it MUST use the entity's primary key (`id`, `service_id`, `official_id`, etc.) — never a foreign key like `inbox_id`.
+4. **ContentCard accepts an `href` prop** for explicit routing override. Use it when the card's `id` prop doesn't match the routing key (e.g., when `id` is set to `inbox_id` for translation lookup).
+
 ## Key Design Principles
 
 - **Asset-based language** — focus on strengths and opportunities, not deficits
