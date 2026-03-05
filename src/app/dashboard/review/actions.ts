@@ -20,12 +20,13 @@
  */
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { AiClassification } from '@/lib/types/dashboard'
 
 /** Verify the calling user is authenticated; returns user for audit trail. */
-async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
+async function requireAuth() {
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
   return user
@@ -57,8 +58,8 @@ async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
  * @sideeffect Revalidates `/dashboard/review`, `/dashboard/content`, and `/dashboard`.
  */
 export async function approveItem(reviewId: string, inboxId: string, classification: AiClassification) {
-  const supabase = await createClient()
-  const user = await requireAuth(supabase)
+  const user = await requireAuth()
+  const supabase = createServiceClient()
 
   // Update review status with actual reviewer identity
   const { error: reviewErr } = await supabase.from('content_review_queue')
@@ -186,8 +187,8 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
  * @sideeffect Revalidates `/dashboard/review` and `/dashboard`.
  */
 export async function rejectItem(reviewId: string, notes?: string) {
-  const supabase = await createClient()
-  const user = await requireAuth(supabase)
+  const user = await requireAuth()
+  const supabase = createServiceClient()
 
   const { error } = await supabase.from('content_review_queue')
     .update({ review_status: 'rejected', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString(), reviewer_notes: notes || null })
@@ -222,8 +223,8 @@ export async function bulkApproveItems(
  * Bulk reject multiple review queue items.
  */
 export async function bulkRejectItems(reviewIds: string[], notes?: string) {
-  const supabase = await createClient()
-  const user = await requireAuth(supabase)
+  const user = await requireAuth()
+  const supabase = createServiceClient()
 
   const { error } = await supabase.from('content_review_queue')
     .update({
@@ -245,8 +246,8 @@ export async function bulkRejectItems(reviewIds: string[], notes?: string) {
  * Bulk flag multiple review queue items for manual review.
  */
 export async function bulkFlagItems(reviewIds: string[]) {
-  const supabase = await createClient()
-  await requireAuth(supabase)
+  await requireAuth()
+  const supabase = createServiceClient()
 
   const { error } = await supabase.from('content_review_queue')
     .update({ review_status: 'flagged' })

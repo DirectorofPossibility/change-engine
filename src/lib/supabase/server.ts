@@ -9,6 +9,7 @@
 // ── Imports ──
 
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import type { Database } from './database.types'
 
@@ -24,6 +25,15 @@ import type { Database } from './database.types'
  *
  * @returns A `SupabaseClient<Database>` bound to the current request cookies.
  */
+/**
+ * Service-role client that bypasses RLS. Use only in server actions
+ * that have already verified authentication via requireAuth().
+ */
+export function createServiceClient() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
+  return createSupabaseClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL!, key)
+}
+
 export async function createClient() {
   const cookieStore = await cookies()
   return createServerClient<Database>(

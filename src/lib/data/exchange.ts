@@ -1564,10 +1564,10 @@ export async function getEntityMeshProfile(entityType: string, entityId: string)
       : Promise.resolve({ data: [] }),
   ])
 
-  const relContentIds = Array.from(new Set((contentJ.data ?? []).map(j => j.content_id))).slice(0, 5)
-  const relOfficialIds = Array.from(new Set((officialJ.data ?? []).map(j => j.official_id))).slice(0, 5)
-  const relPolicyIds = Array.from(new Set((policyJ.data ?? []).map(j => j.policy_id))).slice(0, 5)
-  const relServiceIds = Array.from(new Set((serviceJ.data ?? []).map(j => j.service_id))).slice(0, 5)
+  const relContentIds = Array.from<string>(new Set((contentJ.data ?? []).map(j => String(j.content_id)))).slice(0, 5)
+  const relOfficialIds = Array.from<string>(new Set((officialJ.data ?? []).map(j => String(j.official_id)))).slice(0, 5)
+  const relPolicyIds = Array.from<string>(new Set((policyJ.data ?? []).map(j => String(j.policy_id)))).slice(0, 5)
+  const relServiceIds = Array.from<string>(new Set((serviceJ.data ?? []).map(j => String(j.service_id)))).slice(0, 5)
 
   const [relContent, relOfficials, relPolicies, relServices] = await Promise.all([
     relContentIds.length > 0
@@ -1590,6 +1590,171 @@ export async function getEntityMeshProfile(entityType: string, entityId: string)
     relatedOfficials: relOfficials.data ?? [],
     relatedPolicies: relPolicies.data ?? [],
     relatedServices: relServices.data ?? [],
+  }
+}
+
+/**
+ * Universal Wayfinder context — surfaces ALL related entities through shared focus areas.
+ * Replaces getEntityMeshProfile with richer, multi-hop traversal.
+ */
+export async function getWayfinderContext(
+  entityType: string,
+  entityId: string
+): Promise<import('@/lib/types/exchange').WayfinderData> {
+  const { getLibraryNuggets } = await import('@/lib/data/library')
+  const supabase = await createClient()
+
+  const empty: import('@/lib/types/exchange').WayfinderData = {
+    focusAreas: [], themes: [], content: [], libraryNuggets: [],
+    opportunities: [], services: [], officials: [], policies: [],
+    foundations: [], organizations: [],
+  }
+
+  // ── Hop 1: Get this entity's focus area IDs ──
+  let focusIds: string[] = []
+  if (entityType === 'content') {
+    const { data } = await supabase.from('content_focus_areas').select('focus_id').eq('content_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'official') {
+    const { data } = await supabase.from('official_focus_areas').select('focus_id').eq('official_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'policy') {
+    const { data } = await supabase.from('policy_focus_areas').select('focus_id').eq('policy_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'service') {
+    const { data } = await (supabase as any).from('service_focus_areas').select('focus_id').eq('service_id', entityId)
+    focusIds = (data ?? []).map((j: any) => j.focus_id)
+  } else if (entityType === 'organization') {
+    const { data } = await supabase.from('organization_focus_areas').select('focus_id').eq('org_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'guide') {
+    // Guide stores focus_area_ids inline
+    const { data } = await supabase.from('guides').select('focus_area_ids').eq('guide_id', entityId).single()
+    focusIds = (data as any)?.focus_area_ids ?? []
+  } else if (entityType === 'kb_document') {
+    const { data } = await (supabase as any).from('kb_documents').select('focus_area_ids, theme_ids').eq('id', entityId).single()
+    focusIds = (data as any)?.focus_area_ids ?? []
+  } else if (entityType === 'life_situation') {
+    const { data } = await supabase.from('life_situation_focus_areas').select('focus_id').eq('situation_id', entityId)
+    focusIds = (data ?? []).map(j => j.focus_id)
+  } else {
+    return empty
+  }
+
+  if (focusIds.length === 0) return empty
+
+  // Get focus area details
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('focus_id, focus_area_name, theme_id')
+    .in('focus_id', focusIds)
+
+  const faList = focusAreas ?? []
+  const themes = Array.from(new Set(faList.map(fa => fa.theme_id).filter(Boolean))) as string[]
+
+  // ── Hop 2: Fan out through focus areas to find related entity IDs ──
+  const [contentJ, officialJ, policyJ, serviceJ, orgJ, oppJ] = await Promise.all([
+    entityType !== 'content'
+      ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] as any[] }),
+    entityType !== 'official'
+      ? supabase.from('official_focus_areas').select('official_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] as any[] }),
+    entityType !== 'policy'
+      ? supabase.from('policy_focus_areas').select('policy_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] as any[] }),
+    entityType !== 'service'
+      ? (supabase as any).from('service_focus_areas').select('service_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] as any[] }),
+    entityType !== 'organization'
+      ? supabase.from('organization_focus_areas').select('org_id').in('focus_id', focusIds)
+      : Promise.resolve({ data: [] as any[] }),
+    supabase.from('opportunity_focus_areas').select('opportunity_id').in('focus_id', focusIds),
+  ])
+
+  const relContentIds = Array.from<string>(new Set((contentJ.data ?? []).map((j: any) => String(j.content_id)))).slice(0, 6)
+  const relOfficialIds = Array.from<string>(new Set((officialJ.data ?? []).map((j: any) => String(j.official_id)))).slice(0, 4)
+  const relPolicyIds = Array.from<string>(new Set((policyJ.data ?? []).map((j: any) => String(j.policy_id)))).slice(0, 4)
+  const relServiceIds = Array.from<string>(new Set((serviceJ.data ?? []).map((j: any) => String(j.service_id)))).slice(0, 6)
+  const relOrgIds = Array.from<string>(new Set((orgJ.data ?? []).map((j: any) => String(j.org_id)))).slice(0, 4)
+  const relOppIds = Array.from<string>(new Set((oppJ.data ?? []).map((j: any) => String(j.opportunity_id)))).slice(0, 4)
+
+  // ── Hop 3: Fetch enriched entity details in parallel ──
+  const [relContent, relOfficials, relPolicies, relServices, relOrgs, relOpps, nuggets] = await Promise.all([
+    relContentIds.length > 0
+      ? supabase.from('content_published')
+          .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url, inbox_id')
+          .eq('is_active', true).in('id', relContentIds)
+      : Promise.resolve({ data: [] }),
+    relOfficialIds.length > 0
+      ? supabase.from('elected_officials')
+          .select('official_id, official_name, title, level, party, photo_url')
+          .in('official_id', relOfficialIds)
+      : Promise.resolve({ data: [] }),
+    relPolicyIds.length > 0
+      ? supabase.from('policies')
+          .select('policy_id, policy_name, title_6th_grade, bill_number, status, level')
+          .in('policy_id', relPolicyIds)
+      : Promise.resolve({ data: [] }),
+    relServiceIds.length > 0
+      ? supabase.from('services_211')
+          .select('service_id, service_name, description_5th_grade, phone, address, city, org_id')
+          .eq('is_active', 'Yes').in('service_id', relServiceIds)
+      : Promise.resolve({ data: [] }),
+    relOrgIds.length > 0
+      ? supabase.from('organizations')
+          .select('org_id, org_name, description_5th_grade, logo_url, website, phone, donate_url, volunteer_url, newsletter_url')
+          .in('org_id', relOrgIds)
+      : Promise.resolve({ data: [] }),
+    relOppIds.length > 0
+      ? supabase.from('opportunities')
+          .select('opportunity_id, opportunity_name, description_5th_grade, start_date, end_date, time_commitment, is_virtual, registration_url, org_id')
+          .eq('is_active', 'Yes').in('opportunity_id', relOppIds)
+      : Promise.resolve({ data: [] }),
+    getLibraryNuggets(themes, focusIds, 2),
+  ])
+
+  // Fetch foundations via focus area names (junction uses names not IDs)
+  let foundations: any[] = []
+  const faNames = faList.map(fa => fa.focus_area_name)
+  if (faNames.length > 0) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    const hd = { apikey: key, Authorization: `Bearer ${key}` }
+    try {
+      const jRes = await fetch(
+        `${url}/rest/v1/foundation_focus_areas?focus_area=in.(${faNames.map(n => encodeURIComponent(`"${n}"`)).join(',')})&select=foundation_id&limit=10`,
+        { headers: hd }
+      )
+      const fJunctions: any[] = jRes.ok ? await jRes.json() : []
+      const fIds = Array.from(new Set(fJunctions.map(j => j.foundation_id))).slice(0, 3)
+      if (fIds.length > 0) {
+        const fRes = await fetch(
+          `${url}/rest/v1/foundations?id=in.(${fIds.join(',')})&select=id,name,mission,website_url`,
+          { headers: hd }
+        )
+        const fData: any[] = fRes.ok ? await fRes.json() : []
+        foundations = fData.map(f => ({
+          foundation_id: f.id,
+          name: f.name,
+          description: f.mission || null,
+          website: f.website_url || null,
+        }))
+      }
+    } catch { /* foundation lookup is best-effort */ }
+  }
+
+  return {
+    focusAreas: faList,
+    themes,
+    content: (relContent.data ?? []) as any[],
+    libraryNuggets: nuggets as any,
+    opportunities: (relOpps.data ?? []) as any[],
+    services: (relServices.data ?? []) as any[],
+    officials: (relOfficials.data ?? []) as any[],
+    policies: (relPolicies.data ?? []) as any[],
+    foundations,
+    organizations: (relOrgs.data ?? []) as any[],
   }
 }
 

@@ -16,11 +16,12 @@
  */
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 /** Verify the calling user is authenticated; throws if not. */
-async function requireAuth(supabase: Awaited<ReturnType<typeof createClient>>) {
+async function requireAuth() {
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
   return user
@@ -48,8 +49,8 @@ export async function updateContent(id: string, data: {
   is_featured?: boolean
   is_active?: boolean
 }) {
-  const supabase = await createClient()
-  await requireAuth(supabase)
+  await requireAuth()
+  const supabase = createServiceClient()
 
   const { error } = await supabase.from('content_published')
     .update({ ...data, last_updated: new Date().toISOString() })
@@ -109,8 +110,8 @@ export async function toggleActive(id: string, value: boolean) {
  * @sideeffect Revalidates `/dashboard/content` and `/dashboard`.
  */
 export async function deleteContent(id: string, inboxId: string | null) {
-  const supabase = await createClient()
-  await requireAuth(supabase)
+  await requireAuth()
+  const supabase = createServiceClient()
 
   // Clean up associated records
   if (inboxId) {
@@ -143,8 +144,8 @@ export async function deleteContent(id: string, inboxId: string | null) {
  * @sideeffect Revalidates `/dashboard/content`, `/dashboard/review`, and `/dashboard`.
  */
 export async function moveToDraft(id: string, inboxId: string) {
-  const supabase = await createClient()
-  await requireAuth(supabase)
+  await requireAuth()
+  const supabase = createServiceClient()
 
   // Set review queue record back to pending
   const { error: reviewErr } = await supabase
@@ -192,8 +193,8 @@ export async function moveToDraft(id: string, inboxId: string) {
  * @sideeffect Revalidates `/dashboard/content`, `/dashboard/review`, `/dashboard`.
  */
 export async function bulkMoveToDraft(items: { id: string; inboxId: string }[]) {
-  const supabase = await createClient()
-  await requireAuth(supabase)
+  await requireAuth()
+  const supabase = createServiceClient()
 
   const failed: string[] = []
 
@@ -244,8 +245,8 @@ export async function bulkMoveToDraft(items: { id: string; inboxId: string }[]) 
  * @sideeffect Revalidates `/dashboard/content` and `/dashboard`.
  */
 export async function bulkDeleteContent(items: { id: string; inboxId: string | null }[]) {
-  const supabase = await createClient()
-  await requireAuth(supabase)
+  await requireAuth()
+  const supabase = createServiceClient()
 
   const failed: string[] = []
 

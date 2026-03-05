@@ -406,7 +406,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
             )}
 
             {/* Actions */}
-            {(selected.review_status === 'pending' || selected.review_status === 'flagged') && (
+            {(selected.review_status === 'pending' || selected.review_status === 'flagged' || selected.review_status === 'auto_approved') && (
               <div className="border-t border-brand-border pt-4 space-y-3">
                 <div className="flex gap-3">
                   <button
