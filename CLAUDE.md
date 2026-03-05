@@ -147,15 +147,48 @@ source ~/.nvm/nvm.sh && nvm use 18 && npm run build
 git push origin master
 ```
 
-## Content Pipeline
+## Unified Intake Pipeline
 
-1. Content is ingested via `/api/ingest` or Supabase edge functions
-2. All content goes through `classify-content-v2` — nothing is auto-approved
-3. Classification maps content onto knowledge graph (themes, focus areas, SDGs)
-4. Content rewrites target 6th-grade reading level
-5. Admin reviews in `/dashboard/review` → publishes via `publish-content`
-6. Published content links to original source URL in the Wayfinder
-7. Translations handled by `translate-content` / `translate-all` edge functions
+**Single entry point: `POST /api/intake`** — routes any data type through classification.
+
+### Intake Modes
+| Type | Payload | What Happens |
+|------|---------|-------------|
+| `content` | `{ urls: [...] }` | Scrape → classify-content-v2 → review queue → publish |
+| `officials` | `{ items: [...] }` | Upsert elected_officials → auto-classify → junction tables |
+| `policies` | `{ items: [...] }` | Upsert policies → auto-classify → junction tables |
+| `services` | `{ items: [...] }` | Upsert services_211 → auto-classify → junction tables |
+| `organizations` | `{ items: [...] }` | Upsert organizations → auto-classify → junction tables |
+| `opportunities` | `{ items: [...] }` | Upsert opportunities → auto-classify → junction tables |
+| `rss_feed` | `{ feed_url, feed_name }` | Add to rss_feeds → immediate poll → classify |
+| `sync` | `{ source: "all"\|"google_civic"\|"legistar"\|"texas"\|"rss" }` | Trigger data sync from external APIs |
+| `classify` | `{ table, limit }` | Sweep unclassified entities in any table |
+
+### Daily Cron Schedule (CT)
+| Time | Cron | What |
+|------|------|------|
+| 1 AM | `batch-translate` | Translate untranslated content → ES, VI |
+| 3 AM | `poll-rss` | Poll all active RSS feeds → classify new items |
+| 6 AM | `sync-polling-places` | Refresh voter locations |
+| 7 AM | `sync-city-houston` | Legistar API → officials + policies + classify |
+| 9 AM | `sync-state-texas` | TLO + Open States → officials + policies + classify |
+| 11 AM | `classify-pending` | Sweep ALL entity tables for unclassified items |
+
+### Classification Pipeline
+1. All data goes through `classify-content-v2` (content) or `enrich-entity` (entities)
+2. AI classifies across **16 taxonomy dimensions** (themes, focus areas, SDGs, SDOH, NTEE, AIRS, centers, audiences, life situations, service categories, skills, time commitments, action types, gov levels, content type, geographic scope)
+3. Junction tables populated automatically for every entity type
+4. Nothing is auto-published — content goes to `needs_review` in `/dashboard/review`
+5. Translations run nightly for published content (ES + VI)
+
+### Data Sources
+- **RSS feeds** → `rss_feeds` table → `rss-proxy` edge function → content pipeline
+- **Google Civic API** → `sync-officials` → ZIP→district mapping + officials
+- **Congress.gov API** → `sync-officials` → federal officials (TX)
+- **Legistar API** → `sync-city-houston` → Houston council + ordinances
+- **Texas Legislature** → `sync-state-texas` → state officials + bills
+- **Manual URLs** → `/api/ingest` or `/api/intake` → content pipeline
+- **External APIs** → `/api/intake` with entity items → upsert + classify
 
 ## Translation System
 
