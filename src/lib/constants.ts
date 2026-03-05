@@ -217,3 +217,11 @@ export const CENTER_COLORS: Record<string, string> = {
   Resource: '#d69e2e',
   Accountability: '#805ad5',
 }
+
+/** Compass entry card prompts — maps center keys to i18n keys. */
+export const COMPASS_PROMPTS: Record<string, { i18nKey: string; center: string }> = {
+  Learning: { i18nKey: 'compass.understand', center: 'Learning' },
+  Action: { i18nKey: 'compass.help', center: 'Action' },
+  Resource: { i18nKey: 'compass.available', center: 'Resource' },
+  Accountability: { i18nKey: 'compass.decides', center: 'Accountability' },
+}

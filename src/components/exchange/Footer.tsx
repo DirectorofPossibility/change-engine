@@ -24,6 +24,7 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-sm mb-3 text-gray-300">{t('footer.explore')}</h4>
             <div className="grid grid-cols-2 gap-2">
+              <Link href="/compass" className="text-sm text-gray-400 hover:text-white">Compass</Link>
               <Link href="/pathways" className="text-sm text-gray-400 hover:text-white">{t('footer.pathways')}</Link>
               <Link href="/help" className="text-sm text-gray-400 hover:text-white">{t('footer.help')}</Link>
               <Link href="/officials" className="text-sm text-gray-400 hover:text-white">{t('footer.officials')}</Link>

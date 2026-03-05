@@ -10,7 +10,9 @@ import {
   getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { ShelfBraid } from '@/components/exchange/ShelfBraid'
+import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { getLibraryNuggets } from '@/lib/data/library'
 import { getUIStrings } from '@/lib/i18n'
 
 function resolveTheme(slug: string) {
@@ -49,12 +51,13 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const themeFocusAreaIds = themeFocusAreas.map(function (fa) { return fa.focus_id })
 
   // Phase 2: fetch all related entities via focus area junctions
-  const [opportunities, policies, relatedServices, relatedOfficials, foundations] = await Promise.all([
+  const [opportunities, policies, relatedServices, relatedOfficials, foundations, libraryNuggets] = await Promise.all([
     getRelatedOpportunities(themeFocusAreaIds),
     getRelatedPolicies(themeFocusAreaIds),
     getRelatedServices(themeFocusAreaIds),
     getRelatedOfficials(themeFocusAreaIds),
     getFoundationsByPathway(theme.id),
+    getLibraryNuggets([theme.id], themeFocusAreaIds, 3),
   ])
 
   // Translations
@@ -124,6 +127,16 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           opportunities={opportunities}
           themeColor={theme.color}
         />
+
+        {/* ── Library Nuggets ── */}
+        <div className="mt-6">
+          <LibraryNugget
+            nuggets={libraryNuggets}
+            variant="sidebar"
+            color={theme.color}
+            labels={{ fromThe: t('library.from_the'), readMore: t('library.read_more') }}
+          />
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

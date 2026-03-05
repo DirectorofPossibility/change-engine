@@ -59,7 +59,96 @@ export interface KBChunkSearchResult {
   document_title?: string
 }
 
+/** A library nugget — a representative chunk excerpt from a published document. */
+export interface LibraryNugget {
+  documentId: string
+  documentTitle: string
+  chunkExcerpt: string
+  pageRef: string | null
+  link: string
+}
+
 // ── Public queries ──
+
+/**
+ * Fetch library nuggets matching given theme or focus area IDs.
+ * Returns one representative chunk per document, with a 200-char excerpt.
+ */
+export async function getLibraryNuggets(
+  themeIds: string[],
+  focusAreaIds: string[],
+  limit = 3
+): Promise<LibraryNugget[]> {
+  if (themeIds.length === 0 && focusAreaIds.length === 0) return []
+
+  const supabase = await createClient()
+
+  // Query published documents that overlap with the given themes or focus areas
+  let query = supabase
+    .from('kb_documents' as any)
+    .select('id, title, focus_area_ids, theme_ids')
+    .eq('status', 'published')
+    .limit(limit * 2) // fetch extra to ensure we get enough after filtering
+
+  if (themeIds.length > 0) {
+    query = query.overlaps('theme_ids', themeIds)
+  }
+
+  const { data: docs } = await query
+  if (!docs || docs.length === 0) return []
+
+  const typedDocs = docs as unknown as Array<{
+    id: string; title: string; focus_area_ids: string[]; theme_ids: string[]
+  }>
+
+  // If we also have focus area filters, score by overlap
+  let ranked = typedDocs
+  if (focusAreaIds.length > 0) {
+    ranked = typedDocs
+      .map(d => ({
+        ...d,
+        score: (d.focus_area_ids || []).filter(id => focusAreaIds.includes(id)).length
+          + (d.theme_ids || []).filter(id => themeIds.includes(id)).length,
+      }))
+      .sort((a, b) => b.score - a.score)
+  }
+
+  const selected = ranked.slice(0, limit)
+  const docIds = selected.map(d => d.id)
+
+  // Get one chunk per document
+  const { data: chunks } = await supabase
+    .from('kb_chunks' as any)
+    .select('document_id, content, page_start, chunk_index')
+    .in('document_id', docIds)
+    .order('chunk_index', { ascending: true })
+
+  const typedChunks = (chunks ?? []) as unknown as Array<{
+    document_id: string; content: string; page_start: number | null; chunk_index: number
+  }>
+
+  // Pick first chunk per document
+  const chunkMap = new Map<string, typeof typedChunks[0]>()
+  for (const c of typedChunks) {
+    if (!chunkMap.has(c.document_id)) chunkMap.set(c.document_id, c)
+  }
+
+  return selected
+    .filter(d => chunkMap.has(d.id))
+    .map(d => {
+      const chunk = chunkMap.get(d.id)!
+      const excerpt = chunk.content.length > 200
+        ? chunk.content.slice(0, 197) + '...'
+        : chunk.content
+      return {
+        documentId: d.id,
+        documentTitle: d.title,
+        chunkExcerpt: excerpt,
+        pageRef: chunk.page_start ? 'p. ' + chunk.page_start : null,
+        link: '/library/' + d.id,
+      }
+    })
+}
 
 export async function getPublishedDocuments(
   page = 1,

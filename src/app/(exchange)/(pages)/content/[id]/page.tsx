@@ -15,6 +15,8 @@ import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getFocusAreasByIds, getSDGMap, getSDOHMap, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
+import { getLibraryNuggets } from '@/lib/data/library'
+import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { FileText, Users, ExternalLink } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
@@ -88,11 +90,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     : []
 
   // Fetch SDG map, SDOH map, and related opportunities/policies in parallel
-  const [sdgMap, sdohMap, opportunities, policies] = await Promise.all([
+  const pathwayThemeIds = item.pathway_primary ? [item.pathway_primary] : []
+  const [sdgMap, sdohMap, opportunities, policies, libraryNuggets] = await Promise.all([
     item.sdg_ids && item.sdg_ids.length > 0 ? getSDGMap() : Promise.resolve({} as Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }>),
     item.sdoh_domain ? getSDOHMap() : Promise.resolve({} as Record<string, { sdoh_name: string; sdoh_description: string | null }>),
     focusAreaIds.length > 0 ? getRelatedOpportunities(focusAreaIds) : Promise.resolve([]),
     focusAreaIds.length > 0 ? getRelatedPolicies(focusAreaIds) : Promise.resolve([]),
+    getLibraryNuggets(pathwayThemeIds, focusAreaIds, 3),
   ])
 
   // Resolve life situations via junction table
@@ -772,6 +776,17 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       </div>
+
+      {/* Library nuggets — go deeper */}
+      {libraryNuggets.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LibraryNugget
+            nuggets={libraryNuggets}
+            variant="section"
+            color={themeColor}
+          />
+        </div>
+      )}
 
       {/* Related content */}
       {related && related.length > 0 && (

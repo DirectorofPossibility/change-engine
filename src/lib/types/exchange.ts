@@ -257,6 +257,22 @@ export type Candidate = Tables<'candidates'>
 export type BallotItem = Tables<'ballot_items'>
 export type CivicCalendarEvent = Tables<'civic_calendar'>
 
+// ── Compass types ────────────────────────────────────────────────────
+
+/** Lightweight content preview for the Compass grid (pathway × center). */
+export interface ContentPreview {
+  id: string
+  title: string | null
+  summary: string | null
+  pathway: string | null
+  center: string | null
+  image_url: string | null
+  source_url: string | null
+}
+
+/** Compass preview data: pathway → center → content previews. */
+export type CompassPreviewData = Record<string, Record<string, ContentPreview[]>>
+
 /** Aggregated data for the voting dashboard page. */
 export interface ElectionDashboardData {
   pastElections: Election[]

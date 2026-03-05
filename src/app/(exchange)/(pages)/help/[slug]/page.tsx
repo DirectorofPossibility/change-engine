@@ -13,7 +13,9 @@ import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { HelpMap } from '@/components/exchange/HelpMap'
+import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { getLibraryNuggets } from '@/lib/data/library'
 
 export const revalidate = 3600
 
@@ -42,11 +44,12 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
     .eq('situation_id', situation.situation_id)
   const focusIds = (focusJunctions ?? []).map(j => j.focus_id)
 
-  const [{ content, services }, paths, opportunities, policies] = await Promise.all([
+  const [{ content, services }, paths, opportunities, policies, libraryNuggets] = await Promise.all([
     getLifeSituationContent(situation.situation_id, situation.service_cat_ids),
     situation.path_id ? getLearningPaths() : Promise.resolve([]),
     getRelatedOpportunities(focusIds),
     getRelatedPolicies(focusIds),
+    getLibraryNuggets([], focusIds, 2),
   ])
 
   const relatedPath = paths.find(function (p) { return p.path_id === situation.path_id })
@@ -120,6 +123,9 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
           </div>
         </section>
       )}
+
+      {/* Library Nuggets */}
+      <LibraryNugget nuggets={libraryNuggets} variant="inline" />
 
       {/* Matched Services */}
       {services.length > 0 && (

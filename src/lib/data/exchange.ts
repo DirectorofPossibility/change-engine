@@ -47,7 +47,7 @@ import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
 import type { Database } from '@/lib/supabase/database.types'
-import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData, CompassPreviewData, ContentPreview } from '@/lib/types/exchange'
 
 type ContentRow = Database['public']['Tables']['content_published']['Row'] & { content_type?: string | null }
 type MunicipalServiceRow = Database['public']['Tables']['municipal_services']['Row']
@@ -2245,6 +2245,51 @@ export async function getGeographyData(zip?: string, superNeighborhoodId?: strin
     officials,
     policies,
   }
+}
+
+// ── Compass ──────────────────────────────────────────────────────────
+
+/**
+ * Fetch content previews for the Compass grid: up to 3 items per pathway×center cell.
+ * Returns a nested record keyed by pathway_primary → center → ContentPreview[].
+ */
+export async function getCompassPreview(): Promise<CompassPreviewData> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('content_published')
+    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url')
+    .eq('is_active', true)
+    .order('published_at', { ascending: false })
+    .limit(200)
+
+  const result: CompassPreviewData = {}
+  const cellCounts: Record<string, number> = {}
+
+  for (const row of data ?? []) {
+    const pathway = row.pathway_primary
+    const center = row.center
+    if (!pathway || !center) continue
+
+    const cellKey = pathway + '|' + center
+    const count = cellCounts[cellKey] || 0
+    if (count >= 3) continue
+    cellCounts[cellKey] = count + 1
+
+    if (!result[pathway]) result[pathway] = {}
+    if (!result[pathway][center]) result[pathway][center] = []
+
+    result[pathway][center].push({
+      id: row.id,
+      title: row.title_6th_grade,
+      summary: row.summary_6th_grade,
+      pathway,
+      center,
+      image_url: row.image_url ?? null,
+      source_url: row.source_url ?? null,
+    })
+  }
+
+  return result
 }
 
 /** Get geography rows for a policy. */

@@ -475,6 +475,24 @@ const en: Record<string, string> = {
   'voting.registration_open': 'Registration is open',
   'voting.runoff_heading': 'Races heading to runoff',
 
+  // Compass
+  'compass.title': 'The Compass',
+  'compass.subtitle': 'Where am I, and what\'s around me?',
+  'compass.tagline': 'Born in Houston. Built for Everyone.',
+  'compass.show_all': 'Show me everything',
+  'compass.understand': 'I want to understand something',
+  'compass.help': 'I want to help',
+  'compass.available': 'I want to find what\'s available',
+  'compass.decides': 'I want to know who decides',
+  'compass.made_with': 'Made with thoughtfulness',
+  'compass.items': 'items',
+
+  // Library nuggets
+  'library.from_the': 'From the library',
+  'library.read_more': 'Read more',
+  'library.go_deeper': 'Go deeper',
+  'library.understanding': 'Understanding this resource',
+
   // Brand
   'brand.name': 'The Change Engine',
   'brand.subtitle': 'Community Exchange',
@@ -934,6 +952,24 @@ const es: Record<string, string> = {
   'voting.registration_open': 'El registro está abierto',
   'voting.runoff_heading': 'Carreras que van a segunda vuelta',
 
+  // Compass
+  'compass.title': 'La Brújula',
+  'compass.subtitle': '¿Dónde estoy y qué hay a mi alrededor?',
+  'compass.tagline': 'Nacido en Houston. Hecho para todos.',
+  'compass.show_all': 'Mostrar todo',
+  'compass.understand': 'Quiero entender algo',
+  'compass.help': 'Quiero ayudar',
+  'compass.available': 'Quiero encontrar lo que hay disponible',
+  'compass.decides': 'Quiero saber quién decide',
+  'compass.made_with': 'Hecho con consideración',
+  'compass.items': 'elementos',
+
+  // Library nuggets
+  'library.from_the': 'De la biblioteca',
+  'library.read_more': 'Leer más',
+  'library.go_deeper': 'Profundizar',
+  'library.understanding': 'Entendiendo este recurso',
+
   // Brand
   'brand.name': 'The Change Engine',
   'brand.subtitle': 'Intercambio Comunitario',
@@ -1392,6 +1428,24 @@ const vi: Record<string, string> = {
   'voting.days_until': 'ngày nữa',
   'voting.registration_open': 'Đăng ký đang mở',
   'voting.runoff_heading': 'Cuộc đua đi vào vòng hai',
+
+  // Compass
+  'compass.title': 'La Bàn',
+  'compass.subtitle': 'Tôi đang ở đâu và xung quanh có gì?',
+  'compass.tagline': 'Sinh ra ở Houston. Xây dựng cho mọi người.',
+  'compass.show_all': 'Hiển thị tất cả',
+  'compass.understand': 'Tôi muốn hiểu điều gì đó',
+  'compass.help': 'Tôi muốn giúp đỡ',
+  'compass.available': 'Tôi muốn tìm những gì có sẵn',
+  'compass.decides': 'Tôi muốn biết ai quyết định',
+  'compass.made_with': 'Được tạo với sự chu đáo',
+  'compass.items': 'mục',
+
+  // Library nuggets
+  'library.from_the': 'Từ thư viện',
+  'library.read_more': 'Đọc thêm',
+  'library.go_deeper': 'Tìm hiểu sâu hơn',
+  'library.understanding': 'Hiểu về tài nguyên này',
 
   // Brand
   'brand.name': 'The Change Engine',

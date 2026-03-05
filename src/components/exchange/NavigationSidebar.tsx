@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
-  Phone, Scale, Map,
+  Phone, Scale, Map, Compass,
   Landmark, PanelLeftClose, PanelLeftOpen, Vote, BookOpen,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
@@ -180,6 +180,21 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         >
           <Home size={16} />
           {t('sidebar.home')}
+        </Link>
+      </div>
+
+      {/* Compass */}
+      <div className="px-4 py-1">
+        <Link
+          href="/compass"
+          onClick={closeMobile}
+          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+            (pathname.startsWith('/compass')
+              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+        >
+          <Compass size={16} style={{ color: BRAND.accent }} />
+          Compass
         </Link>
       </div>
 

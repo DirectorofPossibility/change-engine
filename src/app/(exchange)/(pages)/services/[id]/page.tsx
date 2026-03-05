@@ -7,6 +7,8 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { EntityMesh } from '@/components/exchange/EntityMesh'
 import { SingleLocationMap } from '@/components/maps'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getLibraryNuggets } from '@/lib/data/library'
+import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 300
@@ -57,6 +59,14 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       .limit(4)
     relatedServices = related || []
   }
+
+  // Resolve focus areas for library nuggets
+  const { data: focusJunctions } = await (supabase as any)
+    .from('service_focus_areas')
+    .select('focus_id')
+    .eq('service_id', id)
+  const focusIds = ((focusJunctions ?? []) as Array<{ focus_id: string }>).map(j => j.focus_id)
+  const libraryNuggets = await getLibraryNuggets([], focusIds, 3)
 
   const fullAddress = [service.address, service.city, service.state, service.zip_code].filter(Boolean).join(', ')
 
@@ -194,6 +204,18 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               )
             })}
           </div>
+        </section>
+      )}
+
+      {/* Library nuggets — understanding this resource */}
+      {libraryNuggets.length > 0 && (
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <LibraryNugget
+            nuggets={libraryNuggets}
+            variant="section"
+            color="#d69e2e"
+            labels={{ goDeeper: 'Understanding this resource' }}
+          />
         </section>
       )}
 
