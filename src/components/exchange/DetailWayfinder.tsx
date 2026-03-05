@@ -22,6 +22,11 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
+  // Separate event-type content into "Get Involved", news/articles into "Understand"
+  const EVENT_TYPES = new Set(['event', 'opportunity', 'campaign'])
+  const newsContent = data.content.filter(c => !EVENT_TYPES.has(c.content_type || ''))
+  const eventContent = data.content.filter(c => EVENT_TYPES.has(c.content_type || ''))
+
   const totalEntities =
     data.content.length + data.libraryNuggets.length +
     data.opportunities.length + data.services.length +
@@ -30,8 +35,8 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
   if (totalEntities === 0 && data.focusAreas.length === 0) return null
 
-  const understandCount = data.content.length + data.libraryNuggets.length
-  const involvedCount = data.opportunities.length + data.services.length
+  const understandCount = newsContent.length + data.libraryNuggets.length
+  const involvedCount = data.opportunities.length + data.services.length + eventContent.length
   const deeperCount = data.officials.length + data.policies.length + data.foundations.length
 
   const firstOpenTier = understandCount > 0 ? 'understand' : involvedCount > 0 ? 'involved' : 'deeper'
@@ -135,7 +140,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-4 pb-4 space-y-2">
-            {data.content.map(function (c) {
+            {newsContent.map(function (c) {
               const themeKey = c.pathway_primary as keyof typeof THEMES | null
               const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
               return (
@@ -185,6 +190,21 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-4 pb-4 space-y-2">
+            {eventContent.map(function (c) {
+              const themeKey = c.pathway_primary as keyof typeof THEMES | null
+              const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
+              return (
+                <Link key={c.id} href={'/content/' + c.id} className="flex items-start gap-2 group/evt">
+                  <Calendar size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-xs font-medium text-brand-text group-hover/evt:text-brand-accent transition-colors line-clamp-2">
+                      {c.title_6th_grade || 'Untitled'}
+                    </span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-50 text-green-700 capitalize">{c.content_type}</span>
+                  </div>
+                </Link>
+              )
+            })}
             {data.opportunities.map(function (o) {
               return (
                 <div key={o.opportunity_id} className="flex items-start gap-2">

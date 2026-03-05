@@ -87,7 +87,22 @@ async function approveItemCore(
     body = inbox.description || ''
   }
 
-  const contentType = inbox.content_type || (inbox as any).source_type || 'article'
+  // Derive content_type from the AI-assigned resource_type_id
+  const RTYPE_TO_CONTENT: Record<string, string> = {
+    RTYPE_14: 'event',      // Event
+    RTYPE_01: 'article',    // Article
+    RTYPE_05: 'report',     // Report
+    RTYPE_12: 'report',     // Research
+    RTYPE_06: 'guide',      // Guide
+    RTYPE_09: 'course',     // Course
+    RTYPE_02: 'video',      // Video
+    RTYPE_10: 'video',      // Webinar
+    RTYPE_03: 'video',      // Podcast
+    RTYPE_13: 'opportunity', // Volunteer Opportunity
+    RTYPE_15: 'campaign',   // Campaign
+    RTYPE_18: 'tool',       // Toolkit
+  }
+  const contentType = RTYPE_TO_CONTENT[classification.resource_type_id] || inbox.content_type || (inbox as any).source_type || 'article'
 
   // Step 4: Insert into content_published
   const actions = classification.action_items || {}

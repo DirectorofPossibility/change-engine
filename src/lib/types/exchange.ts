@@ -284,6 +284,7 @@ export interface WayfinderContent {
   image_url: string | null
   source_url: string | null
   inbox_id: string | null
+  content_type?: string | null
 }
 
 export interface WayfinderOfficial {
