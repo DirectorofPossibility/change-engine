@@ -29,7 +29,7 @@ interface ReviewItem {
 const STATUS_TABS = ['all', 'pending', 'flagged', 'approved', 'auto_approved', 'rejected'] as const
 
 export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: ReviewItem[]; segmentMap?: Record<string, string> }) {
-  const [items] = useState(initialItems)
+  const [items, setItems] = useState(initialItems)
   const [activeTab, setActiveTab] = useState<string>('all')
   const [selected, setSelected] = useState<ReviewItem | null>(null)
   const [acting, setActing] = useState(false)
@@ -69,8 +69,12 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setActing(false)
         return
       }
+      // Update local state: mark as approved
+      setItems((prev) => prev.map((i) =>
+        i.id === selected.id ? { ...i, review_status: 'approved', reviewed_at: new Date().toISOString() } : i
+      ))
       setSelected(null)
-      window.location.reload()
+      setActing(false)
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Approve failed')
       setActing(false)
@@ -88,9 +92,12 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setActing(false)
         return
       }
+      setItems((prev) => prev.map((i) =>
+        i.id === selected.id ? { ...i, review_status: 'rejected', reviewed_at: new Date().toISOString() } : i
+      ))
       setSelected(null)
       setRejectNotes('')
-      window.location.reload()
+      setActing(false)
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Reject failed')
       setActing(false)
@@ -108,8 +115,11 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setActing(false)
         return
       }
+      setItems((prev) => prev.map((i) =>
+        i.id === selected.id ? { ...i, review_status: 'flagged', reviewed_at: new Date().toISOString() } : i
+      ))
       setSelected(null)
-      window.location.reload()
+      setActing(false)
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Flag failed')
       setActing(false)
@@ -145,7 +155,10 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
     const approvable = selectedItems.filter(
       (i) => i.inbox_id && i.ai_classification && (i.review_status === 'pending' || i.review_status === 'flagged' || i.review_status === 'auto_approved')
     )
-    if (approvable.length === 0) return
+    if (approvable.length === 0) {
+      setActionError(`None of the ${selectedIds.size} selected items can be approved (they may already be approved or lack classification data).`)
+      return
+    }
     setBulkActing(true)
     setActionError(null)
     try {
@@ -156,16 +169,23 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
           classification: i.ai_classification as AiClassification,
         }))
       )
-      const failures = results.filter((r) => 'error' in r)
-      if (failures.length > 0) {
-        const firstErr = 'error' in failures[0] ? failures[0].error : 'Unknown'
-        setActionError(`${failures.length} of ${results.length} items failed: ${firstErr}`)
-        setBulkActing(false)
-        return
+      const failures = results.filter((r) => r.error)
+      const successes = results.filter((r) => r.success)
+
+      // Update local state for successful items
+      if (successes.length > 0) {
+        const successIds = new Set(successes.map((r) => r.reviewId))
+        setItems((prev) => prev.map((i) =>
+          successIds.has(i.id) ? { ...i, review_status: 'approved', reviewed_at: new Date().toISOString() } : i
+        ))
       }
+
+      if (failures.length > 0) {
+        setActionError(`${successes.length} approved, ${failures.length} failed: ${failures[0].error}`)
+      }
+
       setSelectedIds(new Set())
       setBulkActing(false)
-      window.location.reload()
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Bulk approve failed')
       setBulkActing(false)
@@ -184,9 +204,11 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setBulkActing(false)
         return
       }
+      setItems((prev) => prev.map((i) =>
+        ids.includes(i.id) ? { ...i, review_status: 'rejected', reviewed_at: new Date().toISOString() } : i
+      ))
       setSelectedIds(new Set())
       setBulkActing(false)
-      window.location.reload()
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Bulk reject failed')
       setBulkActing(false)
@@ -205,9 +227,11 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setBulkActing(false)
         return
       }
+      setItems((prev) => prev.map((i) =>
+        ids.includes(i.id) ? { ...i, review_status: 'flagged', reviewed_at: new Date().toISOString() } : i
+      ))
       setSelectedIds(new Set())
       setBulkActing(false)
-      window.location.reload()
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Bulk flag failed')
       setBulkActing(false)
