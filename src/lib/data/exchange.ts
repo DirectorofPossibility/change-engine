@@ -1599,7 +1599,8 @@ export async function getEntityMeshProfile(entityType: string, entityId: string)
  */
 export async function getWayfinderContext(
   entityType: string,
-  entityId: string
+  entityId: string,
+  userRole?: string,
 ): Promise<import('@/lib/types/exchange').WayfinderData> {
   const { getLibraryNuggets } = await import('@/lib/data/library')
   const supabase = await createClient()
@@ -1744,6 +1745,68 @@ export async function getWayfinderContext(
     } catch { /* foundation lookup is best-effort */ }
   }
 
+  // ── Taxonomy metadata for admin/partner roles ──
+  let taxonomy: import('@/lib/types/exchange').WayfinderData['taxonomy']
+  const showTaxonomy = userRole === 'admin' || userRole === 'partner'
+
+  if (showTaxonomy && entityType === 'content') {
+    const [sdgJ, contentRow, actionTypeJ, govLevelJ] = await Promise.all([
+      supabase.from('content_sdgs').select('sdg_id').eq('content_id', entityId),
+      supabase.from('content_published').select('sdoh_domain, time_commitment_id, gov_level_id').eq('id', entityId).single(),
+      (supabase as any).from('content_action_types').select('action_type_id').eq('content_id', entityId),
+      (supabase as any).from('content_government_levels').select('gov_level_id').eq('content_id', entityId),
+    ])
+
+    const sdgIds = (sdgJ.data ?? []).map((j: any) => j.sdg_id)
+    const atIds = (actionTypeJ.data ?? []).map((j: any) => j.action_type_id)
+    const glIds = (govLevelJ.data ?? []).map((j: any) => j.gov_level_id)
+    const pub = contentRow.data as any
+
+    const [sdgRows, sdohRow, atRows, glRow, tcRow] = await Promise.all([
+      sdgIds.length > 0
+        ? supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color').in('sdg_id', sdgIds)
+        : Promise.resolve({ data: [] }),
+      pub?.sdoh_domain
+        ? supabase.from('sdoh_domains').select('sdoh_code, sdoh_name, sdoh_description').eq('sdoh_code', pub.sdoh_domain).single()
+        : Promise.resolve({ data: null }),
+      atIds.length > 0
+        ? supabase.from('action_types').select('action_type_id, action_type_name, category').in('action_type_id', atIds)
+        : Promise.resolve({ data: [] }),
+      glIds.length > 0
+        ? supabase.from('government_levels').select('gov_level_id, gov_level_name').in('gov_level_id', glIds).limit(1)
+        : Promise.resolve({ data: [] }),
+      pub?.time_commitment_id
+        ? supabase.from('time_commitments').select('time_id, time_name').eq('time_id', pub.time_commitment_id).single()
+        : Promise.resolve({ data: null }),
+    ])
+
+    // Get NTEE/AIRS from the review queue classification
+    let ntee_codes: string[] = []
+    let airs_codes: string[] = []
+    const { data: reviewRow } = await supabase
+      .from('content_review_queue')
+      .select('ai_classification')
+      .eq('inbox_id', entityId)
+      .single()
+    if (reviewRow?.ai_classification) {
+      const cls = typeof reviewRow.ai_classification === 'string'
+        ? JSON.parse(reviewRow.ai_classification)
+        : reviewRow.ai_classification
+      ntee_codes = cls.ntee_codes || []
+      airs_codes = cls.airs_codes || []
+    }
+
+    taxonomy = {
+      sdgs: (sdgRows.data ?? []) as any[],
+      sdohDomain: sdohRow.data as any,
+      actionTypes: (atRows.data ?? []) as any[],
+      govLevel: (glRow.data as any)?.[0] || null,
+      timeCommitment: tcRow.data as any,
+      ntee_codes,
+      airs_codes,
+    }
+  }
+
   return {
     focusAreas: faList,
     themes,
@@ -1755,6 +1818,7 @@ export async function getWayfinderContext(
     policies: (relPolicies.data ?? []) as any[],
     foundations,
     organizations: (relOrgs.data ?? []) as any[],
+    taxonomy,
   }
 }
 

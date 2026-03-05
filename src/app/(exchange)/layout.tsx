@@ -21,6 +21,7 @@ import { cookies } from 'next/headers'
 import { ElectionBanner } from '@/components/exchange/ElectionBanner'
 import { LanguageProvider } from '@/lib/contexts/LanguageContext'
 import { NeighborhoodProvider } from '@/lib/contexts/NeighborhoodContext'
+import { LeftNav } from '@/components/exchange/LeftNav'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -64,8 +65,11 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
             Skip to main content
           </a>
           <ElectionBanner election={nextElection} />
-          <div id="main-content">
-            {children}
+          <div id="main-content" className="flex">
+            <LeftNav />
+            <div className="flex-1 min-w-0">
+              {children}
+            </div>
           </div>
         </div>
       </NeighborhoodProvider>

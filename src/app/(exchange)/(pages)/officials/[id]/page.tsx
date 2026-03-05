@@ -5,8 +5,9 @@ import { createClient } from '@/lib/supabase/server'
 import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
-import { EntityMesh } from '@/components/exchange/EntityMesh'
-import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { OfficialDistrictMap } from './OfficialDistrictMap'
 
@@ -160,6 +161,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     officialTranslation = results[0][official.official_id]
     policyTranslations = results[1]
   }
+
+  // Wayfinder data
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('official', id, userProfile?.role)
 
   const displayTitle = officialTranslation?.title || official.title
   const rawPhotoUrl = profile?.photo_url || (official as any).photo_url as string | null
@@ -372,7 +377,9 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         </div>
       )}
 
-      <EntityMesh entityType="official" entityId={id} />
+      <div className="mt-10">
+        <DetailWayfinder data={wayfinderData} currentType="official" currentId={id} userRole={userProfile?.role} />
+      </div>
     </div>
   )
 }

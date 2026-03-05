@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 import {
   BookOpen, Heart, Scale, ChevronDown,
   Phone, Globe, Gift, Users, Calendar, MapPin,
-  FileText,
+  FileText, Tag,
 } from 'lucide-react'
 import type { WayfinderData } from '@/lib/types/exchange'
 
@@ -13,9 +13,11 @@ interface DetailWayfinderProps {
   data: WayfinderData
   currentType: string
   currentId: string
+  /** User role — taxonomy section only shown for admin/partner */
+  userRole?: string
 }
 
-export async function DetailWayfinder({ data, currentType, currentId }: DetailWayfinderProps) {
+export async function DetailWayfinder({ data, currentType, currentId, userRole }: DetailWayfinderProps) {
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
@@ -289,6 +291,93 @@ export async function DetailWayfinder({ data, currentType, currentId }: DetailWa
                 </div>
               )
             })}
+          </div>
+        </details>
+      )}
+
+      {/* Taxonomy — admin/partner only */}
+      {(userRole === 'admin' || userRole === 'partner') && data.taxonomy && (
+        <details className="group border-t border-brand-border">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <div className="flex items-center gap-2">
+              <Tag size={15} className="text-gray-500" />
+              <span className="text-sm font-medium text-brand-text">Classification</span>
+            </div>
+            <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
+          </summary>
+          <div className="px-4 pb-4 space-y-3 text-xs">
+            {/* SDGs */}
+            {data.taxonomy.sdgs.length > 0 && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">UN SDGs</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {data.taxonomy.sdgs.map(function (s) {
+                    return (
+                      <span key={s.sdg_id} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: s.sdg_color || '#4C9F38' }}>
+                        {s.sdg_number}. {s.sdg_name}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* SDOH */}
+            {data.taxonomy.sdohDomain && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Social Determinant</span>
+                <p className="text-brand-text mt-0.5">{data.taxonomy.sdohDomain.sdoh_name}</p>
+                {data.taxonomy.sdohDomain.sdoh_description && (
+                  <p className="text-brand-muted mt-0.5">{data.taxonomy.sdohDomain.sdoh_description}</p>
+                )}
+              </div>
+            )}
+
+            {/* Government Level */}
+            {data.taxonomy.govLevel && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Government Level</span>
+                <p className="text-brand-text mt-0.5">{data.taxonomy.govLevel.gov_level_name}</p>
+              </div>
+            )}
+
+            {/* Action Types */}
+            {data.taxonomy.actionTypes.length > 0 && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Action Types</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {data.taxonomy.actionTypes.map(function (at) {
+                    return (
+                      <span key={at.action_type_id} className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-text">
+                        {at.action_type_name}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Time Commitment */}
+            {data.taxonomy.timeCommitment && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Time Commitment</span>
+                <p className="text-brand-text mt-0.5">{data.taxonomy.timeCommitment.time_name}</p>
+              </div>
+            )}
+
+            {/* NTEE / AIRS codes */}
+            {data.taxonomy.ntee_codes.length > 0 && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">NTEE</span>
+                <p className="text-brand-text mt-0.5 font-mono">{data.taxonomy.ntee_codes.join(', ')}</p>
+              </div>
+            )}
+            {data.taxonomy.airs_codes.length > 0 && (
+              <div>
+                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">AIRS</span>
+                <p className="text-brand-text mt-0.5 font-mono">{data.taxonomy.airs_codes.join(', ')}</p>
+              </div>
+            )}
           </div>
         </details>
       )}

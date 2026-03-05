@@ -11,7 +11,9 @@ import { SDOHBadge } from '@/components/ui/SDOHBadge'
 import { ActionBar } from '@/components/exchange/ActionBar'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
-import { EntityMesh } from '@/components/exchange/EntityMesh'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { getFocusAreasByIds, getSDGMap, getSDOHMap, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
@@ -248,6 +250,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     .filter(function (r: any) { return r._score > 0 })
     .sort(function (a: any, b: any) { return b._score - a._score })
     .slice(0, 6)
+
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('content', id, userProfile?.role)
 
   const title = translatedTitle || item.title_6th_grade
   const summary = translatedSummary || item.summary_6th_grade
@@ -795,7 +800,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <EntityMesh entityType="content" entityId={id} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
+      </div>
     </div>
   )
 }

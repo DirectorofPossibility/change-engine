@@ -118,6 +118,8 @@ async function approveItemCore(
     action_apply: actions.apply_url || null,
     action_call: actions.phone || null,
     action_attend: actions.attend_url || null,
+    time_commitment_id: classification.time_commitment_id || null,
+    gov_level_id: classification.gov_level_id || null,
     confidence: classification.confidence,
     classification_reasoning: classification.reasoning || '',
     image_url: inbox.image_url || null,
@@ -163,6 +165,16 @@ async function approveItemCore(
   for (const skId of (classification.skill_ids || [])) {
     junctionInserts.push(
       svc.from('content_skills').insert({ content_id: contentId, skill_id: skId }).then(() => {})
+    )
+  }
+  for (const atId of (classification.action_type_ids || [])) {
+    junctionInserts.push(
+      (svc as any).from('content_action_types').insert({ content_id: contentId, action_type_id: atId }).then(() => {})
+    )
+  }
+  if (classification.gov_level_id) {
+    junctionInserts.push(
+      (svc as any).from('content_government_levels').insert({ content_id: contentId, gov_level_id: classification.gov_level_id }).then(() => {})
     )
   }
 

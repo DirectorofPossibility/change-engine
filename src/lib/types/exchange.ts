@@ -365,6 +365,16 @@ export interface WayfinderData {
   policies: WayfinderPolicy[]
   foundations: WayfinderFoundation[]
   organizations: WayfinderOrganization[]
+  /** Taxonomy metadata — only rendered for admin/partner roles */
+  taxonomy?: {
+    sdgs: Array<{ sdg_id: string; sdg_number: number; sdg_name: string; sdg_color: string }>
+    sdohDomain: { sdoh_code: string; sdoh_name: string; sdoh_description: string | null } | null
+    actionTypes: Array<{ action_type_id: string; action_type_name: string; category: string | null }>
+    govLevel: { gov_level_id: string; gov_level_name: string } | null
+    timeCommitment: { time_id: string; time_name: string } | null
+    ntee_codes: string[]
+    airs_codes: string[]
+  }
 }
 
 /** Aggregated data for the voting dashboard page. */

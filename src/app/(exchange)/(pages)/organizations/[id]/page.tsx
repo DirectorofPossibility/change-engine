@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Phone, Mail, Globe, MapPin } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
-import { EntityMesh } from '@/components/exchange/EntityMesh'
-import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 86400
@@ -83,6 +84,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   const displayOrgName = orgTranslation?.title || org.org_name
   const displayOrgDesc = orgTranslation?.summary || org.description_5th_grade
+
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('organization', id, userProfile?.role)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -231,7 +235,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         </section>
       )}
 
-      <EntityMesh entityType="organization" entityId={id} />
+      <div className="mt-10">
+        <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
+      </div>
     </div>
   )
 }

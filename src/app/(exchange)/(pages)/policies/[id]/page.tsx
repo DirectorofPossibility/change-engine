@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { EntityMesh } from '@/components/exchange/EntityMesh'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { ThemePill } from '@/components/ui/ThemePill'
-import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography } from '@/lib/data/exchange'
+import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography, getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
@@ -122,6 +123,9 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
     if (!geoByType[g.geo_type]) geoByType[g.geo_type] = []
     geoByType[g.geo_type].push(g.geo_id)
   }
+
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('policy', id, userProfile?.role)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -247,7 +251,9 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             </section>
           )}
 
-          <EntityMesh entityType="policy" entityId={id} />
+          <div className="mt-8">
+            <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
+          </div>
         </div>
 
         {/* Sidebar — focus areas + geography */}

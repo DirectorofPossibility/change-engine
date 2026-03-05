@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Phone, Globe, MapPin, Clock } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
-import { EntityMesh } from '@/components/exchange/EntityMesh'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { SingleLocationMap } from '@/components/maps/dynamic'
-import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -82,6 +83,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   const displayName = translatedName || service.service_name
   const displayDesc = translatedDesc || service.description_5th_grade
+
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('service', id, userProfile?.role)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -219,7 +223,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      <EntityMesh entityType="service" entityId={id} />
+      <div className="mt-10">
+        <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
+      </div>
     </div>
   )
 }
