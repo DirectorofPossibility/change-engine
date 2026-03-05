@@ -76,6 +76,20 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
   const { data: existing } = await supabase.from('content_published').select('id').eq('inbox_id', inboxId)
   if (existing && existing.length > 0) return { success: true, message: 'Already published' }
 
+  // Build extracted text for body field
+  let body = ''
+  try {
+    const extracted = typeof inbox.extracted_text === 'string'
+      ? JSON.parse(inbox.extracted_text)
+      : inbox.extracted_text || {}
+    body = extracted.full_text || inbox.description || ''
+  } catch {
+    body = inbox.description || ''
+  }
+
+  // Determine content_type from inbox metadata
+  const contentType = inbox.content_type || (inbox as any).source_type || 'article'
+
   // Publish as newsfeed item with all identified dimensions
   const actions = classification.action_items || {}
   const { data: published, error } = await supabase.from('content_published').insert({
@@ -87,10 +101,6 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     pathway_secondary: classification.theme_secondary || [],
     focus_area_ids: classification.focus_area_ids || [],
     center: classification.center || 'Learning',
-    // engagement_level is intentionally set to the same value as center.
-    // Both columns exist in content_published: `center` is the canonical
-    // classification field; `engagement_level` is consumed by downstream
-    // views (e.g. guides) that expect a separate column name.
     engagement_level: classification.center || 'Learning',
     sdg_ids: classification.sdg_ids || [],
     sdoh_domain: classification.sdoh_code || null,
@@ -99,6 +109,9 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     geographic_scope: classification.geographic_scope || 'Houston',
     title_6th_grade: classification.title_6th_grade || inbox.title || 'Untitled',
     summary_6th_grade: classification.summary_6th_grade || inbox.description || '',
+    body: body.substring(0, 50000),
+    content_type: contentType,
+    keywords: classification.keywords || [],
     action_donate: actions.donate_url || null,
     action_volunteer: actions.volunteer_url || null,
     action_signup: actions.signup_url || null,
@@ -162,10 +175,28 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
     await Promise.allSettled(junctionInserts)
   }
 
-  if (error) return { error: error.message }
+  if (error) return { error: `Publish failed: ${error.message}` }
 
   revalidatePath('/dashboard/review')
   revalidatePath('/dashboard/content')
+  revalidatePath('/dashboard')
+  return { success: true }
+}
+
+/**
+ * Flag a single review queue item for manual review.
+ */
+export async function flagItem(reviewId: string) {
+  const user = await requireAuth()
+  const supabase = createServiceClient()
+
+  const { error } = await supabase.from('content_review_queue')
+    .update({ review_status: 'flagged', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString() })
+    .eq('id', reviewId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath('/dashboard/review')
   revalidatePath('/dashboard')
   return { success: true }
 }

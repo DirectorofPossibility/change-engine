@@ -4,14 +4,12 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { MapProvider } from './MapProvider'
 import { HoustonMap } from './HoustonMap'
 import { MapMarker, type MarkerData } from './MapMarker'
 import { MapLegend } from './MapLegend'
 import { GeoJsonLayer } from './GeoJsonLayer'
 import { LayerControl, type LayerOption } from './LayerControl'
 import { GeoInfoPanel } from './GeoInfoPanel'
-import { useMapZoom } from './useMapZoom'
 import type { GeoLayerConfig } from '@/lib/constants'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'
 
@@ -86,6 +84,18 @@ function createClusterIcon(cluster: any) {
   })
 }
 
+/** Reports current zoom level from inside MapContainer to a parent callback */
+function ZoomReporter({ onZoomChange }: { onZoomChange: (z: number) => void }) {
+  const map = useMap()
+  useEffect(() => {
+    onZoomChange(map.getZoom())
+    const onZoom = () => onZoomChange(map.getZoom())
+    map.on('zoomend', onZoom)
+    return () => { map.off('zoomend', onZoom) }
+  }, [map, onZoomChange])
+  return null
+}
+
 function InteractiveMapInner({
   markers = [],
   layers = [],
@@ -99,7 +109,8 @@ function InteractiveMapInner({
   onFeatureClick,
   onMarkerClick,
 }: InteractiveMapProps) {
-  const currentZoom = useMapZoom()
+  const [currentZoom, setCurrentZoom] = useState(10)
+  const handleZoom = useCallback((z: number) => setCurrentZoom(z), [])
   const [visibleLayerIds, setVisibleLayerIds] = useState<Set<string>>(
     new Set(defaultVisibleLayers)
   )
@@ -147,6 +158,7 @@ function InteractiveMapInner({
           zoom={initialZoom}
           center={center}
         >
+          <ZoomReporter onZoomChange={handleZoom} />
           {markers.length > 0 && <FitBounds markers={markers} />}
 
           {/* GeoJSON boundary layers — fade in at neighborhood zoom */}
@@ -213,9 +225,5 @@ function InteractiveMapInner({
 }
 
 export function InteractiveMap(props: InteractiveMapProps) {
-  return (
-    <MapProvider>
-      <InteractiveMapInner {...props} />
-    </MapProvider>
-  )
+  return <InteractiveMapInner {...props} />
 }

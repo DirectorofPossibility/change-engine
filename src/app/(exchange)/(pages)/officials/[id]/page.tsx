@@ -162,7 +162,8 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   }
 
   const displayTitle = officialTranslation?.title || official.title
-  const photoUrl = profile?.photo_url || (official as any).photo_url as string | null
+  const rawPhotoUrl = profile?.photo_url || (official as any).photo_url as string | null
+  const photoUrl = rawPhotoUrl?.replace(/^http:\/\//, 'https://') ?? null
   const bio = profile?.bio_short || official.description_5th_grade
 
   return (
@@ -257,7 +258,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               return (
                 <Link
                   key={fa.focus_id}
-                  href={'/focus-areas/' + fa.focus_id}
+                  href={'/explore/focus/' + fa.focus_id}
                   className={'text-sm px-3 py-1.5 rounded-full border font-medium hover:opacity-80 transition-opacity ' + focusAreaColor(i)}
                 >
                   {fa.focus_area_name}

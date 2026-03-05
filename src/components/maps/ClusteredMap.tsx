@@ -1,14 +1,12 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { MapProvider } from './MapProvider'
 import { HoustonMap } from './HoustonMap'
 import { MapMarker, type MarkerData } from './MapMarker'
 import { MapLegend } from './MapLegend'
-import { useMapZoom } from './useMapZoom'
 
 interface ClusteredMapProps {
   markers: MarkerData[]
@@ -51,14 +49,28 @@ function createClusterIcon(cluster: any) {
   })
 }
 
-function ClusteredMapInner({ markers, className, showLegend = true }: ClusteredMapProps) {
+/** Reports current zoom level from inside MapContainer to a parent callback */
+function ZoomReporter({ onZoomChange }: { onZoomChange: (z: number) => void }) {
+  const map = useMap()
+  useEffect(() => {
+    onZoomChange(map.getZoom())
+    const onZoom = () => onZoomChange(map.getZoom())
+    map.on('zoomend', onZoom)
+    return () => { map.off('zoomend', onZoom) }
+  }, [map, onZoomChange])
+  return null
+}
+
+export function ClusteredMap({ markers, className, showLegend = true }: ClusteredMapProps) {
   const types = Array.from(new Set(markers.map(m => m.type)))
-  const zoom = useMapZoom()
+  const [zoom, setZoom] = useState(10)
+  const handleZoom = useCallback((z: number) => setZoom(z), [])
 
   return (
     <div>
       <HoustonMap className={className || 'w-full h-[400px] rounded-xl'}>
         <FitBounds markers={markers} />
+        <ZoomReporter onZoomChange={handleZoom} />
         <MarkerClusterGroup
           chunkedLoading
           iconCreateFunction={createClusterIcon}
@@ -74,13 +86,5 @@ function ClusteredMapInner({ markers, className, showLegend = true }: ClusteredM
       </HoustonMap>
       {showLegend && types.length > 1 && zoom >= 12 && <MapLegend types={types} />}
     </div>
-  )
-}
-
-export function ClusteredMap(props: ClusteredMapProps) {
-  return (
-    <MapProvider>
-      <ClusteredMapInner {...props} />
-    </MapProvider>
   )
 }
