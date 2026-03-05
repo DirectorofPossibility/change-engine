@@ -554,3 +554,78 @@ export async function getRelatedDocuments(
 
   return (data ?? []) as unknown as KBSearchResult[]
 }
+
+// ── Unified Knowledge Base (kb_documents + content_published) ──
+
+export interface UnifiedKBItem {
+  id: string
+  title: string
+  summary: string
+  tags: string[]
+  theme_ids: string[]
+  focus_area_ids: string[]
+  content_type: string
+  center: string | null
+  source: 'kb_document' | 'content'
+  image_url: string | null
+  source_url: string | null
+  published_at: string | null
+}
+
+export async function getUnifiedKBItems(): Promise<UnifiedKBItem[]> {
+  const supabase = await createClient()
+
+  const [kbRes, cpRes] = await Promise.all([
+    supabase
+      .from('kb_documents' as any)
+      .select('id, title, summary, tags, theme_ids, focus_area_ids, content_type, center_id, published_at')
+      .eq('status', 'published'),
+    supabase
+      .from('content_published')
+      .select('id, title_6th_grade, summary_6th_grade, keywords, pathway_primary, pathway_secondary, focus_area_ids, content_type, center, image_url, source_url, published_at')
+      .eq('is_active', true),
+  ])
+
+  const items: UnifiedKBItem[] = []
+
+  for (const d of (kbRes.data ?? []) as any[]) {
+    items.push({
+      id: d.id,
+      title: d.title,
+      summary: d.summary || '',
+      tags: d.tags || [],
+      theme_ids: d.theme_ids || [],
+      focus_area_ids: d.focus_area_ids || [],
+      content_type: d.content_type || 'document',
+      center: d.center_id || null,
+      source: 'kb_document',
+      image_url: null,
+      source_url: null,
+      published_at: d.published_at,
+    })
+  }
+
+  for (const c of (cpRes.data ?? []) as any[]) {
+    const themeIds = [c.pathway_primary, ...(c.pathway_secondary || [])].filter(Boolean)
+    items.push({
+      id: c.id,
+      title: c.title_6th_grade || '',
+      summary: c.summary_6th_grade || '',
+      tags: c.keywords || [],
+      theme_ids: themeIds,
+      focus_area_ids: c.focus_area_ids || [],
+      content_type: c.content_type || 'article',
+      center: c.center || null,
+      source: 'content',
+      image_url: c.image_url || null,
+      source_url: c.source_url || null,
+      published_at: c.published_at,
+    })
+  }
+
+  items.sort(function (a, b) {
+    return a.title.localeCompare(b.title, 'en', { sensitivity: 'base' })
+  })
+
+  return items
+}

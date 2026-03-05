@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
 import { getFocusAreas, getSDGs, getSDOHDomains } from '@/lib/data/exchange'
-import { getDocumentCountsByTheme } from '@/lib/data/library'
+import { getUnifiedKBItems } from '@/lib/data/library'
 import { ExploreFilterClient } from './ExploreFilterClient'
 import { PageHero } from '@/components/exchange/PageHero'
 import { getUIStrings } from '@/lib/i18n'
@@ -29,18 +29,18 @@ const THEME_I18N: Record<string, string> = {
 }
 
 export default async function ExplorePage() {
-  const [focusAreas, sdgs, sdohDomains, kbCounts] = await Promise.all([
+  const [focusAreas, sdgs, sdohDomains, kbItems] = await Promise.all([
     getFocusAreas(),
     getSDGs(),
     getSDOHDomains(),
-    getDocumentCountsByTheme(),
+    getUnifiedKBItems(),
   ])
 
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
-  const totalArticles = Object.values(kbCounts).reduce(function (sum, n) { return sum + n }, 0)
+  const totalItems = kbItems.length
 
   // Group focus areas by theme_id, using translated theme names
   const themes = Object.entries(THEMES).map(function ([id, theme]) {
@@ -75,7 +75,7 @@ export default async function ExplorePage() {
               Knowledge Base
             </h2>
             <p className="text-sm text-brand-muted">
-              Browse {totalArticles > 0 ? totalArticles + ' articles' : 'articles and research'} A-Z with search
+              Browse {totalItems > 0 ? totalItems + ' articles, reports, guides, and more' : 'articles and research'}
             </p>
           </div>
           <ArrowRight size={18} className="text-brand-muted group-hover:text-brand-accent transition-colors flex-shrink-0" />

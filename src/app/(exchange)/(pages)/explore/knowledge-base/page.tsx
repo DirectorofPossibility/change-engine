@@ -1,24 +1,32 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
-import { getPublishedDocuments } from '@/lib/data/library'
-import { KnowledgeBaseTree } from '../KnowledgeBaseSection'
+import { getUnifiedKBItems } from '@/lib/data/library'
+import { getFocusAreas } from '@/lib/data/exchange'
+import { KnowledgeBaseClient } from '../KnowledgeBaseSection'
 import { PageHero } from '@/components/exchange/PageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { BookOpen, MessageCircle, FileText } from 'lucide-react'
+import { MessageCircle, FileText } from 'lucide-react'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Knowledge Base — Community Exchange',
-  description: 'Browse all articles A-Z in the Community Exchange knowledge base.',
+  description: 'Browse articles, reports, guides, videos, and research across all pathways.',
 }
 
 export default async function KnowledgeBasePage() {
-  const { documents } = await getPublishedDocuments(1, 500)
+  const [items, allFocusAreas] = await Promise.all([
+    getUnifiedKBItems(),
+    getFocusAreas(),
+  ])
 
   const themes = Object.entries(THEMES).map(function ([id, theme]) {
     return { id, name: theme.name, color: theme.color, emoji: theme.emoji }
+  })
+
+  const focusAreas = allFocusAreas.map(function (fa: any) {
+    return { focus_id: fa.focus_id, focus_area_name: fa.focus_area_name, theme_id: fa.theme_id || null }
   })
 
   return (
@@ -26,10 +34,10 @@ export default async function KnowledgeBasePage() {
       <PageHero
         variant="editorial"
         title="Knowledge Base"
-        subtitle="Browse all articles and research, organized A-Z."
+        subtitle="Explore articles, reports, guides, videos, and tools — organized by pathway, topic, or A-Z."
       />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumb items={[
           { label: 'Explore', href: '/explore' },
           { label: 'Knowledge Base' },
@@ -52,33 +60,15 @@ export default async function KnowledgeBasePage() {
             Ask AI
           </Link>
           <span className="text-xs text-brand-muted ml-auto">
-            {documents.length} article{documents.length !== 1 ? 's' : ''}
+            {items.length} item{items.length !== 1 ? 's' : ''} in knowledge base
           </span>
         </div>
 
-        {/* A-Z Tree */}
-        {documents.length > 0 ? (
-          <KnowledgeBaseTree
-            articles={documents.map(function (d: any) {
-              return {
-                id: d.id,
-                title: d.title,
-                summary: d.summary || '',
-                tags: d.tags || [],
-                theme_ids: d.theme_ids || [],
-                page_count: d.page_count || 0,
-                published_at: d.published_at,
-              }
-            })}
-            themes={themes}
-          />
-        ) : (
-          <div className="text-center py-16 bg-white rounded-xl border border-brand-border">
-            <BookOpen size={36} className="mx-auto text-brand-muted mb-4" />
-            <p className="text-brand-muted mb-2">The knowledge base is being built.</p>
-            <p className="text-sm text-brand-muted">Check back soon for articles and guides.</p>
-          </div>
-        )}
+        <KnowledgeBaseClient
+          items={items}
+          themes={themes}
+          focusAreas={focusAreas}
+        />
       </div>
     </div>
   )
