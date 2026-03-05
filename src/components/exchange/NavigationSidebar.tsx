@@ -320,6 +320,19 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         )}
       </div>
 
+      {/* Support link */}
+      <div className="px-4 py-1">
+        <a
+          href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm font-semibold text-brand-accent hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+        >
+          <Heart size={16} />
+          {t('support.button')}
+        </a>
+      </div>
+
       {/* Spacer */}
       <div className="flex-1 min-h-4" />
       <div className="pb-4" />

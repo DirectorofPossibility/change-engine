@@ -7,6 +7,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Heart } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
 
@@ -45,6 +46,15 @@ export function Footer() {
               <Link href="/privacy" className="block text-sm text-gray-400 hover:text-white">{t('footer.privacy')}</Link>
               <Link href="/terms" className="block text-sm text-gray-400 hover:text-white">{t('footer.terms')}</Link>
               <Link href="/accessibility" className="block text-sm text-gray-400 hover:text-white">{t('footer.accessibility')}</Link>
+              <a
+                href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-brand-accent hover:text-white transition-colors mt-2"
+              >
+                <Heart size={14} />
+                {t('support.button')}
+              </a>
             </div>
           </div>
         </div>
