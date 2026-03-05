@@ -14,9 +14,6 @@
  * parity.
  */
 
-'use client'
-
-import { useLanguage } from '@/lib/contexts/LanguageContext'
 import type { SupportedLanguage } from '@/lib/types/exchange'
 
 // ── Dictionaries ──
@@ -460,6 +457,19 @@ const en: Record<string, string> = {
   'library.uploading': 'Uploading...',
   'library.upload_btn': 'Upload Document',
   'library.nav': 'Research Library',
+  'library.kb_search_placeholder': 'Search the research library...',
+  'library.browse_categories': 'Browse by Pathway',
+  'library.category_documents': 'documents',
+  'library.see_all': 'See all',
+  'library.see_all_count': 'See all {count} articles',
+  'library.back_to_category': 'Back to {name}',
+  'library.in_this_section': 'In this section',
+  'library.was_helpful': 'Was this article helpful?',
+  'library.vote_yes': 'Yes',
+  'library.vote_no': 'No',
+  'library.vote_thanks': 'Thanks for your feedback!',
+  'library.popular_articles': 'Recently Published',
+  'library.other_resources': 'Other resources',
 
   // Voting Dashboard
   'voting.zip_placeholder': 'Enter your ZIP code',
@@ -958,6 +968,19 @@ const es: Record<string, string> = {
   'library.uploading': 'Subiendo...',
   'library.upload_btn': 'Subir Documento',
   'library.nav': 'Biblioteca de Investigación',
+  'library.kb_search_placeholder': 'Buscar en la biblioteca de investigación...',
+  'library.browse_categories': 'Explorar por Camino',
+  'library.category_documents': 'documentos',
+  'library.see_all': 'Ver todos',
+  'library.see_all_count': 'Ver los {count} artículos',
+  'library.back_to_category': 'Volver a {name}',
+  'library.in_this_section': 'En esta sección',
+  'library.was_helpful': '¿Fue útil este artículo?',
+  'library.vote_yes': 'Sí',
+  'library.vote_no': 'No',
+  'library.vote_thanks': '¡Gracias por tus comentarios!',
+  'library.popular_articles': 'Publicados recientemente',
+  'library.other_resources': 'Otros recursos',
 
   // Voting Dashboard
   'voting.zip_placeholder': 'Ingrese su código postal',
@@ -1456,6 +1479,19 @@ const vi: Record<string, string> = {
   'library.uploading': 'Đang tải lên...',
   'library.upload_btn': 'Tải Lên Tài Liệu',
   'library.nav': 'Thư Viện Nghiên Cứu',
+  'library.kb_search_placeholder': 'Tìm kiếm trong thư viện nghiên cứu...',
+  'library.browse_categories': 'Duyệt theo Con Đường',
+  'library.category_documents': 'tài liệu',
+  'library.see_all': 'Xem tất cả',
+  'library.see_all_count': 'Xem tất cả {count} bài viết',
+  'library.back_to_category': 'Quay lại {name}',
+  'library.in_this_section': 'Trong phần này',
+  'library.was_helpful': 'Bài viết này có hữu ích không?',
+  'library.vote_yes': 'Có',
+  'library.vote_no': 'Không',
+  'library.vote_thanks': 'Cảm ơn phản hồi của bạn!',
+  'library.popular_articles': 'Xuất bản gần đây',
+  'library.other_resources': 'Tài nguyên khác',
 
   // Voting Dashboard
   'voting.zip_placeholder': 'Nhập mã bưu điện',
@@ -1515,29 +1551,7 @@ const vi: Record<string, string> = {
   'brand.subtitle': 'Trao Đổi Cộng Đồng',
 }
 
-const dictionaries: Record<SupportedLanguage, Record<string, string>> = { en, es, vi }
-
-// ── Client hook ──
-
-/**
- * React hook returning a `t()` function that resolves UI string keys
- * against the current language from {@link LanguageContext}.
- *
- * @returns `{ t }` where `t(key)` returns the translated string or the key itself as fallback.
- *
- * @example
- * ```tsx
- * const { t } = useTranslation()
- * return <h1>{t('services.title')}</h1>
- * ```
- */
-export function useTranslation() {
-  const { language } = useLanguage()
-  function t(key: string): string {
-    return dictionaries[language]?.[key] ?? dictionaries.en[key] ?? key
-  }
-  return { t }
-}
+export const dictionaries: Record<SupportedLanguage, Record<string, string>> = { en, es, vi }
 
 // ── Server helper ──
 

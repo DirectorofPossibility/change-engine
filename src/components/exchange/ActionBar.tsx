@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Heart, Users, FileText, ClipboardList, Phone, Calendar, Pencil } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface Action {
   key: string

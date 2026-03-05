@@ -2,10 +2,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { FileText, Download, Tag, MessageCircle } from 'lucide-react'
-import { getDocumentById, getRelatedDocuments } from '@/lib/data/library'
+import { getDocumentById, getRelatedDocuments, getSiblingDocuments } from '@/lib/data/library'
 import { THEMES } from '@/lib/constants'
 import { LibraryCard } from '@/components/exchange/LibraryCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { ArticleSidebar } from './ArticleSidebar'
+import { ArticleVoting } from './ArticleVoting'
 
 export const revalidate = 300
 
@@ -28,23 +30,53 @@ export default async function DocumentDetailPage(
   const doc = await getDocumentById(id)
   if (!doc) notFound()
 
-  const related = await getRelatedDocuments(doc.id, doc.theme_ids, doc.tags)
+  const [related, siblings] = await Promise.all([
+    getRelatedDocuments(doc.id, doc.theme_ids, doc.tags),
+    getSiblingDocuments(doc.id, doc.theme_ids, doc.center_id),
+  ])
 
   // Resolve theme info
   const themeInfo = doc.theme_ids
     .map(function (tid) {
-      const theme = (THEMES as Record<string, { color: string; name: string }>)[tid]
-      return theme ? { color: theme.color, name: theme.name } : null
+      const theme = (THEMES as Record<string, { color: string; name: string; slug: string }>)[tid]
+      return theme ? { color: theme.color, name: theme.name, slug: theme.slug } : null
     })
-    .filter(Boolean) as { color: string; name: string }[]
+    .filter(Boolean) as { color: string; name: string; slug: string }[]
 
+  const primaryTheme = themeInfo[0] || { color: '#C75B2A', name: 'Library', slug: '' }
   const fileSizeMB = (doc.file_size / (1024 * 1024)).toFixed(1)
+
+  // Breadcrumb trail
+  const breadcrumbs = [
+    { label: 'Library', href: '/library' },
+    ...(primaryTheme.slug
+      ? [{ label: primaryTheme.name, href: '/library/category/' + primaryTheme.slug }]
+      : []),
+    { label: doc.title },
+  ]
+
+  // Sidebar siblings list: current doc + siblings
+  const sidebarDocs = [
+    { id: doc.id, title: doc.title },
+    ...siblings.map(function (s) { return { id: s.id, title: s.title } }),
+  ]
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Breadcrumb items={[{ label: 'Library', href: '/library' }, { label: doc.title }]} />
+      <Breadcrumb items={breadcrumbs} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Left sidebar — collapses on mobile */}
+        <div className="hidden lg:block lg:col-span-1">
+          <ArticleSidebar
+            currentDocId={doc.id}
+            siblings={sidebarDocs}
+            themeSlug={primaryTheme.slug}
+            themeName={primaryTheme.name}
+            themeColor={primaryTheme.color}
+          />
+        </div>
+
         {/* Main content */}
         <div className="lg:col-span-2">
           {/* Theme pills */}
@@ -52,13 +84,14 @@ export default async function DocumentDetailPage(
             <div className="flex flex-wrap gap-2 mb-4">
               {themeInfo.map(function (theme) {
                 return (
-                  <span
+                  <Link
                     key={theme.name}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
+                    href={'/library/category/' + theme.slug}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold hover:opacity-80 transition-opacity"
                     style={{ backgroundColor: theme.color + '15', color: theme.color }}
                   >
                     {theme.name}
-                  </span>
+                  </Link>
                 )
               })}
             </div>
@@ -119,9 +152,12 @@ export default async function DocumentDetailPage(
               })}
             </div>
           )}
+
+          {/* Voting */}
+          <ArticleVoting documentId={doc.id} />
         </div>
 
-        {/* Sidebar */}
+        {/* Right sidebar — actions + related */}
         <div className="space-y-5">
           {/* Actions */}
           <div className="bg-white rounded-xl border border-brand-border p-5 space-y-3">
@@ -142,6 +178,17 @@ export default async function DocumentDetailPage(
               <MessageCircle size={15} />
               Ask About This Document
             </Link>
+          </div>
+
+          {/* Mobile sidebar — shown below main content on small screens */}
+          <div className="lg:hidden">
+            <ArticleSidebar
+              currentDocId={doc.id}
+              siblings={sidebarDocs}
+              themeSlug={primaryTheme.slug}
+              themeName={primaryTheme.name}
+              themeColor={primaryTheme.color}
+            />
           </div>
 
           {/* Related documents */}

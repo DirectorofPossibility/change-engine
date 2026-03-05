@@ -7,7 +7,7 @@ import {
   Send, RotateCcw, FileText, MapPin, Users, Building2,
   Newspaper, Landmark, MessageCircle,
 } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface ChatSource {
   source_type: string

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { MapPin, X } from 'lucide-react'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 export function ZipInput() {
   const { zip, neighborhood, lookupZip, clearZip, isLoading } = useNeighborhood()

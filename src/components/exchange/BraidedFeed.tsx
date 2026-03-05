@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { FeedCard } from './FeedCard'
 import type { FeedItem } from './FeedCard'
 import { BookOpen, Zap, Package, Scale, LayoutGrid, List } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 export type { FeedItem } from './FeedCard'
 

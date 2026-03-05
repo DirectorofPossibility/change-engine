@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Calendar, MapPin, Users } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface OpportunityCardProps {
   name: string

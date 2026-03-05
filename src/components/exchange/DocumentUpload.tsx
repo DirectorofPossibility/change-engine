@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { Upload, FileText, X, Check } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { createBrowserClient } from '@supabase/ssr'
 
 const MAX_FILE_SIZE = 35 * 1024 * 1024 // 35MB

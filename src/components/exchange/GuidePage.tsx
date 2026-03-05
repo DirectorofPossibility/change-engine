@@ -8,7 +8,7 @@ import {
   Vote, Compass, Phone, Activity, Landmark,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import type { ExchangeStats, ServiceWithOrg } from '@/lib/types/exchange'

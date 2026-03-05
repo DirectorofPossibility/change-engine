@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { ChevronRight, BookOpen, Zap, Package, Scale } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { CENTER_COLORS } from '@/lib/constants'
 
 export interface FeedItem {

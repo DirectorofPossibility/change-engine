@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface PathwayRibbonsProps {
   pathwayCounts: Record<string, number>

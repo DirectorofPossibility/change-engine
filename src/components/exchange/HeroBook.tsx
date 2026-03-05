@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { BRAND, THEMES } from '@/lib/constants'
 
 /** Spectrum bar showing all 7 pathway colors */

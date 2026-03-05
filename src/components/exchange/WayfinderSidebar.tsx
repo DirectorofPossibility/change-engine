@@ -10,7 +10,7 @@ import {
   Landmark, Vote,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { AuthButton } from './AuthButton'

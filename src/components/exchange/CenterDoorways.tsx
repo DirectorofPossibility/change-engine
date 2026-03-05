@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { CENTERS, BRAND, CENTER_COLORS } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface CenterDoorwaysProps {
   centerCounts: Record<string, number>

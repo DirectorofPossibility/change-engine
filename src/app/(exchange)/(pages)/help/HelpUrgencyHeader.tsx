@@ -6,7 +6,7 @@
  */
 'use client'
 
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { URGENCY_CONFIG } from '@/lib/constants'
 
 interface HelpUrgencyHeaderProps {

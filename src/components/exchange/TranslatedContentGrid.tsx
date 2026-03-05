@@ -10,7 +10,7 @@
 
 import { useEffect } from 'react'
 import { useLanguage } from '@/lib/contexts/LanguageContext'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { ContentCard } from './ContentCard'
 interface ContentGridItem {
   id: string

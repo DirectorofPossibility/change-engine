@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages = [
     '', '/pathways', '/help', '/officials', '/officials/lookup',
-    '/elections', '/services', '/learn', '/search', '/policies', '/geography',
+    '/elections', '/services', '/learn', '/search', '/policies', '/geography', '/library',
   ].map(function (path) {
     return {
       url: baseUrl + path,
@@ -96,5 +96,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   })
 
-  return [...staticPages, ...pathwayPages, ...contentPages, ...officialPages, ...helpPages, ...servicePages, ...policyPages]
+  // Library category pages
+  const libraryCategoryPages = Object.values(THEMES).map(function (t) {
+    return {
+      url: baseUrl + '/library/category/' + t.slug,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }
+  })
+
+  // Library document pages
+  const { data: kbDocs } = await supabase
+    .from('kb_documents')
+    .select('id, published_at')
+    .eq('status', 'published')
+  const libraryDocPages = (kbDocs || []).map(function (d: { id: string; published_at: string | null }) {
+    return {
+      url: baseUrl + '/library/doc/' + d.id,
+      lastModified: d.published_at ? new Date(d.published_at) : new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }
+  })
+
+  return [...staticPages, ...pathwayPages, ...contentPages, ...officialPages, ...helpPages, ...servicePages, ...policyPages, ...libraryCategoryPages, ...libraryDocPages]
 }

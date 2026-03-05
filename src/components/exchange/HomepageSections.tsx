@@ -7,7 +7,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 /** Translated section heading with optional subtitle. */
 export function HomeSectionHeading({ titleKey, subtitleKey }: { titleKey: string; subtitleKey?: string }) {

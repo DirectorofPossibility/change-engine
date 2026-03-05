@@ -273,6 +273,100 @@ export interface ContentPreview {
 /** Compass preview data: pathway → center → content previews. */
 export type CompassPreviewData = Record<string, Record<string, ContentPreview[]>>
 
+// ── Wayfinder types ─────────────────────────────────────────────────
+
+export interface WayfinderContent {
+  id: string
+  title_6th_grade: string | null
+  summary_6th_grade: string | null
+  pathway_primary: string | null
+  center: string | null
+  image_url: string | null
+  source_url: string | null
+  inbox_id: string | null
+}
+
+export interface WayfinderOfficial {
+  official_id: string
+  official_name: string
+  title: string | null
+  level: string | null
+  party: string | null
+  photo_url: string | null
+}
+
+export interface WayfinderPolicy {
+  policy_id: string
+  policy_name: string
+  title_6th_grade: string | null
+  bill_number: string | null
+  status: string | null
+  level: string | null
+}
+
+export interface WayfinderService {
+  service_id: string
+  service_name: string
+  description_5th_grade: string | null
+  phone: string | null
+  address: string | null
+  city: string | null
+  org_id: string | null
+}
+
+export interface WayfinderOrganization {
+  org_id: string
+  org_name: string
+  description_5th_grade: string | null
+  logo_url: string | null
+  website: string | null
+  phone: string | null
+  donate_url: string | null
+  volunteer_url: string | null
+  newsletter_url: string | null
+}
+
+export interface WayfinderOpportunity {
+  opportunity_id: string
+  opportunity_name: string
+  description_5th_grade: string | null
+  start_date: string | null
+  end_date: string | null
+  time_commitment: string | null
+  is_virtual: boolean | null
+  registration_url: string | null
+  org_id: string | null
+}
+
+export interface WayfinderFoundation {
+  foundation_id: string
+  name: string
+  description: string | null
+  website: string | null
+}
+
+export interface LibraryNugget {
+  id: string
+  title: string
+  summary: string | null
+  excerpt: string | null
+  page_ref: string | null
+  document_id: string
+}
+
+export interface WayfinderData {
+  focusAreas: Array<{ focus_id: string; focus_area_name: string; theme_id: string | null }>
+  themes: string[]
+  content: WayfinderContent[]
+  libraryNuggets: LibraryNugget[]
+  opportunities: WayfinderOpportunity[]
+  services: WayfinderService[]
+  officials: WayfinderOfficial[]
+  policies: WayfinderPolicy[]
+  foundations: WayfinderFoundation[]
+  organizations: WayfinderOrganization[]
+}
+
 /** Aggregated data for the voting dashboard page. */
 export interface ElectionDashboardData {
   pastElections: Election[]

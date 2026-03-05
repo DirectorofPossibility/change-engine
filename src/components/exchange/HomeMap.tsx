@@ -3,7 +3,7 @@
 import { InteractiveMap } from '@/components/maps'
 import type { MarkerData } from '@/components/maps'
 import { GEO_LAYERS } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface HomeMapProps {
   markers: MarkerData[]

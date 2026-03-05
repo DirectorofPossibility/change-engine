@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, Filter, Scale } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 
 interface Policy {

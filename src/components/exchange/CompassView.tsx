@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { THEMES, CENTER_COLORS } from '@/lib/constants'
 import { ContentShelf, type ShelfItem } from './ContentShelf'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import type { CompassPreviewData } from '@/lib/types/exchange'
 
 const CENTER_ICONS: Record<string, string> = {

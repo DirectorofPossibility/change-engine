@@ -10,7 +10,7 @@
 
 import Link from 'next/link'
 import { Phone, MapPin, Globe } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface ServiceCardProps {
   /** Service unique ID for linking to detail page. */

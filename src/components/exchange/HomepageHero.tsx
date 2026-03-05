@@ -10,7 +10,7 @@
 
 import Link from 'next/link'
 import { BRAND } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 /**
  * Translatable hero text overlay with CTA buttons.

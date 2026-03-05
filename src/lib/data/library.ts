@@ -23,6 +23,7 @@ export interface KBDocument {
   tags: string[]
   theme_ids: string[]
   focus_area_ids: string[]
+  center_id: string | null
   created_at: string
   published_at: string | null
 }
@@ -146,7 +147,7 @@ export async function getLibraryNuggets(
         documentTitle: d.title,
         chunkExcerpt: excerpt,
         pageRef: chunk.page_start ? 'p. ' + chunk.page_start : null,
-        link: '/library/' + d.id,
+        link: '/library/doc/' + d.id,
       }
     })
 }
@@ -371,6 +372,128 @@ export async function multiSourceSearch(
       score: c.combined_score,
       metadata: { page_start: c.metadata?.page_start, chunk_id: c.chunk_id },
     }))
+  }
+}
+
+// ── Knowledge Base queries ──
+
+/** Count published documents per theme for homepage category cards. */
+export async function getDocumentCountsByTheme(): Promise<Record<string, number>> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('kb_documents' as any)
+    .select('theme_ids')
+    .eq('status', 'published')
+
+  const counts: Record<string, number> = {}
+  for (const doc of (data ?? []) as unknown as Array<{ theme_ids: string[] }>) {
+    for (const tid of doc.theme_ids ?? []) {
+      counts[tid] = (counts[tid] || 0) + 1
+    }
+  }
+  return counts
+}
+
+/** Fetch published documents for a given theme, optionally filtered by center. */
+export async function getDocumentsByTheme(
+  themeId: string,
+  center?: string,
+  limit = 50
+): Promise<KBDocument[]> {
+  const supabase = await createClient()
+  let query = supabase
+    .from('kb_documents' as any)
+    .select('*')
+    .eq('status', 'published')
+    .contains('theme_ids', [themeId])
+    .order('published_at', { ascending: false })
+    .limit(limit)
+
+  if (center) {
+    query = query.eq('center_id', center)
+  }
+
+  const { data } = await query
+  return (data ?? []) as unknown as KBDocument[]
+}
+
+/** Count documents per center for a given theme. */
+export async function getCenterCountsForTheme(
+  themeId: string
+): Promise<Record<string, number>> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('kb_documents' as any)
+    .select('center_id')
+    .eq('status', 'published')
+    .contains('theme_ids', [themeId])
+
+  const counts: Record<string, number> = {}
+  for (const doc of (data ?? []) as unknown as Array<{ center_id: string | null }>) {
+    const key = doc.center_id || '_other'
+    counts[key] = (counts[key] || 0) + 1
+  }
+  return counts
+}
+
+/** Fetch sibling documents in the same theme/center for sidebar navigation. */
+export async function getSiblingDocuments(
+  docId: string,
+  themeIds: string[],
+  centerId: string | null,
+  limit = 10
+): Promise<KBSearchResult[]> {
+  if (themeIds.length === 0) return []
+  const supabase = await createClient()
+
+  let query = supabase
+    .from('kb_documents' as any)
+    .select('id, title, summary, tags, theme_ids, page_count, published_at')
+    .eq('status', 'published')
+    .neq('id', docId)
+    .overlaps('theme_ids', themeIds)
+    .order('published_at', { ascending: false })
+    .limit(limit)
+
+  if (centerId) {
+    query = query.eq('center_id', centerId)
+  }
+
+  const { data } = await query
+  return (data ?? []) as unknown as KBSearchResult[]
+}
+
+/** Record a helpful/not_helpful vote (upsert by session). */
+export async function recordArticleVote(
+  documentId: string,
+  vote: 'helpful' | 'not_helpful',
+  sessionId: string
+): Promise<{ success: boolean }> {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('kb_article_votes' as any)
+    .upsert(
+      { document_id: documentId, vote, session_id: sessionId },
+      { onConflict: 'document_id,session_id' }
+    )
+
+  return { success: !error }
+}
+
+/** Get aggregate vote counts for a document. */
+export async function getArticleVotes(
+  documentId: string
+): Promise<{ helpful: number; not_helpful: number }> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('kb_article_votes' as any)
+    .select('vote')
+    .eq('document_id', documentId)
+
+  const votes = (data ?? []) as unknown as Array<{ vote: string }>
+  return {
+    helpful: votes.filter(v => v.vote === 'helpful').length,
+    not_helpful: votes.filter(v => v.vote === 'not_helpful').length,
   }
 }
 

@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 const HEIGHT_MAP = {
   sm: 'min-h-[160px] sm:min-h-[200px]',

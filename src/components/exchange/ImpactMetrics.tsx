@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { BookOpen, Building2, Users, ScrollText } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface ImpactMetricsProps {
   stats: { resources: number; organizations: number; officials: number; policies: number }

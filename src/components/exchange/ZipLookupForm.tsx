@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { MapPin, Vote, Landmark, Star, Home, Building2, Phone, Globe, Shield, Flame, Heart, Trees, BookOpen, Zap, AlertTriangle, Scale } from 'lucide-react'
 import Link from 'next/link'
 import { VotingLocationsMap } from './VotingLocationsMap'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { lookupCivicProfile, type CivicProfileResult } from '@/app/(exchange)/(pages)/officials/lookup/actions'
 
 function levelColor(level: string | null): string {

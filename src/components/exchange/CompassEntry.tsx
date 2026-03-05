@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { CENTER_COLORS, COMPASS_PROMPTS, CENTERS } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface CompassEntryProps {
   centerCounts: Record<string, number>

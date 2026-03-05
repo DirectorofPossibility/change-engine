@@ -46,7 +46,7 @@ const SOURCE_TYPE_LABELS: Record<string, string> = {
 
 function buildSourceLink(sourceType: string, sourceId: string, metadata: Record<string, unknown>): string {
   switch (sourceType) {
-    case 'kb_document': return `/library/${sourceId}`
+    case 'kb_document': return `/library/doc/${sourceId}`
     case 'service': return `/services/${sourceId}`
     case 'organization': return `/organizations/${sourceId}`
     case 'content': return (metadata.source_url as string) || `/content/${sourceId}`

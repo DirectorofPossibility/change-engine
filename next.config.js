@@ -22,6 +22,11 @@ const nextConfig = {
         destination: '/geography?superNeighborhood=:path*',
         permanent: true,
       },
+      {
+        source: '/library/:id((?!category|doc|chat)[a-f0-9-]{36})',
+        destination: '/library/doc/:id',
+        permanent: true,
+      },
     ]
   },
 }

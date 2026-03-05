@@ -15,7 +15,7 @@
 import Link from 'next/link'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { FocusAreaPills } from './FocusAreaPills'
 
 /** Gradient color pairs keyed by pathway ID for placeholder card images. */

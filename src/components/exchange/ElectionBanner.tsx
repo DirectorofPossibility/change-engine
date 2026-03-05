@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { X, Vote } from 'lucide-react'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 /**
  * Urgent election banner. Shows when an election is upcoming or today.

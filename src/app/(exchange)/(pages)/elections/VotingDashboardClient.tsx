@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 import { ElectionResultsBar } from '@/components/exchange/ElectionResultsBar'
 import { TurnoutGauge } from '@/components/exchange/TurnoutGauge'
 import { CivicTimeline } from '@/components/exchange/CivicTimeline'

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { FileText, Tag } from 'lucide-react'
 import { THEMES } from '@/lib/constants'
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 interface LibraryCardProps {
   id: string
@@ -37,7 +37,7 @@ export function LibraryCard({
   const primaryColor = themeColors[0]?.color || '#C75B2A'
 
   return (
-    <Link href={'/library/' + id} className="block group">
+    <Link href={'/library/doc/' + id} className="block group">
       <article className="bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
         {/* Color bar */}
         <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${primaryColor}, ${primaryColor}40)` }} />

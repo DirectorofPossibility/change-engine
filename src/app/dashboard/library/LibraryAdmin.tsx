@@ -155,6 +155,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         theme_ids: [],
         focus_area_ids: [],
+        center_id: null,
         created_at: new Date().toISOString(),
         published_at: null,
       }
@@ -489,7 +490,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
                       <div className="flex items-center justify-end gap-1.5">
                         {doc.status === 'published' && (
                           <a
-                            href={'/library/' + doc.id}
+                            href={'/library/doc/' + doc.id}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500"

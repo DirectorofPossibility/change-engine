@@ -3,7 +3,7 @@
  */
 'use client'
 
-import { useTranslation } from '@/lib/i18n'
+import { useTranslation } from '@/lib/use-translation'
 
 /** Translated section heading for election listing sections. */
 export function ElectionSectionHeader({ titleKey }: { titleKey: string }) {
