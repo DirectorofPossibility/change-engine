@@ -48,17 +48,24 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: official } = await supabase
-    .from('elected_officials')
-    .select('*')
-    .eq('official_id', id)
-    .single()
-
-  const { data: profileRow } = await supabase
-    .from('official_profiles' as any)
-    .select('*')
-    .eq('official_id', id)
-    .single()
+  // Fetch official + profile + all junction data in parallel (H9 fix: was 8 sequential queries)
+  const [
+    { data: official },
+    { data: profileRow },
+    { data: policyJunctions },
+    { data: focusJunctions },
+    { data: countyJunctions },
+    { data: committees },
+    { data: votes },
+  ] = await Promise.all([
+    supabase.from('elected_officials').select('*').eq('official_id', id).single(),
+    supabase.from('official_profiles' as any).select('*').eq('official_id', id).single(),
+    supabase.from('policy_officials').select('policy_id').eq('official_id', id),
+    supabase.from('official_focus_areas').select('focus_id').eq('official_id', id),
+    supabase.from('official_counties').select('county_id').eq('official_id', id),
+    supabase.from('committee_assignments' as any).select('committee_name, role, chamber, jurisdiction_focus, pathway_ids').eq('official_id', id).order('committee_name'),
+    supabase.from('vote_records' as any).select('bill_number, vote, vote_date, policy_id, chamber').eq('official_id', id).order('vote_date', { ascending: false }).limit(20),
+  ])
 
   if (!official) notFound()
 
@@ -70,64 +77,32 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     social_linkedin?: string | null; photo_url?: string | null
   } | null
 
-  // Policies connected to this official via junction table
-  const { data: policyJunctions } = await supabase
-    .from('policy_officials')
-    .select('policy_id')
-    .eq('official_id', id)
+  // Resolve junction data in parallel (second batch — depends on first batch IDs)
   const policyIds = (policyJunctions ?? []).map(j => j.policy_id)
-  const policies = policyIds.length > 0
-    ? (await supabase.from('policies').select('*').in('policy_id', policyIds)).data ?? []
-    : []
-
-  // Focus areas via junction table
-  const { data: focusJunctions } = await supabase
-    .from('official_focus_areas')
-    .select('focus_id')
-    .eq('official_id', id)
   const focusAreaIds = (focusJunctions ?? []).map(j => j.focus_id)
-  let focusAreas: Array<{ focus_id: string; focus_area_name: string }> = []
-  if (focusAreaIds.length > 0) {
-    const { data: faData } = await supabase
-      .from('focus_areas')
-      .select('focus_id, focus_area_name')
-      .in('focus_id', focusAreaIds)
-    focusAreas = faData ?? []
-  }
+  const countyIds = (countyJunctions ?? []).map((j: any) => j.county_id)
 
-  // Counties served via junction table
-  let counties: Array<{ county_id: string; county_name: string }> = []
-  const { data: countyJunctions } = await supabase
-    .from('official_counties')
-    .select('county_id')
-    .eq('official_id', id)
-  const countyIds = (countyJunctions ?? []).map(j => j.county_id)
-  if (countyIds.length > 0) {
-    const { data: countyData } = await supabase
-      .from('counties')
-      .select('county_id, county_name')
-      .in('county_id', countyIds)
-    counties = countyData ?? []
-  }
+  const [policiesResult, focusAreasResult, countiesResult] = await Promise.all([
+    policyIds.length > 0
+      ? supabase.from('policies').select('*').in('policy_id', policyIds)
+      : Promise.resolve({ data: [] as any[] }),
+    focusAreaIds.length > 0
+      ? supabase.from('focus_areas').select('focus_id, focus_area_name').in('focus_id', focusAreaIds)
+      : Promise.resolve({ data: [] as any[] }),
+    countyIds.length > 0
+      ? supabase.from('counties').select('county_id, county_name').in('county_id', countyIds)
+      : Promise.resolve({ data: [] as any[] }),
+  ])
 
-  // Committee assignments
-  const { data: committees } = await supabase
-    .from('committee_assignments' as any)
-    .select('committee_name, role, chamber, jurisdiction_focus, pathway_ids')
-    .eq('official_id', id)
-    .order('committee_name')
+  const policies = policiesResult.data ?? []
+  const focusAreas = (focusAreasResult.data ?? []) as Array<{ focus_id: string; focus_area_name: string }>
+  const counties = (countiesResult.data ?? []) as Array<{ county_id: string; county_name: string }>
+
   const committeeList = (committees ?? []) as unknown as Array<{
     committee_name: string; role: string | null; chamber: string | null
     jurisdiction_focus: string[] | null; pathway_ids: string[] | null
   }>
 
-  // Recent vote records
-  const { data: votes } = await supabase
-    .from('vote_records' as any)
-    .select('bill_number, vote, vote_date, policy_id, chamber')
-    .eq('official_id', id)
-    .order('vote_date', { ascending: false })
-    .limit(20)
   const voteList = (votes ?? []) as unknown as Array<{
     bill_number: string | null; vote: string; vote_date: string | null
     policy_id: string | null; chamber: string | null

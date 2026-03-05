@@ -23,6 +23,10 @@ const ALL_TABLES = [
   'elected_officials',
   'learning_paths',
   'life_situations',
+  'agencies',
+  'benefit_programs',
+  'campaigns',
+  'ballot_items',
 ]
 
 export async function POST(req: NextRequest) {

@@ -1786,6 +1786,9 @@ export async function getWayfinderContext(
   } else if (entityType === 'life_situation') {
     const { data } = await supabase.from('life_situation_focus_areas').select('focus_id').eq('situation_id', entityId)
     focusIds = (data ?? []).map(j => j.focus_id)
+  } else if (entityType === 'opportunity') {
+    const { data } = await (supabase as any).from('opportunity_focus_areas').select('focus_id').eq('opportunity_id', entityId)
+    focusIds = (data ?? []).map((j: any) => j.focus_id)
   } else {
     return empty
   }
