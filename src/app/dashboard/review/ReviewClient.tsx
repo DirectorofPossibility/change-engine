@@ -6,7 +6,7 @@ import { CenterBadge } from '@/components/ui/CenterBadge'
 import { ConfidenceBadge } from '@/components/ui/ConfidenceBadge'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { SlidePanel } from '@/components/ui/SlidePanel'
-import { approveItem, rejectItem, bulkApproveItems, bulkRejectItems, bulkFlagItems } from './actions'
+import { approveItem, rejectItem, flagItem, bulkApproveItems, bulkRejectItems, bulkFlagItems } from './actions'
 import type { AiClassification } from '@/lib/types/dashboard'
 
 /** Review queue item from the Supabase join between content_review_queue and content_inbox. */
@@ -31,6 +31,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
   const [activeTab, setActiveTab] = useState<string>('all')
   const [selected, setSelected] = useState<ReviewItem | null>(null)
   const [acting, setActing] = useState(false)
+  const [actionError, setActionError] = useState<string | null>(null)
   const [rejectNotes, setRejectNotes] = useState('')
   const [page, setPage] = useState(1)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -57,20 +58,59 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
   async function handleApprove() {
     if (!selected || !classification || !selected.inbox_id) return
     setActing(true)
-    await approveItem(selected.id, selected.inbox_id, classification)
-    setSelected(null)
-    setActing(false)
-    window.location.reload()
+    setActionError(null)
+    try {
+      const result = await approveItem(selected.id, selected.inbox_id, classification)
+      if ('error' in result) {
+        setActionError(result.error || 'Unknown error')
+        setActing(false)
+        return
+      }
+      setSelected(null)
+      window.location.reload()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Approve failed')
+      setActing(false)
+    }
   }
 
   async function handleReject() {
     if (!selected) return
     setActing(true)
-    await rejectItem(selected.id, rejectNotes)
-    setSelected(null)
-    setRejectNotes('')
-    setActing(false)
-    window.location.reload()
+    setActionError(null)
+    try {
+      const result = await rejectItem(selected.id, rejectNotes)
+      if ('error' in result) {
+        setActionError(result.error || 'Unknown error')
+        setActing(false)
+        return
+      }
+      setSelected(null)
+      setRejectNotes('')
+      window.location.reload()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Reject failed')
+      setActing(false)
+    }
+  }
+
+  async function handleFlag() {
+    if (!selected) return
+    setActing(true)
+    setActionError(null)
+    try {
+      const result = await flagItem(selected.id)
+      if ('error' in result) {
+        setActionError(result.error || 'Unknown error')
+        setActing(false)
+        return
+      }
+      setSelected(null)
+      window.location.reload()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Flag failed')
+      setActing(false)
+    }
   }
 
   function toggleSelect(id: string) {
@@ -104,36 +144,66 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
     )
     if (approvable.length === 0) return
     setBulkActing(true)
-    await bulkApproveItems(
-      approvable.map((i) => ({
-        reviewId: i.id,
-        inboxId: i.inbox_id!,
-        classification: i.ai_classification as AiClassification,
-      }))
-    )
-    setSelectedIds(new Set())
-    setBulkActing(false)
-    window.location.reload()
+    setActionError(null)
+    try {
+      const results = await bulkApproveItems(
+        approvable.map((i) => ({
+          reviewId: i.id,
+          inboxId: i.inbox_id!,
+          classification: i.ai_classification as AiClassification,
+        }))
+      )
+      const failures = results.filter((r: any) => r.error)
+      if (failures.length > 0) {
+        setActionError(`${failures.length} of ${results.length} items failed: ${failures[0].error}`)
+      }
+      setSelectedIds(new Set())
+      setBulkActing(false)
+      window.location.reload()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Bulk approve failed')
+      setBulkActing(false)
+    }
   }
 
   async function handleBulkReject() {
     const ids = Array.from(selectedIds)
     if (ids.length === 0) return
     setBulkActing(true)
-    await bulkRejectItems(ids)
-    setSelectedIds(new Set())
-    setBulkActing(false)
-    window.location.reload()
+    setActionError(null)
+    try {
+      const result = await bulkRejectItems(ids)
+      if ('error' in result) {
+        setActionError(result.error || 'Unknown error')
+        setBulkActing(false)
+        return
+      }
+      setSelectedIds(new Set())
+      window.location.reload()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Bulk reject failed')
+      setBulkActing(false)
+    }
   }
 
   async function handleBulkFlag() {
     const ids = Array.from(selectedIds)
     if (ids.length === 0) return
     setBulkActing(true)
-    await bulkFlagItems(ids)
-    setSelectedIds(new Set())
-    setBulkActing(false)
-    window.location.reload()
+    setActionError(null)
+    try {
+      const result = await bulkFlagItems(ids)
+      if ('error' in result) {
+        setActionError(result.error || 'Unknown error')
+        setBulkActing(false)
+        return
+      }
+      setSelectedIds(new Set())
+      window.location.reload()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Bulk flag failed')
+      setBulkActing(false)
+    }
   }
 
   return (
@@ -157,6 +227,14 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
           </button>
         ))}
       </div>
+
+      {/* Error Banner */}
+      {actionError && (
+        <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+          <span className="text-sm text-red-800 flex-1">{actionError}</span>
+          <button onClick={() => setActionError(null)} className="text-red-400 hover:text-red-600 text-sm font-medium">Dismiss</button>
+        </div>
+      )}
 
       {/* Bulk Action Bar */}
       {selectedIds.size > 0 && (
@@ -391,6 +469,17 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
                 </div>
               </div>
               <div>
+                <span className="text-brand-muted text-xs">Keywords</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {(classification.keywords || []).length > 0
+                    ? classification.keywords!.map((kw: string) => (
+                        <span key={kw} className="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded">{kw}</span>
+                      ))
+                    : <span className="text-xs text-brand-muted italic">None extracted</span>
+                  }
+                </div>
+              </div>
+              <div>
                 <span className="text-brand-muted text-xs">Reasoning</span>
                 <p className="mt-1 text-xs text-brand-muted">{classification.reasoning}</p>
               </div>
@@ -408,13 +497,25 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
             {/* Actions */}
             {(selected.review_status === 'pending' || selected.review_status === 'flagged' || selected.review_status === 'auto_approved') && (
               <div className="border-t border-brand-border pt-4 space-y-3">
-                <div className="flex gap-3">
+                {actionError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-sm text-red-800">
+                    {actionError}
+                  </div>
+                )}
+                <div className="flex gap-2">
                   <button
                     onClick={handleApprove}
                     disabled={acting}
                     className="flex-1 bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
                   >
                     {acting ? 'Processing...' : 'Approve & Publish'}
+                  </button>
+                  <button
+                    onClick={handleFlag}
+                    disabled={acting}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 disabled:opacity-50"
+                  >
+                    {acting ? '...' : 'Flag'}
                   </button>
                   <button
                     onClick={handleReject}
