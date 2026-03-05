@@ -171,6 +171,7 @@ git push origin master
 | 3 AM | `poll-rss` | Poll all active RSS feeds → classify new items |
 | 6 AM | `sync-polling-places` | Refresh voter locations |
 | 7 AM | `sync-city-houston` | Legistar API → officials + policies + classify |
+| 8 AM | `sync-officials` | Google Civic + Congress → federal/state officials + ZIP districts + classify |
 | 9 AM | `sync-state-texas` | TLO + Open States → officials + policies + classify |
 | 11 AM | `classify-pending` | Sweep ALL entity tables for unclassified items |
 

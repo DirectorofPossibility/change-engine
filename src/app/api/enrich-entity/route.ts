@@ -30,6 +30,27 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || ''
 
+async function logToIngestion(eventType: string, source: string, status: string, message: string, itemCount?: number) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/ingestion_log`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        event_type: eventType,
+        source,
+        status,
+        message,
+        item_count: itemCount || 0,
+      }),
+    })
+  } catch { /* non-critical */ }
+}
+
 async function supaRest(method: string, path: string, body?: unknown) {
   const headers: Record<string, string> = {
     apikey: SUPABASE_KEY,
@@ -151,12 +172,23 @@ export async function POST(req: NextRequest) {
       })
       succeeded++
     } catch (err) {
-      results.push({ id: entityId, success: false, error: (err as Error).message })
+      const errMsg = (err as Error).message
+      results.push({ id: entityId, success: false, error: errMsg })
       failed++
+      await logToIngestion('classify_error', tableName, 'error',
+        `Failed to classify ${entityId} (${name}): ${errMsg}`)
     }
 
     // Rate limit
     await new Promise(r => setTimeout(r, 1000))
+  }
+
+  // Log summary
+  if (succeeded > 0 || failed > 0) {
+    await logToIngestion('classify_batch', tableName,
+      failed === 0 ? 'success' : 'partial',
+      `Classified ${succeeded}/${succeeded + failed} in ${tableName} (${skipped} skipped)`,
+      succeeded)
   }
 
   return NextResponse.json({

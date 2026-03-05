@@ -263,6 +263,9 @@ export async function POST(req: NextRequest) {
         if (urls.length === 0) {
           return NextResponse.json({ error: 'No URLs provided. Use { "type": "content", "urls": ["..."] }' }, { status: 400 })
         }
+        if (urls.length > 50) {
+          return NextResponse.json({ error: `Too many URLs (${urls.length}). Maximum 50 per request.` }, { status: 400 })
+        }
         result = await handleContentUrls(urls, req)
         break
       }
@@ -277,6 +280,9 @@ export async function POST(req: NextRequest) {
       case 'benefit_programs': {
         if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
           return NextResponse.json({ error: `No items provided. Use { "type": "${intakeType}", "items": [...] }` }, { status: 400 })
+        }
+        if (body.items.length > 500) {
+          return NextResponse.json({ error: `Too many items (${body.items.length}). Maximum 500 per request.` }, { status: 400 })
         }
         result = await handleEntityRecords(intakeType, body.items, req)
         break
