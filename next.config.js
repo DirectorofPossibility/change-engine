@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/design1',
+        destination: '/templates/journey-v3-2026-03.html',
+      },
+    ]
+  },
   async redirects() {
     return [
       {

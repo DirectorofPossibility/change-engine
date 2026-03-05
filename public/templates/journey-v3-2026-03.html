@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Exchange — Design 1</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F0EBE1; --ink: #1a1a1a; --hot: #D94F2B; --hot-light: rgba(217,79,43,0.08);
+    --muted: #9E9488; --rule: #D4CEC4; --card: #FDFAF5; --deep: #2C2618;
+    --health: #C43B3B; --families: #C46A1F; --neighborhood: #B8911E;
+    --voice: #2E8B57; --money: #2A6CB5; --planet: #2A8F8F; --bigger: #7044B5;
+    --c-learn: #2A6CB5; --c-connect: #C46A1F; --c-attend: #2E8B57; --c-organize: #7044B5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); overflow-x: hidden; }
+  img.ri { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ─── STEPPER ─── */
+  .stepper {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+    background: var(--ink); padding: 0 24px; display: flex; align-items: center;
+    height: 40px; overflow-x: auto; border-bottom: 3px solid var(--hot);
+  }
+  .st-label {
+    font-family: 'Space Mono', monospace; font-size: 9px; color: var(--hot);
+    text-transform: uppercase; letter-spacing: 3px; margin-right: 16px; flex-shrink: 0;
+  }
+  .st-btn {
+    padding: 0 14px; height: 40px; line-height: 40px;
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    cursor: pointer; border: none; color: rgba(255,255,255,0.3);
+    background: none; white-space: nowrap; transition: all 0.15s;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .st-btn:hover { color: rgba(255,255,255,0.7); }
+  .st-btn.on { color: #fff; box-shadow: inset 0 -3px 0 var(--hot); }
+  .st-div { width: 1px; height: 16px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+
+  .frame { display: none; margin-top: 40px; min-height: calc(100vh - 40px); }
+  .frame.on { display: block; }
+
+  /* ─── HEADER ─── */
+  .hdr {
+    background: var(--card); border-bottom: 2px solid var(--ink);
+    display: flex; align-items: center; padding: 0 48px; height: 54px;
+    position: sticky; top: 40px; z-index: 500;
+  }
+  .hdr-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: 36px; cursor: pointer; }
+  .hdr-logo svg { width: 26px; height: 26px; }
+  .hdr-logo span { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--ink); }
+  .hdr-doors { display: flex; gap: 0; margin-right: auto; }
+  .hdr-door {
+    padding: 16px 18px; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: var(--muted);
+    cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s;
+    text-decoration: none;
+  }
+  .hdr-door:hover { color: var(--ink); }
+  .hdr-door.on { color: var(--ink); border-bottom-color: var(--hot); }
+  .hdr-search {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: var(--muted);
+    cursor: pointer; margin-right: 16px; transition: color 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .hdr-search:hover { color: var(--hot); }
+  .hdr-zip {
+    padding: 6px 18px; background: var(--hot); color: #fff;
+    font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; cursor: pointer; transition: all 0.15s;
+  }
+  .hdr-zip:hover { background: var(--ink); }
+
+  /* ─── SCRATCHY UNDERLINE ─── */
+  .scribble {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='14' viewBox='0 0 200 14'%3E%3Cpath d='M2 9 C30 3, 55 12, 90 5 S150 11, 198 4' stroke='%23D94F2B' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: repeat-x; background-position: bottom left;
+    background-size: 140px 12px; padding-bottom: 10px;
+  }
+
+  /* ─── OFFSET IMAGE BLOCK (collage layer) ─── */
+  .img-offset {
+    position: relative; display: inline-block;
+  }
+  .img-offset::before {
+    content: ''; position: absolute;
+    top: 10px; left: -10px; width: 100%; height: 100%;
+    background: var(--hot); z-index: 0;
+  }
+  .img-offset img, .img-offset .img-inner {
+    position: relative; z-index: 1; display: block;
+  }
+
+  /* ─── DUOTONE HOVER ─── */
+  .duo {
+    position: relative; overflow: hidden;
+  }
+  .duo img {
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter 0.4s, transform 0.5s cubic-bezier(0.19,1,0.22,1);
+  }
+  .duo:hover img {
+    filter: grayscale(100%) contrast(1.2);
+    transform: scale(1.06);
+  }
+  .duo::after {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.4s; pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+  .duo:hover::after { opacity: 0.55; }
+
+  /* ─── MONO LABEL ─── */
+  .mono {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+  }
+
+  /* ═══════════════════════════════
+     PAGE 1 — FRONT DOOR
+     ═══════════════════════════════ */
+  .fd { min-height: calc(100vh - 94px); position: relative; background: var(--paper); }
+
+  /* hero area — asymmetric split */
+  .fd-hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 94px - 160px);
+  }
+  .fd-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 40px 60px 80px; position: relative;
+  }
+  .fd-left::after {
+    content: ''; position: absolute; right: 0; top: 10%; bottom: 10%;
+    width: 2px; background: var(--rule);
+  }
+  .fd h1 {
+    font-family: 'DM Serif Display', serif; font-size: 6vw; line-height: 0.92;
+    color: var(--ink); letter-spacing: -0.03em; max-width: 540px;
+  }
+  .fd h1 em { font-style: italic; color: var(--hot); }
+  .fd-sub {
+    font-size: 15px; color: var(--muted); margin-top: 28px;
+    max-width: 360px; line-height: 1.7;
+  }
+  .fd-zip-row { margin-top: 40px; display: flex; align-items: stretch; gap: 0; }
+  .fd-zip-row input {
+    width: 180px; padding: 18px 20px; font-size: 24px;
+    font-family: 'Space Mono', monospace; font-weight: 700;
+    border: 2px solid var(--ink); border-right: none;
+    background: #fff; color: var(--ink); outline: none; letter-spacing: 6px;
+  }
+  .fd-zip-row input::placeholder { color: var(--rule); letter-spacing: 6px; }
+  .fd-zip-go {
+    padding: 18px 32px; background: var(--hot); color: #fff; border: 2px solid var(--hot);
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 3px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .fd-zip-go:hover { background: var(--ink); border-color: var(--ink); }
+  .fd-hint {
+    font-family: 'Space Mono', monospace; font-size: 9px;
+    color: var(--muted); margin-top: 12px;
+    text-transform: uppercase; letter-spacing: 3px;
+  }
+
+  /* right side collage */
+  .fd-collage { position: relative; overflow: hidden; }
+  .fd-cimg {
+    position: absolute; overflow: hidden; cursor: pointer;
+    transition: transform 0.5s cubic-bezier(0.19,1,0.22,1);
+  }
+  .fd-cimg img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter 0.4s, transform 0.5s cubic-bezier(0.19,1,0.22,1);
+  }
+  .fd-cimg:hover img {
+    filter: grayscale(100%) contrast(1.2);
+    transform: scale(1.08);
+  }
+  .fd-cimg::after {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.4s; mix-blend-mode: multiply;
+  }
+  .fd-cimg:hover::after { opacity: 0.5; }
+  /* offset accent blocks */
+  .fd-accent {
+    position: absolute; background: var(--hot); z-index: 0;
+  }
+  /* image label */
+  .fd-cimg-label {
+    position: absolute; bottom: 0; left: 0; padding: 6px 14px;
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: #fff;
+    opacity: 0; transition: opacity 0.3s; z-index: 5;
+  }
+  .fd-cimg:hover .fd-cimg-label { opacity: 1; }
+
+  /* 4 doors strip */
+  .fd-doors {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-top: 2px solid var(--ink);
+  }
+  .fd-door {
+    padding: 28px 32px; cursor: pointer; transition: background 0.2s;
+    border-right: 1px solid var(--rule); position: relative; overflow: hidden;
+  }
+  .fd-door:last-child { border-right: none; }
+  .fd-door:hover { background: var(--hot-light); }
+  .fd-door::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.19,1,0.22,1);
+  }
+  .fd-door:hover::after { transform: scaleX(1); }
+  .fd-door-num {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 3px; margin-bottom: 6px;
+  }
+  .fd-door-name {
+    font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--ink); line-height: 1;
+  }
+  .fd-door-q {
+    font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6;
+  }
+  .fd-door-peek { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
+  .fd-peek {
+    font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted);
+    display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px;
+  }
+  .fd-peek-bar { width: 20px; height: 3px; flex-shrink: 0; }
+
+  /* ═══════════════════════════════
+     PAGE 2 — PATHWAYS
+     ═══════════════════════════════ */
+  .pw-page { background: var(--paper); }
+  .pw-hero {
+    padding: 80px 80px 40px; position: relative;
+    border-bottom: 2px solid var(--ink);
+  }
+  .pw-hero h1 {
+    font-family: 'DM Serif Display', serif; font-size: 5vw; line-height: 0.95;
+  }
+  .pw-hero h1 em { font-style: italic; color: var(--hot); }
+  .pw-hero-sub {
+    font-size: 15px; color: var(--muted); margin-top: 16px;
+    max-width: 420px; line-height: 1.7;
+  }
+  .pw-crumb {
+    padding: 12px 80px; border-bottom: 1px solid var(--rule);
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+  }
+  .pw-crumb a { color: var(--hot); text-decoration: none; cursor: pointer; }
+
+  /* pathway cards — broken grid, overlapping */
+  .pw-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; padding: 0;
+  }
+  .pw-card {
+    padding: 40px 36px; border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .pw-card:nth-child(3n) { border-right: none; }
+  .pw-card:hover { background: var(--card); }
+  .pw-card::before {
+    content: ''; position: absolute; left: 0; top: 0; width: 5px; height: 0;
+    transition: height 0.4s cubic-bezier(0.19,1,0.22,1);
+  }
+  .pw-card:hover::before { height: 100%; }
+  .pw-card-num {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .pw-card-name {
+    font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1;
+  }
+  .pw-card-desc {
+    font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.6;
+    max-width: 260px;
+  }
+  .pw-card-count {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    color: var(--hot); margin-top: 16px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  /* last card spans remaining space */
+  .pw-card-wide {
+    grid-column: span 2; display: flex; align-items: center; gap: 40px;
+    background: var(--hot-light);
+  }
+
+  /* tool chips */
+  .pw-tools {
+    padding: 32px 80px 48px; border-top: 2px solid var(--ink);
+  }
+  .pw-tools-label {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 3px; color: var(--muted); margin-bottom: 16px;
+  }
+  .pw-tools-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pw-chip {
+    padding: 10px 20px; border: 2px solid var(--rule); background: var(--card);
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pw-chip:hover { border-color: var(--hot); color: var(--hot); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--hot); }
+
+  /* ═══════════════════════════════
+     PAGE 3 — RESULTS
+     ═══════════════════════════════ */
+  .res-page { background: var(--paper); }
+  .res-hero {
+    padding: 60px 80px 32px; border-bottom: 2px solid var(--ink);
+    display: flex; align-items: flex-end; gap: 20px;
+  }
+  .res-hero-left { flex: 1; }
+  .res-hero h1 { font-family: 'DM Serif Display', serif; font-size: 4.5vw; line-height: 0.95; }
+  .res-hero-sub {
+    font-size: 14px; color: var(--muted); margin-top: 10px; line-height: 1.6;
+  }
+  .res-hero-right {
+    font-family: 'DM Serif Display', serif; font-style: italic;
+    font-size: 14px; color: var(--muted); text-align: right; max-width: 280px;
+  }
+  .res-crumb {
+    padding: 12px 80px; border-bottom: 1px solid var(--rule);
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+  }
+  .res-crumb a { color: var(--hot); text-decoration: none; cursor: pointer; }
+
+  /* shelf sections */
+  .shelf { padding: 32px 0 40px; border-bottom: 2px solid var(--ink); position: relative; }
+  .shelf:last-of-type { border-bottom: none; }
+  .shelf-hdr {
+    padding: 0 80px 16px; display: flex; align-items: center; gap: 14px;
+  }
+  .shelf-bar { width: 4px; height: 32px; flex-shrink: 0; }
+  .shelf-name { font-family: 'DM Serif Display', serif; font-size: 28px; }
+  .shelf-desc {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-left: 8px;
+  }
+  .shelf-count {
+    margin-left: auto; font-family: 'Space Mono', monospace; font-size: 10px;
+    font-weight: 700; color: var(--hot); text-transform: uppercase; letter-spacing: 1px;
+  }
+  .shelf-row {
+    display: flex; gap: 0; overflow-x: auto; padding: 0 80px;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+  }
+  .shelf-row::-webkit-scrollbar { height: 2px; }
+  .shelf-row::-webkit-scrollbar-thumb { background: var(--rule); }
+
+  /* shelf cards */
+  .sc {
+    flex: 0 0 240px; scroll-snap-align: start;
+    border-right: 1px solid var(--rule); cursor: pointer;
+    transition: background 0.2s; position: relative;
+  }
+  .sc:hover { background: var(--card); }
+  .sc-img {
+    width: 100%; height: 140px; overflow: hidden; position: relative;
+  }
+  .sc-img img {
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter 0.4s, transform 0.5s cubic-bezier(0.19,1,0.22,1);
+  }
+  .sc:hover .sc-img img {
+    filter: grayscale(100%) contrast(1.2); transform: scale(1.06);
+  }
+  .sc-img::after {
+    content: ''; position: absolute; inset: 0;
+    opacity: 0; transition: opacity 0.4s; mix-blend-mode: multiply;
+  }
+  .sc:hover .sc-img::after { opacity: 0.45; }
+  .sc-badge {
+    position: absolute; top: 8px; left: 0; padding: 4px 12px;
+    font-family: 'Space Mono', monospace; font-size: 8px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: #fff; z-index: 2;
+  }
+  .sc-body { padding: 12px 18px 18px; }
+  .sc-title { font-family: 'DM Serif Display', serif; font-size: 14px; line-height: 1.3; }
+  .sc-meta {
+    font-family: 'Space Mono', monospace; font-size: 9px;
+    color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .sc-more {
+    flex: 0 0 120px; display: flex; align-items: center; justify-content: center;
+    border-right: 1px solid var(--rule);
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .sc-more:hover { background: var(--hot-light); color: var(--hot); }
+
+  /* contextual tools row */
+  .ctx-tools {
+    padding: 20px 80px 32px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+
+  /* ═══════════════════════════════
+     PAGE 4 — ARTICLE DETAIL
+     ═══════════════════════════════ */
+  .det-page { background: var(--paper); }
+  .det-layout { display: grid; grid-template-columns: 1fr 300px; }
+  .det-main { padding: 40px 48px 80px 80px; }
+  .det-img {
+    width: 100%; height: 300px; overflow: hidden; position: relative; margin-bottom: 24px;
+  }
+  .det-img img { filter: grayscale(15%) contrast(1.05); }
+  .det-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--paper) 0%, transparent 40%);
+  }
+  .det-badge {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+    display: inline-block; padding: 4px 12px; background: var(--hot); color: #fff;
+  }
+  .det-main h1 {
+    font-family: 'DM Serif Display', serif; font-size: 3.2vw; line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .det-byline {
+    font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 28px;
+  }
+  .det-body { font-size: 16px; line-height: 1.9; color: #444; max-width: 600px; }
+  .det-body p { margin-bottom: 16px; }
+  .det-body h2 {
+    font-family: 'DM Serif Display', serif; font-size: 22px;
+    color: var(--ink); margin: 32px 0 12px;
+  }
+  .det-callout {
+    padding: 18px 24px; border-left: 5px solid var(--hot); margin: 20px 0;
+    font-size: 15px; line-height: 1.7; background: var(--hot-light);
+  }
+  .det-next {
+    margin-top: 40px; padding: 28px 0; border-top: 2px solid var(--ink);
+  }
+  .det-next h3 {
+    font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 16px;
+  }
+  .det-next h3 em { font-style: italic; color: var(--hot); }
+  .det-next-row { display: flex; gap: 0; }
+  .det-ncard {
+    flex: 1; padding: 16px 20px; border-right: 1px solid var(--rule);
+    cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .det-ncard:last-child { border-right: none; }
+  .det-ncard:hover { background: var(--card); }
+  .det-ncard::before {
+    content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+  }
+  .det-ncard-dir {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+  }
+  .det-ncard-title { font-family: 'DM Serif Display', serif; font-size: 13px; margin-top: 4px; line-height: 1.35; }
+  .det-ncard-meta { font-size: 10px; color: var(--muted); margin-top: 3px; font-style: italic; }
+
+  /* wayfinder sidebar */
+  .wf {
+    border-left: 2px solid var(--ink); background: var(--card);
+    position: sticky; top: 94px; height: calc(100vh - 94px); overflow-y: auto;
+  }
+  .wf-sec { padding: 16px 18px; border-bottom: 1px solid var(--rule); }
+  .wf-sec-t {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; color: var(--hot); margin-bottom: 10px;
+  }
+  .wf-row {
+    display: flex; align-items: center; gap: 10px; padding: 6px 8px;
+    cursor: pointer; transition: all 0.15s; margin-bottom: 2px;
+  }
+  .wf-row:hover { background: var(--paper); transform: translateX(4px); }
+  .wf-row-img { width: 32px; height: 32px; overflow: hidden; flex-shrink: 0; }
+  .wf-row-img img { object-fit: contain; padding: 2px; background: #fff; }
+  .wf-row-name { font-family: 'DM Serif Display', serif; font-size: 12px; }
+  .wf-row-meta { font-size: 9px; color: var(--muted); font-style: italic; }
+  .wf-nudge { padding: 16px 18px; background: var(--hot-light); border-top: 2px solid var(--hot); }
+  .wf-nudge-t {
+    font-family: 'DM Serif Display', serif; font-size: 15px; margin-bottom: 10px;
+  }
+  .wf-nudge-t em { color: var(--hot); font-style: italic; }
+  .wf-ncard {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    background: var(--card); border-left: 4px solid;
+    cursor: pointer; transition: all 0.2s; margin-bottom: 4px;
+  }
+  .wf-ncard:hover { transform: translateX(4px); }
+  .wf-ncard-dir {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; min-width: 50px;
+  }
+  .wf-ncard-title { font-family: 'DM Serif Display', serif; font-size: 11px; }
+  .wf-ncard-meta { font-size: 8px; color: var(--muted); font-style: italic; }
+
+  /* ═══════════════════════════════
+     PAGE 5 — DASHBOARD
+     ═══════════════════════════════ */
+  .dash-page { background: var(--paper); }
+  .dash-hero {
+    padding: 60px 80px 32px; border-bottom: 2px solid var(--ink);
+  }
+  .dash-hero h1 { font-family: 'DM Serif Display', serif; font-size: 4vw; line-height: 0.95; }
+  .dash-hero h1 em { color: var(--hot); font-style: italic; }
+  .dash-hero-sub { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+  /* stats strip */
+  .dash-stats {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .dash-stat {
+    padding: 24px 20px; text-align: center;
+    border-right: 1px solid var(--rule);
+  }
+  .dash-stat:last-child { border-right: none; }
+  .dash-stat-num {
+    font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--hot); line-height: 1;
+  }
+  .dash-stat-label {
+    font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+  }
+
+  /* doors row */
+  .dash-doors {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .dash-door {
+    padding: 28px 24px; border-right: 1px solid var(--rule);
+    cursor: pointer; transition: background 0.2s; position: relative;
+  }
+  .dash-door:last-child { border-right: none; }
+  .dash-door:hover { background: var(--hot-light); }
+  .dash-door::before {
+    content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+  }
+  .dash-door-name { font-family: 'DM Serif Display', serif; font-size: 24px; }
+  .dash-door-count { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* pathways grid */
+  .dash-pw-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .dash-pw {
+    padding: 20px 24px; border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule); cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .dash-pw:hover { background: var(--card); }
+  .dash-pw-bar { width: 4px; height: 24px; flex-shrink: 0; }
+  .dash-pw-name { font-family: 'DM Serif Display', serif; font-size: 15px; }
+  .dash-pw-count { margin-left: auto; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); }
+
+  /* tools grid */
+  .dash-tools-label {
+    padding: 20px 80px 0;
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 3px; color: var(--muted);
+  }
+  .dash-tools {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; padding: 12px 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .dash-tool {
+    padding: 20px 28px; border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule); cursor: pointer; transition: all 0.2s;
+  }
+  .dash-tool:nth-child(3n) { border-right: none; }
+  .dash-tool:hover { background: var(--card); }
+  .dash-tool-name { font-family: 'DM Serif Display', serif; font-size: 16px; }
+  .dash-tool-desc { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* ═══════════════════════════════
+     PAGE 6 — MAP
+     ═══════════════════════════════ */
+  .map-page { display: grid; grid-template-columns: 360px 1fr; height: calc(100vh - 94px); }
+  .map-side {
+    background: var(--card); border-right: 2px solid var(--ink); overflow-y: auto;
+  }
+  .map-side-hdr {
+    padding: 28px 24px 16px; border-bottom: 2px solid var(--ink);
+  }
+  .map-side-hdr h2 { font-family: 'DM Serif Display', serif; font-size: 26px; }
+  .map-side-hdr p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .map-layer {
+    display: flex; align-items: center; gap: 10px; padding: 10px 24px;
+    border-bottom: 1px solid var(--rule); cursor: pointer; transition: background 0.15s;
+    font-size: 12px;
+  }
+  .map-layer:hover { background: var(--paper); }
+  .map-layer-bar { width: 16px; height: 4px; flex-shrink: 0; }
+  .map-pin-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 24px;
+    border-bottom: 1px solid var(--rule); cursor: pointer; transition: all 0.15s;
+  }
+  .map-pin-item:hover { background: var(--paper); transform: translateX(4px); }
+  .map-pin-img { width: 36px; height: 36px; overflow: hidden; flex-shrink: 0; }
+  .map-pin-name { font-family: 'DM Serif Display', serif; font-size: 13px; }
+  .map-pin-meta { font-size: 9px; color: var(--muted); font-style: italic; }
+  .map-pin-dist {
+    margin-left: auto; font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--hot); font-weight: 700;
+  }
+  .map-area {
+    background: var(--paper); position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .map-placeholder {
+    width: 88%; height: 88%; border: 2px solid var(--rule);
+    background: var(--card); position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .map-placeholder-big {
+    font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--rule);
+  }
+  .map-dot {
+    position: absolute; width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--card); box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer; transition: transform 0.2s; z-index: 10;
+  }
+  .map-dot:hover { transform: scale(1.8); z-index: 20; }
+
+  /* ═══════════════════════════════
+     PAGE 7 — CALENDAR
+     ═══════════════════════════════ */
+  .cal-page { background: var(--paper); }
+  .cal-hero {
+    padding: 40px 80px 24px; border-bottom: 2px solid var(--ink);
+    display: flex; align-items: flex-end; gap: 20px;
+  }
+  .cal-hero h1 { font-family: 'DM Serif Display', serif; font-size: 3.5vw; line-height: 0.95; }
+  .cal-hero-right {
+    margin-left: auto; font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+  }
+  .cal-filters {
+    padding: 10px 80px; border-bottom: 1px solid var(--rule); display: flex; gap: 4px;
+  }
+  .cal-filt {
+    padding: 6px 16px; font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; border: 1px solid var(--rule);
+    background: var(--card); cursor: pointer; transition: all 0.15s;
+  }
+  .cal-filt:hover { border-color: var(--hot); color: var(--hot); }
+  .cal-filt.on { background: var(--hot); color: #fff; border-color: var(--hot); }
+  .cal-layout { display: grid; grid-template-columns: 1fr 320px; }
+  .cal-main { padding: 0; }
+  .cal-month-title {
+    padding: 16px 80px; font-family: 'DM Serif Display', serif; font-size: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; padding: 0;
+  }
+  .cal-dh {
+    padding: 8px; text-align: center;
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+    border-bottom: 1px solid var(--rule); border-right: 1px solid var(--rule);
+  }
+  .cal-day {
+    min-height: 80px; padding: 6px 8px; border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule); cursor: pointer; transition: background 0.15s;
+  }
+  .cal-day:hover { background: var(--card); }
+  .cal-day.today { box-shadow: inset 0 0 0 2px var(--hot); }
+  .cal-day-num { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .cal-day.today .cal-day-num { color: var(--hot); font-weight: 700; }
+  .cal-ev {
+    padding: 2px 6px; font-size: 8px; font-weight: 700;
+    margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: #fff;
+  }
+  /* calendar sidebar */
+  .cal-side {
+    border-left: 2px solid var(--ink); background: var(--card); overflow-y: auto;
+  }
+  .cal-side-title {
+    padding: 20px 20px 12px;
+    font-family: 'DM Serif Display', serif; font-size: 18px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cal-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+    border-bottom: 1px solid var(--rule); cursor: pointer; transition: all 0.15s;
+    border-left: 4px solid transparent;
+  }
+  .cal-item:hover { background: var(--paper); transform: translateX(4px); }
+  .cal-item-img { width: 40px; height: 40px; overflow: hidden; flex-shrink: 0; }
+  .cal-item-name { font-family: 'DM Serif Display', serif; font-size: 13px; }
+  .cal-item-meta { font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .cal-item-time {
+    margin-left: auto; font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--hot); font-weight: 700; white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════
+     PAGE 8 — QUICK HELP
+     ═══════════════════════════════ */
+  .qh-page { background: var(--paper); }
+  .qh-hero {
+    padding: 60px 80px 32px; border-bottom: 2px solid var(--ink); text-align: center;
+  }
+  .qh-hero h1 {
+    font-family: 'DM Serif Display', serif; font-size: 4.5vw; line-height: 0.95;
+  }
+  .qh-hero h1 em { color: var(--hot); font-style: italic; }
+  .qh-hero-sub { font-size: 15px; color: var(--muted); margin-top: 12px; }
+  .qh-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .qh-card {
+    padding: 32px 28px; border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule); cursor: pointer;
+    transition: all 0.2s; position: relative;
+  }
+  .qh-card:nth-child(3n) { border-right: none; }
+  .qh-card:hover { background: var(--card); }
+  .qh-card::before {
+    content: ''; position: absolute; left: 0; top: 0; width: 5px; height: 0;
+    transition: height 0.4s cubic-bezier(0.19,1,0.22,1);
+  }
+  .qh-card:hover::before { height: 100%; }
+  .qh-card-name { font-family: 'DM Serif Display', serif; font-size: 24px; line-height: 1.1; }
+  .qh-card-desc { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .qh-card-count {
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    color: var(--hot); margin-top: 14px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .qh-emergency {
+    padding: 24px 80px; display: flex; align-items: center; gap: 20px;
+    background: var(--hot-light); border-bottom: 2px solid var(--hot);
+  }
+  .qh-em-icon {
+    width: 48px; height: 48px; background: var(--hot); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 700; flex-shrink: 0;
+  }
+  .qh-em-text h3 { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--hot); }
+  .qh-em-text p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ═══════════════════════════════
+     PAGE 9 — OFFICIALS
+     ═══════════════════════════════ */
+  .rep-page { background: var(--paper); }
+  .rep-hero {
+    padding: 60px 80px 32px; border-bottom: 2px solid var(--ink);
+  }
+  .rep-hero h1 { font-family: 'DM Serif Display', serif; font-size: 4vw; line-height: 0.95; }
+  .rep-hero h1 em { color: var(--hot); font-style: italic; }
+  .rep-hero-sub { font-size: 14px; color: var(--muted); margin-top: 10px; }
+  .rep-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  }
+  .rep-card {
+    border-right: 1px solid var(--rule); border-bottom: 2px solid var(--ink);
+    cursor: pointer; transition: background 0.2s; position: relative;
+  }
+  .rep-card:nth-child(3n) { border-right: none; }
+  .rep-card:hover { background: var(--card); }
+  .rep-card-top { display: flex; align-items: center; gap: 14px; padding: 20px 24px; }
+  .rep-card-photo {
+    width: 56px; height: 56px; overflow: hidden; flex-shrink: 0;
+    position: relative;
+  }
+  .rep-card-photo::before {
+    content: ''; position: absolute; top: 4px; left: -4px;
+    width: 100%; height: 100%; background: var(--hot); z-index: 0;
+  }
+  .rep-card-photo img { position: relative; z-index: 1; filter: grayscale(30%) contrast(1.1); }
+  .rep-card:hover .rep-card-photo img { filter: grayscale(100%) contrast(1.2); }
+  .rep-card-name { font-family: 'DM Serif Display', serif; font-size: 17px; }
+  .rep-card-role { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .rep-card-level {
+    font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+    display: inline-block; padding: 2px 8px;
+  }
+  .rep-card-body { padding: 0 24px 20px; }
+  .rep-card-item {
+    font-size: 11px; padding: 5px 0; border-top: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .rep-card-item:first-child { border-top: none; }
+  .rep-card-dot { width: 8px; height: 3px; flex-shrink: 0; }
+
+  /* ═══════════════════════════════
+     PAGE 10 — MY JOURNEY
+     ═══════════════════════════════ */
+  .jour-page { background: var(--paper); }
+  .jour-hero {
+    padding: 60px 80px 32px; border-bottom: 2px solid var(--ink);
+  }
+  .jour-hero h1 { font-family: 'DM Serif Display', serif; font-size: 4vw; line-height: 0.95; }
+  .jour-hero h1 em { color: var(--hot); font-style: italic; }
+  .jour-hero-sub { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+  /* compass strip */
+  .jour-compass {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+  .jour-dir {
+    padding: 20px 24px; border-right: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .jour-dir:last-child { border-right: none; }
+  .jour-dir:hover { background: var(--card); }
+  .jour-dir-bar { width: 4px; height: 32px; flex-shrink: 0; }
+  .jour-dir-name { font-family: 'DM Serif Display', serif; font-size: 18px; }
+  .jour-dir-stat {
+    font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;
+  }
+  .jour-dir-check { margin-left: auto; font-size: 14px; }
+
+  /* journey sections */
+  .jour-sec {
+    border-bottom: 2px solid var(--ink);
+  }
+  .jour-sec-title {
+    padding: 20px 80px; border-bottom: 1px solid var(--rule);
+    font-family: 'DM Serif Display', serif; font-size: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .jour-sec-title em { color: var(--hot); font-style: italic; }
+  .jour-items {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  }
+  .jour-item {
+    display: flex; align-items: center; gap: 12px; padding: 14px 24px;
+    border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .jour-item:nth-child(3n) { border-right: none; }
+  .jour-item:hover { background: var(--card); transform: translateX(4px); }
+  .jour-item-bar { width: 4px; height: 28px; flex-shrink: 0; }
+  .jour-item-img { width: 36px; height: 36px; overflow: hidden; flex-shrink: 0; }
+  .jour-item-name { font-family: 'DM Serif Display', serif; font-size: 13px; }
+  .jour-item-meta { font-size: 9px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .jour-item-when {
+    margin-left: auto; font-family: 'Space Mono', monospace; font-size: 9px;
+    color: var(--hot); font-weight: 700; white-space: nowrap;
+  }
+
+  /* ─── CHANCE FAB ─── */
+  .chance-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 800;
+    display: flex; align-items: center; gap: 8px; padding: 12px 20px;
+    background: var(--hot); color: #fff; border: none;
+    font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    cursor: pointer; box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+    transition: all 0.15s;
+  }
+  .chance-btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 rgba(0,0,0,0.15); }
+  .chance-btn svg { width: 16px; height: 16px; }
+</style>
+</head>
+<body>
+
+<!-- STEPPER -->
+<div class="stepper">
+  <span class="st-label">Pages</span>
+  <div class="st-btn on" onclick="go(1)">01 Front Door</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(2)">02 Pathways</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(3)">03 Results</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(4)">04 Article</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(5)">Dashboard</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(6)">Map</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(7)">Calendar</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(8)">Quick Help</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(9)">Officials</div>
+  <div class="st-div"></div>
+  <div class="st-btn" onclick="go(10)">My Journey</div>
+</div>
+
+<button class="chance-btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+  Chance
+</button>
+
+<!-- ═══ PAGE 1: FRONT DOOR ═══ -->
+<div class="frame on" id="p1">
+  <div class="hdr">
+    <a class="hdr-logo">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/><circle cx="100" cy="80" r="18" stroke="#C43B3B" stroke-width="1.5" opacity="0.5"/><circle cx="100" cy="120" r="18" stroke="#2A8F8F" stroke-width="1.5" opacity="0.5"/><circle cx="117.3" cy="90" r="18" stroke="#C46A1F" stroke-width="1.5" opacity="0.5"/><circle cx="117.3" cy="110" r="18" stroke="#2A6CB5" stroke-width="1.5" opacity="0.5"/><circle cx="82.7" cy="90" r="18" stroke="#B8911E" stroke-width="1.5" opacity="0.5"/><circle cx="82.7" cy="110" r="18" stroke="#7044B5" stroke-width="1.5" opacity="0.5"/></svg>
+      <span>Community Exchange</span>
+    </a>
+    <div class="hdr-doors">
+      <a class="hdr-door" onclick="go(2)">Learn</a>
+      <a class="hdr-door">Connect</a>
+      <a class="hdr-door">Attend</a>
+      <a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+
+  <div class="fd">
+    <div class="fd-hero">
+      <div class="fd-left">
+        <h1>What's going on <em class="scribble">near you</em></h1>
+        <div class="fd-sub">Services, people, and things to do. All near your zip code, all easy to find.</div>
+        <div class="fd-zip-row">
+          <input type="text" placeholder="ZIP" value="77004" maxlength="5">
+          <button class="fd-zip-go">Go</button>
+        </div>
+        <div class="fd-hint">Everything starts here</div>
+      </div>
+      <div class="fd-collage">
+        <!-- offset accent blocks -->
+        <div class="fd-accent" style="top:8%;right:12%;width:30%;height:25%;opacity:0.12;"></div>
+        <div class="fd-accent" style="bottom:12%;left:8%;width:22%;height:18%;opacity:0.08;"></div>
+        <!-- collage images -->
+        <div class="fd-cimg" style="top:4%;left:6%;width:52%;height:44%;">
+          <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/reading.jpg" alt="">
+          <div class="fd-cimg-label" style="background:var(--c-learn);">Learn</div>
+        </div>
+        <div class="fd-cimg" style="top:2%;right:2%;width:36%;height:34%;">
+          <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/two-people-talking.jpg" alt="">
+          <div class="fd-cimg-label" style="background:var(--c-connect);">Connect</div>
+        </div>
+        <div class="fd-cimg" style="bottom:8%;left:0;width:44%;height:42%;">
+          <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/community-meeting.jpg" alt="">
+          <div class="fd-cimg-label" style="background:var(--c-attend);">Attend</div>
+        </div>
+        <div class="fd-cimg" style="bottom:2%;right:0;width:48%;height:46%;">
+          <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/civic-building.jpg" alt="">
+          <div class="fd-cimg-label" style="background:var(--c-organize);">Organize</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 doors strip -->
+    <div class="fd-doors">
+      <div class="fd-door" onclick="go(2)" style="--dc:var(--c-learn);">
+        <div class="fd-door-num" style="color:var(--c-learn);">01</div>
+        <div class="fd-door-name">Learn</div>
+        <div class="fd-door-q">Short reads about what's happening and why it matters.</div>
+        <div class="fd-door-peek">
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--health);"></span>How Houston clinics work</div>
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--voice);"></span>What your council member does</div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--c-learn);transform:scaleX(0);transition:transform 0.4s cubic-bezier(0.19,1,0.22,1);"></div>
+      </div>
+      <div class="fd-door">
+        <div class="fd-door-num" style="color:var(--c-connect);">02</div>
+        <div class="fd-door-name">Connect</div>
+        <div class="fd-door-q">Real phone numbers, hours, and addresses.</div>
+        <div class="fd-door-peek">
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--families);"></span>After-school near 77004</div>
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--health);"></span>Free mental health</div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--c-connect);transform:scaleX(0);transition:transform 0.4s cubic-bezier(0.19,1,0.22,1);"></div>
+      </div>
+      <div class="fd-door">
+        <div class="fd-door-num" style="color:var(--c-attend);">03</div>
+        <div class="fd-door-name">Attend</div>
+        <div class="fd-door-q">Meetings, events, and volunteer days near you.</div>
+        <div class="fd-door-peek">
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--planet);"></span>Bayou cleanup Saturday</div>
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--voice);"></span>Town hall with your rep</div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--c-attend);transform:scaleX(0);transition:transform 0.4s cubic-bezier(0.19,1,0.22,1);"></div>
+      </div>
+      <div class="fd-door">
+        <div class="fd-door-num" style="color:var(--c-organize);">04</div>
+        <div class="fd-door-name">Organize</div>
+        <div class="fd-door-q">Who represents you? What are they voting on?</div>
+        <div class="fd-door-peek">
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--voice);"></span>Your 8 elected officials</div>
+          <div class="fd-peek"><span class="fd-peek-bar" style="background:var(--health);"></span>SB 2047: Health funding</div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--c-organize);transform:scaleX(0);transition:transform 0.4s cubic-bezier(0.19,1,0.22,1);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 2: PATHWAYS ═══ -->
+<div class="frame" id="p2">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door on" style="border-bottom-color:var(--c-learn);">Learn</a>
+      <a class="hdr-door">Connect</a>
+      <a class="hdr-door">Attend</a>
+      <a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="pw-page">
+    <div class="pw-hero">
+      <h1>Learn something <em>new</em></h1>
+      <div class="pw-hero-sub">Short reads about things that matter near you. Pick a topic.</div>
+    </div>
+    <div class="pw-crumb"><a onclick="go(1)">Home</a> / <span style="color:var(--c-learn);font-weight:700;">Learn</span></div>
+
+    <div class="pw-grid">
+      <div class="pw-card" onclick="go(3)" style="--c:var(--health);">
+        <div class="pw-card-num" style="color:var(--health);">01</div>
+        <div class="pw-card-name" style="color:var(--health);">Our Health</div>
+        <div class="pw-card-desc">Clinics, counseling, nutrition, and wellness near you</div>
+        <div class="pw-card-count">24 reads</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--health);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+      <div class="pw-card" style="--c:var(--families);">
+        <div class="pw-card-num" style="color:var(--families);">02</div>
+        <div class="pw-card-name" style="color:var(--families);">Our Families</div>
+        <div class="pw-card-desc">Schools, childcare, youth programs, family support</div>
+        <div class="pw-card-count">18 reads</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--families);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+      <div class="pw-card" style="--c:var(--neighborhood);">
+        <div class="pw-card-num" style="color:var(--neighborhood);">03</div>
+        <div class="pw-card-name" style="color:var(--neighborhood);">Our Neighborhood</div>
+        <div class="pw-card-desc">Housing, parks, libraries, the places we share</div>
+        <div class="pw-card-count">15 reads</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--neighborhood);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+      <div class="pw-card" style="--c:var(--voice);">
+        <div class="pw-card-num" style="color:var(--voice);">04</div>
+        <div class="pw-card-name" style="color:var(--voice);">Our Voice</div>
+        <div class="pw-card-desc">Voting, town halls, getting your voice heard</div>
+        <div class="pw-card-count">14 reads</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--voice);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+      <div class="pw-card" style="--c:var(--money);">
+        <div class="pw-card-num" style="color:var(--money);">05</div>
+        <div class="pw-card-name" style="color:var(--money);">Our Money</div>
+        <div class="pw-card-desc">Jobs, benefits, tax prep, financial coaching</div>
+        <div class="pw-card-count">19 reads</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--money);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+      <div class="pw-card" style="--c:var(--planet);">
+        <div class="pw-card-num" style="color:var(--planet);">06</div>
+        <div class="pw-card-name" style="color:var(--planet);">Our Planet</div>
+        <div class="pw-card-desc">Flooding, air quality, energy, green stuff</div>
+        <div class="pw-card-count">11 reads</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--planet);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+      <div class="pw-card pw-card-wide" style="--c:var(--bigger);">
+        <div>
+          <div class="pw-card-num" style="color:var(--bigger);">07</div>
+          <div class="pw-card-name" style="color:var(--bigger);">The Bigger We</div>
+          <div class="pw-card-desc">Getting to know people who aren't like you</div>
+          <div class="pw-card-count">8 reads</div>
+        </div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--bigger);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="pw-bar"></div>
+      </div>
+    </div>
+
+    <div class="pw-tools">
+      <div class="pw-tools-label">Or try these</div>
+      <div class="pw-tools-row">
+        <div class="pw-chip">Your Guide</div>
+        <div class="pw-chip">Library</div>
+        <div class="pw-chip">Compass</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 3: RESULTS ═══ -->
+<div class="frame" id="p3">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door on" style="border-bottom-color:var(--c-learn);">Learn</a>
+      <a class="hdr-door">Connect</a>
+      <a class="hdr-door">Attend</a>
+      <a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="res-page">
+    <div class="res-hero">
+      <div class="res-hero-left">
+        <h1 style="color:var(--health);">Our Health</h1>
+        <div class="res-hero-sub">Clinics, counseling, nutrition, and wellness near 77004</div>
+      </div>
+      <div class="res-hero-right">Everything we found about health in your area, organized by what you can do with it.</div>
+    </div>
+    <div class="res-crumb"><a onclick="go(1)">Home</a> / <a onclick="go(2)" style="color:var(--c-learn);">Learn</a> / <span style="font-weight:700;">Our Health</span></div>
+
+    <!-- LEARN shelf -->
+    <div class="shelf">
+      <div class="shelf-hdr">
+        <div class="shelf-bar" style="background:var(--c-learn);"></div>
+        <div class="shelf-name" style="color:var(--c-learn);">Learn</div>
+        <div class="shelf-desc">Articles and guides</div>
+        <div class="shelf-count">24 reads</div>
+      </div>
+      <div class="shelf-row">
+        <div class="sc" onclick="go(4)">
+          <div class="sc-img" style="--duo:var(--c-learn);">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-learn);">Article</div>
+            <div style="position:absolute;inset:0;background:var(--c-learn);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">Health Workers Are Changing Primary Care</div>
+            <div class="sc-meta">~3 min read</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-learn);">Guide</div>
+            <div style="position:absolute;inset:0;background:var(--c-learn);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">Understanding Your Insurance Options</div>
+            <div class="sc-meta">~5 min read</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img" style="background:var(--c-learn);display:flex;align-items:center;justify-content:center;height:140px;">
+            <span style="color:#fff;font-family:'DM Serif Display',serif;font-size:16px;text-align:center;padding:16px;line-height:1.3;">Mental Health<br>Near You</span>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">Where to Find Free Counseling</div>
+            <div class="sc-meta">~2 min read</div>
+          </div>
+        </div>
+        <div class="sc-more" style="color:var(--c-learn);">See all 24 &rarr;</div>
+      </div>
+    </div>
+
+    <!-- CONNECT shelf -->
+    <div class="shelf">
+      <div class="shelf-hdr">
+        <div class="shelf-bar" style="background:var(--c-connect);"></div>
+        <div class="shelf-name" style="color:var(--c-connect);">Connect</div>
+        <div class="shelf-desc">Services and resources</div>
+        <div class="shelf-count">12 services</div>
+      </div>
+      <div class="shelf-row">
+        <div class="sc">
+          <div class="sc-img" style="background:#fff;display:flex;align-items:center;justify-content:center;height:140px;">
+            <img style="width:80%;height:60%;object-fit:contain;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt="">
+            <div class="sc-badge" style="background:var(--c-connect);">Service</div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">The Harris Center</div>
+            <div class="sc-meta">Mental health / Free / 0.8 mi</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img" style="background:#fff;display:flex;align-items:center;justify-content:center;height:140px;">
+            <img style="width:80%;height:60%;object-fit:contain;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt="">
+            <div class="sc-badge" style="background:var(--c-connect);">Service</div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">Legacy Community Health</div>
+            <div class="sc-meta">Primary care / 1.2 mi</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img" style="background:#fff;display:flex;align-items:center;justify-content:center;height:140px;">
+            <img style="width:80%;height:60%;object-fit:contain;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/211-texas.png" alt="">
+            <div class="sc-badge" style="background:var(--c-connect);">Helpline</div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">211 Texas</div>
+            <div class="sc-meta">Call 2-1-1 / Free / 24/7</div>
+          </div>
+        </div>
+        <div class="sc-more" style="color:var(--c-connect);">See all 12 &rarr;</div>
+      </div>
+    </div>
+
+    <!-- ATTEND shelf -->
+    <div class="shelf">
+      <div class="shelf-hdr">
+        <div class="shelf-bar" style="background:var(--c-attend);"></div>
+        <div class="shelf-name" style="color:var(--c-attend);">Attend</div>
+        <div class="shelf-desc">Events and meetings</div>
+        <div class="shelf-count">6 events</div>
+      </div>
+      <div class="shelf-row">
+        <div class="sc">
+          <div class="sc-img">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-attend);">Event</div>
+            <div style="position:absolute;inset:0;background:var(--c-attend);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">Community Health Fair</div>
+            <div class="sc-meta">Mar 15 / Sunnyside / Free</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/town-hall.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-attend);">Meeting</div>
+            <div style="position:absolute;inset:0;background:var(--c-attend);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">District D Town Hall</div>
+            <div class="sc-meta">Mar 22 / 6pm / TSU</div>
+          </div>
+        </div>
+        <div class="sc-more" style="color:var(--c-attend);">See all 6 &rarr;</div>
+      </div>
+    </div>
+
+    <!-- ORGANIZE shelf -->
+    <div class="shelf">
+      <div class="shelf-hdr">
+        <div class="shelf-bar" style="background:var(--c-organize);"></div>
+        <div class="shelf-name" style="color:var(--c-organize);">Organize</div>
+        <div class="shelf-desc">Officials and policies</div>
+        <div class="shelf-count">4 officials + 3 bills</div>
+      </div>
+      <div class="shelf-row">
+        <div class="sc">
+          <div class="sc-img" style="position:relative;">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/evans-shabazz.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-organize);">Official</div>
+            <div style="position:absolute;inset:0;background:var(--c-organize);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">CM Carolyn Evans-Shabazz</div>
+            <div class="sc-meta">District D / City Council</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/morales.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-organize);">Official</div>
+            <div style="position:absolute;inset:0;background:var(--c-organize);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">Rep. Christina Morales</div>
+            <div class="sc-meta">HD-145 / State House</div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-img">
+            <img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/civic-building.jpg" alt="">
+            <div class="sc-badge" style="background:var(--c-organize);">Bill</div>
+            <div style="position:absolute;inset:0;background:var(--c-organize);mix-blend-mode:multiply;opacity:0;transition:opacity 0.4s;" class="sc-duo"></div>
+          </div>
+          <div class="sc-body">
+            <div class="sc-title">SB 2047: Health Worker Funding</div>
+            <div class="sc-meta">Committee hearing Apr 3</div>
+          </div>
+        </div>
+        <div class="sc-more" style="color:var(--c-organize);">See all 7 &rarr;</div>
+      </div>
+    </div>
+
+    <!-- contextual tools -->
+    <div class="ctx-tools">
+      <div class="pw-chip">Map View</div>
+      <div class="pw-chip">Elections</div>
+      <div class="pw-chip">Foundations</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 4: ARTICLE ═══ -->
+<div class="frame" id="p4">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door on" style="border-bottom-color:var(--c-learn);">Learn</a>
+      <a class="hdr-door">Connect</a>
+      <a class="hdr-door">Attend</a>
+      <a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="res-crumb" style="padding-left:80px;"><a onclick="go(1)">Home</a> / <a onclick="go(2)" style="color:var(--c-learn);">Learn</a> / <a onclick="go(3)" style="color:var(--health);">Our Health</a> / <span style="font-weight:700;">Health Workers</span></div>
+
+  <div class="det-page">
+    <div class="det-layout">
+      <div class="det-main">
+        <div class="det-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt=""></div>
+        <div class="det-badge">Article / Our Health</div>
+        <h1>Health Workers Are Changing Primary Care in Houston</h1>
+        <div class="det-byline">~3 min read / Community health / Updated Mar 2026</div>
+
+        <div class="det-body">
+          <p>If you've been to a clinic recently, you might have talked to someone who wasn't a doctor or a nurse -- but who still really helped. That person was probably a community health worker.</p>
+          <p>Community health workers are people from your neighborhood who are trained to help connect you to the care you need. They speak your language, understand your situation, and can walk you through things like signing up for insurance, finding a food pantry, or getting your kids into a program.</p>
+          <h2>What do they actually do?</h2>
+          <p>Health workers do a lot of different things, but the big ones are:</p>
+          <div class="det-callout">They help people who don't know where to start. If you've ever thought "I know I need help but I don't know who to call" -- that's exactly who health workers are for.</div>
+          <p>In Houston, organizations like Legacy Community Health and The Harris Center have health workers on staff. They can visit your home, meet you at a clinic, or talk on the phone.</p>
+          <p>The state legislature is looking at a bill right now -- SB 2047 -- that would put more money into training health workers across Texas. Your state rep, Christina Morales, is one of the sponsors.</p>
+        </div>
+
+        <div class="det-next">
+          <h3>Now that you <em>know</em>...</h3>
+          <div class="det-next-row">
+            <div class="det-ncard" style="--c:var(--c-connect);">
+              <div class="det-ncard-dir" style="color:var(--c-connect);">Connect</div>
+              <div class="det-ncard-title">The Harris Center is 0.8 mi from you</div>
+              <div class="det-ncard-meta">Free mental health / Walk-ins OK</div>
+              <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-connect);"></div>
+            </div>
+            <div class="det-ncard" style="--c:var(--c-attend);">
+              <div class="det-ncard-dir" style="color:var(--c-attend);">Attend</div>
+              <div class="det-ncard-title">Health Fair this Saturday</div>
+              <div class="det-ncard-meta">Sunnyside / Free / Come as you are</div>
+              <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-attend);"></div>
+            </div>
+            <div class="det-ncard" style="--c:var(--c-organize);">
+              <div class="det-ncard-dir" style="color:var(--c-organize);">Organize</div>
+              <div class="det-ncard-title">SB 2047 hearing Apr 3</div>
+              <div class="det-ncard-meta">You can testify</div>
+              <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-organize);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wayfinder sidebar -->
+      <div class="wf">
+        <div class="wf-sec">
+          <div class="wf-sec-t">Mentioned in this article</div>
+          <div class="wf-row">
+            <div class="wf-row-img"><img class="ri" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+            <div><div class="wf-row-name">The Harris Center</div><div class="wf-row-meta">Mental health / 0.8 mi</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-row-img"><img class="ri" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt=""></div>
+            <div><div class="wf-row-name">Legacy Community Health</div><div class="wf-row-meta">Primary care / 1.2 mi</div></div>
+          </div>
+        </div>
+        <div class="wf-sec">
+          <div class="wf-sec-t">Your official on this</div>
+          <div class="wf-row">
+            <div class="wf-row-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/morales.jpg" alt=""></div>
+            <div><div class="wf-row-name">Rep. Christina Morales</div><div class="wf-row-meta">HD-145 / Sponsors SB 2047</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-row-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/evans-shabazz.jpg" alt=""></div>
+            <div><div class="wf-row-name">CM Evans-Shabazz</div><div class="wf-row-meta">District D / City Council</div></div>
+          </div>
+        </div>
+        <div class="wf-sec">
+          <div class="wf-sec-t">Related</div>
+          <div class="wf-row">
+            <div class="wf-row-img" style="background:var(--health);"></div>
+            <div><div class="wf-row-name">Insurance Options Near You</div><div class="wf-row-meta">~5 min read</div></div>
+          </div>
+          <div class="wf-row">
+            <div class="wf-row-img" style="background:var(--health);"></div>
+            <div><div class="wf-row-name">Free Counseling in 77004</div><div class="wf-row-meta">~2 min read</div></div>
+          </div>
+        </div>
+        <div class="wf-nudge">
+          <div class="wf-nudge-t"><em>Keep going?</em></div>
+          <div class="wf-ncard" style="border-left-color:var(--c-connect);">
+            <div class="wf-ncard-dir" style="color:var(--c-connect);">Connect</div>
+            <div><div class="wf-ncard-title">Harris Center 0.8 mi</div><div class="wf-ncard-meta">Free / Walk-ins</div></div>
+          </div>
+          <div class="wf-ncard" style="border-left-color:var(--c-attend);">
+            <div class="wf-ncard-dir" style="color:var(--c-attend);">Attend</div>
+            <div><div class="wf-ncard-title">Health Fair Saturday</div><div class="wf-ncard-meta">Sunnyside / Free</div></div>
+          </div>
+          <div class="wf-ncard" style="border-left-color:var(--c-organize);">
+            <div class="wf-ncard-dir" style="color:var(--c-organize);">Organize</div>
+            <div><div class="wf-ncard-title">SB 2047 hearing Apr 3</div><div class="wf-ncard-meta">You can testify</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ═══ PAGE 5: DASHBOARD ═══ -->
+<div class="frame" id="p5">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door" onclick="go(2)">Learn</a>
+      <a class="hdr-door">Connect</a>
+      <a class="hdr-door">Attend</a>
+      <a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" style="background:var(--ink);">77004</div>
+  </div>
+  <div class="dash-page">
+    <div class="dash-hero">
+      <h1>Your <em>77004</em> dashboard</h1>
+      <div class="dash-hero-sub">Everything we know about your neighborhood, all in one place.</div>
+    </div>
+    <div class="dash-stats">
+      <div class="dash-stat"><div class="dash-stat-num">847</div><div class="dash-stat-label">Articles + Guides</div></div>
+      <div class="dash-stat"><div class="dash-stat-num">312</div><div class="dash-stat-label">Services Near You</div></div>
+      <div class="dash-stat"><div class="dash-stat-num">86</div><div class="dash-stat-label">Events This Month</div></div>
+      <div class="dash-stat"><div class="dash-stat-num">22</div><div class="dash-stat-label">Elected Officials</div></div>
+      <div class="dash-stat"><div class="dash-stat-num">18</div><div class="dash-stat-label">Active Bills</div></div>
+    </div>
+    <div class="dash-doors">
+      <div class="dash-door" onclick="go(2)" style="cursor:pointer;">
+        <div class="dash-door-name" style="color:var(--c-learn);">Learn</div>
+        <div class="dash-door-count">847 reads available</div>
+        <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-learn);"></div>
+      </div>
+      <div class="dash-door">
+        <div class="dash-door-name" style="color:var(--c-connect);">Connect</div>
+        <div class="dash-door-count">312 services near you</div>
+        <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-connect);"></div>
+      </div>
+      <div class="dash-door">
+        <div class="dash-door-name" style="color:var(--c-attend);">Attend</div>
+        <div class="dash-door-count">86 events this month</div>
+        <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-attend);"></div>
+      </div>
+      <div class="dash-door">
+        <div class="dash-door-name" style="color:var(--c-organize);">Organize</div>
+        <div class="dash-door-count">22 officials + 18 bills</div>
+        <div style="position:absolute;left:0;top:0;width:4px;height:100%;background:var(--c-organize);"></div>
+      </div>
+    </div>
+    <div class="dash-pw-grid">
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--health);"></div><div class="dash-pw-name">Our Health</div><div class="dash-pw-count">24</div></div>
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--families);"></div><div class="dash-pw-name">Our Families</div><div class="dash-pw-count">18</div></div>
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--neighborhood);"></div><div class="dash-pw-name">Our Neighborhood</div><div class="dash-pw-count">15</div></div>
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--voice);"></div><div class="dash-pw-name">Our Voice</div><div class="dash-pw-count">14</div></div>
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--money);"></div><div class="dash-pw-name">Our Money</div><div class="dash-pw-count">19</div></div>
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--planet);"></div><div class="dash-pw-name">Our Planet</div><div class="dash-pw-count">11</div></div>
+      <div class="dash-pw"><div class="dash-pw-bar" style="background:var(--bigger);"></div><div class="dash-pw-name">The Bigger We</div><div class="dash-pw-count">8</div></div>
+    </div>
+    <div class="dash-tools-label">Your tools</div>
+    <div class="dash-tools">
+      <div class="dash-tool"><div class="dash-tool-name">Compass</div><div class="dash-tool-desc">Find your starting point</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Elections</div><div class="dash-tool-desc">Voting, dates, locations</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Library</div><div class="dash-tool-desc">Browse everything</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Your Guide</div><div class="dash-tool-desc">Personalized suggestions</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Local Resources</div><div class="dash-tool-desc">Services near you</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Officials</div><div class="dash-tool-desc">Who represents you</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Policy</div><div class="dash-tool-desc">Bills and legislation</div></div>
+      <div class="dash-tool" onclick="go(6)"><div class="dash-tool-name">Map View</div><div class="dash-tool-desc">See your neighborhood</div></div>
+      <div class="dash-tool"><div class="dash-tool-name">Foundations</div><div class="dash-tool-desc">Who funds what</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 6: MAP ═══ -->
+<div class="frame" id="p6">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door">Learn</a><a class="hdr-door">Connect</a><a class="hdr-door">Attend</a><a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="map-page">
+    <div class="map-side">
+      <div class="map-side-hdr">
+        <h2>My Neighborhood</h2>
+        <p>What's around 77004</p>
+      </div>
+      <div style="padding:12px 24px 6px;"><span class="mono" style="color:var(--muted);">Layers</span></div>
+      <div class="map-layer"><div class="map-layer-bar" style="background:var(--c-connect);"></div>Services<div style="margin-left:auto;width:14px;height:14px;background:var(--hot);"></div></div>
+      <div class="map-layer"><div class="map-layer-bar" style="background:var(--c-attend);"></div>Events<div style="margin-left:auto;width:14px;height:14px;background:var(--hot);"></div></div>
+      <div class="map-layer"><div class="map-layer-bar" style="background:var(--c-organize);"></div>Officials<div style="margin-left:auto;width:14px;height:14px;border:2px solid var(--rule);"></div></div>
+      <div class="map-layer"><div class="map-layer-bar" style="background:var(--voice);"></div>Polling Places<div style="margin-left:auto;width:14px;height:14px;border:2px solid var(--rule);"></div></div>
+      <div style="padding:16px 24px 6px;border-top:2px solid var(--ink);"><span class="mono" style="color:var(--muted);">Nearby</span></div>
+      <div class="map-pin-item">
+        <div class="map-pin-img"><img class="ri" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+        <div><div class="map-pin-name">The Harris Center</div><div class="map-pin-meta">Mental health / Free</div></div>
+        <div class="map-pin-dist">0.8 mi</div>
+      </div>
+      <div class="map-pin-item">
+        <div class="map-pin-img"><img class="ri" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt=""></div>
+        <div><div class="map-pin-name">Legacy Community Health</div><div class="map-pin-meta">Primary care</div></div>
+        <div class="map-pin-dist">1.2 mi</div>
+      </div>
+      <div class="map-pin-item">
+        <div class="map-pin-img" style="background:var(--c-attend);"></div>
+        <div><div class="map-pin-name">Health Fair</div><div class="map-pin-meta">Mar 15 / Sunnyside</div></div>
+        <div class="map-pin-dist">2.1 mi</div>
+      </div>
+    </div>
+    <div class="map-area">
+      <div class="map-placeholder">
+        <div class="map-placeholder-big">Map</div>
+        <div class="mono" style="color:var(--muted);margin-top:8px;">Leaflet + OpenStreetMap</div>
+      </div>
+      <div class="map-dot" style="top:35%;left:40%;background:var(--c-connect);"></div>
+      <div class="map-dot" style="top:50%;left:55%;background:var(--c-connect);"></div>
+      <div class="map-dot" style="top:60%;left:35%;background:var(--c-attend);"></div>
+      <div class="map-dot" style="top:30%;left:65%;background:var(--c-attend);"></div>
+      <div class="map-dot" style="top:45%;left:48%;background:var(--c-connect);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 7: CALENDAR ═══ -->
+<div class="frame" id="p7">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door">Learn</a><a class="hdr-door">Connect</a><a class="hdr-door on" style="border-bottom-color:var(--c-attend);">Attend</a><a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="cal-page">
+    <div class="cal-hero">
+      <h1>What's <em style="color:var(--hot);font-style:italic;">happening</em></h1>
+      <div class="cal-hero-right">March 2026</div>
+    </div>
+    <div class="cal-filters">
+      <div class="cal-filt on">All</div>
+      <div class="cal-filt">Health</div>
+      <div class="cal-filt">Families</div>
+      <div class="cal-filt">Voice</div>
+      <div class="cal-filt">Planet</div>
+    </div>
+    <div class="cal-layout">
+      <div class="cal-main">
+        <div class="cal-month-title">March 2026</div>
+        <div class="cal-grid">
+          <div class="cal-dh">Sun</div><div class="cal-dh">Mon</div><div class="cal-dh">Tue</div><div class="cal-dh">Wed</div><div class="cal-dh">Thu</div><div class="cal-dh">Fri</div><div class="cal-dh">Sat</div>
+          <div class="cal-day"><div class="cal-day-num">1</div></div>
+          <div class="cal-day"><div class="cal-day-num">2</div></div>
+          <div class="cal-day"><div class="cal-day-num">3</div><div class="cal-ev" style="background:var(--health);">Health Walk</div></div>
+          <div class="cal-day"><div class="cal-day-num">4</div></div>
+          <div class="cal-day today"><div class="cal-day-num">5</div><div class="cal-ev" style="background:var(--voice);">Council Mtg</div></div>
+          <div class="cal-day"><div class="cal-day-num">6</div></div>
+          <div class="cal-day"><div class="cal-day-num">7</div><div class="cal-ev" style="background:var(--planet);">Bayou Cleanup</div></div>
+          <div class="cal-day"><div class="cal-day-num">8</div></div>
+          <div class="cal-day"><div class="cal-day-num">9</div></div>
+          <div class="cal-day"><div class="cal-day-num">10</div><div class="cal-ev" style="background:var(--families);">Youth Fair</div></div>
+          <div class="cal-day"><div class="cal-day-num">11</div></div>
+          <div class="cal-day"><div class="cal-day-num">12</div></div>
+          <div class="cal-day"><div class="cal-day-num">13</div></div>
+          <div class="cal-day"><div class="cal-day-num">14</div></div>
+          <div class="cal-day"><div class="cal-day-num">15</div><div class="cal-ev" style="background:var(--health);">Health Fair</div></div>
+          <div class="cal-day"><div class="cal-day-num">16</div></div>
+          <div class="cal-day"><div class="cal-day-num">17</div></div>
+          <div class="cal-day"><div class="cal-day-num">18</div></div>
+          <div class="cal-day"><div class="cal-day-num">19</div></div>
+          <div class="cal-day"><div class="cal-day-num">20</div></div>
+          <div class="cal-day"><div class="cal-day-num">21</div></div>
+          <div class="cal-day"><div class="cal-day-num">22</div><div class="cal-ev" style="background:var(--voice);">Town Hall</div></div>
+          <div class="cal-day"><div class="cal-day-num">23</div></div>
+          <div class="cal-day"><div class="cal-day-num">24</div></div>
+          <div class="cal-day"><div class="cal-day-num">25</div><div class="cal-ev" style="background:var(--money);">Tax Help</div></div>
+          <div class="cal-day"><div class="cal-day-num">26</div></div>
+          <div class="cal-day"><div class="cal-day-num">27</div></div>
+          <div class="cal-day"><div class="cal-day-num">28</div></div>
+          <div class="cal-day"><div class="cal-day-num">29</div></div>
+          <div class="cal-day"><div class="cal-day-num">30</div></div>
+          <div class="cal-day"><div class="cal-day-num">31</div></div>
+        </div>
+      </div>
+      <div class="cal-side">
+        <div class="cal-side-title">Coming up</div>
+        <div class="cal-item" style="border-left-color:var(--voice);">
+          <div class="cal-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/town-hall.jpg" alt=""></div>
+          <div><div class="cal-item-name">Council Meeting</div><div class="cal-item-meta">City Hall / Public comment</div></div>
+          <div class="cal-item-time">Today</div>
+        </div>
+        <div class="cal-item" style="border-left-color:var(--planet);">
+          <div class="cal-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/community-meeting.jpg" alt=""></div>
+          <div><div class="cal-item-name">Bayou Cleanup</div><div class="cal-item-meta">Buffalo Bayou / Bring gloves</div></div>
+          <div class="cal-item-time">Mar 7</div>
+        </div>
+        <div class="cal-item" style="border-left-color:var(--health);">
+          <div class="cal-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt=""></div>
+          <div><div class="cal-item-name">Health Fair</div><div class="cal-item-meta">Sunnyside / Free screenings</div></div>
+          <div class="cal-item-time">Mar 15</div>
+        </div>
+        <div class="cal-item" style="border-left-color:var(--voice);">
+          <div class="cal-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/town-hall.jpg" alt=""></div>
+          <div><div class="cal-item-name">District D Town Hall</div><div class="cal-item-meta">TSU / 6pm / Open to all</div></div>
+          <div class="cal-item-time">Mar 22</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ═══ PAGE 8: QUICK HELP ═══ -->
+<div class="frame" id="p8">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door">Learn</a><a class="hdr-door">Connect</a><a class="hdr-door">Attend</a><a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="qh-page">
+    <div class="qh-hero">
+      <h1>Quick <em>access</em></h1>
+      <div class="qh-hero-sub">Pick what you need. We'll show you what's close and what's open.</div>
+    </div>
+    <div class="qh-grid">
+      <div class="qh-card" style="--c:var(--health);">
+        <div class="qh-card-name" style="color:var(--health);">Someone to talk to</div>
+        <div class="qh-card-desc">Counseling, crisis lines, peer support</div>
+        <div class="qh-card-count">14 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--health);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--families);">
+        <div class="qh-card-name" style="color:var(--families);">Food access</div>
+        <div class="qh-card-desc">Pantries, hot meals, groceries, SNAP</div>
+        <div class="qh-card-count">22 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--families);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--neighborhood);">
+        <div class="qh-card-name" style="color:var(--neighborhood);">A place to stay</div>
+        <div class="qh-card-desc">Shelters, housing help, rental assistance</div>
+        <div class="qh-card-count">11 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--neighborhood);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--money);">
+        <div class="qh-card-name" style="color:var(--money);">Help with bills</div>
+        <div class="qh-card-desc">Utility assistance, financial coaching</div>
+        <div class="qh-card-count">8 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--money);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--families);">
+        <div class="qh-card-name" style="color:var(--families);">Help with kids</div>
+        <div class="qh-card-desc">After school, childcare, tutoring</div>
+        <div class="qh-card-count">16 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--families);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--money);">
+        <div class="qh-card-name" style="color:var(--money);">A job</div>
+        <div class="qh-card-desc">Training, placement, career coaching</div>
+        <div class="qh-card-count">12 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--money);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--health);">
+        <div class="qh-card-name" style="color:var(--health);">A clinic</div>
+        <div class="qh-card-desc">Free/low-cost health care near you</div>
+        <div class="qh-card-count">9 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--health);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--voice);">
+        <div class="qh-card-name" style="color:var(--voice);">Legal help</div>
+        <div class="qh-card-desc">Free legal aid, tenant rights, immigration</div>
+        <div class="qh-card-count">7 resources</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--voice);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+      <div class="qh-card" style="--c:var(--bigger);">
+        <div class="qh-card-name" style="color:var(--bigger);">Not sure</div>
+        <div class="qh-card-desc">Talk to Chance -- our guide can help you figure it out</div>
+        <div class="qh-card-count">Start here</div>
+        <div style="position:absolute;left:0;top:0;width:5px;height:0;background:var(--bigger);transition:height 0.4s cubic-bezier(0.19,1,0.22,1);" class="qh-bar"></div>
+      </div>
+    </div>
+    <div class="qh-emergency">
+      <div class="qh-em-icon">!</div>
+      <div class="qh-em-text">
+        <h3>Right now, right away</h3>
+        <p>911 for emergencies / 988 for mental health crisis / 211 for everything else</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 9: OFFICIALS ═══ -->
+<div class="frame" id="p9">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door">Learn</a><a class="hdr-door">Connect</a><a class="hdr-door">Attend</a><a class="hdr-door on" style="border-bottom-color:var(--c-organize);">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="rep-page">
+    <div class="rep-hero">
+      <h1>Who <em>represents</em> you</h1>
+      <div class="rep-hero-sub">These are the people who make decisions on your behalf. Here's what they've been up to.</div>
+    </div>
+    <div class="rep-grid">
+      <div class="rep-card">
+        <div class="rep-card-top">
+          <div class="rep-card-photo"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/evans-shabazz.jpg" alt=""></div>
+          <div>
+            <div class="rep-card-name">Carolyn Evans-Shabazz</div>
+            <div class="rep-card-role">City Council, District D</div>
+            <div class="rep-card-level" style="background:var(--hot-light);color:var(--hot);">City</div>
+          </div>
+        </div>
+        <div class="rep-card-body">
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--health);"></div>Voted YES on health funding</div>
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--neighborhood);"></div>Town hall Mar 22</div>
+        </div>
+      </div>
+      <div class="rep-card">
+        <div class="rep-card-top">
+          <div class="rep-card-photo"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/morales.jpg" alt=""></div>
+          <div>
+            <div class="rep-card-name">Christina Morales</div>
+            <div class="rep-card-role">State House, HD-145</div>
+            <div class="rep-card-level" style="background:rgba(42,108,181,0.1);color:var(--money);">State</div>
+          </div>
+        </div>
+        <div class="rep-card-body">
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--health);"></div>Sponsors SB 2047</div>
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--money);"></div>Co-author HB 1200</div>
+        </div>
+      </div>
+      <div class="rep-card">
+        <div class="rep-card-top">
+          <div class="rep-card-photo" style="background:var(--c-organize);"></div>
+          <div>
+            <div class="rep-card-name">John Whitmire</div>
+            <div class="rep-card-role">Mayor of Houston</div>
+            <div class="rep-card-level" style="background:var(--hot-light);color:var(--hot);">City</div>
+          </div>
+        </div>
+        <div class="rep-card-body">
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--neighborhood);"></div>Budget proposal released</div>
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--planet);"></div>Flood bond update</div>
+        </div>
+      </div>
+      <div class="rep-card">
+        <div class="rep-card-top">
+          <div class="rep-card-photo" style="background:var(--money);"></div>
+          <div>
+            <div class="rep-card-name">Sylvia Garcia</div>
+            <div class="rep-card-role">U.S. House, TX-29</div>
+            <div class="rep-card-level" style="background:rgba(42,108,181,0.1);color:var(--money);">Federal</div>
+          </div>
+        </div>
+        <div class="rep-card-body">
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--families);"></div>Child tax credit vote</div>
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--money);"></div>Infrastructure funding</div>
+        </div>
+      </div>
+      <div class="rep-card">
+        <div class="rep-card-top">
+          <div class="rep-card-photo" style="background:var(--voice);"></div>
+          <div>
+            <div class="rep-card-name">John Cornyn</div>
+            <div class="rep-card-role">U.S. Senate</div>
+            <div class="rep-card-level" style="background:rgba(42,108,181,0.1);color:var(--money);">Federal</div>
+          </div>
+        </div>
+        <div class="rep-card-body">
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--voice);"></div>Judiciary committee</div>
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--neighborhood);"></div>Disaster relief bill</div>
+        </div>
+      </div>
+      <div class="rep-card">
+        <div class="rep-card-top">
+          <div class="rep-card-photo" style="background:var(--bigger);"></div>
+          <div>
+            <div class="rep-card-name">Lina Hidalgo</div>
+            <div class="rep-card-role">Harris County Judge</div>
+            <div class="rep-card-level" style="background:var(--hot-light);color:var(--hot);">County</div>
+          </div>
+        </div>
+        <div class="rep-card-body">
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--health);"></div>Mental health funding</div>
+          <div class="rep-card-item"><div class="rep-card-dot" style="background:var(--planet);"></div>Flood control vote</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 10: MY JOURNEY ═══ -->
+<div class="frame" id="p10">
+  <div class="hdr">
+    <a class="hdr-logo" onclick="go(1)"><svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#D94F2B" stroke-width="2.5"/></svg><span>Community Exchange</span></a>
+    <div class="hdr-doors">
+      <a class="hdr-door">Learn</a><a class="hdr-door">Connect</a><a class="hdr-door">Attend</a><a class="hdr-door">Organize</a>
+    </div>
+    <div class="hdr-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find</div>
+    <div class="hdr-zip" onclick="go(5)">77004</div>
+  </div>
+  <div class="jour-page">
+    <div class="jour-hero">
+      <h1>Your <em>journey</em></h1>
+      <div class="jour-hero-sub">Here's what you've explored so far, and where to go next.</div>
+    </div>
+    <div class="jour-compass">
+      <div class="jour-dir" style="opacity:0.5;">
+        <div class="jour-dir-bar" style="background:var(--c-learn);"></div>
+        <div><div class="jour-dir-name" style="color:var(--c-learn);">Learn</div><div class="jour-dir-stat">7 articles read</div></div>
+        <div class="jour-dir-check" style="color:var(--c-learn);">Done</div>
+      </div>
+      <div class="jour-dir" style="opacity:0.5;">
+        <div class="jour-dir-bar" style="background:var(--c-connect);"></div>
+        <div><div class="jour-dir-name" style="color:var(--c-connect);">Connect</div><div class="jour-dir-stat">3 services saved</div></div>
+        <div class="jour-dir-check" style="color:var(--c-connect);">Done</div>
+      </div>
+      <div class="jour-dir">
+        <div class="jour-dir-bar" style="background:var(--c-attend);"></div>
+        <div><div class="jour-dir-name" style="color:var(--c-attend);">Attend</div><div class="jour-dir-stat">1 event coming up</div></div>
+        <div class="jour-dir-check" style="color:var(--hot);">Next</div>
+      </div>
+      <div class="jour-dir" style="opacity:0.35;">
+        <div class="jour-dir-bar" style="background:var(--c-organize);"></div>
+        <div><div class="jour-dir-name" style="color:var(--c-organize);">Organize</div><div class="jour-dir-stat">Not started</div></div>
+        <div class="jour-dir-check" style="color:var(--muted);">--</div>
+      </div>
+    </div>
+
+    <div class="jour-sec">
+      <div class="jour-sec-title">Articles you <em>read</em></div>
+      <div class="jour-items">
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--health);"></div>
+          <div class="jour-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt=""></div>
+          <div><div class="jour-item-name">Health Workers</div><div class="jour-item-meta">Our Health / 3 min</div></div>
+          <div class="jour-item-when">2 days ago</div>
+        </div>
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--health);"></div>
+          <div class="jour-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt=""></div>
+          <div><div class="jour-item-name">Insurance Options</div><div class="jour-item-meta">Our Health / 5 min</div></div>
+          <div class="jour-item-when">3 days ago</div>
+        </div>
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--voice);"></div>
+          <div class="jour-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/town-hall.jpg" alt=""></div>
+          <div><div class="jour-item-name">What Council Does</div><div class="jour-item-meta">Our Voice / 4 min</div></div>
+          <div class="jour-item-when">Last week</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jour-sec">
+      <div class="jour-sec-title">Services you <em>saved</em></div>
+      <div class="jour-items">
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--c-connect);"></div>
+          <div class="jour-item-img"><img class="ri" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+          <div><div class="jour-item-name">The Harris Center</div><div class="jour-item-meta">Mental health / 0.8 mi</div></div>
+          <div class="jour-item-when">Saved</div>
+        </div>
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--c-connect);"></div>
+          <div class="jour-item-img"><img class="ri" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt=""></div>
+          <div><div class="jour-item-name">Legacy Community Health</div><div class="jour-item-meta">Primary care / 1.2 mi</div></div>
+          <div class="jour-item-when">Saved</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jour-sec">
+      <div class="jour-sec-title">What's <em>next</em></div>
+      <div class="jour-items">
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--c-attend);"></div>
+          <div class="jour-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt=""></div>
+          <div><div class="jour-item-name">Health Fair</div><div class="jour-item-meta">Sunnyside / Free</div></div>
+          <div class="jour-item-when" style="color:var(--c-attend);">Mar 15</div>
+        </div>
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--c-attend);"></div>
+          <div class="jour-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/town-hall.jpg" alt=""></div>
+          <div><div class="jour-item-name">District D Town Hall</div><div class="jour-item-meta">TSU / 6pm</div></div>
+          <div class="jour-item-when" style="color:var(--c-attend);">Mar 22</div>
+        </div>
+        <div class="jour-item">
+          <div class="jour-item-bar" style="background:var(--c-organize);"></div>
+          <div class="jour-item-img"><img class="ri" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/civic-building.jpg" alt=""></div>
+          <div><div class="jour-item-name">SB 2047 Hearing</div><div class="jour-item-meta">You can testify</div></div>
+          <div class="jour-item-when" style="color:var(--c-organize);">Apr 3</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function go(n) {
+  document.querySelectorAll('.frame').forEach(f => f.classList.remove('on'));
+  document.querySelectorAll('.st-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('p' + n)?.classList.add('on');
+  document.querySelectorAll('.st-btn')[n - 1]?.classList.add('on');
+  window.scrollTo(0, 0);
+}
+// door hover bars
+document.querySelectorAll('.fd-door').forEach(d => {
+  const bar = d.querySelector(':scope > div:last-child');
+  if (bar && bar.style.transform !== undefined) {
+    d.addEventListener('mouseenter', () => bar.style.transform = 'scaleX(1)');
+    d.addEventListener('mouseleave', () => bar.style.transform = 'scaleX(0)');
+  }
+});
+// pathway card + quick help card left bars
+document.querySelectorAll('.pw-card, .qh-card').forEach(c => {
+  const bar = c.querySelector('.pw-bar, .qh-bar');
+  if (bar) {
+    c.addEventListener('mouseenter', () => bar.style.height = '100%');
+    c.addEventListener('mouseleave', () => bar.style.height = '0');
+  }
+});
+// shelf card duotone overlays
+document.querySelectorAll('.sc').forEach(c => {
+  const duo = c.querySelector('.sc-duo');
+  if (duo) {
+    c.addEventListener('mouseenter', () => duo.style.opacity = '0.45');
+    c.addEventListener('mouseleave', () => duo.style.opacity = '0');
+  }
+});
+// collage image labels
+document.querySelectorAll('.fd-cimg').forEach(c => {
+  c.addEventListener('mouseenter', () => {
+    const af = c.querySelector('::after');
+    c.style.zIndex = '10';
+  });
+  c.addEventListener('mouseleave', () => { c.style.zIndex = ''; });
+});
+</script>
+</body>
+</html>
