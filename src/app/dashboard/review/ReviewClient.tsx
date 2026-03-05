@@ -156,6 +156,8 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
       const failures = results.filter((r: any) => r.error)
       if (failures.length > 0) {
         setActionError(`${failures.length} of ${results.length} items failed: ${failures[0].error}`)
+        setBulkActing(false)
+        return
       }
       setSelectedIds(new Set())
       setBulkActing(false)
@@ -179,6 +181,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         return
       }
       setSelectedIds(new Set())
+      setBulkActing(false)
       window.location.reload()
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Bulk reject failed')
@@ -199,6 +202,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         return
       }
       setSelectedIds(new Set())
+      setBulkActing(false)
       window.location.reload()
     } catch (err) {
       setActionError(err instanceof Error ? err.message : 'Bulk flag failed')
