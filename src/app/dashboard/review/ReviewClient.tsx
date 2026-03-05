@@ -17,6 +17,8 @@ interface ReviewItem {
   confidence: number | null
   ai_classification: unknown
   created_at: string | null
+  reviewed_at: string | null
+  reviewed_by: string | null
   content_inbox?: {
     title: string | null
     source_domain: string | null
@@ -24,7 +26,7 @@ interface ReviewItem {
   } | null
 }
 
-const STATUS_TABS = ['all', 'pending', 'flagged', 'auto_approved', 'rejected'] as const
+const STATUS_TABS = ['all', 'pending', 'flagged', 'approved', 'auto_approved', 'rejected'] as const
 
 export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: ReviewItem[]; segmentMap?: Record<string, string> }) {
   const [items] = useState(initialItems)
@@ -49,6 +51,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
     all: items.length,
     pending: items.filter((i: ReviewItem) => i.review_status === 'pending').length,
     flagged: items.filter((i: ReviewItem) => i.review_status === 'flagged').length,
+    approved: items.filter((i: ReviewItem) => i.review_status === 'approved').length,
     auto_approved: items.filter((i: ReviewItem) => i.review_status === 'auto_approved').length,
     rejected: items.filter((i: ReviewItem) => i.review_status === 'rejected').length,
   }
@@ -227,7 +230,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
                 : 'text-brand-muted hover:text-brand-text hover:bg-brand-bg'
             }`}
           >
-            {tab === 'all' ? 'All' : tab === 'auto_approved' ? 'Auto-Approved' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab === 'all' ? 'All' : tab === 'auto_approved' ? 'Auto-Approved' : tab === 'approved' ? 'Approved' : tab.charAt(0).toUpperCase() + tab.slice(1)}
             <span className="ml-1.5 text-xs opacity-70">({tabCounts[tab]})</span>
           </button>
         ))}
@@ -299,6 +302,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
               <th className="px-4 py-3 font-medium">Center</th>
               <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Created</th>
+              <th className="px-4 py-3 font-medium">Reviewed</th>
             </tr>
           </thead>
           <tbody>
@@ -330,6 +334,13 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
                   <td className="px-4 py-3"><StatusBadge status={item.review_status} /></td>
                   <td className="px-4 py-3 text-brand-muted text-xs">
                     {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}
+                  </td>
+                  <td className="px-4 py-3 text-brand-muted text-xs">
+                    {item.reviewed_at ? (
+                      <span title={item.reviewed_by || ''}>
+                        {new Date(item.reviewed_at).toLocaleString()}
+                      </span>
+                    ) : '-'}
                   </td>
                 </tr>
               )
