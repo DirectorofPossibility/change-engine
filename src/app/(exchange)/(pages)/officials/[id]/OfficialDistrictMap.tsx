@@ -1,6 +1,6 @@
 'use client'
 
-import { InteractiveMap } from '@/components/maps'
+import { InteractiveMap } from '@/components/maps/dynamic'
 import { GEO_LAYERS } from '@/lib/constants'
 
 interface OfficialDistrictMapProps {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { InteractiveMap } from '@/components/maps'
+import { InteractiveMap } from '@/components/maps/dynamic'
 import { GEO_LAYERS } from '@/lib/constants'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'
 

@@ -1,7 +1,7 @@
 'use client'
 
-import { InteractiveMap } from '@/components/maps'
-import type { MarkerData } from '@/components/maps'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import type { MarkerData } from '@/components/maps/MapMarker'
 import { GEO_LAYERS } from '@/lib/constants'
 
 interface SuperNeighborhoodDetailMapProps {

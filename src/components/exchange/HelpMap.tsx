@@ -1,7 +1,7 @@
 'use client'
 
-import { ClusteredMap } from '@/components/maps'
-import type { MarkerData } from '@/components/maps'
+import { ClusteredMap } from '@/components/maps/dynamic'
+import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg } from '@/lib/types/exchange'
 
 interface HelpMapProps {
