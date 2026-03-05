@@ -318,3 +318,245 @@ export async function getFidelityEntities(
     total: count ?? 0,
   }
 }
+
+// ── Graph Coverage & Explorer ────────────────────────────────────────────
+
+export interface CoverageCell {
+  entity: string
+  dimension: string
+  edgeCount: number
+  entityCount: number
+}
+
+export interface GraphNode {
+  id: string
+  label: string
+  type: 'entity' | 'taxonomy'
+  subtype: string
+}
+
+export interface GraphEdge {
+  source: string
+  target: string
+  weight: number
+}
+
+export async function getGraphCoverage(): Promise<{
+  cells: CoverageCell[]
+  entityCounts: Record<string, number>
+}> {
+  const supabase = await createClient()
+
+  // Get entity counts using typed queries
+  const [orgs, content, policies, opps, officials, founds, campaigns, services] = await Promise.all([
+    supabase.from('organizations').select('org_id', { count: 'exact', head: true }),
+    supabase.from('content_published').select('id', { count: 'exact', head: true }),
+    supabase.from('policies').select('policy_id', { count: 'exact', head: true }),
+    supabase.from('opportunities').select('opportunity_id', { count: 'exact', head: true }),
+    supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }),
+    supabase.from('foundations').select('id', { count: 'exact', head: true }),
+    supabase.from('campaigns').select('campaign_id', { count: 'exact', head: true }),
+    supabase.from('services_211').select('id', { count: 'exact', head: true }),
+  ])
+
+  const entityCounts: Record<string, number> = {
+    organization: orgs.count ?? 0,
+    content: content.count ?? 0,
+    policy: policies.count ?? 0,
+    opportunity: opps.count ?? 0,
+    official: officials.count ?? 0,
+    foundation: founds.count ?? 0,
+    campaign: campaigns.count ?? 0,
+    service: services.count ?? 0,
+  }
+
+  // Get edge counts for junction tables using typed queries
+  const junctions = await Promise.all([
+    supabase.from('organization_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('organization_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('organization_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('organization_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('organization_life_situations').select('*', { count: 'exact', head: true }),
+    supabase.from('organization_service_categories').select('*', { count: 'exact', head: true }),
+    supabase.from('organization_neighborhoods').select('*', { count: 'exact', head: true }),
+    supabase.from('content_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('content_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('content_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('content_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('content_life_situations').select('*', { count: 'exact', head: true }),
+    supabase.from('content_service_categories').select('*', { count: 'exact', head: true }),
+    supabase.from('content_neighborhoods').select('*', { count: 'exact', head: true }),
+    supabase.from('policy_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('policy_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('policy_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('policy_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('policy_life_situations').select('*', { count: 'exact', head: true }),
+    supabase.from('opportunity_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('opportunity_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('opportunity_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('opportunity_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('opportunity_life_situations').select('*', { count: 'exact', head: true }),
+    supabase.from('official_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('official_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('official_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('official_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('foundation_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('foundation_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('campaign_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('campaign_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('campaign_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('service_pathways').select('*', { count: 'exact', head: true }),
+    supabase.from('service_sdgs').select('*', { count: 'exact', head: true }),
+    supabase.from('service_focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('service_audience_segments').select('*', { count: 'exact', head: true }),
+    supabase.from('service_life_situations').select('*', { count: 'exact', head: true }),
+  ])
+
+  // Map junction results to cells
+  const junctionDefs: { entity: string; dimension: string }[] = [
+    { entity: 'organization', dimension: 'pathways' },
+    { entity: 'organization', dimension: 'sdgs' },
+    { entity: 'organization', dimension: 'focus_areas' },
+    { entity: 'organization', dimension: 'audience_segments' },
+    { entity: 'organization', dimension: 'life_situations' },
+    { entity: 'organization', dimension: 'service_categories' },
+    { entity: 'organization', dimension: 'neighborhoods' },
+    { entity: 'content', dimension: 'pathways' },
+    { entity: 'content', dimension: 'sdgs' },
+    { entity: 'content', dimension: 'focus_areas' },
+    { entity: 'content', dimension: 'audience_segments' },
+    { entity: 'content', dimension: 'life_situations' },
+    { entity: 'content', dimension: 'service_categories' },
+    { entity: 'content', dimension: 'neighborhoods' },
+    { entity: 'policy', dimension: 'pathways' },
+    { entity: 'policy', dimension: 'sdgs' },
+    { entity: 'policy', dimension: 'focus_areas' },
+    { entity: 'policy', dimension: 'audience_segments' },
+    { entity: 'policy', dimension: 'life_situations' },
+    { entity: 'opportunity', dimension: 'pathways' },
+    { entity: 'opportunity', dimension: 'sdgs' },
+    { entity: 'opportunity', dimension: 'focus_areas' },
+    { entity: 'opportunity', dimension: 'audience_segments' },
+    { entity: 'opportunity', dimension: 'life_situations' },
+    { entity: 'official', dimension: 'pathways' },
+    { entity: 'official', dimension: 'sdgs' },
+    { entity: 'official', dimension: 'focus_areas' },
+    { entity: 'official', dimension: 'audience_segments' },
+    { entity: 'foundation', dimension: 'pathways' },
+    { entity: 'foundation', dimension: 'focus_areas' },
+    { entity: 'campaign', dimension: 'pathways' },
+    { entity: 'campaign', dimension: 'sdgs' },
+    { entity: 'campaign', dimension: 'audience_segments' },
+    { entity: 'service', dimension: 'pathways' },
+    { entity: 'service', dimension: 'sdgs' },
+    { entity: 'service', dimension: 'focus_areas' },
+    { entity: 'service', dimension: 'audience_segments' },
+    { entity: 'service', dimension: 'life_situations' },
+  ]
+
+  const cells: CoverageCell[] = junctions.map((result, i) => ({
+    entity: junctionDefs[i].entity,
+    dimension: junctionDefs[i].dimension,
+    edgeCount: result.error ? 0 : (result.count ?? 0),
+    entityCount: entityCounts[junctionDefs[i].entity] ?? 0,
+  }))
+
+  return { cells, entityCounts }
+}
+
+export async function getGraphExplorerData(): Promise<{
+  nodes: GraphNode[]
+  edges: GraphEdge[]
+}> {
+  const supabase = await createClient()
+
+  // Fetch taxonomy dimensions with correct column names
+  const [focusAreas, sdgsData, audiences, pathways, serviceCats] = await Promise.all([
+    supabase.from('focus_areas').select('focus_id, focus_area_name').limit(500),
+    supabase.from('sdgs').select('sdg_id, sdg_name').limit(20),
+    supabase.from('audience_segments').select('segment_id, segment_name').limit(50),
+    supabase.from('life_situations').select('situation_id, situation_name').limit(50),
+    supabase.from('service_categories').select('service_cat_id, service_cat_name').limit(50),
+  ])
+
+  // Fetch entities with correct column names
+  const [orgData, contentData, policyData, foundData, officialData, oppData, campaignData] = await Promise.all([
+    supabase.from('organizations').select('org_id, org_name').limit(200),
+    supabase.from('content_published').select('id, title_6th_grade').limit(200),
+    supabase.from('policies').select('policy_id, policy_name').limit(200),
+    supabase.from('foundations').select('id, name').limit(200),
+    supabase.from('elected_officials').select('official_id, official_name').limit(200),
+    supabase.from('opportunities').select('opportunity_id, opportunity_name').limit(200),
+    supabase.from('campaigns').select('campaign_id, campaign_name').limit(200),
+  ])
+
+  const nodes: GraphNode[] = []
+  const edges: GraphEdge[] = []
+
+  // Add taxonomy nodes
+  for (const item of focusAreas.data || []) {
+    nodes.push({ id: `focus_area:${item.focus_id}`, label: item.focus_area_name || '', type: 'taxonomy', subtype: 'focus_area' })
+  }
+  for (const item of sdgsData.data || []) {
+    nodes.push({ id: `sdg:${item.sdg_id}`, label: item.sdg_name || '', type: 'taxonomy', subtype: 'sdg' })
+  }
+  for (const item of audiences.data || []) {
+    nodes.push({ id: `audience_segment:${item.segment_id}`, label: item.segment_name || '', type: 'taxonomy', subtype: 'audience_segment' })
+  }
+  for (const item of pathways.data || []) {
+    nodes.push({ id: `pathway:${item.situation_id}`, label: item.situation_name || '', type: 'taxonomy', subtype: 'pathway' })
+  }
+  for (const item of serviceCats.data || []) {
+    nodes.push({ id: `service_category:${item.service_cat_id}`, label: item.service_cat_name || '', type: 'taxonomy', subtype: 'service_category' })
+  }
+
+  // Add entity nodes
+  for (const item of orgData.data || []) {
+    nodes.push({ id: `organization:${item.org_id}`, label: item.org_name || '', type: 'entity', subtype: 'organization' })
+  }
+  for (const item of contentData.data || []) {
+    nodes.push({ id: `content:${item.id}`, label: item.title_6th_grade || '', type: 'entity', subtype: 'content' })
+  }
+  for (const item of policyData.data || []) {
+    nodes.push({ id: `policy:${item.policy_id}`, label: item.policy_name || '', type: 'entity', subtype: 'policy' })
+  }
+  for (const item of foundData.data || []) {
+    nodes.push({ id: `foundation:${item.id}`, label: item.name || '', type: 'entity', subtype: 'foundation' })
+  }
+  for (const item of officialData.data || []) {
+    nodes.push({ id: `official:${item.official_id}`, label: item.official_name || '', type: 'entity', subtype: 'official' })
+  }
+  for (const item of oppData.data || []) {
+    nodes.push({ id: `opportunity:${item.opportunity_id}`, label: item.opportunity_name || '', type: 'entity', subtype: 'opportunity' })
+  }
+  for (const item of campaignData.data || []) {
+    nodes.push({ id: `campaign:${item.campaign_id}`, label: item.campaign_name || '', type: 'entity', subtype: 'campaign' })
+  }
+
+  // Fetch edges from populated junction tables
+  const [contentFocus, foundFocus, foundPath, officialFocus, orgFocus] = await Promise.all([
+    supabase.from('content_focus_areas').select('content_id, focus_id').limit(2000),
+    supabase.from('foundation_focus_areas').select('foundation_id, focus_area').limit(2000),
+    supabase.from('foundation_pathways').select('foundation_id, pathway_id').limit(2000),
+    supabase.from('official_focus_areas').select('official_id, focus_id').limit(2000),
+    supabase.from('organization_focus_areas').select('org_id, focus_id').limit(2000),
+  ])
+
+  for (const row of contentFocus.data || []) {
+    edges.push({ source: `content:${row.content_id}`, target: `focus_area:${row.focus_id}`, weight: 1 })
+  }
+  for (const row of foundFocus.data || []) {
+    edges.push({ source: `foundation:${row.foundation_id}`, target: `focus_area:${row.focus_area}`, weight: 1 })
+  }
+  for (const row of foundPath.data || []) {
+    edges.push({ source: `foundation:${row.foundation_id}`, target: `pathway:${row.pathway_id}`, weight: 1 })
+  }
+  for (const row of officialFocus.data || []) {
+    edges.push({ source: `official:${row.official_id}`, target: `focus_area:${row.focus_id}`, weight: 1 })
+  }
+  for (const row of orgFocus.data || []) {
+    edges.push({ source: `organization:${row.org_id}`, target: `focus_area:${row.focus_id}`, weight: 1 })
+  }
+
+  return { nodes, edges }
+}

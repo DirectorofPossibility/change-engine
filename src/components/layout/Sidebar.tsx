@@ -15,6 +15,8 @@ const ADMIN_NAV = [
   { href: '/dashboard/taxonomy', label: 'Taxonomy', icon: '🗂️' },
   { href: '/dashboard/knowledge-graph', label: 'Knowledge Graph', icon: '🌌' },
   { href: '/dashboard/circles', label: 'Circle Graph', icon: '⭕' },
+  { href: '/dashboard/graph-coverage', label: 'Graph Coverage', icon: '🔥' },
+  { href: '/dashboard/graph-explorer', label: 'Graph Explorer', icon: '🕸️' },
   { href: '/dashboard/linkedin', label: 'LinkedIn', icon: '🔗' },
   { href: '/dashboard/users', label: 'Users', icon: '👤' },
   { href: '/dashboard/library', label: 'Library', icon: '📚' },
