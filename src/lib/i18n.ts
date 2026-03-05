@@ -287,8 +287,15 @@ const en: Record<string, string> = {
   'sidebar.your_guide': 'Your Guide',
   'sidebar.elections': 'Elections & Voting',
   'sidebar.library': 'Library',
+  'sidebar.chat': 'Chat with Chance',
   'sidebar.topics': 'Topics',
   'sidebar.no_topics': 'No topics available',
+
+  // Chat with Chance
+  'chat.title': 'Chat with Chance',
+  'chat.subtitle': 'Your neighborhood guide',
+  'chat.welcome_title': 'Meet Chance',
+  'chat.placeholder': 'Ask Chance anything about Houston...',
 
   // Your Guide links
   'discover.guide': 'The Community Guide',
@@ -764,8 +771,15 @@ const es: Record<string, string> = {
   'sidebar.your_guide': 'Tu Guía',
   'sidebar.elections': 'Elecciones y Votación',
   'sidebar.library': 'Biblioteca',
+  'sidebar.chat': 'Habla con Chance',
   'sidebar.topics': 'Temas',
   'sidebar.no_topics': 'No hay temas disponibles',
+
+  // Chat with Chance
+  'chat.title': 'Habla con Chance',
+  'chat.subtitle': 'Tu guía del vecindario',
+  'chat.welcome_title': 'Conoce a Chance',
+  'chat.placeholder': 'Pregúntale a Chance sobre Houston...',
 
   // Your Guide links
   'discover.guide': 'La Guía Comunitaria',
@@ -1241,8 +1255,15 @@ const vi: Record<string, string> = {
   'sidebar.your_guide': 'Hướng Dẫn',
   'sidebar.elections': 'Bầu Cử & Bỏ Phiếu',
   'sidebar.library': 'Thư Viện',
+  'sidebar.chat': 'Trò Chuyện với Chance',
   'sidebar.topics': 'Chủ Đề',
   'sidebar.no_topics': 'Không có chủ đề',
+
+  // Chat with Chance
+  'chat.title': 'Trò Chuyện với Chance',
+  'chat.subtitle': 'Hướng dẫn viên khu phố',
+  'chat.welcome_title': 'Gặp Chance',
+  'chat.placeholder': 'Hỏi Chance về Houston...',
 
   // Your Guide links
   'discover.guide': 'Hướng Dẫn Cộng Đồng',

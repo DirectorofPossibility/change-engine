@@ -6,6 +6,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server'
+import { generateEmbedding } from '@/lib/embeddings'
 
 // ── Types ──
 
@@ -249,6 +250,128 @@ export async function searchChunks(query: string, limit = 10): Promise<KBChunkSe
       ...c,
       document_title: titleMap.get(c.document_id),
     })) as KBChunkSearchResult[]
+}
+
+// ── Hybrid + Multi-source search ──
+
+export interface HybridSearchResult {
+  chunk_id: string
+  document_id: string
+  content: string
+  metadata: { chunk_index?: number; page_start?: number; page_end?: number }
+  fts_rank: number
+  semantic_score: number
+  combined_score: number
+  document_title?: string
+}
+
+export interface MultiSourceResult {
+  source_type: 'kb_document' | 'service' | 'organization' | 'content' | 'official'
+  source_id: string
+  title: string
+  content: string
+  score: number
+  metadata: Record<string, unknown>
+}
+
+/**
+ * Hybrid search combining semantic (pgvector) and full-text search on kb_chunks.
+ * Falls back to FTS-only if embedding generation fails.
+ */
+export async function hybridSearch(
+  query: string,
+  limit = 10,
+): Promise<HybridSearchResult[]> {
+  if (!query || query.trim().length === 0) return []
+
+  const supabase = await createClient()
+
+  try {
+    const queryEmbedding = await generateEmbedding(query)
+
+    const { data, error } = await supabase.rpc('hybrid_search' as any, {
+      query_text: query,
+      query_embedding: JSON.stringify(queryEmbedding),
+      match_count: limit,
+      fts_weight: 0.3,
+      semantic_weight: 0.7,
+    })
+
+    if (error) throw error
+    if (!data || data.length === 0) return []
+
+    const results = data as unknown as HybridSearchResult[]
+
+    // Enrich with document titles
+    const docIds = Array.from(new Set(results.map(r => r.document_id)))
+    const { data: docs } = await supabase
+      .from('kb_documents' as any)
+      .select('id, title')
+      .in('id', docIds)
+      .eq('status', 'published')
+
+    const titleMap = new Map(
+      ((docs ?? []) as unknown as Array<{ id: string; title: string }>).map(d => [d.id, d.title])
+    )
+
+    return results.map(r => ({
+      ...r,
+      document_title: titleMap.get(r.document_id),
+    }))
+  } catch (err) {
+    console.error('Hybrid search failed, falling back to FTS:', err)
+    // Fallback to existing FTS search
+    const ftsResults = await searchChunks(query, limit)
+    return ftsResults.map(c => ({
+      chunk_id: c.id,
+      document_id: c.document_id,
+      content: c.content,
+      metadata: { page_start: c.page_start ?? undefined, page_end: c.page_end ?? undefined },
+      fts_rank: 1,
+      semantic_score: 0,
+      combined_score: 0.3,
+      document_title: c.document_title,
+    }))
+  }
+}
+
+/**
+ * Multi-source search across ALL entity types: KB docs, services, orgs,
+ * published content, and elected officials.
+ * Falls back to KB-only search if multi-source RPC fails.
+ */
+export async function multiSourceSearch(
+  query: string,
+  limit = 15,
+): Promise<MultiSourceResult[]> {
+  if (!query || query.trim().length === 0) return []
+
+  const supabase = await createClient()
+
+  try {
+    const queryEmbedding = await generateEmbedding(query)
+
+    const { data, error } = await supabase.rpc('multi_source_search' as any, {
+      query_text: query,
+      query_embedding: JSON.stringify(queryEmbedding),
+      match_count: limit,
+    })
+
+    if (error) throw error
+    return (data ?? []) as unknown as MultiSourceResult[]
+  } catch (err) {
+    console.error('Multi-source search failed, falling back to KB search:', err)
+    // Fallback: search KB chunks only
+    const chunks = await hybridSearch(query, limit)
+    return chunks.map(c => ({
+      source_type: 'kb_document' as const,
+      source_id: c.document_id,
+      title: c.document_title || 'Untitled',
+      content: c.content,
+      score: c.combined_score,
+      metadata: { page_start: c.metadata?.page_start, chunk_id: c.chunk_id },
+    }))
+  }
 }
 
 // ── Admin queries ──

@@ -8,6 +8,15 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
+import { generateEmbeddings } from '@/lib/embeddings'
+import {
+  fetchFullTaxonomy,
+  buildPromptForEntity,
+  buildUserPrompt,
+  classifyEntity,
+  parseClaudeJson as parseClassificationJson,
+  validateAndEnrich,
+} from '@/lib/classification'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
@@ -184,29 +193,49 @@ export async function POST(req: NextRequest) {
     })
 
     // Batch insert chunks (max 50 at a time)
+    const insertedChunks: any[] = []
     for (let i = 0; i < chunkInserts.length; i += 50) {
       const batch = chunkInserts.slice(i, i + 50)
-      await supaRest('POST', 'kb_chunks', batch)
+      const inserted = await supaRest('POST', 'kb_chunks', batch)
+      if (inserted) insertedChunks.push(...inserted)
     }
 
-    // Fetch taxonomy for mapping
-    const taxonomy = await fetchThemesAndFocusAreas()
+    // Generate and store embeddings for each chunk
+    try {
+      const chunkTexts = textChunks.map(t => t.slice(0, 32000))
+      const embeddings = await generateEmbeddings(chunkTexts)
 
-    // Prepare Claude prompt
+      // Match embeddings to inserted chunk IDs and update
+      for (let i = 0; i < insertedChunks.length && i < embeddings.length; i++) {
+        const chunkId = insertedChunks[i]?.id
+        if (chunkId && embeddings[i]) {
+          await supaRest('PATCH', `kb_chunks?id=eq.${chunkId}`, {
+            embedding: JSON.stringify(embeddings[i]),
+          })
+        }
+      }
+      console.log(`Generated embeddings for ${embeddings.length} chunks`)
+    } catch (embErr) {
+      console.error('Embedding generation failed (non-fatal):', embErr)
+      // Continue processing — embeddings are nice-to-have, not blocking
+    }
+
+    // ── Step 1: Basic metadata extraction (title, summary, key points, tags) ──
+    const basicTaxonomy = await fetchThemesAndFocusAreas()
     const sampleText = fullText.slice(0, 8000)
-    const themeList = taxonomy.themes.map((t: { theme_id: string; theme_name: string }) =>
+    const themeList = basicTaxonomy.themes.map((t: { theme_id: string; theme_name: string }) =>
       `${t.theme_id}: ${t.theme_name}`
     ).join('\n')
-    const focusAreaList = taxonomy.focusAreas.slice(0, 50).map((f: { focus_id: string; focus_area_name: string }) =>
+    const focusAreaList = basicTaxonomy.focusAreas.slice(0, 50).map((f: { focus_id: string; focus_area_name: string }) =>
       `${f.focus_id}: ${f.focus_area_name}`
     ).join('\n')
 
-    const systemPrompt = `You are a civic research librarian for The Change Engine, a Houston civic platform.
+    const metadataPrompt = `You are a civic research librarian for The Change Engine, a Houston civic platform.
 Analyze the provided document text and extract structured metadata.
 Use asset-based language — focus on strengths, opportunities, and community resources.
 Respond with valid JSON only.`
 
-    const userPrompt = `Analyze this document and return JSON with these fields:
+    const metadataUser = `Analyze this document and return JSON with these fields:
 - title: a clear, concise title (if the text suggests one, use it; otherwise create one)
 - summary: 2-3 sentence summary at a 6th-grade reading level, asset-based language
 - key_points: array of 3-6 key takeaways as short bullet strings
@@ -219,7 +248,7 @@ ${focusAreaList}
 Document text (first ~8000 chars):
 ${sampleText}`
 
-    const aiResponse = await callClaude(systemPrompt, userPrompt)
+    const aiResponse = await callClaude(metadataPrompt, metadataUser)
     const analysis = parseClaudeJson(aiResponse) as {
       title?: string
       summary?: string
@@ -229,14 +258,54 @@ ${sampleText}`
       focus_area_ids?: string[]
     }
 
-    // Validate theme IDs
-    const validThemeIds = new Set(taxonomy.themes.map((t: { theme_id: string }) => t.theme_id))
-    const validFocusIds = new Set(taxonomy.focusAreas.map((f: { focus_id: string }) => f.focus_id))
-
+    const validThemeIds = new Set(basicTaxonomy.themes.map((t: { theme_id: string }) => t.theme_id))
+    const validFocusIds = new Set(basicTaxonomy.focusAreas.map((f: { focus_id: string }) => f.focus_id))
     const filteredThemeIds = (analysis.theme_ids ?? []).filter(id => validThemeIds.has(id))
     const filteredFocusIds = (analysis.focus_area_ids ?? []).filter(id => validFocusIds.has(id))
 
-    // Update document with AI results
+    // ── Step 2: Full 16-dimension classification ──
+    let classificationV2 = null
+    let assignedOrgId: string | null = null
+    let primaryThemeId: string | null = null
+    let classifiedContentType: string | null = null
+
+    try {
+      const fullTax = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY)
+      const systemPrompt = buildPromptForEntity(fullTax, 'content')
+      const userPromptText = buildUserPrompt('content', {
+        name: analysis.title || doc.title || 'Untitled Document',
+        description: analysis.summary || '',
+        fullText: fullText,
+      })
+
+      const classRaw = await classifyEntity(systemPrompt, userPromptText, ANTHROPIC_KEY)
+      const classParsed = parseClassificationJson(classRaw)
+      const enriched = validateAndEnrich(classParsed, fullTax, 'content')
+
+      classificationV2 = enriched
+      primaryThemeId = enriched.theme_primary || filteredThemeIds[0] || null
+      classifiedContentType = enriched.content_type || 'report'
+
+      // Auto-assign org_id by matching org names in document text
+      try {
+        const orgs = await supaRest('GET', 'organizations?select=org_id,org_name&limit=500')
+        if (orgs) {
+          const textLower = fullText.toLowerCase()
+          for (const org of orgs) {
+            if (org.org_name && org.org_name.length > 3 && textLower.includes(org.org_name.toLowerCase())) {
+              assignedOrgId = org.org_id
+              break
+            }
+          }
+        }
+      } catch { /* org matching is optional */ }
+
+      console.log(`Full classification completed: theme=${primaryThemeId}, type=${classifiedContentType}`)
+    } catch (classErr) {
+      console.error('Full classification failed (non-fatal):', classErr)
+    }
+
+    // ── Step 3: Update document with all results ──
     await supaRest('PATCH', `kb_documents?id=eq.${document_id}`, {
       title: analysis.title || doc.title,
       summary: analysis.summary || '',
@@ -247,6 +316,11 @@ ${sampleText}`
       page_count: pageCount,
       status: 'published',
       published_at: new Date().toISOString(),
+      // New v2 classification fields
+      classification_v2: classificationV2,
+      org_id: assignedOrgId,
+      theme_id: primaryThemeId,
+      content_type: classifiedContentType,
     })
 
     return NextResponse.json({
@@ -255,6 +329,8 @@ ${sampleText}`
       page_count: pageCount,
       chunk_count: textChunks.length,
       title: analysis.title || doc.title,
+      classification: classificationV2 ? 'v2' : 'basic',
+      org_id: assignedOrgId,
     })
   } catch (err) {
     console.error('Library process error:', err)
