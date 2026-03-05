@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
-import { THEMES, BRAND, CENTERS } from '@/lib/constants'
+import { THEMES, BRAND, CENTERS, CENTER_COLORS } from '@/lib/constants'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 
 const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({
@@ -14,15 +14,18 @@ const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({
   slug: t.slug,
 }))
 
+const CENTER_LIST = Object.entries(CENTERS).map(([name, c]) => ({
+  name,
+  slug: c.slug,
+  emoji: c.emoji,
+}))
+
 const QUICK_LINKS = [
-  { href: '/compass', label: 'Compass' },
-  { href: '/help', label: 'Resources' },
+  { href: '/news', label: 'News' },
+  { href: '/calendar', label: 'Calendar' },
   { href: '/services', label: 'Services' },
-  { href: '/officials', label: 'Officials' },
-  { href: '/policies', label: 'Policies' },
   { href: '/elections', label: 'Elections' },
   { href: '/library', label: 'Library' },
-  { href: '/about', label: 'About' },
 ]
 
 export function LeftNav() {
@@ -139,11 +142,57 @@ export function LeftNav() {
 
       <div className="h-px bg-brand-border mx-3" />
 
+      {/* Engagement Layers */}
+      <div className="px-3 py-3">
+        <Link
+          href="/centers"
+          className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2 block hover:text-brand-accent transition-colors"
+        >
+          Engagement
+        </Link>
+        {CENTER_LIST.map((c) => {
+          const href = `/centers/${c.slug}`
+          const isActive = pathname === href || pathname?.startsWith(href + '/')
+          const color = CENTER_COLORS[c.name] || '#8B7E74'
+          return (
+            <Link
+              key={c.name}
+              href={href}
+              className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors mb-0.5 ${
+                isActive
+                  ? 'bg-brand-accent/10 font-bold'
+                  : 'hover:bg-brand-accent/5'
+              }`}
+            >
+              <span
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: color, opacity: isActive ? 1 : 0.6 }}
+              />
+              <span className={`text-[12px] font-medium ${isActive ? 'text-brand-accent' : 'text-brand-text'}`}>
+                {c.name}
+              </span>
+            </Link>
+          )
+        })}
+      </div>
+
+      <div className="h-px bg-brand-border mx-3" />
+
       {/* Explore links */}
       <div className="px-3 py-3">
         <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">
           Explore
         </div>
+        <Link
+          href="/personas"
+          className={`flex items-center gap-2 px-2 py-1 rounded-lg text-[12px] font-medium transition-colors mb-0.5 ${
+            pathname === '/personas'
+              ? 'bg-brand-accent/10 text-brand-accent font-bold'
+              : 'text-brand-text hover:bg-brand-accent/5'
+          }`}
+        >
+          <FlowerOfLifeIcon size={14} /> Your Journey
+        </Link>
         {QUICK_LINKS.map((link) => {
           const isActive = pathname === link.href || pathname?.startsWith(link.href + '/')
           return (
