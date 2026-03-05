@@ -33,8 +33,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const role = profile?.role || 'user'
 
-  // Restrict dashboard to admins and partners only
-  if (role !== 'admin' && role !== 'partner') {
+  // Restrict dashboard to admins, partners, and neighbors
+  if (role !== 'admin' && role !== 'partner' && role !== 'neighbor') {
     redirect('/me')
   }
 

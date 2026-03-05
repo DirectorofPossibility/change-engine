@@ -5,13 +5,17 @@
  * create a profile, contribute content, and participate in the civic
  * knowledge graph. Lives in the pipeline admin dashboard.
  *
+ * Role-aware: shows content relevant to the viewer's level (neighbor,
+ * partner, or admin).
+ *
  * @route GET /dashboard/manual
  */
 
 import type { Metadata } from 'next'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
-  title: 'Users Manual — Pipeline Admin',
+  title: 'Users Manual — Dashboard',
   description: 'A guide for Neighbors and Partners on how to use The Change Engine platform.',
 }
 
@@ -72,14 +76,63 @@ function StepCard({ number, title, children }: { number: number; title: string; 
   )
 }
 
-export default function ManualPage() {
+export default async function ManualPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  let role = 'neighbor'
+  if (user) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('auth_id', user.id)
+      .single()
+    role = profile?.role || 'user'
+  }
+
+  const isAdmin = role === 'admin'
+  const isPartner = role === 'partner'
+  const isNeighbor = role === 'neighbor'
+
+  // Build TOC based on role
+  const tocItems: { href: string; label: string }[] = [
+    { href: '#overview', label: 'What is The Change Engine?' },
+    { href: '#pathways', label: 'The Seven Pathways' },
+    { href: '#centers', label: 'Four Centers' },
+    { href: '#roles', label: 'Neighbors & Partners' },
+    { href: '#getting-started', label: 'Getting Started' },
+  ]
+
+  if (isNeighbor || isAdmin) {
+    tocItems.push({ href: '#neighbor-guide', label: 'Neighbor Guide' })
+    tocItems.push({ href: '#neighbor-tools', label: 'Neighbor Tools' })
+  }
+  if (isPartner || isAdmin) {
+    tocItems.push({ href: '#partner-guide', label: 'Partner Guide' })
+    tocItems.push({ href: '#partner-tools', label: 'Partner Tools' })
+  }
+
+  tocItems.push(
+    { href: '#content-pipeline', label: 'How Content Works' },
+    { href: '#wayfinder', label: 'Using the Wayfinder' },
+    { href: '#languages', label: 'Languages' },
+  )
+
+  if (isAdmin) {
+    tocItems.push({ href: '#admin-users', label: 'Admin: Managing Roles' })
+  }
+
   return (
     <div className="max-w-4xl">
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Users Manual</h1>
         <p className="text-sm text-gray-500 mt-1">
-          A guide for Neighbors and Partners — how to use The Change Engine, create profiles, and contribute content.
+          {isAdmin
+            ? 'Complete guide for all roles — Neighbors, Partners, and Admins.'
+            : isPartner
+              ? 'Your guide to managing content and representing your organization on The Change Engine.'
+              : 'Your guide to exploring and contributing to The Change Engine community.'
+          }
         </p>
       </div>
 
@@ -87,7 +140,7 @@ export default function ManualPage() {
         {/* Main Content */}
         <div className="space-y-0">
 
-          {/* ── Overview ── */}
+          {/* -- Overview -- */}
           <SectionHeading id="overview">What is The Change Engine?</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
             The Change Engine is a civic platform built for Houston. It brings together articles, services, organizations, elected officials, policies, and community opportunities into one place — organized around the topics that matter most to daily life.
@@ -99,7 +152,7 @@ export default function ManualPage() {
             All content is written at an accessible reading level and available in <strong>English</strong>, <strong>Spanish</strong>, and <strong>Vietnamese</strong>.
           </p>
 
-          {/* ── The Seven Pathways ── */}
+          {/* -- The Seven Pathways -- */}
           <SectionHeading id="pathways">The Seven Pathways</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
             Everything in The Change Engine is organized around seven pathways of civic life. Each one connects to the others through shared focus areas, officials, and policies.
@@ -116,7 +169,7 @@ export default function ManualPage() {
             ))}
           </div>
 
-          {/* ── Four Centers ── */}
+          {/* -- Four Centers -- */}
           <SectionHeading id="centers">Four Centers of Inquiry</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
             Within each pathway, content is organized by what you are looking for. Each center answers a different question.
@@ -134,7 +187,7 @@ export default function ManualPage() {
             ))}
           </div>
 
-          {/* ── Roles ── */}
+          {/* -- Roles -- */}
           <SectionHeading id="roles">Neighbors &amp; Partners</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
             The Change Engine is built by and for the community. There are two ways to participate beyond browsing.
@@ -174,7 +227,7 @@ export default function ManualPage() {
             </div>
           </div>
 
-          {/* ── Getting Started ── */}
+          {/* -- Getting Started -- */}
           <SectionHeading id="getting-started">Getting Started</SectionHeading>
           <div className="space-y-5">
             <StepCard number={1} title="Create your account">
@@ -191,90 +244,168 @@ export default function ManualPage() {
             </StepCard>
           </div>
 
-          {/* ── Neighbor Guide ── */}
-          <SectionHeading id="neighbor-guide">Neighbor Guide</SectionHeading>
+          {/* -- Neighbor Guide (shown to neighbors and admins) -- */}
+          {(isNeighbor || isAdmin) && (
+            <>
+              <SectionHeading id="neighbor-guide">Neighbor Guide</SectionHeading>
 
-          <SubHeading>Your Profile</SubHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Your profile captures your interests, preferred language, and neighborhood. This helps the platform surface the most relevant content for you. Update your profile anytime from <strong>Settings</strong>.
-          </p>
+              <SubHeading>Your Profile</SubHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Your profile captures your interests, preferred language, and neighborhood. This helps the platform surface the most relevant content for you. Update your profile anytime from <strong>Settings</strong>.
+              </p>
 
-          <SubHeading>Learning Paths</SubHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Learning paths are curated sequences of articles and resources that build understanding around a civic topic — like understanding local government, navigating healthcare options, or exploring climate resilience. Your progress is tracked automatically, and you earn badges as you complete modules.
-          </p>
+              <SubHeading>Learning Paths</SubHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Learning paths are curated sequences of articles and resources that build understanding around a civic topic — like understanding local government, navigating healthcare options, or exploring climate resilience. Your progress is tracked automatically, and you earn badges as you complete modules.
+              </p>
 
-          <SubHeading>Badges &amp; Impact Points</SubHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Every meaningful action earns impact points — completing a learning module, attending an event, using a resource, or volunteering. Points accumulate into badges that reflect your civic engagement.
-          </p>
+              <SubHeading>Badges &amp; Impact Points</SubHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Every meaningful action earns impact points — completing a learning module, attending an event, using a resource, or volunteering. Points accumulate into badges that reflect your civic engagement.
+              </p>
 
-          <SubHeading>Suggesting Content</SubHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Every published item has a <strong>&ldquo;Suggest an edit&rdquo;</strong> option. You can flag outdated information, suggest new resources, or share local knowledge that the community team can review and incorporate.
-          </p>
+              <SubHeading>Suggesting Content</SubHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Every published item has a <strong>&ldquo;Suggest an edit&rdquo;</strong> option. You can flag outdated information, suggest new resources, or share local knowledge that the community team can review and incorporate.
+              </p>
 
-          {/* ── Partner Guide ── */}
-          <SectionHeading id="partner-guide">Partner Guide</SectionHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Partners have access to the <strong>Partner Portal</strong> — a dedicated dashboard for managing your organization&apos;s content.
-          </p>
+              {/* Neighbor Tools Section */}
+              <SectionHeading id="neighbor-tools">Your Neighbor Tools</SectionHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                As a Neighbor, you have access to these tools in your dashboard. Visit <a href="/dashboard/tools-guides" className="text-blue-600 hover:underline font-medium">Tools &amp; Guides</a> to see the full list.
+              </p>
+              <div className="space-y-3">
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Submit Content via URL</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Found an article, resource, or event that would be valuable to the community? Paste the URL and our team will review it, classify it on the knowledge graph, and publish it if approved.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Knowledge Base</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Browse the full library of published content — articles, services, guides, learning paths — organized by pathway, center, and focus area. Add items to the library and curate collections.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Users Manual</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    You are reading it now. This guide explains how the platform works, how content is organized, and how you can contribute.
+                  </p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 mt-3 italic">
+                All neighbor-submitted content requires review before publication.
+              </p>
+            </>
+          )}
 
-          <SubHeading>Becoming a Partner</SubHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Create an account and contact the Change Engine team. Once your organization is verified, an admin will assign you the Partner role and link your account to your organization. You will then see the Partner Portal in your dashboard.
-          </p>
+          {/* -- Partner Guide (shown to partners and admins) -- */}
+          {(isPartner || isAdmin) && (
+            <>
+              <SectionHeading id="partner-guide">Partner Guide</SectionHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Partners have access to the <strong>Partner Portal</strong> — a dedicated dashboard for managing your organization&apos;s content.
+              </p>
 
-          <SubHeading>Creating Guides</SubHeading>
-          <div className="rounded-lg border border-gray-200 bg-white p-4 mb-3">
-            <p className="text-sm text-gray-600 leading-relaxed mb-2">
-              Guides are educational content pieces your organization creates for the community:
-            </p>
-            <ol className="text-sm text-gray-600 leading-relaxed space-y-1.5 list-decimal list-inside">
-              <li>Navigate to <strong>My Guides</strong> in the Partner Portal</li>
-              <li>Click <strong>Create New Guide</strong></li>
-              <li>Add a title, description, and guide content (supports rich text)</li>
-              <li>Select the relevant pathway and focus areas</li>
-              <li>Optionally add a hero image</li>
-              <li>Submit for review</li>
-            </ol>
-            <p className="text-xs text-gray-400 mt-2 italic">
-              All guides start in &ldquo;pending review&rdquo; status. The community team reviews and publishes approved guides within a few business days.
-            </p>
-          </div>
+              <SubHeading>Becoming a Partner</SubHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Create an account and contact the Change Engine team. Once your organization is verified, an admin will assign you the Partner role and link your account to your organization. You will then see the Partner Portal in your dashboard.
+              </p>
 
-          <SubHeading>Posting Events &amp; Opportunities</SubHeading>
-          <div className="rounded-lg border border-gray-200 bg-white p-4 mb-3">
-            <p className="text-sm text-gray-600 leading-relaxed mb-2">
-              Share volunteer opportunities, community events, and programs:
-            </p>
-            <ol className="text-sm text-gray-600 leading-relaxed space-y-1.5 list-decimal list-inside">
-              <li>Go to <strong>My Events</strong> in the Partner Portal</li>
-              <li>Click <strong>Create New Event</strong></li>
-              <li>Fill in event details — name, description, dates, location</li>
-              <li>Mark whether it is virtual or in-person</li>
-              <li>Add a registration link and available spots (if applicable)</li>
-              <li>Submit for review</li>
-            </ol>
-          </div>
+              <SubHeading>Creating Guides</SubHeading>
+              <div className="rounded-lg border border-gray-200 bg-white p-4 mb-3">
+                <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                  Guides are educational content pieces your organization creates for the community:
+                </p>
+                <ol className="text-sm text-gray-600 leading-relaxed space-y-1.5 list-decimal list-inside">
+                  <li>Navigate to <strong>My Guides</strong> in the Partner Portal</li>
+                  <li>Click <strong>Create New Guide</strong></li>
+                  <li>Add a title, description, and guide content (supports rich text)</li>
+                  <li>Select the relevant pathway and focus areas</li>
+                  <li>Optionally add a hero image</li>
+                  <li>Submit for review</li>
+                </ol>
+                <p className="text-xs text-gray-400 mt-2 italic">
+                  All guides start in &ldquo;pending review&rdquo; status. The community team reviews and publishes approved guides within a few business days.
+                </p>
+              </div>
 
-          <SubHeading>Review Status</SubHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Your Partner Portal dashboard shows the status of all submitted content:
-          </p>
-          <div className="flex flex-wrap gap-2 mb-3">
-            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
-              Pending — Under review
-            </span>
-            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-              Approved — Live on site
-            </span>
-            <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-50 text-red-700 border border-red-200">
-              Needs Revision — See feedback
-            </span>
-          </div>
+              <SubHeading>Posting Events &amp; Opportunities</SubHeading>
+              <div className="rounded-lg border border-gray-200 bg-white p-4 mb-3">
+                <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                  Share volunteer opportunities, community events, and programs:
+                </p>
+                <ol className="text-sm text-gray-600 leading-relaxed space-y-1.5 list-decimal list-inside">
+                  <li>Go to <strong>My Events</strong> in the Partner Portal</li>
+                  <li>Click <strong>Create New Event</strong></li>
+                  <li>Fill in event details — name, description, dates, location</li>
+                  <li>Mark whether it is virtual or in-person</li>
+                  <li>Add a registration link and available spots (if applicable)</li>
+                  <li>Submit for review</li>
+                </ol>
+              </div>
 
-          {/* ── Content Pipeline ── */}
+              <SubHeading>Review Status</SubHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Your Partner Portal dashboard shows the status of all submitted content:
+              </p>
+              <div className="flex flex-wrap gap-2 mb-3">
+                <span className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
+                  Pending — Under review
+                </span>
+                <span className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                  Approved — Live on site
+                </span>
+                <span className="inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-medium bg-red-50 text-red-700 border border-red-200">
+                  Needs Revision — See feedback
+                </span>
+              </div>
+
+              {/* Partner Tools Section */}
+              <SectionHeading id="partner-tools">Your Partner Tools</SectionHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                As a Partner, you have access to an expanded set of tools. Visit <a href="/dashboard/tools-guides" className="text-blue-600 hover:underline font-medium">Tools &amp; Guides</a> to see the full list.
+              </p>
+              <div className="space-y-3">
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Submit Content (URL, API, RSS)</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Partners can submit content via URL, connect RSS feeds for automatic ingestion, and use the API for programmatic content submission. All submissions go through the review pipeline.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Create Guides &amp; Events</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Write educational guides and post community events on behalf of your organization. Content is mapped onto the knowledge graph and connected to relevant pathways.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Graph Visualizations</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Explore how your organization's content connects across the knowledge graph. View the circle graph, coverage heatmap, and force-directed explorer.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Pipeline &amp; Ingestion</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Manage your content pipeline — submit via API keys, configure RSS feeds, and track ingestion status across all your submissions.
+                  </p>
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-white p-4">
+                  <h4 className="font-semibold text-gray-900 text-sm mb-1">Knowledge Base</h4>
+                  <p className="text-xs text-gray-500 leading-relaxed">
+                    Browse and contribute to the full library of published content. See how your organization's resources connect to the broader community knowledge graph.
+                  </p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 mt-3 italic">
+                All partner-submitted content requires review before publication.
+              </p>
+            </>
+          )}
+
+          {/* -- Content Pipeline -- */}
           <SectionHeading id="content-pipeline">How Content Works</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
             All content goes through a careful pipeline to ensure quality, accessibility, and accurate classification.
@@ -298,7 +429,7 @@ export default function ManualPage() {
             ))}
           </div>
 
-          {/* ── Wayfinder ── */}
+          {/* -- Wayfinder -- */}
           <SectionHeading id="wayfinder">Using the Wayfinder</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
             The <strong>Wayfinder</strong> is the heart of the Community Exchange homepage. It displays the seven pathways as interactive circles, with bridge lines showing how many resources connect between them.
@@ -310,7 +441,7 @@ export default function ManualPage() {
             <p><strong>Switch languages</strong> using the language selector in the header — English, Spanish, and Vietnamese.</p>
           </div>
 
-          {/* ── Languages ── */}
+          {/* -- Languages -- */}
           <SectionHeading id="languages">Languages</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
             The Change Engine is available in three languages:
@@ -333,26 +464,34 @@ export default function ManualPage() {
             Use the language toggle in the site header to switch. Your preference is saved automatically.
           </p>
 
-          {/* ── Admin: Managing Users ── */}
-          <SectionHeading id="admin-users">Admin: Managing Users &amp; Roles</SectionHeading>
-          <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Admins can manage user roles from the <strong>Users</strong> page in the pipeline dashboard.
-          </p>
+          {/* -- Admin: Managing Users (admin only) -- */}
+          {isAdmin && (
+            <>
+              <SectionHeading id="admin-users">Admin: Managing Users &amp; Roles</SectionHeading>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Admins can manage user roles from the <strong>Users</strong> page in the pipeline dashboard.
+              </p>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-4 space-y-3 text-sm text-gray-600">
-            <div>
-              <p className="font-medium text-gray-900">Promoting a Neighbor</p>
-              <p className="text-xs text-gray-500">Find the user in the Users list and click <strong>Make Neighbor</strong>. This elevates them from the default &ldquo;user&rdquo; role to &ldquo;neighbor,&rdquo; enabling contribution features.</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900">Assigning a Partner</p>
-              <p className="text-xs text-gray-500">Click <strong>Assign Partner</strong>, select the organization from the dropdown, and confirm. The user gets partner access and can manage content for that organization.</p>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900">Revoking Roles</p>
-              <p className="text-xs text-gray-500">Click <strong>Revoke Role</strong> to return an elevated user to the default &ldquo;user&rdquo; role. Their submitted content remains but they lose portal access.</p>
-            </div>
-          </div>
+              <div className="rounded-lg border border-gray-200 bg-white p-4 space-y-3 text-sm text-gray-600">
+                <div>
+                  <p className="font-medium text-gray-900">Promoting a Neighbor</p>
+                  <p className="text-xs text-gray-500">Find the user in the Users list and click <strong>Make Neighbor</strong>. This elevates them from the default &ldquo;user&rdquo; role to &ldquo;neighbor,&rdquo; enabling contribution features.</p>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">Assigning a Partner</p>
+                  <p className="text-xs text-gray-500">Click <strong>Assign Partner</strong>, select the organization from the dropdown, and confirm. The user gets partner access and can manage content for that organization.</p>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">Revoking Roles</p>
+                  <p className="text-xs text-gray-500">Click <strong>Revoke Role</strong> to return an elevated user to the default &ldquo;user&rdquo; role. Their submitted content remains but they lose portal access.</p>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">Managing Tools &amp; Guides</p>
+                  <p className="text-xs text-gray-500">Use the <strong>Tools &amp; Guides</strong> page in the admin sidebar to control which tools and guides appear for neighbors and partners. Toggle items on or off and assign them to specific levels.</p>
+                </div>
+              </div>
+            </>
+          )}
 
         </div>
 
@@ -361,17 +500,9 @@ export default function ManualPage() {
           <div className="sticky top-8">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">On this page</p>
             <ul className="space-y-1.5 border-l border-gray-200 pl-3">
-              <TOCLink href="#overview">What is The Change Engine?</TOCLink>
-              <TOCLink href="#pathways">The Seven Pathways</TOCLink>
-              <TOCLink href="#centers">Four Centers</TOCLink>
-              <TOCLink href="#roles">Neighbors &amp; Partners</TOCLink>
-              <TOCLink href="#getting-started">Getting Started</TOCLink>
-              <TOCLink href="#neighbor-guide">Neighbor Guide</TOCLink>
-              <TOCLink href="#partner-guide">Partner Guide</TOCLink>
-              <TOCLink href="#content-pipeline">How Content Works</TOCLink>
-              <TOCLink href="#wayfinder">Using the Wayfinder</TOCLink>
-              <TOCLink href="#languages">Languages</TOCLink>
-              <TOCLink href="#admin-users">Admin: Managing Roles</TOCLink>
+              {tocItems.map((item) => (
+                <TOCLink key={item.href} href={item.href}>{item.label}</TOCLink>
+              ))}
             </ul>
           </div>
         </nav>

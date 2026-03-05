@@ -4,32 +4,51 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import type { PipelineStats } from '@/lib/types/dashboard'
 import { createClient } from '@/lib/supabase/client'
+import {
+  LayoutDashboard, Search, FileText, Zap, BarChart3,
+  Languages, Wrench, Users, BookOpen, HelpCircle,
+  Briefcase, CalendarDays, Building2, Globe,
+  LogOut, Compass, BookMarked,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const ADMIN_NAV = [
-  { href: '/dashboard', label: 'Overview', icon: '📊' },
-  { href: '/dashboard/review', label: 'Review', icon: '🔍' },
-  { href: '/dashboard/content', label: 'Content', icon: '📄' },
-  { href: '/dashboard/pipeline', label: 'Pipeline', icon: '⚡' },
-  { href: '/dashboard/translations', label: 'Translations', icon: '🌐' },
-  { href: '/dashboard/fidelity', label: 'Fidelity', icon: '🎯' },
-  { href: '/dashboard/taxonomy', label: 'Taxonomy', icon: '🗂️' },
-  { href: '/dashboard/knowledge-graph', label: 'Knowledge Graph', icon: '🌌' },
-  { href: '/dashboard/circles', label: 'Circle Graph', icon: '⭕' },
-  { href: '/dashboard/graph-coverage', label: 'Graph Coverage', icon: '🔥' },
-  { href: '/dashboard/graph-explorer', label: 'Graph Explorer', icon: '🕸️' },
-  { href: '/dashboard/linkedin', label: 'LinkedIn', icon: '🔗' },
-  { href: '/dashboard/users', label: 'Users', icon: '👤' },
-  { href: '/dashboard/library', label: 'Library', icon: '📚' },
-  { href: '/dashboard/manual', label: 'Users Manual', icon: '📘' },
+interface NavItem {
+  href: string
+  label: string
+  icon: LucideIcon
+}
+
+const ADMIN_NAV: NavItem[] = [
+  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+  { href: '/dashboard/review', label: 'Review', icon: Search },
+  { href: '/dashboard/content', label: 'Content', icon: FileText },
+  { href: '/dashboard/pipeline', label: 'Pipeline', icon: Zap },
+  { href: '/dashboard/graphs', label: 'Graphs', icon: BarChart3 },
+  { href: '/dashboard/utilities', label: 'Utilities', icon: Wrench },
+  { href: '/dashboard/users', label: 'Users', icon: Users },
+  { href: '/dashboard/library', label: 'Library', icon: BookOpen },
+  { href: '/dashboard/tools-guides', label: 'Tools & Guides', icon: BookMarked },
+  { href: '/dashboard/manual', label: 'Users Manual', icon: HelpCircle },
 ]
 
-const PARTNER_NAV = [
-  { href: '/dashboard/partner', label: 'Overview', icon: '📊' },
-  { href: '/dashboard/partner/guides', label: 'My Guides', icon: '📖' },
-  { href: '/dashboard/partner/events', label: 'My Events', icon: '📅' },
-  { href: '/dashboard/partner/organization', label: 'My Organization', icon: '🏢' },
-  { href: '/dashboard/library', label: 'Knowledge Base', icon: '📚' },
-  { href: '/dashboard/manual', label: 'Users Manual', icon: '📘' },
+const PARTNER_NAV: NavItem[] = [
+  { href: '/dashboard/partner', label: 'Overview', icon: LayoutDashboard },
+  { href: '/dashboard/partner/guides', label: 'My Guides', icon: BookOpen },
+  { href: '/dashboard/partner/events', label: 'My Events', icon: CalendarDays },
+  { href: '/dashboard/partner/organization', label: 'My Organization', icon: Building2 },
+  { href: '/dashboard/pipeline', label: 'Pipeline', icon: Zap },
+  { href: '/dashboard/graphs', label: 'Graphs', icon: BarChart3 },
+  { href: '/dashboard/tools-guides', label: 'Tools & Guides', icon: BookMarked },
+  { href: '/dashboard/library', label: 'Knowledge Base', icon: BookOpen },
+  { href: '/dashboard/manual', label: 'Users Manual', icon: HelpCircle },
+]
+
+const NEIGHBOR_NAV: NavItem[] = [
+  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+  { href: '/dashboard/submit', label: 'Submit Content', icon: FileText },
+  { href: '/dashboard/library', label: 'Knowledge Base', icon: BookOpen },
+  { href: '/dashboard/tools-guides', label: 'Tools & Guides', icon: BookMarked },
+  { href: '/dashboard/manual', label: 'Users Manual', icon: HelpCircle },
 ]
 
 interface SidebarProps {
@@ -43,7 +62,17 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
   const pathname = usePathname()
   const router = useRouter()
 
-  const navItems = role === 'partner' ? PARTNER_NAV : ADMIN_NAV
+  const navItems = role === 'partner'
+    ? PARTNER_NAV
+    : role === 'neighbor'
+      ? NEIGHBOR_NAV
+      : ADMIN_NAV
+
+  const portalLabel = role === 'partner'
+    ? 'Partner Portal'
+    : role === 'neighbor'
+      ? 'Neighbor Portal'
+      : 'Pipeline Admin'
 
   function handleSignOut() {
     const supabase = createClient()
@@ -64,9 +93,7 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
       <div className="px-5 py-6 border-b border-white/10">
         <Link href={role === 'partner' ? '/dashboard/partner' : '/dashboard'} className="block">
           <h1 className="text-lg font-bold tracking-tight">THE CHANGE LAB</h1>
-          <p className="text-xs text-white/50 mt-0.5">
-            {role === 'partner' ? 'Partner Portal' : 'Pipeline Admin'}
-          </p>
+          <p className="text-xs text-white/50 mt-0.5">{portalLabel}</p>
           {role === 'partner' && orgName && (
             <p className="text-xs text-brand-accent mt-1 truncate">{orgName}</p>
           )}
@@ -75,25 +102,28 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
 
       {/* Nav */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
-              isActive(item.href)
-                ? 'bg-sidebar-active text-white font-medium'
-                : 'text-white/70 hover:bg-sidebar-hover hover:text-white'
-            }`}
-          >
-            <span className="text-base">{item.icon}</span>
-            <span className="flex-1">{item.label}</span>
-            {item.href === '/dashboard/users' && pendingRequestCount > 0 && (
-              <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
-                {pendingRequestCount}
-              </span>
-            )}
-          </Link>
-        ))}
+        {navItems.map((item) => {
+          const Icon = item.icon
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
+                isActive(item.href)
+                  ? 'bg-sidebar-active text-white font-medium'
+                  : 'text-white/70 hover:bg-sidebar-hover hover:text-white'
+              }`}
+            >
+              <Icon size={16} className="flex-shrink-0" />
+              <span className="flex-1">{item.label}</span>
+              {item.href === '/dashboard/users' && pendingRequestCount > 0 && (
+                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                  {pendingRequestCount}
+                </span>
+              )}
+            </Link>
+          )
+        })}
       </nav>
 
       {/* Sign Out + Exchange Link */}
@@ -102,14 +132,14 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
           href="/"
           className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/70 hover:bg-sidebar-hover hover:text-white"
         >
-          <span className="text-base">🌐</span>
+          <Globe size={16} className="flex-shrink-0" />
           <span>View Site</span>
         </Link>
         <button
           onClick={handleSignOut}
           className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm text-white/70 hover:bg-red-600/20 hover:text-red-300"
         >
-          <span className="text-base">🚪</span>
+          <LogOut size={16} className="flex-shrink-0" />
           <span>Sign Out</span>
         </button>
       </div>
@@ -120,9 +150,9 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
           <p className="text-xs text-white/40 uppercase tracking-wide mb-2">Pipeline</p>
           <div className="flex items-center gap-1 text-xs">
             <span className="text-blue-300 font-medium">{pipelineStats.totalIngested}</span>
-            <span className="text-white/30">→</span>
+            <span className="text-white/30">&rarr;</span>
             <span className="text-yellow-300 font-medium">{pipelineStats.needsReview}</span>
-            <span className="text-white/30">→</span>
+            <span className="text-white/30">&rarr;</span>
             <span className="text-green-300 font-medium">{pipelineStats.published}</span>
           </div>
           <div className="flex items-center gap-1 text-[10px] text-white/30 mt-0.5">
