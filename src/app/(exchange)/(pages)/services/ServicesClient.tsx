@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
-import { ClusteredMap } from '@/components/maps'
-import type { MarkerData } from '@/components/maps'
+import { ClusteredMap } from '@/components/maps/dynamic'
+import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg, TranslationMap } from '@/lib/types/exchange'
 import { List, Map as MapIcon } from 'lucide-react'
 

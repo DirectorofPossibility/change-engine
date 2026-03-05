@@ -13,7 +13,8 @@ import { SDOHBadge } from '@/components/ui/SDOHBadge'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { ClusteredMap, type MarkerData } from '@/components/maps'
+import { ClusteredMap } from '@/components/maps/dynamic'
+import type { MarkerData } from '@/components/maps/MapMarker'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
