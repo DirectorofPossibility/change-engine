@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/auth/roles'
 import { UsersClient } from './UsersClient'
+import { RoleRequestQueue } from './RoleRequestQueue'
 
 export interface UserProfile {
   id: string
@@ -33,6 +34,24 @@ export default async function UsersPage() {
     .select('org_id, org_name')
     .order('org_name', { ascending: true })
 
+  // Fetch pending role requests with user info
+  const { data: roleRequests } = await supabase
+    .from('role_requests' as any)
+    .select('id, user_id, requested_role, org_name, reason, status, created_at')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: true })
+
+  // Enrich role requests with user display info
+  const enrichedRequests = (roleRequests || []).map(function (rr: any) {
+    const user = (users || []).find(function (u: any) { return u.id === rr.user_id })
+    return {
+      ...rr,
+      user_display_name: user?.display_name || null,
+      user_email: user?.email || null,
+      user_role: user?.role || 'user',
+    }
+  })
+
   if (usersError) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">
@@ -43,9 +62,12 @@ export default async function UsersPage() {
   }
 
   return (
-    <UsersClient
-      initialUsers={(users ?? []) as unknown as UserProfile[]}
-      organizations={(orgs ?? []) as Organization[]}
-    />
+    <>
+      <RoleRequestQueue initialRequests={enrichedRequests} />
+      <UsersClient
+        initialUsers={(users ?? []) as unknown as UserProfile[]}
+        organizations={(orgs ?? []) as Organization[]}
+      />
+    </>
   )
 }

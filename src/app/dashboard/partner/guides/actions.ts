@@ -37,11 +37,15 @@ async function getPartnerProfile() {
 
   const { data: profile } = await supabase
     .from('user_profiles')
-    .select('role, org_id')
+    .select('role, org_id, account_status')
     .eq('auth_id', user.id)
     .single()
 
   if (!profile || profile.role !== 'partner' || !profile.org_id) {
+    return { supabase, profile: null }
+  }
+
+  if ((profile as any).account_status !== 'active') {
     return { supabase, profile: null }
   }
 

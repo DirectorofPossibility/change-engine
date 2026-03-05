@@ -36,9 +36,10 @@ interface SidebarProps {
   pipelineStats: PipelineStats
   role?: string
   orgName?: string | null
+  pendingRequestCount?: number
 }
 
-export function Sidebar({ pipelineStats, role = 'admin', orgName }: SidebarProps) {
+export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequestCount = 0 }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -85,7 +86,12 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName }: SidebarProps
             }`}
           >
             <span className="text-base">{item.icon}</span>
-            <span>{item.label}</span>
+            <span className="flex-1">{item.label}</span>
+            {item.href === '/dashboard/users' && pendingRequestCount > 0 && (
+              <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                {pendingRequestCount}
+              </span>
+            )}
           </Link>
         ))}
       </nav>

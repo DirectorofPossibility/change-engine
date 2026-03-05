@@ -10,6 +10,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { PartnerSubmissionTracker } from '@/components/dashboard/PartnerSubmissionTracker'
 
 export default async function PartnerOverviewPage() {
   const supabase = await createClient()
@@ -149,6 +150,9 @@ export default async function PartnerOverviewPage() {
           </p>
         </div>
       )}
+
+      {/* Submission Tracker */}
+      <PartnerSubmissionTracker orgId={orgId} />
 
       {/* Recent Activity */}
       <div className="bg-white rounded-xl border border-brand-border p-6">

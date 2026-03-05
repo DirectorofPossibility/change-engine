@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { RoleRequestCard } from '@/components/exchange/RoleRequestCard'
+import { SubmissionTracker } from '@/components/exchange/SubmissionTracker'
 
 export const dynamic = 'force-dynamic'
 
@@ -173,6 +175,11 @@ export default async function MyDashboardPage() {
               </div>
             )}
           </section>
+
+          {/* Submission Tracker (neighbors, partners, admins) */}
+          {profile?.role && ['neighbor', 'partner', 'admin'].includes(profile.role) && (
+            <SubmissionTracker authId={user.id} />
+          )}
         </div>
 
         {/* Sidebar */}
@@ -206,6 +213,9 @@ export default async function MyDashboardPage() {
               </div>
             )}
           </section>
+
+          {/* Role request */}
+          <RoleRequestCard currentRole={profile?.role || 'user'} />
 
           {/* Quick links */}
           <section>

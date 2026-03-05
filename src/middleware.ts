@@ -66,12 +66,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(meLoginUrl)
   }
 
-
-  // Check account status for authenticated users (skip for /account-locked itself)
+  // Check account status and role for authenticated users
   if (user && !request.nextUrl.pathname.startsWith('/account-locked')) {
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('account_status')
+      .select('account_status, role')
       .eq('auth_id', user.id)
       .single()
 
@@ -80,6 +79,17 @@ export async function middleware(request: NextRequest) {
       lockedUrl.pathname = '/account-locked'
       lockedUrl.search = ''
       return NextResponse.redirect(lockedUrl)
+    }
+
+    // Enforce role-based access for /dashboard routes
+    if (request.nextUrl.pathname.startsWith('/dashboard')) {
+      const role = (profile as any)?.role || 'user'
+      if (role !== 'admin' && role !== 'partner') {
+        const meUrl = request.nextUrl.clone()
+        meUrl.pathname = '/me'
+        meUrl.search = ''
+        return NextResponse.redirect(meUrl)
+      }
     }
   }
 

@@ -51,9 +51,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
   // ── Sidebar data ──
   const stats = await getPipelineStats()
 
+  // Count pending role requests (admin only)
+  let pendingRequestCount = 0
+  if (role === 'admin') {
+    const { count } = await supabase
+      .from('role_requests' as any)
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'pending')
+    pendingRequestCount = count || 0
+  }
+
   return (
     <div className="min-h-screen bg-brand-bg">
-      <Sidebar pipelineStats={stats} role={role} orgName={orgName} />
+      <Sidebar pipelineStats={stats} role={role} orgName={orgName} pendingRequestCount={pendingRequestCount} />
       <main className="ml-60 min-h-screen p-8">
         {children}
       </main>
