@@ -98,14 +98,18 @@ export default async function MyDashboardPage() {
       <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
         <h1 className="text-2xl font-bold text-brand-text mb-1">Welcome back, {displayName}!</h1>
         <div className="flex flex-wrap gap-4 text-sm text-brand-muted mt-3">
-          {profile?.zip_code && <span>ZIP: {profile.zip_code}</span>}
+          {(profile as any)?.address && <span>{(profile as any).address}</span>}
+          {!(profile as any)?.address && profile?.zip_code && <span>ZIP: {profile.zip_code}</span>}
           {profile?.preferred_language && (
             <span>Language: {profile.preferred_language === 'es' ? 'Español' : profile.preferred_language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
           )}
           <span>Impact Points: <strong className="text-brand-accent">{totalPoints}</strong></span>
         </div>
-        <div className="mt-3">
+        <div className="flex items-center gap-4 mt-3">
           <Link href="/me/settings" className="text-sm text-brand-accent hover:underline">Edit settings</Link>
+          {profile?.role && ['admin', 'partner', 'neighbor'].includes(profile.role) && (
+            <Link href="/dashboard" className="text-sm text-brand-accent hover:underline">Go to Dashboard</Link>
+          )}
         </div>
       </div>
 

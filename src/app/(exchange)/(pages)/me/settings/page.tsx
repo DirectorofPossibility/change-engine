@@ -25,6 +25,7 @@ import { createClient } from '@/lib/supabase/client'
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null)
   const [displayName, setDisplayName] = useState('')
+  const [address, setAddress] = useState('')
   const [zipCode, setZipCode] = useState('')
   const [language, setLanguage] = useState('en')
   const [gamification, setGamification] = useState(true)
@@ -52,6 +53,7 @@ export default function SettingsPage() {
           if (prof) {
             setProfile(prof)
             setDisplayName(prof.display_name || '')
+            setAddress((prof as any).address || '')
             setZipCode(prof.zip_code || '')
             setLanguage(prof.preferred_language || 'en')
             setGamification(prof.gamification_enabled !== false)
@@ -70,15 +72,20 @@ export default function SettingsPage() {
     setError(null)
 
     const supabase = createClient()
+    // Extract ZIP from address if provided
+    const extractedZip = address.match(/\b(\d{5})\b/)?.[1]
+    const effectiveZip = zipCode || extractedZip || null
+
     const { error: updateError } = await supabase
       .from('user_profiles')
       .update({
         display_name: displayName,
-        zip_code: zipCode || null,
+        address: address || null,
+        zip_code: effectiveZip,
         preferred_language: language,
         gamification_enabled: gamification,
         last_active: new Date().toISOString(),
-      })
+      } as any)
       .eq('auth_id', profile.auth_id)
 
     if (updateError) {
@@ -159,6 +166,18 @@ export default function SettingsPage() {
           />
         </div>
         <div>
+          <label htmlFor="address" className="block text-sm font-medium text-brand-text mb-1">Address</label>
+          <input
+            id="address"
+            type="text"
+            value={address}
+            onChange={function (e) { setAddress(e.target.value) }}
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            placeholder="123 Main St, Houston, TX 77001"
+          />
+          <p className="text-xs text-brand-muted mt-1">Used to find your elected officials and local resources</p>
+        </div>
+        <div>
           <label htmlFor="zipCode" className="block text-sm font-medium text-brand-text mb-1">ZIP Code</label>
           <input
             id="zipCode"
@@ -167,6 +186,7 @@ export default function SettingsPage() {
             value={zipCode}
             onChange={function (e) { setZipCode(e.target.value) }}
             className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            placeholder="Auto-filled from address"
           />
         </div>
         <div>

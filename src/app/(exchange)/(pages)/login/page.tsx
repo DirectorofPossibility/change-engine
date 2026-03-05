@@ -32,6 +32,23 @@ export default function LoginPage() {
       return
     }
 
+    // If no explicit redirect was set, check role and send admin/partner/neighbor to dashboard
+    if (redirect === '/me') {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('role')
+          .eq('auth_id', user.id)
+          .single()
+        if (profile?.role === 'admin' || profile?.role === 'partner' || profile?.role === 'neighbor') {
+          router.push('/dashboard')
+          router.refresh()
+          return
+        }
+      }
+    }
+
     router.push(redirect)
     router.refresh()
   }
