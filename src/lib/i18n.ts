@@ -51,6 +51,7 @@ const en: Record<string, string> = {
   'footer.accessibility': 'Accessibility',
   'footer.tagline': 'A civic platform connecting Houston residents with resources, services, and civic participation opportunities.',
   'footer.built_in': 'Built with care in Houston, TX',
+  'support.button': 'Support This Project',
 
   // Homepage
   'home.location': 'Houston, Texas',
@@ -450,7 +451,7 @@ const en: Record<string, string> = {
   'library.new_conversation': 'New conversation',
   'library.sources': 'Sources',
   'library.drop_pdf': 'Drop a PDF here or click to browse',
-  'library.max_size': 'PDF files up to 25MB',
+  'library.max_size': 'PDF files up to 35MB',
   'library.doc_title': 'Document Title',
   'library.title_placeholder': 'Enter a title for this document',
   'library.doc_tags': 'Tags (comma separated)',
@@ -500,6 +501,19 @@ const en: Record<string, string> = {
   'library.go_deeper': 'Go deeper',
   'library.understanding': 'Understanding this resource',
 
+  // Wayfinder
+  'wayfinder.title': 'Connected Through the Community',
+  'wayfinder.understand': 'Understand',
+  'wayfinder.get_involved': 'Get Involved',
+  'wayfinder.go_deeper': 'Go Deeper',
+  'wayfinder.donate': 'Donate',
+  'wayfinder.volunteer': 'Volunteer',
+  'wayfinder.subscribe': 'Subscribe',
+  'wayfinder.call': 'Call',
+  'wayfinder.visit': 'Visit',
+  'wayfinder.register': 'Register',
+  'wayfinder.time': 'Time',
+
   // Brand
   'brand.name': 'The Change Engine',
   'brand.subtitle': 'Community Exchange',
@@ -535,6 +549,7 @@ const es: Record<string, string> = {
   'footer.accessibility': 'Accesibilidad',
   'footer.tagline': 'Una plataforma cívica que conecta a los residentes de Houston con recursos, servicios y oportunidades de participación cívica.',
   'footer.built_in': 'Hecho con cariño en Houston, TX',
+  'support.button': 'Apoya Este Proyecto',
 
   // Homepage
   'home.location': 'Houston, Texas',
@@ -934,7 +949,7 @@ const es: Record<string, string> = {
   'library.new_conversation': 'Nueva conversación',
   'library.sources': 'Fuentes',
   'library.drop_pdf': 'Suelte un PDF aquí o haga clic para buscar',
-  'library.max_size': 'Archivos PDF hasta 25MB',
+  'library.max_size': 'Archivos PDF hasta 35MB',
   'library.doc_title': 'Título del Documento',
   'library.title_placeholder': 'Ingrese un título para este documento',
   'library.doc_tags': 'Etiquetas (separadas por comas)',
@@ -984,6 +999,19 @@ const es: Record<string, string> = {
   'library.go_deeper': 'Profundizar',
   'library.understanding': 'Entendiendo este recurso',
 
+  // Wayfinder
+  'wayfinder.title': 'Conectados a Través de la Comunidad',
+  'wayfinder.understand': 'Comprender',
+  'wayfinder.get_involved': 'Participar',
+  'wayfinder.go_deeper': 'Profundizar',
+  'wayfinder.donate': 'Donar',
+  'wayfinder.volunteer': 'Voluntariado',
+  'wayfinder.subscribe': 'Suscribirse',
+  'wayfinder.call': 'Llamar',
+  'wayfinder.visit': 'Visitar',
+  'wayfinder.register': 'Registrarse',
+  'wayfinder.time': 'Tiempo',
+
   // Brand
   'brand.name': 'The Change Engine',
   'brand.subtitle': 'Intercambio Comunitario',
@@ -1019,6 +1047,7 @@ const vi: Record<string, string> = {
   'footer.accessibility': 'Trợ Năng',
   'footer.tagline': 'Nền tảng dân sự kết nối cư dân Houston với tài nguyên, dịch vụ và cơ hội tham gia cộng đồng.',
   'footer.built_in': 'Được xây dựng tận tâm tại Houston, TX',
+  'support.button': 'Ủng Hộ Dự Án',
 
   // Homepage
   'home.location': 'Houston, Texas',
@@ -1418,7 +1447,7 @@ const vi: Record<string, string> = {
   'library.new_conversation': 'Cuộc trò chuyện mới',
   'library.sources': 'Nguồn',
   'library.drop_pdf': 'Thả tệp PDF vào đây hoặc nhấp để duyệt',
-  'library.max_size': 'Tệp PDF tối đa 25MB',
+  'library.max_size': 'Tệp PDF tối đa 35MB',
   'library.doc_title': 'Tiêu Đề Tài Liệu',
   'library.title_placeholder': 'Nhập tiêu đề cho tài liệu này',
   'library.doc_tags': 'Thẻ (phân cách bằng dấu phẩy)',
@@ -1467,6 +1496,19 @@ const vi: Record<string, string> = {
   'library.read_more': 'Đọc thêm',
   'library.go_deeper': 'Tìm hiểu sâu hơn',
   'library.understanding': 'Hiểu về tài nguyên này',
+
+  // Wayfinder
+  'wayfinder.title': 'Kết Nối Qua Cộng Đồng',
+  'wayfinder.understand': 'Tìm Hiểu',
+  'wayfinder.get_involved': 'Tham Gia',
+  'wayfinder.go_deeper': 'Đi Sâu Hơn',
+  'wayfinder.donate': 'Quyên Góp',
+  'wayfinder.volunteer': 'Tình Nguyện',
+  'wayfinder.subscribe': 'Đăng Ký',
+  'wayfinder.call': 'Gọi',
+  'wayfinder.visit': 'Truy Cập',
+  'wayfinder.register': 'Đăng Ký',
+  'wayfinder.time': 'Thời Gian',
 
   // Brand
   'brand.name': 'The Change Engine',

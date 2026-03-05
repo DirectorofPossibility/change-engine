@@ -19,7 +19,7 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: 'bg-red-100 text-red-800',
 }
 
-const MAX_FILE_SIZE = 25 * 1024 * 1024 // 25MB
+const MAX_FILE_SIZE = 35 * 1024 * 1024 // 35MB
 
 export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: LibraryAdminProps) {
   const [documents, setDocuments] = useState(initialDocs)
@@ -51,7 +51,7 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
 
   function validateFile(file: File): string | null {
     if (file.type !== 'application/pdf') return 'Only PDF files are accepted.'
-    if (file.size > MAX_FILE_SIZE) return 'File size exceeds 25MB limit.'
+    if (file.size > MAX_FILE_SIZE) return 'File size exceeds 35MB limit.'
     return null
   }
 
