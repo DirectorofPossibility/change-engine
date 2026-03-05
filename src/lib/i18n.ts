@@ -286,6 +286,7 @@ const en: Record<string, string> = {
   'sidebar.explore_houston': 'Explore Houston',
   'sidebar.your_guide': 'Your Guide',
   'sidebar.elections': 'Elections & Voting',
+  'sidebar.library': 'Library',
   'sidebar.topics': 'Topics',
   'sidebar.no_topics': 'No topics available',
 
@@ -744,6 +745,7 @@ const es: Record<string, string> = {
   'sidebar.explore_houston': 'Explorar Houston',
   'sidebar.your_guide': 'Tu Guía',
   'sidebar.elections': 'Elecciones y Votación',
+  'sidebar.library': 'Biblioteca',
   'sidebar.topics': 'Temas',
   'sidebar.no_topics': 'No hay temas disponibles',
 
@@ -1202,6 +1204,7 @@ const vi: Record<string, string> = {
   'sidebar.explore_houston': 'Khám Phá Houston',
   'sidebar.your_guide': 'Hướng Dẫn',
   'sidebar.elections': 'Bầu Cử & Bỏ Phiếu',
+  'sidebar.library': 'Thư Viện',
   'sidebar.topics': 'Chủ Đề',
   'sidebar.no_topics': 'Không có chủ đề',
 

@@ -7,7 +7,7 @@ import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   Phone, Scale, Map,
-  Landmark, PanelLeftClose, PanelLeftOpen, Vote,
+  Landmark, PanelLeftClose, PanelLeftOpen, Vote, BookOpen,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/i18n'
@@ -197,6 +197,21 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         >
           <Vote size={16} style={{ color: BRAND.accent }} />
           {t('sidebar.elections')}
+        </Link>
+      </div>
+
+      {/* Library */}
+      <div className="px-4 py-1">
+        <Link
+          href="/library"
+          onClick={closeMobile}
+          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+            (pathname.startsWith('/library')
+              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+        >
+          <BookOpen size={16} style={{ color: BRAND.accent }} />
+          {t('sidebar.library')}
         </Link>
       </div>
 
