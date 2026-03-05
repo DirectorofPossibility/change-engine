@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Search } from 'lucide-react'
+import { Search, Heart } from 'lucide-react'
 import { THEMES, BRAND, CENTERS, CENTER_COLORS } from '@/lib/constants'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 
@@ -211,9 +211,18 @@ export function LeftNav() {
         })}
       </div>
 
-      {/* Origin line — pushed to bottom */}
-      <div className="mt-auto px-4 py-3 border-t border-brand-border">
-        <div className="text-[9px] text-brand-muted italic leading-relaxed">
+      {/* Support — pushed to bottom */}
+      <div className="mt-auto px-3 pt-3 pb-2 border-t border-brand-border">
+        <a
+          href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-semibold text-brand-accent hover:bg-brand-accent/10 transition-colors"
+        >
+          <Heart size={14} className="fill-brand-accent" />
+          Support Our Work
+        </a>
+        <div className="px-3 pt-1 text-[9px] text-brand-muted italic leading-relaxed">
           {BRAND.origin || 'Built in Houston, made for everyone'}
         </div>
       </div>
