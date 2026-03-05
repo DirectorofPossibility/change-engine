@@ -98,10 +98,11 @@ export function GeoJsonLayer({
       return {
         fillColor: style.fillColor,
         fillOpacity: isHighlighted
-          ? Math.min(style.fillOpacity * 2, 0.6)
+          ? Math.min(style.fillOpacity * 3, 0.35)
           : style.fillOpacity,
         color: style.strokeColor,
         weight: isHighlighted ? style.strokeWeight * 2 : style.strokeWeight,
+        opacity: 0.7,
       }
     },
     [style, highlightFeatureId, idProperty]

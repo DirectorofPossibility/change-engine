@@ -1,12 +1,3 @@
-/**
- * @fileoverview Map with automatic marker clustering via react-leaflet-cluster.
- *
- * Combines {@link MapProvider}, {@link HoustonMap}, and {@link MapMarker}
- * with a declarative `<MarkerClusterGroup>` so that densely packed markers
- * are grouped into numbered cluster icons. A helper child component
- * auto-fits the map bounds to contain all provided markers, and an optional
- * {@link MapLegend} is shown when more than one marker type is present.
- */
 'use client'
 
 import { useEffect } from 'react'
@@ -17,6 +8,7 @@ import { MapProvider } from './MapProvider'
 import { HoustonMap } from './HoustonMap'
 import { MapMarker, type MarkerData } from './MapMarker'
 import { MapLegend } from './MapLegend'
+import { useMapZoom } from './useMapZoom'
 
 interface ClusteredMapProps {
   markers: MarkerData[]
@@ -24,11 +16,6 @@ interface ClusteredMapProps {
   showLegend?: boolean
 }
 
-/**
- * Auto-fits map bounds to contain all markers with padding.
- *
- * @param props.markers - Array of marker data with lat/lng positions.
- */
 function FitBounds({ markers }: { markers: MarkerData[] }) {
   const map = useMap()
 
@@ -41,35 +28,55 @@ function FitBounds({ markers }: { markers: MarkerData[] }) {
   return null
 }
 
+function createClusterIcon(cluster: any) {
+  const count = cluster.getChildCount()
+  let size = 36
+  let fontSize = '0.75rem'
+  if (count >= 100) { size = 48; fontSize = '0.8rem' }
+  else if (count >= 10) { size = 40; fontSize = '0.75rem' }
+
+  return L.divIcon({
+    html: `<div style="
+      width:${size}px;height:${size}px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(199,91,42,0.85);
+      color:#fff;font-weight:600;font-size:${fontSize};
+      border-radius:50%;
+      border:3px solid rgba(255,255,255,0.9);
+      box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    ">${count}</div>`,
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  })
+}
+
 function ClusteredMapInner({ markers, className, showLegend = true }: ClusteredMapProps) {
   const types = Array.from(new Set(markers.map(m => m.type)))
+  const zoom = useMapZoom()
 
   return (
     <div>
       <HoustonMap className={className || 'w-full h-[400px] rounded-xl'}>
         <FitBounds markers={markers} />
-        <MarkerClusterGroup chunkedLoading>
+        <MarkerClusterGroup
+          chunkedLoading
+          iconCreateFunction={createClusterIcon}
+          maxClusterRadius={50}
+          spiderfyOnMaxZoom
+          showCoverageOnHover={false}
+          disableClusteringAtZoom={12}
+        >
           {markers.map(m => (
             <MapMarker key={m.id} marker={m} />
           ))}
         </MarkerClusterGroup>
       </HoustonMap>
-      {showLegend && types.length > 1 && <MapLegend types={types} />}
+      {showLegend && types.length > 1 && zoom >= 12 && <MapLegend types={types} />}
     </div>
   )
 }
 
-/**
- * Self-contained clustered map with its own MapProvider.
- *
- * Renders a Houston-centered map where nearby markers are automatically
- * grouped into numbered cluster icons. Includes an optional color-coded
- * legend when multiple marker types are present.
- *
- * @param props.markers - Array of {@link MarkerData} objects to display.
- * @param props.className - CSS class for the map container.
- * @param props.showLegend - Whether to display the marker-type legend. Defaults to `true`.
- */
 export function ClusteredMap(props: ClusteredMapProps) {
   return (
     <MapProvider>

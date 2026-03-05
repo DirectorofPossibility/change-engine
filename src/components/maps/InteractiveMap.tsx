@@ -1,16 +1,3 @@
-/**
- * @fileoverview Full-featured interactive Leaflet map with GeoJSON boundary
- * layers, marker clustering, layer toggle controls, and polygon-click info
- * panels.
- *
- * This is the highest-level map component in the maps system. It composes
- * {@link HoustonMap}, {@link MapMarker}, {@link GeoJsonLayer},
- * {@link LayerControl}, {@link GeoInfoPanel}, and {@link MapLegend} into a
- * single ready-to-use map experience. Consumers provide an array of markers
- * and/or an array of GeoJSON layer configurations; the component handles
- * clustering, visibility toggling, boundary rendering, feature highlighting,
- * and polygon detail display.
- */
 'use client'
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
@@ -24,6 +11,7 @@ import { MapLegend } from './MapLegend'
 import { GeoJsonLayer } from './GeoJsonLayer'
 import { LayerControl, type LayerOption } from './LayerControl'
 import { GeoInfoPanel } from './GeoInfoPanel'
+import { useMapZoom } from './useMapZoom'
 import type { GeoLayerConfig } from '@/lib/constants'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'
 
@@ -46,11 +34,11 @@ interface SelectedFeature {
   layerConfig: GeoLayerConfig
 }
 
-/**
- * Auto-fits map bounds to contain all markers with padding.
- *
- * @param props.markers - Array of marker data with lat/lng positions.
- */
+/** Zoom thresholds for progressive detail */
+const ZOOM_SHOW_BOUNDARIES = 9    // show GeoJSON boundaries
+const ZOOM_SHOW_MARKERS = 12      // show individual markers (clusters always show)
+const ZOOM_DETAILED_BOUNDARIES = 13 // thicker strokes, higher fill opacity
+
 function FitBounds({ markers }: { markers: MarkerData[] }) {
   const map = useMap()
 
@@ -63,6 +51,41 @@ function FitBounds({ markers }: { markers: MarkerData[] }) {
   return null
 }
 
+/** Zoom-aware GeoJSON styling */
+function getLayerStyle(color: string, zoom: number) {
+  const isDetailed = zoom >= ZOOM_DETAILED_BOUNDARIES
+  return {
+    fillColor: color,
+    fillOpacity: isDetailed ? 0.12 : 0.06,
+    strokeColor: color,
+    strokeWeight: isDetailed ? 2 : 1,
+  }
+}
+
+/** Custom cluster icon factory with brand styling */
+function createClusterIcon(cluster: any) {
+  const count = cluster.getChildCount()
+  let size = 36
+  let fontSize = '0.75rem'
+  if (count >= 100) { size = 48; fontSize = '0.8rem' }
+  else if (count >= 10) { size = 40; fontSize = '0.75rem' }
+
+  return L.divIcon({
+    html: `<div style="
+      width:${size}px;height:${size}px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(199,91,42,0.85);
+      color:#fff;font-weight:600;font-size:${fontSize};
+      border-radius:50%;
+      border:3px solid rgba(255,255,255,0.9);
+      box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    ">${count}</div>`,
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  })
+}
+
 function InteractiveMapInner({
   markers = [],
   layers = [],
@@ -71,11 +94,12 @@ function InteractiveMapInner({
   showLegend = true,
   highlightLayerId,
   highlightFeatureId,
-  zoom,
+  zoom: initialZoom,
   center,
   onFeatureClick,
   onMarkerClick,
 }: InteractiveMapProps) {
+  const currentZoom = useMapZoom()
   const [visibleLayerIds, setVisibleLayerIds] = useState<Set<string>>(
     new Set(defaultVisibleLayers)
   )
@@ -84,11 +108,8 @@ function InteractiveMapInner({
   const handleToggleLayer = useCallback((layerId: string) => {
     setVisibleLayerIds(prev => {
       const next = new Set(prev)
-      if (next.has(layerId)) {
-        next.delete(layerId)
-      } else {
-        next.add(layerId)
-      }
+      if (next.has(layerId)) next.delete(layerId)
+      else next.add(layerId)
       return next
     })
   }, [])
@@ -96,21 +117,18 @@ function InteractiveMapInner({
   const handleLayerClick = useCallback(
     (layerConfig: GeoLayerConfig) => (properties: GeoFeatureProperties) => {
       setSelectedFeature({ properties, layerConfig })
-      if (onFeatureClick) {
-        onFeatureClick(layerConfig, properties)
-      }
+      if (onFeatureClick) onFeatureClick(layerConfig, properties)
     },
     [onFeatureClick]
   )
 
   const layerOptions: LayerOption[] = useMemo(
-    () =>
-      layers.map(layer => ({
-        id: layer.id,
-        label: layer.label,
-        color: layer.color,
-        visible: visibleLayerIds.has(layer.id),
-      })),
+    () => layers.map(layer => ({
+      id: layer.id,
+      label: layer.label,
+      color: layer.color,
+      visible: visibleLayerIds.has(layer.id),
+    })),
     [layers, visibleLayerIds]
   )
 
@@ -119,29 +137,25 @@ function InteractiveMapInner({
     [markers]
   )
 
+  const showBoundaries = currentZoom >= ZOOM_SHOW_BOUNDARIES
+
   return (
     <div>
       <div className="relative">
         <HoustonMap
           className={className || 'w-full h-[450px] rounded-xl'}
-          zoom={zoom}
+          zoom={initialZoom}
           center={center}
         >
-          {/* Auto-fit bounds to markers */}
           {markers.length > 0 && <FitBounds markers={markers} />}
 
-          {/* GeoJSON boundary layers */}
-          {layers.map(layer => (
+          {/* GeoJSON boundary layers — fade in at neighborhood zoom */}
+          {showBoundaries && layers.map(layer => (
             <GeoJsonLayer
               key={layer.id}
               url={layer.url}
               visible={visibleLayerIds.has(layer.id)}
-              style={{
-                fillColor: layer.color,
-                fillOpacity: 0.15,
-                strokeColor: layer.color,
-                strokeWeight: 1.5,
-              }}
+              style={getLayerStyle(layer.color, currentZoom)}
               onClick={handleLayerClick(layer)}
               idProperty={layer.idProperty}
               highlightFeatureId={
@@ -150,8 +164,15 @@ function InteractiveMapInner({
             />
           ))}
 
-          {/* Clustered point markers on top of boundaries */}
-          <MarkerClusterGroup chunkedLoading>
+          {/* Clustered markers with brand-styled clusters */}
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createClusterIcon}
+            maxClusterRadius={50}
+            spiderfyOnMaxZoom
+            showCoverageOnHover={false}
+            disableClusteringAtZoom={ZOOM_SHOW_MARKERS}
+          >
             {markers.map(m => (
               <MapMarker key={m.id} marker={m} onClick={onMarkerClick} />
             ))}
@@ -161,6 +182,13 @@ function InteractiveMapInner({
         {/* Layer toggle control */}
         {layers.length > 0 && (
           <LayerControl layers={layerOptions} onToggle={handleToggleLayer} />
+        )}
+
+        {/* Zoom hint — shows briefly at low zoom */}
+        {currentZoom < ZOOM_SHOW_BOUNDARIES && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-sm rounded-full px-4 py-1.5 text-xs text-brand-muted shadow-sm border border-brand-border/50 pointer-events-none">
+            Zoom in to explore neighborhoods
+          </div>
         )}
       </div>
 
@@ -176,30 +204,14 @@ function InteractiveMapInner({
         />
       )}
 
-      {/* Marker legend */}
-      {showLegend && markerTypes.length > 1 && <MapLegend types={markerTypes} />}
+      {/* Marker legend — only at zoom levels where individual markers show */}
+      {showLegend && markerTypes.length > 1 && currentZoom >= ZOOM_SHOW_MARKERS && (
+        <MapLegend types={markerTypes} />
+      )}
     </div>
   )
 }
 
-/**
- * Full-featured interactive map with boundary layers, clustering, and info panels.
- *
- * Wraps its own {@link MapProvider} so it can be dropped into any page without
- * additional setup. Supports optional GeoJSON boundary layers with toggle
- * controls, marker clustering, feature highlighting, and a detail panel that
- * appears when the user clicks a polygon.
- *
- * @param props.markers - Point markers to display on the map.
- * @param props.layers - GeoJSON boundary layer configurations.
- * @param props.defaultVisibleLayers - Layer IDs that should be visible on mount.
- * @param props.className - CSS class for the map container.
- * @param props.showLegend - Whether to show the marker-type legend. Defaults to `true`.
- * @param props.highlightLayerId - ID of the layer containing the feature to highlight.
- * @param props.highlightFeatureId - ID of the specific feature to highlight within the layer.
- * @param props.zoom - Initial zoom level override.
- * @param props.center - Initial center coordinate override.
- */
 export function InteractiveMap(props: InteractiveMapProps) {
   return (
     <MapProvider>

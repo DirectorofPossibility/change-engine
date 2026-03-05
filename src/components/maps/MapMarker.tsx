@@ -53,16 +53,16 @@ const MARKER_COLORS: Record<MarkerType, { background: string; border: string }> 
 function createPinIcon(bg: string, border: string) {
   return L.divIcon({
     className: '',
-    iconSize: [24, 36],
-    iconAnchor: [12, 36],
-    popupAnchor: [0, -36],
+    iconSize: [20, 28],
+    iconAnchor: [10, 28],
+    popupAnchor: [0, -28],
     html: `<div style="
-      width:24px;height:24px;
+      width:18px;height:18px;
       background:${bg};
-      border:2px solid ${border};
+      border:2px solid rgba(255,255,255,0.9);
       border-radius:50% 50% 50% 0;
       transform:rotate(-45deg);
-      box-shadow:0 1px 3px rgba(0,0,0,0.3);
+      box-shadow:0 1px 4px rgba(0,0,0,0.2);
     "></div>`,
   })
 }
