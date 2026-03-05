@@ -9,7 +9,6 @@ import { HomeTopBar } from './HomeTopBar'
 import { HeroBook } from './HeroBook'
 import { CenterDoorways } from './CenterDoorways'
 import { PersonaSelector } from './PersonaSelector'
-import { ImpactMetrics } from './ImpactMetrics'
 import { PathwayRibbons } from './PathwayRibbons'
 import { FeedCard } from './FeedCard'
 import type { FeedItem } from './FeedCard'
@@ -97,10 +96,10 @@ export function Wayfinder({
   })
 
   return (
-    <div className="min-h-screen bg-brand-bg">
+    <div>
       <HomeTopBar liveCount={stats.resources} />
 
-      <main className="bg-brand-bg">
+      <main>
         {/* 1. Full-viewport hero */}
         <HeroBook />
 
@@ -111,22 +110,14 @@ export function Wayfinder({
           {/* 3. Persona selector */}
           <section className="py-10">
             <h2 className="font-serif text-xl font-bold tracking-tight mb-1">Not sure where to start?</h2>
-            <p className="text-sm text-brand-muted mb-4 font-serif italic">Find your path — pick the one that sounds like you.</p>
+            <p className="text-sm text-brand-muted mb-4 font-serif italic">Pick the one that sounds like you.</p>
             <PersonaSelector />
           </section>
 
-          {/* 4. Impact metrics */}
-          <ImpactMetrics stats={{
-            resources: stats.resources,
-            organizations: organizations,
-            officials: stats.officials,
-            policies: stats.policies,
-          }} />
-
-          {/* 5. Pathway ribbons */}
+          {/* 4. Pathway ribbons */}
           <PathwayRibbons pathwayCounts={pathwayCounts} />
 
-          {/* 6. Latest content preview */}
+          {/* 4. Latest content preview */}
           {feedItems.length > 0 && (
             <section className="py-12">
               <div className="flex items-center justify-between mb-6">
@@ -138,12 +129,12 @@ export function Wayfinder({
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
                       </span>
-                      +{newThisWeek} {t('wayfinder.this_week')}
+                      {newThisWeek > 20 ? 'Updated daily' : '+' + newThisWeek + ' ' + t('wayfinder.this_week')}
                     </span>
                   )}
                 </div>
                 <Link
-                  href="/library"
+                  href="/compass"
                   className="inline-flex items-center gap-1 text-sm font-semibold hover:underline"
                   style={{ color: BRAND.accent }}
                 >
@@ -158,16 +149,6 @@ export function Wayfinder({
               </div>
             </section>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="text-center py-8 border-t border-brand-border bg-white">
-          <p className="text-sm text-brand-muted font-serif italic">
-            {t('wayfinder.footer')}
-          </p>
-          <p className="text-xs text-brand-muted/50 mt-1">
-            {stats.resources} resources &middot; {stats.officials} officials &middot; {stats.policies} policies &middot; {stats.focusAreas} focus areas
-          </p>
         </div>
       </main>
     </div>

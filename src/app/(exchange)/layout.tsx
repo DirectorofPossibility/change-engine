@@ -22,6 +22,8 @@ import { ElectionBanner } from '@/components/exchange/ElectionBanner'
 import { LanguageProvider } from '@/lib/contexts/LanguageContext'
 import { NeighborhoodProvider } from '@/lib/contexts/NeighborhoodContext'
 import { LeftNav } from '@/components/exchange/LeftNav'
+import { Footer } from '@/components/exchange/Footer'
+import MobileBottomNav from '@/components/exchange/MobileBottomNav'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -67,10 +69,14 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           <ElectionBanner election={nextElection} />
           <div id="main-content" className="flex">
             <LeftNav />
-            <div className="flex-1 min-w-0">
-              {children}
+            <div className="flex-1 min-w-0 flex flex-col">
+              <div className="flex-1 pb-16 lg:pb-0">
+                {children}
+              </div>
+              <Footer />
             </div>
           </div>
+          <MobileBottomNav />
         </div>
       </NeighborhoodProvider>
     </LanguageProvider>

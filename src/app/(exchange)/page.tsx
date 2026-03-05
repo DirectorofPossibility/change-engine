@@ -55,7 +55,7 @@ export default async function HomePage() {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-brand-bg">
       <EnvironmentBar />
       <Wayfinder
         stats={circleStats}
@@ -65,6 +65,6 @@ export default async function HomePage() {
         centerCounts={centerCounts}
         organizations={stats.organizations || 0}
       />
-    </>
+    </div>
   )
 }

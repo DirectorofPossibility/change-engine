@@ -1,5 +1,8 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Search } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
 import { BRAND, THEMES } from '@/lib/constants'
 
@@ -15,11 +18,29 @@ function SpectrumBar() {
   )
 }
 
+const SEARCH_SUGGESTIONS = [
+  'food assistance',
+  'voter registration',
+  'mental health',
+  'job training',
+  'childcare',
+  'legal help',
+]
+
 export function HeroBook() {
   const { t } = useTranslation()
+  const router = useRouter()
+  const [query, setQuery] = useState('')
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (query.trim()) {
+      router.push('/search?q=' + encodeURIComponent(query.trim()))
+    }
+  }
 
   return (
-    <section className="relative flex flex-col items-center justify-center py-16 sm:py-24 px-4 text-center">
+    <section className="relative flex flex-col items-center justify-center py-14 sm:py-20 px-4 text-center">
       {/* Warm radial gradient background */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -46,15 +67,38 @@ export function HeroBook() {
           {BRAND.tagline}
         </p>
 
+        {/* Search bar */}
+        <form onSubmit={handleSearch} className="relative max-w-lg mx-auto mb-6">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted" />
+          <input
+            type="text"
+            value={query}
+            onChange={function (e) { setQuery(e.target.value) }}
+            placeholder="What are you looking for?"
+            className="w-full pl-11 pr-4 py-3.5 bg-white border border-brand-border rounded-xl text-sm text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent/30 shadow-sm"
+          />
+        </form>
+
+        {/* Search suggestions — inline text links, no pills */}
+        <p className="text-xs text-brand-muted mb-6">
+          Try:{' '}
+          {SEARCH_SUGGESTIONS.map(function (term, i) {
+            return (
+              <span key={term}>
+                {i > 0 && <span className="mx-1">&middot;</span>}
+                <button
+                  onClick={function () { router.push('/search?q=' + encodeURIComponent(term)) }}
+                  className="text-brand-accent hover:underline"
+                >
+                  {term}
+                </button>
+              </span>
+            )
+          })}
+        </p>
+
         {/* Spectrum bar — 7 pathway colors */}
         <SpectrumBar />
-
-        {/* Scroll prompt */}
-        <div className="mt-8">
-          <p className="text-sm text-brand-muted font-medium">
-            {t('hero.scroll_prompt')}
-          </p>
-        </div>
       </div>
     </section>
   )

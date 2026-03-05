@@ -16,7 +16,7 @@ interface HelpUrgencyHeaderProps {
 /**
  * Renders a colored urgency-level heading with a translated label.
  *
- * @param props.level - Urgency level key (Critical, High, Medium, Low).
+ * @param props.level - Urgency level key (Critical, High, Medium, Low). Displayed as timeline labels (Right Now, This Week, At Your Pace, When You're Ready).
  */
 export function HelpUrgencyHeader({ level }: HelpUrgencyHeaderProps) {
   const { t } = useTranslation()

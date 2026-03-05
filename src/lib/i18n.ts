@@ -82,16 +82,16 @@ const en: Record<string, string> = {
 
   // Help page
   'help.title': 'Available Resources',
-  'help.subtitle': 'Browse community resources for any life situation, organized by priority.',
+  'help.subtitle': 'Explore what\u2019s available for any life situation, at whatever pace works for you.',
   'help.emergency': 'In an emergency?',
   'help.crisis_911': '911 for emergencies',
   'help.crisis_988': '988 for mental health crisis',
   'help.crisis_dv': '1-800-799-7233 for domestic violence',
-  'help.urgency_critical': 'Time-Sensitive Resources',
-  'help.urgency_high': 'Priority Resources',
-  'help.urgency_medium': 'Community Resources',
-  'help.urgency_low': 'Ongoing Resources',
-  'help.intro': 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',
+  'help.urgency_critical': 'Right Now',
+  'help.urgency_high': 'This Week',
+  'help.urgency_medium': 'At Your Pace',
+  'help.urgency_low': 'When You\u2019re Ready',
+  'help.intro': 'Houston has a wealth of resources ready for you. Explore by life situation or timeline to find services, support, and opportunities.',
 
   // Services page
   'services.title': 'Services',
@@ -595,16 +595,16 @@ const es: Record<string, string> = {
 
   // Help page
   'help.title': 'Recursos Disponibles',
-  'help.subtitle': 'Descubra recursos comunitarios para cualquier situación de vida, organizados por prioridad.',
-  'help.emergency': '¿Es una emergencia?',
+  'help.subtitle': 'Explore lo que est\u00e1 disponible para cualquier situaci\u00f3n de vida, a su propio ritmo.',
+  'help.emergency': '\u00bfEs una emergencia?',
   'help.crisis_911': '911 para emergencias',
   'help.crisis_988': '988 para crisis de salud mental',
-  'help.crisis_dv': '1-800-799-7233 para violencia doméstica',
-  'help.urgency_critical': 'Recursos Urgentes',
-  'help.urgency_high': 'Recursos Prioritarios',
-  'help.urgency_medium': 'Recursos Comunitarios',
-  'help.urgency_low': 'Recursos Continuos',
-  'help.intro': 'Sin importar lo que enfrente, Houston tiene recursos listos para usted. Busque por urgencia o situación de vida para encontrar apoyo, servicios y próximos pasos.',
+  'help.crisis_dv': '1-800-799-7233 para violencia dom\u00e9stica',
+  'help.urgency_critical': 'Ahora Mismo',
+  'help.urgency_high': 'Esta Semana',
+  'help.urgency_medium': 'A Su Ritmo',
+  'help.urgency_low': 'Cuando Est\u00e9 Listo',
+  'help.intro': 'Houston cuenta con una gran cantidad de recursos listos para usted. Explore por situaci\u00f3n de vida o plazo para encontrar servicios, apoyo y oportunidades.',
 
   // Services page
   'services.title': 'Servicios',
@@ -1108,16 +1108,16 @@ const vi: Record<string, string> = {
 
   // Help page
   'help.title': 'Tài Nguyên Có Sẵn',
-  'help.subtitle': 'Khám phá tài nguyên cộng đồng cho bất kỳ tình huống cuộc sống nào, sắp xếp theo mức độ ưu tiên.',
-  'help.emergency': 'Trường hợp khẩn cấp?',
-  'help.crisis_911': '911 cho trường hợp khẩn cấp',
-  'help.crisis_988': '988 cho khủng hoảng sức khỏe tâm thần',
-  'help.crisis_dv': '1-800-799-7233 cho bạo lực gia đình',
-  'help.urgency_critical': 'Tài Nguyên Khẩn Cấp',
-  'help.urgency_high': 'Tài Nguyên Ưu Tiên',
-  'help.urgency_medium': 'Tài Nguyên Cộng Đồng',
-  'help.urgency_low': 'Tài Nguyên Liên Tục',
-  'help.intro': 'Dù bạn đang đối mặt với điều gì, Houston có tài nguyên sẵn sàng cho bạn. Duyệt theo mức độ khẩn cấp hoặc tình huống cuộc sống để tìm hỗ trợ, dịch vụ và bước tiếp theo.',
+  'help.subtitle': 'Kh\u00e1m ph\u00e1 nh\u1eefng g\u00ec c\u00f3 s\u1eb5n cho b\u1ea5t k\u1ef3 t\u00ecnh hu\u1ed1ng cu\u1ed9c s\u1ed1ng n\u00e0o, theo nh\u1ecbp \u0111\u1ed9 ph\u00f9 h\u1ee3p v\u1edbi b\u1ea1n.',
+  'help.emergency': 'Tr\u01b0\u1eddng h\u1ee3p kh\u1ea9n c\u1ea5p?',
+  'help.crisis_911': '911 cho tr\u01b0\u1eddng h\u1ee3p kh\u1ea9n c\u1ea5p',
+  'help.crisis_988': '988 cho kh\u1ee7ng ho\u1ea3ng s\u1ee9c kh\u1ecfe t\u00e2m th\u1ea7n',
+  'help.crisis_dv': '1-800-799-7233 cho b\u1ea1o l\u1ef1c gia \u0111\u00ecnh',
+  'help.urgency_critical': 'Ngay B\u00e2y Gi\u1edd',
+  'help.urgency_high': 'Tu\u1ea7n N\u00e0y',
+  'help.urgency_medium': 'Theo Nh\u1ecbp C\u1ee7a B\u1ea1n',
+  'help.urgency_low': 'Khi B\u1ea1n S\u1eb5n S\u00e0ng',
+  'help.intro': 'Houston c\u00f3 nhi\u1ec1u t\u00e0i nguy\u00ean s\u1eb5n s\u00e0ng cho b\u1ea1n. Kh\u00e1m ph\u00e1 theo t\u00ecnh hu\u1ed1ng cu\u1ed9c s\u1ed1ng ho\u1eb7c th\u1eddi gian \u0111\u1ec3 t\u00ecm d\u1ecbch v\u1ee5, h\u1ed7 tr\u1ee3 v\u00e0 c\u01a1 h\u1ed9i.',
 
   // Services page
   'services.title': 'Dịch Vụ',
