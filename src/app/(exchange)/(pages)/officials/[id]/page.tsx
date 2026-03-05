@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin } from 'lucide-react'
+import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin, Vote, Building2 } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.official_name,
-    description: data.title || 'Details on The Change Engine.',
+    description: data.title || 'Details on the Community Exchange.',
   }
 }
 
@@ -109,6 +109,29 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       .in('county_id', countyIds)
     counties = countyData ?? []
   }
+
+  // Committee assignments
+  const { data: committees } = await supabase
+    .from('committee_assignments' as any)
+    .select('committee_name, role, chamber, jurisdiction_focus, pathway_ids')
+    .eq('official_id', id)
+    .order('committee_name')
+  const committeeList = (committees ?? []) as unknown as Array<{
+    committee_name: string; role: string | null; chamber: string | null
+    jurisdiction_focus: string[] | null; pathway_ids: string[] | null
+  }>
+
+  // Recent vote records
+  const { data: votes } = await supabase
+    .from('vote_records' as any)
+    .select('bill_number, vote, vote_date, policy_id, chamber')
+    .eq('official_id', id)
+    .order('vote_date', { ascending: false })
+    .limit(20)
+  const voteList = (votes ?? []) as unknown as Array<{
+    bill_number: string | null; vote: string; vote_date: string | null
+    policy_id: string | null; chamber: string | null
+  }>
 
   // ZIP codes that map to this official's district
   let districtZips: number[] = []
@@ -340,6 +363,88 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 </span>
               )
             })}
+          </div>
+        </section>
+      )}
+
+      {/* Committee Assignments */}
+      {committeeList.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
+            <Building2 size={20} /> Committee Assignments
+          </h2>
+          <div className="space-y-3">
+            {committeeList.map(function (c, i) {
+              return (
+                <div key={i} className="bg-white rounded-xl border border-brand-border p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-medium text-brand-text">{c.committee_name}</p>
+                      {c.chamber && (
+                        <span className="text-xs text-brand-muted">{c.chamber}</span>
+                      )}
+                    </div>
+                    {c.role && (
+                      <span className="text-xs px-2 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 font-medium flex-shrink-0">
+                        {c.role}
+                      </span>
+                    )}
+                  </div>
+                  {c.jurisdiction_focus && c.jurisdiction_focus.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {c.jurisdiction_focus.map(function (jf) {
+                        return (
+                          <span key={jf} className="text-xs px-2 py-0.5 bg-brand-bg rounded text-brand-muted">
+                            {jf}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Vote Records */}
+      {voteList.length > 0 && (
+        <section className="mb-8">
+          <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
+            <Vote size={20} /> Recent Votes
+          </h2>
+          <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+            <div className="divide-y divide-brand-border">
+              {voteList.map(function (v, i) {
+                const voteColor = v.vote === 'Yea' ? 'bg-green-100 text-green-700'
+                  : v.vote === 'Nay' ? 'bg-red-100 text-red-700'
+                  : 'bg-gray-100 text-gray-600'
+                const inner = (
+                  <div className="flex items-center justify-between gap-3 p-4">
+                    <div className="min-w-0">
+                      <p className="font-medium text-brand-text text-sm truncate">
+                        {v.bill_number || 'Vote'}
+                      </p>
+                      <div className="flex items-center gap-2 text-xs text-brand-muted mt-0.5">
+                        {v.chamber && <span>{v.chamber}</span>}
+                        {v.vote_date && <span>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                      </div>
+                    </div>
+                    <span className={'text-xs px-2.5 py-1 rounded-full font-semibold flex-shrink-0 ' + voteColor}>
+                      {v.vote}
+                    </span>
+                  </div>
+                )
+                return v.policy_id ? (
+                  <Link key={i} href={'/policies/' + v.policy_id} className="block hover:bg-brand-bg transition-colors">
+                    {inner}
+                  </Link>
+                ) : (
+                  <div key={i}>{inner}</div>
+                )
+              })}
+            </div>
           </div>
         </section>
       )}
