@@ -1809,27 +1809,21 @@ export async function getWayfinderContext(
     entityType !== 'content'
       ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusIds)
       : Promise.resolve({ data: [] as any[] }),
-    entityType !== 'official'
-      ? supabase.from('official_focus_areas').select('official_id').in('focus_id', focusIds)
-      : Promise.resolve({ data: [] as any[] }),
-    entityType !== 'policy'
-      ? supabase.from('policy_focus_areas').select('policy_id').in('focus_id', focusIds)
-      : Promise.resolve({ data: [] as any[] }),
-    entityType !== 'service'
-      ? (supabase as any).from('service_focus_areas').select('service_id').in('focus_id', focusIds)
-      : Promise.resolve({ data: [] as any[] }),
-    entityType !== 'organization'
-      ? supabase.from('organization_focus_areas').select('org_id').in('focus_id', focusIds)
-      : Promise.resolve({ data: [] as any[] }),
+    supabase.from('official_focus_areas').select('official_id').in('focus_id', focusIds),
+    supabase.from('policy_focus_areas').select('policy_id').in('focus_id', focusIds),
+    (supabase as any).from('service_focus_areas').select('service_id').in('focus_id', focusIds),
+    supabase.from('organization_focus_areas').select('org_id').in('focus_id', focusIds),
     supabase.from('opportunity_focus_areas').select('opportunity_id').in('focus_id', focusIds),
   ])
 
-  const relContentIds = Array.from<string>(new Set((contentJ.data ?? []).map((j: any) => String(j.content_id)))).slice(0, 6)
-  const relOfficialIds = Array.from<string>(new Set((officialJ.data ?? []).map((j: any) => String(j.official_id)))).slice(0, 4)
-  const relPolicyIds = Array.from<string>(new Set((policyJ.data ?? []).map((j: any) => String(j.policy_id)))).slice(0, 4)
-  const relServiceIds = Array.from<string>(new Set((serviceJ.data ?? []).map((j: any) => String(j.service_id)))).slice(0, 6)
-  const relOrgIds = Array.from<string>(new Set((orgJ.data ?? []).map((j: any) => String(j.org_id)))).slice(0, 4)
-  const relOppIds = Array.from<string>(new Set((oppJ.data ?? []).map((j: any) => String(j.opportunity_id)))).slice(0, 4)
+  // Exclude the current entity from its own related results (M3 self-referencing fix)
+  const exclude = (ids: string[]) => ids.filter(id => id !== entityId)
+  const relContentIds = exclude(Array.from<string>(new Set((contentJ.data ?? []).map((j: any) => String(j.content_id))))).slice(0, 6)
+  const relOfficialIds = exclude(Array.from<string>(new Set((officialJ.data ?? []).map((j: any) => String(j.official_id))))).slice(0, 4)
+  const relPolicyIds = exclude(Array.from<string>(new Set((policyJ.data ?? []).map((j: any) => String(j.policy_id))))).slice(0, 4)
+  const relServiceIds = exclude(Array.from<string>(new Set((serviceJ.data ?? []).map((j: any) => String(j.service_id))))).slice(0, 6)
+  const relOrgIds = exclude(Array.from<string>(new Set((orgJ.data ?? []).map((j: any) => String(j.org_id))))).slice(0, 4)
+  const relOppIds = exclude(Array.from<string>(new Set((oppJ.data ?? []).map((j: any) => String(j.opportunity_id))))).slice(0, 4)
 
   // ── Hop 3: Fetch enriched entity details in parallel ──
   const [relContent, relOfficials, relPolicies, relServices, relOrgs, relOpps, nuggets] = await Promise.all([

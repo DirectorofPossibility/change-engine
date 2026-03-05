@@ -4,9 +4,6 @@ import { CORS } from '../_shared/cors.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const CLASSIFY_URL = `${SUPABASE_URL}/functions/v1/classify-content-v2`;
-
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 // Parse RSS 2.0 <item> and Atom <entry> from XML
 function parseItems(xml: string): { title: string; link: string; description: string }[] {
@@ -71,37 +68,41 @@ async function pollAllFeeds(): Promise<{ feeds_polled: number; new_items: number
       const xml = await res.text();
       const items = parseItems(xml);
 
-      let classified = 0;
+      // Insert new items directly to content_inbox (skip inline classification
+      // to avoid 60s edge function timeout). The classify-pending cron at 11 AM
+      // will pick these up, or they can be classified via /api/intake.
       for (const item of items) {
         if (existingUrls.has(item.link)) continue;
 
         try {
-          const classifyRes = await fetch(CLASSIFY_URL, {
+          const inboxRes = await fetch(`${SUPABASE_URL}/rest/v1/content_inbox`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              apikey: SUPABASE_KEY,
               Authorization: `Bearer ${SUPABASE_KEY}`,
+              Prefer: 'return=minimal,resolution=merge-duplicates',
             },
             body: JSON.stringify({
-              url: item.link,
-              title: item.title,
-              description: item.description,
+              source_url: item.link,
+              raw_title: item.title,
+              raw_description: item.description.substring(0, 1000),
+              source_type: 'rss',
+              source_name: feed.feed_name || feed.feed_url,
+              status: 'pending',
             }),
           });
 
-          if (classifyRes.ok) {
+          if (inboxRes.ok || inboxRes.status === 409) {
             existingUrls.add(item.link);
-            classified++;
             newItems++;
           } else {
-            const errText = await classifyRes.text().catch(() => '');
-            errors.push(`${feed.feed_name}/${item.link}: classify HTTP ${classifyRes.status} ${errText.substring(0, 100)}`);
+            const errText = await inboxRes.text().catch(() => '');
+            errors.push(`${feed.feed_name}/${item.link}: inbox insert ${inboxRes.status} ${errText.substring(0, 100)}`);
           }
         } catch (e) {
           errors.push(`${feed.feed_name}/${item.link}: ${(e as Error).message}`);
         }
-
-        await sleep(2000);
       }
 
       // Update feed metadata
