@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { href: '/services', key: 'nav.services' },
   { href: '/elections', key: 'nav.elections' },
   { href: '/library', key: 'nav.library' },
+  { href: '/explore/knowledge-base', key: 'nav.knowledge_base' },
 ]
 
 export function Header() {

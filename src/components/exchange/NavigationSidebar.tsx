@@ -6,7 +6,7 @@ import Link from 'next/link'
 import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
-  Phone, Scale, Map, Compass, MessageCircle,
+  Phone, Scale, Map, Compass, MessageCircle, Layers,
   Landmark, PanelLeftClose, PanelLeftOpen, Vote, BookOpen,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
@@ -227,6 +227,21 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         >
           <BookOpen size={16} style={{ color: BRAND.accent }} />
           {t('sidebar.library')}
+        </Link>
+      </div>
+
+      {/* Knowledge Base */}
+      <div className="px-4 py-1">
+        <Link
+          href="/explore/knowledge-base"
+          onClick={closeMobile}
+          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+            (pathname.startsWith('/explore/knowledge-base')
+              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+        >
+          <Layers size={16} style={{ color: BRAND.accent }} />
+          {t('sidebar.knowledge_base')}
         </Link>
       </div>
 

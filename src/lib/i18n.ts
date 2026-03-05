@@ -30,6 +30,7 @@ const en: Record<string, string> = {
   'nav.calendar': 'Calendar',
   'nav.news': 'News',
   'nav.library': 'Library',
+  'nav.knowledge_base': 'Knowledge Base',
   'nav.search_placeholder': 'Search...',
   'nav.zip_prompt': 'Start with your ZIP code',
 
@@ -101,6 +102,10 @@ const en: Record<string, string> = {
   // Officials page
   'officials.title': 'Elected Officials',
   'officials.subtitle': 'Find and contact your elected representatives at every level of government.',
+
+  // Policies page
+  'policies.title': 'Policies & Legislation',
+  'policies.subtitle': 'Track bills, executive orders, and policies that affect Houston communities at every level of government.',
 
   // Lookup page
   'lookup.address_or_zip': 'Enter your address or ZIP code',
@@ -194,7 +199,7 @@ const en: Record<string, string> = {
   'search.browse_pathways': 'Browse Pathways',
   'search.find_reps': 'Find My Reps',
   'search.view_resource': 'View resource',
-  'search.intro': 'Explore everything The Change Engine has gathered for Houston — from articles and services to elected officials and community organizations.',
+  'search.intro': 'Explore everything the Community Exchange has gathered for Houston — from articles and services to elected officials and community organizations.',
 
   // Polling places page
   'polling.title': 'Find Your Polling Place',
@@ -268,7 +273,7 @@ const en: Record<string, string> = {
   'wayfinder.this_week': 'this week',
   'wayfinder.connected_to': 'Connected to',
   'wayfinder.pathway_desc': 'resources across involvement, services, policies & civic life',
-  'wayfinder.footer': 'The Community Exchange — a product of The Change Engine',
+  'wayfinder.footer': 'Community Exchange — powered by The Change Lab',
 
   // Life situations
   'life.food_access': 'Food Access',
@@ -287,6 +292,7 @@ const en: Record<string, string> = {
   'sidebar.your_guide': 'Your Guide',
   'sidebar.elections': 'Elections & Voting',
   'sidebar.library': 'Library',
+  'sidebar.knowledge_base': 'Knowledge Base',
   'sidebar.chat': 'Chat with Chance',
   'sidebar.topics': 'Topics',
   'sidebar.no_topics': 'No topics available',
@@ -526,8 +532,33 @@ const en: Record<string, string> = {
   'wayfinder.register': 'Register',
   'wayfinder.time': 'Time',
 
+  // About / Design 1
+  'about.powered_by': 'Powered by The Change Lab',
+  'about.hero': 'Support the Community Exchange',
+  'about.intro': 'Most people want to be part of something. They just don\u2019t know where to start. That\u2019s not a motivation problem. It\u2019s a navigation problem. And it\u2019s what The Change Lab was built to solve.',
+  'about.what_we_do': 'What We Do',
+  'about.what_we_do_text': 'The Change Lab is a Houston-based practice that helps people find their place in the community \u2014 and actually show up. We build tools and programs that make community life easier to step into, for people who care but feel lost about where to begin.',
+  'about.exchange_title': 'The Community Exchange',
+  'about.exchange_p1': 'The Community Exchange is our main platform. It connects people to the civic and community life already happening around them \u2014 local organizations, opportunities to act, and other people who give a damn.',
+  'about.exchange_p2': 'A short quiz helps you find your starting point. From there, you move at your own pace \u2014 reading and learning, plugging into local activity, or taking direct action on something that matters to you.',
+  'about.exchange_p3': 'It\u2019s not for activists. It\u2019s for everyone else.',
+  'about.club_title': 'The Greater Houston Civic and Social Club',
+  'about.club_text': 'The platform has a real-life counterpart. The Civic and Social Club brings Houstonians together in person \u2014 across the 18-county region, across class lines, across the rural-urban divide. People meet, share a meal, and figure out what they have in common. It\u2019s simple and it works.',
+  'about.why_title': 'Why It Matters',
+  'about.why_text': 'Seven in ten Americans say they want to get involved but don\u2019t know how. We take that at face value. The Community Exchange is built for them \u2014 not to convince people to care, but to meet them where they already do.',
+  'about.where_title': 'Where We\u2019re Headed',
+  'about.goal_1': '25,000 Houstonians in year one',
+  'about.goal_2': 'Expansion across Texas',
+  'about.goal_3': 'A platform other nonprofits and cities can use',
+  'about.measure': 'We measure real things: actions completed, pathways used, people who showed up.',
+  'about.learn': 'Learn',
+  'about.connect': 'Connect',
+  'about.attend': 'Attend',
+  'about.organize': 'Organize',
+  'about.contact': 'Get in touch',
+
   // Brand
-  'brand.name': 'The Change Engine',
+  'brand.name': 'Community Exchange',
   'brand.subtitle': 'Community Exchange',
 }
 
@@ -543,6 +574,7 @@ const es: Record<string, string> = {
   'nav.calendar': 'Calendario',
   'nav.news': 'Noticias',
   'nav.library': 'Biblioteca',
+  'nav.knowledge_base': 'Base de Conocimiento',
   'nav.search_placeholder': 'Buscar...',
   'nav.zip_prompt': 'Comience con su código postal',
 
@@ -707,7 +739,7 @@ const es: Record<string, string> = {
   'search.browse_pathways': 'Explorar Caminos',
   'search.find_reps': 'Encuentre a Sus Representantes',
   'search.view_resource': 'Ver recurso',
-  'search.intro': 'Explore todo lo que The Change Engine ha reunido para Houston — desde artículos y servicios hasta funcionarios electos y organizaciones comunitarias.',
+  'search.intro': 'Explore todo lo que el Community Exchange ha reunido para Houston — desde artículos y servicios hasta funcionarios electos y organizaciones comunitarias.',
 
   // Polling places page
   'polling.title': 'Encuentre Su Lugar de Votación',
@@ -781,7 +813,7 @@ const es: Record<string, string> = {
   'wayfinder.this_week': 'esta semana',
   'wayfinder.connected_to': 'Conectado a',
   'wayfinder.pathway_desc': 'recursos de participación, servicios, políticas y vida cívica',
-  'wayfinder.footer': 'El Intercambio Comunitario — un producto de The Change Engine',
+  'wayfinder.footer': 'Community Exchange — impulsado por The Change Lab',
 
   // Life situations
   'life.food_access': 'Acceso a Alimentos',
@@ -800,6 +832,7 @@ const es: Record<string, string> = {
   'sidebar.your_guide': 'Tu Guía',
   'sidebar.elections': 'Elecciones y Votación',
   'sidebar.library': 'Biblioteca',
+  'sidebar.knowledge_base': 'Base de Conocimiento',
   'sidebar.chat': 'Habla con Chance',
   'sidebar.topics': 'Temas',
   'sidebar.no_topics': 'No hay temas disponibles',
@@ -1039,8 +1072,33 @@ const es: Record<string, string> = {
   'wayfinder.register': 'Registrarse',
   'wayfinder.time': 'Tiempo',
 
+  // About / Design 1
+  'about.powered_by': 'Impulsado por The Change Lab',
+  'about.hero': 'Apoya el Community Exchange',
+  'about.intro': 'La mayor\u00eda de la gente quiere ser parte de algo. Simplemente no saben por d\u00f3nde empezar. Eso no es un problema de motivaci\u00f3n. Es un problema de navegaci\u00f3n. Y es lo que The Change Lab fue creado para resolver.',
+  'about.what_we_do': 'Lo que hacemos',
+  'about.what_we_do_text': 'The Change Lab es una pr\u00e1ctica basada en Houston que ayuda a las personas a encontrar su lugar en la comunidad \u2014 y realmente participar. Construimos herramientas y programas que facilitan la vida comunitaria, para personas que se preocupan pero no saben por d\u00f3nde empezar.',
+  'about.exchange_title': 'El Community Exchange',
+  'about.exchange_p1': 'El Community Exchange es nuestra plataforma principal. Conecta a las personas con la vida c\u00edvica y comunitaria que ya est\u00e1 sucediendo a su alrededor \u2014 organizaciones locales, oportunidades para actuar y otras personas comprometidas.',
+  'about.exchange_p2': 'Un breve cuestionario te ayuda a encontrar tu punto de partida. A partir de ah\u00ed, avanzas a tu propio ritmo \u2014 leyendo y aprendiendo, participando en actividades locales, o tomando acci\u00f3n directa en algo que te importa.',
+  'about.exchange_p3': 'No es para activistas. Es para todos los dem\u00e1s.',
+  'about.club_title': 'El Club C\u00edvico y Social del Gran Houston',
+  'about.club_text': 'La plataforma tiene una contraparte en la vida real. El Club C\u00edvico y Social re\u00fane a los habitantes de Houston en persona \u2014 a trav\u00e9s de la regi\u00f3n de 18 condados, cruzando l\u00edneas de clase, cruzando la divisi\u00f3n rural-urbana. La gente se re\u00fane, comparte una comida y descubre lo que tienen en com\u00fan.',
+  'about.why_title': 'Por qu\u00e9 importa',
+  'about.why_text': 'Siete de cada diez estadounidenses dicen que quieren involucrarse pero no saben c\u00f3mo. Lo tomamos al pie de la letra. El Community Exchange est\u00e1 construido para ellos \u2014 no para convencer a la gente de que se preocupe, sino para encontrarlos donde ya lo hacen.',
+  'about.where_title': 'Hacia d\u00f3nde vamos',
+  'about.goal_1': '25,000 habitantes de Houston en el primer a\u00f1o',
+  'about.goal_2': 'Expansi\u00f3n a trav\u00e9s de Texas',
+  'about.goal_3': 'Una plataforma que otras organizaciones y ciudades puedan usar',
+  'about.measure': 'Medimos cosas reales: acciones completadas, caminos utilizados, personas que se presentaron.',
+  'about.learn': 'Aprender',
+  'about.connect': 'Conectar',
+  'about.attend': 'Asistir',
+  'about.organize': 'Organizar',
+  'about.contact': 'Cont\u00e1ctanos',
+
   // Brand
-  'brand.name': 'The Change Engine',
+  'brand.name': 'Community Exchange',
   'brand.subtitle': 'Intercambio Comunitario',
 }
 
@@ -1056,6 +1114,7 @@ const vi: Record<string, string> = {
   'nav.calendar': 'Lịch',
   'nav.news': 'Tin Tức',
   'nav.library': 'Thư Viện',
+  'nav.knowledge_base': 'Cơ Sở Kiến Thức',
   'nav.search_placeholder': 'Tìm kiếm...',
   'nav.zip_prompt': 'Bắt đầu với mã bưu điện',
 
@@ -1220,7 +1279,7 @@ const vi: Record<string, string> = {
   'search.browse_pathways': 'Duyệt Lộ Trình',
   'search.find_reps': 'Tìm Đại Diện',
   'search.view_resource': 'Xem tài nguyên',
-  'search.intro': 'Khám phá mọi thứ The Change Engine đã thu thập cho Houston — từ bài viết và dịch vụ đến quan chức dân cử và tổ chức cộng đồng.',
+  'search.intro': 'Khám phá mọi thứ Community Exchange đã thu thập cho Houston — từ bài viết và dịch vụ đến quan chức dân cử và tổ chức cộng đồng.',
 
   // Polling places page
   'polling.title': 'Tìm Địa Điểm Bỏ Phiếu',
@@ -1294,7 +1353,7 @@ const vi: Record<string, string> = {
   'wayfinder.this_week': 'tuần này',
   'wayfinder.connected_to': 'Kết nối với',
   'wayfinder.pathway_desc': 'tài nguyên về tham gia, dịch vụ, chính sách & đời sống dân sự',
-  'wayfinder.footer': 'Trao Đổi Cộng Đồng — sản phẩm của The Change Engine',
+  'wayfinder.footer': 'Community Exchange — được hỗ trợ bởi The Change Lab',
 
   // Life situations
   'life.food_access': 'Tiếp Cận Thực Phẩm',
@@ -1313,6 +1372,7 @@ const vi: Record<string, string> = {
   'sidebar.your_guide': 'Hướng Dẫn',
   'sidebar.elections': 'Bầu Cử & Bỏ Phiếu',
   'sidebar.library': 'Thư Viện',
+  'sidebar.knowledge_base': 'Cơ Sở Kiến Thức',
   'sidebar.chat': 'Trò Chuyện với Chance',
   'sidebar.topics': 'Chủ Đề',
   'sidebar.no_topics': 'Không có chủ đề',
@@ -1552,8 +1612,33 @@ const vi: Record<string, string> = {
   'wayfinder.register': 'Đăng Ký',
   'wayfinder.time': 'Thời Gian',
 
+  // About / Design 1
+  'about.powered_by': 'Được hỗ trợ bởi The Change Lab',
+  'about.hero': 'Hỗ trợ Community Exchange',
+  'about.intro': 'Hầu hết mọi người đều muốn là một phần của điều gì đó. Họ chỉ không biết bắt đầu từ đâu. Đó không phải là vấn đề động lực. Đó là vấn đề định hướng. Và đó là điều The Change Lab được xây dựng để giải quyết.',
+  'about.what_we_do': 'Chúng tôi làm gì',
+  'about.what_we_do_text': 'The Change Lab là một tổ chức tại Houston giúp mọi người tìm được vị trí của mình trong cộng đồng \u2014 và thực sự tham gia. Chúng tôi xây dựng công cụ và chương trình giúp cuộc sống cộng đồng dễ tiếp cận hơn.',
+  'about.exchange_title': 'Community Exchange',
+  'about.exchange_p1': 'Community Exchange là nền tảng chính của chúng tôi. Nó kết nối mọi người với đời sống dân sự và cộng đồng đang diễn ra xung quanh họ \u2014 các tổ chức địa phương, cơ hội hành động, và những người quan tâm.',
+  'about.exchange_p2': 'Một bài trắc nghiệm ngắn giúp bạn tìm điểm khởi đầu. Từ đó, bạn tiến theo tốc độ riêng \u2014 đọc và tìm hiểu, tham gia hoạt động địa phương, hoặc hành động trực tiếp.',
+  'about.exchange_p3': 'Không dành cho các nhà hoạt động. Dành cho tất cả mọi người khác.',
+  'about.club_title': 'Câu Lạc Bộ Dân Sự và Xã Hội Greater Houston',
+  'about.club_text': 'Nền tảng có một đối tác trong đời thực. Câu Lạc Bộ Dân Sự và Xã Hội mang người Houston lại với nhau \u2014 qua khu vực 18 quận, vượt qua ranh giới giai cấp, vượt qua khoảng cách nông thôn-thành thị.',
+  'about.why_title': 'Tại sao điều này quan trọng',
+  'about.why_text': 'Bảy trong mười người Mỹ nói rằng họ muốn tham gia nhưng không biết cách. Chúng tôi tin điều đó. Community Exchange được xây dựng cho họ \u2014 không phải để thuyết phục mọi người quan tâm, mà để gặp họ ở nơi họ đã quan tâm.',
+  'about.where_title': 'Hướng đi tương lai',
+  'about.goal_1': '25,000 người Houston trong năm đầu tiên',
+  'about.goal_2': 'Mở rộng trên toàn Texas',
+  'about.goal_3': 'Một nền tảng mà các tổ chức và thành phố khác có thể sử dụng',
+  'about.measure': 'Chúng tôi đo lường những điều thực tế: hành động hoàn thành, lộ trình sử dụng, người đã tham gia.',
+  'about.learn': 'Tìm hiểu',
+  'about.connect': 'Kết nối',
+  'about.attend': 'Tham dự',
+  'about.organize': 'Tổ chức',
+  'about.contact': 'Liên hệ',
+
   // Brand
-  'brand.name': 'The Change Engine',
+  'brand.name': 'Community Exchange',
   'brand.subtitle': 'Trao Đổi Cộng Đồng',
 }
 
