@@ -153,9 +153,10 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
           classification: i.ai_classification as AiClassification,
         }))
       )
-      const failures = results.filter((r: any) => r.error)
+      const failures = results.filter((r) => 'error' in r)
       if (failures.length > 0) {
-        setActionError(`${failures.length} of ${results.length} items failed: ${failures[0].error}`)
+        const firstErr = 'error' in failures[0] ? failures[0].error : 'Unknown'
+        setActionError(`${failures.length} of ${results.length} items failed: ${firstErr}`)
         setBulkActing(false)
         return
       }

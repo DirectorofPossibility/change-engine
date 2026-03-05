@@ -1,20 +1,24 @@
 /**
  * @fileoverview Server actions for the content review queue.
  *
- * Uses the authenticated user's Supabase client (with admin RLS policies)
- * for all mutations. Falls back to service client only if needed.
+ * Auth check uses the user's authenticated client.
+ * All mutations use the service client (bypasses RLS) after verifying auth.
  */
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import type { AiClassification } from '@/lib/types/dashboard'
 
-/** Verify the calling user is authenticated and is an admin; returns user + client. */
+/**
+ * Verify the caller is an admin or partner.
+ * Returns the user for audit trail.
+ * Mutations will use createServiceClient() separately.
+ */
 async function requireAdmin() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized — not logged in')
+  if (!user) throw new Error('Not logged in')
 
   const { data: profile } = await supabase
     .from('user_profiles')
@@ -23,21 +27,26 @@ async function requireAdmin() {
     .single()
 
   if (!profile || (profile.role !== 'admin' && profile.role !== 'partner')) {
-    throw new Error(`Unauthorized — role "${profile?.role}" cannot review content`)
+    throw new Error(`Role "${profile?.role}" cannot review content`)
   }
 
-  return { user, supabase, role: profile.role }
+  return user
 }
 
 /**
- * Approve a review queue item and publish it as a newsfeed entry.
+ * Approve a review queue item and publish it.
  */
-export async function approveItem(reviewId: string, inboxId: string, classification: AiClassification) {
+export async function approveItem(
+  reviewId: string,
+  inboxId: string,
+  classification: AiClassification,
+): Promise<{ success: true } | { error: string }> {
   try {
-    const { user, supabase } = await requireAdmin()
+    const user = await requireAdmin()
+    const svc = createServiceClient()
 
     // Step 1: Update review status
-    const { error: reviewErr, count: reviewCount } = await supabase
+    const { error: reviewErr } = await svc
       .from('content_review_queue')
       .update({
         review_status: 'approved',
@@ -45,33 +54,42 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
         reviewed_at: new Date().toISOString(),
       })
       .eq('id', reviewId)
-      .select('id')
 
-    if (reviewErr) return { error: `Step 1 (update review): ${reviewErr.message}` }
-    if (reviewCount === 0) return { error: `Step 1: Review item ${reviewId} not found or not updated` }
+    if (reviewErr) return { error: `Step 1 (update review status): ${reviewErr.message} [code: ${reviewErr.code}]` }
+
+    // Verify the update actually happened
+    const { data: verifyRow } = await svc
+      .from('content_review_queue')
+      .select('review_status')
+      .eq('id', reviewId)
+      .single()
+
+    if (!verifyRow || verifyRow.review_status !== 'approved') {
+      return { error: `Step 1 verify: status is "${verifyRow?.review_status}" not "approved". RLS may be blocking writes.` }
+    }
 
     // Step 2: Get inbox data
-    const { data: inbox, error: inboxErr } = await supabase
+    const { data: inbox, error: inboxErr } = await svc
       .from('content_inbox')
       .select('*')
       .eq('id', inboxId)
       .single()
 
     if (inboxErr) return { error: `Step 2 (fetch inbox): ${inboxErr.message}` }
-    if (!inbox) return { error: 'Step 2: Inbox item not found' }
+    if (!inbox) return { error: `Step 2: Inbox item ${inboxId} not found` }
 
     // Step 3: Skip if already published
-    const { data: existing } = await supabase
+    const { data: existing } = await svc
       .from('content_published')
       .select('id')
       .eq('inbox_id', inboxId)
 
     if (existing && existing.length > 0) {
       revalidatePath('/dashboard/review')
-      return { success: true, message: 'Already published' }
+      return { success: true }
     }
 
-    // Build extracted text for body field
+    // Build body from extracted text
     let body = ''
     try {
       const extracted = typeof inbox.extracted_text === 'string'
@@ -84,9 +102,9 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
 
     const contentType = inbox.content_type || (inbox as any).source_type || 'article'
 
-    // Step 4: Publish
+    // Step 4: Insert into content_published
     const actions = classification.action_items || {}
-    const { data: published, error: pubErr } = await supabase.from('content_published').insert({
+    const { data: published, error: pubErr } = await svc.from('content_published').insert({
       inbox_id: inboxId,
       source_url: inbox.source_url || '',
       source_domain: inbox.source_domain || '',
@@ -120,67 +138,67 @@ export async function approveItem(reviewId: string, inboxId: string, classificat
       is_active: true,
     }).select('id').single()
 
-    if (pubErr) return { error: `Step 4 (publish): ${pubErr.message}` }
+    if (pubErr) return { error: `Step 4 (publish): ${pubErr.message} [code: ${pubErr.code}]` }
+    if (!published) return { error: 'Step 4: Insert returned no data' }
 
-    // Step 5: Write junction tables
-    if (published?.id) {
-      const contentId = published.id
-      const junctionInserts = [
-        ...(classification.focus_area_ids || []).map(fid =>
-          supabase.from('content_focus_areas').insert({ content_id: contentId, focus_id: fid }).then(() => {})
-        ),
-        ...(classification.sdg_ids || []).map(sid =>
-          supabase.from('content_sdgs').insert({ content_id: contentId, sdg_id: sid }).then(() => {})
-        ),
-        ...(classification.life_situation_ids || []).map(lid =>
-          supabase.from('content_life_situations').insert({ content_id: contentId, situation_id: lid }).then(() => {})
-        ),
-        ...(classification.audience_segment_ids || []).map(aid =>
-          supabase.from('content_audience_segments').insert({ content_id: contentId, segment_id: aid }).then(() => {})
-        ),
-      ]
+    // Step 5: Junction tables
+    const contentId = published.id
+    const junctionInserts = [
+      ...(classification.focus_area_ids || []).map(fid =>
+        svc.from('content_focus_areas').insert({ content_id: contentId, focus_id: fid }).then(() => {})
+      ),
+      ...(classification.sdg_ids || []).map(sid =>
+        svc.from('content_sdgs').insert({ content_id: contentId, sdg_id: sid }).then(() => {})
+      ),
+      ...(classification.life_situation_ids || []).map(lid =>
+        svc.from('content_life_situations').insert({ content_id: contentId, situation_id: lid }).then(() => {})
+      ),
+      ...(classification.audience_segment_ids || []).map(aid =>
+        svc.from('content_audience_segments').insert({ content_id: contentId, segment_id: aid }).then(() => {})
+      ),
+    ]
 
-      if (classification.theme_primary) {
-        junctionInserts.push(
-          supabase.from('content_pathways').insert({ content_id: contentId, theme_id: classification.theme_primary, is_primary: true }).then(() => {})
-        )
-      }
-      for (const themeId of (classification.theme_secondary || [])) {
-        junctionInserts.push(
-          supabase.from('content_pathways').insert({ content_id: contentId, theme_id: themeId, is_primary: false }).then(() => {})
-        )
-      }
-      for (const scId of (classification.service_cat_ids || [])) {
-        junctionInserts.push(
-          supabase.from('content_service_categories').insert({ content_id: contentId, service_cat_id: scId }).then(() => {})
-        )
-      }
-      for (const skId of (classification.skill_ids || [])) {
-        junctionInserts.push(
-          supabase.from('content_skills').insert({ content_id: contentId, skill_id: skId }).then(() => {})
-        )
-      }
-
-      await Promise.allSettled(junctionInserts)
+    if (classification.theme_primary) {
+      junctionInserts.push(
+        svc.from('content_pathways').insert({ content_id: contentId, theme_id: classification.theme_primary, is_primary: true }).then(() => {})
+      )
     }
+    for (const themeId of (classification.theme_secondary || [])) {
+      junctionInserts.push(
+        svc.from('content_pathways').insert({ content_id: contentId, theme_id: themeId, is_primary: false }).then(() => {})
+      )
+    }
+    for (const scId of (classification.service_cat_ids || [])) {
+      junctionInserts.push(
+        svc.from('content_service_categories').insert({ content_id: contentId, service_cat_id: scId }).then(() => {})
+      )
+    }
+    for (const skId of (classification.skill_ids || [])) {
+      junctionInserts.push(
+        svc.from('content_skills').insert({ content_id: contentId, skill_id: skId }).then(() => {})
+      )
+    }
+
+    await Promise.allSettled(junctionInserts)
 
     revalidatePath('/dashboard/review')
     revalidatePath('/dashboard/content')
     revalidatePath('/dashboard')
     return { success: true }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Unknown error in approveItem' }
+    return { error: `approveItem exception: ${err instanceof Error ? err.message : String(err)}` }
   }
 }
 
 /**
- * Flag a single review queue item for manual review.
+ * Flag a single review queue item.
  */
-export async function flagItem(reviewId: string) {
+export async function flagItem(reviewId: string): Promise<{ success: true } | { error: string }> {
   try {
-    const { user, supabase } = await requireAdmin()
+    const user = await requireAdmin()
+    const svc = createServiceClient()
 
-    const { error } = await supabase.from('content_review_queue')
+    const { error } = await svc.from('content_review_queue')
       .update({ review_status: 'flagged', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString() })
       .eq('id', reviewId)
 
@@ -190,18 +208,19 @@ export async function flagItem(reviewId: string) {
     revalidatePath('/dashboard')
     return { success: true }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Unknown error in flagItem' }
+    return { error: `flagItem: ${err instanceof Error ? err.message : String(err)}` }
   }
 }
 
 /**
  * Reject a review queue item.
  */
-export async function rejectItem(reviewId: string, notes?: string) {
+export async function rejectItem(reviewId: string, notes?: string): Promise<{ success: true } | { error: string }> {
   try {
-    const { user, supabase } = await requireAdmin()
+    const user = await requireAdmin()
+    const svc = createServiceClient()
 
-    const { error } = await supabase.from('content_review_queue')
+    const { error } = await svc.from('content_review_queue')
       .update({
         review_status: 'rejected',
         reviewed_by: user.email || user.id,
@@ -216,7 +235,7 @@ export async function rejectItem(reviewId: string, notes?: string) {
     revalidatePath('/dashboard')
     return { success: true }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Unknown error in rejectItem' }
+    return { error: `rejectItem: ${err instanceof Error ? err.message : String(err)}` }
   }
 }
 
@@ -242,9 +261,10 @@ export async function bulkApproveItems(
  */
 export async function bulkRejectItems(reviewIds: string[], notes?: string) {
   try {
-    const { user, supabase } = await requireAdmin()
+    const user = await requireAdmin()
+    const svc = createServiceClient()
 
-    const { error } = await supabase.from('content_review_queue')
+    const { error } = await svc.from('content_review_queue')
       .update({
         review_status: 'rejected',
         reviewed_by: user.email || user.id,
@@ -259,18 +279,19 @@ export async function bulkRejectItems(reviewIds: string[], notes?: string) {
     revalidatePath('/dashboard')
     return { success: true, count: reviewIds.length }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Unknown error in bulkRejectItems' }
+    return { error: `bulkReject: ${err instanceof Error ? err.message : String(err)}` }
   }
 }
 
 /**
- * Bulk flag multiple review queue items for manual review.
+ * Bulk flag multiple review queue items.
  */
 export async function bulkFlagItems(reviewIds: string[]) {
   try {
-    const { user, supabase } = await requireAdmin()
+    const user = await requireAdmin()
+    const svc = createServiceClient()
 
-    const { error } = await supabase.from('content_review_queue')
+    const { error } = await svc.from('content_review_queue')
       .update({ review_status: 'flagged', reviewed_by: user.email || user.id, reviewed_at: new Date().toISOString() })
       .in('id', reviewIds)
 
@@ -280,6 +301,6 @@ export async function bulkFlagItems(reviewIds: string[]) {
     revalidatePath('/dashboard')
     return { success: true, count: reviewIds.length }
   } catch (err) {
-    return { error: err instanceof Error ? err.message : 'Unknown error in bulkFlagItems' }
+    return { error: `bulkFlag: ${err instanceof Error ? err.message : String(err)}` }
   }
 }
