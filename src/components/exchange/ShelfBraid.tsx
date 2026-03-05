@@ -85,7 +85,7 @@ export function ShelfBraid({
       title: o.opportunity_name,
       summary: o.description_5th_grade,
       subtitle: o.start_date ? 'Starts ' + new Date(o.start_date).toLocaleDateString() : null,
-      href: '#',  // opportunities don't have detail pages yet
+      href: '/opportunities/' + o.opportunity_id,
       color: CENTER_COLORS.Action,
     })),
   ]
@@ -119,7 +119,7 @@ export function ShelfBraid({
       title: p.title_6th_grade || p.policy_name,
       summary: p.summary_6th_grade,
       subtitle: p.bill_number ? p.bill_number + (p.status ? ' · ' + p.status : '') : null,
-      href: '#',
+      href: '/policies/' + p.policy_id,
       color: CENTER_COLORS.Accountability,
     })),
   ]
