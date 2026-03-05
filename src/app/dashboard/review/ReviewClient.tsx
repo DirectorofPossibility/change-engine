@@ -338,7 +338,9 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
                   <td className="px-4 py-3 text-brand-muted text-xs">
                     {item.reviewed_at ? (
                       <span title={item.reviewed_by || ''}>
-                        {new Date(item.reviewed_at).toLocaleString()}
+                        {new Date(item.reviewed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {' '}
+                        <span className="opacity-60">{new Date(item.reviewed_at).toLocaleDateString()}</span>
                       </span>
                     ) : '-'}
                   </td>
