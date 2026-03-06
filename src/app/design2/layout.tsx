@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers'
-import Link from 'next/link'
 import { LanguageProvider } from '@/lib/contexts/LanguageContext'
 import { NeighborhoodProvider } from '@/lib/contexts/NeighborhoodContext'
-import { THEMES, BRAND } from '@/lib/constants'
 import { getNextElection } from '@/lib/data/exchange'
 import { Design2Nav } from './components/Design2Nav'
 import { Design2Footer } from './components/Design2Footer'
+import { ChanceChatWidget } from '@/components/exchange/ChanceChatWidget'
+import './design2.css'
 
 export default async function Design2Layout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -16,12 +16,13 @@ export default async function Design2Layout({ children }: { children: React.Reac
   return (
     <LanguageProvider initialLang={lang}>
       <NeighborhoodProvider initialZip={zip}>
-        <div className="min-h-screen" style={{ background: '#F0EAE0', fontFamily: "'DM Sans', sans-serif" }}>
+        <div className="d2-root min-h-screen">
           <Design2Nav election={nextElection} />
           <main id="main-content">
             {children}
           </main>
           <Design2Footer />
+          <ChanceChatWidget />
         </div>
       </NeighborhoodProvider>
     </LanguageProvider>

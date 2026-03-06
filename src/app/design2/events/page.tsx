@@ -85,7 +85,7 @@ export default async function EventsPage() {
               return (
                 <Link
                   key={event.event_id}
-                  href={`/events/${event.event_id}`}
+                  href={`/design2/events/${event.event_id}`}
                   className="block group"
                 >
                   <div className="bg-white rounded-xl border border-[#E2DDD5] hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex overflow-hidden">

@@ -39,7 +39,7 @@ export default async function DocumentDetailPage(
     })
     .filter(Boolean) as { color: string; name: string; slug: string }[]
 
-  const primaryTheme = themeInfo[0] || { color: '#C75B2A', name: 'Library', slug: '' }
+  const primaryTheme = themeInfo[0] || { color: '#E8723A', name: 'Library', slug: '' }
   const fileSizeMB = (doc.file_size / (1024 * 1024)).toFixed(1)
 
   const breadcrumbs = [

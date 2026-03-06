@@ -75,7 +75,7 @@ export default async function OrganizationsPage() {
             return (
               <Link
                 key={org.org_id}
-                href={`/organizations/${org.org_id}`}
+                href={`/design2/organizations/${org.org_id}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <div

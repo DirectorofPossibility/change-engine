@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Search, Menu, X, ChevronDown } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
+import { LanguageSwitcher } from '@/components/exchange/LanguageSwitcher'
+import { ZipInput } from '@/components/exchange/ZipInput'
 
 const NAV_CENTERS = [
   {
@@ -124,7 +126,13 @@ export function Design2Nav({ election }: Design2NavProps) {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="hidden md:block">
+              <ZipInput />
+            </div>
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
             <Link
               href="/design2/search"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs"
@@ -145,6 +153,10 @@ export function Design2Nav({ election }: Design2NavProps) {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="lg:hidden border-t px-6 py-4" style={{ borderColor: '#D4CCBE', background: '#F7F2EA' }}>
+            <div className="flex items-center gap-3 mb-4 md:hidden">
+              <ZipInput />
+              <LanguageSwitcher />
+            </div>
             {NAV_CENTERS.map(function (center) {
               return (
                 <div key={center.label} className="mb-3">

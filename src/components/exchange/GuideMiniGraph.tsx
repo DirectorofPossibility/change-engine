@@ -90,7 +90,7 @@ export function GuideMiniGraph({ guideTitle, focusAreas, relatedOrgs, relatedSer
           onClick={item.type === 'org' ? () => router.push('/organizations/' + item.id) : undefined}
         >
           <circle cx={item.x} cy={item.y} r={item.type === 'badge' ? 14 : 6}
-            fill={item.type === 'badge' ? '#C75B2A' : '#a0aec0'} opacity={0.8} />
+            fill={item.type === 'badge' ? '#E8723A' : '#a0aec0'} opacity={0.8} />
           {item.type === 'badge' && (
             <text x={item.x} y={item.y + 1} textAnchor="middle" dominantBaseline="middle"
               fontSize={6} fill="white" fontWeight={600}>{item.label}</text>
@@ -114,7 +114,7 @@ export function GuideMiniGraph({ guideTitle, focusAreas, relatedOrgs, relatedSer
       ))}
 
       {/* Center node */}
-      <circle cx={cx} cy={cy} r={24} fill="#C75B2A" />
+      <circle cx={cx} cy={cy} r={24} fill="#E8723A" />
       <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle"
         fontSize={7} fill="white" fontWeight={600}>
         {truncate(guideTitle, 20)}

@@ -115,7 +115,7 @@ export default async function OfficialsPage() {
           {officials.map((official: any) => (
             <Link
               key={official.official_id}
-              href={'/officials/' + official.official_id}
+              href={'/design2/officials/' + official.official_id}
               className="group block bg-white rounded-xl overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
               style={{ borderWidth: '1px', borderColor: '#D4CCBE' }}
             >

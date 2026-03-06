@@ -132,8 +132,8 @@ export default async function NewsPage({
                     <img src={item.image_url} alt="" className="w-16 h-12 rounded object-cover flex-shrink-0" />
                   ) : (
                     <div className="w-16 h-12 rounded flex-shrink-0 flex items-center justify-center"
-                      style={{ backgroundColor: (theme?.color || '#C75B2A') + '15' }}>
-                      <FileText size={16} style={{ color: theme?.color || '#C75B2A' }} />
+                      style={{ backgroundColor: (theme?.color || '#E8723A') + '15' }}>
+                      <FileText size={16} style={{ color: theme?.color || '#E8723A' }} />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">

@@ -162,7 +162,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
               href="/library/chat"
               className="group relative flex items-center gap-6 bg-gradient-to-r from-brand-dark to-brand-dark/90 rounded-2xl p-6 sm:p-8 overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 80% 50%, #C75B2A 0%, transparent 50%)' }} />
+              <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 80% 50%, #E8723A 0%, transparent 50%)' }} />
               <div className="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
                 <MessageCircle size={28} className="text-white" />
               </div>
@@ -250,7 +250,7 @@ function FeaturedCard({ doc }: { doc: LibraryDoc }) {
           {/* Gradient header */}
           <div className="h-2" style={{ background: themes.length > 1
             ? 'linear-gradient(90deg, ' + themes.map(function (t) { return t.color }).join(', ') + ')'
-            : (primary?.color || '#C75B2A')
+            : (primary?.color || '#E8723A')
           }} />
 
           <div className="p-6 sm:p-8">
@@ -296,7 +296,7 @@ function FeaturedCard({ doc }: { doc: LibraryDoc }) {
                       <div key={i} className="flex items-start gap-2">
                         <span
                           className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0 mt-0.5"
-                          style={{ backgroundColor: primary?.color || '#C75B2A' }}
+                          style={{ backgroundColor: primary?.color || '#E8723A' }}
                         >
                           {i + 1}
                         </span>
@@ -335,9 +335,9 @@ function DocumentRow({ doc }: { doc: LibraryDoc }) {
       <article className="flex gap-5 bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
         {/* Color accent + page count */}
         <div className="flex-shrink-0 w-16 flex flex-col items-center justify-center">
-          <div className="w-12 h-14 rounded-lg flex flex-col items-center justify-center" style={{ backgroundColor: (primary?.color || '#C75B2A') + '12' }}>
-            <FileText size={18} style={{ color: primary?.color || '#C75B2A' }} />
-            <span className="text-[9px] font-bold mt-0.5" style={{ color: primary?.color || '#C75B2A' }}>{doc.page_count}p</span>
+          <div className="w-12 h-14 rounded-lg flex flex-col items-center justify-center" style={{ backgroundColor: (primary?.color || '#E8723A') + '12' }}>
+            <FileText size={18} style={{ color: primary?.color || '#E8723A' }} />
+            <span className="text-[9px] font-bold mt-0.5" style={{ color: primary?.color || '#E8723A' }}>{doc.page_count}p</span>
           </div>
         </div>
 
@@ -401,8 +401,8 @@ function SearchResultCard({ doc }: { doc: LibraryDoc }) {
     <Link href={'/library/doc/' + doc.id} className="group block">
       <article className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-4">
-          <div className="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: (primary?.color || '#C75B2A') + '12' }}>
-            <FileText size={18} style={{ color: primary?.color || '#C75B2A' }} />
+          <div className="w-10 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: (primary?.color || '#E8723A') + '12' }}>
+            <FileText size={18} style={{ color: primary?.color || '#E8723A' }} />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">

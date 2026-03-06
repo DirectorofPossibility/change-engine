@@ -10,7 +10,7 @@ interface BreakItDownProps {
   accentColor?: string
 }
 
-export function BreakItDown({ title, summary, type, accentColor = '#C75B2A' }: BreakItDownProps) {
+export function BreakItDown({ title, summary, type, accentColor = '#E8723A' }: BreakItDownProps) {
   const [breakdown, setBreakdown] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

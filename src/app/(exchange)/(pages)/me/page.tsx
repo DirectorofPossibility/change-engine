@@ -203,7 +203,7 @@ export default async function MyDashboardPage() {
                     <div key={ub.user_badge_id} className="bg-white rounded-xl border border-brand-border p-3 text-center">
                       <div
                         className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-white text-lg"
-                        style={{ backgroundColor: detail?.color || '#C75B2A' }}
+                        style={{ backgroundColor: detail?.color || '#E8723A' }}
                       >
                         {detail?.icon_name ? detail.icon_name.charAt(0).toUpperCase() : '★'}
                       </div>

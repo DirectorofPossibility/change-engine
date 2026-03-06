@@ -3,12 +3,12 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 const API = process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1";
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const HD = { apikey: KEY, Authorization: "Bearer " + KEY };
-const T = { bg:"#FAFAF7",sf:"#FFFFFF",alt:"#F5F3EE",bd:"#E8E4DB",bl:"#F0EDE6",tx:"#2D2A26",t2:"#6B665C",t3:"#9E9789",ac:"#C75B2A",al:"#E8885A",ab:"rgba(199,91,42,0.06)",ar:"rgba(199,91,42,0.18)" };
+const T = { bg:"#FAFAF7",sf:"#FFFFFF",alt:"#F5F3EE",bd:"#E8E4DB",bl:"#F0EDE6",tx:"#2D2A26",t2:"#6B665C",t3:"#9E9789",ac:"#E8723A",al:"#E8885A",ab:"rgba(199,91,42,0.06)",ar:"rgba(199,91,42,0.18)" };
 const PW: Record<string,{name:string;color:string;s:string}> = { health:{name:"Our Health",color:"#C44D4D",s:"Health"},families:{name:"Our Families",color:"#C47A3A",s:"Families"},neighborhood:{name:"Our Neighborhood",color:"#B89A3E",s:"Neighborhood"},voice:{name:"Our Voice",color:"#5A9E6F",s:"Voice"},money:{name:"Our Money",color:"#4A7FB5",s:"Money"},planet:{name:"Our Planet",color:"#4A9E9B",s:"Planet"},bigger_we:{name:"The Bigger We",color:"#7B6BA5",s:"Bigger We"} };
 const GEO = [ {id:"city",name:"City of Houston",s:"Houston",c:"#C44D4D"},{id:"county",name:"Harris County",s:"Harris Co.",c:"#C47A3A"},{id:"metro",name:"Greater Houston Metro",s:"Metro",c:"#B89A3E"},{id:"state",name:"State Level",s:"State",c:"#5A9E6F"},{id:"federal",name:"Federal",s:"Federal",c:"#4A7FB5"},{id:"international",name:"International",s:"Intl",c:"#7B6BA5"} ];
 const GM: Record<string,typeof GEO[0]> = Object.fromEntries(GEO.map(g=>[g.id,g]));
 const VS: Record<string,{c:string;l:string}> = { verified:{c:"#5A9E6F",l:"Verified"},unverified:{c:"#B89A3E",l:"Unverified"},needs_review:{c:"#C44D4D",l:"Needs Review"},stale:{c:"#9E9789",l:"Stale"} };
-const RS: Record<string,{c:string;l:string}> = { executive:{c:"#C75B2A",l:"Exec"},board:{c:"#7B6BA5",l:"Board"},grants:{c:"#5A9E6F",l:"Grants"} };
+const RS: Record<string,{c:string;l:string}> = { executive:{c:"#E8723A",l:"Exec"},board:{c:"#7B6BA5",l:"Board"},grants:{c:"#5A9E6F",l:"Grants"} };
 
 interface Foundation { id: string; name: string; mission?: string; type?: string; geo_level: string; assets?: string; annual_giving?: string; website_display?: string; website_url?: string; address?: string; city?: string; state_code?: string; zip_code?: string; phone?: string; email?: string; founded_year?: string; verification_status: string; last_verified_at?: string; last_updated_at?: string; source_state?: string; ppl: Person[]; pws: string[]; fas: string[]; }
 interface Person { foundation_id: string; name: string; role: string; role_type: string; }

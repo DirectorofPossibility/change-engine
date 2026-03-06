@@ -10,7 +10,7 @@ const HD = { apikey: KEY, Authorization: "Bearer " + KEY }
 const C = {
   bg: "#FAFAF7", sf: "#FFFFFF", alt: "#F5F3EE",
   bd: "#E8E4DB", tx: "#2D2A26", t2: "#6B665C", t3: "#9E9789",
-  ac: "#C75B2A", al: "#E8885A",
+  ac: "#E8723A", al: "#E8885A",
   ring: "rgba(0,0,0,0.06)", ringHi: "rgba(0,0,0,0.12)",
 }
 

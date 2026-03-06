@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#C75B2A" title="Contact Us" subtitle="Have a question, suggestion, or want to partner with us? We would love to hear from you." />
+      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#E8723A" title="Contact Us" subtitle="Have a question, suggestion, or want to partner with us? We would love to hear from you." />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Contact' }]} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">

@@ -281,7 +281,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const summary = translatedSummary || item.summary_6th_grade
   const themeSlug = resolveThemeSlug(item.pathway_primary)
   const themeEntry = item.pathway_primary ? (THEMES as Record<string, { name: string; color: string; slug: string }>)[item.pathway_primary] : null
-  const themeColor = themeEntry?.color || '#C75B2A'
+  const themeColor = themeEntry?.color || '#E8723A'
 
   // Parse body into sections for numbered rendering
   const bodyText = sanitizeBody(translatedBody || item.body || '')
@@ -376,6 +376,26 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 })}
               </div>
             )}
+
+            {/* Embedded Video */}
+            {(item as any).video_url && (() => {
+              const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
+              const videoId = match ? match[1] : null
+              if (!videoId) return null
+              return (
+                <div className="my-8">
+                  <div className="relative w-full overflow-hidden rounded-xl" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                      title="Video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              )
+            })()}
 
             {/* AI Break It Down */}
             <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />

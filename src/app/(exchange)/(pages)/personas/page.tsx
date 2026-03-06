@@ -70,7 +70,7 @@ const PERSONAS = [
     description: 'You are curious about how everything connects — pathways to policies, services to SDGs, neighborhoods to officials. You explore the knowledge graph to find patterns others miss.',
     center: null,
     Icon: ExplorerIcon,
-    color: '#C75B2A',
+    color: '#E8723A',
     actions: ['Browse the knowledge graph', 'Explore by geography', 'Search everything'],
   },
 ]

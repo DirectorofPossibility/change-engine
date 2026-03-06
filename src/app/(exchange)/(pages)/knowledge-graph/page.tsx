@@ -21,9 +21,13 @@ export const metadata: Metadata = {
 
 export default function KnowledgeGraphPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Breadcrumb items={[{ label: 'Civic Knowledge Galaxy' }]} />
-      <KnowledgeGraphClient />
+    <div>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+        <Breadcrumb items={[{ label: 'Civic Knowledge Galaxy' }]} />
+      </div>
+      <div className="max-w-[1400px] mx-auto">
+        <KnowledgeGraphClient />
+      </div>
     </div>
   )
 }

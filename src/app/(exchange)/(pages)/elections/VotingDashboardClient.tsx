@@ -405,7 +405,7 @@ export function VotingDashboardClient({
           ═══════════════════════════════════════════════════ */}
       {relatedContent.length > 0 && (
         <section>
-          <SectionHeading title="Related Reading" color="#C75B2A" />
+          <SectionHeading title="Related Reading" color="#E8723A" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {relatedContent.map(function (item) {
               return (

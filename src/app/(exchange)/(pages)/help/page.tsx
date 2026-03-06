@@ -44,7 +44,7 @@ export default async function HelpPage() {
       <PageHero
         variant="sacred"
         sacredPattern="tripod"
-        gradientColor="#C75B2A"
+        gradientColor="#E8723A"
         titleKey="help.title"
         subtitleKey="help.subtitle"
         intro={PAGE_INTROS.availableResources}

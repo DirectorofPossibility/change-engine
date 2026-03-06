@@ -217,7 +217,7 @@ export default async function ContentDetailPage({
                     {wayfinder.officials.slice(0, 4).map((official) => (
                       <Link
                         key={official.official_id}
-                        href={`/officials/${official.official_id}`}
+                        href={`/design2/officials/${official.official_id}`}
                         className="group flex items-center gap-3 rounded-md border p-3 transition-shadow hover:shadow-sm"
                         style={{ borderColor: '#D4CCBE' }}
                       >
@@ -267,7 +267,7 @@ export default async function ContentDetailPage({
                     {wayfinder.policies.slice(0, 4).map((policy) => (
                       <Link
                         key={policy.policy_id}
-                        href={`/policies/${policy.policy_id}`}
+                        href={`/design2/policies/${policy.policy_id}`}
                         className="group flex items-start gap-2 rounded-md border p-3 transition-shadow hover:shadow-sm"
                         style={{ borderColor: '#D4CCBE' }}
                       >

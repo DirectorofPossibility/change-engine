@@ -41,7 +41,7 @@ export default async function PoliciesPage() {
             return (
               <Link
                 key={p.policy_id}
-                href={'/policies/' + p.policy_id}
+                href={'/design2/policies/' + p.policy_id}
                 className="bg-white rounded-xl border p-5 transition-all hover:shadow-md hover:translate-y-[-2px]"
                 style={{ borderColor: '#D4CCBE' }}
               >

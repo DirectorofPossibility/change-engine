@@ -91,7 +91,7 @@ export function PartnerIcon({ size = 20, color = '#dd6b20', className }: IconPro
   )
 }
 
-export function ExplorerIcon({ size = 20, color = '#C75B2A', className }: IconProps) {
+export function ExplorerIcon({ size = 20, color = '#E8723A', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="24" cy="24" r="6" stroke={color} strokeWidth="1.5" opacity="0.7" />
@@ -143,7 +143,7 @@ export function DeeperIcon({ size = 16, color = '#1e40af', className }: IconProp
 
 // ─── FULL FLOWER OF LIFE (brand mark) ──────────────────────
 
-export function FlowerOfLifeIcon({ size = 48, color = '#C75B2A', className }: IconProps) {
+export function FlowerOfLifeIcon({ size = 48, color = '#E8723A', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true">
       <circle cx="100" cy="100" r="20" stroke={color} strokeWidth="1.5" opacity="0.6" />

@@ -29,7 +29,7 @@ interface StatsCircleProps {
  */
 export function StatsCircle({ value, labelKey, accentColor }: StatsCircleProps) {
   const { t } = useTranslation()
-  const ringColor = accentColor || '#C75B2A'
+  const ringColor = accentColor || '#E8723A'
 
   return (
     <div className="flex flex-col items-center gap-2">

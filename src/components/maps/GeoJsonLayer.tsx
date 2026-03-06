@@ -96,9 +96,9 @@ export function GeoJsonLayer({
         highlightFeatureId != null && featureId != null && String(featureId) === String(highlightFeatureId)
 
       return {
-        fillColor: isHighlighted ? '#C75B2A' : style.fillColor,
+        fillColor: isHighlighted ? '#E8723A' : style.fillColor,
         fillOpacity: isHighlighted ? 0.4 : style.fillOpacity,
-        color: isHighlighted ? '#C75B2A' : style.strokeColor,
+        color: isHighlighted ? '#E8723A' : style.strokeColor,
         weight: isHighlighted ? 3 : style.strokeWeight,
         opacity: isHighlighted ? 1 : 0.7,
       }

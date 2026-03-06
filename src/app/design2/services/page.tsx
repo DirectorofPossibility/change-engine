@@ -68,7 +68,7 @@ export default async function ServicesPage() {
           services.map((svc: any) => (
             <Link
               key={svc.service_id}
-              href={`/services/${svc.service_id}`}
+              href={`/design2/services/${svc.service_id}`}
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <div

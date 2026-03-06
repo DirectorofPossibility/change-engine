@@ -12,6 +12,6 @@ export function ReadingProgressBar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
   return (
-    <div style={{ position: 'fixed', top: 0, left: 0, width: progress + '%', height: 3, background: '#C75B2A', zIndex: 100, transition: 'width .1s' }} />
+    <div style={{ position: 'fixed', top: 0, left: 0, width: progress + '%', height: 3, background: '#E8723A', zIndex: 100, transition: 'width .1s' }} />
   )
 }

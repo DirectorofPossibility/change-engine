@@ -34,7 +34,7 @@ export function LibraryCard({
     })
     .filter(Boolean) as { color: string; name: string }[]
 
-  const primaryColor = themeColors[0]?.color || '#C75B2A'
+  const primaryColor = themeColors[0]?.color || '#E8723A'
 
   return (
     <Link href={'/library/doc/' + id} className="block group">

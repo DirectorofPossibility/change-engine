@@ -13,9 +13,9 @@ export function BadgeCard({ name, description, points, color }: BadgeCardProps) 
     <div className="bg-white rounded-xl border border-brand-border p-5 flex items-start gap-4">
       <div
         className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
-        style={{ backgroundColor: (color || '#C75B2A') + '20' }}
+        style={{ backgroundColor: (color || '#E8723A') + '20' }}
       >
-        <Award size={24} style={{ color: color || '#C75B2A' }} />
+        <Award size={24} style={{ color: color || '#E8723A' }} />
       </div>
       <div>
         <h4 className="font-semibold text-brand-text">{name}</h4>
