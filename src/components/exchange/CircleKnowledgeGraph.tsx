@@ -1002,7 +1002,7 @@ export default function CircleKnowledgeGraph() {
         borderTop: `1px solid ${C.bdr}`, marginTop: 8,
       }}>
         <div style={{ fontSize: 10, color: C.lt }}>
-          The Community Exchange -- a product of The Change Engine
+          Community Exchange — powered by The Change Lab
         </div>
         <div style={{ fontSize: 9, color: C.lt2, marginTop: 2 }}>
           Community Life, Organized

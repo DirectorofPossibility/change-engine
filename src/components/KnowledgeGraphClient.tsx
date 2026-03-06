@@ -1,5 +1,5 @@
 /**
- * @fileoverview SVG-based knowledge graph visualization for the Civic Knowledge Mesh.
+ * @fileoverview SVG-based knowledge graph visualization for the Civic Knowledge Galaxy.
  *
  * Renders an interactive force-directed graph with pan/zoom, search, and
  * click-to-inspect functionality. Each node carries approximately 35
@@ -320,7 +320,7 @@ interface NodeBase {
 /**
  * SVG-based knowledge graph visualization with pan/zoom, search, and click-to-inspect.
  *
- * Renders the Civic Knowledge Mesh as an interactive force-directed graph.
+ * Renders the Civic Knowledge Galaxy as an interactive force-directed graph.
  * Supports multiple views (galaxy, pathway detail, center detail, etc.),
  * mouse-driven panning and wheel-driven zooming, node hover/click inspection
  * with a detail panel showing all ~35 dimensions, and a search bar for
@@ -617,7 +617,7 @@ export default function KnowledgeGraphClient() {
             </div>
             <div>
               <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em" }}>
-                <span style={{ color: "#C75B2A" }}>Civic Knowledge Mesh</span>
+                <span style={{ color: "#C75B2A" }}>Civic Knowledge Galaxy</span>
               </h1>
               <p style={{ margin: 0, fontSize: 11, color: "#8b8178", letterSpacing: "0.05em", textTransform: "uppercase" }}>
                 {STATS.totalRecords.toLocaleString()} records · {STATS.totalEdges.toLocaleString()}+ edges · ~{TOTAL_DIMS} dimensions per node · {STATS.tables} tables
@@ -1840,7 +1840,7 @@ export default function KnowledgeGraphClient() {
       })()}
 
       <div style={{ padding: "14px 28px", borderTop: "1px solid #f5f1eb", display: "flex", justifyContent: "space-between", color: "#9a918a", fontSize: 11 }}>
-        <span>The Change Engine — Community Life, Organized</span>
+        <span>Community Exchange — Powered by The Change Lab</span>
         <span>Houston, TX · ~{TOTAL_DIMS}D mesh · v5</span>
       </div>
     </div>
