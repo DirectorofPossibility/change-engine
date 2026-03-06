@@ -209,45 +209,93 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         </div>
       </div>
 
-      {/* Contact card */}
-      <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
-        <h3 className="text-sm font-semibold text-brand-text mb-3 uppercase tracking-wide">Contact</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {(profile?.phone_office || official.office_phone) && (
-            <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-              <Phone size={18} className="flex-shrink-0" /> {profile?.phone_office || official.office_phone}
-            </a>
-          )}
-          {official.email && (
-            <a href={'mailto:' + official.email} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-              <Mail size={18} className="flex-shrink-0" /> <span className="truncate">{official.email}</span>
-            </a>
-          )}
-          {official.website && (
-            <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-              <Globe size={18} className="flex-shrink-0" /> Website
-            </a>
-          )}
-          {profile?.social_linkedin && (
-            <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-              <Linkedin size={18} className="flex-shrink-0" /> LinkedIn
-            </a>
-          )}
+      {/* Contact + District Map side by side */}
+      <div className="flex flex-col lg:flex-row gap-6 mb-8">
+        {/* Left: Contact info */}
+        <div className="flex-1 min-w-0">
+          <div className="bg-white rounded-xl border border-brand-border p-6">
+            <h3 className="text-sm font-semibold text-brand-text mb-3 uppercase tracking-wide">Contact</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {(profile?.phone_office || official.office_phone) && (
+                <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+                  <Phone size={18} className="flex-shrink-0" /> {profile?.phone_office || official.office_phone}
+                </a>
+              )}
+              {official.email && (
+                <a href={'mailto:' + official.email} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+                  <Mail size={18} className="flex-shrink-0" /> <span className="truncate">{official.email}</span>
+                </a>
+              )}
+              {official.website && (
+                <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+                  <Globe size={18} className="flex-shrink-0" /> Website
+                </a>
+              )}
+              {profile?.social_linkedin && (
+                <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
+                  <Linkedin size={18} className="flex-shrink-0" /> LinkedIn
+                </a>
+              )}
+            </div>
+            {(profile?.address_office || profile?.address_district) && (
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {profile.address_office && (
+                  <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
+                    <MapPin size={18} className="flex-shrink-0 mt-0.5" />
+                    <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">Office</span><br />{profile.address_office}</div>
+                  </div>
+                )}
+                {profile.address_district && (
+                  <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
+                    <MapPin size={18} className="flex-shrink-0 mt-0.5" />
+                    <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">District Office</span><br />{profile.address_district}</div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* District info */}
+            {(official.district_type || official.district_id) && (
+              <div className="mt-4 pt-4 border-t border-brand-border">
+                <div className="flex items-center gap-4 mb-2">
+                  {official.district_type && (
+                    <div>
+                      <span className="text-xs text-brand-muted uppercase tracking-wide">Type</span>
+                      <p className="font-medium text-brand-text">{official.district_type}</p>
+                    </div>
+                  )}
+                  {official.district_id && (
+                    <div>
+                      <span className="text-xs text-brand-muted uppercase tracking-wide">District</span>
+                      <p className="font-medium text-brand-text">{official.district_id}</p>
+                    </div>
+                  )}
+                </div>
+                {districtZips.length > 0 && (
+                  <div className="mt-2">
+                    <span className="text-xs text-brand-muted uppercase tracking-wide flex items-center gap-1 mb-1.5">
+                      <MapPin size={12} /> ZIP Codes Covered
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {districtZips.map(function (z) {
+                        return (
+                          <span key={z} className="text-xs px-2 py-1 bg-brand-bg rounded-md text-brand-muted font-mono">
+                            {String(z).padStart(5, '0')}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-        {(profile?.address_office || profile?.address_district) && (
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {profile.address_office && (
-              <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
-                <MapPin size={18} className="flex-shrink-0 mt-0.5" />
-                <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">Office</span><br />{profile.address_office}</div>
-              </div>
-            )}
-            {profile.address_district && (
-              <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
-                <MapPin size={18} className="flex-shrink-0 mt-0.5" />
-                <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">District Office</span><br />{profile.address_district}</div>
-              </div>
-            )}
+
+        {/* Right: District map (compact) */}
+        {(official.district_type || official.district_id) && (
+          <div className="lg:w-[340px] flex-shrink-0">
+            <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
           </div>
         )}
       </div>
@@ -277,50 +325,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         <section className="mb-8">
           <h2 className="text-xl font-bold text-brand-text mb-3">About</h2>
           <p className="text-brand-muted leading-relaxed">{bio}</p>
-        </section>
-      )}
-
-      {/* District info + map */}
-      {(official.district_type || official.district_id) && (
-        <section className="mb-8">
-          <h2 className="text-xl font-bold text-brand-text mb-3">District</h2>
-          <div className="bg-white rounded-xl border border-brand-border p-5 mb-4">
-            <div className="flex items-center gap-4 mb-3">
-              {official.district_type && (
-                <div>
-                  <span className="text-xs text-brand-muted uppercase tracking-wide">Type</span>
-                  <p className="font-medium text-brand-text">{official.district_type}</p>
-                </div>
-              )}
-              {official.district_id && (
-                <div>
-                  <span className="text-xs text-brand-muted uppercase tracking-wide">District</span>
-                  <p className="font-medium text-brand-text">{official.district_id}</p>
-                </div>
-              )}
-            </div>
-
-            {/* ZIP codes in this district */}
-            {districtZips.length > 0 && (
-              <div className="mt-3">
-                <span className="text-xs text-brand-muted uppercase tracking-wide flex items-center gap-1 mb-2">
-                  <MapPin size={12} /> ZIP Codes Covered
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {districtZips.map(function (z) {
-                    return (
-                      <span key={z} className="text-xs px-2 py-1 bg-brand-bg rounded-md text-brand-muted font-mono">
-                        {String(z).padStart(5, '0')}
-                      </span>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* District map */}
-          <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
         </section>
       )}
 

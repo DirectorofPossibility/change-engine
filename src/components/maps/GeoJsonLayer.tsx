@@ -93,16 +93,14 @@ export function GeoJsonLayer({
         ? feature.properties[idProperty]
         : null
       const isHighlighted =
-        highlightFeatureId != null && featureId === highlightFeatureId
+        highlightFeatureId != null && featureId != null && String(featureId) === String(highlightFeatureId)
 
       return {
-        fillColor: style.fillColor,
-        fillOpacity: isHighlighted
-          ? Math.min(style.fillOpacity * 3, 0.35)
-          : style.fillOpacity,
-        color: style.strokeColor,
-        weight: isHighlighted ? style.strokeWeight * 2 : style.strokeWeight,
-        opacity: 0.7,
+        fillColor: isHighlighted ? '#C75B2A' : style.fillColor,
+        fillOpacity: isHighlighted ? 0.4 : style.fillOpacity,
+        color: isHighlighted ? '#C75B2A' : style.strokeColor,
+        weight: isHighlighted ? 3 : style.strokeWeight,
+        opacity: isHighlighted ? 1 : 0.7,
       }
     },
     [style, highlightFeatureId, idProperty]

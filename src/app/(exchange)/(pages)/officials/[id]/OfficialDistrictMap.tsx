@@ -51,12 +51,16 @@ export function OfficialDistrictMap({ districtType, districtId }: OfficialDistri
   const featureId = extractFeatureId(districtId, districtType)
 
   return (
-    <InteractiveMap
-      layers={[layer]}
-      defaultVisibleLayers={[layer.id]}
-      highlightLayerId={layer.id}
-      highlightFeatureId={featureId}
-      className="w-full h-[400px] rounded-xl"
-    />
+    <div>
+      <h3 className="text-sm font-semibold text-brand-text mb-2 uppercase tracking-wide">District Map</h3>
+      <InteractiveMap
+        layers={[layer]}
+        defaultVisibleLayers={[layer.id]}
+        highlightLayerId={layer.id}
+        highlightFeatureId={featureId}
+        showLegend={false}
+        className="w-full h-[280px] rounded-xl"
+      />
+    </div>
   )
 }

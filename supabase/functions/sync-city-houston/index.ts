@@ -154,16 +154,20 @@ Deno.serve(async (req: Request) => {
         }
       }
 
-      const record = {
+      // Photo URL from Legistar (prefer medium, fallback to small)
+      const photoUrl = person.PersonImageMedium || person.PersonImageSmall || null;
+
+      const record: Record<string, unknown> = {
         official_id: officialId,
         official_name: fullName,
         title: 'Council Member',
         level: 'City',
-        district_type: districtType,
+        district_type: districtType === 'council' ? 'Council District' : districtType,
         district_id: districtId,
         email: person.PersonEmail || null,
         phone: person.PersonPhone || null,
         website: person.PersonWWW || null,
+        photo_url: photoUrl,
         data_source: 'legistar_houston',
         last_updated: new Date().toISOString(),
       };
@@ -175,7 +179,75 @@ Deno.serve(async (req: Request) => {
       if (res) stats.officials_upserted++;
       else stats.errors++;
 
+      // Upsert official_profiles with photo + contact info
+      await db('official_profiles?on_conflict=official_id', 'POST', [{
+        official_id: officialId,
+        photo_url: photoUrl,
+        phone_office: person.PersonPhone || null,
+        email: person.PersonEmail || null,
+        data_source: 'houstontx.gov',
+        last_updated: new Date().toISOString(),
+      }]);
+
       await sleep(300); // Rate limit Legistar API
+    }
+
+    // ── 1b. Sync vote records from Legistar VoteTypes + EventItems ──
+    // Pull recent roll call votes
+    const voteStats = { synced: 0 };
+    try {
+      const recentDays = mode === 'recent' ? 14 : 90;
+      const voteFrom = new Date(Date.now() - recentDays * 24 * 60 * 60 * 1000);
+      const voteFromStr = voteFrom.toISOString().split('.')[0] + 'Z';
+
+      // Get recent events (council meetings)
+      const events = (await legistar(`Events?$filter=EventDate gt datetime'${voteFromStr}'&$orderby=EventDate desc&$top=10`) as any[]) || [];
+
+      for (const event of events) {
+        const eventId = event.EventId;
+        if (!eventId) continue;
+
+        // Get event items (agenda items with votes)
+        const eventItems = (await legistar(`Events/${eventId}/EventItems?$filter=EventItemRollCallFlag eq 1`) as any[]) || [];
+
+        for (const item of eventItems) {
+          const eventItemId = item.EventItemId;
+          if (!eventItemId) continue;
+
+          const matterId = item.EventItemMatterId;
+          const policyId = matterId ? `POL_HOU_${matterId}` : null;
+          const billNumber = item.EventItemMatterFile || item.EventItemTitle || null;
+
+          // Get votes for this item
+          const votes = (await legistar(`Events/${eventId}/EventItems/${eventItemId}/Votes`) as any[]) || [];
+
+          for (const vote of votes) {
+            const votePersonId = vote.VotePersonId;
+            const officialId = personIdToOfficialId.get(votePersonId);
+            if (!officialId) continue;
+
+            const voteValue = (vote.VoteValueId === 11 || /yea|aye|yes/i.test(vote.VoteResult || ''))
+              ? 'Yea'
+              : (vote.VoteValueId === 12 || /nay|no/i.test(vote.VoteResult || ''))
+                ? 'Nay'
+                : vote.VoteResult || 'Present';
+
+            await db('vote_records?on_conflict=official_id,bill_number,vote_date', 'POST', [{
+              official_id: officialId,
+              bill_number: billNumber,
+              vote: voteValue,
+              vote_date: event.EventDate?.split('T')[0] || null,
+              policy_id: policyId,
+              chamber: 'Houston City Council',
+            }]);
+            voteStats.synced++;
+          }
+
+          await sleep(300);
+        }
+      }
+    } catch (err) {
+      console.error('Vote sync error:', (err as Error).message);
     }
 
     // ── 2. Sync policies (Matters) ──────────────────────────────────
@@ -327,7 +399,8 @@ Deno.serve(async (req: Request) => {
       mode,
       ...stats,
       classified,
-      message: `Houston sync complete: ${stats.officials_upserted} officials, ${stats.policies_upserted} policies, ${classified} classified`,
+      votes_synced: voteStats.synced,
+      message: `Houston sync complete: ${stats.officials_upserted} officials, ${stats.policies_upserted} policies, ${voteStats.synced} votes, ${classified} classified`,
     }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     });
