@@ -4796,6 +4796,7 @@ export type Database = {
           ntee_code: string | null
           org_id: string
           org_name: string
+          org_type: string | null
           partner_count: number | null
           people_served: string | null
           phone: string | null
@@ -4837,6 +4838,7 @@ export type Database = {
           ntee_code?: string | null
           org_id: string
           org_name: string
+          org_type?: string | null
           partner_count?: number | null
           people_served?: string | null
           phone?: string | null
@@ -4878,6 +4880,7 @@ export type Database = {
           ntee_code?: string | null
           org_id?: string
           org_name?: string
+          org_type?: string | null
           partner_count?: number | null
           people_served?: string | null
           phone?: string | null

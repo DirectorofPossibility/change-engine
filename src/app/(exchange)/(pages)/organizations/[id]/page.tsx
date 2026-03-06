@@ -107,6 +107,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               {org.mission_statement && <p className="text-brand-muted mt-1 font-serif italic">{org.mission_statement}</p>}
               {!org.mission_statement && displayOrgDesc && <p className="text-brand-muted mt-1">{displayOrgDesc}</p>}
               <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
+                {org.org_type && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent border border-brand-accent/20">{org.org_type}</span>}
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
                 {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}</span>}
               </div>

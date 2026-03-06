@@ -134,6 +134,8 @@ export interface SearchResultOrganization {
   org_name: string | null
   description_5th_grade: string | null
   website: string | null
+  org_type: string | null
+  logo_url: string | null
 }
 
 export interface SearchResultPolicy {
@@ -325,6 +327,7 @@ export interface WayfinderOrganization {
   donate_url: string | null
   volunteer_url: string | null
   newsletter_url: string | null
+  org_type: string | null
 }
 
 export interface WayfinderOpportunity {

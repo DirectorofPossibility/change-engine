@@ -490,6 +490,16 @@ export async function getLifeSituationContent(situationId: string, serviceCatIds
 
 // ── Entity queries ─────────────────────────────────────────────────────
 
+/** All organizations — nonprofits, agencies, foundations, etc. */
+export async function getOrganizations() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('organizations')
+    .select('org_id, org_name, description_5th_grade, website, phone, address, city, zip_code, logo_url, org_type, mission_statement, service_area, focus_area_ids, ntee_code')
+    .order('org_name')
+  return data ?? []
+}
+
 /** All elected officials with their government levels and LinkedIn profiles. */
 export async function getOfficials() {
   const supabase = await createClient()
@@ -1874,7 +1884,7 @@ export async function getWayfinderContext(
       : Promise.resolve({ data: [] }),
     relOrgIds.length > 0
       ? supabase.from('organizations')
-          .select('org_id, org_name, description_5th_grade, logo_url, website, phone, donate_url, volunteer_url, newsletter_url')
+          .select('org_id, org_name, description_5th_grade, logo_url, website, phone, donate_url, volunteer_url, newsletter_url, org_type')
           .in('org_id', relOrgIds)
       : Promise.resolve({ data: [] }),
     relOppIds.length > 0
@@ -2030,7 +2040,7 @@ export async function getRelatedOrgsForGuide(focusAreaIds: string[]) {
   if (orgIds.length === 0) return []
   const { data } = await supabase
     .from('organizations')
-    .select('org_id, org_name, description_5th_grade, website, logo_url')
+    .select('org_id, org_name, description_5th_grade, website, logo_url, org_type')
     .in('org_id', orgIds)
     .limit(8)
   return data ?? []
@@ -2100,7 +2110,7 @@ export async function getKnowledgeGraphData() {
   ] = await Promise.all([
     supabase.from('focus_areas').select('focus_id, focus_area_name, theme_id, sdg_id, sdoh_code, is_bridging, description'),
     supabase.from('content_published').select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, center, focus_area_ids, sdg_ids, image_url, published_at, source_url'),
-    supabase.from('organizations').select('org_id, org_name, focus_area_ids, website, description_5th_grade'),
+    supabase.from('organizations').select('org_id, org_name, focus_area_ids, website, description_5th_grade, org_type, logo_url'),
     supabase.from('services_211').select('service_id, service_name, focus_area_ids, org_id, description_5th_grade').eq('is_active', 'Yes'),
     supabase.from('guides').select('guide_id, title, slug, theme_id, focus_area_ids, description, hero_image_url').eq('is_active', true),
     supabase.from('policies').select('policy_id, policy_name, title_6th_grade, focus_area_ids, summary_5th_grade, summary_6th_grade'),
@@ -2268,7 +2278,7 @@ export async function getThemeDrillDown(themeId: string) {
       .order('published_at', { ascending: false })
       .limit(50),
     supabase.from('organizations')
-      .select('org_id, org_name, focus_area_ids, website, description_5th_grade')
+      .select('org_id, org_name, focus_area_ids, website, description_5th_grade, org_type, logo_url')
       .or(faOrFilter)
       .limit(30),
     supabase.from('services_211')
@@ -2325,7 +2335,7 @@ export async function getFocusAreaDrillDown(focusId: string) {
       .order('published_at', { ascending: false })
       .limit(10),
     supabase.from('organizations')
-      .select('org_id, org_name, website, description_5th_grade')
+      .select('org_id, org_name, website, description_5th_grade, org_type, logo_url')
       .or(textMatch)
       .limit(10),
     supabase.from('services_211')

@@ -44,7 +44,7 @@ export async function searchAll(query: string): Promise<SearchResults> {
       .limit(20),
     supabase
       .from('organizations')
-      .select('org_id, org_name, description_5th_grade, website')
+      .select('org_id, org_name, description_5th_grade, website, org_type, logo_url')
       .textSearch('fts', tsQuery)
       .limit(20),
     supabase
