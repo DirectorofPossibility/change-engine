@@ -24,6 +24,7 @@ import { NeighborhoodProvider } from '@/lib/contexts/NeighborhoodContext'
 import { LeftNav } from '@/components/exchange/LeftNav'
 import { Footer } from '@/components/exchange/Footer'
 import MobileBottomNav from '@/components/exchange/MobileBottomNav'
+import { ChanceChatWidget } from '@/components/exchange/ChanceChatWidget'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -38,13 +39,13 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
     '@graph': [
       {
         '@type': 'Organization',
-        name: 'The Change Engine',
+        name: 'Community Exchange',
         url: 'https://www.changeengine.us',
         description: 'A civic platform connecting Houston residents with resources, services, and civic participation opportunities.',
       },
       {
         '@type': 'WebSite',
-        name: 'The Change Engine',
+        name: 'Community Exchange',
         url: 'https://www.changeengine.us',
         potentialAction: {
           '@type': 'SearchAction',
@@ -77,6 +78,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
             </div>
           </div>
           <MobileBottomNav />
+          <ChanceChatWidget />
         </div>
       </NeighborhoodProvider>
     </LanguageProvider>
