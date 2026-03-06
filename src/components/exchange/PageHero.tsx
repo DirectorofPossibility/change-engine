@@ -95,18 +95,18 @@ export function PageHero({
   if (resolvedVariant === 'content') {
     const gc = gradientColor || '#C75B2A'
     return (
-      <section className="relative w-full overflow-hidden bg-brand-dark">
+      <section className="relative w-full overflow-hidden bg-brand-bg border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
             <div className="flex-1 min-w-0">
               {children && <div className="flex items-center gap-2 mb-4">{children}</div>}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
                 {displayTitle}
               </h1>
               {displaySubtitle && (
-                <p className="text-base sm:text-lg text-white/60 mt-3 max-w-2xl leading-relaxed">{displaySubtitle}</p>
+                <p className="text-base sm:text-lg text-brand-muted mt-3 max-w-2xl leading-relaxed">{displaySubtitle}</p>
               )}
-              <div className="flex items-center gap-3 text-sm text-white/40 mt-4">
+              <div className="flex items-center gap-3 text-sm text-brand-muted mt-4">
                 {sourceDomain && <span className="font-medium">{sourceDomain}</span>}
                 {sourceDomain && publishedDate && <span className="opacity-40">/</span>}
                 {publishedDate && <span>{publishedDate}</span>}
