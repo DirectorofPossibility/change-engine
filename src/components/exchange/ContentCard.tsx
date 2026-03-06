@@ -17,6 +17,7 @@ import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { useTranslation } from '@/lib/use-translation'
 import { FocusAreaPills } from './FocusAreaPills'
+import { ImageLightbox } from './ImageLightbox'
 
 /** Gradient color pairs keyed by pathway ID for placeholder card images. */
 const PATHWAY_GRADIENTS: Record<string, { from: string; to: string }> = {
@@ -83,7 +84,7 @@ export function ContentCard({
       {/* TODO: Replace with real Houston photography */}
       {imageUrl ? (
         <div className="w-full h-40 relative">
-          <img
+          <ImageLightbox
             src={imageUrl}
             alt={displayTitle}
             className="w-full h-full object-cover"

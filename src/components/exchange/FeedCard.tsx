@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ChevronRight, BookOpen, Zap, Package, Scale } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
 import { CENTER_COLORS } from '@/lib/constants'
+import { ImageLightbox } from './ImageLightbox'
 
 export interface FeedItem {
   type: 'resource' | 'official' | 'policy' | 'service'
@@ -92,9 +93,9 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
         {/* Image area */}
         <div className="relative h-44 overflow-hidden">
           {item.imageUrl ? (
-            <img
+            <ImageLightbox
               src={item.imageUrl}
-              alt=""
+              alt={item.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
@@ -160,9 +161,9 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
     <div className="group flex bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
       {item.imageUrl && (
         <div className="w-28 sm:w-36 flex-shrink-0 overflow-hidden">
-          <img
+          <ImageLightbox
             src={item.imageUrl}
-            alt=""
+            alt={item.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
