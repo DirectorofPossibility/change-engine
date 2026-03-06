@@ -90,24 +90,24 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   return (
     <div>
-      {/* Dark hero */}
-      <div className="bg-brand-dark">
+      {/* Hero */}
+      <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <Breadcrumb variant="dark" items={[
+          <Breadcrumb items={[
             { label: 'Organizations', href: '/organizations' },
             { label: displayOrgName }
           ]} />
           <div className="flex items-start gap-4 mt-4">
             {org.logo_url && (
-              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-white/10" />
+              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border" />
             )}
             <div>
-              <h1 className="text-3xl font-serif font-bold text-white">{displayOrgName}</h1>
-              {org.mission_statement && <p className="text-white/60 mt-1 font-serif italic">{org.mission_statement}</p>}
-              {!org.mission_statement && displayOrgDesc && <p className="text-white/50 mt-1">{displayOrgDesc}</p>}
-              <div className="flex items-center gap-3 mt-2 text-sm text-white/40">
+              <h1 className="text-3xl font-serif font-bold text-brand-text">{displayOrgName}</h1>
+              {org.mission_statement && <p className="text-brand-muted mt-1 font-serif italic">{org.mission_statement}</p>}
+              {!org.mission_statement && displayOrgDesc && <p className="text-brand-muted mt-1">{displayOrgDesc}</p>}
+              <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
-                {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-lg bg-white/10">NTEE: {org.ntee_code}</span>}
+                {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}</span>}
               </div>
             </div>
           </div>

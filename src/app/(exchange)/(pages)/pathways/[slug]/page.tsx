@@ -77,9 +77,9 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   return (
     <div>
       {/* ── Hero ── */}
-      <div className="bg-brand-dark">
+      <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-          <Breadcrumb variant="dark" items={[
+          <Breadcrumb items={[
             { label: t('nav.pathways'), href: '/pathways' },
             { label: theme.name }
           ]} />
@@ -89,10 +89,10 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
               <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: theme.color, opacity: 0.4 }} />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white">
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">
               {theme.name}
             </h1>
-            <p className="text-base font-serif italic text-white/60 mt-2 max-w-2xl leading-relaxed">
+            <p className="text-base font-serif italic text-brand-muted mt-2 max-w-2xl leading-relaxed">
               {theme.description}
             </p>
           </div>
@@ -100,7 +100,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           {/* Connected pathways */}
           {bridgeData.length > 0 && (
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-5">
-              <span className="text-xs text-white/30 font-serif italic">Connected to</span>
+              <span className="text-xs text-brand-muted font-serif italic">Connected to</span>
               {bridgeData.map(function (b) {
                 return (
                   <Link
@@ -111,7 +111,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                   >
                     <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: b.targetColor }} />
                     {b.targetName}
-                    <span className="text-white/30">({b.sharedCount})</span>
+                    <span className="text-brand-muted">({b.sharedCount})</span>
                   </Link>
                 )
               })}

@@ -91,25 +91,25 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
   return (
     <div>
-      {/* Dark hero */}
-      <div className="bg-brand-dark">
+      {/* Hero */}
+      <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <Breadcrumb variant="dark" items={[
+          <Breadcrumb items={[
             { label: 'Opportunities', href: '/opportunities' },
             { label: displayName }
           ]} />
           <div className="flex items-start gap-4 mt-4">
             {org?.logo_url && (
-              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-white/10" />
+              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border" />
             )}
             <div>
-              <h1 className="text-3xl font-serif font-bold text-white">{displayName}</h1>
+              <h1 className="text-3xl font-serif font-bold text-brand-text">{displayName}</h1>
               {org && (
-                <Link href={'/organizations/' + org.org_id} className="text-white/60 hover:text-white/80 text-sm mt-1 inline-block">
+                <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline text-sm mt-1 inline-block">
                   {org.org_name}
                 </Link>
               )}
-              <div className="flex items-center gap-3 mt-2 text-sm text-white/40">
+              <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
                 {(opportunity as any).start_date && (
                   <span className="flex items-center gap-1">
                     <Calendar size={14} /> Starts {new Date((opportunity as any).start_date).toLocaleDateString()}
