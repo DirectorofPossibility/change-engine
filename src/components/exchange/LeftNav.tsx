@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Search, Heart, ChevronDown, ChevronRight } from 'lucide-react'
 import { THEMES, BRAND, CENTERS, CENTER_COLORS } from '@/lib/constants'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
+import { NeighborhoodWidget } from './NeighborhoodBanner'
 
 const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({
   id,
@@ -142,6 +143,11 @@ export function LeftNav() {
           Search...
         </Link>
       </div>
+
+      {/* Neighborhood / ZIP */}
+      <NeighborhoodWidget />
+
+      <div className="h-px bg-white/10 mx-3" />
 
       {/* Archetypes — Your Journey */}
       <div className="px-3 pt-4 pb-2">

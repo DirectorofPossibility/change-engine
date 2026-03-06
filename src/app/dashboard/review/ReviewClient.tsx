@@ -30,7 +30,7 @@ const STATUS_TABS = ['all', 'pending', 'flagged', 'approved', 'auto_approved', '
 
 export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: ReviewItem[]; segmentMap?: Record<string, string> }) {
   const [items, setItems] = useState(initialItems)
-  const [activeTab, setActiveTab] = useState<string>('all')
+  const [activeTab, setActiveTab] = useState<string>('pending')
   const [selected, setSelected] = useState<ReviewItem | null>(null)
   const [acting, setActing] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
@@ -69,10 +69,8 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setActing(false)
         return
       }
-      // Update local state: mark as approved
-      setItems((prev) => prev.map((i) =>
-        i.id === selected.id ? { ...i, review_status: 'approved', reviewed_at: new Date().toISOString() } : i
-      ))
+      // Remove from list so it doesn't clog the queue
+      setItems((prev) => prev.filter((i) => i.id !== selected.id))
       setSelected(null)
       setActing(false)
     } catch (err) {
@@ -92,9 +90,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setActing(false)
         return
       }
-      setItems((prev) => prev.map((i) =>
-        i.id === selected.id ? { ...i, review_status: 'rejected', reviewed_at: new Date().toISOString() } : i
-      ))
+      setItems((prev) => prev.filter((i) => i.id !== selected.id))
       setSelected(null)
       setRejectNotes('')
       setActing(false)
@@ -115,9 +111,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setActing(false)
         return
       }
-      setItems((prev) => prev.map((i) =>
-        i.id === selected.id ? { ...i, review_status: 'flagged', reviewed_at: new Date().toISOString() } : i
-      ))
+      setItems((prev) => prev.filter((i) => i.id !== selected.id))
       setSelected(null)
       setActing(false)
     } catch (err) {
@@ -172,12 +166,10 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
       const failures = results.filter((r) => r.error)
       const successes = results.filter((r) => r.success)
 
-      // Update local state for successful items
+      // Remove successful items from list
       if (successes.length > 0) {
         const successIds = new Set(successes.map((r) => r.reviewId))
-        setItems((prev) => prev.map((i) =>
-          successIds.has(i.id) ? { ...i, review_status: 'approved', reviewed_at: new Date().toISOString() } : i
-        ))
+        setItems((prev) => prev.filter((i) => !successIds.has(i.id)))
       }
 
       if (failures.length > 0) {
@@ -204,9 +196,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setBulkActing(false)
         return
       }
-      setItems((prev) => prev.map((i) =>
-        ids.includes(i.id) ? { ...i, review_status: 'rejected', reviewed_at: new Date().toISOString() } : i
-      ))
+      setItems((prev) => prev.filter((i) => !ids.includes(i.id)))
       setSelectedIds(new Set())
       setBulkActing(false)
     } catch (err) {
@@ -227,9 +217,7 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
         setBulkActing(false)
         return
       }
-      setItems((prev) => prev.map((i) =>
-        ids.includes(i.id) ? { ...i, review_status: 'flagged', reviewed_at: new Date().toISOString() } : i
-      ))
+      setItems((prev) => prev.filter((i) => !ids.includes(i.id)))
       setSelectedIds(new Set())
       setBulkActing(false)
     } catch (err) {

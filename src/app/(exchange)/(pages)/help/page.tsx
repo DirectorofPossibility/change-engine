@@ -41,12 +41,12 @@ export default async function HelpPage() {
 
   return (
     <div>
-      {/* Hero banner */}
       <PageHero
+        variant="sacred"
+        sacredPattern="tripod"
+        gradientColor="#C75B2A"
         titleKey="help.title"
         subtitleKey="help.subtitle"
-        backgroundImage="/images/hero/community-gathering.svg"
-        height="sm"
         intro={PAGE_INTROS.availableResources}
       />
 

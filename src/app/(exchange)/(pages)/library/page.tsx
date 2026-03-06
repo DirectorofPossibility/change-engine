@@ -17,7 +17,9 @@ export default async function LibraryPage() {
   return (
     <div>
       <PageHero
-        variant="editorial"
+        variant="sacred"
+        sacredPattern="seed"
+        gradientColor="#d69e2e"
         title="Research Library"
         subtitle="Curated reports, policy briefs, and community research from Houston's leading organizations. Every document is summarized for quick understanding and available for AI-assisted exploration."
       />

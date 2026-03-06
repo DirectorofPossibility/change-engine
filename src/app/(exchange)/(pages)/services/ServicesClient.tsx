@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { ClusteredMap } from '@/components/maps/dynamic'
+import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg, TranslationMap } from '@/lib/types/exchange'
 import { List, Map as MapIcon } from 'lucide-react'
@@ -14,9 +15,19 @@ interface ServicesClientProps {
 }
 
 export function ServicesClient({ services, translations = {} }: ServicesClientProps) {
+  const { zip: savedZip } = useNeighborhood()
   const [search, setSearch] = useState('')
   const [zipFilter, setZipFilter] = useState('')
   const [view, setView] = useState<'list' | 'map'>('list')
+  const autoFilled = useRef(false)
+
+  // Auto-fill ZIP filter from saved neighborhood
+  useEffect(function () {
+    if (savedZip && savedZip.length === 5 && !autoFilled.current && !zipFilter) {
+      autoFilled.current = true
+      setZipFilter(savedZip)
+    }
+  }, [savedZip]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const filtered = useMemo(() => {
     return services.filter((s) => {

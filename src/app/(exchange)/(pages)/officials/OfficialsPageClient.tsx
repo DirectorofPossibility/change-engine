@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { MapPin, Search, Landmark, Star, Home, Building2, type LucideIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { OfficialsClient } from './OfficialsClient'
+import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import type { ElectedOfficial, GovernmentLevel, TranslationMap } from '@/lib/types/exchange'
 
 interface ZipResults {
@@ -29,14 +30,24 @@ interface Props {
 }
 
 export function OfficialsPageClient({ officials, levels, translations = {}, linkedinProfiles = {} }: Props) {
+  const { zip: savedZip } = useNeighborhood()
   const [zip, setZip] = useState('')
   const [zipResults, setZipResults] = useState<ZipResults | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const autoSearched = useRef(false)
 
-  async function handleZipSearch(e: React.FormEvent) {
-    e.preventDefault()
-    if (zip.length !== 5) { setError('Please enter a 5-digit ZIP code'); return }
+  // Auto-search when user has a saved ZIP from their neighborhood
+  useEffect(function () {
+    if (savedZip && savedZip.length === 5 && !autoSearched.current && !zipResults) {
+      autoSearched.current = true
+      setZip(savedZip)
+      doZipSearch(savedZip)
+    }
+  }, [savedZip]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function doZipSearch(searchZip: string) {
+    if (searchZip.length !== 5) return
     setError('')
     setLoading(true)
     setZipResults(null)
@@ -47,7 +58,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
       const { data: zipData } = await supabase
         .from('zip_codes')
         .select('*')
-        .eq('zip_code', parseInt(zip))
+        .eq('zip_code', parseInt(searchZip))
         .single()
 
       if (!zipData) { setError('ZIP code not found in our database'); setLoading(false); return }
@@ -83,6 +94,12 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
     } finally {
       setLoading(false)
     }
+  }
+
+  async function handleZipSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (zip.length !== 5) { setError('Please enter a 5-digit ZIP code'); return }
+    doZipSearch(zip)
   }
 
   function clearZipResults() {

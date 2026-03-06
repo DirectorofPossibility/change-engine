@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { PageHero } from '@/components/exchange/PageHero'
 import { PoliciesPageClient } from './PoliciesPageClient'
 
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Policies',
+  title: 'Policies & Legislation',
   description: 'Track legislation and policies affecting Houston and Harris County communities.',
 }
 
@@ -27,12 +28,18 @@ export default async function PoliciesPage() {
   const translations = langId ? await fetchTranslationsForTable('policies', policyIds, langId) : {}
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Breadcrumb items={[{ label: 'Policy' }]} />
-      <h1 className="text-3xl font-serif font-bold text-brand-text mb-2">Policies &amp; Legislation</h1>
-      <p className="text-brand-muted mb-8">Track bills, executive orders, and policies that affect Houston communities at every level of government.</p>
-
-      <PoliciesPageClient policies={all} translations={translations} />
+    <div>
+      <PageHero
+        variant="sacred"
+        sacredPattern="vesica"
+        gradientColor="#3182ce"
+        titleKey="policies.title"
+        subtitleKey="policies.subtitle"
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Breadcrumb items={[{ label: 'Policies' }]} />
+        <PoliciesPageClient policies={all} translations={translations} />
+      </div>
     </div>
   )
 }

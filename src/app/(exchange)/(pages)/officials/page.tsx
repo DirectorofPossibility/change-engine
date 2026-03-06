@@ -31,12 +31,12 @@ export default async function OfficialsPage() {
 
   return (
     <div>
-      {/* Hero banner */}
       <PageHero
+        variant="sacred"
+        sacredPattern="metatron"
+        gradientColor="#805ad5"
         titleKey="officials.title"
         subtitleKey="officials.subtitle"
-        backgroundImage="/images/hero/civic-engagement.svg"
-        height="sm"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

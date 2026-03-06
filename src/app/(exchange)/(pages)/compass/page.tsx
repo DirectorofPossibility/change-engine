@@ -1,13 +1,15 @@
 import { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { getExchangeStats, getPathwayCounts, getCenterCounts, getPathwayBridges, getCompassPreview } from '@/lib/data/exchange'
 import { CompassEntry } from '@/components/exchange/CompassEntry'
 import { CompassView } from '@/components/exchange/CompassView'
+import { CompassNeighborhoodWelcome } from './CompassNeighborhoodWelcome'
 import { THEMES } from '@/lib/constants'
 
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'The Compass | The Change Engine',
+  title: 'The Compass | Community Exchange',
   description: 'Navigate community life in Houston. Find resources, services, and civic opportunities organized by pathway and purpose.',
 }
 
@@ -45,6 +47,9 @@ export default async function CompassPage() {
         </p>
       </header>
 
+      {/* Neighborhood welcome — shows when user has ZIP set */}
+      <CompassNeighborhoodWelcome />
+
       {/* Center entry cards — 4 doors */}
       <CompassEntry centerCounts={centerCounts} />
 
@@ -54,13 +59,6 @@ export default async function CompassPage() {
         bridges={bridges}
         preview={preview}
       />
-
-      {/* Footer line */}
-      <footer className="text-center py-8 border-t border-brand-border mt-8">
-        <p className="text-sm text-brand-muted font-serif italic">
-          Made with thoughtfulness
-        </p>
-      </footer>
     </div>
   )
 }

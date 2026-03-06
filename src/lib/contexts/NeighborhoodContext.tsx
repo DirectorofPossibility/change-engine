@@ -12,7 +12,7 @@
 
 // ── Imports ──
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Neighborhood, ElectedOfficial } from '@/lib/types/exchange'
 
@@ -111,6 +111,13 @@ export function NeighborhoodProvider({
     setDistrictOfficials([])
     document.cookie = 'zip=;path=/;max-age=0'
   }, [])
+
+  // Auto-resolve neighborhood when initialZip is available (e.g. from cookie)
+  useEffect(function () {
+    if (initialZip && initialZip.length === 5 && !neighborhood) {
+      lookupZip(initialZip)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <NeighborhoodContext.Provider value={{

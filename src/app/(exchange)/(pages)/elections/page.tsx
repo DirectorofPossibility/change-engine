@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
+import { cookies } from 'next/headers'
 import { getElectionDashboard } from '@/lib/data/exchange'
 import { PageHero } from '@/components/exchange/PageHero'
 import { PAGE_INTROS } from '@/lib/constants'
@@ -18,13 +19,18 @@ export default async function ElectionsPage({
 }: {
   searchParams: Promise<{ zip?: string }>
 }) {
-  const { zip } = await searchParams
+  const { zip: paramZip } = await searchParams
+  // Use ZIP from URL params, or fall back to saved cookie
+  const cookieStore = await cookies()
+  const zip = paramZip || cookieStore.get('zip')?.value || undefined
   const data = await getElectionDashboard(zip)
 
   return (
     <div>
       <PageHero
-        variant="editorial"
+        variant="sacred"
+        sacredPattern="seed"
+        gradientColor="#e53e3e"
         titleKey="elections.title"
         subtitleKey="elections.subtitle"
         intro={PAGE_INTROS.elections}

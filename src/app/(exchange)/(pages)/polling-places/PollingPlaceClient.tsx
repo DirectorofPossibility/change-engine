@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { MapPin, ExternalLink } from 'lucide-react'
+import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
 
 interface ActiveElection {
@@ -44,16 +45,26 @@ interface PollingPlaceClientProps {
 }
 
 export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) {
+  const { zip: savedZip } = useNeighborhood()
   const [zip, setZip] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [results, setResults] = useState<Results | null>(null)
   const [locationTypeFilter, setLocationTypeFilter] = useState<'all' | 'Early Voting' | 'Election Day'>('all')
   const [accessibilityFilter, setAccessibilityFilter] = useState(false)
+  const autoSearched = useRef(false)
 
-  async function handleLookup(e: React.FormEvent) {
-    e.preventDefault()
-    if (zip.length !== 5) { setError('Please enter a 5-digit ZIP code'); return }
+  // Auto-search when user has a saved ZIP
+  useEffect(function () {
+    if (savedZip && savedZip.length === 5 && !autoSearched.current && !results) {
+      autoSearched.current = true
+      setZip(savedZip)
+      doLookup(savedZip)
+    }
+  }, [savedZip]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function doLookup(searchZip: string) {
+    if (searchZip.length !== 5) return
     setError('')
     setLoading(true)
     setResults(null)
@@ -64,7 +75,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
       const { data: zipData } = await supabase
         .from('zip_codes')
         .select('congressional_district, state_senate_district, state_house_district, city')
-        .eq('zip_code', parseInt(zip))
+        .eq('zip_code', parseInt(searchZip))
         .single()
 
       if (!zipData) { setError('ZIP code not found in our database'); setLoading(false); return }
@@ -72,7 +83,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
       let query = supabase
         .from('voting_locations')
         .select('*')
-        .eq('zip_code', parseInt(zip))
+        .eq('zip_code', parseInt(searchZip))
         .eq('is_active', 'Yes')
 
       if (activeElection) {
@@ -90,6 +101,12 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
     } finally {
       setLoading(false)
     }
+  }
+
+  async function handleLookup(e: React.FormEvent) {
+    e.preventDefault()
+    if (zip.length !== 5) { setError('Please enter a 5-digit ZIP code'); return }
+    doLookup(zip)
   }
 
   const filtered = results ? results.votingLocations.filter(function (loc) {

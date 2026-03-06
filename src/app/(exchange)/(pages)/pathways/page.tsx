@@ -49,13 +49,13 @@ export default async function PathwaysPage() {
 
   return (
     <div>
-      <PageHero variant="editorial" titleKey="pathways.title" subtitleKey="pathways.subtitle" />
+      <PageHero variant="sacred" sacredPattern="flower" gradientColor="#C75B2A" titleKey="pathways.title" subtitleKey="pathways.subtitle" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Pathways' }]} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {Object.entries(THEMES).map(([id, theme]) => (
-            <div key={id} className="space-y-3">
+            <div key={id}>
               <PathwayCard
                 themeId={id}
                 name={t(THEME_I18N[id] || '') || theme.name}
@@ -65,13 +65,14 @@ export default async function PathwaysPage() {
                 count={pathwayCounts[id] || 0}
               />
               {/* Center sub-counts */}
-              <div className="flex gap-2 flex-wrap pl-2">
+              <div className="flex gap-3 flex-wrap mt-3 pl-3">
                 {Object.entries(CENTERS).map(([centerName]) => {
                   const count = centerCountsPerPathway[id]?.[centerName] || 0
                   if (count === 0) return null
                   return (
                     <span key={centerName} className="text-xs text-brand-muted">
-                      {t(CENTER_I18N[centerName] || '') || centerName} {count}
+                      <span className="font-medium text-brand-text">{count}</span>{' '}
+                      {t(CENTER_I18N[centerName] || '') || centerName}
                     </span>
                   )
                 })}
