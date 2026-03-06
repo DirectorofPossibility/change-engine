@@ -1672,6 +1672,7 @@ export type Database = {
           id: string
           image_url: string | null
           org_id: string | null
+          referral_url: string | null
           scraped_at: string | null
           source_domain: string | null
           source_trust_level: string | null
@@ -1687,6 +1688,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           org_id?: string | null
+          referral_url?: string | null
           scraped_at?: string | null
           source_domain?: string | null
           source_trust_level?: string | null
@@ -1702,6 +1704,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           org_id?: string | null
+          referral_url?: string | null
           scraped_at?: string | null
           source_domain?: string | null
           source_trust_level?: string | null

@@ -133,7 +133,9 @@ async function callClaude(system: string, user: string, maxTokens = 3000): Promi
 // ── Slug-to-inbox_id resolution ─────────────────────────────────────────
 
 async function buildSlugMap(): Promise<Record<string, string>> {
-  const items = await supaRest('GET', 'content_inbox?source_domain=eq.www.thechangelab.net&select=id,source_url&limit=500')
+  // Build slug map from ALL inbox items (not just one source domain)
+  // This supports cross-referencing between any imported assets
+  const items = await supaRest('GET', 'content_inbox?select=id,source_url&limit=1000')
   const map: Record<string, string> = {}
   for (const item of items) {
     const slug = item.source_url.replace(/\/$/, '').split('/').pop()
@@ -182,15 +184,18 @@ async function enrichItem(
 
   // Build the enrichment prompt with FULL text
   const systemPrompt = `You are the Change Engine v2 knowledge graph enricher for Houston, Texas civic content.
-You have the FULL article text (not just a summary). Your job is to:
+You have the FULL article text (not just a summary). This content comes from external sources — attribute it to the original creator, not to The Change Lab (which is the directory platform).
+
+Your job is to:
 1. Write a clear, engaging title at 6th-grade reading level (max 80 chars)
 2. Write a comprehensive summary at 6th-grade reading level (150-300 words) that captures ALL key information from the article
 3. Classify against the EXACT taxonomy below using valid IDs only
-4. Extract ALL organizations mentioned in the text with their URLs
+4. Extract ALL organizations mentioned in the text with their URLs — these are the original asset creators
 5. Identify action items (donate, volunteer, sign up, etc.) from the content and links
 6. Extract keywords that describe the content
+7. Identify the primary source organization that created this content
 
-The summary should be detailed enough that if the original source disappears, a reader would still understand the full scope of what was covered.
+The summary should be detailed enough that if the original source disappears, a reader would still understand the full scope of what was covered. Use asset-based language — focus on strengths and opportunities.
 
 ${taxonomyPrompt}`
 
@@ -238,6 +243,7 @@ Return a single JSON object:
   ],
   "keywords": ["keyword1", "keyword2"],
   "geographic_scope": "Houston|National|Texas|Global",
+  "source_org_name": "Name of the organization that created this content (not The Change Lab unless it actually authored it)",
   "confidence": 0.0,
   "reasoning": "..."
 }`
@@ -296,6 +302,7 @@ Return a single JSON object:
     geographic_scope: classification.geographic_scope || publishedItem.geographic_scope,
     confidence,
     classification_reasoning: classification.reasoning || '',
+    source_org_name: classification.source_org_name || publishedItem.source_org_name || null,
     action_donate: actions.donate_url || publishedItem.action_donate,
     action_volunteer: actions.volunteer_url || publishedItem.action_volunteer,
     action_signup: actions.signup_url || publishedItem.action_signup,
@@ -352,7 +359,7 @@ Return a single JSON object:
     }
 
     // Create new org — use a deterministic ID from the domain
-    const orgId = 'ORG_CL_' + domain.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30).toUpperCase()
+    const orgId = 'ORG_' + domain.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30).toUpperCase()
 
     try {
       await supaRest('POST', 'organizations', {
@@ -361,7 +368,7 @@ Return a single JSON object:
         website: org.url,
         description_5th_grade: org.description || '',
         focus_area_ids: validFocusAreaIds.join(','),
-        data_source: 'thechangelab.net',
+        data_source: domain,  // attribute to the org's own domain, not the directory
       })
       // Also register the domain
       await supaRest('POST', 'org_domains', {
@@ -421,10 +428,10 @@ export async function POST(req: NextRequest) {
     const idFilter = inboxIds.map(id => `"${id}"`).join(',')
     inboxItems = await supaRest('GET', `content_inbox?id=in.(${idFilter})&select=*`)
   } else {
-    // Get published items from thechangelab.net that haven't been enriched yet
-    // We'll check for items where the review queue still has v2-full-matrix version
+    // Get published items that haven't been enriched yet (any source domain)
+    // Content from any source can be enriched — not limited to one directory
     inboxItems = await supaRest('GET',
-      `content_inbox?source_domain=eq.www.thechangelab.net&status=eq.published&select=*&order=created_at.asc&limit=${batchSize}`)
+      `content_inbox?status=eq.published&select=*&order=created_at.asc&limit=${batchSize}`)
   }
 
   if (!inboxItems || inboxItems.length === 0) {

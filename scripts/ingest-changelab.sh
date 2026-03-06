@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
-# ingest-changelab.sh — Ingest thechangelab.net/resourcecenter into The Change Engine
+# ingest-changelab.sh — Import assets from The Change Lab directory into The Change Engine
 #
+# The Change Lab resource center is a DIRECTORY of external assets.
+# Content is attributed to its original source, not to The Change Lab.
 # Calls the api-ingest edge function in batches of 25 URLs.
 # Images are automatically captured via og:image extraction in classify-content-v2.
 #
@@ -68,8 +70,8 @@ if [ ! -f "$URL_FILE" ]; then
 fi
 
 TOTAL=$(wc -l < "$URL_FILE")
-echo "=== The Change Lab Resource Center Ingestion ==="
-echo "  Source: thechangelab.net/resourcecenter"
+echo "=== Change Lab Directory Import (assets attributed to original sources) ==="
+echo "  Directory: thechangelab.net/resourcecenter"
 echo "  Total URLs: $TOTAL"
 echo "  Batch size: $BATCH_SIZE"
 echo "  Target: $INGEST_URL"

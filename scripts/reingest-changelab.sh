@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Re-ingest Change Lab resources through classify-content-v2 with full body extraction.
+# Re-ingest assets from Change Lab directory through classify-content-v2 with full body extraction.
+# The Change Lab is a directory — content is attributed to original sources, not The Change Lab.
 # Calls the edge function directly using the service role key.
 set -uo pipefail
 
@@ -19,7 +20,7 @@ URL_FILE="$SCRIPT_DIR/changelab-urls.txt"
 LOG_FILE="$SCRIPT_DIR/reingest-changelab.log"
 
 TOTAL=$(wc -l < "$URL_FILE")
-echo "=== Change Lab Re-Ingestion (Full Body) ===" | tee "$LOG_FILE"
+echo "=== Change Lab Directory Re-Ingestion (Full Body) ===" | tee "$LOG_FILE"
 echo "  Total URLs: $TOTAL" | tee -a "$LOG_FILE"
 echo "  Started: $(date)" | tee -a "$LOG_FILE"
 echo "" | tee -a "$LOG_FILE"

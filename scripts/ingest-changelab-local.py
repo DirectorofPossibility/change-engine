@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """
-Scrape thechangelab.net/resourcecenter and insert into content_inbox via REST API.
-Extracts: title, description, image_url, source_url, source_domain.
+Scrape thechangelab.net/resourcecenter directory and insert into content_inbox via REST API.
+
+The Change Lab resource center is a DIRECTORY of external assets — each page curates
+content from external organizations. This script extracts the original source URL
+from each resource page and attributes content to the original creator, not The Change Lab.
+
+Extracts: title, description, image_url, source_url (original), source_domain (original),
+          referral_url (the Change Lab directory page).
 
 Usage:
   python3 scripts/ingest-changelab-local.py
@@ -24,7 +30,7 @@ SUPABASE_KEY = os.environ["SUPABASE_SECRET_KEY"]  # Set via environment variable
 URLS_FILE = os.path.join(os.path.dirname(__file__), "changelab-urls.txt")
 PROGRESS_FILE = os.path.join(os.path.dirname(__file__), ".ingest-progress.json")
 DELAY_BETWEEN = 1.0  # seconds between requests to be polite
-SOURCE_DOMAIN = "www.thechangelab.net"
+DIRECTORY_DOMAIN = "www.thechangelab.net"  # The Change Lab is the directory, not the source
 
 # Allow self-signed / older SSL
 ssl_ctx = ssl.create_default_context()
@@ -111,6 +117,61 @@ def extract_meta(html):
     return title, description, image_url
 
 
+def extract_original_source(html, directory_url):
+    """Extract the original external source URL from a Change Lab resource page.
+
+    The Change Lab resource center pages typically link to the original asset.
+    We look for prominent external links that aren't navigation/social/changelab links.
+    Returns (source_url, source_domain) or (None, None) if not found.
+    """
+    # Look for external links in the main content area
+    # First try: links with explicit "source", "original", "visit", "read more", "learn more" text
+    source_patterns = [
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>[^<]*(?:visit|original|source|read more|learn more|view|go to|website)[^<]*</a>',
+        r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>\s*(?:Visit|Original|Source|Read More|Learn More|View|Go to|Website)',
+    ]
+
+    skip_domains = {
+        "thechangelab.net", "www.thechangelab.net",
+        "facebook.com", "twitter.com", "x.com", "instagram.com",
+        "linkedin.com", "youtube.com", "tiktok.com",
+        "squarespace.com", "wix.com", "wordpress.com",
+    }
+
+    def is_valid_source(url):
+        if not url or not url.startswith("http"):
+            return False
+        try:
+            domain = url.split("//")[1].split("/")[0].lower()
+            return not any(skip in domain for skip in skip_domains)
+        except Exception:
+            return False
+
+    def get_domain(url):
+        try:
+            return url.split("//")[1].split("/")[0].lower()
+        except Exception:
+            return None
+
+    # Try source-indicator patterns first
+    for pattern in source_patterns:
+        matches = re.findall(pattern, html, re.I)
+        for match in matches:
+            if is_valid_source(match):
+                return match, get_domain(match)
+
+    # Fallback: find all external links and pick the most prominent one
+    all_links = re.findall(r'<a[^>]+href=["\']([^"\']+)["\']', html, re.I)
+    external_links = [url for url in all_links if is_valid_source(url)]
+
+    if external_links:
+        # Return the first external link (most likely the primary source)
+        return external_links[0], get_domain(external_links[0])
+
+    # No external source found — this might be original Change Lab content
+    return None, None
+
+
 def supabase_rest(method, path, data=None):
     """Make a Supabase REST API request."""
     url = SUPABASE_URL + "/rest/v1/" + path
@@ -171,7 +232,7 @@ def main():
     with open(URLS_FILE) as f:
         all_urls = [line.strip() for line in f if line.strip()]
 
-    print(f"=== The Change Lab Resource Center Ingestion ===")
+    print(f"=== Change Lab Directory Import (assets attributed to original sources) ===")
     print(f"  Total URLs: {len(all_urls)}")
     print(f"  Target: {SUPABASE_URL}")
     print()
@@ -222,23 +283,32 @@ def main():
             time.sleep(DELAY_BETWEEN)
             continue
 
+        # Extract original external source (the Change Lab is the directory, not the source)
+        original_url, original_domain = extract_original_source(html, url)
+
         # Insert into content_inbox
+        # If an original source was found, attribute to it; otherwise mark as Change Lab original
         record = {
-            "source_url": url,
-            "source_domain": SOURCE_DOMAIN,
+            "source_url": original_url or url,
+            "source_domain": original_domain or DIRECTORY_DOMAIN,
             "title": title,
             "description": description[:2000] if description else None,
             "image_url": image_url,
             "status": "pending",
             "source_trust_level": "trusted",
+            "referral_url": url,  # Always preserve the Change Lab directory page
         }
+        # If no external source found, this is likely original Change Lab content
+        if not original_url:
+            record["source_org_name"] = "The Change Lab"
 
         data, status = insert_inbox(record)
 
         if status in (200, 201):
             inbox_id = data[0]["id"] if isinstance(data, list) and data else "?"
             has_img = "img" if image_url else "no-img"
-            print(f"OK ({has_img}) [{inbox_id[:8]}]")
+            src_label = original_domain or "changelab-original"
+            print(f"OK ({has_img}) [{inbox_id[:8]}] → {src_label}")
             progress["completed"].append(url)
             succeeded += 1
         elif status == 409:

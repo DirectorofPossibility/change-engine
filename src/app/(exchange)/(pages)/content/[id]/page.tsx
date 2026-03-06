@@ -475,10 +475,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-serif font-bold text-brand-text mb-3">At a Glance</h3>
               <div className="space-y-2.5">
-                {item.source_domain && (
+                {(item.source_org_name || item.source_domain) && (
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-brand-muted">Source</span>
-                    <span className="font-medium text-brand-text">{item.source_domain}</span>
+                    <span className="font-medium text-brand-text">{item.source_org_name || item.source_domain}</span>
                   </div>
                 )}
                 {item.published_at && (

@@ -1,3 +1,5 @@
+-- These 7 guides are ORIGINAL Change Lab content (authored by The Change Lab).
+-- Unlike directory imports, these are correctly attributed to thechangelab.net.
 INSERT INTO guides (guide_id, title, slug, description, theme_id, engagement_level, source_url, display_order, sections) VALUES
 
 ('GUIDE_001',
