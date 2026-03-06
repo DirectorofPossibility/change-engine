@@ -44,6 +44,12 @@ async function requireAuth() {
 export async function updateContent(id: string, data: {
   title_6th_grade?: string
   summary_6th_grade?: string
+  body?: string
+  image_url?: string | null
+  content_type?: string
+  source_url?: string
+  event_start_date?: string | null
+  event_end_date?: string | null
   pathway_primary?: string
   center?: string
   is_featured?: boolean

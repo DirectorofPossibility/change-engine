@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="16" fill="#F0ECE6"/>
+  <g transform="translate(100,100)" fill="none" stroke="#C75B2A" stroke-width="1.2" opacity="0.5">
+    <circle r="30"/>
+    <circle cx="30" r="30"/>
+    <circle cx="-30" r="30"/>
+    <circle cx="15" cy="26" r="30"/>
+    <circle cx="-15" cy="26" r="30"/>
+    <circle cx="15" cy="-26" r="30"/>
+    <circle cx="-15" cy="-26" r="30"/>
+  </g>
+  <text x="100" y="170" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="11" fill="#6B6560">Community Exchange</text>
+</svg>

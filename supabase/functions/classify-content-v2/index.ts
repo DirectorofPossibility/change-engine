@@ -126,10 +126,12 @@ Also produce:
 - "hero_quote": A short inspirational quote from the source. Null if none found.
 - "programs": Array of {"name":"...","description":"..."} for key programs mentioned. Max 4. Empty array if none.
 - "action_items": {"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null}
+- "event_start_date": ISO 8601 datetime string if this is an event with a specific date/time. Null otherwise.
+- "event_end_date": ISO 8601 datetime string if the event has an end date/time. Null otherwise.
 
 Return JSON only. No markdown fences.`;
 
-    const userContent = `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON with: theme_primary, theme_secondary, focus_area_ids, sdg_ids, sdoh_code, ntee_codes, airs_codes, center, resource_type_id, content_type, audience_segment_ids, life_situation_ids, service_cat_ids, skill_ids, time_commitment_id, action_type_ids, gov_level_id, title_6th_grade, summary_6th_grade, body_6th_grade, hero_quote, programs, action_items, geographic_scope, confidence, reasoning`;
+    const userContent = `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON with: theme_primary, theme_secondary, focus_area_ids, sdg_ids, sdoh_code, ntee_codes, airs_codes, center, resource_type_id, content_type, audience_segment_ids, life_situation_ids, service_cat_ids, skill_ids, time_commitment_id, action_type_ids, gov_level_id, title_6th_grade, summary_6th_grade, body_6th_grade, hero_quote, programs, action_items, event_start_date, event_end_date, geographic_scope, confidence, reasoning`;
 
     const rawText = await callClaude(contentPrompt, userContent, ANTHROPIC_KEY, 3000);
 

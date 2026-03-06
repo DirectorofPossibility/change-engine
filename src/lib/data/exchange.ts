@@ -153,6 +153,7 @@ export async function getLatestContent(limit = 6) {
     .from('content_published')
     .select('*')
     .eq('is_active', true)
+    .not('content_type', 'in', '("article","report","announcement","event")')
     .order('published_at', { ascending: false })
     .limit(limit)
   return data ?? []
@@ -183,7 +184,7 @@ export async function getCalendarItems(pathway?: string) {
   // Content items tagged as events
   let contentQ = supabase
     .from('content_published')
-    .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url, published_at, action_attend, action_register, content_type')
+    .select('*')
     .eq('is_active', true)
     .eq('content_type', 'event')
     .order('published_at', { ascending: false })
@@ -243,8 +244,8 @@ export async function getCalendarItems(pathway?: string) {
       title: c.title_6th_grade,
       description: c.summary_6th_grade,
       category: 'content',
-      date: c.published_at,
-      endDate: null,
+      date: (c as any).event_start_date || c.published_at,
+      endDate: (c as any).event_end_date || null,
       location: null,
       isVirtual: false,
       registrationUrl: c.action_register || c.action_attend || null,
@@ -334,6 +335,20 @@ export async function getNewsFeed(pathway?: string, limit = 30) {
   if (pathway) q = q.eq('pathway_primary', pathway)
   const { data } = await q
   return data ?? []
+}
+
+/**
+ * News count for a pathway — used to show "X news articles" link.
+ */
+export async function getPathwayNewsCount(themeId: string) {
+  const supabase = await createClient()
+  const { count } = await supabase
+    .from('content_published')
+    .select('id', { count: 'exact', head: true })
+    .eq('is_active', true)
+    .eq('pathway_primary', themeId)
+    .in('content_type', ['article', 'report', 'announcement'])
+  return count ?? 0
 }
 
 /**
@@ -691,6 +706,7 @@ export async function getPathwayContent(themeId: string, center?: string) {
     .select('*')
     .eq('is_active', true)
     .eq('pathway_primary', themeId)
+    .not('content_type', 'in', '("article","report","announcement","event")')
     .order('published_at', { ascending: false })
 
   if (center) {

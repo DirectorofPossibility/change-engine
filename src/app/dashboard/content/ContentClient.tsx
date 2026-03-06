@@ -41,9 +41,16 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
     if (!editing) return
     setSaving(true)
     const form = new FormData(e.currentTarget)
+    const contentType = form.get('content_type') as string
     await updateContent(editing.id, {
       title_6th_grade: form.get('title') as string,
       summary_6th_grade: form.get('summary') as string,
+      body: form.get('body') as string || undefined,
+      image_url: (form.get('image_url') as string) || null,
+      content_type: contentType || undefined,
+      source_url: form.get('source_url') as string || undefined,
+      event_start_date: contentType === 'event' ? (form.get('event_start_date') as string || null) : null,
+      event_end_date: contentType === 'event' ? (form.get('event_end_date') as string || null) : null,
       pathway_primary: form.get('pathway') as string,
       center: form.get('center') as string,
     })
@@ -251,16 +258,43 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
       {/* Edit Modal */}
       <Modal open={!!editing} onClose={() => setEditing(null)} title="Edit Content">
         {editing && (
-          <form onSubmit={handleSaveEdit} className="space-y-4">
+          <form onSubmit={handleSaveEdit} className="space-y-4 max-h-[80vh] overflow-y-auto">
             <div>
               <label className="block text-sm font-medium mb-1">Title (6th Grade)</label>
               <input name="title" defaultValue={editing.title_6th_grade} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Summary (6th Grade)</label>
-              <textarea name="summary" defaultValue={editing.summary_6th_grade} rows={4} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
+              <textarea name="summary" defaultValue={editing.summary_6th_grade} rows={3} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Body (Markdown)</label>
+              <textarea name="body" defaultValue={(editing as any).body || ''} rows={8} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm font-mono" />
             </div>
             <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Image URL</label>
+                <input name="image_url" defaultValue={(editing as any).image_url || ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Source URL</label>
+                <input name="source_url" defaultValue={(editing as any).source_url || ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Content Type</label>
+                <select name="content_type" defaultValue={(editing as any).content_type || ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm">
+                  <option value="">--</option>
+                  <option value="news">News</option>
+                  <option value="event">Event</option>
+                  <option value="resource">Resource</option>
+                  <option value="guide">Guide</option>
+                  <option value="report">Report</option>
+                  <option value="opinion">Opinion</option>
+                  <option value="announcement">Announcement</option>
+                </select>
+              </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Pathway</label>
                 <select name="pathway" defaultValue={editing.pathway_primary || ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm">
@@ -278,6 +312,18 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
                 </select>
               </div>
             </div>
+            {((editing as any).content_type === 'event' || true) && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Event Start Date</label>
+                  <input name="event_start_date" type="datetime-local" defaultValue={(editing as any).event_start_date ? (editing as any).event_start_date.substring(0, 16) : ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Event End Date</label>
+                  <input name="event_end_date" type="datetime-local" defaultValue={(editing as any).event_end_date ? (editing as any).event_end_date.substring(0, 16) : ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm" />
+                </div>
+              </div>
+            )}
             <div className="flex justify-end gap-3 pt-2">
               <button type="button" onClick={() => setEditing(null)} className="px-4 py-2 text-sm border border-brand-border rounded-lg">Cancel</button>
               <button type="submit" disabled={saving} className="px-4 py-2 text-sm bg-brand-accent text-white rounded-lg hover:opacity-90 disabled:opacity-50">

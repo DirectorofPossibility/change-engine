@@ -141,6 +141,8 @@ Deno.serve(async (req: Request) => {
           action_apply: actions.apply_url || null,
           action_call: actions.phone || null,
           action_attend: actions.attend_url || null,
+          event_start_date: c.event_start_date || null,
+          event_end_date: c.event_end_date || null,
           confidence: c.confidence ?? item.confidence,
           classification_reasoning: c.reasoning || '',
           is_featured: false,
