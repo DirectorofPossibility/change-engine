@@ -7,6 +7,7 @@ import {
   getPathwayContent, getCenterContentForPathway,
   getRelatedOpportunities, getRelatedPolicies, getRelatedServices, getRelatedOfficials,
   getFocusAreas, getFoundationsByPathway, getBridgesForPathway,
+  getPathwayNewsCount,
   getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { ShelfBraid } from '@/components/exchange/ShelfBraid'
@@ -39,12 +40,13 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const theme = resolveTheme(slug)
   if (!theme) notFound()
 
-  // Phase 1: fetch content + focus areas + bridges
-  const [content, centerCounts, allFocusAreas, bridgeData] = await Promise.all([
+  // Phase 1: fetch content + focus areas + bridges + news count
+  const [content, centerCounts, allFocusAreas, bridgeData, newsCount] = await Promise.all([
     getPathwayContent(theme.id),
     getCenterContentForPathway(theme.id),
     getFocusAreas(),
     getBridgesForPathway(theme.id),
+    getPathwayNewsCount(theme.id),
   ])
 
   const themeFocusAreas = allFocusAreas.filter(function (fa) { return fa.theme_id === theme.id })
@@ -120,6 +122,22 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         </div>
         <div className="h-1" style={{ background: `linear-gradient(90deg, ${theme.color}, transparent 60%)` }} />
       </div>
+
+      {/* ── News Feed Link ── */}
+      {newsCount > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+          <Link
+            href={'/news?pathway=' + theme.id}
+            className="inline-flex items-center gap-2 text-sm font-medium hover:underline transition-colors"
+            style={{ color: theme.color }}
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
+            </svg>
+            {newsCount} news {newsCount === 1 ? 'article' : 'articles'} in {theme.name}
+          </Link>
+        </div>
+      )}
 
       {/* ── Shelf Braid: 4 centers with mixed entity types ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
