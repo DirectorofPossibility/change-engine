@@ -329,6 +329,26 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Main content */}
           <div className="lg:col-span-2">
+            {/* Embedded Video — hero position for video-centric content */}
+            {(item as any).video_url && (() => {
+              const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
+              const videoId = match ? match[1] : null
+              if (!videoId) return null
+              return (
+                <div className="mb-8">
+                  <div className="relative w-full overflow-hidden rounded-xl border border-brand-border shadow-sm" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                      title="Video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              )
+            })()}
+
             {/* Body Sections — numbered headings */}
             {bodyBlocks.length > 0 && (
               <div className="space-y-6">
@@ -378,26 +398,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 })}
               </div>
             )}
-
-            {/* Embedded Video */}
-            {(item as any).video_url && (() => {
-              const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
-              const videoId = match ? match[1] : null
-              if (!videoId) return null
-              return (
-                <div className="my-8">
-                  <div className="relative w-full overflow-hidden rounded-xl" style={{ paddingBottom: '56.25%' }}>
-                    <iframe
-                      className="absolute inset-0 w-full h-full"
-                      src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-                      title="Video"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                </div>
-              )
-            })()}
 
             {/* AI Break It Down */}
             <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
