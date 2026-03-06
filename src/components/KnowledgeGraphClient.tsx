@@ -488,18 +488,18 @@ export default function KnowledgeGraphClient() {
     if (node.type === "pathway") {
       const t = THEMES[node.id as string];
       const pwEdges = PATHWAY_CENTER.filter(e => e.pw === node.id && e.n > 0);
-      c.push({ label: "Centers", nodes: pwEdges.map(e => `${CENTERS[e.c]?.emoji} ${e.c} (${e.n})`), color: "#6366f1" });
-      c.push({ label: "5 Rings", nodes: Object.entries(t.rings).map(([ring, cnt]) => `${RINGS.find(r => r.id === ring)?.icon || ""} ${ring}: ${cnt}`), color: "#C75B2A" });
+      c.push({ label: "Centers", nodes: pwEdges.map(e => `${e.c} (${e.n})`), color: "#6366f1" });
+      c.push({ label: "5 Rings", nodes: Object.entries(t.rings).map(([ring, cnt]) => `${ring}: ${cnt}`), color: "#C75B2A" });
       const bridges = BRIDGING.filter(b => b.a === node.id || b.b === node.id);
-      if (bridges.length) c.push({ label: "Bridges", nodes: bridges.map(b => { const o = b.a === node.id ? b.b : b.a; return `${THEMES[o]?.emoji} ${THEMES[o]?.name} (${b.shared} — ${b.reason})`; }), color: "#d53f8c" });
+      if (bridges.length) c.push({ label: "Bridges", nodes: bridges.map(b => { const o = b.a === node.id ? b.b : b.a; return `${THEMES[o]?.name} (${b.shared} — ${b.reason})`; }), color: "#d53f8c" });
       if (t.sdoh.length) c.push({ label: "SDOH", nodes: t.sdoh.map(code => SDOH.find(x => x.id === code)?.name || code), color: "#805ad5" });
-      if (t.sdgs.length) c.push({ label: "SDGs", nodes: t.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `${s.icon} #${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
-      if (t.audiences.length) c.push({ label: "Audiences", nodes: t.audiences.map(id => { const a = AUDIENCES.find(x => x.id === id); return a ? `${a.emoji} ${a.name}` : id; }), color: "#d53f8c" });
+      if (t.sdgs.length) c.push({ label: "SDGs", nodes: t.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
+      if (t.audiences.length) c.push({ label: "Audiences", nodes: t.audiences.map(id => { const a = AUDIENCES.find(x => x.id === id); return a ? `${a.name}` : id; }), color: "#d53f8c" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.themes.includes(node.id as string));
-      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.emoji} ${s.name} (${s.count})`), color: "#10b981" });
+      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.name} (${s.count})`), color: "#10b981" });
       if (t.orgs.length) c.push({ label: "Organizations", nodes: t.orgs, color: "#dd6b20" });
       const geos = GEOGRAPHY.filter(g => g.pathways.includes(node.id as string));
-      if (geos.length) c.push({ label: "Geography", nodes: geos.map(g => `🏘️ ${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
+      if (geos.length) c.push({ label: "Geography", nodes: geos.map(g => `${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
       const missing = MISSING_BRIDGES.filter(b => b.a === node.id || b.b === node.id);
       if (missing.length) c.push({ label: "Missing Bridges", nodes: missing.map(b => { const o = b.a === node.id ? b.b : b.a; return `${THEMES[o]?.name}: ${b.reason}`; }), color: "#ef4444" });
       const mc = MISSING_CENTER_EDGES.filter(e => e.pw === node.id);
@@ -508,81 +508,81 @@ export default function KnowledgeGraphClient() {
     if (node.type === "center") {
       const ctr = CENTERS[node.id as string];
       const pwEdges = PATHWAY_CENTER.filter(e => e.c === node.id && e.n > 0);
-      c.push({ label: "Pathways", nodes: pwEdges.map(e => `${THEMES[e.pw]?.emoji} ${THEMES[e.pw]?.name} (${e.n})`), color: "#C75B2A" });
+      c.push({ label: "Pathways", nodes: pwEdges.map(e => `${THEMES[e.pw]?.name} (${e.n})`), color: "#C75B2A" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.centers.includes(node.id as string));
-      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.emoji} ${s.name}`), color: "#10b981" });
+      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.name}`), color: "#10b981" });
       if (ctr?.sdoh.length) c.push({ label: "SDOH", nodes: ctr.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#805ad5" });
-      if (ctr?.sdgs.length) c.push({ label: "SDGs", nodes: ctr.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `${s.icon} #${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
+      if (ctr?.sdgs.length) c.push({ label: "SDGs", nodes: ctr.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
       if (ctr?.orgs.length) { const ctrOrgs = ORGANIZATIONS.filter(o => ctr.orgs.includes(o.id)); c.push({ label: "Organizations", nodes: ctrOrgs.map(o => o.name), color: "#dd6b20" }); }
-      if (ctr?.geos.length) { const ctrGeos = GEOGRAPHY.filter(g => ctr.geos.includes(g.id)); c.push({ label: "Geography", nodes: ctrGeos.map(g => `🏘️ ${g.name}`), color: "#d69e2e" }); }
+      if (ctr?.geos.length) { const ctrGeos = GEOGRAPHY.filter(g => ctr.geos.includes(g.id)); c.push({ label: "Geography", nodes: ctrGeos.map(g => `${g.name}`), color: "#d69e2e" }); }
       const ctrRings = RINGS.filter(r => { const ringCenters = Object.entries(THEMES).some(([tid]) => PATHWAY_CENTER.some(pc => pc.c === node.id && pc.pw === tid && pc.n > 0)); return ringCenters; });
-      if (ctrRings.length) c.push({ label: "Content Rings", nodes: RINGS.map(r => `${r.icon} ${r.name} (${r.count})`), color: "#6366f1" });
+      if (ctrRings.length) c.push({ label: "Content Rings", nodes: RINGS.map(r => `${r.name} (${r.count})`), color: "#6366f1" });
     }
     if (node.type === "sdoh") {
       const d = SDOH.find(s => s.id === node.id);
-      if (d?.themes.length) c.push({ label: "Pathways", nodes: d.themes.map(t => `${THEMES[t]?.emoji} ${THEMES[t]?.name}`), color: "#C75B2A" });
-      if (d?.sdgs.length) c.push({ label: "SDGs", nodes: d.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `${s.icon} #${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
+      if (d?.themes.length) c.push({ label: "Pathways", nodes: d.themes.map(t => `${THEMES[t]?.name}`), color: "#C75B2A" });
+      if (d?.sdgs.length) c.push({ label: "SDGs", nodes: d.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.sdoh === node.id);
-      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.emoji} ${s.name}`), color: "#10b981" });
+      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.name}`), color: "#10b981" });
       const orgs = ORGANIZATIONS.filter(o => o.sdoh.includes(node.id as string));
       if (orgs.length) c.push({ label: "Organizations", nodes: orgs.map(o => o.name), color: "#dd6b20" });
       const sdohGeos = GEOGRAPHY.filter(g => g.sdoh.includes(node.id as string));
-      if (sdohGeos.length) c.push({ label: "Geography", nodes: sdohGeos.map(g => `🏘️ ${g.name}`), color: "#d69e2e" });
+      if (sdohGeos.length) c.push({ label: "Geography", nodes: sdohGeos.map(g => `${g.name}`), color: "#d69e2e" });
       const sdohRings = RINGS.filter(r => r.sdoh.includes(node.id as string));
-      if (sdohRings.length) c.push({ label: "Content Rings", nodes: sdohRings.map(r => `${r.icon} ${r.name}`), color: "#6366f1" });
+      if (sdohRings.length) c.push({ label: "Content Rings", nodes: sdohRings.map(r => `${r.name}`), color: "#6366f1" });
     }
     if (node.type === "sdg") {
       const linkedSdoh = SDG_SDOH_LINKS.filter(l => l.sdg === node.id);
       if (linkedSdoh.length) c.push({ label: "SDOH", nodes: linkedSdoh.map(l => l.label), color: "#805ad5" });
       const themes = Object.entries(THEMES).filter(([, t]) => t.sdgs.includes(node.id as number));
-      if (themes.length) c.push({ label: "Pathways", nodes: themes.map(([, t]) => `${t.emoji} ${t.name}`), color: "#C75B2A" });
+      if (themes.length) c.push({ label: "Pathways", nodes: themes.map(([, t]) => `${t.name}`), color: "#C75B2A" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.sdg === node.id);
-      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.emoji} ${s.name}`), color: "#10b981" });
+      if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.name}`), color: "#10b981" });
       const orgs = ORGANIZATIONS.filter(o => o.sdgs.includes(node.id as number));
       if (orgs.length) c.push({ label: "Organizations", nodes: orgs.map(o => o.name), color: "#dd6b20" });
       const sdgGeos = GEOGRAPHY.filter(g => g.sdgs.includes(node.id as number));
-      if (sdgGeos.length) c.push({ label: "Geography", nodes: sdgGeos.map(g => `🏘️ ${g.name}`), color: "#d69e2e" });
+      if (sdgGeos.length) c.push({ label: "Geography", nodes: sdgGeos.map(g => `${g.name}`), color: "#d69e2e" });
       const sdgRings = RINGS.filter(r => r.sdgs.includes(node.id as number));
-      if (sdgRings.length) c.push({ label: "Content Rings", nodes: sdgRings.map(r => `${r.icon} ${r.name}`), color: "#6366f1" });
+      if (sdgRings.length) c.push({ label: "Content Rings", nodes: sdgRings.map(r => `${r.name}`), color: "#6366f1" });
     }
     if (node.type === "lifeSit") {
       const sit = LIFE_SITUATIONS.find(ls => ls.name === node.id);
       if (sit) {
-        c.push({ label: "Pathways", nodes: sit.themes.map(t => `${THEMES[t]?.emoji} ${THEMES[t]?.name}`), color: "#C75B2A" });
-        c.push({ label: "Centers", nodes: sit.centers.map(cn => `${CENTERS[cn]?.emoji} ${cn}`), color: "#6366f1" });
+        c.push({ label: "Pathways", nodes: sit.themes.map(t => `${THEMES[t]?.name}`), color: "#C75B2A" });
+        c.push({ label: "Centers", nodes: sit.centers.map(cn => `${cn}`), color: "#6366f1" });
         c.push({ label: "SDOH", nodes: [SDOH.find(s => s.id === sit.sdoh)?.name || sit.sdoh], color: "#805ad5" });
-        c.push({ label: "SDG", nodes: [(() => { const s = SDG_DATA.find(x => x.id === sit.sdg); return s ? `${s.icon} #${s.id}: ${s.name}` : `#${sit.sdg}`; })()], color: "#dd6b20" });
+        c.push({ label: "SDG", nodes: [(() => { const s = SDG_DATA.find(x => x.id === sit.sdg); return s ? `#${s.id}: ${s.name}` : `#${sit.sdg}`; })()], color: "#dd6b20" });
         if (sit.services.length) c.push({ label: "Services", nodes: sit.services, color: "#10b981" });
         c.push({ label: "AIRS Code", nodes: [sit.airs], color: "#10b981" });
-        if (sit.audiences.length) c.push({ label: "Audiences", nodes: sit.audiences.map(id => { const a = AUDIENCES.find(x => x.id === id); return a ? `${a.emoji} ${a.name}` : id; }), color: "#d53f8c" });
+        if (sit.audiences.length) c.push({ label: "Audiences", nodes: sit.audiences.map(id => { const a = AUDIENCES.find(x => x.id === id); return a ? `${a.name}` : id; }), color: "#d53f8c" });
         if (sit.orgs.length) c.push({ label: "Organizations", nodes: sit.orgs, color: "#dd6b20" });
         const sitGeos = GEOGRAPHY.filter(g => g.situations.includes(sit.name));
-        if (sitGeos.length) c.push({ label: "Geography", nodes: sitGeos.map(g => `🏘️ ${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
+        if (sitGeos.length) c.push({ label: "Geography", nodes: sitGeos.map(g => `${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
         const sitRings = RINGS.filter(r => r.situations.includes(sit.name));
-        if (sitRings.length) c.push({ label: "Content Rings", nodes: sitRings.map(r => `${r.icon} ${r.name}`), color: "#6366f1" });
+        if (sitRings.length) c.push({ label: "Content Rings", nodes: sitRings.map(r => `${r.name}`), color: "#6366f1" });
       }
     }
     if (node.type === "ring") {
       const ring = RINGS.find(r => r.id === node.id);
-      const perPathway = Object.entries(THEMES).map(([id, t]) => `${t.emoji} ${t.name}: ${t.rings[node.id as keyof typeof t.rings] || 0}`);
+      const perPathway = Object.entries(THEMES).map(([id, t]) => `${t.name}: ${t.rings[node.id as keyof typeof t.rings] || 0}`);
       c.push({ label: "Per Pathway", nodes: perPathway, color: "#C75B2A" });
       if (ring) {
         if (ring.orgs.length) { const ringOrgs = ORGANIZATIONS.filter(o => ring.orgs.includes(o.id)); c.push({ label: "Organizations", nodes: ringOrgs.map(o => o.name), color: "#dd6b20" }); }
-        if (ring.sdgs.length) c.push({ label: "SDGs", nodes: ring.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `${s.icon} #${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
+        if (ring.sdgs.length) c.push({ label: "SDGs", nodes: ring.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
         if (ring.sdoh.length) c.push({ label: "SDOH", nodes: ring.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#805ad5" });
         if (ring.situations.length) c.push({ label: "Life Situations", nodes: ring.situations, color: "#10b981" });
-        if (ring.geos.length) { const ringGeos = GEOGRAPHY.filter(g => ring.geos.includes(g.id)); c.push({ label: "Geography", nodes: ringGeos.map(g => `🏘️ ${g.name}`), color: "#d69e2e" }); }
+        if (ring.geos.length) { const ringGeos = GEOGRAPHY.filter(g => ring.geos.includes(g.id)); c.push({ label: "Geography", nodes: ringGeos.map(g => `${g.name}`), color: "#d69e2e" }); }
       }
     }
     if (node.type === "org") {
       const org = ORGANIZATIONS.find(o => o.id === node.id);
       if (org) {
-        c.push({ label: "Pathways", nodes: org.themes.map(t => `${THEMES[t]?.emoji} ${THEMES[t]?.name}`), color: "#C75B2A" });
+        c.push({ label: "Pathways", nodes: org.themes.map(t => `${THEMES[t]?.name}`), color: "#C75B2A" });
         c.push({ label: "SDOH", nodes: org.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#805ad5" });
         c.push({ label: "SDGs", nodes: org.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
         if (org.situations.length) c.push({ label: "Life Situations", nodes: org.situations, color: "#10b981" });
         const orgGeos = GEOGRAPHY.filter(g => g.orgs.includes(org.id));
-        if (orgGeos.length) c.push({ label: "Geography", nodes: orgGeos.map(g => `🏘️ ${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
+        if (orgGeos.length) c.push({ label: "Geography", nodes: orgGeos.map(g => `${g.name} (${g.zips.join(", ")})`), color: "#d69e2e" });
         c.push({ label: "Pipeline", nodes: [`${org.pipeline} — ${org.domain} — ${org.count} articles`], color: "#8b8178" });
       }
     }
@@ -590,13 +590,13 @@ export default function KnowledgeGraphClient() {
       const geo = GEOGRAPHY.find(g => g.id === node.id);
       if (geo) {
         c.push({ label: "ZIP Codes", nodes: geo.zips, color: "#d69e2e" });
-        c.push({ label: "Pathways", nodes: geo.pathways.map(t => `${THEMES[t]?.emoji} ${THEMES[t]?.name}`), color: "#C75B2A" });
+        c.push({ label: "Pathways", nodes: geo.pathways.map(t => `${THEMES[t]?.name}`), color: "#C75B2A" });
         const geoOrgs = ORGANIZATIONS.filter(o => geo.orgs.includes(o.id));
         if (geoOrgs.length) c.push({ label: "Organizations", nodes: geoOrgs.map(o => o.name), color: "#dd6b20" });
         if (geo.situations.length) c.push({ label: "Life Situations", nodes: geo.situations, color: "#10b981" });
         if (geo.sdoh.length) c.push({ label: "SDOH", nodes: geo.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#805ad5" });
-        if (geo.sdgs.length) c.push({ label: "SDGs", nodes: geo.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `${s.icon} #${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
-        if (geo.rings.length) { const geoRings = RINGS.filter(r => geo.rings.includes(r.id)); c.push({ label: "Content Rings", nodes: geoRings.map(r => `${r.icon} ${r.name} (${r.count})`), color: "#6366f1" }); }
+        if (geo.sdgs.length) c.push({ label: "SDGs", nodes: geo.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#dd6b20" });
+        if (geo.rings.length) { const geoRings = RINGS.filter(r => geo.rings.includes(r.id)); c.push({ label: "Content Rings", nodes: geoRings.map(r => `${r.name} (${r.count})`), color: "#6366f1" }); }
       }
     }
     return c;
@@ -612,9 +612,12 @@ export default function KnowledgeGraphClient() {
       <div style={{ padding: "20px 28px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            <div style={{ width: 36, height: 36, borderRadius: "50%", background: "linear-gradient(135deg, #e53e3e, #dd6b20, #d69e2e, #38a169, #3182ce, #805ad5)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "#ffffff", border: "2px solid #2C2C2C" }} />
-            </div>
+            <svg width={36} height={36} viewBox="0 0 36 36" style={{ flexShrink: 0 }}>
+              <circle cx={18} cy={18} r={17} fill="#C75B2A" opacity={0.08} stroke="#C75B2A" strokeWidth={1.2} />
+              {[0, 60, 120, 180, 240, 300].map(d => <circle key={d} cx={18 + Math.cos(d * Math.PI / 180) * 6} cy={18 + Math.sin(d * Math.PI / 180) * 6} r={6} fill="none" stroke="#C75B2A" strokeWidth={0.6} opacity={0.35} />)}
+              <circle cx={18} cy={18} r={6} fill="none" stroke="#C75B2A" strokeWidth={0.8} opacity={0.5} />
+              <circle cx={18} cy={18} r={2} fill="#C75B2A" opacity={0.4} />
+            </svg>
             <div>
               <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: "-0.02em" }}>
                 <span style={{ color: "#C75B2A" }}>Civic Knowledge Galaxy</span>
@@ -629,7 +632,7 @@ export default function KnowledgeGraphClient() {
           <div style={{ position: "relative" }}>
             <input type="text" placeholder="Search nodes..." value={search} onChange={e => setSearch(e.target.value)}
               style={{ padding: "7px 12px 7px 30px", borderRadius: 8, border: "1px solid #e5e0d8", background: "#f5f1eb", color: "#2C2C2C", fontSize: 12, width: 160, outline: "none" }} />
-            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 12, color: "#8b8178" }}>🔍</span>
+            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 11, color: "#8b8178", fontWeight: 600 }}>S</span>
           </div>
           {["galaxy", "nodemap", "mesh", "stats", "gaps"].map(v => (
             <button key={v} onClick={() => setView(v)} style={{
@@ -660,7 +663,8 @@ export default function KnowledgeGraphClient() {
 
       {/* ═══════════════════ GALAXY VIEW ═══════════════════ */}
       {view === "galaxy" && (
-        <div style={{ padding: "0 28px 28px" }}>
+        <div style={{ padding: "0 28px 28px", display: "flex", gap: 0 }}>
+        <div style={{ flex: "1 1 0%", minWidth: 0 }}>
           <div style={{ display: "flex", gap: 4, marginBottom: 10, flexWrap: "wrap", alignItems: "center" }}>
             {([
               { key: "centers" as LayerKey, label: "Centers", color: "#6366f1" },
@@ -1012,7 +1016,7 @@ export default function KnowledgeGraphClient() {
                   <g key={`geo-${i}`} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(g)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(g)}>
                     {isSel && <circle cx={g.x} cy={g.y} r={r * 2.5} fill="#d69e2e" opacity={0.1} filter="url(#selGlow)" />}
                     <polygon points={hex} fill="#f8f6f3" stroke="#d69e2e" strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.4} />
-                    <text x={g.x} y={g.y + 1} fill="#2C2C2C" fontSize={8} textAnchor="middle" dominantBaseline="middle">🏘️</text>
+                    <circle cx={g.x} cy={g.y} r={4} fill="#d69e2e" opacity={isH || isSel ? 0.7 : 0.3} />
                     {(isH || isSel) && <text x={g.x} y={g.y + r + 14} fill="#d69e2e" fontSize={7} textAnchor="middle" fontWeight={600}>{g.name}</text>}
                     {(isH || isSel) && <text x={g.x} y={g.y + r + 23} fill="#8b8178" fontSize={6} textAnchor="middle">{g.population?.toLocaleString()} pop · {g.zips?.join(", ")}</text>}
                   </g>
@@ -1026,7 +1030,7 @@ export default function KnowledgeGraphClient() {
                   <g key={r.id} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(r)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(r)}>
                     {isSel && <circle cx={r.x} cy={r.y} r={24} fill={r.color} opacity={0.1} filter="url(#selGlow)" />}
                     <circle cx={r.x} cy={r.y} r={16} fill="#f8f6f3" stroke={r.color} strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.5} />
-                    <text x={r.x} y={r.y + 1} fill="#2C2C2C" fontSize={12} textAnchor="middle" dominantBaseline="middle">{r.icon}</text>
+                    <text x={r.x} y={r.y + 4} fill={r.color} fontSize={9} textAnchor="middle" fontWeight={800}>{r.count}</text>
                     <text x={r.x} y={r.y + (r.y < cy ? -22 : 28)} fill={isH || isSel ? r.color : "#e5e0d8"} fontSize={8} textAnchor="middle" fontWeight={600}>{r.name}</text>
                     {(isH || isSel) && <text x={r.x} y={r.y + (r.y < cy ? -12 : 38)} fill="#8b8178" fontSize={7} textAnchor="middle">{r.count}</text>}
                   </g>
@@ -1087,7 +1091,8 @@ export default function KnowledgeGraphClient() {
                     {isSel && <circle cx={n.x} cy={n.y} r={36} fill={n.color} opacity={0.15} filter="url(#selGlow)" />}
                     <circle cx={n.x} cy={n.y} r={16 + n.content / 3} fill={n.color} opacity={0}><animate attributeName="opacity" values="0;0.1;0" dur="3s" begin={`${i * 0.4}s`} repeatCount="indefinite" /></circle>
                     <circle cx={n.x} cy={n.y} r={21} fill="#f8f6f3" stroke={n.color} strokeWidth={isSel ? 3 : isH ? 2.5 : 1.5} />
-                    <text x={n.x} y={n.y + 1} fill="#2C2C2C" fontSize={15} textAnchor="middle" dominantBaseline="middle">{n.emoji}</text>
+                    <circle cx={n.x} cy={n.y} r={8} fill={n.color} opacity={0.15} />
+                    <text x={n.x} y={n.y + 3.5} fill={n.color} fontSize={9} textAnchor="middle" fontWeight={800}>{n.name.split(" ").pop()?.charAt(0) || ""}</text>
                     <text x={n.x} y={n.y + (n.y < cy ? -29 : 34)} fill={n.color} fontSize={10} textAnchor="middle" fontWeight={600}>{n.name}</text>
                     <text x={n.x} y={n.y + (n.y < cy ? -18 : 45)} fill="#9a918a" fontSize={8} textAnchor="middle">{n.content} · {n.focus}fa</text>
                   </g>
@@ -1101,7 +1106,7 @@ export default function KnowledgeGraphClient() {
                   <g key={`ls-${i}`} data-node style={{ cursor: "pointer", opacity: dim ? 0.15 : 1 }} onMouseEnter={() => setHovered(s)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(s)}>
                     {isSel && <circle cx={s.x} cy={s.y} r={16} fill="#10b981" opacity={0.15} filter="url(#selGlow)" />}
                     <circle cx={s.x} cy={s.y} r={isH || isSel ? 11 : 6} fill="#10b981" opacity={isH || isSel ? 0.3 : 0.08} />
-                    <text x={s.x} y={s.y + 4} fill="#2C2C2C" fontSize={isH || isSel ? 10 : 8} textAnchor="middle">{s.emoji}</text>
+                    <circle cx={s.x} cy={s.y} r={3} fill="#10b981" opacity={isH || isSel ? 0.8 : 0.4} />
                     {(isH || isSel) && <text x={s.x} y={s.y + 18} fill="#10b981" fontSize={7} textAnchor="middle" fontWeight={600}>{s.name} ({s.count})</text>}
                   </g>
                 );
@@ -1114,7 +1119,8 @@ export default function KnowledgeGraphClient() {
                   <g key={n.id} data-node style={{ cursor: "pointer" }} onMouseEnter={() => setHovered(n)} onMouseLeave={() => setHovered(null)} onClick={() => selectNode(n)}>
                     {isSel && <circle cx={n.x} cy={n.y} r={38} fill={n.color} opacity={0.12} filter="url(#selGlow)" />}
                     <circle cx={n.x} cy={n.y} r={22} fill="#f8f6f3" stroke={n.color} strokeWidth={isSel ? 3 : isH ? 2.5 : 1.5} />
-                    <text x={n.x} y={n.y + 1} fill="#2C2C2C" fontSize={16} textAnchor="middle" dominantBaseline="middle">{n.emoji}</text>
+                    <circle cx={n.x} cy={n.y} r={9} fill={n.color} opacity={0.15} />
+                    <text x={n.x} y={n.y + 3.5} fill={n.color} fontSize={10} textAnchor="middle" fontWeight={800}>{(n.name as string).charAt(0)}</text>
                     <text x={n.x} y={n.y + 34} fill={n.color} fontSize={9.5} textAnchor="middle" fontWeight={600}>{n.name}</text>
                     <text x={n.x} y={n.y + 45} fill="#9a918a" fontSize={8} textAnchor="middle">{n.count}</text>
                   </g>
@@ -1132,13 +1138,21 @@ export default function KnowledgeGraphClient() {
                 );
               })}
 
-              {/* Hub */}
+              {/* Hub — Flower of Life */}
               <g data-node style={{ cursor: "pointer" }} onClick={() => setShowExplosion(!showExplosion)}>
-                <circle cx={cx} cy={cy} r={32} fill="#f8f6f3" stroke="#C75B2A" strokeWidth={2} filter="url(#glow)" />
-                <text x={cx} y={cy - 9} fill="#C75B2A" fontSize={7} textAnchor="middle" fontWeight={700} letterSpacing="0.1em">CHANGE</text>
-                <text x={cx} y={cy + 1} fill="#C75B2A" fontSize={7} textAnchor="middle" fontWeight={700} letterSpacing="0.1em">ENGINE</text>
-                <text x={cx} y={cy + 13} fill="#8b8178" fontSize={5.5} textAnchor="middle">~{TOTAL_DIMS} dims · 5 rings</text>
-                <text x={cx} y={cy + 21} fill="#9a918a" fontSize={5} textAnchor="middle">{showExplosion ? "click to collapse" : "click to explode all dims"}</text>
+                <circle cx={cx} cy={cy} r={34} fill="#faf8f5" stroke="#C75B2A" strokeWidth={1.5} opacity={0.9} />
+                <circle cx={cx} cy={cy} r={34} fill="url(#coreGlow)" />
+                {/* Flower of Life: 6 petals + center */}
+                {[0, 60, 120, 180, 240, 300].map(deg => {
+                  const rad = (deg * Math.PI) / 180;
+                  const px = cx + Math.cos(rad) * 12;
+                  const py = cy + Math.sin(rad) * 12;
+                  return <circle key={deg} cx={px} cy={py} r={12} fill="none" stroke="#C75B2A" strokeWidth={0.7} opacity={0.3} />;
+                })}
+                <circle cx={cx} cy={cy} r={12} fill="none" stroke="#C75B2A" strokeWidth={0.9} opacity={0.45} />
+                <circle cx={cx} cy={cy} r={4} fill="#C75B2A" opacity={0.25} />
+                <text x={cx} y={cy + 42} fill="#C75B2A" fontSize={6} textAnchor="middle" fontWeight={700} letterSpacing="0.08em" opacity={0.7}>CHANGE ENGINE</text>
+                <text x={cx} y={cy + 50} fill="#9a918a" fontSize={5} textAnchor="middle">{showExplosion ? "click to collapse" : "click to explode dims"}</text>
               </g>
             </svg>
 
@@ -1155,42 +1169,64 @@ export default function KnowledgeGraphClient() {
               </div>
             )}
           </div>
-
-          {/* Detail panel */}
-          {selectedNode && (
-            <div style={{ marginTop: 12, padding: 20, background: "#f8f6f3", borderRadius: 12, border: `1px solid ${selectedNode.color || "#e5e0d8"}30`, maxHeight: 400, overflowY: "auto" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        </div>
+        <div style={{ width: 360, flexShrink: 0, borderLeft: "1px solid #e5e0d8", background: "#faf9f7", overflowY: "auto", maxHeight: "82vh", position: "sticky", top: 0 }}>
+          {selectedNode ? (
+            <div style={{ padding: 20 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                 <div>
                   <span style={{ padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, background: selectedNode.color + "20", color: selectedNode.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{selectedNode.type}</span>
-                  <h3 style={{ margin: "6px 0 0", fontSize: 18, color: selectedNode.color }}>{selectedNode.emoji || selectedNode.icon || ""} {selectedNode.name}</h3>
+                  <h3 style={{ margin: "6px 0 0", fontSize: 17, fontWeight: 700, color: selectedNode.color }}>{selectedNode.name}</h3>
                 </div>
-                <button onClick={() => setSelectedNode(null)} style={{ background: "#f5f1eb", border: "1px solid #e5e0d8", color: "#8b8178", cursor: "pointer", fontSize: 14, borderRadius: 8, padding: "4px 10px" }}>ESC</button>
+                <button onClick={() => setSelectedNode(null)} style={{ background: "#f5f1eb", border: "1px solid #e5e0d8", color: "#8b8178", cursor: "pointer", fontSize: 12, borderRadius: 8, padding: "4px 10px", whiteSpace: "nowrap" }}>ESC</button>
               </div>
-              <div style={{ marginTop: 12, fontSize: 13, color: "#6b6157", lineHeight: 1.7 }}>
-                {selectedNode.type === "pathway" && <>{selectedNode.content} items across {selectedNode.focus} focus areas, distributed across 5 rings. Each item classified across ~{TOTAL_DIMS} dimensions. Orgs mentioned are auto-detected and run through the full pipeline.</>}
-                {selectedNode.type === "center" && <>Answers &ldquo;{selectedNode.question}&rdquo; — {selectedNode.count} items routed through all 7 pathways. Centers frame content: learning material, available resources, calls to action, or accountability structures.</>}
-                {selectedNode.type === "sdoh" && <>{selectedNode.count} items in &ldquo;{selectedNode.name}&rdquo; — links to pathways, SDGs, life situations, and organizations in a full mesh. SDOH factors account for up to 80% of health outcomes.</>}
-                {selectedNode.type === "sdg" && <>UN SDG #{selectedNode.id}: &ldquo;{selectedNode.name}&rdquo; — {selectedNode.count} items. Cross-linked to SDOH domains, pathways, life situations, and orgs via the Rosetta Stone.</>}
-                {selectedNode.type === "lifeSit" && <>&ldquo;{selectedNode.name}&rdquo; — {selectedNode.count} resources. Full mesh: pathways, centers, SDOH, SDG, AIRS code, service categories, audience segments, and serving organizations.</>}
-                {selectedNode.type === "ring" && <>{selectedNode.name}: {selectedNode.count} items. One of 5 content rings in the wayfinder. Distributed across all 7 pathways and connected to 4 centers.</>}
-                {selectedNode.type === "org" && <>{selectedNode.name} ({selectedNode.domain}) — {selectedNode.count} articles. Pipeline status: {selectedNode.pipeline}. When mentioned in content, orgs are auto-extracted, created if new, classified across all dimensions, and linked via org_domains.</>}
-                {selectedNode.type === "geography" && <>{selectedNode.name} — pop. {selectedNode.population?.toLocaleString()}. ZIP codes: {selectedNode.zips?.join(", ")}. Connected to pathways, organizations, life situations, and SDOH domains serving this neighborhood.</>}
-                {selectedNode.type === "domain" && <>{selectedNode.items?.length} object types · {selectedNode.totalCount?.toLocaleString()} records.</>}
-                {selectedNode.type === "crosswalk" && <>{selectedNode.full}: {selectedNode.count} codes. Part of the Rosetta Stone mapping 312 focus areas across 5 systems.</>}
+              <div style={{ fontSize: 12, color: "#6b6157", lineHeight: 1.6, marginBottom: 16, paddingBottom: 12, borderBottom: "1px solid #e5e0d8" }}>
+                {selectedNode.type === "pathway" && <>{selectedNode.content} items across {selectedNode.focus} focus areas, distributed across 5 rings. Each item classified across ~{TOTAL_DIMS} dimensions.</>}
+                {selectedNode.type === "center" && <>Answers {"\u201C"}{selectedNode.question}{"\u201D"} — {selectedNode.count} items routed through all 7 pathways.</>}
+                {selectedNode.type === "sdoh" && <>{selectedNode.count} items in {"\u201C"}{selectedNode.name}{"\u201D"} — links to pathways, SDGs, life situations, and organizations.</>}
+                {selectedNode.type === "sdg" && <>UN SDG #{selectedNode.id}: {"\u201C"}{selectedNode.name}{"\u201D"} — {selectedNode.count} items. Cross-linked via the Rosetta Stone.</>}
+                {selectedNode.type === "lifeSit" && <>{"\u201C"}{selectedNode.name}{"\u201D"} — {selectedNode.count} resources across pathways, centers, and service organizations.</>}
+                {selectedNode.type === "ring" && <>{selectedNode.name}: {selectedNode.count} items. One of 5 content rings distributed across all 7 pathways.</>}
+                {selectedNode.type === "org" && <>{selectedNode.name} ({selectedNode.domain}) — {selectedNode.count} articles. Status: {selectedNode.pipeline}.</>}
+                {selectedNode.type === "geography" && <>{selectedNode.name} — pop. {selectedNode.population?.toLocaleString()}. ZIPs: {selectedNode.zips?.join(", ")}.</>}
+                {selectedNode.type === "domain" && <>{selectedNode.items?.length} object types, {selectedNode.totalCount?.toLocaleString()} records.</>}
+                {selectedNode.type === "crosswalk" && <>{selectedNode.full}: {selectedNode.count} codes in the Rosetta Stone.</>}
               </div>
+              {selectedNode.type === "pathway" && (() => {
+                const slugMap: Record<string, string> = { THEME_01: "our-health", THEME_02: "our-families", THEME_03: "our-neighborhood", THEME_04: "our-voice", THEME_05: "our-money", THEME_06: "our-planet", THEME_07: "the-bigger-we" };
+                const slug = slugMap[selectedNode.id as string];
+                return slug ? <a href={"/pathways/" + slug} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600, background: selectedNode.color + "15", color: selectedNode.color, border: "1px solid " + selectedNode.color + "30", textDecoration: "none", marginBottom: 14 }}>View {selectedNode.name} pathway {"\u2192"}</a> : null;
+              })()}
+              {selectedNode.type === "org" && selectedNode.domain && (
+                <a href={"https://" + selectedNode.domain} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600, background: selectedNode.color + "15", color: selectedNode.color, border: "1px solid " + selectedNode.color + "30", textDecoration: "none", marginBottom: 14 }}>Visit {selectedNode.domain} {"\u2192"}</a>
+              )}
+              {selectedNode.type === "geography" && (
+                <a href="/super-neighborhoods" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600, background: "#d69e2e15", color: "#d69e2e", border: "1px solid #d69e2e30", textDecoration: "none", marginBottom: 14 }}>View neighborhoods {"\u2192"}</a>
+              )}
+              {selectedNode.type === "ring" && (() => {
+                const ringRoutes: Record<string, string> = { resources: "/news", guides: "/library", services: "/services", officials: "/officials", policies: "/policies" };
+                const href = ringRoutes[selectedNode.id as string];
+                return href ? <a href={href} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600, background: selectedNode.color + "15", color: selectedNode.color, border: "1px solid " + selectedNode.color + "30", textDecoration: "none", marginBottom: 14 }}>Browse {selectedNode.name} {"\u2192"}</a> : null;
+              })()}
               {(() => {
                 const conns = getConnections(selectedNode);
                 if (!conns.length) return null;
                 return (
-                  <div style={{ marginTop: 16 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 10 }}>Mesh Connections</div>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 10 }}>Connections</div>
                     {conns.map((conn, i) => (
-                      <div key={i} style={{ marginBottom: 10 }}>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: conn.color, marginBottom: 3 }}>{conn.label.startsWith("Missing") ? "⚠️ " : ""}{conn.label}</div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                          {conn.nodes.map((n, j) => (
-                            <span key={j} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 11, background: conn.label.startsWith("Missing") ? "#ef444415" : conn.color + "12", border: `1px solid ${conn.label.startsWith("Missing") ? "#ef4444" : conn.color}25`, color: conn.label.startsWith("Missing") ? "#ef4444" : "#6b6157", lineHeight: 1.4 }}>{n}</span>
-                          ))}
+                      <div key={i} style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: conn.color, marginBottom: 4 }}>{conn.label}</div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+                          {conn.nodes.map((n, j) => {
+                            const cleanName = n.replace(/[^\u0020-\u007E\u00A0-\u00FF]/g, "").trim();
+                            const matchNode = allNodes.find(an => cleanName.startsWith(an.name));
+                            return matchNode ? (
+                              <button key={j} onClick={() => selectNode(matchNode)} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 10, background: conn.color + "10", border: "1px solid " + conn.color + "20", color: "#4a453e", cursor: "pointer", lineHeight: 1.4, textAlign: "left" }}>{cleanName}</button>
+                            ) : (
+                              <span key={j} style={{ padding: "3px 8px", borderRadius: 6, fontSize: 10, background: conn.color + "10", border: "1px solid " + conn.color + "20", color: "#6b6157", lineHeight: 1.4 }}>{cleanName}</span>
+                            );
+                          })}
                         </div>
                       </div>
                     ))}
@@ -1198,7 +1234,60 @@ export default function KnowledgeGraphClient() {
                 );
               })()}
             </div>
+          ) : (
+            <div style={{ padding: 20 }}>
+              <h3 style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 700, color: "#2C2C2C" }}>Galaxy Overview</h3>
+              <p style={{ margin: "0 0 16px", fontSize: 11, color: "#8b8178", lineHeight: 1.5 }}>
+                Click any node to inspect its mesh connections. Each node connects across ~{TOTAL_DIMS} dimensions.
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 16 }}>
+                {[
+                  { label: "Records", value: STATS.totalRecords.toLocaleString(), color: "#E8723A" },
+                  { label: "Edges", value: STATS.totalEdges.toLocaleString(), color: "#6366f1" },
+                  { label: "Focus Areas", value: "312", color: "#319795" },
+                  { label: "Organizations", value: String(STATS.orgs), color: "#dd6b20" },
+                  { label: "Translations", value: String(STATS.translations), color: "#f59e0b" },
+                  { label: "Pathways", value: "7", color: "#E8723A" },
+                ].map(s => (
+                  <div key={s.label} style={{ padding: "8px 10px", background: "#ffffff", borderRadius: 8, borderLeft: "3px solid " + s.color }}>
+                    <div style={{ fontSize: 16, fontWeight: 800, color: s.color }}>{s.value}</div>
+                    <div style={{ fontSize: 9, color: "#8b8178" }}>{s.label}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Node Types</div>
+              {[
+                { color: "#E8723A", label: "Pathways", desc: "7 community themes" },
+                { color: "#6366f1", label: "Centers", desc: "4 engagement frames" },
+                { color: "#10b981", label: "Life Situations", desc: "12 real-world needs" },
+                { color: "#dd6b20", label: "SDGs", desc: "12 UN Sustainable Goals" },
+                { color: "#805ad5", label: "SDOH", desc: "5 health domains" },
+                { color: "#319795", label: "Crosswalks", desc: "Rosetta Stone mapping" },
+                { color: "#d69e2e", label: "Geography", desc: "12 neighborhoods" },
+                { color: "#dd6b20", label: "Organizations", desc: "10 pipelined orgs" },
+              ].map(l => (
+                <div key={l.label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: "50%", background: l.color, flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: "#2C2C2C" }}>{l.label}</div>
+                    <div style={{ fontSize: 9, color: "#8b8178" }}>{l.desc}</div>
+                  </div>
+                </div>
+              ))}
+              <div style={{ marginTop: 16, fontSize: 10, fontWeight: 700, color: "#8b8178", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Quick Links</div>
+              {[
+                { href: "/pathways", label: "All Pathways" },
+                { href: "/services", label: "Local Resources" },
+                { href: "/officials", label: "Officials" },
+                { href: "/policies", label: "Policies" },
+                { href: "/explore/knowledge-base", label: "Knowledge Base" },
+                { href: "/super-neighborhoods", label: "Neighborhoods" },
+              ].map(l => (
+                <a key={l.href} href={l.href} style={{ display: "block", padding: "6px 10px", marginBottom: 3, borderRadius: 6, fontSize: 11, color: "#E8723A", fontWeight: 500, textDecoration: "none", background: "transparent" }}>{l.label} {"\u2192"}</a>
+              ))}
+            </div>
           )}
+        </div>
         </div>
       )}
 
@@ -1461,19 +1550,27 @@ export default function KnowledgeGraphClient() {
                           <circle cx={pos.x} cy={pos.y} r={r} fill={n.type === "crosswalk" ? n.color : "#f8f6f3"} stroke={n.color}
                             strokeWidth={isSel ? 2.5 : isH ? 2 : 1} opacity={isH || isSel ? 1 : 0.5} />
                         )}
-                        {/* Emoji/text inside */}
-                        {(n.emoji || n.icon) && (
-                          <text x={pos.x} y={pos.y + 1} fill="#2C2C2C" fontSize={n.type === "pathway" || n.type === "center" ? 12 : 9}
-                            textAnchor="middle" dominantBaseline="middle">{n.emoji || n.icon}</text>
+                        {/* Initial/text inside */}
+                        {(n.type === "pathway" || n.type === "center") && (
+                          <text x={pos.x} y={pos.y + 3} fill={n.color} fontSize={9} textAnchor="middle" fontWeight={800}>{n.name?.charAt(0)}</text>
                         )}
-                        {!n.emoji && !n.icon && n.type === "sdg" && (
+                        {n.type === "ring" && (
+                          <text x={pos.x} y={pos.y + 3} fill={n.color} fontSize={8} textAnchor="middle" fontWeight={800}>{n.count}</text>
+                        )}
+                        {n.type === "sdg" && (
                           <text x={pos.x} y={pos.y + 3} fill="#fff" fontSize={7} textAnchor="middle" fontWeight={600}>{n.id}</text>
                         )}
-                        {!n.emoji && !n.icon && n.type === "sdoh" && (
+                        {n.type === "sdoh" && (
                           <text x={pos.x} y={pos.y + 3} fill="#fff" fontSize={7} textAnchor="middle" fontWeight={700}>{n.count}</text>
                         )}
-                        {!n.emoji && !n.icon && n.type === "crosswalk" && (
+                        {n.type === "crosswalk" && (
                           <text x={pos.x} y={pos.y + 3} fill="#fff" fontSize={6} textAnchor="middle" fontWeight={700}>{n.name?.slice(0, 4)}</text>
+                        )}
+                        {n.type === "geography" && (
+                          <circle cx={pos.x} cy={pos.y} r={4} fill="#d69e2e" opacity={0.5} />
+                        )}
+                        {n.type === "lifeSit" && (
+                          <circle cx={pos.x} cy={pos.y} r={3} fill="#10b981" opacity={0.6} />
                         )}
                         {/* Label */}
                         <text x={pos.x + r + 6} y={pos.y + 1} fill={isH || isSel ? n.color : "#9a918a"} fontSize={8} fontWeight={isH || isSel ? 600 : 400} dominantBaseline="middle">
@@ -1521,7 +1618,7 @@ export default function KnowledgeGraphClient() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   <div>
                     <span style={{ padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 600, background: selectedNode.color + "20", color: selectedNode.color, textTransform: "uppercase", letterSpacing: "0.05em" }}>{selectedNode.type}</span>
-                    <h3 style={{ margin: "6px 0 0", fontSize: 18, color: selectedNode.color }}>{selectedNode.emoji || selectedNode.icon || ""} {selectedNode.name}</h3>
+                    <h3 style={{ margin: "6px 0 0", fontSize: 18, color: selectedNode.color }}>{selectedNode.name}</h3>
                   </div>
                   <button onClick={() => setSelectedNode(null)} style={{ background: "#f5f1eb", border: "1px solid #e5e0d8", color: "#8b8178", cursor: "pointer", fontSize: 14, borderRadius: 8, padding: "4px 10px" }}>ESC</button>
                 </div>
@@ -1690,9 +1787,9 @@ export default function KnowledgeGraphClient() {
               {MISSING_BRIDGES.map((b, i) => (
                 <div key={i} style={{ padding: "12px 14px", background: "#ffffff", borderRadius: 8, border: "1px solid #ef444420" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[b.a].color + "20", color: THEMES[b.a].color }}>{THEMES[b.a].emoji} {THEMES[b.a].name}</span>
+                    <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[b.a].color + "20", color: THEMES[b.a].color }}>{THEMES[b.a].name}</span>
                     <span style={{ color: "#ef4444", fontSize: 14 }}>⟷</span>
-                    <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[b.b].color + "20", color: THEMES[b.b].color }}>{THEMES[b.b].emoji} {THEMES[b.b].name}</span>
+                    <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[b.b].color + "20", color: THEMES[b.b].color }}>{THEMES[b.b].name}</span>
                   </div>
                   <div style={{ fontSize: 12, color: "#6b6157" }}>{b.reason}</div>
                 </div>
@@ -1705,9 +1802,9 @@ export default function KnowledgeGraphClient() {
             {MISSING_CENTER_EDGES.map((e, i) => (
               <div key={i} style={{ padding: "12px 14px", background: "#ffffff", borderRadius: 8, border: "1px solid #f59e0b20", marginBottom: 8 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[e.pw].color + "20", color: THEMES[e.pw].color }}>{THEMES[e.pw].emoji} {THEMES[e.pw].name}</span>
+                  <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: THEMES[e.pw].color + "20", color: THEMES[e.pw].color }}>{THEMES[e.pw].name}</span>
                   <span style={{ color: "#f59e0b" }}>→</span>
-                  <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: CENTERS[e.c].color + "20", color: CENTERS[e.c].color }}>{CENTERS[e.c].emoji} {e.c}</span>
+                  <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: CENTERS[e.c].color + "20", color: CENTERS[e.c].color }}>{e.c}</span>
                   <span style={{ padding: "2px 6px", borderRadius: 6, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>0 items</span>
                 </div>
                 <div style={{ fontSize: 12, color: "#6b6157" }}>{e.reason}</div>
@@ -1758,7 +1855,7 @@ export default function KnowledgeGraphClient() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {ringsNoOrg.map((ring, i) => (
                 <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8, display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: ring.color + "20", color: ring.color }}>{ring.icon} {ring.name} ({ring.count})</span>
+                  <span style={{ padding: "2px 8px", borderRadius: 10, fontSize: 10, fontWeight: 700, background: ring.color + "20", color: ring.color }}>{ring.name} ({ring.count})</span>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>no orgs</span>
                 </div>
               ))}
@@ -1773,7 +1870,7 @@ export default function KnowledgeGraphClient() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {lifeSitsNoOrg.map((sit, i) => (
                 <div key={i} style={{ padding: "6px 10px", background: "#ffffff", borderRadius: 8, display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ fontSize: 12 }}>{sit.emoji}</span>
+                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
                   <span style={{ fontSize: 11, color: "#6b6157" }}>{sit.name}</span>
                   <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>no orgs</span>
                 </div>
@@ -1808,7 +1905,7 @@ export default function KnowledgeGraphClient() {
               {lowServiceGeos.map((geo, i) => (
                 <div key={i} style={{ padding: "10px 12px", background: "#ffffff", borderRadius: 8 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: "#d69e2e" }}>🏘️ {geo.name}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: "#d69e2e" }}>{geo.name}</span>
                     <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#ef444420", color: "#ef4444" }}>{geo.situations.length} sits</span>
                   </div>
                   <div style={{ fontSize: 10, color: "#8b8178" }}>ZIPs: {geo.zips.join(", ")} · pop. {geo.population.toLocaleString()}</div>
