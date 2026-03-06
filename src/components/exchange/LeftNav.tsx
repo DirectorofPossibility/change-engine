@@ -119,7 +119,7 @@ export function LeftNav() {
   }
 
   return (
-    <nav className="hidden lg:flex lg:flex-col w-[220px] flex-shrink-0 bg-brand-dark overflow-y-auto sticky top-0 h-screen">
+    <nav className="hidden lg:flex lg:flex-col w-[220px] flex-shrink-0 overflow-y-auto sticky top-0 h-screen" style={{ backgroundColor: '#2C2418' }}>
 
       {/* Brand mark */}
       <div className="px-4 pt-5 pb-4 border-b border-white/10">
