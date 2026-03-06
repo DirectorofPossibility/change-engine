@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Change Engine — Engagement Ordering by Archetype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB; --text: #2C2C2C; --accent: #C75B2A; --muted: #8B7E74;
+    --border: #E8E3DB; --card: #FFFFFF;
+    --health: #e53e3e; --families: #dd6b20; --neighborhood: #d69e2e;
+    --voice: #38a169; --money: #3182ce; --planet: #319795; --bigger: #805ad5;
+    --understand-bg: #fef3c7; --understand-fg: #92400e;
+    --involve-bg: #d1fae5; --involve-fg: #065f46;
+    --deeper-bg: #dbeafe; --deeper-fg: #1e40af;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1a1a; color: var(--text); }
+  .serif { font-family: 'DM Serif Display', serif; }
+
+  /* Top bar */
+  .top-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #111; border-bottom: 1px solid #333;
+    padding: 10px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .top-bar .title { color: #fff; font-family: 'DM Serif Display', serif; font-size: 15px; }
+  .top-bar .subtitle { color: #888; font-size: 11px; }
+
+  /* Archetype selector bar */
+  .archetype-bar {
+    max-width: 1200px; margin: 20px auto 0;
+    background: #222; border-radius: 16px 16px 0 0; padding: 16px 24px;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .archetype-bar-label { color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 8px; font-weight: 600; }
+  .archetype-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 10px; border: 1px solid #444;
+    background: transparent; color: #aaa; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+  }
+  .archetype-btn:hover { border-color: #666; color: #ddd; background: #2a2a2a; }
+  .archetype-btn.active { border-color: var(--accent); color: #fff; background: rgba(199,91,42,0.2); }
+  .archetype-btn .emoji { font-size: 16px; }
+  .archetype-btn .meta { font-size: 9px; color: #666; font-weight: 400; display: block; margin-top: 1px; }
+  .archetype-btn.active .meta { color: var(--accent); }
+
+  /* Ordering explanation */
+  .ordering-explanation {
+    max-width: 1200px; margin: 0 auto;
+    background: #1d1d1d; padding: 12px 24px; border-bottom: 1px solid #333;
+    display: flex; align-items: center; gap: 16px;
+    transition: all 0.3s;
+  }
+  .ordering-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 4px; flex-shrink: 0; }
+  .ordering-text { font-size: 12px; color: #999; line-height: 1.5; }
+  .ordering-text strong { color: #ddd; }
+
+  /* Main page shell */
+  .page-shell {
+    max-width: 1200px; margin: 0 auto;
+    background: var(--bg); border-radius: 0 0 16px 16px;
+    overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .three-col { display: grid; grid-template-columns: 200px 1fr 280px; min-height: 80vh; }
+
+  /* Left nav */
+  .left-nav { background: #FDFBF8; border-right: 1px solid var(--border); padding: 16px 0; }
+  .left-nav-section { padding: 0 12px; margin-bottom: 16px; }
+  .left-nav-section-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; padding-left: 4px; }
+  .left-nav-item { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 6px; text-decoration: none; font-size: 12px; color: var(--text); font-weight: 500; cursor: pointer; margin-bottom: 1px; }
+  .left-nav-item:hover { background: rgba(199,91,42,0.08); }
+  .left-nav-item.active { background: rgba(199,91,42,0.12); color: var(--accent); font-weight: 600; }
+  .left-nav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .left-nav-divider { height: 1px; background: var(--border); margin: 10px 12px; }
+
+  .archetype-nav {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 8px; border-radius: 6px; cursor: pointer; margin-bottom: 2px;
+    border-left: 3px solid transparent; transition: all 0.15s;
+  }
+  .archetype-nav:hover { background: rgba(199,91,42,0.06); }
+  .archetype-nav.active { border-left-color: var(--accent); background: rgba(199,91,42,0.1); }
+  .archetype-nav .emoji { font-size: 14px; }
+  .archetype-nav .name { font-size: 11px; font-weight: 600; }
+
+  /* Main content */
+  .main-content { padding: 20px 24px; min-width: 0; }
+  .breadcrumb { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+  .hero-image { width: 100%; height: 180px; border-radius: 10px; margin-bottom: 14px; background: linear-gradient(135deg, #e8e3db, #d5cec4); display: flex; align-items: flex-end; position: relative; overflow: hidden; }
+  .hero-image-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(44,44,44,0.75)); padding: 14px 18px; color: white; }
+  .hero-image-overlay h1 { color: white; font-family: 'DM Serif Display', serif; font-size: 20px; line-height: 1.3; }
+  .hero-image-overlay .pathway-label { font-size: 10px; font-weight: 600; opacity: 0.9; }
+
+  .content-block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .content-block h2 { font-family: 'DM Serif Display', serif; font-size: 15px; margin-bottom: 4px; }
+  .content-block p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* The nudge card — the key engagement onramp element */
+  .nudge-card {
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+    display: flex; gap: 12px; align-items: flex-start;
+    transition: all 0.4s ease; position: relative; overflow: hidden;
+  }
+  .nudge-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .nudge-understand { background: #fffbeb; border: 1px solid #fde68a; }
+  .nudge-understand::before { background: #f59e0b; }
+  .nudge-involve { background: #ecfdf5; border: 1px solid #a7f3d0; }
+  .nudge-involve::before { background: #10b981; }
+  .nudge-deeper { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .nudge-deeper::before { background: #3b82f6; }
+
+  .nudge-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .nudge-content { flex: 1; }
+  .nudge-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .nudge-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .nudge-desc { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .nudge-action { font-size: 11px; font-weight: 600; margin-top: 6px; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; text-decoration: none; }
+  .nudge-effort { font-size: 9px; color: var(--muted); background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+
+  /* Engagement ladder visualization */
+  .ladder { margin: 12px 0; }
+  .ladder-step {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    border-radius: 8px; margin-bottom: 4px; font-size: 12px;
+    transition: all 0.35s ease; cursor: default;
+    border-left: 3px solid transparent;
+  }
+  .ladder-step.highlighted { transform: translateX(4px); }
+  .ladder-step .step-effort { font-size: 10px; color: var(--muted); min-width: 60px; text-align: right; }
+  .ladder-step .step-icon { font-size: 14px; flex-shrink: 0; }
+  .ladder-step .step-text { font-weight: 500; flex: 1; }
+  .ladder-step .step-tier { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+  .skeleton { background: linear-gradient(90deg, #e8e3db 25%, #f0ece6 50%, #e8e3db 75%); background-size: 200% 100%; border-radius: 4px; height: 10px; margin: 5px 0; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .cta-row { display: flex; gap: 6px; margin-top: 12px; }
+  .cta-btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border-radius: 7px; font-size: 11px; font-weight: 600; text-decoration: none; }
+  .cta-primary { background: var(--accent); color: white; }
+  .cta-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+
+  /* === WAYFINDER SIDEBAR === */
+  .wayfinder { background: var(--card); border-left: 1px solid var(--border); overflow-y: auto; }
+  .wf-header { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .wf-header h3 { font-family: 'DM Serif Display', serif; font-size: 13px; }
+
+  .wf-org-section { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .wf-org { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .wf-org-logo { width: 24px; height: 24px; border-radius: 4px; background: var(--bg); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; color: var(--muted); border: 1px solid var(--border); }
+  .wf-org-name { font-size: 11px; font-weight: 600; }
+  .wf-actions { display: flex; flex-wrap: wrap; gap: 3px; padding-left: 30px; margin-bottom: 6px; }
+  .wf-action { font-size: 9px; padding: 2px 6px; border-radius: 4px; text-decoration: none; font-weight: 500; }
+  .wf-donate { background: #f0fff4; color: #276749; }
+  .wf-volunteer { background: #ebf8ff; color: #2b6cb0; }
+
+  .wf-focus-dots { padding: 6px 12px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px; }
+  .wf-focus-dot { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; color: var(--muted); text-decoration: none; }
+  .wf-focus-dot .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Wayfinder tiers — these reorder! */
+  .wf-tiers-container { transition: all 0.3s; }
+
+  .wf-tier { border-top: 1px solid var(--border); transition: all 0.35s ease; }
+  .wf-tier.primary { border-left: 3px solid var(--accent); }
+  .wf-tier.secondary { opacity: 0.95; }
+  .wf-tier.tertiary { opacity: 0.85; }
+
+  .wf-tier summary { display: flex; align-items: center; justify-content: space-between; padding: 7px 12px; cursor: pointer; list-style: none; font-size: 11px; font-weight: 600; }
+  .wf-tier summary::-webkit-details-marker { display: none; }
+  .wf-tier summary:hover { background: rgba(245,241,235,0.5); }
+  .wf-tier-left { display: flex; align-items: center; gap: 5px; }
+  .wf-tier-icon { font-size: 11px; }
+  .wf-tier-count { font-size: 8px; padding: 1px 5px; border-radius: 6px; font-weight: 700; }
+  .wf-tier-body { padding: 0 12px 8px; }
+  .wf-tier-priority { font-size: 8px; padding: 1px 5px; border-radius: 4px; font-weight: 700; background: rgba(199,91,42,0.15); color: var(--accent); margin-left: 4px; }
+
+  .wf-content-card { display: flex; gap: 5px; padding: 3px 0; text-decoration: none; }
+  .wf-content-thumb { width: 38px; height: 28px; border-radius: 3px; flex-shrink: 0; background: linear-gradient(135deg, #e8e3db, #d5cec4); }
+  .wf-content-title { font-size: 9px; font-weight: 600; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .wf-pathway-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; margin-right: 2px; }
+
+  .wf-involved-card { padding: 3px 0; font-size: 10px; }
+  .wf-involved-name { font-weight: 600; color: var(--text); font-size: 10px; }
+  .wf-time-badge { font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #f0fff4; color: #276749; }
+  .wf-effort-tag { font-size: 8px; padding: 1px 4px; border-radius: 3px; background: #f5f3ff; color: #6b46c1; margin-left: 3px; }
+
+  .wf-official-card { display: flex; gap: 5px; padding: 3px 0; align-items: center; }
+  .wf-official-photo { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #ddd, #bbb); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #888; }
+  .wf-official-name { font-size: 10px; font-weight: 600; }
+  .wf-official-title { font-size: 8px; color: var(--muted); }
+
+  .wf-policy-card { display: flex; gap: 4px; padding: 3px 0; }
+  .wf-policy-icon { flex-shrink: 0; font-size: 9px; color: #4299e1; }
+  .wf-bill { font-size: 8px; font-family: monospace; color: var(--muted); }
+  .wf-policy-name { font-size: 9px; font-weight: 600; color: var(--text); }
+
+  /* Ordering within tiers */
+  .wf-item { transition: all 0.3s ease; position: relative; }
+  .wf-item .relevance-dot { position: absolute; left: -8px; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+  .wf-item.top-match .relevance-dot { opacity: 1; }
+
+  /* Engagement ladder in sidebar */
+  .wf-engagement-hint {
+    padding: 8px 12px; background: #fafaf8; border-top: 1px solid var(--border);
+    font-size: 9px; color: var(--muted); line-height: 1.5;
+  }
+  .wf-engagement-hint strong { color: var(--text); }
+
+  /* Transition animation for reordering */
+  .reordering .wf-tier { animation: slideIn 0.4s ease; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .reordering .nudge-card { animation: fadeSwap 0.5s ease; }
+  @keyframes fadeSwap { 0% { opacity: 0; transform: translateX(-10px); } 100% { opacity: 1; transform: translateX(0); } }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span class="title serif">Engagement Ordering</span>
+  <span class="subtitle">Click an archetype to see how the same content page reorders its information hierarchy</span>
+</div>
+
+<!-- Archetype selector -->
+<div class="archetype-bar">
+  <span class="archetype-bar-label">I am...</span>
+  <button class="archetype-btn active" onclick="setArchetype('explorer')">
+    <span class="emoji">&#x1F30D;</span>
+    <div><span>The Explorer</span><span class="meta">Default order</span></div>
+  </button>
+  <button class="archetype-btn" onclick="setArchetype('seeker')">
+    <span class="emoji">&#x1F331;</span>
+    <div><span>The Seeker</span><span class="meta">Resources first</span></div>
+  </button>
+  <button class="archetype-btn" onclick="setArchetype('learner')">
+    <span class="emoji">&#x1F4D6;</span>
+    <div><span>The Learner</span><span class="meta">Understanding first</span></div>
+  </button>
+  <button class="archetype-btn" onclick="setArchetype('builder')">
+    <span class="emoji">&#x1F91D;</span>
+    <div><span>The Builder</span><span class="meta">Action first</span></div>
+  </button>
+  <button class="archetype-btn" onclick="setArchetype('watchdog')">
+    <span class="emoji">&#x1F50D;</span>
+    <div><span>The Watchdog</span><span class="meta">Accountability first</span></div>
+  </button>
+  <button class="archetype-btn" onclick="setArchetype('partner')">
+    <span class="emoji">&#x1F3E2;</span>
+    <div><span>The Partner</span><span class="meta">Collaboration first</span></div>
+  </button>
+</div>
+
+<!-- Ordering explanation — changes per archetype -->
+<div class="ordering-explanation" id="ordering-explanation">
+  <span class="ordering-tag" id="ordering-tag" style="background:var(--understand-bg);color:var(--understand-fg);">Default</span>
+  <span class="ordering-text" id="ordering-text">
+    <strong>Progressive engagement:</strong> Understand &rarr; Get Involved &rarr; Go Deeper. Content ordered by relevance, then recency.
+  </span>
+</div>
+
+<!-- The page -->
+<div class="page-shell">
+  <div class="three-col">
+
+    <!-- LEFT NAV -->
+    <nav class="left-nav">
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Your Journey</div>
+        <div class="archetype-nav active" id="nav-explorer" onclick="setArchetype('explorer')"><span class="emoji">&#x1F30D;</span><span class="name">Explorer</span></div>
+        <div class="archetype-nav" id="nav-seeker" onclick="setArchetype('seeker')"><span class="emoji">&#x1F331;</span><span class="name">Seeker</span></div>
+        <div class="archetype-nav" id="nav-learner" onclick="setArchetype('learner')"><span class="emoji">&#x1F4D6;</span><span class="name">Learner</span></div>
+        <div class="archetype-nav" id="nav-builder" onclick="setArchetype('builder')"><span class="emoji">&#x1F91D;</span><span class="name">Builder</span></div>
+        <div class="archetype-nav" id="nav-watchdog" onclick="setArchetype('watchdog')"><span class="emoji">&#x1F50D;</span><span class="name">Watchdog</span></div>
+        <div class="archetype-nav" id="nav-partner" onclick="setArchetype('partner')"><span class="emoji">&#x1F3E2;</span><span class="name">Partner</span></div>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Pathways</div>
+        <a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Engagement Ladder</div>
+        <div style="padding: 0 4px;">
+          <div class="ladder">
+            <div class="ladder-step" style="background:#fffbeb;border-left-color:#f59e0b;" id="ladder-read">
+              <span class="step-icon">&#x1F4D6;</span>
+              <span class="step-text">Read</span>
+              <span class="step-effort">~1 min</span>
+            </div>
+            <div class="ladder-step" style="background:#fef3c7;border-left-color:#f59e0b;">
+              <span class="step-icon">&#x1F517;</span>
+              <span class="step-text">Visit a link</span>
+              <span class="step-effort">~1 min</span>
+            </div>
+            <div class="ladder-step" style="background:#ecfdf5;border-left-color:#10b981;">
+              <span class="step-icon">&#x1F4DE;</span>
+              <span class="step-text">Call</span>
+              <span class="step-effort">~5 min</span>
+            </div>
+            <div class="ladder-step" style="background:#ecfdf5;border-left-color:#10b981;" id="ladder-attend">
+              <span class="step-icon">&#x1F4CD;</span>
+              <span class="step-text">Attend</span>
+              <span class="step-effort">1-2 hrs</span>
+            </div>
+            <div class="ladder-step" style="background:#ecfdf5;border-left-color:#10b981;">
+              <span class="step-icon">&#x270B;</span>
+              <span class="step-text">Volunteer</span>
+              <span class="step-effort">recurring</span>
+            </div>
+            <div class="ladder-step" style="background:#eff6ff;border-left-color:#3b82f6;">
+              <span class="step-icon">&#x1F4AC;</span>
+              <span class="step-text">Testify</span>
+              <span class="step-effort">public</span>
+            </div>
+            <div class="ladder-step" style="background:#eff6ff;border-left-color:#3b82f6;" id="ladder-organize">
+              <span class="step-icon">&#x1F310;</span>
+              <span class="step-text">Organize</span>
+              <span class="step-effort">sustained</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Our Health</a> &rsaquo; Article</div>
+
+      <div class="hero-image" style="background: linear-gradient(135deg, #e53e3e15 0%, #dd6b2015 50%, #d69e2e15 100%);">
+        <div class="hero-image-overlay">
+          <div class="pathway-label"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--health);margin-right:4px;"></span> Our Health</div>
+          <h1 class="serif">How Houston's Community Health Workers Are Transforming Neighborhood Care</h1>
+        </div>
+      </div>
+
+      <!-- Main article content -->
+      <div class="content-block">
+        <h2>The Growing Role of Community Health Workers</h2>
+        <p>Community health workers (CHWs) are trusted members of the communities they serve. They help navigate the healthcare system, connect residents with preventive services, and provide culturally sensitive health education.</p>
+        <div class="skeleton" style="width:95%"></div>
+        <div class="skeleton" style="width:80%"></div>
+      </div>
+
+      <!-- NUDGE CARDS — these reorder based on archetype -->
+      <div id="nudge-zone">
+        <!-- Nudge 1: Understand (lateral bridge) -->
+        <div class="nudge-card nudge-understand" id="nudge-understand" data-tier="understand">
+          <span class="nudge-icon">&#x1F4D6;</span>
+          <div class="nudge-content">
+            <div class="nudge-label" style="color:var(--understand-fg);">Since you're reading about this...</div>
+            <div class="nudge-title">3 more articles on Community Health Workers</div>
+            <div class="nudge-desc">CHW programs reduce ER visits by 30% &bull; School-based health centers &bull; Mental health first aid</div>
+            <a class="nudge-action" style="background:var(--understand-bg);color:var(--understand-fg);">Read next <span>&rarr;</span></a>
+            <span class="nudge-effort">~2 min each</span>
+          </div>
+        </div>
+
+        <!-- Nudge 2: Get Involved (onramp up) -->
+        <div class="nudge-card nudge-involve" id="nudge-involve" data-tier="involve">
+          <span class="nudge-icon">&#x1F49A;</span>
+          <div class="nudge-content">
+            <div class="nudge-label" style="color:var(--involve-fg);">Something happening near you...</div>
+            <div class="nudge-title">Community Health Fair — Sunnyside</div>
+            <div class="nudge-desc">Free health screenings, CHW info sessions, family activities. March 15, 10am-2pm.</div>
+            <a class="nudge-action" style="background:var(--involve-bg);color:var(--involve-fg);">See details <span>&rarr;</span></a>
+            <span class="nudge-effort">~2 hours</span>
+          </div>
+        </div>
+
+        <!-- Nudge 3: Go Deeper (deep pull) -->
+        <div class="nudge-card nudge-deeper" id="nudge-deeper" data-tier="deeper">
+          <span class="nudge-icon">&#x2696;&#xFE0F;</span>
+          <div class="nudge-content">
+            <div class="nudge-label" style="color:var(--deeper-fg);">Who decides on this?</div>
+            <div class="nudge-title">HB-2847: Community Health Worker Act</div>
+            <div class="nudge-desc">Currently in committee. Your state rep, Rep. Garcia, serves on the Health Committee.</div>
+            <a class="nudge-action" style="background:var(--deeper-bg);color:var(--deeper-fg);">Track this policy <span>&rarr;</span></a>
+            <span class="nudge-effort">~1 min</span>
+          </div>
+        </div>
+
+        <!-- Nudge 4: Resource (for Seeker) -->
+        <div class="nudge-card nudge-involve" id="nudge-resource" data-tier="resource" style="display:none;border-color:#fde68a;background:#fffbeb;">
+          <span class="nudge-icon">&#x1F331;</span>
+          <div class="nudge-content">
+            <div class="nudge-label" style="color:#92400e;">Available near your ZIP code...</div>
+            <div class="nudge-title">Free Community Health Worker Services</div>
+            <div class="nudge-desc">The Harris Center offers free CHW home visits in your neighborhood. Available in English, Spanish, and Vietnamese.</div>
+            <a class="nudge-action" style="background:#fef3c7;color:#92400e;">Call (713) 970-7000 <span>&rarr;</span></a>
+            <span class="nudge-effort">~5 min call</span>
+          </div>
+        </div>
+
+        <!-- Nudge 5: Partner (for Partner archetype) -->
+        <div class="nudge-card nudge-deeper" id="nudge-partner" data-tier="partner" style="display:none;border-color:#e9d5ff;background:#faf5ff;">
+          <span class="nudge-icon">&#x1F3E2;</span>
+          <div class="nudge-content">
+            <div class="nudge-label" style="color:#6b46c1;">Collaboration opportunity...</div>
+            <div class="nudge-title">Houston Health Dept seeks CHW program partners</div>
+            <div class="nudge-desc">Funding available for organizations expanding CHW programs into underserved super neighborhoods.</div>
+            <a class="nudge-action" style="background:#f5f3ff;color:#6b46c1;">Connect <span>&rarr;</span></a>
+            <span class="nudge-effort">partnership inquiry</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h2>Impact on Health Outcomes</h2>
+        <p>Neighborhoods with active CHW programs see measurable improvements in chronic disease management, prenatal care, and mental health screening.</p>
+        <div class="skeleton" style="width:88%"></div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-btn cta-primary" href="#">View original source</a>
+        <a class="cta-btn cta-secondary" href="#">Suggest an edit</a>
+      </div>
+    </div>
+
+    <!-- WAYFINDER SIDEBAR — tiers reorder based on archetype -->
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+
+      <div class="wf-org-section">
+        <div class="wf-org"><div class="wf-org-logo">HHD</div><div class="wf-org-name">Houston Health Dept</div></div>
+        <div class="wf-actions"><a class="wf-action wf-donate">Donate</a> <a class="wf-action wf-volunteer">Volunteer</a></div>
+        <div class="wf-org"><div class="wf-org-logo">UTH</div><div class="wf-org-name">UTHealth Houston</div></div>
+      </div>
+
+      <div class="wf-focus-dots">
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Community Health</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Healthcare Access</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--families)"></span> Youth Wellness</a>
+      </div>
+
+      <!-- Tiers container — JS reorders these -->
+      <div class="wf-tiers-container" id="wf-tiers">
+
+        <!-- UNDERSTAND TIER -->
+        <details class="wf-tier" id="tier-understand" open data-tier="understand">
+          <summary>
+            <span class="wf-tier-left">
+              <span class="wf-tier-icon">&#x1F4D6;</span>
+              <span>Understand</span>
+              <span class="wf-tier-priority" id="priority-understand" style="display:none;"></span>
+            </span>
+            <span class="wf-tier-count" style="background:var(--understand-bg);color:var(--understand-fg);">5</span>
+          </summary>
+          <div class="wf-tier-body">
+            <div class="wf-item top-match"><div class="relevance-dot"></div>
+              <a class="wf-content-card"><div class="wf-content-thumb" style="background:linear-gradient(135deg,#e8d5d5,#d4a5a5);"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">CHW Programs Reduce ER Visits by 30%</span></div></a>
+            </div>
+            <div class="wf-item">
+              <a class="wf-content-card"><div class="wf-content-thumb" style="background:linear-gradient(135deg,#d5e8d5,#a5d4a8);"></div><div><span class="wf-pathway-dot" style="background:var(--families)"></span><span class="wf-content-title">How School-Based Health Centers Work</span></div></a>
+            </div>
+            <div class="wf-item">
+              <a class="wf-content-card"><div class="wf-content-thumb" style="background:linear-gradient(135deg,#d5dde8,#a5b5d4);"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">Mental Health First Aid Training Guide</span></div></a>
+            </div>
+            <div class="wf-item" style="padding:3px 0;font-size:9px;font-style:italic;color:var(--muted);line-height:1.4;">
+              <span style="margin-right:3px;">&#x1F4DA;</span> "CHWs bridge the gap between clinical care and community need..." <span style="font-style:normal;font-size:8px;color:var(--muted);">p.14</span>
+            </div>
+          </div>
+        </details>
+
+        <!-- GET INVOLVED TIER -->
+        <details class="wf-tier" id="tier-involve" open data-tier="involve">
+          <summary>
+            <span class="wf-tier-left">
+              <span class="wf-tier-icon">&#x1F49A;</span>
+              <span>Get Involved</span>
+              <span class="wf-tier-priority" id="priority-involve" style="display:none;"></span>
+            </span>
+            <span class="wf-tier-count" style="background:var(--involve-bg);color:var(--involve-fg);">4</span>
+          </summary>
+          <div class="wf-tier-body">
+            <div class="wf-item top-match"><div class="relevance-dot"></div>
+              <div class="wf-involved-card"><div><span class="wf-involved-name">Community Health Fair</span><br><span class="wf-time-badge">Mar 15</span> <span class="wf-effort-tag">attend ~2hrs</span></div></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-involved-card"><div><span class="wf-involved-name">CHW Training Program</span><br><span class="wf-time-badge">Apr-Jun</span> <span class="wf-effort-tag">8 weeks</span></div></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-involved-card"><div><span class="wf-involved-name">Free Health Screening — Kashmere</span><br><span class="wf-time-badge">Mar 22</span> <span class="wf-effort-tag">walk-in</span></div></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-involved-card"><div><span class="wf-involved-name">Volunteer: Health Literacy Mentor</span><br><span class="wf-time-badge">Ongoing</span> <span class="wf-effort-tag">2hrs/wk</span></div></div>
+            </div>
+          </div>
+        </details>
+
+        <!-- GO DEEPER TIER -->
+        <details class="wf-tier" id="tier-deeper" data-tier="deeper">
+          <summary>
+            <span class="wf-tier-left">
+              <span class="wf-tier-icon">&#x2696;&#xFE0F;</span>
+              <span>Go Deeper</span>
+              <span class="wf-tier-priority" id="priority-deeper" style="display:none;"></span>
+            </span>
+            <span class="wf-tier-count" style="background:var(--deeper-bg);color:var(--deeper-fg);">4</span>
+          </summary>
+          <div class="wf-tier-body">
+            <div class="wf-item top-match"><div class="relevance-dot"></div>
+              <div class="wf-official-card"><div class="wf-official-photo">SJ</div><div><div class="wf-official-name">Rep. Mary Garcia</div><div class="wf-official-title">State Rep, Dist. 145 &bull; <em>your rep</em></div></div></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-official-card"><div class="wf-official-photo">LH</div><div><div class="wf-official-name">Lina Hidalgo</div><div class="wf-official-title">County Judge</div></div></div>
+            </div>
+            <div class="wf-item">
+              <div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">HB-2847</span><br><span class="wf-policy-name">Community Health Worker Act</span></div></div>
+            </div>
+            <div class="wf-item">
+              <div style="display:flex;gap:4px;padding:3px 0;font-size:9px;">
+                <span style="color:#90cdf4;">&#x1F3DB;</span>
+                <div><span style="font-weight:600;color:var(--text);">Episcopal Health Foundation</span> <a style="font-size:8px;color:var(--accent);text-decoration:none;margin-left:3px;">Visit &rarr;</a></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+      </div>
+
+      <!-- Engagement hint -->
+      <div class="wf-engagement-hint" id="engagement-hint">
+        <strong>Your next step:</strong> Read one related article, then check out the health fair happening March 15 near you.
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const archetypes = {
+  explorer: {
+    tierOrder: ['understand', 'involve', 'deeper'],
+    tierOpen: ['understand', 'involve'],
+    nudgeOrder: ['understand', 'involve', 'deeper'],
+    nudgeHidden: ['resource', 'partner'],
+    explanation: {
+      tag: 'Default', tagBg: 'var(--understand-bg)', tagFg: 'var(--understand-fg)',
+      text: '<strong>Progressive engagement:</strong> Understand &rarr; Get Involved &rarr; Go Deeper. Lowest effort items surface first within each tier. Content ordered by topical relevance, then recency.'
+    },
+    hint: '<strong>Your next step:</strong> Read one related article, then check out the health fair happening March 15 near you.',
+    priorities: { understand: '', involve: '', deeper: '' }
+  },
+  seeker: {
+    tierOrder: ['involve', 'understand', 'deeper'],
+    tierOpen: ['involve', 'understand'],
+    nudgeOrder: ['resource', 'involve', 'understand'],
+    nudgeHidden: ['deeper', 'partner'],
+    explanation: {
+      tag: 'Seeker', tagBg: '#fef3c7', tagFg: '#92400e',
+      text: '<strong>Resources & services first.</strong> Nearest available services surface at the top. Get Involved shows walk-in and free options before commitments. Understanding comes after you\'ve found what you need.'
+    },
+    hint: '<strong>Available now:</strong> Free CHW home visits in your ZIP code. Call The Harris Center at (713) 970-7000.',
+    priorities: { involve: '1st', understand: '2nd', deeper: '3rd' }
+  },
+  learner: {
+    tierOrder: ['understand', 'deeper', 'involve'],
+    tierOpen: ['understand', 'deeper'],
+    nudgeOrder: ['understand', 'deeper', 'involve'],
+    nudgeHidden: ['resource', 'partner'],
+    explanation: {
+      tag: 'Learner', tagBg: 'var(--understand-bg)', tagFg: 'var(--understand-fg)',
+      text: '<strong>Understanding first, then systems.</strong> Related articles and research surface at top. Go Deeper (policies, officials) comes second — context for the systems that shape this issue. Actions come last, when you\'re ready.'
+    },
+    hint: '<strong>Go deeper:</strong> Read how CHW programs reduce ER visits by 30%, then explore the policy landscape around HB-2847.',
+    priorities: { understand: '1st', deeper: '2nd', involve: '3rd' }
+  },
+  builder: {
+    tierOrder: ['involve', 'understand', 'deeper'],
+    tierOpen: ['involve'],
+    nudgeOrder: ['involve', 'understand', 'deeper'],
+    nudgeHidden: ['resource', 'partner'],
+    explanation: {
+      tag: 'Builder', tagBg: 'var(--involve-bg)', tagFg: 'var(--involve-fg)',
+      text: '<strong>Action first.</strong> Soonest events and lowest-commitment opportunities surface at top. Within Get Involved: attend &rarr; volunteer &rarr; ongoing commitment. Understanding is there when you want context for your action.'
+    },
+    hint: '<strong>Jump in:</strong> Community Health Fair in Sunnyside, March 15. Free, family-friendly, no sign-up needed.',
+    priorities: { involve: '1st', understand: '2nd', deeper: '3rd' }
+  },
+  watchdog: {
+    tierOrder: ['deeper', 'understand', 'involve'],
+    tierOpen: ['deeper', 'understand'],
+    nudgeOrder: ['deeper', 'understand', 'involve'],
+    nudgeHidden: ['resource', 'partner'],
+    explanation: {
+      tag: 'Watchdog', tagBg: 'var(--deeper-bg)', tagFg: 'var(--deeper-fg)',
+      text: '<strong>Accountability first.</strong> Your elected officials and active policies surface at top. Officials from YOUR district are prioritized. Understanding provides context. Get Involved shows testimony and advocacy opportunities first.'
+    },
+    hint: '<strong>Track this:</strong> HB-2847 is in committee. Your rep, Mary Garcia, sits on the Health Committee. Public hearing March 20.',
+    priorities: { deeper: '1st', understand: '2nd', involve: '3rd' }
+  },
+  partner: {
+    tierOrder: ['involve', 'deeper', 'understand'],
+    tierOpen: ['involve', 'deeper'],
+    nudgeOrder: ['partner', 'involve', 'deeper'],
+    nudgeHidden: ['resource', 'understand'],
+    explanation: {
+      tag: 'Partner', tagBg: '#f5f3ff', tagFg: '#6b46c1',
+      text: '<strong>Collaboration first.</strong> Partnership and funding opportunities surface at top. Organizations and their capacity are highlighted. Policy landscape shows where institutional support aligns. Content provides shared context for partnership conversations.'
+    },
+    hint: '<strong>Connect:</strong> Houston Health Dept is actively seeking CHW program partners with funding available for underserved super neighborhoods.',
+    priorities: { involve: '1st', deeper: '2nd', understand: '3rd' }
+  }
+};
+
+let currentArchetype = 'explorer';
+
+function setArchetype(name) {
+  if (name === currentArchetype) return;
+  currentArchetype = name;
+  const config = archetypes[name];
+
+  // Update archetype buttons
+  document.querySelectorAll('.archetype-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.archetype-btn[onclick="setArchetype('${name}')"]`).classList.add('active');
+
+  // Update left nav archetype items
+  document.querySelectorAll('.archetype-nav').forEach(n => n.classList.remove('active'));
+  document.getElementById(`nav-${name}`).classList.add('active');
+
+  // Update ordering explanation
+  const expEl = document.getElementById('ordering-explanation');
+  const tagEl = document.getElementById('ordering-tag');
+  const textEl = document.getElementById('ordering-text');
+  tagEl.textContent = config.explanation.tag;
+  tagEl.style.background = config.explanation.tagBg;
+  tagEl.style.color = config.explanation.tagFg;
+  textEl.innerHTML = config.explanation.text;
+
+  // Reorder wayfinder tiers with animation
+  const container = document.getElementById('wf-tiers');
+  container.classList.add('reordering');
+  setTimeout(() => container.classList.remove('reordering'), 500);
+
+  config.tierOrder.forEach((tierName, i) => {
+    const tier = document.getElementById(`tier-${tierName}`);
+    tier.style.order = i;
+    // Set open/closed
+    tier.open = config.tierOpen.includes(tierName);
+    // Set visual priority
+    tier.className = 'wf-tier';
+    if (i === 0) tier.classList.add('primary');
+    else if (i === 1) tier.classList.add('secondary');
+    else tier.classList.add('tertiary');
+
+    // Priority labels
+    const priorityEl = document.getElementById(`priority-${tierName}`);
+    if (config.priorities[tierName]) {
+      priorityEl.style.display = 'inline';
+      priorityEl.textContent = config.priorities[tierName];
+    } else {
+      priorityEl.style.display = 'none';
+    }
+  });
+
+  // Reorder nudge cards
+  const nudgeZone = document.getElementById('nudge-zone');
+  nudgeZone.classList.add('reordering');
+  setTimeout(() => nudgeZone.classList.remove('reordering'), 600);
+
+  // Hide all nudges first
+  ['understand', 'involve', 'deeper', 'resource', 'partner'].forEach(n => {
+    const el = document.getElementById(`nudge-${n}`);
+    if (el) el.style.display = 'none';
+  });
+
+  // Show and order visible nudges
+  config.nudgeOrder.forEach((nudgeName, i) => {
+    const el = document.getElementById(`nudge-${nudgeName}`);
+    if (el) {
+      el.style.display = 'flex';
+      el.style.order = i;
+    }
+  });
+
+  // Update engagement hint
+  document.getElementById('engagement-hint').innerHTML = config.hint;
+}
+
+// Make nudge zone a flex container for ordering
+document.getElementById('nudge-zone').style.display = 'flex';
+document.getElementById('nudge-zone').style.flexDirection = 'column';
+
+// Make tiers container flex for ordering
+document.getElementById('wf-tiers').style.display = 'flex';
+document.getElementById('wf-tiers').style.flexDirection = 'column';
+
+// Initialize
+setArchetype('explorer');
+</script>
+
+</body>
+</html>

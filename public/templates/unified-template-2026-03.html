@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Change Engine — Unified Template + Archetypes + Consultant Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB;
+    --text: #2C2C2C;
+    --accent: #C75B2A;
+    --muted: #8B7E74;
+    --border: #E8E3DB;
+    --card: #FFFFFF;
+    --health: #e53e3e;
+    --families: #dd6b20;
+    --neighborhood: #d69e2e;
+    --voice: #38a169;
+    --money: #3182ce;
+    --planet: #319795;
+    --bigger: #805ad5;
+    --learning: #3182ce;
+    --action: #38a169;
+    --resource: #d69e2e;
+    --accountability: #805ad5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1a1a; color: var(--text); }
+  .serif { font-family: 'DM Serif Display', serif; }
+
+  /* Top nav for mockup switching */
+  .mockup-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #111; border-bottom: 1px solid #333;
+    padding: 12px 24px;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .mockup-nav .title { color: #fff; font-family: 'DM Serif Display', serif; font-size: 16px; margin-right: 16px; }
+  .mockup-nav a {
+    color: #999; text-decoration: none; font-size: 12px; font-weight: 600;
+    padding: 5px 12px; border-radius: 8px; transition: all 0.2s; cursor: pointer;
+  }
+  .mockup-nav a:hover, .mockup-nav a.active { color: #fff; background: #333; }
+  .mockup-nav .sep { width: 1px; height: 20px; background: #444; margin: 0 4px; }
+  .mockup-nav .group-label { color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 2px; }
+
+  .page-mockup { max-width: 1200px; margin: 40px auto; background: var(--bg); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); display: none; }
+  .page-mockup.visible { display: block; }
+  .page-label { background: #222; color: #fff; text-align: center; padding: 10px; font-size: 13px; font-weight: 600; letter-spacing: 0.05em; }
+  .page-label span { color: var(--accent); }
+
+  /* === MAIN LAYOUT: Left Nav + Content + Wayfinder === */
+  .three-col {
+    display: grid;
+    grid-template-columns: 220px 1fr 300px;
+    min-height: 80vh;
+  }
+  @media (max-width: 1024px) { .three-col { grid-template-columns: 1fr 300px; } }
+  @media (max-width: 768px) { .three-col { grid-template-columns: 1fr; } }
+
+  /* === LEFT NAVIGATION === */
+  .left-nav {
+    background: #FDFBF8;
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    position: sticky; top: 48px; height: calc(100vh - 48px); overflow-y: auto;
+  }
+  .left-nav-section { padding: 0 16px; margin-bottom: 20px; }
+  .left-nav-section-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; padding-left: 4px;
+  }
+  .left-nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border-radius: 8px; text-decoration: none;
+    font-size: 13px; color: var(--text); font-weight: 500;
+    transition: all 0.15s; cursor: pointer; margin-bottom: 2px;
+  }
+  .left-nav-item:hover { background: rgba(199,91,42,0.08); }
+  .left-nav-item.active { background: rgba(199,91,42,0.12); color: var(--accent); font-weight: 600; }
+  .left-nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .left-nav-icon { width: 16px; height: 16px; flex-shrink: 0; color: var(--muted); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .left-nav-divider { height: 1px; background: var(--border); margin: 12px 16px; }
+
+  /* Archetype cards in left nav */
+  .archetype-card {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 10px; border-radius: 8px; text-decoration: none;
+    font-size: 12px; color: var(--text); transition: all 0.15s; cursor: pointer;
+    margin-bottom: 4px; border-left: 3px solid transparent;
+  }
+  .archetype-card:hover { background: rgba(199,91,42,0.06); }
+  .archetype-card.active { border-left-color: var(--accent); background: rgba(199,91,42,0.08); }
+  .archetype-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .archetype-name { font-weight: 600; font-size: 12px; line-height: 1.3; }
+  .archetype-desc { font-size: 10px; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+
+  /* === MAIN CONTENT AREA === */
+  .main-content { padding: 24px 28px; min-width: 0; }
+
+  /* Breadcrumb */
+  .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+  /* Compact Hero - universal */
+  .hero-compact { margin-bottom: 20px; }
+  .hero-compact .pathway-label { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; }
+  .hero-compact .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+  .hero-compact h1 { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1.3; margin-top: 6px; color: var(--text); }
+  .hero-compact .subtitle { font-style: italic; color: var(--muted); margin-top: 4px; font-size: 14px; max-width: 560px; }
+  .hero-compact .rule { height: 3px; border-radius: 2px; width: 50px; margin-top: 10px; }
+  .hero-compact .badges { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .hero-compact .badge { font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: 600; }
+
+  /* Hero image variant */
+  .hero-image { width: 100%; height: 200px; border-radius: 12px; object-fit: cover; margin-bottom: 16px; background: linear-gradient(135deg, #e8e3db 0%, #d5cec4 100%); display: flex; align-items: flex-end; position: relative; overflow: hidden; }
+  .hero-image-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(44,44,44,0.75)); padding: 16px 20px; color: white; }
+  .hero-image-overlay h1 { color: white; font-family: 'DM Serif Display', serif; font-size: 22px; }
+  .hero-image-overlay .pathway-label { color: rgba(255,255,255,0.9); font-size: 11px; font-weight: 600; }
+
+  /* Content blocks */
+  .content-block { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 14px; }
+  .content-block h2 { font-family: 'DM Serif Display', serif; font-size: 17px; margin-bottom: 6px; }
+  .content-block p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .skeleton { background: linear-gradient(90deg, #e8e3db 25%, #f0ece6 50%, #e8e3db 75%); background-size: 200% 100%; border-radius: 5px; height: 11px; margin: 6px 0; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* Photo strip */
+  .photo-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; }
+  .photo-strip-item { width: 100px; height: 68px; border-radius: 6px; flex-shrink: 0; background: linear-gradient(135deg, #e8e3db, #d5cec4); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--muted); }
+
+  /* Inline map */
+  .inline-map { height: 180px; border-radius: 10px; margin-bottom: 14px; background: #e8f4e8; border: 1px solid #c6dcc6; display: flex; align-items: center; justify-content: center; color: #5a8a5a; font-size: 12px; position: relative; overflow: hidden; }
+
+  /* Contact grid */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .contact-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 12px; }
+  .contact-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+  .contact-item .value { font-weight: 600; color: var(--text); }
+
+  /* Stats grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+  .stat-number { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); }
+  .stat-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* Entity cards grid */
+  .entity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .entity-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; gap: 8px; align-items: center; }
+  .entity-photo { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ddd, #bbb); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; }
+  .entity-logo { width: 36px; height: 36px; border-radius: 6px; background: white; border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--muted); }
+  .entity-name { font-size: 12px; font-weight: 600; }
+  .entity-meta { font-size: 10px; color: var(--muted); }
+
+  /* Timeline */
+  .timeline { padding-left: 20px; border-left: 2px solid var(--border); margin-bottom: 14px; }
+  .timeline-item { padding: 8px 0 8px 12px; position: relative; }
+  .timeline-item::before { content: ''; position: absolute; left: -25px; top: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+  .timeline-date { font-size: 10px; color: var(--muted); font-weight: 600; }
+  .timeline-text { font-size: 12px; color: var(--text); margin-top: 2px; }
+
+  /* CTA row */
+  .cta-row { display: flex; gap: 8px; margin-top: 16px; }
+  .cta-btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; }
+  .cta-btn:hover { opacity: 0.85; }
+  .cta-primary { background: var(--accent); color: white; }
+  .cta-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+
+  /* === WAYFINDER SIDEBAR === */
+  .wayfinder {
+    background: var(--card); border-left: 1px solid var(--border);
+    position: sticky; top: 48px; height: calc(100vh - 48px); overflow-y: auto;
+    padding-bottom: 20px;
+  }
+  .wf-header { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .wf-header h3 { font-family: 'DM Serif Display', serif; font-size: 14px; }
+
+  .wf-org-section { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+  .wf-org { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .wf-org-logo { width: 28px; height: 28px; border-radius: 5px; background: var(--bg); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--muted); border: 1px solid var(--border); }
+  .wf-org-name { font-size: 12px; font-weight: 600; }
+  .wf-actions { display: flex; flex-wrap: wrap; gap: 4px; padding-left: 36px; margin-bottom: 8px; }
+  .wf-action { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 3px 7px; border-radius: 5px; text-decoration: none; font-weight: 500; }
+  .wf-donate { background: #f0fff4; color: #276749; }
+  .wf-volunteer { background: #ebf8ff; color: #2b6cb0; }
+  .wf-subscribe { background: #faf5ff; color: #6b46c1; }
+
+  .wf-focus-dots { padding: 8px 14px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 5px; }
+  .wf-focus-dot { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--muted); text-decoration: none; }
+  .wf-focus-dot .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .wf-tier { border-top: 1px solid var(--border); }
+  .wf-tier summary { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; cursor: pointer; list-style: none; font-size: 12px; font-weight: 600; }
+  .wf-tier summary::-webkit-details-marker { display: none; }
+  .wf-tier summary:hover { background: rgba(245,241,235,0.5); }
+  .wf-tier-left { display: flex; align-items: center; gap: 6px; }
+  .wf-tier-icon { font-size: 12px; }
+  .wf-tier-count { font-size: 9px; padding: 1px 6px; border-radius: 8px; font-weight: 700; }
+  .wf-tier-body { padding: 0 14px 10px; }
+
+  .wf-content-card { display: flex; gap: 6px; padding: 3px 0; text-decoration: none; }
+  .wf-content-thumb { width: 42px; height: 30px; border-radius: 3px; flex-shrink: 0; background: linear-gradient(135deg, #e8e3db, #d5cec4); }
+  .wf-content-title { font-size: 10px; font-weight: 600; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .wf-pathway-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 3px; }
+
+  .wf-involved-card { display: flex; gap: 5px; padding: 3px 0; font-size: 10px; }
+  .wf-involved-name { font-weight: 600; color: var(--text); }
+  .wf-time-badge { font-size: 9px; padding: 1px 5px; border-radius: 3px; background: #f0fff4; color: #276749; }
+
+  .wf-official-card { display: flex; gap: 6px; padding: 3px 0; align-items: center; }
+  .wf-official-photo { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #ddd, #bbb); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #888; }
+  .wf-official-name { font-size: 10px; font-weight: 600; }
+  .wf-official-title { font-size: 9px; color: var(--muted); }
+
+  .wf-policy-card { display: flex; gap: 5px; padding: 3px 0; }
+  .wf-policy-icon { flex-shrink: 0; margin-top: 2px; font-size: 10px; color: #4299e1; }
+  .wf-bill { font-size: 9px; font-family: monospace; color: var(--muted); }
+  .wf-policy-name { font-size: 10px; font-weight: 600; color: var(--text); }
+
+  /* === CONSULTANT BRIEF SECTION === */
+  .brief-section { max-width: 1200px; margin: 40px auto; padding: 40px; background: #111; border-radius: 16px; color: #ddd; }
+  .brief-section h2 { font-family: 'DM Serif Display', serif; color: var(--accent); font-size: 24px; margin-bottom: 16px; }
+  .brief-section h3 { font-family: 'DM Serif Display', serif; color: #fff; font-size: 18px; margin: 20px 0 10px; }
+  .brief-section p { font-size: 14px; line-height: 1.7; color: #bbb; margin-bottom: 10px; }
+  .brief-section ul { padding-left: 20px; margin-bottom: 12px; }
+  .brief-section li { font-size: 13px; line-height: 1.7; color: #bbb; margin-bottom: 4px; }
+  .brief-section .highlight { background: rgba(199,91,42,0.15); border-left: 3px solid var(--accent); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+  .brief-section .highlight p { color: #eee; margin: 0; }
+  .brief-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+  @media (max-width: 768px) { .brief-columns { grid-template-columns: 1fr; } }
+  .brief-card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 16px; }
+  .brief-card h4 { font-family: 'DM Serif Display', serif; color: #fff; font-size: 15px; margin-bottom: 6px; }
+  .brief-card p { font-size: 12px; }
+  .archetype-preview { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+  .archetype-chip { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; padding: 12px 16px; flex: 1; min-width: 160px; }
+  .archetype-chip .emoji { font-size: 24px; margin-bottom: 6px; }
+  .archetype-chip .name { font-weight: 700; color: #fff; font-size: 13px; }
+  .archetype-chip .desc { font-size: 11px; color: #888; margin-top: 4px; line-height: 1.5; }
+  .archetype-chip .maps-to { font-size: 10px; color: var(--accent); margin-top: 6px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="mockup-nav">
+  <span class="title">Unified Template</span>
+  <span class="group-label">Pages:</span>
+  <a class="active" onclick="showPage('content')">Content</a>
+  <a onclick="showPage('official')">Official</a>
+  <a onclick="showPage('service')">Service</a>
+  <a onclick="showPage('org')">Organization</a>
+  <a onclick="showPage('policy')">Policy</a>
+  <a onclick="showPage('guide')">Guide</a>
+  <a onclick="showPage('help')">Help</a>
+  <a onclick="showPage('library')">Library</a>
+  <div class="sep"></div>
+  <a onclick="showPage('brief')" style="border: 1px solid var(--accent); color: var(--accent);">Consultant Brief</a>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONSULTANT BRIEF
+     ══════════════════════════════════════════════════════════ -->
+<div id="brief" class="brief-section" style="display:none;">
+  <h2>Consultant Recommendations: Community Exchange</h2>
+
+  <h3>1. The Archetype System</h3>
+  <p>Your platform already has Centers (Learning, Action, Resource, Accountability) and Pathways (7 themes). What's missing is the <strong>human entry point</strong> — who is the person arriving, and what mode are they in? Archetypes bridge the gap between "what the platform organizes" and "how people actually show up."</p>
+
+  <div class="highlight"><p>Archetypes are NOT user accounts or profiles. They're navigational lenses — a way someone self-selects their intent in this moment, which then curates the experience.</p></div>
+
+  <div class="archetype-preview">
+    <div class="archetype-chip">
+      <div class="emoji">&#x1F331;</div>
+      <div class="name">The Seeker</div>
+      <div class="desc">Looking for resources, services, or answers for themselves or a loved one</div>
+      <div class="maps-to">Maps to: Resource Center</div>
+    </div>
+    <div class="archetype-chip">
+      <div class="emoji">&#x1F4D6;</div>
+      <div class="name">The Learner</div>
+      <div class="desc">Wants to understand an issue, explore research, learn how systems work</div>
+      <div class="maps-to">Maps to: Learning Center</div>
+    </div>
+    <div class="archetype-chip">
+      <div class="emoji">&#x1F91D;</div>
+      <div class="name">The Builder</div>
+      <div class="desc">Ready to volunteer, organize, contribute, or create something in the community</div>
+      <div class="maps-to">Maps to: Action Center</div>
+    </div>
+    <div class="archetype-chip">
+      <div class="emoji">&#x1F50D;</div>
+      <div class="name">The Watchdog</div>
+      <div class="desc">Tracking decisions, policies, elected officials, and accountability</div>
+      <div class="maps-to">Maps to: Accountability Center</div>
+    </div>
+    <div class="archetype-chip">
+      <div class="emoji">&#x1F3E2;</div>
+      <div class="name">The Partner</div>
+      <div class="desc">An organization, funder, or institution looking to connect and collaborate</div>
+      <div class="maps-to">Maps to: Partner Portal</div>
+    </div>
+    <div class="archetype-chip">
+      <div class="emoji">&#x1F30D;</div>
+      <div class="name">The Explorer</div>
+      <div class="desc">Just browsing, curious, wants to see what's happening across Houston</div>
+      <div class="maps-to">Maps to: Compass / Pathways</div>
+    </div>
+  </div>
+
+  <h3>2. Why Archetypes in the Left Nav?</h3>
+  <p>The left navigation becomes a <strong>persistent wayfinding rail</strong> that anchors the user's experience across every page. It replaces the current top-nav-only approach with a always-visible context panel.</p>
+  <div class="brief-columns">
+    <div class="brief-card">
+      <h4>Current State</h4>
+      <p>Top nav has: Pathways, Services, Officials, Policies, Elections, Library. That's entity-type navigation — it assumes the user already knows what type of thing they want. Most don't.</p>
+    </div>
+    <div class="brief-card">
+      <h4>Proposed State</h4>
+      <p>Left nav has: Archetypes (intent-first), then Pathways (theme-second), then entity shortcuts. The top nav simplifies to search + language + zip. The user's "mode" persists across pages.</p>
+    </div>
+  </div>
+
+  <h3>3. Unified Template Strategy</h3>
+  <p>Every detail page should follow the same three-column rhythm:</p>
+  <div class="highlight"><p><strong>Left Nav</strong> (persistent context: archetype + pathways + shortcuts) + <strong>Main Content</strong> (adapts per content type) + <strong>Wayfinder Sidebar</strong> (universal 3-tier: Understand, Get Involved, Go Deeper)</p></div>
+
+  <p>What stays consistent across ALL 8 page types:</p>
+  <ul>
+    <li>Left nav with archetypes + pathways — always visible on desktop</li>
+    <li>Breadcrumb trail showing location in the knowledge graph</li>
+    <li>Compact hero: pathway dot + serif title + italic description + colored rule</li>
+    <li>Wayfinder sidebar with org anchors, focus dots, 3 collapsible tiers</li>
+    <li>"Suggest an edit" + "View source" CTAs at bottom of main content</li>
+    <li>Mobile: left nav becomes hamburger drawer, wayfinder collapses below main</li>
+  </ul>
+
+  <p>What adapts per content type:</p>
+  <ul>
+    <li><strong>Content</strong>: hero image + photo strip + article body + inline map</li>
+    <li><strong>Official</strong>: circular photo + contact grid + district map + legislation list</li>
+    <li><strong>Service</strong>: cost/free badge + contact grid + location map + related services</li>
+    <li><strong>Organization</strong>: logo + photo strip + stats grid + services list + area map</li>
+    <li><strong>Policy</strong>: status badges + timeline + impact highlight + decision makers</li>
+    <li><strong>Guide</strong>: hero image + step-by-step sections + program providers</li>
+    <li><strong>Library</strong>: metadata row + key takeaways + download/ask CTAs</li>
+    <li><strong>Help</strong>: urgency badges + service map + grouped resources</li>
+  </ul>
+
+  <h3>4. Implementation Roadmap</h3>
+  <div class="brief-columns">
+    <div class="brief-card">
+      <h4>Phase 1: Foundation (This Sprint)</h4>
+      <ul>
+        <li>Build UnifiedDetailLayout (3-column shell)</li>
+        <li>Build LeftNav component with archetypes</li>
+        <li>Refactor DetailWayfinder to match template exactly</li>
+        <li>Build CompactHero with content-type variants</li>
+        <li>Wire into /content/[id] as first page</li>
+      </ul>
+    </div>
+    <div class="brief-card">
+      <h4>Phase 2: Roll Out (Next Sprint)</h4>
+      <ul>
+        <li>Apply to /officials/[id], /services/[id], /organizations/[id]</li>
+        <li>Apply to /policies/[id], /guides/[slug]</li>
+        <li>Apply to /library/doc/[id], /help/[slug]</li>
+        <li>Mobile responsive: drawer nav + stacked wayfinder</li>
+      </ul>
+    </div>
+    <div class="brief-card">
+      <h4>Phase 3: Archetype Intelligence</h4>
+      <ul>
+        <li>Archetype selection persists in cookie (like language)</li>
+        <li>Content ordering in Wayfinder adapts to archetype</li>
+        <li>Homepage PersonaSelector maps to archetypes</li>
+        <li>Analytics: track archetype-driven engagement</li>
+      </ul>
+    </div>
+    <div class="brief-card">
+      <h4>Phase 4: Community Features</h4>
+      <ul>
+        <li>Archetype-specific onboarding flows</li>
+        <li>"Others like you also explored..." recommendations</li>
+        <li>Community contributions surfaced by archetype</li>
+        <li>Partner archetype connects to partner portal</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>5. What This Solves</h3>
+  <ul>
+    <li><strong>Consistency</strong>: Every page feels like the same platform. No more bespoke layouts.</li>
+    <li><strong>Discoverability</strong>: The Wayfinder sidebar ensures every detail page is a doorway to 3 more related things. No dead ends.</li>
+    <li><strong>Intent clarity</strong>: Archetypes answer "what can I do here?" before the user even asks.</li>
+    <li><strong>Asset-based framing</strong>: The archetype names (Seeker, Learner, Builder, Watchdog, Partner, Explorer) are all empowering identities, not needs-based labels.</li>
+    <li><strong>Scalability</strong>: One template handles all 8 content types. New types just need a main-content variant.</li>
+  </ul>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTENT DETAIL PAGE (3-column)
+     ══════════════════════════════════════════════════════════ -->
+<div id="content" class="page-mockup visible">
+  <div class="page-label">Content Detail — <span>/content/[id]</span></div>
+  <div class="three-col">
+    <!-- LEFT NAV -->
+    <nav class="left-nav">
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Your Journey</div>
+        <a class="archetype-card active">
+          <span class="archetype-icon">&#x1F331;</span>
+          <div>
+            <div class="archetype-name">The Seeker</div>
+            <div class="archetype-desc">Find resources & services</div>
+          </div>
+        </a>
+        <a class="archetype-card">
+          <span class="archetype-icon">&#x1F4D6;</span>
+          <div>
+            <div class="archetype-name">The Learner</div>
+            <div class="archetype-desc">Understand & explore</div>
+          </div>
+        </a>
+        <a class="archetype-card">
+          <span class="archetype-icon">&#x1F91D;</span>
+          <div>
+            <div class="archetype-name">The Builder</div>
+            <div class="archetype-desc">Volunteer & create</div>
+          </div>
+        </a>
+        <a class="archetype-card">
+          <span class="archetype-icon">&#x1F50D;</span>
+          <div>
+            <div class="archetype-name">The Watchdog</div>
+            <div class="archetype-desc">Track accountability</div>
+          </div>
+        </a>
+        <a class="archetype-card">
+          <span class="archetype-icon">&#x1F3E2;</span>
+          <div>
+            <div class="archetype-name">The Partner</div>
+            <div class="archetype-desc">Connect & collaborate</div>
+          </div>
+        </a>
+        <a class="archetype-card">
+          <span class="archetype-icon">&#x1F30D;</span>
+          <div>
+            <div class="archetype-name">The Explorer</div>
+            <div class="archetype-desc">Browse & discover</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="left-nav-divider"></div>
+
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Pathways</div>
+        <a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a>
+      </div>
+
+      <div class="left-nav-divider"></div>
+
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Quick Links</div>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5FA;</span> Compass</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x2699;</span> Services</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F3DB;</span> Officials</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4CB;</span> Policies</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5F3;</span> Elections</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4DA;</span> Library</a>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Our Health</a> &rsaquo; Article</div>
+
+      <div class="hero-image" style="background: linear-gradient(135deg, #e53e3e15 0%, #dd6b2015 50%, #d69e2e15 100%);">
+        <div class="hero-image-overlay">
+          <div class="pathway-label"><span class="dot" style="background:var(--health)"></span> Our Health</div>
+          <h1 class="serif">How Houston's Community Health Workers Are Transforming Neighborhood Care</h1>
+        </div>
+      </div>
+
+      <div class="photo-strip">
+        <div class="photo-strip-item" style="background: linear-gradient(135deg, #e8d5d5, #d4a5a5);">CHW Training</div>
+        <div class="photo-strip-item" style="background: linear-gradient(135deg, #d5e8d5, #a5d4a8);">Health Fair</div>
+        <div class="photo-strip-item" style="background: linear-gradient(135deg, #d5dde8, #a5b5d4);">Community Hub</div>
+        <div class="photo-strip-item" style="background: linear-gradient(135deg, #e8e5d5, #d4cda5);">Mobile Clinic</div>
+      </div>
+
+      <div class="content-block">
+        <h2>The Growing Role of Community Health Workers</h2>
+        <p>Community health workers (CHWs) are trusted members of the communities they serve. They help navigate the healthcare system, connect residents with preventive services, and provide culturally sensitive health education.</p>
+        <div class="skeleton" style="width: 100%;"></div>
+        <div class="skeleton" style="width: 85%;"></div>
+        <div class="skeleton" style="width: 92%;"></div>
+      </div>
+
+      <div class="content-block">
+        <h2>Impact on Health Outcomes</h2>
+        <p>Neighborhoods with active CHW programs see measurable improvements in chronic disease management, prenatal care, and mental health screening.</p>
+        <div class="skeleton" style="width: 90%;"></div>
+        <div class="skeleton" style="width: 78%;"></div>
+      </div>
+
+      <div class="inline-map">Leaflet Map — Related Locations</div>
+
+      <div class="cta-row">
+        <a class="cta-primary" href="#">View original source</a>
+        <a class="cta-secondary" href="#">Suggest an edit</a>
+      </div>
+    </div>
+
+    <!-- WAYFINDER SIDEBAR -->
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section">
+        <div class="wf-org"><div class="wf-org-logo">HHD</div><div class="wf-org-name">Houston Health Dept</div></div>
+        <div class="wf-actions">
+          <a class="wf-action wf-donate">Donate</a>
+          <a class="wf-action wf-volunteer">Volunteer</a>
+          <a class="wf-action wf-subscribe">Subscribe</a>
+        </div>
+        <div class="wf-org"><div class="wf-org-logo">UTH</div><div class="wf-org-name">UTHealth Houston</div></div>
+      </div>
+      <div class="wf-focus-dots">
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Community Health</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Healthcare Access</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--families)"></span> Youth Wellness</a>
+      </div>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> <span>Understand</span></span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">5</span></summary>
+        <div class="wf-tier-body">
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">CHW Programs Reduce ER Visits by 30%</span></div></a>
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--families)"></span><span class="wf-content-title">How School-Based Health Centers Work</span></div></a>
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">Mental Health First Aid Training Guide</span></div></a>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> <span>Get Involved</span></span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">3</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-involved-card"><div><span class="wf-involved-name">CHW Training Program</span><br><span class="wf-time-badge">8 weeks</span></div></div>
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Community Health Fair</span><br><span class="wf-time-badge">Mar 15</span></div></div>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> <span>Go Deeper</span></span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">4</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-official-card"><div class="wf-official-photo">SJ</div><div><div class="wf-official-name">Sylvester Turner</div><div class="wf-official-title">Mayor, City of Houston</div></div></div>
+          <div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">HB-2847</span><br><span class="wf-policy-name">Community Health Worker Act</span></div></div>
+        </div>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     OFFICIAL DETAIL PAGE
+     ══════════════════════════════════════════════════════════ -->
+<div id="official" class="page-mockup">
+  <div class="page-label">Official Detail — <span>/officials/[id]</span></div>
+  <div class="three-col">
+    <nav class="left-nav">
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Your Journey</div>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div></div></a>
+        <a class="archetype-card active"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div><div class="archetype-desc">Track accountability</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Pathways</div>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a>
+        <a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Quick Links</div>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5FA;</span> Compass</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x2699;</span> Services</a>
+        <a class="left-nav-item" style="font-weight:700;color:var(--accent)"><span class="left-nav-icon">&#x1F3DB;</span> Officials</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4CB;</span> Policies</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5F3;</span> Elections</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4DA;</span> Library</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Officials</a> &rsaquo; Detail</div>
+
+      <div class="hero-compact">
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div class="entity-photo" style="width:80px;height:80px;font-size:20px;border-radius:50%;">ST</div>
+          <div>
+            <div class="badges">
+              <span class="badge" style="background:#ebf8ff;color:#2b6cb0;">City</span>
+              <span class="badge" style="background:#fef3c7;color:#92400e;">Democrat</span>
+            </div>
+            <h1 class="serif" style="font-size:26px;margin-top:6px;">Sylvester Turner</h1>
+            <div class="subtitle">Mayor, City of Houston</div>
+            <div class="rule" style="background:var(--voice);"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-item"><div class="label">Phone</div><div class="value">(832) 393-1000</div></div>
+        <div class="contact-item"><div class="label">Website</div><div class="value" style="color:var(--accent)">houstontx.gov/mayor</div></div>
+        <div class="contact-item"><div class="label">Email</div><div class="value" style="color:var(--accent)">mayor@houstontx.gov</div></div>
+        <div class="contact-item"><div class="label">District</div><div class="value">City-wide</div></div>
+      </div>
+
+      <div class="content-block">
+        <h2>About</h2>
+        <p>Serving as Houston's 62nd mayor, focusing on infrastructure, public safety, and equitable economic development across all communities.</p>
+        <div class="skeleton" style="width:90%"></div>
+        <div class="skeleton" style="width:75%"></div>
+      </div>
+
+      <div class="inline-map" style="background:#eef2ff;border-color:#c7d2fe;color:#6366f1;">District Map — City of Houston</div>
+
+      <div class="content-block">
+        <h2>Sponsored Policies & Legislation</h2>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="font-family:monospace;color:var(--muted);font-size:10px;">ORD-2025-114</span> <span style="font-weight:600;">Complete Streets Policy</span> <span style="font-size:10px;padding:2px 6px;background:#d1fae5;color:#065f46;border-radius:4px;">Enacted</span></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="font-family:monospace;color:var(--muted);font-size:10px;">ORD-2025-089</span> <span style="font-weight:600;">Affordable Housing Trust Fund</span> <span style="font-size:10px;padding:2px 6px;background:#fef3c7;color:#92400e;border-radius:4px;">In Committee</span></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;"><span style="font-family:monospace;color:var(--muted);font-size:10px;">HB-2847</span> <span style="font-weight:600;">Community Health Worker Act</span> <span style="font-size:10px;padding:2px 6px;background:#dbeafe;color:#1e40af;border-radius:4px;">Referred</span></div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h2>Organizations in This District</h2>
+        <div class="entity-grid" style="margin-top:8px;">
+          <div class="entity-card"><div class="entity-logo">UW</div><div><div class="entity-name">United Way of Greater Houston</div><div class="entity-meta">Nonprofit</div></div></div>
+          <div class="entity-card"><div class="entity-logo">HHD</div><div><div class="entity-name">Houston Health Dept</div><div class="entity-meta">Government</div></div></div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-secondary" href="#">Suggest an edit</a>
+      </div>
+    </div>
+
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section">
+        <div class="wf-org"><div class="wf-org-logo">COH</div><div class="wf-org-name">City of Houston</div></div>
+        <div class="wf-actions"><a class="wf-action wf-volunteer">Visit Website</a></div>
+      </div>
+      <div class="wf-focus-dots">
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--voice)"></span> Civic Leadership</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--neighborhood)"></span> Infrastructure</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--money)"></span> Economic Dev</a>
+      </div>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">4</span></summary>
+        <div class="wf-tier-body">
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--voice)"></span><span class="wf-content-title">How City Council Decisions Affect You</span></div></a>
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--neighborhood)"></span><span class="wf-content-title">Houston's Complete Streets Initiative</span></div></a>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">2</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Town Hall Meeting</span><br><span class="wf-time-badge">Apr 2</span></div></div>
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Budget Hearing — Public Comment</span><br><span class="wf-time-badge">Mar 28</span></div></div>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">3</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">ORD-2025-114</span><br><span class="wf-policy-name">Complete Streets Policy</span></div></div>
+          <div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">ORD-2025-089</span><br><span class="wf-policy-name">Affordable Housing Trust Fund</span></div></div>
+        </div>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SERVICE DETAIL PAGE
+     ══════════════════════════════════════════════════════════ -->
+<div id="service" class="page-mockup">
+  <div class="page-label">Service Detail — <span>/services/[id]</span></div>
+  <div class="three-col">
+    <nav class="left-nav">
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Your Journey</div>
+        <a class="archetype-card active"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div><div class="archetype-desc">Find resources & services</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Pathways</div>
+        <a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Quick Links</div>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5FA;</span> Compass</a>
+        <a class="left-nav-item" style="font-weight:700;color:var(--accent)"><span class="left-nav-icon">&#x2699;</span> Services</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F3DB;</span> Officials</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4CB;</span> Policies</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5F3;</span> Elections</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4DA;</span> Library</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Services</a> &rsaquo; Detail</div>
+      <div class="hero-compact">
+        <div class="badges">
+          <span class="badge" style="background:#fef2f2;color:#991b1b;">Our Health</span>
+          <span class="badge" style="background:#d1fae5;color:#065f46;">Free</span>
+        </div>
+        <h1 class="serif" style="margin-top:6px;">Community Mental Health Counseling</h1>
+        <div class="subtitle">The Harris Center for Mental Health and IDD</div>
+        <div class="rule" style="background:var(--health);"></div>
+      </div>
+
+      <div class="content-block">
+        <h2>About This Service</h2>
+        <p>Free, confidential mental health counseling for Houston-area residents. Offers individual, family, and group therapy sessions with licensed counselors. Available in English, Spanish, and Vietnamese.</p>
+        <div class="skeleton" style="width:88%"></div>
+      </div>
+
+      <div class="inline-map">Leaflet Map — Service Location</div>
+
+      <div class="contact-grid">
+        <div class="contact-item"><div class="label">Phone</div><div class="value">(713) 970-7000</div></div>
+        <div class="contact-item"><div class="label">Hours</div><div class="value">Mon-Fri 8am-5pm</div></div>
+        <div class="contact-item"><div class="label">Address</div><div class="value">9401 Southwest Fwy</div></div>
+        <div class="contact-item"><div class="label">Languages</div><div class="value">EN, ES, VI</div></div>
+      </div>
+
+      <div class="content-block">
+        <h2>About the Organization</h2>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:8px;">
+          <div class="entity-logo" style="width:48px;height:48px;font-size:14px;">HC</div>
+          <div><div style="font-weight:600;font-size:13px;">The Harris Center</div><div style="font-size:11px;color:var(--muted);">Largest community behavioral health center in Texas</div></div>
+        </div>
+      </div>
+
+      <div class="content-block">
+        <h2>Related Services Nearby</h2>
+        <div class="entity-grid" style="margin-top:8px;">
+          <div class="entity-card"><div class="entity-logo">AA</div><div><div class="entity-name">Crisis Hotline (24/7)</div><div class="entity-meta">Free</div></div></div>
+          <div class="entity-card"><div class="entity-logo">SP</div><div><div class="entity-name">Substance Use Support</div><div class="entity-meta">Sliding scale</div></div></div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-primary" href="#">Call (713) 970-7000</a>
+        <a class="cta-secondary" href="#">Suggest an edit</a>
+      </div>
+    </div>
+
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section">
+        <div class="wf-org"><div class="wf-org-logo">HC</div><div class="wf-org-name">The Harris Center</div></div>
+        <div class="wf-actions"><a class="wf-action wf-donate">Donate</a><a class="wf-action wf-volunteer">Volunteer</a></div>
+      </div>
+      <div class="wf-focus-dots">
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Mental Health</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Counseling</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--families)"></span> Family Support</a>
+      </div>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">3</span></summary>
+        <div class="wf-tier-body">
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">Understanding Mental Health Resources in Houston</span></div></a>
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">How to Access Free Counseling</span></div></a>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">2</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Mental Health First Aid Training</span><br><span class="wf-time-badge">Free | Apr 10</span></div></div>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">2</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-official-card"><div class="wf-official-photo">LH</div><div><div class="wf-official-name">Lina Hidalgo</div><div class="wf-official-title">County Judge</div></div></div>
+          <div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">HB-1890</span><br><span class="wf-policy-name">Mental Health Parity Act</span></div></div>
+        </div>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     ORGANIZATION DETAIL PAGE
+     ══════════════════════════════════════════════════════════ -->
+<div id="org" class="page-mockup">
+  <div class="page-label">Organization Detail — <span>/organizations/[id]</span></div>
+  <div class="three-col">
+    <nav class="left-nav">
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Your Journey</div>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div></div></a>
+        <a class="archetype-card active"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div><div class="archetype-desc">Volunteer & create</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Pathways</div>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a>
+        <a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Quick Links</div>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5FA;</span> Compass</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x2699;</span> Services</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F3DB;</span> Officials</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4CB;</span> Policies</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F5F3;</span> Elections</a>
+        <a class="left-nav-item"><span class="left-nav-icon">&#x1F4DA;</span> Library</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Organizations</a> &rsaquo; Detail</div>
+
+      <div class="hero-compact">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div class="entity-logo" style="width:56px;height:56px;font-size:16px;">UW</div>
+          <div>
+            <div class="badges">
+              <span class="badge" style="background:#f5f3ff;color:#6b46c1;">Nonprofit</span>
+              <span class="badge" style="background:#fef3c7;color:#92400e;">Est. 1922</span>
+            </div>
+            <h1 class="serif" style="font-size:24px;margin-top:6px;">United Way of Greater Houston</h1>
+            <div class="subtitle">Uniting the community to build a stronger Houston through education, income stability, and healthy living.</div>
+            <div class="rule" style="background:var(--families);"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="photo-strip">
+        <div class="photo-strip-item" style="background:linear-gradient(135deg,#d5dde8,#a5b5d4);">Gala</div>
+        <div class="photo-strip-item" style="background:linear-gradient(135deg,#d5e8d5,#a5d4a8);">Day of Caring</div>
+        <div class="photo-strip-item" style="background:linear-gradient(135deg,#e8e5d5,#d4cda5);">Youth Program</div>
+        <div class="photo-strip-item" style="background:linear-gradient(135deg,#e8d5d5,#d4a5a5);">Food Drive</div>
+        <div class="photo-strip-item" style="background:linear-gradient(135deg,#d5e8e8,#a5d4d4);">Office</div>
+      </div>
+
+      <div class="content-block">
+        <h2>About</h2>
+        <p>United Way of Greater Houston fights for the education, financial stability, and health of every person in the community. Through partnerships with hundreds of nonprofits, they invest in programs that create lasting change.</p>
+      </div>
+
+      <div class="inline-map" style="height:160px;">Service Area Map — Greater Houston Region</div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">2.4M</div><div class="stat-label">People Served</div></div>
+        <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Counties</div></div>
+        <div class="stat-card"><div class="stat-number">250+</div><div class="stat-label">Partners</div></div>
+        <div class="stat-card"><div class="stat-number">$92M</div><div class="stat-label">Annual Impact</div></div>
+      </div>
+
+      <div class="content-block">
+        <h2>Services</h2>
+        <div class="entity-grid" style="margin-top:8px;grid-template-columns:1fr 1fr 1fr;">
+          <div class="entity-card"><div><div class="entity-name">211 Helpline</div><div class="entity-meta">24/7 Resource Referral</div></div></div>
+          <div class="entity-card"><div><div class="entity-name">Tax Prep (VITA)</div><div class="entity-meta">Free Tax Filing</div></div></div>
+          <div class="entity-card"><div><div class="entity-name">Bright Beginnings</div><div class="entity-meta">Early Childhood</div></div></div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-primary" href="#">Donate</a>
+        <a class="cta-primary" href="#" style="background:var(--voice);">Volunteer</a>
+        <a class="cta-secondary" href="#">Suggest an edit</a>
+      </div>
+    </div>
+
+    <!-- Org page: NO org section in wayfinder (this IS the org) -->
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-focus-dots" style="border-top:none;">
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--families)"></span> Education</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--money)"></span> Financial Stability</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Healthy Living</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--bigger)"></span> Community Building</a>
+      </div>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">4</span></summary>
+        <div class="wf-tier-body">
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--families)"></span><span class="wf-content-title">Houston's Education Equity Report 2025</span></div></a>
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--money)"></span><span class="wf-content-title">Free Tax Prep Saves Houstonians $14M</span></div></a>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">5</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Day of Caring 2026</span><br><span class="wf-time-badge">Sep 12</span></div></div>
+          <div class="wf-involved-card"><div><span class="wf-involved-name">VITA Tax Prep Volunteer</span><br><span class="wf-time-badge">Jan-Apr</span></div></div>
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Youth Mentorship Program</span><br><span class="wf-time-badge">Ongoing</span></div></div>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">3</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-official-card"><div class="wf-official-photo">ST</div><div><div class="wf-official-name">Sylvester Turner</div><div class="wf-official-title">Mayor</div></div></div>
+          <div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">SB-421</span><br><span class="wf-policy-name">Nonprofit Tax Incentive Act</span></div></div>
+        </div>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     POLICY DETAIL (compact)
+     ══════════════════════════════════════════════════════════ -->
+<div id="policy" class="page-mockup">
+  <div class="page-label">Policy Detail — <span>/policies/[id]</span></div>
+  <div class="three-col">
+    <nav class="left-nav">
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Your Journey</div>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div></div></a>
+        <a class="archetype-card active"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div><div class="archetype-desc">Track accountability</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a>
+        <a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a>
+      </div>
+      <div class="left-nav-divider"></div>
+      <div class="left-nav-section">
+        <div class="left-nav-section-title">Pathways</div>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a>
+        <a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a>
+        <a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Policies</a> &rsaquo; Detail</div>
+      <div class="hero-compact">
+        <div class="badges">
+          <span class="badge" style="background:#fef3c7;color:#92400e;">In Committee</span>
+          <span class="badge" style="background:#ebf8ff;color:#2b6cb0;">State</span>
+          <span class="badge" style="background:#fef2f2;color:#991b1b;">Our Neighborhood</span>
+        </div>
+        <h1 class="serif" style="margin-top:6px;">Complete Streets Policy</h1>
+        <div class="subtitle" style="font-family:monospace;font-style:normal;font-size:12px;color:var(--muted);">ORD-2025-114</div>
+        <div class="rule" style="background:var(--neighborhood);"></div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item"><div class="timeline-date">Feb 15, 2025</div><div class="timeline-text">Introduced by Council Member Castillo</div></div>
+        <div class="timeline-item"><div class="timeline-date">Mar 3, 2025</div><div class="timeline-text">Referred to Transportation Committee</div></div>
+        <div class="timeline-item"><div class="timeline-date">Mar 20, 2025</div><div class="timeline-text">Public hearing scheduled</div></div>
+      </div>
+
+      <div class="content-block">
+        <h2>Summary</h2>
+        <p>Requires all new road construction and major renovations to include safe infrastructure for pedestrians, cyclists, and transit riders. Prioritizes historically underserved neighborhoods.</p>
+      </div>
+
+      <div class="content-block" style="background:#fffbeb;border-color:#fde68a;">
+        <h2 style="color:#92400e;">How This Affects Your Community</h2>
+        <p style="color:#78350f;">Safer streets for walking, biking, and transit access. Priority investment in neighborhoods with the highest pedestrian injury rates.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Decision Makers</h2>
+        <div class="entity-grid" style="margin-top:8px;">
+          <div class="entity-card"><div class="entity-photo">RC</div><div><div class="entity-name">Robert Castillo</div><div class="entity-meta">Council Member, Dist. H</div></div></div>
+          <div class="entity-card"><div class="entity-photo">ST</div><div><div class="entity-name">Sylvester Turner</div><div class="entity-meta">Mayor</div></div></div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-secondary" href="#">Suggest an edit</a>
+      </div>
+    </div>
+
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section">
+        <div class="wf-org"><div class="wf-org-logo">BC</div><div class="wf-org-name">BikeHouston</div></div>
+        <div class="wf-actions"><a class="wf-action wf-donate">Donate</a><a class="wf-action wf-volunteer">Volunteer</a></div>
+      </div>
+      <div class="wf-focus-dots">
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--neighborhood)"></span> Transportation</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Pedestrian Safety</a>
+        <a class="wf-focus-dot"><span class="dot" style="background:var(--planet)"></span> Sustainability</a>
+      </div>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">3</span></summary>
+        <div class="wf-tier-body">
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--neighborhood)"></span><span class="wf-content-title">What Complete Streets Mean for Houston</span></div></a>
+          <a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">Pedestrian Safety by the Numbers</span></div></a>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">2</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-involved-card"><div><span class="wf-involved-name">Public Hearing — Testify</span><br><span class="wf-time-badge">Mar 20</span></div></div>
+        </div>
+      </details>
+      <details class="wf-tier" open>
+        <summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">2</span></summary>
+        <div class="wf-tier-body">
+          <div class="wf-official-card"><div class="wf-official-photo">RC</div><div><div class="wf-official-name">Robert Castillo</div><div class="wf-official-title">Council Member, Dist. H</div></div></div>
+        </div>
+      </details>
+    </aside>
+  </div>
+</div>
+
+<!-- Remaining pages (Guide, Help, Library) follow the same 3-col pattern -->
+<!-- Placeholder stubs so the nav works -->
+<div id="guide" class="page-mockup">
+  <div class="page-label">Guide Detail — <span>/guides/[slug]</span> — Same 3-column layout</div>
+  <div class="three-col">
+    <nav class="left-nav"><div class="left-nav-section"><div class="left-nav-section-title">Your Journey</div><a class="archetype-card active"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div><div class="archetype-desc">Understand & explore</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a></div><div class="left-nav-divider"></div><div class="left-nav-section"><div class="left-nav-section-title">Pathways</div><a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a></div></nav>
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Guides</a> &rsaquo; Detail</div>
+      <div class="hero-image" style="background:linear-gradient(135deg, #3182ce15 0%, #38a16915 100%);">
+        <div class="hero-image-overlay">
+          <div class="pathway-label">Guide</div>
+          <h1 class="serif" style="font-size:22px;">How to Access Free Tax Preparation in Houston</h1>
+        </div>
+      </div>
+      <div class="content-block"><h2>Step 1: Gather Your Documents</h2><p>You'll need your W-2s, 1099s, government-issued ID, Social Security cards for all household members, and last year's tax return if available.</p><div class="skeleton" style="width:90%"></div></div>
+      <div class="content-block"><h2>Step 2: Find a VITA Site Near You</h2><p>The IRS Volunteer Income Tax Assistance (VITA) program offers free tax prep at over 40 locations across Houston.</p><div class="skeleton" style="width:85%"></div></div>
+      <div class="content-block"><h2>Organizations Offering Programs</h2><div class="entity-grid" style="margin-top:8px;"><div class="entity-card"><div class="entity-logo">UW</div><div><div class="entity-name">United Way</div><div class="entity-meta">VITA Program</div></div></div><div class="entity-card"><div class="entity-logo">BK</div><div><div class="entity-name">BakerRipley</div><div class="entity-meta">Tax Centers</div></div></div></div></div>
+      <div class="cta-row"><a class="cta-primary" href="#">Find a VITA Site</a><a class="cta-secondary" href="#">Suggest an edit</a></div>
+    </div>
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section"><div class="wf-org"><div class="wf-org-logo">UW</div><div class="wf-org-name">United Way</div></div><div class="wf-actions"><a class="wf-action wf-donate">Donate</a><a class="wf-action wf-volunteer">Volunteer</a></div></div>
+      <div class="wf-focus-dots"><a class="wf-focus-dot"><span class="dot" style="background:var(--money)"></span> Financial Literacy</a><a class="wf-focus-dot"><span class="dot" style="background:var(--money)"></span> Tax Access</a></div>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">3</span></summary><div class="wf-tier-body"><a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--money)"></span><span class="wf-content-title">VITA Saves Houstonians $14M in Tax Prep Fees</span></div></a></div></details>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">2</span></summary><div class="wf-tier-body"><div class="wf-involved-card"><div><span class="wf-involved-name">VITA Volunteer Training</span><br><span class="wf-time-badge">Jan-Apr</span></div></div></div></details>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">1</span></summary><div class="wf-tier-body"><div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">HB-1234</span><br><span class="wf-policy-name">Earned Income Tax Credit Expansion</span></div></div></div></details>
+    </aside>
+  </div>
+</div>
+
+<div id="help" class="page-mockup">
+  <div class="page-label">Help / Life Situation — <span>/help/[slug]</span> — Same 3-column layout</div>
+  <div class="three-col">
+    <nav class="left-nav"><div class="left-nav-section"><div class="left-nav-section-title">Your Journey</div><a class="archetype-card active"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div><div class="archetype-desc">Find resources & services</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a></div><div class="left-nav-divider"></div><div class="left-nav-section"><div class="left-nav-section-title">Pathways</div><a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a></div></nav>
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Help</a> &rsaquo; Food Access</div>
+      <div class="hero-compact">
+        <div class="badges">
+          <span class="badge" style="background:#fef2f2;color:#991b1b;">Our Health</span>
+          <span class="badge" style="background:#fef3c7;color:#92400e;">Our Families</span>
+        </div>
+        <h1 class="serif" style="margin-top:6px;">Food Access & Nutrition</h1>
+        <div class="subtitle">Groceries, food pantries, SNAP benefits, and nutrition programs across Houston</div>
+        <div class="rule" style="background:var(--health);"></div>
+      </div>
+      <div class="inline-map">Leaflet Map — Food Pantries & Service Locations</div>
+      <div class="content-block"><h2>Community Resources</h2><div class="entity-grid" style="margin-top:8px;"><div class="entity-card"><div class="entity-logo">HFB</div><div><div class="entity-name">Houston Food Bank</div><div class="entity-meta">Free | 100+ Pantries</div></div></div><div class="entity-card"><div class="entity-logo">MT</div><div><div class="entity-name">Meals on Wheels</div><div class="entity-meta">Seniors | Home Delivery</div></div></div></div></div>
+      <div class="content-block"><h2>Services Available</h2><div class="entity-grid" style="margin-top:8px;"><div class="entity-card"><div><div class="entity-name">SNAP Benefits Enrollment</div><div class="entity-meta">(832) 394-4000 | Free</div></div></div><div class="entity-card"><div><div class="entity-name">WIC Nutrition Program</div><div class="entity-meta">(800) 942-3678 | Free</div></div></div></div></div>
+      <div class="cta-row"><a class="cta-primary" href="#">Call 211 for Help</a><a class="cta-secondary" href="#">Suggest an edit</a></div>
+    </div>
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section"><div class="wf-org"><div class="wf-org-logo">HFB</div><div class="wf-org-name">Houston Food Bank</div></div><div class="wf-actions"><a class="wf-action wf-donate">Donate</a><a class="wf-action wf-volunteer">Volunteer</a></div></div>
+      <div class="wf-focus-dots"><a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Food Security</a><a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Nutrition</a><a class="wf-focus-dot"><span class="dot" style="background:var(--families)"></span> Child Hunger</a></div>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">3</span></summary><div class="wf-tier-body"><a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">Houston's Food Desert Map</span></div></a><a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--families)"></span><span class="wf-content-title">How SNAP Benefits Work in Texas</span></div></a></div></details>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">4</span></summary><div class="wf-tier-body"><div class="wf-involved-card"><div><span class="wf-involved-name">Food Bank Volunteer Shift</span><br><span class="wf-time-badge">Weekly</span></div></div><div class="wf-involved-card"><div><span class="wf-involved-name">Community Garden Program</span><br><span class="wf-time-badge">Ongoing</span></div></div></div></details>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">2</span></summary><div class="wf-tier-body"><div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">HB-3100</span><br><span class="wf-policy-name">Texas Healthy Food Access Act</span></div></div></div></details>
+    </aside>
+  </div>
+</div>
+
+<div id="library" class="page-mockup">
+  <div class="page-label">Library Document — <span>/library/doc/[id]</span> — Same 3-column layout</div>
+  <div class="three-col">
+    <nav class="left-nav"><div class="left-nav-section"><div class="left-nav-section-title">Your Journey</div><a class="archetype-card active"><span class="archetype-icon">&#x1F4D6;</span><div><div class="archetype-name">The Learner</div><div class="archetype-desc">Understand & explore</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F331;</span><div><div class="archetype-name">The Seeker</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F91D;</span><div><div class="archetype-name">The Builder</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F50D;</span><div><div class="archetype-name">The Watchdog</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F3E2;</span><div><div class="archetype-name">The Partner</div></div></a><a class="archetype-card"><span class="archetype-icon">&#x1F30D;</span><div><div class="archetype-name">The Explorer</div></div></a></div><div class="left-nav-divider"></div><div class="left-nav-section"><div class="left-nav-section-title">Pathways</div><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--health)"></span> Our Health</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--families)"></span> Our Families</a><a class="left-nav-item active"><span class="left-nav-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--voice)"></span> Our Voice</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--money)"></span> Our Money</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--planet)"></span> Our Planet</a><a class="left-nav-item"><span class="left-nav-dot" style="background:var(--bigger)"></span> The Bigger We</a></div></nav>
+    <div class="main-content">
+      <div class="breadcrumb"><a href="#">Home</a> &rsaquo; <a href="#">Library</a> &rsaquo; Document</div>
+      <div class="hero-compact">
+        <div class="badges">
+          <span class="badge" style="background:#fef2f2;color:#991b1b;">Our Neighborhood</span>
+          <span class="badge" style="background:#f5f3ff;color:#6b46c1;">Research</span>
+        </div>
+        <h1 class="serif" style="margin-top:6px;">Houston Housing Affordability Report 2025</h1>
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--muted);">
+          <span>48 pages</span><span>2.3 MB</span><span>Published Jan 2025</span><span>PDF</span>
+        </div>
+        <div class="rule" style="background:var(--neighborhood);"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <a class="cta-primary" href="#">Download PDF</a>
+        <a class="cta-secondary" href="#">Ask About This Document</a>
+      </div>
+      <div class="content-block"><h2>Summary</h2><p>A comprehensive analysis of housing affordability trends across the Greater Houston region, with neighborhood-level data on rental costs, homeownership rates, and displacement risk.</p></div>
+      <div class="content-block"><h2>Key Takeaways</h2><ul style="padding-left:18px;font-size:13px;color:var(--muted);line-height:1.8;"><li>Median rent increased 18% since 2020 in historically affordable neighborhoods</li><li>Homeownership rate for households earning under $50K fell to 34%</li><li>3 of 5 most displacement-vulnerable super neighborhoods are in the northeast corridor</li></ul></div>
+      <div class="content-block"><h2>Organizations Referenced</h2><div class="entity-grid" style="margin-top:8px;"><div class="entity-card"><div class="entity-logo">HC</div><div><div class="entity-name">Houston Housing Authority</div><div class="entity-meta">Government</div></div></div><div class="entity-card"><div class="entity-logo">LH</div><div><div class="entity-name">Local Initiatives Support Corp</div><div class="entity-meta">Nonprofit</div></div></div></div></div>
+      <div class="cta-row"><a class="cta-secondary" href="#">Suggest an edit</a></div>
+    </div>
+    <aside class="wayfinder">
+      <div class="wf-header"><h3 class="serif">Connected Through the Community</h3></div>
+      <div class="wf-org-section"><div class="wf-org"><div class="wf-org-logo">HHA</div><div class="wf-org-name">Houston Housing Authority</div></div><div class="wf-actions"><a class="wf-action wf-volunteer">Visit Website</a></div></div>
+      <div class="wf-focus-dots"><a class="wf-focus-dot"><span class="dot" style="background:var(--neighborhood)"></span> Housing</a><a class="wf-focus-dot"><span class="dot" style="background:var(--money)"></span> Affordability</a><a class="wf-focus-dot"><span class="dot" style="background:var(--neighborhood)"></span> Displacement</a></div>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F4D6;</span> Understand</span> <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">4</span></summary><div class="wf-tier-body"><a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--neighborhood)"></span><span class="wf-content-title">What "Affordable Housing" Actually Means</span></div></a><a class="wf-content-card"><div class="wf-content-thumb"></div><div><span class="wf-pathway-dot" style="background:var(--money)"></span><span class="wf-content-title">How to Apply for Housing Assistance</span></div></a></div></details>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x1F49A;</span> Get Involved</span> <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">2</span></summary><div class="wf-tier-body"><div class="wf-involved-card"><div><span class="wf-involved-name">Housing Justice Coalition Meeting</span><br><span class="wf-time-badge">Monthly</span></div></div></div></details>
+      <details class="wf-tier" open><summary><span class="wf-tier-left"><span class="wf-tier-icon">&#x2696;</span> Go Deeper</span> <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">3</span></summary><div class="wf-tier-body"><div class="wf-official-card"><div class="wf-official-photo">TE</div><div><div class="wf-official-name">Tiffany Thomas</div><div class="wf-official-title">Council Member, Dist. F</div></div></div><div class="wf-policy-card"><span class="wf-policy-icon">&#x1F4DC;</span><div><span class="wf-bill">ORD-2025-089</span><br><span class="wf-policy-name">Affordable Housing Trust Fund</span></div></div></div></details>
+    </aside>
+  </div>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page-mockup, .brief-section').forEach(el => {
+    el.style.display = 'none';
+    el.classList.remove('visible');
+  });
+  document.querySelectorAll('.mockup-nav a').forEach(a => a.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) {
+    if (target.classList.contains('brief-section')) {
+      target.style.display = 'block';
+    } else {
+      target.style.display = 'block';
+      target.classList.add('visible');
+    }
+  }
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

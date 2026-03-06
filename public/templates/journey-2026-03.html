@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Exchange — Full Journey</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB; --text: #2C2C2C; --accent: #C75B2A; --muted: #8B7E74;
+    --border: #E8E3DB; --card: #FFFFFF;
+    --cream: #FAF7F2; --tan: #EDE8DF; --warm-gray: #D6D0C7;
+    --health: #e53e3e; --families: #dd6b20; --neighborhood: #d69e2e;
+    --voice: #38a169; --money: #3182ce; --planet: #319795; --bigger: #805ad5;
+    --c-learn: #3182ce; --c-connect: #dd6b20; --c-attend: #38a169; --c-organize: #805ad5;
+    --sb: https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+  .real-img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+
+  /* ═══ PAGE SELECTOR — click to see each step ═══ */
+  .page-selector {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: #1a1a2e; padding: 10px 24px;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .page-selector .ps-label {
+    font-family: 'Architects Daughter', cursive; font-size: 14px; color: rgba(255,255,255,0.5);
+    margin-right: 8px; white-space: nowrap;
+  }
+  .page-selector .ps-step {
+    display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+    border-radius: 10px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; border: 2px solid transparent;
+    color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06);
+    white-space: nowrap;
+  }
+  .page-selector .ps-step:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .page-selector .ps-step.active { background: rgba(255,255,255,0.15); color: #fff; border-color: var(--accent); }
+  .page-selector .ps-arrow { color: rgba(255,255,255,0.2); font-size: 16px; }
+  .page-selector .ps-num {
+    width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0;
+  }
+  .ps-step.active .ps-num { background: var(--accent); }
+
+  /* Page frames */
+  .page-frame { display: none; margin-top: 52px; min-height: calc(100vh - 52px); }
+  .page-frame.visible { display: block; }
+
+  /* ═══ SHARED HEADER (appears on all pages) ═══ */
+  .app-header {
+    background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 10px 32px; gap: 16px;
+    position: sticky; top: 52px; z-index: 100;
+  }
+  .app-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; margin-right: auto; }
+  .app-logo svg { width: 28px; height: 28px; }
+  .app-logo span { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--text); }
+  .app-nav { display: flex; gap: 4px; }
+  .app-nav a {
+    padding: 8px 14px; font-size: 12px; font-weight: 600; color: var(--muted);
+    text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s;
+    cursor: pointer;
+  }
+  .app-nav a:hover { color: var(--text); }
+  .app-nav a.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .zip-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 20px;
+    background: var(--cream); border: 1px solid var(--border);
+    font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--accent);
+    cursor: pointer;
+  }
+  .zip-chip:hover { border-color: var(--accent); }
+
+  /* ═══ MINI COMPASS — persistent Wayfinder in header ═══ */
+  .header-compass {
+    width: 36px; height: 36px; position: relative; cursor: pointer;
+  }
+  .hc-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); }
+  .hc-r3 { width: 36px; height: 36px; top: 0; left: 0; }
+  .hc-r2 { width: 24px; height: 24px; top: 6px; left: 6px; }
+  .hc-r1 { width: 12px; height: 12px; top: 12px; left: 12px; }
+  .hc-you { width: 6px; height: 6px; top: 15px; left: 15px; border-radius: 50%; background: var(--accent); }
+  .hc-pip { position: absolute; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid; background: #fff; }
+  .hc-pip.lit { background: currentColor; }
+  .hc-N { top: -2px; left: 14px; border-color: var(--c-learn); color: var(--c-learn); }
+  .hc-E { top: 14px; right: -2px; border-color: var(--c-connect); color: var(--c-connect); }
+  .hc-S { bottom: -2px; left: 14px; border-color: var(--c-attend); color: var(--c-attend); }
+  .hc-W { top: 14px; left: -2px; border-color: var(--c-organize); color: var(--c-organize); }
+
+  /* ═══ STRATEGY ANNOTATIONS (visible in mockup only) ═══ */
+  .strategy-note {
+    position: absolute; z-index: 50;
+    background: #1a1a2e; color: #fff; padding: 8px 14px;
+    border-radius: 10px; font-size: 11px; line-height: 1.5;
+    max-width: 240px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    pointer-events: none; opacity: 0.92;
+  }
+  .strategy-note::before {
+    content: 'STRATEGY'; display: block;
+    font-family: 'Architects Daughter', cursive; font-size: 10px;
+    color: var(--accent); margin-bottom: 3px; letter-spacing: 1px;
+  }
+  .sn-arrow { position: absolute; width: 0; height: 0; }
+
+  /* ═══ PAGE 1: HOMEPAGE ═══ */
+  .p1-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; background: linear-gradient(135deg, #fff 0%, var(--cream) 100%); }
+  .p1-left { padding: 60px 48px 48px 56px; display: flex; flex-direction: column; justify-content: center; }
+  .p1-left h1 { font-family: 'Architects Daughter', cursive; font-size: 40px; color: var(--accent); line-height: 1.15; }
+  .p1-left .subtitle { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; color: var(--muted); margin-top: 12px; line-height: 1.7; max-width: 380px; }
+  .p1-zip { margin-top: 28px; max-width: 340px; }
+  .p1-zip input {
+    width: 100%; padding: 16px 24px; font-size: 22px;
+    font-family: 'Architects Daughter', cursive;
+    border: 3px dashed rgba(199,91,42,0.35); border-radius: 16px;
+    background: #fff; text-align: center; color: var(--accent);
+    outline: none; transition: all 0.3s;
+  }
+  .p1-zip input::placeholder { color: var(--warm-gray); }
+  .p1-zip input:focus { border-style: solid; border-color: var(--accent); }
+  .p1-right { display: flex; align-items: center; justify-content: center; padding: 32px; position: relative; }
+
+  /* Mini compass in hero */
+  .mini-compass { width: 340px; height: 340px; position: relative; }
+  .mc-ring { position: absolute; border-radius: 50%; border: 2px solid rgba(0,0,0,0.06); }
+  .mc-r4 { width: 340px; height: 340px; top: 0; left: 0; }
+  .mc-r3 { width: 260px; height: 260px; top: 40px; left: 40px; }
+  .mc-r2 { width: 180px; height: 180px; top: 80px; left: 80px; }
+  .mc-r1 { width: 100px; height: 100px; top: 120px; left: 120px; }
+  .mc-you {
+    width: 56px; height: 56px; top: 142px; left: 142px;
+    border: 3px solid var(--accent); background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(199,91,42,0.15);
+  }
+  .mc-you span { font-family: 'Architects Daughter', cursive; font-size: 13px; color: var(--accent); }
+  .mc-card {
+    position: absolute; z-index: 10; text-align: center; cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
+  }
+  .mc-card:hover { transform: scale(1.08); }
+  .mc-icon {
+    width: 44px; height: 44px; border-radius: 50%; border: 3px solid;
+    margin: 0 auto 4px; overflow: hidden;
+  }
+  .mc-label { font-family: 'Architects Daughter', cursive; font-size: 16px; }
+  .mc-time { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 10px; opacity: 0.6; }
+  .mc-N { top: -12px; left: 50%; transform: translateX(-50%); color: var(--c-learn); }
+  .mc-E { top: 50%; right: -16px; transform: translateY(-50%); color: var(--c-connect); }
+  .mc-S { bottom: -12px; left: 50%; transform: translateX(-50%); color: var(--c-attend); }
+  .mc-W { top: 50%; left: -16px; transform: translateY(-50%); color: var(--c-organize); }
+  .mc-N .mc-icon { border-color: var(--c-learn); }
+  .mc-E .mc-icon { border-color: var(--c-connect); }
+  .mc-S .mc-icon { border-color: var(--c-attend); }
+  .mc-W .mc-icon { border-color: var(--c-organize); }
+
+  /* 4 center cards below hero */
+  .p1-centers { padding: 48px 48px 40px; background: #fff; border-top: 1px solid var(--border); }
+  .p1-centers h2 { font-family: 'Architects Daughter', cursive; font-size: 34px; color: var(--accent); text-align: center; }
+  .p1-centers .p1c-sub { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 15px; color: var(--muted); text-align: center; margin: 6px auto 28px; max-width: 440px; }
+  .p1-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1000px; margin: 0 auto; }
+  .p1-card {
+    background: var(--cream); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; cursor: pointer; transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
+  }
+  .p1-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.06); }
+  .p1-card-img { width: 100%; height: 110px; overflow: hidden; }
+  .p1-card-body { padding: 16px 18px 20px; }
+  .p1-card-name { font-family: 'Architects Daughter', cursive; font-size: 20px; }
+  .p1-card-q { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 13px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+  .p1-card-peek { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .p1-peek-item { font-size: 11px; padding: 5px 8px; background: #fff; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+  .p1-peek-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ═══ PAGE 2: CENTER PAGE (e.g. /learn) ═══ */
+  .p2-hero {
+    padding: 36px 48px 28px; background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 32px;
+  }
+  .p2-hero-left { flex: 1; }
+  .p2-hero-left h1 { font-family: 'Architects Daughter', cursive; font-size: 36px; color: var(--c-learn); }
+  .p2-hero-left p { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 15px; color: var(--muted); margin-top: 6px; max-width: 440px; line-height: 1.6; }
+  .p2-compass-mini { width: 120px; height: 120px; position: relative; flex-shrink: 0; }
+  .p2mr { position: absolute; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.06); }
+  .p2mr4 { width: 120px; height: 120px; top: 0; left: 0; }
+  .p2mr3 { width: 90px; height: 90px; top: 15px; left: 15px; }
+  .p2mr2 { width: 60px; height: 60px; top: 30px; left: 30px; }
+  .p2mr1 { width: 30px; height: 30px; top: 45px; left: 45px; }
+  .p2my { width: 14px; height: 14px; top: 53px; left: 53px; border-radius: 50%; border: 2px solid var(--accent); background: #fff; }
+  .p2mr4 { border-top: 3px solid var(--c-learn); }
+  .p2mr3 { border-top: 3px solid var(--c-learn); }
+  .p2mr2 { border-top: 3px solid var(--c-learn); }
+  .p2pip { position: absolute; width: 14px; height: 14px; border-radius: 50%; border: 2px solid; background: #fff; z-index: 4; }
+  .p2pip-N { top: -4px; left: 53px; border-color: var(--c-learn); background: var(--c-learn); }
+  .p2pip-E { top: 53px; right: -4px; border-color: var(--c-connect); }
+  .p2pip-S { bottom: -4px; left: 53px; border-color: var(--c-attend); }
+  .p2pip-W { top: 53px; left: -4px; border-color: var(--c-organize); }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    padding: 10px 48px; background: var(--cream); border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px;
+  }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; cursor: pointer; }
+  .breadcrumb .sep { color: var(--warm-gray); }
+
+  /* Shelf braid — horizontal scroll shelves by pathway */
+  .shelf-section { padding: 28px 0 36px; }
+  .shelf-title-bar { padding: 0 48px 12px; display: flex; align-items: center; gap: 12px; }
+  .shelf-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .shelf-title { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .shelf-count { font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--muted); margin-left: auto; }
+  .shelf-scroll {
+    display: flex; gap: 14px; overflow-x: auto; padding: 0 48px 12px;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+  }
+  .shelf-scroll::-webkit-scrollbar { height: 4px; }
+  .shelf-scroll::-webkit-scrollbar-thumb { background: var(--warm-gray); border-radius: 4px; }
+  .shelf-card {
+    flex: 0 0 220px; scroll-snap-align: start;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; cursor: pointer; transition: all 0.3s cubic-bezier(0.19,1,0.22,1);
+  }
+  .shelf-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+  .shelf-card-img { width: 100%; height: 100px; overflow: hidden; position: relative; }
+  .shelf-card-type {
+    position: absolute; bottom: 6px; left: 6px; padding: 2px 8px;
+    border-radius: 6px; font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px; color: #fff;
+  }
+  .shelf-card-body { padding: 10px 14px 14px; }
+  .shelf-card-title { font-family: 'DM Serif Display', serif; font-size: 13px; line-height: 1.35; }
+  .shelf-card-meta { font-size: 10px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+  /* ═══ PAGE 3: PATHWAY FOCUS (e.g. /learn/our-health) ═══ */
+  .p3-hero {
+    padding: 28px 48px 20px; background: #fff; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 20px;
+  }
+  .p3-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; }
+  .p3-hero h1 { font-family: 'DM Serif Display', serif; font-size: 28px; }
+  .p3-hero p { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 14px; color: var(--muted); margin-left: auto; max-width: 320px; text-align: right; }
+  .p3-filters {
+    padding: 12px 48px; background: var(--cream); border-bottom: 1px solid var(--border);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .p3-filter {
+    padding: 5px 14px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    border: 1px solid var(--border); background: #fff; cursor: pointer; transition: all 0.2s;
+  }
+  .p3-filter:hover { border-color: var(--accent); }
+  .p3-filter.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .p3-grid-layout { display: grid; grid-template-columns: 1fr 300px; gap: 0; }
+  .p3-content { padding: 24px 32px 48px 48px; }
+  .p3-content-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .p3-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; cursor: pointer; transition: all 0.3s cubic-bezier(0.19,1,0.22,1);
+  }
+  .p3-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+  .p3-card-img { width: 100%; height: 100px; overflow: hidden; }
+  .p3-card-body { padding: 12px 16px 16px; }
+  .p3-card-type {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .p3-card-title { font-family: 'DM Serif Display', serif; font-size: 14px; line-height: 1.35; }
+  .p3-card-meta { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+  /* ═══ WAYFINDER SIDEBAR (Pages 3 & 4) ═══ */
+  .wf-sidebar {
+    border-left: 1px solid var(--border); background: #fff;
+    position: sticky; top: 102px; height: calc(100vh - 102px); overflow-y: auto;
+  }
+  .wf-compass-box { padding: 16px; background: var(--cream); border-bottom: 1px solid var(--border); display: flex; justify-content: center; }
+  .wf-sec { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .wf-sec:last-child { border-bottom: none; }
+  .wf-sec-title { font-family: 'Architects Daughter', cursive; font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+  .wf-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-bottom: 2px; }
+  .wf-item:hover { background: var(--cream); transform: translateX(3px); }
+  .wf-item-img { width: 32px; height: 32px; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+  .wf-item-name { font-family: 'DM Serif Display', serif; font-size: 12px; }
+  .wf-item-meta { font-size: 9px; color: var(--muted); font-style: italic; }
+  .wf-cascade { padding: 12px 16px; background: var(--cream); border-top: 1px solid var(--border); }
+  .wf-cascade-title { font-family: 'Architects Daughter', cursive; font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+  .wf-nudge {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    background: #fff; border-radius: 10px; border-left: 3px solid;
+    cursor: pointer; transition: all 0.3s; margin-bottom: 5px;
+  }
+  .wf-nudge:hover { transform: translateX(4px); }
+  .wf-nudge-dir { font-family: 'Architects Daughter', cursive; font-size: 11px; min-width: 50px; }
+  .wf-nudge-title { font-family: 'DM Serif Display', serif; font-size: 11px; }
+  .wf-nudge-meta { font-size: 9px; color: var(--muted); font-style: italic; }
+
+  /* ═══ PAGE 4: CONTENT DETAIL ═══ */
+  .p4-layout { display: grid; grid-template-columns: 1fr 300px; gap: 0; }
+  .p4-main { padding: 32px 40px 64px 48px; max-width: 760px; }
+  .p4-hero-img { width: 100%; height: 260px; border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
+  .p4-type-badge {
+    display: inline-block; padding: 3px 10px; border-radius: 8px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 8px;
+  }
+  .p4-main h1 { font-family: 'DM Serif Display', serif; font-size: 30px; line-height: 1.3; margin-bottom: 8px; }
+  .p4-main .p4-byline { font-size: 12px; color: var(--muted); font-style: italic; margin-bottom: 24px; }
+  .p4-body { font-size: 15px; line-height: 1.85; color: #444; }
+  .p4-body p { margin-bottom: 16px; }
+  .p4-body h2 { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin: 28px 0 12px; }
+  .p4-callout {
+    padding: 16px 20px; background: rgba(49,130,206,0.05); border-left: 4px solid var(--c-learn);
+    border-radius: 0 12px 12px 0; margin: 20px 0; font-size: 14px; line-height: 1.7;
+  }
+  .p4-next-step {
+    margin-top: 32px; padding: 20px 24px; background: var(--cream);
+    border: 1px solid var(--border); border-radius: 16px;
+  }
+  .p4-next-step h3 { font-family: 'Architects Daughter', cursive; font-size: 20px; color: var(--accent); margin-bottom: 12px; }
+  .p4-next-cards { display: flex; gap: 12px; }
+  .p4-next-card {
+    flex: 1; padding: 12px 16px; background: #fff; border-radius: 12px;
+    border-left: 4px solid; cursor: pointer; transition: all 0.3s;
+  }
+  .p4-next-card:hover { transform: translateX(4px); }
+  .p4-nc-dir { font-family: 'Architects Daughter', cursive; font-size: 14px; margin-bottom: 4px; }
+  .p4-nc-title { font-family: 'DM Serif Display', serif; font-size: 12px; line-height: 1.35; }
+  .p4-nc-meta { font-size: 10px; color: var(--muted); font-style: italic; margin-top: 3px; }
+
+  /* ═══ PAGE 5: NUDGE FORWARD ═══ */
+  .p5-layout { display: grid; grid-template-columns: 1fr 300px; gap: 0; }
+  .p5-main { padding: 40px 48px 64px; }
+  .p5-main h1 { font-family: 'Architects Daughter', cursive; font-size: 32px; color: var(--accent); margin-bottom: 6px; }
+  .p5-main .p5-sub { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 15px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; max-width: 480px; }
+  .p5-cascade { display: flex; flex-direction: column; gap: 12px; max-width: 540px; }
+  .p5-step {
+    display: flex; align-items: stretch; gap: 16px; padding: 16px 20px;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    border-left: 5px solid; cursor: pointer; transition: all 0.4s cubic-bezier(0.19,1,0.22,1);
+    position: relative;
+  }
+  .p5-step:hover { transform: translateX(8px); box-shadow: 0 6px 20px rgba(0,0,0,0.05); }
+  .p5-step.done { opacity: 0.5; }
+  .p5-step.current { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .p5-step-img { width: 56px; height: 56px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+  .p5-step-body { flex: 1; }
+  .p5-step-dir { font-family: 'Architects Daughter', cursive; font-size: 18px; }
+  .p5-step-title { font-family: 'DM Serif Display', serif; font-size: 14px; margin-top: 2px; }
+  .p5-step-meta { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 3px; }
+  .p5-step-check { width: 28px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--muted); }
+  .p5-step.done .p5-step-check { color: var(--c-attend); }
+  .p5-connector { width: 2px; height: 16px; background: var(--warm-gray); margin-left: 42px; }
+  .p5-insight {
+    margin-top: 28px; padding: 20px 24px; background: rgba(128,90,213,0.04);
+    border: 1px solid rgba(128,90,213,0.15); border-radius: 14px; max-width: 540px;
+  }
+  .p5-insight h3 { font-family: 'Architects Daughter', cursive; font-size: 18px; color: var(--bigger); margin-bottom: 6px; }
+  .p5-insight p { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* Annotation overlays */
+  .anno-layer { position: relative; }
+  .anno {
+    position: absolute; background: rgba(26,26,46,0.92); color: #fff;
+    padding: 8px 12px; border-radius: 8px; font-size: 10px; line-height: 1.5;
+    max-width: 200px; z-index: 50; pointer-events: none;
+  }
+  .anno .anno-label {
+    font-family: 'Architects Daughter', cursive; font-size: 9px;
+    color: var(--accent); letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .anno-toggle {
+    position: fixed; bottom: 20px; right: 20px; z-index: 1001;
+    padding: 8px 16px; background: #1a1a2e; color: #fff; border: none;
+    border-radius: 10px; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .anno-toggle:hover { background: #2a2a4e; }
+  .anno.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══ PAGE STEP SELECTOR ═══ -->
+<div class="page-selector">
+  <span class="ps-label">User Journey:</span>
+  <div class="ps-step active" onclick="showPage(1)"><span class="ps-num">1</span> Homepage</div>
+  <span class="ps-arrow">&rarr;</span>
+  <div class="ps-step" onclick="showPage(2)"><span class="ps-num">2</span> Center Page</div>
+  <span class="ps-arrow">&rarr;</span>
+  <div class="ps-step" onclick="showPage(3)"><span class="ps-num">3</span> Pathway Focus</div>
+  <span class="ps-arrow">&rarr;</span>
+  <div class="ps-step" onclick="showPage(4)"><span class="ps-num">4</span> Content Detail</div>
+  <span class="ps-arrow">&rarr;</span>
+  <div class="ps-step" onclick="showPage(5)"><span class="ps-num">5</span> Next Step</div>
+</div>
+
+<button class="anno-toggle" onclick="toggleAnnotations()">Show/Hide Strategy Notes</button>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 1: HOMEPAGE — One question, one input, four directions
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page-frame visible" id="page1">
+  <div class="app-header">
+    <a class="app-logo">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/><circle cx="100" cy="80" r="18" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/><circle cx="100" cy="120" r="18" stroke="#319795" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="90" r="18" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="110" r="18" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="90" r="18" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="110" r="18" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/></svg>
+      <span>Community Exchange</span>
+    </a>
+    <div class="app-nav">
+      <a class="active">Home</a>
+      <a>Learn</a>
+      <a>Connect</a>
+      <a>Attend</a>
+      <a>Organize</a>
+      <a>Pathways</a>
+    </div>
+    <div class="zip-chip">77004</div>
+  </div>
+
+  <div class="p1-hero anno-layer">
+    <div class="p1-left">
+      <h1>Hey neighbor, what's going on near you?</h1>
+      <div class="subtitle">Services, organizations, officials, and things to do -- all near your zip code, all easy to find.</div>
+      <div class="p1-zip">
+        <input type="text" placeholder="type your zip code" value="77004">
+      </div>
+    </div>
+    <div class="p1-right">
+      <div class="mini-compass">
+        <div class="mc-ring mc-r4"></div>
+        <div class="mc-ring mc-r3"></div>
+        <div class="mc-ring mc-r2"></div>
+        <div class="mc-ring mc-r1"></div>
+        <div class="mc-ring mc-you"><span>you</span></div>
+        <div class="mc-card mc-N" onclick="showPage(2)">
+          <div class="mc-icon"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/person-reading2.jpg" alt="Learn"></div>
+          <div class="mc-label">Learn</div><div class="mc-time">~1 min</div>
+        </div>
+        <div class="mc-card mc-E">
+          <div class="mc-icon"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/two-people-talking.jpg" alt="Connect"></div>
+          <div class="mc-label">Connect</div><div class="mc-time">~5 min</div>
+        </div>
+        <div class="mc-card mc-S">
+          <div class="mc-icon"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/community-meeting.jpg" alt="Attend"></div>
+          <div class="mc-label">Attend</div><div class="mc-time">1-2 hrs</div>
+        </div>
+        <div class="mc-card mc-W">
+          <div class="mc-icon"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/organizing.jpg" alt="Organize"></div>
+          <div class="mc-label">Organize</div><div class="mc-time">sustained</div>
+        </div>
+      </div>
+    </div>
+    <!-- Strategy annotations -->
+    <div class="anno" style="top:40px;left:460px;">
+      <div class="anno-label">Strategy: One Decision</div>
+      The only thing we ask: "What's your zip?" Everything else waits. No nav overload. No 47 links.
+    </div>
+    <div class="anno" style="bottom:30px;right:40px;">
+      <div class="anno-label">Strategy: Spatial Memory</div>
+      The compass gives 4 clear directions, not a list. People remember places better than menus.
+    </div>
+  </div>
+
+  <div class="p1-centers anno-layer">
+    <h2>what do you want to do?</h2>
+    <div class="p1c-sub">Pick the one that fits right now. You can always come back.</div>
+    <div class="p1-cards">
+      <div class="p1-card" onclick="showPage(2)">
+        <div class="p1-card-img"><img class="real-img" style="border-radius:16px 16px 0 0;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/reading.jpg" alt="Learn"></div>
+        <div class="p1-card-body">
+          <div class="p1-card-name" style="color:var(--c-learn);">Learn something</div>
+          <div class="p1-card-q">Read a short article about something you care about.</div>
+          <div class="p1-card-peek">
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--health);"></span>How Houston's clinics work</div>
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--voice);"></span>What your council member does</div>
+          </div>
+        </div>
+      </div>
+      <div class="p1-card">
+        <div class="p1-card-img"><img class="real-img" style="border-radius:16px 16px 0 0;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/two-people-talking.jpg" alt="Connect"></div>
+        <div class="p1-card-body">
+          <div class="p1-card-name" style="color:var(--c-connect);">Find a resource</div>
+          <div class="p1-card-q">Real phone numbers, hours, and addresses.</div>
+          <div class="p1-card-peek">
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--families);"></span>After-school programs near 77004</div>
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--health);"></span>Free mental health counseling</div>
+          </div>
+        </div>
+      </div>
+      <div class="p1-card">
+        <div class="p1-card-img"><img class="real-img" style="border-radius:16px 16px 0 0;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/community-meeting.jpg" alt="Attend"></div>
+        <div class="p1-card-body">
+          <div class="p1-card-name" style="color:var(--c-attend);">Show up</div>
+          <div class="p1-card-q">Meetings, events, and volunteer days near you.</div>
+          <div class="p1-card-peek">
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--planet);"></span>Bayou cleanup Saturday</div>
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--voice);"></span>Town hall with District D rep</div>
+          </div>
+        </div>
+      </div>
+      <div class="p1-card">
+        <div class="p1-card-img"><img class="real-img" style="border-radius:16px 16px 0 0;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/civic-building.jpg" alt="Organize"></div>
+        <div class="p1-card-body">
+          <div class="p1-card-name" style="color:var(--c-organize);">Follow the decisions</div>
+          <div class="p1-card-q">Who represents you? What are they voting on?</div>
+          <div class="p1-card-peek">
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--voice);"></span>Your 8 elected officials</div>
+            <div class="p1-peek-item"><span class="p1-peek-dot" style="background:var(--health);"></span>SB 2047: Health funding</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="anno" style="top:10px;right:40px;">
+      <div class="anno-label">Strategy: Progressive Choice</div>
+      Only 4 options. Each previews 2 items so visitors can taste before they commit. No "browse 847 articles" wall.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 2: CENTER PAGE — Shelves by Pathway (horizontal scroll)
+     "You chose Learn. Here's what to read, organized by topic."
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page-frame" id="page2">
+  <div class="app-header">
+    <a class="app-logo" onclick="showPage(1)">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/><circle cx="100" cy="80" r="18" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/><circle cx="100" cy="120" r="18" stroke="#319795" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="90" r="18" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="110" r="18" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="90" r="18" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="110" r="18" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/></svg>
+      <span>Community Exchange</span>
+    </a>
+    <div class="app-nav">
+      <a onclick="showPage(1)">Home</a>
+      <a class="active" style="color:var(--c-learn);border-color:var(--c-learn);">Learn</a>
+      <a>Connect</a>
+      <a>Attend</a>
+      <a>Organize</a>
+      <a>Pathways</a>
+    </div>
+    <div class="header-compass">
+      <div class="hc-ring hc-r3"></div><div class="hc-ring hc-r2"></div><div class="hc-ring hc-r1"></div>
+      <div class="hc-ring hc-you" style="position:absolute;"></div>
+      <div class="hc-pip hc-N lit"></div><div class="hc-pip hc-E"></div><div class="hc-pip hc-S"></div><div class="hc-pip hc-W"></div>
+    </div>
+    <div class="zip-chip">77004</div>
+  </div>
+
+  <div class="p2-hero anno-layer">
+    <div class="p2-hero-left">
+      <h1>Learn something new</h1>
+      <p>Short reads about things that matter near you. Pick a topic or just scroll. Nothing here takes more than a few minutes.</p>
+    </div>
+    <div class="p2-compass-mini">
+      <div class="p2mr p2mr4"></div><div class="p2mr p2mr3"></div><div class="p2mr p2mr2"></div><div class="p2mr p2mr1"></div><div class="p2mr p2my" style="position:absolute;"></div>
+      <div class="p2pip p2pip-N"></div><div class="p2pip p2pip-E"></div><div class="p2pip p2pip-S"></div><div class="p2pip p2pip-W"></div>
+    </div>
+    <div class="anno" style="top:8px;right:180px;">
+      <div class="anno-label">Strategy: Compass Follows</div>
+      Mini compass in hero + header. The lit-up N (Learn) tells you exactly where you are. No getting lost.
+    </div>
+  </div>
+
+  <div class="breadcrumb">
+    <a onclick="showPage(1)">77004</a> <span class="sep">/</span>
+    <span style="color:var(--c-learn);font-weight:600;">Learn</span>
+  </div>
+
+  <div class="anno-layer" style="position:relative;">
+    <!-- Shelf 1: Our Health -->
+    <div class="shelf-section" style="border-bottom:1px solid var(--border);">
+      <div class="shelf-title-bar">
+        <div class="shelf-dot" style="background:var(--health);"></div>
+        <div class="shelf-title" style="color:var(--health);">Our Health</div>
+        <div class="shelf-count">24 articles</div>
+      </div>
+      <div class="shelf-scroll">
+        <div class="shelf-card" onclick="showPage(3)">
+          <div class="shelf-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt=""><div class="shelf-card-type" style="background:var(--health);">Article</div></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">Health Workers Are Changing Primary Care</div><div class="shelf-card-meta">~3 min read</div></div>
+        </div>
+        <div class="shelf-card">
+          <div class="shelf-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt=""><div class="shelf-card-type" style="background:var(--health);">Guide</div></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">Understanding Your Insurance Options</div><div class="shelf-card-meta">~5 min read</div></div>
+        </div>
+        <div class="shelf-card">
+          <div class="shelf-card-img" style="background:var(--health);height:100px;display:flex;align-items:center;justify-content:center;"><span style="color:#fff;font-family:'DM Serif Display',serif;font-size:12px;text-align:center;padding:8px;">Mental Health Services Near 77004</span></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">Where to Find Free Counseling</div><div class="shelf-card-meta">~2 min read</div></div>
+        </div>
+        <div class="shelf-card">
+          <div class="shelf-card-img" style="background:linear-gradient(135deg,#e53e3e22,#e53e3e08);height:100px;display:flex;align-items:center;justify-content:center;"><span style="color:var(--health);font-family:'DM Serif Display',serif;font-size:12px;text-align:center;padding:8px;">Nutrition Programs</span></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">Food Pantries and Nutrition Help</div><div class="shelf-card-meta">~3 min read</div></div>
+        </div>
+        <div class="shelf-card" style="flex:0 0 140px;background:transparent;border:2px dashed var(--health);display:flex;align-items:center;justify-content:center;border-radius:14px;">
+          <span style="font-family:'Architects Daughter',cursive;font-size:14px;color:var(--health);text-align:center;padding:12px;">see all 24 &rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shelf 2: Our Families -->
+    <div class="shelf-section" style="border-bottom:1px solid var(--border);">
+      <div class="shelf-title-bar">
+        <div class="shelf-dot" style="background:var(--families);"></div>
+        <div class="shelf-title" style="color:var(--families);">Our Families</div>
+        <div class="shelf-count">18 articles</div>
+      </div>
+      <div class="shelf-scroll">
+        <div class="shelf-card">
+          <div class="shelf-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/neighborhood.jpg" alt=""><div class="shelf-card-type" style="background:var(--families);">Article</div></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">After-School Programs That Actually Help</div><div class="shelf-card-meta">~3 min read</div></div>
+        </div>
+        <div class="shelf-card">
+          <div class="shelf-card-img" style="background:var(--families);height:100px;display:flex;align-items:center;justify-content:center;"><span style="color:#fff;font-family:'DM Serif Display',serif;font-size:12px;text-align:center;padding:8px;">Childcare Near You</span></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">Childcare Options in Third Ward</div><div class="shelf-card-meta">~4 min read</div></div>
+        </div>
+        <div class="shelf-card">
+          <div class="shelf-card-img" style="background:linear-gradient(135deg,#dd6b2022,#dd6b2008);height:100px;display:flex;align-items:center;justify-content:center;"><span style="color:var(--families);font-family:'DM Serif Display',serif;font-size:12px;text-align:center;padding:8px;">Youth Summer Programs</span></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">Summer 2026: Where Kids Can Go</div><div class="shelf-card-meta">~3 min read</div></div>
+        </div>
+        <div class="shelf-card" style="flex:0 0 140px;background:transparent;border:2px dashed var(--families);display:flex;align-items:center;justify-content:center;border-radius:14px;">
+          <span style="font-family:'Architects Daughter',cursive;font-size:14px;color:var(--families);text-align:center;padding:12px;">see all 18 &rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shelf 3: Our Voice -->
+    <div class="shelf-section" style="border-bottom:1px solid var(--border);">
+      <div class="shelf-title-bar">
+        <div class="shelf-dot" style="background:var(--voice);"></div>
+        <div class="shelf-title" style="color:var(--voice);">Our Voice</div>
+        <div class="shelf-count">14 articles</div>
+      </div>
+      <div class="shelf-scroll">
+        <div class="shelf-card">
+          <div class="shelf-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/polling-place.jpg" alt=""><div class="shelf-card-type" style="background:var(--voice);">Guide</div></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">How to Find Your Polling Place</div><div class="shelf-card-meta">~2 min read</div></div>
+        </div>
+        <div class="shelf-card">
+          <div class="shelf-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/civic-building.jpg" alt=""><div class="shelf-card-type" style="background:var(--voice);">Article</div></div>
+          <div class="shelf-card-body"><div class="shelf-card-title">What Your City Council Member Does</div><div class="shelf-card-meta">~3 min read</div></div>
+        </div>
+        <div class="shelf-card" style="flex:0 0 140px;background:transparent;border:2px dashed var(--voice);display:flex;align-items:center;justify-content:center;border-radius:14px;">
+          <span style="font-family:'Architects Daughter',cursive;font-size:14px;color:var(--voice);text-align:center;padding:12px;">see all 14 &rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="anno" style="top:20px;right:40px;">
+      <div class="anno-label">Strategy: Horizontal Shelves</div>
+      Scroll sideways to browse, down to change topic. You never see a wall of 847 items. Each shelf shows 3-5 + "see all."
+    </div>
+    <div class="anno" style="top:280px;right:40px;">
+      <div class="anno-label">Strategy: Pathway Grouping</div>
+      Content sorted by topic (Our Health, Our Families...) not by type. People think in topics, not in "articles vs. guides."
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 3: PATHWAY FOCUS — Deeper index with Wayfinder sidebar
+     "You're reading about health. Here's everything health-related."
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page-frame" id="page3">
+  <div class="app-header">
+    <a class="app-logo" onclick="showPage(1)">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/><circle cx="100" cy="80" r="18" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/><circle cx="100" cy="120" r="18" stroke="#319795" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="90" r="18" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="110" r="18" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="90" r="18" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="110" r="18" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/></svg>
+      <span>Community Exchange</span>
+    </a>
+    <div class="app-nav">
+      <a onclick="showPage(1)">Home</a>
+      <a class="active" style="color:var(--c-learn);border-color:var(--c-learn);">Learn</a>
+      <a>Connect</a>
+      <a>Attend</a>
+      <a>Organize</a>
+    </div>
+    <div class="header-compass">
+      <div class="hc-ring hc-r3"></div><div class="hc-ring hc-r2"></div><div class="hc-ring hc-r1"></div>
+      <div class="hc-ring hc-you" style="position:absolute;"></div>
+      <div class="hc-pip hc-N lit"></div><div class="hc-pip hc-E"></div><div class="hc-pip hc-S"></div><div class="hc-pip hc-W"></div>
+    </div>
+    <div class="zip-chip">77004</div>
+  </div>
+
+  <div class="breadcrumb">
+    <a onclick="showPage(1)">77004</a> <span class="sep">/</span>
+    <a onclick="showPage(2)" style="color:var(--c-learn);">Learn</a> <span class="sep">/</span>
+    <span style="font-weight:600;">Our Health</span>
+  </div>
+
+  <div class="p3-hero">
+    <div class="p3-dot" style="background:var(--health);"></div>
+    <div>
+      <h1 style="color:var(--health);">Our Health</h1>
+    </div>
+    <p>Clinics, counseling, nutrition, and wellness resources near 77004. Short reads to help you understand what's available.</p>
+  </div>
+
+  <div class="p3-filters">
+    <div class="p3-filter active">All</div>
+    <div class="p3-filter">Articles</div>
+    <div class="p3-filter">Guides</div>
+    <div class="p3-filter">Focus Areas</div>
+  </div>
+
+  <div class="p3-grid-layout anno-layer">
+    <div class="p3-content">
+      <div class="p3-content-grid">
+        <div class="p3-card" onclick="showPage(4)">
+          <div class="p3-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt=""></div>
+          <div class="p3-card-body">
+            <div class="p3-card-type" style="background:rgba(229,62,62,0.1);color:var(--health);">Article</div>
+            <div class="p3-card-title">Health Workers Are Changing Primary Care</div>
+            <div class="p3-card-meta">~3 min read / Community health</div>
+          </div>
+        </div>
+        <div class="p3-card">
+          <div class="p3-card-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt=""></div>
+          <div class="p3-card-body">
+            <div class="p3-card-type" style="background:rgba(229,62,62,0.1);color:var(--health);">Guide</div>
+            <div class="p3-card-title">Understanding Your Insurance Options</div>
+            <div class="p3-card-meta">~5 min read / Insurance</div>
+          </div>
+        </div>
+        <div class="p3-card">
+          <div class="p3-card-img" style="background:linear-gradient(135deg,#e53e3e22,#e53e3e08);height:100px;display:flex;align-items:center;justify-content:center;"><span style="color:var(--health);font-family:'DM Serif Display',serif;font-size:13px;text-align:center;padding:8px;">Mental Health<br>Near You</span></div>
+          <div class="p3-card-body">
+            <div class="p3-card-type" style="background:rgba(229,62,62,0.1);color:var(--health);">Article</div>
+            <div class="p3-card-title">Where to Find Free Counseling</div>
+            <div class="p3-card-meta">~2 min read / Mental health</div>
+          </div>
+        </div>
+        <div class="p3-card">
+          <div class="p3-card-img" style="background:linear-gradient(135deg,#e53e3e22,#e53e3e08);height:100px;display:flex;align-items:center;justify-content:center;"><span style="color:var(--health);font-family:'DM Serif Display',serif;font-size:13px;text-align:center;padding:8px;">Nutrition<br>Programs</span></div>
+          <div class="p3-card-body">
+            <div class="p3-card-type" style="background:rgba(229,62,62,0.1);color:var(--health);">Guide</div>
+            <div class="p3-card-title">Food Pantries and Nutrition Help</div>
+            <div class="p3-card-meta">~3 min read / Food access</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wayfinder Sidebar -->
+    <div class="wf-sidebar">
+      <div class="wf-compass-box">
+        <div class="p2-compass-mini" style="width:100px;height:100px;">
+          <div class="p2mr" style="width:100px;height:100px;top:0;left:0;border-top:3px solid var(--c-learn);"></div>
+          <div class="p2mr" style="width:72px;height:72px;top:14px;left:14px;border-top:3px solid var(--c-learn);"></div>
+          <div class="p2mr" style="width:44px;height:44px;top:28px;left:28px;border-top:3px solid var(--c-learn);"></div>
+          <div style="position:absolute;width:10px;height:10px;top:45px;left:45px;border-radius:50%;border:2px solid var(--accent);background:#fff;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-learn);background:var(--c-learn);top:-2px;left:45px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-connect);background:#fff;top:45px;right:-2px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-attend);background:#fff;bottom:-2px;left:45px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-organize);background:#fff;top:45px;left:-2px;"></div>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">nearby services</div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+          <div><div class="wf-item-name">The Harris Center</div><div class="wf-item-meta">Mental health / Free</div></div>
+        </div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt=""></div>
+          <div><div class="wf-item-name">Legacy Community Health</div><div class="wf-item-meta">Primary care / 1.2 mi</div></div>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">your official</div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/evans-shabazz.jpg" alt=""></div>
+          <div><div class="wf-item-name">CM Evans-Shabazz</div><div class="wf-item-meta">District D / City Council</div></div>
+        </div>
+      </div>
+      <div class="wf-cascade">
+        <div class="wf-cascade-title">keep going?</div>
+        <div class="wf-nudge" style="border-left-color:var(--c-connect);">
+          <div class="wf-nudge-dir" style="color:var(--c-connect);">Connect</div>
+          <div><div class="wf-nudge-title">Harris Center is 0.8 mi away</div><div class="wf-nudge-meta">Free / Walk-ins OK</div></div>
+        </div>
+        <div class="wf-nudge" style="border-left-color:var(--c-attend);">
+          <div class="wf-nudge-dir" style="color:var(--c-attend);">Attend</div>
+          <div><div class="wf-nudge-title">Health Fair this Saturday</div><div class="wf-nudge-meta">Sunnyside / Come as you are</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="anno" style="top:20px;right:320px;">
+      <div class="anno-label">Strategy: Wayfinder Sidebar</div>
+      Always visible. Shows related services, your official, and gentle "keep going" nudges to the next compass direction.
+    </div>
+    <div class="anno" style="top:240px;left:60px;">
+      <div class="anno-label">Strategy: Filtered Not Firehosed</div>
+      You're already filtered to Learn + Our Health. Only 24 items, not 847. Filters narrow further if needed.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 4: CONTENT DETAIL — The article itself + Wayfinder
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page-frame" id="page4">
+  <div class="app-header">
+    <a class="app-logo" onclick="showPage(1)">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/><circle cx="100" cy="80" r="18" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/><circle cx="100" cy="120" r="18" stroke="#319795" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="90" r="18" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="110" r="18" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="90" r="18" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="110" r="18" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/></svg>
+      <span>Community Exchange</span>
+    </a>
+    <div class="app-nav">
+      <a onclick="showPage(1)">Home</a>
+      <a class="active" style="color:var(--c-learn);border-color:var(--c-learn);">Learn</a>
+      <a>Connect</a>
+      <a>Attend</a>
+      <a>Organize</a>
+    </div>
+    <div class="header-compass">
+      <div class="hc-ring hc-r3"></div><div class="hc-ring hc-r2"></div><div class="hc-ring hc-r1"></div>
+      <div class="hc-ring hc-you" style="position:absolute;"></div>
+      <div class="hc-pip hc-N lit"></div><div class="hc-pip hc-E"></div><div class="hc-pip hc-S"></div><div class="hc-pip hc-W"></div>
+    </div>
+    <div class="zip-chip">77004</div>
+  </div>
+
+  <div class="breadcrumb">
+    <a onclick="showPage(1)">77004</a> <span class="sep">/</span>
+    <a onclick="showPage(2)" style="color:var(--c-learn);">Learn</a> <span class="sep">/</span>
+    <a onclick="showPage(3)" style="color:var(--health);">Our Health</a> <span class="sep">/</span>
+    <span style="font-weight:600;">Health Workers</span>
+  </div>
+
+  <div class="p4-layout anno-layer">
+    <div class="p4-main">
+      <div class="p4-hero-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt="Health worker"></div>
+      <div class="p4-type-badge" style="background:rgba(229,62,62,0.1);color:var(--health);">Article / Our Health</div>
+      <h1>Health Workers Are Changing Primary Care in Houston</h1>
+      <div class="p4-byline">~3 min read / Community health / Updated Mar 2026</div>
+
+      <div class="p4-body">
+        <p>If you've been to a clinic recently, you might have talked to someone who wasn't a doctor or a nurse -- but who still really helped. That person was probably a community health worker.</p>
+        <p>Community health workers (CHWs) are people from your neighborhood who are trained to help connect you to the care you need. They speak your language, understand your situation, and can walk you through things like signing up for insurance, finding a food pantry, or getting your kids into a program.</p>
+
+        <h2>What do they actually do?</h2>
+        <p>Health workers do a lot of different things, but the big ones are:</p>
+        <div class="p4-callout">
+          They help people who don't know where to start. If you've ever thought "I know I need help but I don't know who to call" -- that's exactly who health workers are for.
+        </div>
+        <p>In Houston, organizations like Legacy Community Health and The Harris Center have health workers on staff. They can visit your home, meet you at a clinic, or talk on the phone.</p>
+      </div>
+
+      <!-- The cascade nudge — the key UX innovation -->
+      <div class="p4-next-step">
+        <h3>now that you know...</h3>
+        <div class="p4-next-cards">
+          <div class="p4-next-card" style="border-left-color:var(--c-connect);">
+            <div class="p4-nc-dir" style="color:var(--c-connect);">Connect</div>
+            <div class="p4-nc-title">The Harris Center is 0.8 mi from you</div>
+            <div class="p4-nc-meta">Free mental health / Walk-ins OK / (713) 970-7000</div>
+          </div>
+          <div class="p4-next-card" style="border-left-color:var(--c-attend);" onclick="showPage(5)">
+            <div class="p4-nc-dir" style="color:var(--c-attend);">Attend</div>
+            <div class="p4-nc-title">Community Health Fair this Saturday</div>
+            <div class="p4-nc-meta">Sunnyside / Free / Come as you are</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="anno" style="bottom:120px;left:60px;">
+        <div class="anno-label">Strategy: Cascade Nudge</div>
+        "Now that you know..." gently suggests the NEXT compass direction. You learned (N) — now connect (E) or attend (S). One step, not everything.
+      </div>
+    </div>
+
+    <!-- Wayfinder Sidebar -->
+    <div class="wf-sidebar">
+      <div class="wf-compass-box">
+        <div class="p2-compass-mini" style="width:100px;height:100px;">
+          <div class="p2mr" style="width:100px;height:100px;top:0;left:0;border-top:3px solid var(--c-learn);"></div>
+          <div class="p2mr" style="width:72px;height:72px;top:14px;left:14px;border-top:3px solid var(--c-learn);"></div>
+          <div class="p2mr" style="width:44px;height:44px;top:28px;left:28px;border-top:3px solid var(--c-learn);"></div>
+          <div style="position:absolute;width:10px;height:10px;top:45px;left:45px;border-radius:50%;border:2px solid var(--accent);background:#fff;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-learn);background:var(--c-learn);top:-2px;left:45px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-connect);background:#fff;top:45px;right:-2px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-attend);background:#fff;bottom:-2px;left:45px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-organize);background:#fff;top:45px;left:-2px;"></div>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">mentioned in this article</div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+          <div><div class="wf-item-name">The Harris Center</div><div class="wf-item-meta">Mental health / 0.8 mi</div></div>
+        </div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt=""></div>
+          <div><div class="wf-item-name">Legacy Community Health</div><div class="wf-item-meta">Primary care / 1.2 mi</div></div>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">your official on this topic</div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/morales.jpg" alt=""></div>
+          <div><div class="wf-item-name">Rep. Christina Morales</div><div class="wf-item-meta">HD-145 / Filed SB 2047</div></div>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">related reading</div>
+        <div class="wf-item">
+          <div class="wf-item-img" style="background:var(--health);border-radius:6px;"></div>
+          <div><div class="wf-item-name">Insurance Options Near You</div><div class="wf-item-meta">~5 min read</div></div>
+        </div>
+        <div class="wf-item">
+          <div class="wf-item-img" style="background:var(--health);border-radius:6px;"></div>
+          <div><div class="wf-item-name">Free Counseling in 77004</div><div class="wf-item-meta">~2 min read</div></div>
+        </div>
+      </div>
+      <div class="wf-cascade">
+        <div class="wf-cascade-title">your journey so far</div>
+        <div class="wf-nudge" style="border-left-color:var(--c-learn);opacity:0.5;">
+          <div class="wf-nudge-dir" style="color:var(--c-learn);">Learned</div>
+          <div><div class="wf-nudge-title">Health Workers article</div><div class="wf-nudge-meta">You're here now</div></div>
+        </div>
+        <div class="wf-nudge" style="border-left-color:var(--c-connect);">
+          <div class="wf-nudge-dir" style="color:var(--c-connect);">Connect</div>
+          <div><div class="wf-nudge-title">Harris Center is 0.8 mi</div><div class="wf-nudge-meta">Free / Walk-ins OK</div></div>
+        </div>
+        <div class="wf-nudge" style="border-left-color:var(--c-attend);">
+          <div class="wf-nudge-dir" style="color:var(--c-attend);">Attend</div>
+          <div><div class="wf-nudge-title">Health Fair Saturday</div><div class="wf-nudge-meta">Sunnyside / Free</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="anno" style="top:20px;right:320px;">
+      <div class="anno-label">Strategy: Contextual Sidebar</div>
+      Sidebar shows ONLY what's mentioned in this article + your nearest official on this topic. Not the whole database.
+    </div>
+    <div class="anno" style="bottom:20px;right:20px;">
+      <div class="anno-label">Strategy: Journey Tracking</div>
+      "Your journey so far" shows the compass cascade: you Learned, now Connect, then Attend. Gentle progression, not a to-do list.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     PAGE 5: NEXT STEP — The cascade in action
+     "You read about it. Now here's how to take the next step."
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="page-frame" id="page5">
+  <div class="app-header">
+    <a class="app-logo" onclick="showPage(1)">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="18" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/><circle cx="100" cy="80" r="18" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/><circle cx="100" cy="120" r="18" stroke="#319795" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="90" r="18" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/><circle cx="117.3" cy="110" r="18" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="90" r="18" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/><circle cx="82.7" cy="110" r="18" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/></svg>
+      <span>Community Exchange</span>
+    </a>
+    <div class="app-nav">
+      <a onclick="showPage(1)">Home</a>
+      <a style="color:var(--c-learn);">Learn</a>
+      <a>Connect</a>
+      <a class="active" style="color:var(--c-attend);border-color:var(--c-attend);">Attend</a>
+      <a>Organize</a>
+    </div>
+    <div class="header-compass">
+      <div class="hc-ring hc-r3"></div><div class="hc-ring hc-r2"></div><div class="hc-ring hc-r1"></div>
+      <div class="hc-ring hc-you" style="position:absolute;"></div>
+      <div class="hc-pip hc-N"></div><div class="hc-pip hc-E"></div><div class="hc-pip hc-S lit"></div><div class="hc-pip hc-W"></div>
+    </div>
+    <div class="zip-chip">77004</div>
+  </div>
+
+  <div class="breadcrumb">
+    <a onclick="showPage(1)">77004</a> <span class="sep">/</span>
+    <a style="color:var(--c-attend);">Attend</a> <span class="sep">/</span>
+    <a style="color:var(--health);">Our Health</a> <span class="sep">/</span>
+    <span style="font-weight:600;">Community Health Fair</span>
+  </div>
+
+  <div class="p5-layout anno-layer">
+    <div class="p5-main">
+      <h1>your path through health</h1>
+      <div class="p5-sub">You started by reading. Each step connects to the next -- and you don't have to do them all at once.</div>
+
+      <div class="p5-cascade">
+        <div class="p5-step done" style="border-left-color:var(--c-learn);">
+          <div class="p5-step-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-checkup.jpg" alt=""></div>
+          <div class="p5-step-body">
+            <div class="p5-step-dir" style="color:var(--c-learn);">Learn</div>
+            <div class="p5-step-title">Health Workers Are Changing Primary Care</div>
+            <div class="p5-step-meta">~3 min read / You read this</div>
+          </div>
+          <div class="p5-step-check">&#10003;</div>
+        </div>
+
+        <div class="p5-connector"></div>
+
+        <div class="p5-step done" style="border-left-color:var(--c-connect);">
+          <div class="p5-step-img"><img class="real-img" style="object-fit:contain;padding:4px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+          <div class="p5-step-body">
+            <div class="p5-step-dir" style="color:var(--c-connect);">Connect</div>
+            <div class="p5-step-title">The Harris Center -- Mental Health</div>
+            <div class="p5-step-meta">0.8 mi / Free / You saved this</div>
+          </div>
+          <div class="p5-step-check">&#10003;</div>
+        </div>
+
+        <div class="p5-connector"></div>
+
+        <div class="p5-step current" style="border-left-color:var(--c-attend);">
+          <div class="p5-step-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/health-fair.jpg" alt=""></div>
+          <div class="p5-step-body">
+            <div class="p5-step-dir" style="color:var(--c-attend);">Attend</div>
+            <div class="p5-step-title">Community Health Fair -- Sunnyside</div>
+            <div class="p5-step-meta">This Saturday / Free / Come as you are</div>
+          </div>
+          <div class="p5-step-check" style="color:var(--accent);">&rarr;</div>
+        </div>
+
+        <div class="p5-connector"></div>
+
+        <div class="p5-step" style="border-left-color:var(--c-organize);opacity:0.45;">
+          <div class="p5-step-img"><img class="real-img" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/headshots/morales.jpg" alt=""></div>
+          <div class="p5-step-body">
+            <div class="p5-step-dir" style="color:var(--c-organize);">Organize</div>
+            <div class="p5-step-title">Rep. Morales is holding a hearing on SB 2047</div>
+            <div class="p5-step-meta">Apr 3 / You can testify</div>
+          </div>
+          <div class="p5-step-check"></div>
+        </div>
+      </div>
+
+      <div class="p5-insight">
+        <h3>the connection opportunity</h3>
+        <p>66% of Americans say they want to connect with people different from them. The number one reason they don't? They just haven't had the chance. Events like this health fair are where those connections start.</p>
+      </div>
+
+      <div class="anno" style="top:20px;right:-60px;">
+        <div class="anno-label">Strategy: Visual Journey</div>
+        The cascade shows exactly where you've been and where you could go. Completed steps fade. Current step pops. Future steps are gentle suggestions, not demands.
+      </div>
+      <div class="anno" style="bottom:80px;left:60px;">
+        <div class="anno-label">Strategy: Research-Backed Nudge</div>
+        The "connection opportunity" insight gives purpose. You're not just attending an event -- you're part of something bigger. Based on More in Common research.
+      </div>
+    </div>
+
+    <!-- Wayfinder Sidebar -->
+    <div class="wf-sidebar">
+      <div class="wf-compass-box">
+        <div class="p2-compass-mini" style="width:100px;height:100px;">
+          <div class="p2mr" style="width:100px;height:100px;top:0;left:0;border-bottom:3px solid var(--c-attend);"></div>
+          <div class="p2mr" style="width:72px;height:72px;top:14px;left:14px;border-bottom:3px solid var(--c-attend);"></div>
+          <div class="p2mr" style="width:44px;height:44px;top:28px;left:28px;border-bottom:3px solid var(--c-attend);"></div>
+          <div style="position:absolute;width:10px;height:10px;top:45px;left:45px;border-radius:50%;border:2px solid var(--accent);background:#fff;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-learn);background:var(--c-learn);top:-2px;left:45px;opacity:0.4;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-connect);background:var(--c-connect);top:45px;right:-2px;opacity:0.4;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-attend);background:var(--c-attend);bottom:-2px;left:45px;"></div>
+          <div style="position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--c-organize);background:#fff;top:45px;left:-2px;"></div>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">event details</div>
+        <div style="padding:4px 8px;font-size:12px;line-height:1.8;color:var(--text);">
+          <strong>Community Health Fair</strong><br>
+          Saturday, March 15, 2026<br>
+          9am - 2pm<br>
+          Sunnyside Community Center<br>
+          4410 Reed Rd, Houston TX 77051<br>
+          <span style="color:var(--accent);font-family:'Architects Daughter',cursive;">Free / All ages / Walk in</span>
+        </div>
+      </div>
+      <div class="wf-sec">
+        <div class="wf-sec-title">who's hosting</div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/harris-center.png" alt=""></div>
+          <div><div class="wf-item-name">The Harris Center</div><div class="wf-item-meta">Co-sponsor</div></div>
+        </div>
+        <div class="wf-item">
+          <div class="wf-item-img"><img class="real-img" style="object-fit:contain;padding:2px;background:#fff;" src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/logos/legacy-health.png" alt=""></div>
+          <div><div class="wf-item-name">Legacy Community Health</div><div class="wf-item-meta">Free screenings</div></div>
+        </div>
+      </div>
+      <div class="wf-cascade">
+        <div class="wf-cascade-title">after this event</div>
+        <div class="wf-nudge" style="border-left-color:var(--c-organize);">
+          <div class="wf-nudge-dir" style="color:var(--c-organize);">Organize</div>
+          <div><div class="wf-nudge-title">SB 2047 hearing Apr 3</div><div class="wf-nudge-meta">Testify for health funding</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPage(n) {
+  document.querySelectorAll('.page-frame').forEach(p => p.classList.remove('visible'));
+  document.getElementById('page' + n).classList.add('visible');
+  document.querySelectorAll('.ps-step').forEach((s, i) => {
+    s.classList.toggle('active', i === n - 1);
+  });
+  window.scrollTo(0, 0);
+}
+
+let annosVisible = true;
+function toggleAnnotations() {
+  annosVisible = !annosVisible;
+  document.querySelectorAll('.anno').forEach(a => {
+    a.classList.toggle('hidden', !annosVisible);
+  });
+}
+</script>
+</body>
+</html>

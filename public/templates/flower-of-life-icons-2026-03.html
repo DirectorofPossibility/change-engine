@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Change Engine — Flower of Life Icon System + Engagement Ordering</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB; --text: #2C2C2C; --accent: #C75B2A; --muted: #8B7E74;
+    --border: #E8E3DB; --card: #FFFFFF;
+    --health: #e53e3e; --families: #dd6b20; --neighborhood: #d69e2e;
+    --voice: #38a169; --money: #3182ce; --planet: #319795; --bigger: #805ad5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1a1a; color: var(--text); }
+  .serif { font-family: 'DM Serif Display', serif; }
+
+  /* Top bar */
+  .top-bar {
+    position: sticky; top: 0; z-index: 100;
+    background: #111; border-bottom: 1px solid #333;
+    padding: 10px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .top-bar .title { color: #fff; font-family: 'DM Serif Display', serif; font-size: 15px; }
+  .top-bar a { color: #888; text-decoration: none; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+  .top-bar a:hover, .top-bar a.active { color: #fff; background: #333; }
+  .top-bar .sep { width: 1px; height: 18px; background: #444; }
+
+  .section { display: none; }
+  .section.visible { display: block; }
+
+  /* ═══════════════════════════════════════════
+     SECTION 1: ICON SYSTEM REFERENCE
+     ═══════════════════════════════════════════ */
+  .icon-ref { max-width: 1100px; margin: 30px auto; padding: 30px; background: var(--bg); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .icon-ref h2 { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 6px; }
+  .icon-ref .desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+
+  .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .icon-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+  .icon-card svg { margin-bottom: 8px; }
+  .icon-card .icon-name { font-size: 11px; font-weight: 700; color: var(--text); }
+  .icon-card .icon-use { font-size: 9px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+  .icon-card .icon-geometry { font-size: 9px; color: var(--accent); margin-top: 4px; font-style: italic; }
+
+  .subsection { margin-bottom: 24px; }
+  .subsection h3 { font-family: 'DM Serif Display', serif; font-size: 16px; margin-bottom: 4px; }
+  .subsection .subdesc { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+
+  /* ═══════════════════════════════════════════
+     SECTION 2: FULL PAGE WITH ICONS
+     ═══════════════════════════════════════════ */
+  .archetype-bar {
+    max-width: 1100px; margin: 20px auto 0;
+    background: #222; border-radius: 14px 14px 0 0; padding: 12px 20px;
+    display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  }
+  .archetype-bar-label { color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 6px; font-weight: 600; }
+  .archetype-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 8px; border: 1px solid #444;
+    background: transparent; color: #aaa; font-size: 11px; font-weight: 600;
+    cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+  }
+  .archetype-btn:hover { border-color: #666; color: #ddd; background: #2a2a2a; }
+  .archetype-btn.active { border-color: var(--accent); color: #fff; background: rgba(199,91,42,0.2); }
+  .archetype-btn svg { flex-shrink: 0; }
+  .archetype-btn .meta { font-size: 8px; color: #666; display: block; margin-top: 1px; }
+  .archetype-btn.active .meta { color: var(--accent); }
+
+  .ordering-bar {
+    max-width: 1100px; margin: 0 auto;
+    background: #1d1d1d; padding: 8px 20px; border-bottom: 1px solid #333;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .ordering-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 4px; }
+  .ordering-text { font-size: 11px; color: #999; line-height: 1.5; }
+  .ordering-text strong { color: #ddd; }
+
+  .page-shell { max-width: 1100px; margin: 0 auto; background: var(--bg); border-radius: 0 0 14px 14px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .three-col { display: grid; grid-template-columns: 190px 1fr 260px; min-height: 80vh; }
+
+  /* Left nav */
+  .left-nav { background: #FDFBF8; border-right: 1px solid var(--border); padding: 14px 0; overflow-y: auto; }
+  .ln-section { padding: 0 10px; margin-bottom: 14px; }
+  .ln-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; padding-left: 4px; }
+
+  .arch-nav {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 8px; border-radius: 6px; cursor: pointer; margin-bottom: 2px;
+    border-left: 3px solid transparent; transition: all 0.15s;
+  }
+  .arch-nav:hover { background: rgba(199,91,42,0.06); }
+  .arch-nav.active { border-left-color: var(--accent); background: rgba(199,91,42,0.1); }
+  .arch-nav svg { flex-shrink: 0; }
+  .arch-nav .name { font-size: 11px; font-weight: 600; color: var(--text); }
+
+  .ln-item { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 5px; cursor: pointer; margin-bottom: 1px; font-size: 11px; color: var(--text); font-weight: 500; }
+  .ln-item:hover { background: rgba(199,91,42,0.06); }
+  .ln-item.active { background: rgba(199,91,42,0.1); color: var(--accent); font-weight: 600; }
+  .ln-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .ln-divider { height: 1px; background: var(--border); margin: 8px 10px; }
+
+  /* Engagement ladder */
+  .ladder-step {
+    display: flex; align-items: center; gap: 6px; padding: 4px 6px;
+    border-radius: 5px; margin-bottom: 2px; font-size: 10px;
+    border-left: 2px solid transparent;
+  }
+  .ladder-step svg { flex-shrink: 0; }
+  .ladder-step .step-text { flex: 1; font-weight: 500; }
+  .ladder-step .step-effort { font-size: 9px; color: var(--muted); }
+
+  /* Main content */
+  .main-content { padding: 18px 22px; min-width: 0; }
+  .breadcrumb { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+
+  .hero-image {
+    width: 100%; height: 180px; border-radius: 10px; margin-bottom: 12px;
+    display: flex; align-items: flex-end; position: relative; overflow: hidden;
+    background-size: cover; background-position: center;
+  }
+  .hero-image-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(44,44,44,0.8));
+    padding: 14px 16px; color: white;
+  }
+  .hero-image-overlay h1 { color: white; font-family: 'DM Serif Display', serif; font-size: 19px; line-height: 1.3; }
+  .hero-pathway { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 3px; }
+  .hero-pathway .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  .content-block { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+  .content-block h2 { font-family: 'DM Serif Display', serif; font-size: 14px; margin-bottom: 4px; }
+  .content-block p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .skeleton { background: linear-gradient(90deg, #e8e3db 25%, #f0ece6 50%, #e8e3db 75%); background-size: 200% 100%; border-radius: 4px; height: 9px; margin: 4px 0; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* Nudge cards */
+  .nudge-card {
+    border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+    display: flex; gap: 10px; align-items: flex-start;
+    position: relative; overflow: hidden;
+    transition: all 0.4s ease;
+  }
+  .nudge-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .nudge-understand { background: #fffbeb; border: 1px solid #fde68a; }
+  .nudge-understand::before { background: #f59e0b; }
+  .nudge-involve { background: #ecfdf5; border: 1px solid #a7f3d0; }
+  .nudge-involve::before { background: #10b981; }
+  .nudge-deeper { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .nudge-deeper::before { background: #3b82f6; }
+  .nudge-resource { background: #fffbeb; border: 1px solid #fde68a; }
+  .nudge-resource::before { background: #d69e2e; }
+  .nudge-partner { background: #faf5ff; border: 1px solid #e9d5ff; }
+  .nudge-partner::before { background: #805ad5; }
+
+  .nudge-icon { flex-shrink: 0; margin-top: 2px; }
+  .nudge-content { flex: 1; }
+  .nudge-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .nudge-title { font-size: 12px; font-weight: 700; color: var(--text); }
+  .nudge-desc { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .nudge-action {
+    font-size: 10px; font-weight: 600; margin-top: 5px;
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 3px 8px; border-radius: 5px; text-decoration: none;
+  }
+  .nudge-effort { font-size: 8px; color: var(--muted); background: rgba(0,0,0,0.04); padding: 2px 5px; border-radius: 3px; margin-left: 4px; }
+
+  .cta-row { display: flex; gap: 6px; margin-top: 10px; }
+  .cta-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 600; text-decoration: none; }
+  .cta-primary { background: var(--accent); color: white; }
+  .cta-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+
+  /* Wayfinder sidebar */
+  .wayfinder { background: var(--card); border-left: 1px solid var(--border); overflow-y: auto; }
+  .wf-header { padding: 10px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+  .wf-header h3 { font-family: 'DM Serif Display', serif; font-size: 12px; }
+
+  .wf-org-section { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .wf-org { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .wf-org-logo { width: 22px; height: 22px; border-radius: 4px; background: var(--bg); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 7px; color: var(--muted); border: 1px solid var(--border); }
+  .wf-org-name { font-size: 10px; font-weight: 600; }
+  .wf-actions { display: flex; flex-wrap: wrap; gap: 3px; padding-left: 28px; margin-bottom: 4px; }
+  .wf-action { font-size: 8px; padding: 2px 5px; border-radius: 3px; text-decoration: none; font-weight: 500; }
+  .wf-donate { background: #f0fff4; color: #276749; }
+  .wf-volunteer { background: #ebf8ff; color: #2b6cb0; }
+
+  .wf-focus-dots { padding: 6px 10px; border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 4px; }
+  .wf-focus-dot { display: inline-flex; align-items: center; gap: 2px; font-size: 9px; color: var(--muted); text-decoration: none; }
+  .wf-focus-dot .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  .wf-tiers-container { display: flex; flex-direction: column; }
+  .wf-tier { border-top: 1px solid var(--border); transition: all 0.35s ease; }
+  .wf-tier.primary { border-left: 3px solid var(--accent); }
+  .wf-tier summary { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; cursor: pointer; list-style: none; font-size: 10px; font-weight: 600; }
+  .wf-tier summary::-webkit-details-marker { display: none; }
+  .wf-tier summary:hover { background: rgba(245,241,235,0.5); }
+  .wf-tier-left { display: flex; align-items: center; gap: 4px; }
+  .wf-tier-count { font-size: 8px; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+  .wf-tier-priority { font-size: 7px; padding: 1px 4px; border-radius: 3px; font-weight: 700; background: rgba(199,91,42,0.15); color: var(--accent); margin-left: 3px; display: none; }
+  .wf-tier-body { padding: 0 10px 8px; }
+
+  /* Content cards with real images */
+  .wf-content-card { display: flex; gap: 6px; padding: 3px 0; text-decoration: none; }
+  .wf-content-thumb {
+    width: 44px; height: 30px; border-radius: 3px; flex-shrink: 0;
+    background-size: cover; background-position: center;
+    background-color: linear-gradient(135deg, #e8e3db, #d5cec4);
+  }
+  .wf-content-title { font-size: 9px; font-weight: 600; color: var(--text); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .wf-pathway-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; margin-right: 2px; }
+
+  .wf-involved-card { padding: 3px 0; font-size: 9px; }
+  .wf-involved-name { font-weight: 600; color: var(--text); }
+  .wf-badge { font-size: 8px; padding: 1px 4px; border-radius: 3px; font-weight: 500; }
+  .wf-badge-time { background: #f0fff4; color: #276749; }
+  .wf-badge-effort { background: #f5f3ff; color: #6b46c1; margin-left: 2px; }
+
+  .wf-official-card { display: flex; gap: 5px; padding: 3px 0; align-items: center; }
+  .wf-official-photo { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, #ddd, #bbb); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 7px; color: #888; }
+  .wf-official-name { font-size: 9px; font-weight: 600; }
+  .wf-official-title { font-size: 8px; color: var(--muted); }
+
+  .wf-policy-card { display: flex; gap: 4px; padding: 3px 0; }
+  .wf-bill { font-size: 8px; font-family: monospace; color: var(--muted); }
+  .wf-policy-name { font-size: 9px; font-weight: 600; color: var(--text); }
+
+  .wf-engagement-hint {
+    padding: 8px 10px; background: #fafaf8; border-top: 1px solid var(--border);
+    font-size: 9px; color: var(--muted); line-height: 1.5;
+  }
+  .wf-engagement-hint strong { color: var(--text); }
+
+  .reordering .wf-tier { animation: slideIn 0.4s ease; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .reordering .nudge-card { animation: fadeSwap 0.5s ease; }
+  @keyframes fadeSwap { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: translateX(0); } }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span class="title serif">Flower of Life</span>
+  <div class="sep"></div>
+  <a class="active" onclick="showSection('icons')">Icon System</a>
+  <a onclick="showSection('page')">Live Page</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1: FLOWER OF LIFE ICON SYSTEM
+     ═══════════════════════════════════════════════════════ -->
+<div id="icons" class="section visible">
+  <div class="icon-ref">
+    <h2>Flower of Life Icon System</h2>
+    <p class="desc">Every icon in the Change Engine derives from the Flower of Life sacred geometry. Each sub-pattern maps to a concept in the platform. The geometry itself communicates interconnection — circles overlapping circles, the way communities actually work.</p>
+
+    <!-- Full Flower of Life reference -->
+    <div style="text-align:center;margin-bottom:24px;padding:20px;background:var(--card);border-radius:12px;border:1px solid var(--border);">
+      <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Full Flower of Life pattern -->
+        <circle cx="100" cy="100" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <circle cx="100" cy="80" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <circle cx="100" cy="120" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <circle cx="117.3" cy="90" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <circle cx="117.3" cy="110" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <circle cx="82.7" cy="90" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <circle cx="82.7" cy="110" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.6"/>
+        <!-- Outer ring -->
+        <circle cx="100" cy="60" r="20" stroke="#C75B2A" stroke-width="0.7" opacity="0.35"/>
+        <circle cx="100" cy="140" r="20" stroke="#C75B2A" stroke-width="0.7" opacity="0.35"/>
+        <circle cx="134.6" cy="80" r="20" stroke="#C75B2A" stroke-width="0.7" opacity="0.35"/>
+        <circle cx="134.6" cy="120" r="20" stroke="#C75B2A" stroke-width="0.7" opacity="0.35"/>
+        <circle cx="65.4" cy="80" r="20" stroke="#C75B2A" stroke-width="0.7" opacity="0.35"/>
+        <circle cx="65.4" cy="120" r="20" stroke="#C75B2A" stroke-width="0.7" opacity="0.35"/>
+        <!-- Bounding circle -->
+        <circle cx="100" cy="100" r="62" stroke="#C75B2A" stroke-width="0.5" opacity="0.2"/>
+      </svg>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;">The Flower of Life — source pattern for all icons</div>
+    </div>
+
+    <!-- ARCHETYPES -->
+    <div class="subsection">
+      <h3>Archetype Icons</h3>
+      <p class="subdesc">Each archetype extracts a different sub-pattern from the Flower of Life, reflecting its navigational intent.</p>
+      <div class="icon-grid">
+        <!-- Seeker: Seed of Life -->
+        <div class="icon-card">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.7"/>
+            <circle cx="24" cy="16" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="30.9" cy="20" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="30.9" cy="28" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="24" cy="32" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="17.1" cy="28" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="17.1" cy="20" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+          </svg>
+          <div class="icon-name">The Seeker</div>
+          <div class="icon-use">Find resources & services</div>
+          <div class="icon-geometry">Seed of Life — beginning of the journey</div>
+        </div>
+
+        <!-- Learner: Vesica Piscis -->
+        <div class="icon-card">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="19" cy="24" r="12" stroke="#3182ce" stroke-width="1.5" opacity="0.6"/>
+            <circle cx="29" cy="24" r="12" stroke="#3182ce" stroke-width="1.5" opacity="0.6"/>
+            <!-- The vesica (lens) highlighted -->
+            <path d="M24 13.1 A12 12 0 0 1 24 34.9 A12 12 0 0 1 24 13.1Z" fill="#3182ce" opacity="0.1"/>
+          </svg>
+          <div class="icon-name">The Learner</div>
+          <div class="icon-use">Understand & explore</div>
+          <div class="icon-geometry">Vesica Piscis — lens of understanding</div>
+        </div>
+
+        <!-- Builder: Tree of Life / Tripod of Life -->
+        <div class="icon-card">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="16" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.6"/>
+            <circle cx="17" cy="28" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.6"/>
+            <circle cx="31" cy="28" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.6"/>
+            <!-- Connection lines through intersections -->
+            <line x1="24" y1="16" x2="17" y2="28" stroke="#38a169" stroke-width="1" opacity="0.3"/>
+            <line x1="24" y1="16" x2="31" y2="28" stroke="#38a169" stroke-width="1" opacity="0.3"/>
+            <line x1="17" y1="28" x2="31" y2="28" stroke="#38a169" stroke-width="1" opacity="0.3"/>
+          </svg>
+          <div class="icon-name">The Builder</div>
+          <div class="icon-use">Volunteer & create</div>
+          <div class="icon-geometry">Tripod of Life — building structure</div>
+        </div>
+
+        <!-- Watchdog: Metatron's Cube (simplified) -->
+        <div class="icon-card">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="4" stroke="#805ad5" stroke-width="1.5"/>
+            <circle cx="24" cy="14" r="4" stroke="#805ad5" stroke-width="1" opacity="0.5"/>
+            <circle cx="24" cy="34" r="4" stroke="#805ad5" stroke-width="1" opacity="0.5"/>
+            <circle cx="32.7" cy="19" r="4" stroke="#805ad5" stroke-width="1" opacity="0.5"/>
+            <circle cx="32.7" cy="29" r="4" stroke="#805ad5" stroke-width="1" opacity="0.5"/>
+            <circle cx="15.3" cy="19" r="4" stroke="#805ad5" stroke-width="1" opacity="0.5"/>
+            <circle cx="15.3" cy="29" r="4" stroke="#805ad5" stroke-width="1" opacity="0.5"/>
+            <!-- Connecting lines -->
+            <line x1="24" y1="14" x2="32.7" y2="19" stroke="#805ad5" stroke-width="0.5" opacity="0.3"/>
+            <line x1="32.7" y1="19" x2="32.7" y2="29" stroke="#805ad5" stroke-width="0.5" opacity="0.3"/>
+            <line x1="32.7" y1="29" x2="24" y2="34" stroke="#805ad5" stroke-width="0.5" opacity="0.3"/>
+            <line x1="24" y1="34" x2="15.3" y2="29" stroke="#805ad5" stroke-width="0.5" opacity="0.3"/>
+            <line x1="15.3" y1="29" x2="15.3" y2="19" stroke="#805ad5" stroke-width="0.5" opacity="0.3"/>
+            <line x1="15.3" y1="19" x2="24" y2="14" stroke="#805ad5" stroke-width="0.5" opacity="0.3"/>
+            <line x1="24" y1="14" x2="24" y2="34" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+            <line x1="15.3" y1="19" x2="32.7" y2="29" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+            <line x1="32.7" y1="19" x2="15.3" y2="29" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+          </svg>
+          <div class="icon-name">The Watchdog</div>
+          <div class="icon-use">Track accountability</div>
+          <div class="icon-geometry">Metatron's Cube — revealing hidden structure</div>
+        </div>
+
+        <!-- Partner: Borromean / interlocking circles -->
+        <div class="icon-card">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="20" cy="20" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="28" cy="20" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="24" cy="28" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.5"/>
+            <!-- Intersection highlight -->
+            <circle cx="24" cy="22" r="3" fill="#dd6b20" opacity="0.15"/>
+          </svg>
+          <div class="icon-name">The Partner</div>
+          <div class="icon-use">Connect & collaborate</div>
+          <div class="icon-geometry">Borromean Rings — interdependence</div>
+        </div>
+
+        <!-- Explorer: Full Flower -->
+        <div class="icon-card">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="6" stroke="#C75B2A" stroke-width="1.2" opacity="0.7"/>
+            <circle cx="24" cy="18" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.45"/>
+            <circle cx="24" cy="30" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.45"/>
+            <circle cx="29.2" cy="21" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.45"/>
+            <circle cx="29.2" cy="27" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.45"/>
+            <circle cx="18.8" cy="21" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.45"/>
+            <circle cx="18.8" cy="27" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.45"/>
+          </svg>
+          <div class="icon-name">The Explorer</div>
+          <div class="icon-use">Browse & discover</div>
+          <div class="icon-geometry">Flower of Life — the complete pattern</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WAYFINDER TIERS -->
+    <div class="subsection">
+      <h3>Wayfinder Tier Icons</h3>
+      <p class="subdesc">The three engagement tiers use progressive geometric complexity — from a single circle to interlocking forms.</p>
+      <div class="icon-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="icon-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <!-- Single circle with inner pattern emerging -->
+            <circle cx="20" cy="20" r="12" stroke="#92400e" stroke-width="1.5" opacity="0.6"/>
+            <circle cx="20" cy="15" r="5" stroke="#92400e" stroke-width="1" opacity="0.3"/>
+            <circle cx="20" cy="25" r="5" stroke="#92400e" stroke-width="1" opacity="0.3"/>
+          </svg>
+          <div class="icon-name">Understand</div>
+          <div class="icon-use">Articles, research, library</div>
+          <div class="icon-geometry">Genesis — pattern emerging</div>
+        </div>
+        <div class="icon-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <!-- Three overlapping circles, active -->
+            <circle cx="20" cy="16" r="8" stroke="#065f46" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="14" cy="26" r="8" stroke="#065f46" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="26" cy="26" r="8" stroke="#065f46" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="20" cy="22" r="2.5" fill="#065f46" opacity="0.2"/>
+          </svg>
+          <div class="icon-name">Get Involved</div>
+          <div class="icon-use">Events, services, volunteer</div>
+          <div class="icon-geometry">Convergence — circles meeting</div>
+        </div>
+        <div class="icon-card">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <!-- Six-fold pattern — full depth -->
+            <circle cx="20" cy="20" r="6" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/>
+            <circle cx="20" cy="14" r="6" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="20" cy="26" r="6" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="25.2" cy="17" r="6" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="25.2" cy="23" r="6" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="14.8" cy="17" r="6" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="14.8" cy="23" r="6" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+          </svg>
+          <div class="icon-name">Go Deeper</div>
+          <div class="icon-use">Officials, policies, foundations</div>
+          <div class="icon-geometry">Full pattern — systemic depth</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGAGEMENT LADDER -->
+    <div class="subsection">
+      <h3>Engagement Ladder Icons</h3>
+      <p class="subdesc">Each rung of the engagement ladder uses a progressively more complex geometry — from a single circle (read) to a full rosette (organize).</p>
+      <div class="icon-grid" style="grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));">
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="6" stroke="#92400e" stroke-width="1.2"/></svg>
+          <div class="icon-name">Read</div>
+          <div class="icon-use">~1 min</div>
+        </div>
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="13" cy="16" r="6" stroke="#92400e" stroke-width="1.2" opacity="0.6"/>
+            <circle cx="19" cy="16" r="6" stroke="#92400e" stroke-width="1.2" opacity="0.6"/>
+          </svg>
+          <div class="icon-name">Visit</div>
+          <div class="icon-use">~1 min</div>
+        </div>
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="6" stroke="#065f46" stroke-width="1.2" opacity="0.6"/>
+            <circle cx="16" cy="10" r="6" stroke="#065f46" stroke-width="1" opacity="0.4"/>
+          </svg>
+          <div class="icon-name">Call</div>
+          <div class="icon-use">~5 min</div>
+        </div>
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="14" r="5" stroke="#065f46" stroke-width="1.2" opacity="0.5"/>
+            <circle cx="12" cy="22" r="5" stroke="#065f46" stroke-width="1.2" opacity="0.5"/>
+            <circle cx="20" cy="22" r="5" stroke="#065f46" stroke-width="1.2" opacity="0.5"/>
+          </svg>
+          <div class="icon-name">Attend</div>
+          <div class="icon-use">1-2 hrs</div>
+        </div>
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="5" stroke="#065f46" stroke-width="1.2" opacity="0.6"/>
+            <circle cx="16" cy="10" r="5" stroke="#065f46" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="21.3" cy="13" r="5" stroke="#065f46" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="21.3" cy="19" r="5" stroke="#065f46" stroke-width="0.8" opacity="0.4"/>
+          </svg>
+          <div class="icon-name">Volunteer</div>
+          <div class="icon-use">recurring</div>
+        </div>
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="5" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/>
+            <circle cx="16" cy="10" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="16" cy="22" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="21.2" cy="13" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="10.8" cy="13" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+          </svg>
+          <div class="icon-name">Testify</div>
+          <div class="icon-use">public</div>
+        </div>
+        <div class="icon-card">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="4.5" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/>
+            <circle cx="16" cy="11.5" r="4.5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="16" cy="20.5" r="4.5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="19.9" cy="13.75" r="4.5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="19.9" cy="18.25" r="4.5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="12.1" cy="13.75" r="4.5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="12.1" cy="18.25" r="4.5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/>
+          </svg>
+          <div class="icon-name">Organize</div>
+          <div class="icon-use">sustained</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PATHWAY DOTS (remain as colored dots — but now with geometric centers) -->
+    <div class="subsection">
+      <h3>Pathway Marks</h3>
+      <p class="subdesc">Pathways keep their colored dots — the simplest element of the Flower. Each dot is a single circle, the atom of the pattern. When clustered in the sidebar focus dots section, they naturally form micro-flowers.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;">
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#e53e3e"/></svg><span style="font-size:11px;font-weight:600;">Our Health</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#dd6b20"/></svg><span style="font-size:11px;font-weight:600;">Our Families</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#d69e2e"/></svg><span style="font-size:11px;font-weight:600;">Our Neighborhood</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#38a169"/></svg><span style="font-size:11px;font-weight:600;">Our Voice</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#3182ce"/></svg><span style="font-size:11px;font-weight:600;">Our Money</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#319795"/></svg><span style="font-size:11px;font-weight:600;">Our Planet</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#805ad5"/></svg><span style="font-size:11px;font-weight:600;">The Bigger We</span></div>
+      </div>
+    </div>
+
+    <div class="subsection">
+      <h3>Design Philosophy</h3>
+      <p class="subdesc" style="max-width:700px;line-height:1.8;">
+        The Flower of Life is a pattern of <strong>equal circles overlapping</strong>. No circle is more important than another. Every intersection creates something new. This is exactly how civic infrastructure works — organizations, people, policies, and places overlapping to create community.<br><br>
+        As engagement deepens, more circles appear. A single circle is reading an article. Two overlapping is making a connection. The full flower is sustained organizing. <strong>The icon literally grows with you.</strong><br><br>
+        Database images are used for all thumbnails where available. Where no image exists, the fallback is the relevant pathway color as a subtle gradient header — never a generic placeholder, never an emoji.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2: LIVE PAGE WITH FLOWER ICONS + DB IMAGES
+     ═══════════════════════════════════════════════════════ -->
+<div id="page" class="section">
+
+  <div class="archetype-bar">
+    <span class="archetype-bar-label">I am...</span>
+    <button class="archetype-btn active" onclick="setArchetype('explorer')">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="6" stroke="#fff" stroke-width="1.2" opacity="0.7"/><circle cx="24" cy="18" r="6" stroke="#fff" stroke-width="1" opacity="0.35"/><circle cx="24" cy="30" r="6" stroke="#fff" stroke-width="1" opacity="0.35"/><circle cx="29.2" cy="21" r="6" stroke="#fff" stroke-width="1" opacity="0.35"/><circle cx="29.2" cy="27" r="6" stroke="#fff" stroke-width="1" opacity="0.35"/><circle cx="18.8" cy="21" r="6" stroke="#fff" stroke-width="1" opacity="0.35"/><circle cx="18.8" cy="27" r="6" stroke="#fff" stroke-width="1" opacity="0.35"/></svg>
+      <div><span>Explorer</span><span class="meta">Default</span></div>
+    </button>
+    <button class="archetype-btn" onclick="setArchetype('seeker')">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="7" stroke="#fff" stroke-width="1.2" opacity="0.7"/><circle cx="24" cy="17" r="7" stroke="#fff" stroke-width="0.8" opacity="0.35"/><circle cx="30.1" cy="20.5" r="7" stroke="#fff" stroke-width="0.8" opacity="0.35"/><circle cx="30.1" cy="27.5" r="7" stroke="#fff" stroke-width="0.8" opacity="0.35"/><circle cx="24" cy="31" r="7" stroke="#fff" stroke-width="0.8" opacity="0.35"/><circle cx="17.9" cy="27.5" r="7" stroke="#fff" stroke-width="0.8" opacity="0.35"/><circle cx="17.9" cy="20.5" r="7" stroke="#fff" stroke-width="0.8" opacity="0.35"/></svg>
+      <div><span>Seeker</span><span class="meta">Resources first</span></div>
+    </button>
+    <button class="archetype-btn" onclick="setArchetype('learner')">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="19" cy="24" r="10" stroke="#fff" stroke-width="1.2" opacity="0.5"/><circle cx="29" cy="24" r="10" stroke="#fff" stroke-width="1.2" opacity="0.5"/></svg>
+      <div><span>Learner</span><span class="meta">Understanding first</span></div>
+    </button>
+    <button class="archetype-btn" onclick="setArchetype('builder')">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="17" r="7" stroke="#fff" stroke-width="1.2" opacity="0.5"/><circle cx="18" cy="29" r="7" stroke="#fff" stroke-width="1.2" opacity="0.5"/><circle cx="30" cy="29" r="7" stroke="#fff" stroke-width="1.2" opacity="0.5"/></svg>
+      <div><span>Builder</span><span class="meta">Action first</span></div>
+    </button>
+    <button class="archetype-btn" onclick="setArchetype('watchdog')">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="3.5" stroke="#fff" stroke-width="1.2"/><circle cx="24" cy="15" r="3.5" stroke="#fff" stroke-width="0.8" opacity="0.4"/><circle cx="24" cy="33" r="3.5" stroke="#fff" stroke-width="0.8" opacity="0.4"/><circle cx="31.8" cy="19.5" r="3.5" stroke="#fff" stroke-width="0.8" opacity="0.4"/><circle cx="31.8" cy="28.5" r="3.5" stroke="#fff" stroke-width="0.8" opacity="0.4"/><circle cx="16.2" cy="19.5" r="3.5" stroke="#fff" stroke-width="0.8" opacity="0.4"/><circle cx="16.2" cy="28.5" r="3.5" stroke="#fff" stroke-width="0.8" opacity="0.4"/><line x1="24" y1="15" x2="31.8" y2="19.5" stroke="#fff" stroke-width="0.4" opacity="0.3"/><line x1="31.8" y1="19.5" x2="31.8" y2="28.5" stroke="#fff" stroke-width="0.4" opacity="0.3"/><line x1="31.8" y1="28.5" x2="24" y2="33" stroke="#fff" stroke-width="0.4" opacity="0.3"/><line x1="24" y1="33" x2="16.2" y2="28.5" stroke="#fff" stroke-width="0.4" opacity="0.3"/><line x1="16.2" y1="28.5" x2="16.2" y2="19.5" stroke="#fff" stroke-width="0.4" opacity="0.3"/><line x1="16.2" y1="19.5" x2="24" y2="15" stroke="#fff" stroke-width="0.4" opacity="0.3"/></svg>
+      <div><span>Watchdog</span><span class="meta">Accountability</span></div>
+    </button>
+    <button class="archetype-btn" onclick="setArchetype('partner')">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none"><circle cx="20" cy="20" r="9" stroke="#fff" stroke-width="1.2" opacity="0.45"/><circle cx="28" cy="20" r="9" stroke="#fff" stroke-width="1.2" opacity="0.45"/><circle cx="24" cy="27" r="9" stroke="#fff" stroke-width="1.2" opacity="0.45"/></svg>
+      <div><span>Partner</span><span class="meta">Collaboration</span></div>
+    </button>
+  </div>
+
+  <div class="ordering-bar">
+    <span class="ordering-tag" id="o-tag" style="background:#fef3c7;color:#92400e;">Explorer</span>
+    <span class="ordering-text" id="o-text"><strong>Progressive engagement:</strong> Understand, then Get Involved, then Go Deeper. Lowest effort surfaces first.</span>
+  </div>
+
+  <div class="page-shell">
+    <div class="three-col">
+
+      <!-- LEFT NAV -->
+      <nav class="left-nav">
+        <div class="ln-section">
+          <div class="ln-title">Your Journey</div>
+          <div class="arch-nav active" id="an-explorer" onclick="setArchetype('explorer')">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="6" stroke="#C75B2A" stroke-width="1.5" opacity="0.7"/><circle cx="24" cy="18" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.4"/><circle cx="29.2" cy="21" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.4"/><circle cx="29.2" cy="27" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.4"/><circle cx="24" cy="30" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.4"/><circle cx="18.8" cy="27" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.4"/><circle cx="18.8" cy="21" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.4"/></svg>
+            <span class="name">Explorer</span>
+          </div>
+          <div class="arch-nav" id="an-seeker" onclick="setArchetype('seeker')">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.7"/><circle cx="24" cy="16" r="8" stroke="#d69e2e" stroke-width="1" opacity="0.35"/><circle cx="30.9" cy="20" r="8" stroke="#d69e2e" stroke-width="1" opacity="0.35"/><circle cx="30.9" cy="28" r="8" stroke="#d69e2e" stroke-width="1" opacity="0.35"/><circle cx="24" cy="32" r="8" stroke="#d69e2e" stroke-width="1" opacity="0.35"/><circle cx="17.1" cy="28" r="8" stroke="#d69e2e" stroke-width="1" opacity="0.35"/><circle cx="17.1" cy="20" r="8" stroke="#d69e2e" stroke-width="1" opacity="0.35"/></svg>
+            <span class="name">Seeker</span>
+          </div>
+          <div class="arch-nav" id="an-learner" onclick="setArchetype('learner')">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><circle cx="19" cy="24" r="11" stroke="#3182ce" stroke-width="1.5" opacity="0.5"/><circle cx="29" cy="24" r="11" stroke="#3182ce" stroke-width="1.5" opacity="0.5"/></svg>
+            <span class="name">Learner</span>
+          </div>
+          <div class="arch-nav" id="an-builder" onclick="setArchetype('builder')">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.5"/><circle cx="17" cy="28" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.5"/><circle cx="31" cy="28" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.5"/></svg>
+            <span class="name">Builder</span>
+          </div>
+          <div class="arch-nav" id="an-watchdog" onclick="setArchetype('watchdog')">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="4" stroke="#805ad5" stroke-width="1.5"/><circle cx="24" cy="14" r="4" stroke="#805ad5" stroke-width="1" opacity="0.4"/><circle cx="24" cy="34" r="4" stroke="#805ad5" stroke-width="1" opacity="0.4"/><circle cx="32.7" cy="19" r="4" stroke="#805ad5" stroke-width="1" opacity="0.4"/><circle cx="15.3" cy="19" r="4" stroke="#805ad5" stroke-width="1" opacity="0.4"/><circle cx="32.7" cy="29" r="4" stroke="#805ad5" stroke-width="1" opacity="0.4"/><circle cx="15.3" cy="29" r="4" stroke="#805ad5" stroke-width="1" opacity="0.4"/></svg>
+            <span class="name">Watchdog</span>
+          </div>
+          <div class="arch-nav" id="an-partner" onclick="setArchetype('partner')">
+            <svg width="18" height="18" viewBox="0 0 48 48" fill="none"><circle cx="20" cy="20" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.45"/><circle cx="28" cy="20" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.45"/><circle cx="24" cy="28" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.45"/></svg>
+            <span class="name">Partner</span>
+          </div>
+        </div>
+        <div class="ln-divider"></div>
+        <div class="ln-section">
+          <div class="ln-title">Pathways</div>
+          <div class="ln-item active"><span class="ln-dot" style="background:var(--health)"></span> Our Health</div>
+          <div class="ln-item"><span class="ln-dot" style="background:var(--families)"></span> Our Families</div>
+          <div class="ln-item"><span class="ln-dot" style="background:var(--neighborhood)"></span> Our Neighborhood</div>
+          <div class="ln-item"><span class="ln-dot" style="background:var(--voice)"></span> Our Voice</div>
+          <div class="ln-item"><span class="ln-dot" style="background:var(--money)"></span> Our Money</div>
+          <div class="ln-item"><span class="ln-dot" style="background:var(--planet)"></span> Our Planet</div>
+          <div class="ln-item"><span class="ln-dot" style="background:var(--bigger)"></span> The Bigger We</div>
+        </div>
+        <div class="ln-divider"></div>
+        <div class="ln-section">
+          <div class="ln-title">Engagement</div>
+          <div class="ladder-step" style="background:#fffbeb;border-left-color:#f59e0b;">
+            <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="5.5" stroke="#92400e" stroke-width="1.2"/></svg>
+            <span class="step-text">Read</span><span class="step-effort">~1 min</span>
+          </div>
+          <div class="ladder-step" style="background:#ecfdf5;border-left-color:#10b981;">
+            <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><circle cx="13" cy="16" r="5.5" stroke="#065f46" stroke-width="1.2" opacity="0.6"/><circle cx="19" cy="16" r="5.5" stroke="#065f46" stroke-width="1.2" opacity="0.6"/></svg>
+            <span class="step-text">Connect</span><span class="step-effort">~5 min</span>
+          </div>
+          <div class="ladder-step" style="background:#ecfdf5;border-left-color:#10b981;">
+            <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="13" r="5" stroke="#065f46" stroke-width="1" opacity="0.5"/><circle cx="12" cy="21" r="5" stroke="#065f46" stroke-width="1" opacity="0.5"/><circle cx="20" cy="21" r="5" stroke="#065f46" stroke-width="1" opacity="0.5"/></svg>
+            <span class="step-text">Attend</span><span class="step-effort">1-2 hrs</span>
+          </div>
+          <div class="ladder-step" style="background:#eff6ff;border-left-color:#3b82f6;">
+            <svg width="14" height="14" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="4" stroke="#1e40af" stroke-width="1" opacity="0.6"/><circle cx="16" cy="10" r="4" stroke="#1e40af" stroke-width="0.7" opacity="0.35"/><circle cx="21" cy="13" r="4" stroke="#1e40af" stroke-width="0.7" opacity="0.35"/><circle cx="21" cy="19" r="4" stroke="#1e40af" stroke-width="0.7" opacity="0.35"/><circle cx="16" cy="22" r="4" stroke="#1e40af" stroke-width="0.7" opacity="0.35"/><circle cx="11" cy="19" r="4" stroke="#1e40af" stroke-width="0.7" opacity="0.35"/><circle cx="11" cy="13" r="4" stroke="#1e40af" stroke-width="0.7" opacity="0.35"/></svg>
+            <span class="step-text">Organize</span><span class="step-effort">sustained</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- MAIN CONTENT with real DB images -->
+      <div class="main-content">
+        <div class="breadcrumb"><a href="#">Home</a> / <a href="#">Our Health</a> / Article</div>
+        <div class="hero-image" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a75157aa0a83c86f81e1a4_zero-suicide-model-hospitals.jpg');">
+          <div class="hero-image-overlay">
+            <div class="hero-pathway"><span class="dot" style="background:var(--health)"></span> Our Health</div>
+            <h1 class="serif">How Houston's Community Health Workers Are Transforming Neighborhood Care</h1>
+          </div>
+        </div>
+
+        <div class="content-block">
+          <h2>The Growing Role of Community Health Workers</h2>
+          <p>Community health workers are trusted members of the communities they serve. They help navigate the healthcare system, connect residents with preventive services, and provide culturally sensitive health education.</p>
+          <div class="skeleton" style="width:95%"></div><div class="skeleton" style="width:80%"></div>
+        </div>
+
+        <!-- Nudge cards with SVG icons instead of emojis -->
+        <div id="nudge-zone" style="display:flex;flex-direction:column;">
+          <div class="nudge-card nudge-understand" id="n-understand" style="order:0">
+            <svg class="nudge-icon" width="22" height="22" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="10" stroke="#92400e" stroke-width="1.5" opacity="0.6"/><circle cx="20" cy="15" r="4.5" stroke="#92400e" stroke-width="1" opacity="0.3"/><circle cx="20" cy="25" r="4.5" stroke="#92400e" stroke-width="1" opacity="0.3"/></svg>
+            <div class="nudge-content">
+              <div class="nudge-label" style="color:#92400e;">Since you're reading about this...</div>
+              <div class="nudge-title">3 more articles on Community Health Workers</div>
+              <div class="nudge-desc">CHW programs reduce ER visits by 30% / School-based health centers / Mental health first aid</div>
+              <a class="nudge-action" style="background:#fef3c7;color:#92400e;">Read next</a><span class="nudge-effort">~2 min each</span>
+            </div>
+          </div>
+          <div class="nudge-card nudge-involve" id="n-involve" style="order:1">
+            <svg class="nudge-icon" width="22" height="22" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="16" r="7" stroke="#065f46" stroke-width="1.5" opacity="0.5"/><circle cx="14" cy="26" r="7" stroke="#065f46" stroke-width="1.5" opacity="0.5"/><circle cx="26" cy="26" r="7" stroke="#065f46" stroke-width="1.5" opacity="0.5"/><circle cx="20" cy="22" r="2" fill="#065f46" opacity="0.2"/></svg>
+            <div class="nudge-content">
+              <div class="nudge-label" style="color:#065f46;">Something happening near you...</div>
+              <div class="nudge-title">Community Health Fair — Sunnyside</div>
+              <div class="nudge-desc">Free health screenings, CHW info sessions, family activities. March 15, 10am-2pm.</div>
+              <a class="nudge-action" style="background:#d1fae5;color:#065f46;">See details</a><span class="nudge-effort">~2 hours</span>
+            </div>
+          </div>
+          <div class="nudge-card nudge-deeper" id="n-deeper" style="order:2">
+            <svg class="nudge-icon" width="22" height="22" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="5" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/><circle cx="20" cy="15" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="20" cy="25" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="24.3" cy="17.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="24.3" cy="22.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="15.7" cy="17.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="15.7" cy="22.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/></svg>
+            <div class="nudge-content">
+              <div class="nudge-label" style="color:#1e40af;">Who decides on this?</div>
+              <div class="nudge-title">HB-2847: Community Health Worker Act</div>
+              <div class="nudge-desc">Currently in committee. Your state rep, Rep. Garcia, serves on the Health Committee.</div>
+              <a class="nudge-action" style="background:#dbeafe;color:#1e40af;">Track this policy</a><span class="nudge-effort">~1 min</span>
+            </div>
+          </div>
+          <div class="nudge-card nudge-resource" id="n-resource" style="order:3;display:none;">
+            <svg class="nudge-icon" width="22" height="22" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="8" stroke="#92400e" stroke-width="1.5" opacity="0.7"/><circle cx="24" cy="16" r="8" stroke="#92400e" stroke-width="1" opacity="0.35"/><circle cx="30.9" cy="20" r="8" stroke="#92400e" stroke-width="1" opacity="0.35"/><circle cx="30.9" cy="28" r="8" stroke="#92400e" stroke-width="1" opacity="0.35"/><circle cx="24" cy="32" r="8" stroke="#92400e" stroke-width="1" opacity="0.35"/><circle cx="17.1" cy="28" r="8" stroke="#92400e" stroke-width="1" opacity="0.35"/><circle cx="17.1" cy="20" r="8" stroke="#92400e" stroke-width="1" opacity="0.35"/></svg>
+            <div class="nudge-content">
+              <div class="nudge-label" style="color:#92400e;">Available near your ZIP code...</div>
+              <div class="nudge-title">Free Community Health Worker Services</div>
+              <div class="nudge-desc">The Harris Center offers free CHW home visits in your neighborhood. English, Spanish, Vietnamese.</div>
+              <a class="nudge-action" style="background:#fef3c7;color:#92400e;">Call (713) 970-7000</a><span class="nudge-effort">~5 min call</span>
+            </div>
+          </div>
+          <div class="nudge-card nudge-partner" id="n-partner" style="order:4;display:none;">
+            <svg class="nudge-icon" width="22" height="22" viewBox="0 0 48 48" fill="none"><circle cx="20" cy="20" r="9" stroke="#6b46c1" stroke-width="1.5" opacity="0.45"/><circle cx="28" cy="20" r="9" stroke="#6b46c1" stroke-width="1.5" opacity="0.45"/><circle cx="24" cy="28" r="9" stroke="#6b46c1" stroke-width="1.5" opacity="0.45"/></svg>
+            <div class="nudge-content">
+              <div class="nudge-label" style="color:#6b46c1;">Collaboration opportunity...</div>
+              <div class="nudge-title">Houston Health Dept seeks CHW program partners</div>
+              <div class="nudge-desc">Funding available for organizations expanding CHW programs into underserved super neighborhoods.</div>
+              <a class="nudge-action" style="background:#f5f3ff;color:#6b46c1;">Connect</a><span class="nudge-effort">partnership</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-block">
+          <h2>Impact on Health Outcomes</h2>
+          <p>Neighborhoods with active CHW programs see measurable improvements in chronic disease management, prenatal care, and mental health screening.</p>
+          <div class="skeleton" style="width:88%"></div>
+        </div>
+        <div class="cta-row">
+          <a class="cta-btn cta-primary">View original source</a>
+          <a class="cta-btn cta-secondary">Suggest an edit</a>
+        </div>
+      </div>
+
+      <!-- WAYFINDER SIDEBAR with SVG tier icons + DB images -->
+      <aside class="wayfinder">
+        <div class="wf-header">
+          <svg width="16" height="16" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="6" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/><circle cx="24" cy="18" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.35"/><circle cx="29.2" cy="21" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.35"/><circle cx="29.2" cy="27" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.35"/><circle cx="24" cy="30" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.35"/><circle cx="18.8" cy="27" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.35"/><circle cx="18.8" cy="21" r="6" stroke="#C75B2A" stroke-width="1" opacity="0.35"/></svg>
+          <h3 class="serif">Connected Through the Community</h3>
+        </div>
+
+        <div class="wf-org-section">
+          <div class="wf-org"><div class="wf-org-logo">HHD</div><div class="wf-org-name">Houston Health Dept</div></div>
+          <div class="wf-actions"><a class="wf-action wf-donate">Donate</a> <a class="wf-action wf-volunteer">Volunteer</a></div>
+          <div class="wf-org"><div class="wf-org-logo">UTH</div><div class="wf-org-name">UTHealth Houston</div></div>
+        </div>
+
+        <div class="wf-focus-dots">
+          <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Community Health</a>
+          <a class="wf-focus-dot"><span class="dot" style="background:var(--health)"></span> Healthcare Access</a>
+          <a class="wf-focus-dot"><span class="dot" style="background:var(--families)"></span> Youth Wellness</a>
+        </div>
+
+        <div class="wf-tiers-container" id="wf-tiers">
+          <details class="wf-tier primary" id="t-understand" open data-tier="understand" style="order:0">
+            <summary>
+              <span class="wf-tier-left">
+                <svg width="14" height="14" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="10" stroke="#92400e" stroke-width="1.5" opacity="0.6"/><circle cx="20" cy="15" r="4.5" stroke="#92400e" stroke-width="1" opacity="0.3"/><circle cx="20" cy="25" r="4.5" stroke="#92400e" stroke-width="1" opacity="0.3"/></svg>
+                <span>Understand</span>
+                <span class="wf-tier-priority" id="p-understand"></span>
+              </span>
+              <span class="wf-tier-count" style="background:#fef3c7;color:#92400e;">5</span>
+            </summary>
+            <div class="wf-tier-body">
+              <a class="wf-content-card"><div class="wf-content-thumb" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a50e8efdbf3c3c5d210c18_ms-rachel-accurso-iran-strike.jpg');"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">CHW Programs Reduce ER Visits by 30%</span></div></a>
+              <a class="wf-content-card"><div class="wf-content-thumb" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a730b1186e0e0cef98e04f_jane-goodall-day-of-action.jpg');"></div><div><span class="wf-pathway-dot" style="background:var(--families)"></span><span class="wf-content-title">How School-Based Health Centers Work</span></div></a>
+              <a class="wf-content-card"><div class="wf-content-thumb" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a5cb7797d731871a1ebe0e_catherine-o-hara-acting-award-win.jpg');"></div><div><span class="wf-pathway-dot" style="background:var(--health)"></span><span class="wf-content-title">Mental Health First Aid Training Guide</span></div></a>
+              <div style="padding:3px 0;font-size:8px;font-style:italic;color:var(--muted);line-height:1.4;border-left:2px solid var(--border);padding-left:6px;margin-top:2px;">
+                "CHWs bridge the gap between clinical care and community need..." <span style="font-style:normal;color:var(--muted);">p.14</span>
+              </div>
+            </div>
+          </details>
+
+          <details class="wf-tier secondary" id="t-involve" open data-tier="involve" style="order:1">
+            <summary>
+              <span class="wf-tier-left">
+                <svg width="14" height="14" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="16" r="7" stroke="#065f46" stroke-width="1.5" opacity="0.5"/><circle cx="14" cy="26" r="7" stroke="#065f46" stroke-width="1.5" opacity="0.5"/><circle cx="26" cy="26" r="7" stroke="#065f46" stroke-width="1.5" opacity="0.5"/><circle cx="20" cy="22" r="2" fill="#065f46" opacity="0.15"/></svg>
+                <span>Get Involved</span>
+                <span class="wf-tier-priority" id="p-involve"></span>
+              </span>
+              <span class="wf-tier-count" style="background:#d1fae5;color:#065f46;">4</span>
+            </summary>
+            <div class="wf-tier-body">
+              <div class="wf-involved-card"><span class="wf-involved-name">Community Health Fair</span><br><span class="wf-badge wf-badge-time">Mar 15</span> <span class="wf-badge wf-badge-effort">attend ~2hrs</span></div>
+              <div class="wf-involved-card"><span class="wf-involved-name">CHW Training Program</span><br><span class="wf-badge wf-badge-time">Apr-Jun</span> <span class="wf-badge wf-badge-effort">8 weeks</span></div>
+              <div class="wf-involved-card"><span class="wf-involved-name">Free Health Screening — Kashmere</span><br><span class="wf-badge wf-badge-time">Mar 22</span> <span class="wf-badge wf-badge-effort">walk-in</span></div>
+              <div class="wf-involved-card"><span class="wf-involved-name">Volunteer: Health Literacy Mentor</span><br><span class="wf-badge wf-badge-time">Ongoing</span> <span class="wf-badge wf-badge-effort">2hrs/wk</span></div>
+            </div>
+          </details>
+
+          <details class="wf-tier tertiary" id="t-deeper" data-tier="deeper" style="order:2">
+            <summary>
+              <span class="wf-tier-left">
+                <svg width="14" height="14" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="5" stroke="#1e40af" stroke-width="1.2" opacity="0.6"/><circle cx="20" cy="15" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="20" cy="25" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="24.3" cy="17.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="24.3" cy="22.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="15.7" cy="17.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/><circle cx="15.7" cy="22.5" r="5" stroke="#1e40af" stroke-width="0.8" opacity="0.35"/></svg>
+                <span>Go Deeper</span>
+                <span class="wf-tier-priority" id="p-deeper"></span>
+              </span>
+              <span class="wf-tier-count" style="background:#dbeafe;color:#1e40af;">4</span>
+            </summary>
+            <div class="wf-tier-body">
+              <div class="wf-official-card"><div class="wf-official-photo">MG</div><div><div class="wf-official-name">Rep. Mary Garcia</div><div class="wf-official-title">State Rep, Dist. 145 — <em>your rep</em></div></div></div>
+              <div class="wf-official-card"><div class="wf-official-photo">LH</div><div><div class="wf-official-name">Lina Hidalgo</div><div class="wf-official-title">County Judge</div></div></div>
+              <div class="wf-policy-card"><svg width="10" height="10" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="5" stroke="#4299e1" stroke-width="1.2"/><circle cx="16" cy="11" r="5" stroke="#4299e1" stroke-width="0.8" opacity="0.35"/></svg><div><span class="wf-bill">HB-2847</span><br><span class="wf-policy-name">Community Health Worker Act</span></div></div>
+              <div style="display:flex;gap:4px;padding:3px 0;font-size:8px;">
+                <svg width="10" height="10" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="5" stroke="#90cdf4" stroke-width="1"/></svg>
+                <div><span style="font-weight:600;color:var(--text);font-size:9px;">Episcopal Health Foundation</span> <a style="font-size:8px;color:var(--accent);text-decoration:none;margin-left:2px;">Visit</a></div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="wf-engagement-hint" id="e-hint">
+          <strong>Your next step:</strong> Read one related article, then check out the health fair happening March 15 near you.
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<script>
+const archetypes = {
+  explorer: {
+    tierOrder: ['understand','involve','deeper'], tierOpen: ['understand','involve'],
+    nudgeOrder: ['understand','involve','deeper'], nudgeHidden: ['resource','partner'],
+    tag: 'Explorer', tagBg: '#fef3c7', tagFg: '#92400e',
+    text: '<strong>Progressive engagement:</strong> Understand, then Get Involved, then Go Deeper. Lowest effort surfaces first.',
+    hint: '<strong>Your next step:</strong> Read one related article, then check out the health fair happening March 15 near you.',
+    priorities: {}
+  },
+  seeker: {
+    tierOrder: ['involve','understand','deeper'], tierOpen: ['involve','understand'],
+    nudgeOrder: ['resource','involve','understand'], nudgeHidden: ['deeper','partner'],
+    tag: 'Seeker', tagBg: '#fef3c7', tagFg: '#92400e',
+    text: '<strong>Resources and services first.</strong> Nearest available services at top. Walk-in and free options before commitments.',
+    hint: '<strong>Available now:</strong> Free CHW home visits in your ZIP code. Call The Harris Center at (713) 970-7000.',
+    priorities: { involve: '1st', understand: '2nd', deeper: '3rd' }
+  },
+  learner: {
+    tierOrder: ['understand','deeper','involve'], tierOpen: ['understand','deeper'],
+    nudgeOrder: ['understand','deeper','involve'], nudgeHidden: ['resource','partner'],
+    tag: 'Learner', tagBg: '#dbeafe', tagFg: '#1e40af',
+    text: '<strong>Understanding first, then systems.</strong> Articles and research at top. Policies and officials second. Actions when ready.',
+    hint: '<strong>Go deeper:</strong> Read how CHW programs reduce ER visits by 30%, then explore the policy landscape around HB-2847.',
+    priorities: { understand: '1st', deeper: '2nd', involve: '3rd' }
+  },
+  builder: {
+    tierOrder: ['involve','understand','deeper'], tierOpen: ['involve'],
+    nudgeOrder: ['involve','understand','deeper'], nudgeHidden: ['resource','partner'],
+    tag: 'Builder', tagBg: '#d1fae5', tagFg: '#065f46',
+    text: '<strong>Action first.</strong> Soonest events and lowest-commitment opportunities at top. Context when you want it.',
+    hint: '<strong>Jump in:</strong> Community Health Fair in Sunnyside, March 15. Free, family-friendly, no sign-up needed.',
+    priorities: { involve: '1st', understand: '2nd', deeper: '3rd' }
+  },
+  watchdog: {
+    tierOrder: ['deeper','understand','involve'], tierOpen: ['deeper','understand'],
+    nudgeOrder: ['deeper','understand','involve'], nudgeHidden: ['resource','partner'],
+    tag: 'Watchdog', tagBg: '#f5f3ff', tagFg: '#6b46c1',
+    text: '<strong>Accountability first.</strong> Your elected officials and active policies at top. Your district representatives prioritized.',
+    hint: '<strong>Track this:</strong> HB-2847 is in committee. Your rep, Mary Garcia, sits on the Health Committee. Public hearing March 20.',
+    priorities: { deeper: '1st', understand: '2nd', involve: '3rd' }
+  },
+  partner: {
+    tierOrder: ['involve','deeper','understand'], tierOpen: ['involve','deeper'],
+    nudgeOrder: ['partner','involve','deeper'], nudgeHidden: ['resource','understand'],
+    tag: 'Partner', tagBg: '#fef3c7', tagFg: '#92400e',
+    text: '<strong>Collaboration first.</strong> Partnership and funding opportunities at top. Policy landscape for institutional alignment.',
+    hint: '<strong>Connect:</strong> Houston Health Dept seeking CHW program partners with funding for underserved super neighborhoods.',
+    priorities: { involve: '1st', deeper: '2nd', understand: '3rd' }
+  }
+};
+
+function setArchetype(name) {
+  const c = archetypes[name];
+  // Buttons
+  document.querySelectorAll('.archetype-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`.archetype-btn`).forEach(b => { if(b.onclick && b.getAttribute('onclick')?.includes(name)) b.classList.add('active'); });
+  event?.target?.closest('.archetype-btn')?.classList.add('active');
+  // Left nav
+  document.querySelectorAll('.arch-nav').forEach(n => n.classList.remove('active'));
+  document.getElementById(`an-${name}`)?.classList.add('active');
+  // Ordering bar
+  document.getElementById('o-tag').textContent = c.tag;
+  document.getElementById('o-tag').style.background = c.tagBg;
+  document.getElementById('o-tag').style.color = c.tagFg;
+  document.getElementById('o-text').innerHTML = c.text;
+  // Tiers
+  const tc = document.getElementById('wf-tiers');
+  tc.classList.add('reordering');
+  setTimeout(() => tc.classList.remove('reordering'), 500);
+  c.tierOrder.forEach((t,i) => {
+    const el = document.getElementById(`t-${t}`);
+    el.style.order = i;
+    el.open = c.tierOpen.includes(t);
+    el.className = 'wf-tier ' + (i===0?'primary':i===1?'secondary':'tertiary');
+    const p = document.getElementById(`p-${t}`);
+    if(c.priorities[t]) { p.style.display='inline'; p.textContent=c.priorities[t]; }
+    else { p.style.display='none'; }
+  });
+  // Nudges
+  const nz = document.getElementById('nudge-zone');
+  nz.classList.add('reordering');
+  setTimeout(() => nz.classList.remove('reordering'), 600);
+  ['understand','involve','deeper','resource','partner'].forEach(n => {
+    const el = document.getElementById(`n-${n}`);
+    if(el) el.style.display = 'none';
+  });
+  c.nudgeOrder.forEach((n,i) => {
+    const el = document.getElementById(`n-${n}`);
+    if(el) { el.style.display='flex'; el.style.order=i; }
+  });
+  // Hint
+  document.getElementById('e-hint').innerHTML = c.hint;
+}
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.getElementById(id).classList.add('visible');
+  document.querySelectorAll('.top-bar a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

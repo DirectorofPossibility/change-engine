@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Exchange</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Serif+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F0EAE0; --cream: #F7F2EA; --text: #2d2d2d; --accent: #C75B2A;
+    --tan: #E8DFCF; --sand: #D9CDB8; --warm: #C4B49A;
+    --red: #c43c4c; --muted: #6B6560; --muted-lt: #9B9590; --border: #D4CCBE;
+    --learn: #3182ce; --resource: #C75B2A; --action: #38a169; --account: #805ad5;
+    --health: #e53e3e; --families: #dd6b20; --hood: #d69e2e; --voice: #38a169;
+    --money: #3182ce; --planet: #319795; --bigger: #805ad5;
+    --community: #805ad5; --learning: #3182ce; --rescenter: #C75B2A; --actioncenter: #38a169;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --mono: 'Space Mono', monospace;
+    --hand: 'Caveat', cursive;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:var(--sans); background:var(--bg); color:var(--text);
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(199,91,42,0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(128,90,213,0.02) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C4B49A' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  a { text-decoration:none; color:inherit; cursor:pointer; }
+  img { display:block; }
+  button { cursor:pointer; font-family:var(--sans); }
+
+  /* Noise texture overlay for sections */
+  .texture {
+    position:relative;
+  }
+  .texture::after {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity:0.5; mix-blend-mode:multiply;
+  }
+
+  /* Decorative FOL floating elements */
+  .fol-float {
+    position:absolute; pointer-events:none; opacity:0.04;
+    animation: folSpin 60s linear infinite;
+  }
+  @keyframes folSpin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+
+  /* Tape / sticker style decorations */
+  .tape {
+    position:absolute; width:60px; height:20px; background:rgba(199,91,42,0.15);
+    transform:rotate(-5deg); border-radius:2px; z-index:6;
+  }
+  .sticker {
+    position:absolute; z-index:6; background:var(--accent); color:white;
+    font-family:var(--hand); font-size:14px; font-weight:700;
+    padding:6px 12px; border-radius:50%; transform:rotate(8deg);
+    box-shadow:2px 2px 0 rgba(0,0,0,0.15);
+  }
+
+  /* ═══ SCREENS ═══ */
+  .screen { display:none; min-height:100vh; animation: fadeIn 0.4s ease; }
+  .screen.active { display:block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes slideUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ═══ GLOBAL NAV ═══ */
+  .topnav {
+    position:sticky; top:0; z-index:100; background:rgba(247,242,234,0.95);
+    backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+    padding:10px 32px;
+  }
+  .topnav .inner {
+    max-width:1200px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .topnav .brand { display:flex; align-items:center; gap:10px; cursor:pointer; }
+  .topnav .brand-name { font-family:var(--serif); font-size:17px; }
+  .main-nav { display:flex; align-items:center; gap:4px; }
+  .nav-item { position:relative; }
+  .nav-link {
+    padding:6px 12px; font-size:13px; font-weight:600; color:var(--text);
+    border-radius:6px; cursor:pointer; transition:all 0.15s;
+  }
+  .nav-link:hover { background:var(--bg); color:var(--accent); }
+  .nav-drop {
+    display:none; position:absolute; top:100%; left:0; z-index:120;
+    background:white; border:1.5px solid var(--border); border-radius:8px;
+    padding:6px 0; min-width:180px; box-shadow:0 8px 24px rgba(0,0,0,0.1);
+    margin-top:4px;
+  }
+  .nav-item:hover .nav-drop { display:block; }
+  .nd-link {
+    display:block; padding:7px 16px; font-size:13px; font-weight:500;
+    color:var(--text); transition:all 0.1s; cursor:pointer;
+  }
+  .nd-link:hover { background:var(--bg); color:var(--accent); }
+
+  .topnav .nav-r { display:flex; align-items:center; gap:14px; font-size:13px; font-weight:600; }
+  .topnav .zip-input {
+    display:flex; align-items:center; gap:4px; padding:5px 10px; border-radius:8px;
+    border:1.5px solid var(--border); background:white; font-family:var(--mono); font-size:11px;
+  }
+  .topnav .zip-input input {
+    width:50px; border:none; outline:none; font-family:var(--mono); font-size:11px;
+    background:transparent; text-align:center;
+  }
+  .topnav .zip-input input::placeholder { color:var(--muted-lt); }
+
+  .lang-toggle { display:flex; background:var(--bg); border-radius:6px; padding:2px; gap:1px; }
+  .lang-btn {
+    padding:3px 8px; border:none; background:transparent; font-family:var(--mono);
+    font-size:10px; font-weight:700; color:var(--muted); border-radius:4px;
+    cursor:pointer; transition:all 0.15s;
+  }
+  .lang-btn.active { background:var(--accent); color:white; }
+  .lang-btn:hover:not(.active) { color:var(--text); }
+
+  .sign-in-btn {
+    padding:5px 12px; border-radius:7px; border:1.5px solid var(--border);
+    font-size:11px; font-weight:700; background:white; color:var(--text);
+    cursor:pointer; transition:all 0.15s;
+  }
+  .sign-in-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* ZIP pulse + tooltip */
+  .zip-wrapper { position:relative; }
+  .zip-pulse { animation: zipGlow 2s ease-in-out infinite; }
+  @keyframes zipGlow {
+    0%, 100% { border-color:var(--border); box-shadow:none; }
+    50% { border-color:var(--accent); box-shadow:0 0 12px rgba(199,91,42,0.35); }
+  }
+  .zip-tooltip {
+    display:none; position:absolute; top:calc(100% + 8px); right:0; z-index:120;
+    background:var(--text); color:white; font-size:12px; font-weight:600;
+    line-height:1.5; padding:10px 14px; border-radius:8px; width:240px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.2);
+  }
+  .zip-tooltip::before {
+    content:''; position:absolute; top:-6px; right:20px;
+    width:12px; height:12px; background:var(--text); transform:rotate(45deg);
+  }
+  .zip-wrapper:hover .zip-tooltip { display:block; }
+
+  .spectrum { display:flex; height:4px; }
+  .spectrum div { flex:1; }
+
+  .fol { position:absolute; opacity:0.06; pointer-events:none; }
+
+  /* ═══ HOME HERO ═══ */
+  .home-hero {
+    background:var(--cream); position:relative; overflow:hidden; padding:60px 32px 40px;
+  }
+  .home-hero::before {
+    content:''; position:absolute; inset:0;
+    background-image:
+      radial-gradient(circle,rgba(44,44,44,0.04) 1px,transparent 1px),
+      radial-gradient(circle at 85% 15%, rgba(199,91,42,0.06) 0%, transparent 40%),
+      radial-gradient(circle at 10% 85%, rgba(128,90,213,0.04) 0%, transparent 40%);
+    background-size:20px 20px, 100% 100%, 100% 100%;
+  }
+  .home-hero .inner {
+    position:relative; z-index:1; max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1fr 440px; gap:40px; align-items:center;
+  }
+  .home-hero h1 {
+    font-family:var(--serif); font-size:clamp(2.8rem,5.5vw,4.2rem);
+    line-height:1.05; letter-spacing:-0.03em; margin-bottom:20px;
+  }
+  .home-hero h1 .pop { color:var(--accent); }
+  .home-hero h1 .hand { font-family:var(--hand); font-size:1.15em; font-weight:700; }
+  .home-hero .lead { font-size:18px; line-height:1.7; color:var(--muted); margin-bottom:24px; }
+  .home-hero .lead strong { color:var(--text); font-weight:700; }
+  .home-hero .search { position:relative; max-width:480px; margin-bottom:16px; }
+  .home-hero .search input {
+    width:100%; padding:14px 100px 14px 44px;
+    border:2px solid var(--text); border-radius:12px;
+    font-size:15px; background:white; outline:none;
+  }
+  .home-hero .search input:focus { border-color:var(--accent); }
+  .home-hero .search .s-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); }
+  .home-hero .search .s-btn {
+    position:absolute; right:5px; top:50%; transform:translateY(-50%);
+    padding:9px 18px; background:var(--text); color:white; border:none; border-radius:8px;
+    font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase;
+  }
+  .quick-row { display:flex; gap:8px; font-size:14px; font-weight:600; }
+  .quick-row a {
+    padding:5px 12px; border-radius:7px; border:1.5px solid var(--border);
+    background:white; transition:all 0.15s;
+  }
+  .quick-row a:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Collage */
+  .collage { position:relative; height:400px; }
+  .collage .frame {
+    position:absolute; overflow:hidden; border-radius:10px;
+    border:3px solid white; box-shadow:0 8px 28px rgba(0,0,0,0.12);
+  }
+  .collage .frame img { width:100%; height:100%; object-fit:cover; }
+  .collage .fr1 { width:280px; height:200px; top:0; left:30px; transform:rotate(-3deg); z-index:2; }
+  .collage .fr2 { width:190px; height:140px; top:140px; left:-10px; transform:rotate(4deg); z-index:1; }
+  .collage .fr3 { width:250px; height:180px; top:180px; right:0; transform:rotate(-1.5deg); z-index:3; }
+  .collage .fstat {
+    position:absolute; z-index:5; background:white; border:2px solid var(--text);
+    border-radius:10px; padding:8px 14px; font-family:var(--mono); font-size:10px;
+    box-shadow:3px 3px 0 var(--text);
+  }
+  .collage .fstat .n { font-size:28px; font-weight:900; color:var(--accent); display:block; line-height:1; }
+
+  /* Gap stats */
+  .gap-bar {
+    max-width:1200px; margin:0 auto; padding:32px 32px 0;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    position:relative; z-index:1;
+  }
+  .gstat {
+    background:var(--cream); border:2px solid var(--text); border-radius:12px;
+    padding:20px; text-align:center; box-shadow:3px 3px 0 var(--text);
+    position:relative; overflow:hidden;
+  }
+  .gstat .pct { font-family:var(--hand); font-size:52px; font-weight:700; line-height:1; margin-bottom:6px; }
+  .gstat .lbl { font-size:15px; font-weight:600; color:var(--muted); }
+  .gstat .src { font-family:var(--mono); font-size:9px; color:var(--muted-lt); text-transform:uppercase; letter-spacing:0.1em; margin-top:6px; }
+
+  /* ═══ QUICK ACCESS GRID ═══ */
+  .placeholders {
+    max-width:1200px; margin:0 auto; padding:40px 32px 24px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  }
+  @media(max-width:900px){ .placeholders { grid-template-columns:repeat(2,1fr); } }
+  .ph-card {
+    aspect-ratio:1; border-radius:16px;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    gap:6px; transition:all 0.3s; cursor:pointer; position:relative; overflow:hidden;
+  }
+  .ph-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,0.12); }
+  .ph-card .ph-fol {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    opacity:0.12; transition:all 0.5s;
+  }
+  .ph-card:hover .ph-fol { opacity:0.2; transform:translate(-50%,-50%) scale(1.08) rotate(15deg); }
+  .ph-card .ph-label {
+    font-family:var(--serif); font-size:18px; font-weight:700; position:relative; z-index:2;
+    text-shadow:0 1px 3px rgba(0,0,0,0.1);
+  }
+  .ph-card .ph-sub {
+    font-size:11px; text-align:center; padding:0 16px; line-height:1.3;
+    position:relative; z-index:2; opacity:0.7;
+  }
+  .ph-card.ph-cta { border:3px solid var(--accent); }
+  .ph-card.ph-cta:hover { border-color:var(--accent); background:var(--bg-dark)!important; }
+  .ph-card.ph-cta:hover .ph-label { color:white; }
+  .ph-card.ph-cta:hover .ph-sub { color:rgba(255,255,255,0.6); }
+
+  /* ═══ SECTION ENTRY POINTS ═══ */
+  .section-entries {
+    max-width:1200px; margin:0 auto; padding:16px 32px 48px;
+  }
+  .section-entries h2 {
+    font-family:var(--serif); font-size:1.8rem; margin-bottom:6px; text-align:center;
+  }
+  .section-entries h2 .hand { font-family:var(--hand); font-size:1.2em; font-weight:700; }
+  .section-entries .se-sub {
+    text-align:center; font-size:15px; color:var(--muted); max-width:500px; margin:0 auto 24px;
+  }
+  .se-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  }
+  .se-card {
+    background:white; border:2px solid var(--border); border-radius:14px;
+    padding:24px; cursor:pointer; transition:all 0.25s; position:relative; overflow:hidden;
+  }
+  .se-card:hover { border-color:var(--text); transform:translateY(-4px); box-shadow:4px 4px 0 var(--text); }
+  .se-card h3 { font-family:var(--serif); font-size:1.3rem; margin-bottom:6px; }
+  .se-card p { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:12px; }
+  .se-card .se-links { display:flex; flex-wrap:wrap; gap:4px; }
+  .se-card .se-tag {
+    font-size:11px; padding:3px 8px; border-radius:4px; background:var(--bg); color:var(--muted);
+  }
+  .se-card .se-cta {
+    display:block; margin-top:12px;
+    font-family:var(--mono); font-size:12px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.04em; color:var(--accent);
+  }
+  .se-card .se-bar {
+    position:absolute; left:0; top:0; bottom:0; width:4px;
+  }
+
+  /* ═══ ADVENTURE CTA on homepage ═══ */
+  .adventure-cta {
+    max-width:1200px; margin:0 auto; padding:0 32px 48px; text-align:center;
+  }
+  .adventure-cta .ac-box {
+    background:var(--cream); border:2px solid var(--text); border-radius:16px;
+    padding:32px 40px; position:relative; overflow:hidden;
+    box-shadow:4px 4px 0 var(--text);
+  }
+  .adventure-cta h2 { font-family:var(--serif); font-size:1.6rem; margin-bottom:8px; }
+  .adventure-cta p { font-size:15px; color:var(--muted); max-width:480px; margin:0 auto 16px; line-height:1.6; }
+  .adventure-cta .ac-btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 28px; background:var(--text); color:white; border:none;
+    border-radius:10px; font-family:var(--mono); font-size:13px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.04em; cursor:pointer;
+    transition:all 0.2s;
+  }
+  .adventure-cta .ac-btn:hover { background:var(--accent); }
+
+  /* ═══ ADVENTURE SCREEN ═══ */
+  .adv-page { max-width:900px; margin:0 auto; padding:48px 32px; }
+  .adv-step { display:none; animation:fadeIn 0.4s ease; }
+  .adv-step.active { display:block; }
+
+  .adv-step-head { text-align:center; margin-bottom:32px; }
+  .adv-step-head .adv-step-num {
+    font-family:var(--mono); font-size:11px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.08em; color:var(--muted-lt); margin-bottom:8px;
+  }
+  .adv-step-head h2 { font-family:var(--serif); font-size:2rem; margin-bottom:8px; }
+  .adv-step-head h2 .hand { font-family:var(--hand); font-size:1.2em; font-weight:700; }
+  .adv-step-head p { font-size:15px; color:var(--muted); max-width:500px; margin:0 auto; line-height:1.6; }
+
+  .adv-archetype-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:32px; }
+  .adv-arch {
+    background:white; border:2px solid var(--border); border-radius:14px;
+    padding:20px; cursor:pointer; transition:all 0.25s; text-align:center;
+  }
+  .adv-arch:hover { border-color:var(--text); transform:translateY(-3px); box-shadow:3px 3px 0 var(--text); }
+  .adv-arch.selected { border-color:var(--accent); background:rgba(199,91,42,0.04); box-shadow:3px 3px 0 var(--accent); }
+  .adv-arch h3 { font-family:var(--hand); font-size:24px; font-weight:700; margin:8px 0 4px; }
+  .adv-arch p { font-size:12px; color:var(--muted); line-height:1.4; }
+
+  .adv-center-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:32px; }
+  .adv-center {
+    background:white; border:2px solid var(--border); border-radius:14px;
+    padding:28px; cursor:pointer; transition:all 0.25s; position:relative; overflow:hidden;
+  }
+  .adv-center:hover { border-color:var(--text); transform:translateY(-4px); box-shadow:4px 4px 0 var(--text); }
+  .adv-center.selected { border-color:var(--accent); box-shadow:4px 4px 0 var(--accent); }
+  .adv-center .ac-bar { position:absolute; left:0; top:0; bottom:0; width:5px; }
+  .adv-center h3 { font-family:var(--serif); font-size:1.3rem; margin-bottom:6px; padding-left:12px; }
+  .adv-center p { font-size:13px; color:var(--muted); line-height:1.5; padding-left:12px; }
+  .adv-center .ac-items {
+    margin-top:12px; padding-left:12px;
+    display:flex; flex-wrap:wrap; gap:4px;
+  }
+  .adv-center .ac-items span {
+    font-size:11px; padding:3px 8px; border-radius:4px; background:var(--bg); color:var(--muted);
+  }
+
+  .adv-nav { display:flex; justify-content:center; gap:12px; margin-top:24px; }
+  .adv-nav button {
+    padding:10px 24px; border-radius:8px; font-family:var(--mono); font-size:12px;
+    font-weight:700; text-transform:uppercase; letter-spacing:0.04em; cursor:pointer; transition:all 0.2s;
+  }
+  .adv-btn-back {
+    background:white; border:1.5px solid var(--border); color:var(--muted);
+  }
+  .adv-btn-back:hover { border-color:var(--text); color:var(--text); }
+  .adv-btn-next {
+    background:var(--text); border:1.5px solid var(--text); color:white;
+  }
+  .adv-btn-next:hover { background:var(--accent); border-color:var(--accent); }
+
+  /* Progress dots */
+  .adv-progress { display:flex; justify-content:center; gap:8px; margin-bottom:32px; }
+  .adv-dot {
+    width:10px; height:10px; border-radius:50%; background:var(--border); transition:all 0.2s;
+  }
+  .adv-dot.active { background:var(--accent); transform:scale(1.3); }
+  .adv-dot.done { background:var(--action); }
+
+  /* ═══ SECTION PAGE LAYOUT ═══ */
+  .section-page { max-width:1200px; margin:0 auto; padding:48px 32px; }
+  .section-page-head { margin-bottom:32px; }
+  .section-page-head h1 { font-family:var(--serif); font-size:2.4rem; margin-bottom:8px; }
+  .section-page-head .sp-desc { font-size:16px; color:var(--muted); line-height:1.7; max-width:700px; }
+  .section-page-head .sp-bar { width:60px; height:4px; border-radius:2px; margin-top:16px; }
+
+  .sp-section { margin-bottom:40px; }
+  .sp-section-label {
+    font-family:var(--serif); font-size:1.3rem; margin-bottom:16px;
+    padding-bottom:8px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:8px;
+  }
+  .sp-section-label .sp-dot { width:8px; height:8px; border-radius:50%; }
+
+  .sp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .sp-grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+
+  .sp-card {
+    background:white; border:1.5px solid var(--border); border-radius:12px;
+    padding:20px; cursor:pointer; transition:all 0.2s; position:relative;
+  }
+  .sp-card:hover { border-color:var(--text); transform:translateY(-3px); box-shadow:3px 3px 0 var(--text); }
+  .sp-card .sp-card-bar { position:absolute; left:0; top:12px; bottom:12px; width:3px; border-radius:2px; }
+  .sp-card h4 { font-size:15px; font-weight:700; margin-bottom:4px; padding-left:10px; }
+  .sp-card p { font-size:12px; color:var(--muted); line-height:1.4; padding-left:10px; }
+  .sp-card .sp-card-meta {
+    margin-top:8px; padding-left:10px;
+    font-family:var(--mono); font-size:10px; color:var(--muted-lt);
+    text-transform:uppercase; letter-spacing:0.06em;
+  }
+
+  /* Taxonomy breadcrumb */
+  .taxonomy-trail {
+    display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+    margin-bottom:16px; font-size:12px; color:var(--muted);
+  }
+  .taxonomy-trail .tt-sep { color:var(--muted-lt); }
+  .taxonomy-trail a { color:var(--accent); font-weight:600; }
+  .taxonomy-trail a:hover { text-decoration:underline; }
+
+  /* ═══ FULL-WIDTH ENTRY BLOCKS ═══ */
+  .entry-blocks { position:relative; z-index:1; }
+  .entry-block {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:48px 60px; cursor:pointer; position:relative; overflow:hidden;
+    transition:all 0.2s; min-height:140px;
+  }
+  .entry-block:hover { filter:brightness(1.08); }
+  .entry-block .eb-left {
+    display:flex; align-items:center; gap:20px; position:relative; z-index:1;
+  }
+  .entry-block .eb-left h3 {
+    font-family:var(--serif); font-size:clamp(1.8rem,3.5vw,2.6rem);
+    color:white; line-height:1.1; text-decoration:underline;
+    text-decoration-thickness:2px; text-underline-offset:4px;
+  }
+  .entry-block .eb-right {
+    max-width:400px; font-size:16px; color:rgba(255,255,255,0.85);
+    line-height:1.6; position:relative; z-index:1;
+  }
+  .entry-block .eb-fol {
+    position:absolute; right:30%; top:50%; transform:translate(50%,-50%);
+    opacity:0.08; pointer-events:none;
+  }
+
+  /* ═══ SLIDE-OUT MENU ═══ */
+  .menu-overlay {
+    position:fixed; inset:0; background:rgba(44,44,44,0.4); z-index:200;
+    opacity:0; pointer-events:none; transition:opacity 0.25s;
+  }
+  .menu-overlay.open { opacity:1; pointer-events:auto; }
+  .menu-drawer {
+    position:fixed; top:0; left:0; bottom:0; width:320px; z-index:210;
+    background:var(--cream); border-right:2px solid var(--text);
+    transform:translateX(-100%); transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow-y:auto; display:flex; flex-direction:column;
+  }
+  .menu-overlay.open .menu-drawer { transform:translateX(0); }
+  .menu-drawer .md-head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:2px solid var(--text);
+  }
+  .menu-drawer .md-brand { display:flex; align-items:center; gap:8px; }
+  .menu-drawer .md-brand span { font-family:var(--serif); font-size:15px; font-weight:700; }
+  .menu-drawer .md-close {
+    width:32px; height:32px; border:1.5px solid var(--border); border-radius:6px;
+    background:white; display:flex; align-items:center; justify-content:center;
+    font-size:18px; color:var(--muted); cursor:pointer; transition:all 0.15s;
+  }
+  .menu-drawer .md-close:hover { border-color:var(--text); color:var(--text); }
+  .menu-drawer .md-section { padding:16px 20px; border-bottom:1px solid var(--border); }
+  .menu-drawer .md-section:last-child { border-bottom:none; }
+  .menu-drawer .md-label {
+    font-family:var(--hand); font-size:20px; font-weight:600;
+    color:var(--text); margin-bottom:10px;
+  }
+  .menu-drawer .md-fol { flex-shrink:0; }
+  .md-toggle {
+    display:flex; align-items:center; justify-content:space-between; width:100%;
+    background:none; border:none; padding:0; cursor:pointer;
+  }
+  .md-toggle .md-chevron {
+    font-size:16px; color:var(--muted-lt); transition:transform 0.2s;
+    font-family:var(--sans); font-weight:400; line-height:1;
+  }
+  .md-toggle.open .md-chevron { transform:rotate(90deg); }
+  .md-body { display:none; margin-top:8px; }
+  .md-toggle.open + .md-body { display:block; }
+  .menu-drawer .md-link {
+    display:flex; align-items:center; gap:10px; padding:8px 0;
+    font-size:14px; font-weight:600; color:var(--text); cursor:pointer; transition:color 0.15s;
+  }
+  .menu-drawer .md-link:hover { color:var(--accent); }
+  .menu-drawer .md-archetype {
+    display:flex; align-items:center; gap:8px; padding:8px 12px;
+    border-radius:7px; border:1px solid var(--border); background:white;
+    font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s;
+  }
+  .menu-drawer .md-archetype:hover { border-color:var(--accent); }
+  .menu-drawer .md-archetype-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .menu-drawer .md-search {
+    display:flex; align-items:center; gap:8px; padding:8px 12px;
+    background:white; border:1.5px solid var(--border); border-radius:8px; color:var(--muted);
+  }
+  .menu-drawer .md-search input {
+    flex:1; border:none; outline:none; font-size:12px; background:transparent; font-family:var(--sans);
+  }
+  .menu-drawer .md-search input::placeholder { color:var(--muted-lt); }
+  .menu-drawer .md-support {
+    display:flex; align-items:center; gap:8px; padding:8px 0;
+    font-size:12px; font-weight:700; color:var(--accent); cursor:pointer;
+  }
+  .menu-drawer .md-support:hover { text-decoration:underline; }
+
+  .hamburger {
+    width:32px; height:32px; border:1.5px solid var(--border); border-radius:6px;
+    background:white; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:4px; cursor:pointer; transition:all 0.15s; flex-shrink:0;
+  }
+  .hamburger:hover { border-color:var(--text); }
+  .hamburger span { display:block; width:14px; height:1.5px; background:var(--text); border-radius:1px; }
+
+  /* ═══ FOOTER ═══ */
+  .footer {
+    background:var(--text); color:white; padding:32px; text-align:center;
+    position:relative; overflow:hidden;
+  }
+  .footer .fol { top:50%; left:50%; transform:translate(-50%,-50%); opacity:0.03; }
+  .footer .f-grid {
+    max-width:1200px; margin:0 auto; position:relative; z-index:1;
+    display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr 1fr; gap:24px;
+  }
+  .footer .f-col-label {
+    font-family:var(--mono); font-size:10px; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.08em;
+    color:rgba(255,255,255,0.3); margin-bottom:10px;
+  }
+  .footer .f-link {
+    display:flex; align-items:center; gap:6px;
+    font-size:13px; color:rgba(255,255,255,0.45); padding:3px 0;
+    cursor:pointer; transition:color 0.15s;
+  }
+  .footer .f-link:hover { color:white; }
+  .footer .f-link .f-dot { width:5px; height:5px; border-radius:2px; flex-shrink:0; }
+  .footer .f-support { color:var(--accent); font-weight:700; margin-top:8px; }
+  .footer .f-support:hover { color:#e06830; }
+  .footer .f-bottom {
+    max-width:1200px; margin:24px auto 0; padding-top:16px;
+    border-top:1px solid rgba(255,255,255,0.08);
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:11px; color:rgba(255,255,255,0.25); position:relative; z-index:1;
+  }
+  .footer .crisis {
+    max-width:1200px; margin:12px auto 0; padding-top:10px; border-top:1px solid rgba(255,255,255,0.05);
+    font-family:var(--mono); font-size:11px; color:rgba(255,255,255,0.2);
+    display:flex; justify-content:center; gap:16px; position:relative; z-index:1;
+  }
+
+  /* ═══ BACK TO HOME BUTTON ═══ */
+  .back-home {
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:24px;
+    font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:color 0.15s;
+  }
+  .back-home:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ═══ GLOBAL NAV ═══ -->
+<div class="topnav">
+  <div class="inner">
+    <div class="brand" onclick="showScreen('home')">
+      <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="#C75B2A" stroke-width="2.2">
+        <circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/>
+        <circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/>
+        <circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/>
+      </svg>
+      <div class="brand-name">Community Exchange</div>
+    </div>
+
+    <div class="main-nav">
+      <div class="nav-item">
+        <a class="nav-link" onclick="showScreen('community-center')">Community Center</a>
+        <div class="nav-drop">
+          <a class="nd-link" onclick="showScreen('community-center')">Overview</a>
+          <a class="nd-link" onclick="showScreen('neighborhoods')">Neighborhoods</a>
+          <a class="nd-link" onclick="showScreen('organizations-index')">Organizations</a>
+          <a class="nd-link" onclick="showScreen('foundations-index')">Foundations</a>
+          <a class="nd-link" onclick="showScreen('calendar-index')">Events &amp; Calendar</a>
+          <a class="nd-link" onclick="showScreen('about')">About</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" onclick="showScreen('learning-center')">Learning Center</a>
+        <div class="nav-drop">
+          <a class="nd-link" onclick="showScreen('learning-center')">Overview</a>
+          <a class="nd-link" onclick="showScreen('library-index')">Library</a>
+          <a class="nd-link" onclick="showScreen('knowledge-base')">Knowledge Base</a>
+          <a class="nd-link" onclick="showScreen('learning-paths-index')">Learning Paths</a>
+          <a class="nd-link" onclick="showScreen('guides-index')">Guides</a>
+          <a class="nd-link" onclick="showScreen('news-index')">News</a>
+          <a class="nd-link" onclick="showScreen('chat')">Ask Chance</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" onclick="showScreen('resource-center')">Resource Center</a>
+        <div class="nav-drop">
+          <a class="nd-link" onclick="showScreen('resource-center')">Overview</a>
+          <a class="nd-link" onclick="showScreen('services-index')">Services</a>
+          <a class="nd-link" onclick="showScreen('opportunities-index')">Opportunities</a>
+          <a class="nd-link" onclick="showScreen('search-page')">Search</a>
+          <a class="nd-link" onclick="showScreen('map-page')">Map</a>
+          <a class="nd-link" onclick="showScreen('help-page')">Get Help</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" onclick="showScreen('action-center')">Action Center</a>
+        <div class="nav-drop">
+          <a class="nd-link" onclick="showScreen('action-center')">Overview</a>
+          <a class="nd-link" onclick="showScreen('officials-index')">Elected Officials</a>
+          <a class="nd-link" onclick="showScreen('policies-index')">Policies</a>
+          <a class="nd-link" onclick="showScreen('elections-index')">Elections</a>
+          <a class="nd-link" onclick="showScreen('polling-index')">Polling Places</a>
+          <a class="nd-link" onclick="showScreen('volunteer-index')">Volunteer</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" onclick="showScreen('explore')">Explore</a>
+        <div class="nav-drop">
+          <a class="nd-link" onclick="showScreen('explore')">Compass</a>
+          <a class="nd-link" onclick="showScreen('pathways-index')">Pathways</a>
+          <a class="nd-link" onclick="showScreen('topic-page')">Topics</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-r">
+      <div class="zip-wrapper" id="zip-wrapper">
+        <div class="zip-input zip-pulse" id="zip-box">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <input type="text" id="zip-global" placeholder="ZIP" value="77004" maxlength="5" onfocus="stopZipPulse()">
+        </div>
+        <div class="zip-tooltip" id="zip-tooltip">Your ZIP code is a magic key &mdash; it unlocks everything near you: reps, services, events, and neighbors.</div>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang(this)">EN</button>
+        <button class="lang-btn" onclick="setLang(this)">ES</button>
+        <button class="lang-btn" onclick="setLang(this)">VI</button>
+      </div>
+      <a class="sign-in-btn" onclick="alert('Sign in flow')">Sign In</a>
+      <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="spectrum">
+  <div style="background:var(--health)"></div><div style="background:var(--families)"></div>
+  <div style="background:var(--hood)"></div><div style="background:var(--voice)"></div>
+  <div style="background:var(--money)"></div><div style="background:var(--planet)"></div>
+  <div style="background:var(--bigger)"></div>
+</div>
+
+
+<!-- ═══ SLIDE-OUT MENU ═══ -->
+<div class="menu-overlay" id="menu-overlay" onclick="toggleMenu()">
+  <div class="menu-drawer" onclick="event.stopPropagation()">
+    <div class="md-head">
+      <div class="md-brand">
+        <svg width="66" height="66" viewBox="0 0 100 100" fill="none" stroke="#C75B2A" stroke-width="1.2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+        <div>
+          <span>Community Exchange</span>
+          <div style="font-size:11px;color:var(--muted);font-style:italic;margin-top:2px;">Your civic &amp; social club</div>
+        </div>
+      </div>
+      <div class="md-close" onclick="toggleMenu()">&times;</div>
+    </div>
+
+    <div class="md-section" style="padding-bottom:12px;">
+      <div class="md-search">
+        <svg width="16" height="16" viewBox="0 0 100 100" fill="none" stroke="var(--muted-lt)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+        <input type="text" placeholder="Search everything...">
+      </div>
+    </div>
+
+    <!-- YOUR JOURNEY -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Your Journey</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <div style="margin-top:8px;margin-bottom:8px;">
+        <a class="md-link" onclick="showScreen('adventure');toggleMenu()" style="color:var(--accent);font-weight:700;">Start your adventure &#8594;</a>
+      </div>
+      <div class="md-archetype-grid">
+        <div class="md-archetype"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="var(--resource)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Seeker</div>
+        <div class="md-archetype"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="var(--learn)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Learner</div>
+        <div class="md-archetype"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="var(--action)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Builder</div>
+        <div class="md-archetype"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="var(--account)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Watchdog</div>
+        <div class="md-archetype"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="var(--hood)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Partner</div>
+        <div class="md-archetype"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="var(--planet)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Explorer</div>
+      </div>
+      </div>
+    </div>
+
+    <!-- PATHWAYS -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Pathways</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#e53e3e" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Health</a>
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#dd6b20" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Families</a>
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#d69e2e" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Neighborhood</a>
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#38a169" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Voice</a>
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#3182ce" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Money</a>
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#319795" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> Planet</a>
+      <a class="md-link"><svg width="20" height="20" viewBox="0 0 100 100" fill="none" stroke="#805ad5" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg> The Bigger We</a>
+      </div>
+    </div>
+
+    <!-- COMMUNITY CENTER -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Community Center</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <a class="md-link" onclick="showScreen('community-center');toggleMenu()">Overview</a>
+      <a class="md-link" onclick="showScreen('neighborhoods');toggleMenu()">Neighborhoods</a>
+      <a class="md-link" onclick="showScreen('organizations-index');toggleMenu()">Organizations</a>
+      <a class="md-link" onclick="showScreen('foundations-index');toggleMenu()">Foundations</a>
+      <a class="md-link" onclick="showScreen('calendar-index');toggleMenu()">Events &amp; Calendar</a>
+      <a class="md-link" onclick="showScreen('about');toggleMenu()">About</a>
+      </div>
+    </div>
+
+    <!-- LEARNING CENTER -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Learning Center</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <a class="md-link" onclick="showScreen('learning-center');toggleMenu()">Overview</a>
+      <a class="md-link" onclick="showScreen('library-index');toggleMenu()">Library</a>
+      <a class="md-link" onclick="showScreen('knowledge-base');toggleMenu()">Knowledge Base</a>
+      <a class="md-link" onclick="showScreen('learning-paths-index');toggleMenu()">Learning Paths</a>
+      <a class="md-link" onclick="showScreen('guides-index');toggleMenu()">Guides</a>
+      <a class="md-link" onclick="showScreen('news-index');toggleMenu()">News</a>
+      <a class="md-link" onclick="showScreen('chat');toggleMenu()">Ask Chance</a>
+      </div>
+    </div>
+
+    <!-- RESOURCE CENTER -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Resource Center</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <a class="md-link" onclick="showScreen('resource-center');toggleMenu()">Overview</a>
+      <a class="md-link" onclick="showScreen('services-index');toggleMenu()">Services</a>
+      <a class="md-link" onclick="showScreen('opportunities-index');toggleMenu()">Opportunities</a>
+      <a class="md-link" onclick="showScreen('search-page');toggleMenu()">Search</a>
+      <a class="md-link" onclick="showScreen('map-page');toggleMenu()">Map</a>
+      <a class="md-link" onclick="showScreen('help-page');toggleMenu()">Get Help</a>
+      </div>
+    </div>
+
+    <!-- ACTION CENTER -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Action Center</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <a class="md-link" onclick="showScreen('action-center');toggleMenu()">Overview</a>
+      <a class="md-link" onclick="showScreen('officials-index');toggleMenu()">Elected Officials</a>
+      <a class="md-link" onclick="showScreen('policies-index');toggleMenu()">Policies</a>
+      <a class="md-link" onclick="showScreen('elections-index');toggleMenu()">Elections</a>
+      <a class="md-link" onclick="showScreen('polling-index');toggleMenu()">Polling Places</a>
+      <a class="md-link" onclick="showScreen('volunteer-index');toggleMenu()">Volunteer</a>
+      </div>
+    </div>
+
+    <!-- EXPLORE -->
+    <div class="md-section">
+      <button class="md-toggle" onclick="toggleMenuSection(this)"><div class="md-label" style="margin-bottom:0;">Explore</div><span class="md-chevron">&#9654;</span></button>
+      <div class="md-body">
+      <a class="md-link" onclick="showScreen('explore');toggleMenu()">Compass</a>
+      <a class="md-link" onclick="showScreen('pathways-index');toggleMenu()">Pathways</a>
+      <a class="md-link" onclick="showScreen('topic-page');toggleMenu()">Topics</a>
+      </div>
+    </div>
+
+    <!-- SUPPORT + CRISIS -->
+    <div class="md-section" style="background:var(--bg); margin-top:auto;">
+      <a class="md-support" href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Support Our Work
+      </a>
+      <div class="md-label" style="margin-top:12px;">Always available</div>
+      <div style="font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.9;">
+        <div>Crisis line: <strong>988</strong></div>
+        <div>City services: <strong>311</strong></div>
+        <div>Social services: <strong>211</strong></div>
+        <div>Domestic violence: <strong>713-528-2121</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: HOME
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen active" id="screen-home">
+
+  <!-- HERO -->
+  <div class="home-hero">
+    <svg class="fol" style="top:-120px;right:-120px;width:700px;height:700px;" viewBox="0 0 400 400" fill="none" stroke="#C75B2A" stroke-width="1.2">
+      <circle cx="200" cy="200" r="80"/><circle cx="200" cy="120" r="80"/><circle cx="200" cy="280" r="80"/>
+      <circle cx="269" cy="160" r="80"/><circle cx="269" cy="240" r="80"/>
+      <circle cx="131" cy="160" r="80"/><circle cx="131" cy="240" r="80"/>
+    </svg>
+    <div class="inner">
+      <div>
+        <h1>You care.<br>Now <span class="pop"><span class="hand">find</span><br>your place.</span></h1>
+        <p class="lead">
+          Most people want to be part of something.<br>
+          They just don't know where to start.<br>
+          <strong>That's not a motivation problem. It's a navigation problem.</strong>
+        </p>
+        <div class="search">
+          <svg class="s-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" placeholder="What are you looking for?">
+          <button class="s-btn">Go</button>
+        </div>
+        <div class="quick-row">
+          <a onclick="showScreen('adventure')">Take the quiz</a>
+          <a href="#">Near me</a>
+          <a href="#">What's happening</a>
+        </div>
+      </div>
+      <div class="collage">
+        <svg class="fol" style="top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:500px;opacity:0.07;" viewBox="0 0 400 400" fill="none" stroke="#C75B2A" stroke-width="1.5">
+          <circle cx="200" cy="200" r="80"/><circle cx="200" cy="120" r="80"/><circle cx="200" cy="280" r="80"/>
+          <circle cx="269" cy="160" r="80"/><circle cx="269" cy="240" r="80"/>
+          <circle cx="131" cy="160" r="80"/><circle cx="131" cy="240" r="80"/>
+        </svg>
+        <div class="frame fr1"><img src="https://i.imgur.com/SAClIN9.jpeg" alt=""></div>
+        <div class="frame fr2"><img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/volunteers.jpg" alt=""></div>
+        <div class="frame fr3"><img src="http://static1.squarespace.com/static/682df1e7e218fa7fdb174d5b/t/686efdf929368f08df514ac7/1752104441097/Screen+Shot+2025-07-09+at+6.30.00+PM.png?format=1500w" alt=""></div>
+        <div class="tape" style="top:5px;left:140px;transform:rotate(-3deg);"></div>
+        <div class="tape" style="bottom:170px;right:80px;transform:rotate(6deg);"></div>
+        <div class="sticker" style="top:30px;right:10px;">New</div>
+        <div class="fstat" style="bottom:20px;left:0;"><span class="n">3,024</span> resources</div>
+        <div class="fstat" style="top:60px;right:-20px;"><span class="n">312</span> topics</div>
+        <!-- Floating FOL decoration -->
+        <svg class="fol-float" style="bottom:-30px;right:60px;width:120px;height:120px;" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1.2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK ACCESS GRID -->
+  <div class="placeholders">
+    <!-- Calendar -->
+    <div class="ph-card" onclick="showScreen('calendar-index')" style="background:linear-gradient(135deg,#F7F2EA 0%,#EDE4D4 100%);">
+      <svg class="ph-fol" width="200" height="200" viewBox="0 0 100 100" fill="none" stroke="var(--voice)" stroke-width="1.8"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:var(--text);">Calendar</div>
+      <div class="ph-sub">Meetings, hearings, events</div>
+    </div>
+    <!-- Events -->
+    <div class="ph-card" onclick="showScreen('calendar-index')" style="background:linear-gradient(135deg,#553c9a 0%,#7c5cbf 100%);">
+      <svg class="ph-fol" width="220" height="220" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.5" style="transform:translate(-50%,-50%) rotate(30deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">Events</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">What's happening this week</div>
+    </div>
+    <!-- Library -->
+    <div class="ph-card" onclick="showScreen('library-index')" style="background:linear-gradient(135deg,#2b6cb0 0%,#4299e1 100%);">
+      <svg class="ph-fol" width="190" height="190" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="2" style="transform:translate(-50%,-50%) rotate(-15deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">Library</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Articles, guides, deep dives</div>
+    </div>
+    <!-- Near You -->
+    <div class="ph-card" onclick="showScreen('map-page')" style="background:linear-gradient(135deg,#276749 0%,#48bb78 100%);">
+      <svg class="ph-fol" width="240" height="240" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.2" style="transform:translate(-50%,-50%) rotate(10deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">Near You</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Services and orgs in your ZIP</div>
+    </div>
+    <!-- Trending -->
+    <div class="ph-card" onclick="showScreen('news-index')" style="background:linear-gradient(135deg,#EDE4D4 0%,#D9CDB8 100%);">
+      <svg class="ph-fol" width="180" height="180" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2.2" style="transform:translate(-50%,-50%) rotate(45deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:var(--text);">Trending</div>
+      <div class="ph-sub">News and stories right now</div>
+    </div>
+    <!-- Ask Chance -->
+    <div class="ph-card" onclick="showScreen('chat')" style="background:linear-gradient(135deg,#c05621 0%,#ed8936 100%);">
+      <svg class="ph-fol" width="210" height="210" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.6" style="transform:translate(-50%,-50%) rotate(-25deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">Ask Chance</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Your civic AI guide</div>
+    </div>
+    <!-- Get Help -->
+    <div class="ph-card" onclick="showScreen('services-index')" style="background:linear-gradient(135deg,#9b2c2c 0%,#e53e3e 100%);">
+      <svg class="ph-fol" width="200" height="200" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.8" style="transform:translate(-50%,-50%) rotate(20deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">Get Help</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Benefits, services, assistance</div>
+    </div>
+    <!-- Chart Your Course -->
+    <div class="ph-card ph-cta" onclick="showScreen('adventure')" style="background:var(--cream);">
+      <svg class="ph-fol" width="260" height="260" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2.5" style="opacity:0.18;transform:translate(-50%,-50%) rotate(-10deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div style="font-family:var(--hand);font-size:20px;font-weight:700;color:var(--accent);text-align:center;line-height:1.2;position:relative;z-index:2;">Chart Your Course</div>
+      <div class="ph-sub" style="color:var(--accent);opacity:0.6;">Find where you fit in</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="gap-bar">
+    <div class="gstat">
+      <div class="pct accent">90%</div>
+      <div class="lbl">feel responsible to help their community</div>
+      <div class="src">Citizens & Scholars 2024</div>
+    </div>
+    <div class="gstat">
+      <div class="pct" style="color:var(--red);">37%</div>
+      <div class="lbl">don't know where to start</div>
+      <div class="src">Citizens & Scholars 2024</div>
+    </div>
+    <div class="gstat">
+      <div class="pct" style="color:var(--action);">28%</div>
+      <div class="lbl">actually volunteer</div>
+      <div class="src">AmeriCorps 2024</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="spectrum"><div style="background:var(--health)"></div><div style="background:var(--families)"></div><div style="background:var(--hood)"></div><div style="background:var(--voice)"></div><div style="background:var(--money)"></div><div style="background:var(--planet)"></div><div style="background:var(--bigger)"></div></div>
+  <div class="footer">
+    <svg class="fol" width="400" height="400" viewBox="0 0 400 400" fill="none" stroke="white" stroke-width="1"><circle cx="200" cy="200" r="80"/><circle cx="200" cy="120" r="80"/><circle cx="200" cy="280" r="80"/><circle cx="269" cy="160" r="80"/><circle cx="269" cy="240" r="80"/><circle cx="131" cy="160" r="80"/><circle cx="131" cy="240" r="80"/></svg>
+    <div class="f-grid">
+      <div class="f-col">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none" stroke="#C75B2A" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <span style="font-family:var(--serif);font-size:16px;color:white;font-weight:600;">Community Exchange</span>
+        </div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:12px;">A civic platform connecting Houston residents with the resources, knowledge, and opportunities that strengthen communities.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,0.25);font-style:italic;">Built in Houston, Made for Everyone.</p>
+      </div>
+      <div class="f-col">
+        <div class="f-col-label">Pathways</div>
+        <a class="f-link"><span class="f-dot" style="background:#e53e3e;"></span> Health</a>
+        <a class="f-link"><span class="f-dot" style="background:#dd6b20;"></span> Families</a>
+        <a class="f-link"><span class="f-dot" style="background:#d69e2e;"></span> Neighborhood</a>
+        <a class="f-link"><span class="f-dot" style="background:#38a169;"></span> Voice</a>
+        <a class="f-link"><span class="f-dot" style="background:#3182ce;"></span> Money</a>
+        <a class="f-link"><span class="f-dot" style="background:#319795;"></span> Planet</a>
+        <a class="f-link"><span class="f-dot" style="background:#805ad5;"></span> The Bigger We</a>
+      </div>
+      <div class="f-col">
+        <div class="f-col-label">Navigate</div>
+        <a class="f-link" onclick="showScreen('explore')">Compass</a>
+        <a class="f-link" onclick="showScreen('resources')">Services</a>
+        <a class="f-link" onclick="showScreen('government')">Officials</a>
+        <a class="f-link">Policies</a>
+        <a class="f-link">Elections</a>
+        <a class="f-link" onclick="showScreen('learn')">Library</a>
+        <a class="f-link">Search</a>
+      </div>
+      <div class="f-col">
+        <div class="f-col-label">Community</div>
+        <a class="f-link" onclick="showScreen('community')">Neighborhood</a>
+        <a class="f-link">Super Neighborhood</a>
+        <a class="f-link">County</a>
+        <a class="f-link">State</a>
+        <a class="f-link">Federal</a>
+      </div>
+      <div class="f-col">
+        <div class="f-col-label">Connect</div>
+        <a class="f-link" onclick="showScreen('about')">About</a>
+        <a class="f-link">My Account</a>
+        <a class="f-link">Share a Resource</a>
+        <a class="f-link">Sign In</a>
+        <a class="f-link f-support" href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG" target="_blank" rel="noopener noreferrer">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Support Our Work
+        </a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>&copy; 2026 The Change Lab</span>
+      <span class="f-legal">Privacy &middot; Terms &middot; Accessibility</span>
+      <span class="f-langs">English / Espa&ntilde;ol / Ti&#7871;ng Vi&#7879;t</span>
+    </div>
+    <div class="crisis"><span>Crisis: 988</span><span>City: 311</span><span>Social Services: 211</span><span>DV: 713-528-2121</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: ADVENTURE (Choose Your Own Adventure)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-adventure">
+  <div class="adv-page">
+
+    <!-- Progress dots -->
+    <div class="adv-progress">
+      <div class="adv-dot active" id="adv-dot-1"></div>
+      <div class="adv-dot" id="adv-dot-2"></div>
+      <div class="adv-dot" id="adv-dot-3"></div>
+    </div>
+
+    <!-- STEP 1: Pick your archetype -->
+    <div class="adv-step active" id="adv-step-1">
+      <div class="adv-step-head">
+        <div class="adv-step-num">Step 1 of 3</div>
+        <h2>How do you like to <span class="hand">engage?</span></h2>
+        <p>This shapes what we show you first. No wrong answers — you can always change your mind.</p>
+      </div>
+
+      <div class="adv-archetype-grid">
+        <div class="adv-arch" onclick="selectArchetype(this,'seeker')">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="var(--resource)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <h3>Seeker</h3>
+          <p>I need something specific — a service, a program, an answer.</p>
+        </div>
+        <div class="adv-arch" onclick="selectArchetype(this,'learner')">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="var(--learn)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <h3>Learner</h3>
+          <p>I want to understand how things work and what's happening.</p>
+        </div>
+        <div class="adv-arch" onclick="selectArchetype(this,'builder')">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="var(--action)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <h3>Builder</h3>
+          <p>I'm ready to do something. Show me where to show up.</p>
+        </div>
+        <div class="adv-arch" onclick="selectArchetype(this,'watchdog')">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="var(--account)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <h3>Watchdog</h3>
+          <p>I want to track what government is doing and hold them accountable.</p>
+        </div>
+        <div class="adv-arch" onclick="selectArchetype(this,'partner')">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="var(--hood)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <h3>Partner</h3>
+          <p>I represent an org or group. I want to connect and collaborate.</p>
+        </div>
+        <div class="adv-arch" onclick="selectArchetype(this,'explorer')">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" stroke="var(--planet)" stroke-width="2"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+          <h3>Explorer</h3>
+          <p>I'm just browsing. Surprise me with something interesting.</p>
+        </div>
+      </div>
+
+      <div class="adv-nav">
+        <button class="adv-btn-back" onclick="showScreen('home')">&#8592; Back to Home</button>
+        <button class="adv-btn-next" onclick="advStep(2)">Continue &#8594;</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Pick a center -->
+    <div class="adv-step" id="adv-step-2">
+      <div class="adv-step-head">
+        <div class="adv-step-num">Step 2 of 3</div>
+        <h2>Pick a <span class="hand">center</span></h2>
+        <p>Each center is a different lens on the same 312 topics. Same information, different starting point.</p>
+      </div>
+
+      <div class="adv-center-grid">
+        <div class="adv-center" onclick="selectCenter(this,'community')">
+          <div class="ac-bar" style="background:var(--community);"></div>
+          <h3>Community Center</h3>
+          <p>Connect with your neighborhood, find events, meet people doing the work near you.</p>
+          <div class="ac-items">
+            <span>Neighborhoods</span>
+            <span>Events</span>
+            <span>Organizations</span>
+            <span>Foundations</span>
+          </div>
+        </div>
+        <div class="adv-center" onclick="selectCenter(this,'learning')">
+          <div class="ac-bar" style="background:var(--learning);"></div>
+          <h3>Learning Center</h3>
+          <p>Read articles, take learning paths, explore guides, and ask Chance your questions.</p>
+          <div class="ac-items">
+            <span>Library</span>
+            <span>Learning Paths</span>
+            <span>Guides</span>
+            <span>Ask Chance</span>
+          </div>
+        </div>
+        <div class="adv-center" onclick="selectCenter(this,'resource')">
+          <div class="ac-bar" style="background:var(--rescenter);"></div>
+          <h3>Resource Center</h3>
+          <p>Find services, organizations, and benefits matched to your ZIP code and situation.</p>
+          <div class="ac-items">
+            <span>Services</span>
+            <span>Organizations</span>
+            <span>Benefits</span>
+            <span>Get Help</span>
+          </div>
+        </div>
+        <div class="adv-center" onclick="selectCenter(this,'action')">
+          <div class="ac-bar" style="background:var(--actioncenter);"></div>
+          <h3>Action Center</h3>
+          <p>Volunteer, attend events, contact your rep, track policies, and hold government accountable.</p>
+          <div class="ac-items">
+            <span>Volunteer</span>
+            <span>Officials</span>
+            <span>Policies</span>
+            <span>Elections</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="adv-nav">
+        <button class="adv-btn-back" onclick="advStep(1)">&#8592; Back</button>
+        <button class="adv-btn-next" onclick="advStep(3)">See my starting point &#8594;</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Your personalized starting point -->
+    <div class="adv-step" id="adv-step-3">
+      <div class="adv-step-head">
+        <div class="adv-step-num">Step 3 of 3</div>
+        <h2>Your <span class="hand">starting point</span></h2>
+        <p>Based on your choices, here's where we'd send you. Every item connects to the full taxonomy — pathways, topics, and all 4 centers.</p>
+      </div>
+
+      <div class="taxonomy-trail">
+        <a>Archetype: <span id="adv-chosen-arch">Seeker</span></a>
+        <span class="tt-sep">/</span>
+        <a>Center: <span id="adv-chosen-center">Resource Center</span></a>
+        <span class="tt-sep">/</span>
+        <span>312 topics across 7 pathways</span>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-section-label">
+          <span class="sp-dot" style="background:var(--resource);"></span>
+          Recommended for you
+        </div>
+        <div class="sp-grid">
+          <div class="sp-card">
+            <div class="sp-card-bar" style="background:var(--health);"></div>
+            <h4>Free Health Screenings</h4>
+            <p>Harris Health System — Medical Center</p>
+            <div class="sp-card-meta">Service / Health / 1.5 mi</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-card-bar" style="background:var(--families);"></div>
+            <h4>SNAP Application Assistance</h4>
+            <p>Harris County Social Services — Midtown</p>
+            <div class="sp-card-meta">Service / Families / 1.2 mi</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-card-bar" style="background:var(--bigger);"></div>
+            <h4>Houston Food Bank Mobile Pantry</h4>
+            <p>Houston Food Bank — Third Ward</p>
+            <div class="sp-card-meta">Service / Food Access / 0.8 mi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-section-label">
+          <span class="sp-dot" style="background:var(--learn);"></span>
+          Understand the context
+        </div>
+        <div class="sp-grid">
+          <div class="sp-card">
+            <div class="sp-card-bar" style="background:var(--voice);"></div>
+            <h4>Houston In Action: Building Community Power</h4>
+            <p>How neighborhood-level organizing is reshaping civic life</p>
+            <div class="sp-card-meta">Article / Voice / 3 min read</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-card-bar" style="background:var(--money);"></div>
+            <h4>Compudopt: Free Tech for Families</h4>
+            <p>Digital equity programs bridging the technology gap</p>
+            <div class="sp-card-meta">Resource / Money / 4 min read</div>
+          </div>
+          <div class="sp-card">
+            <div class="sp-card-bar" style="background:var(--bigger);"></div>
+            <h4>Braver Angels: Talk Across the Divide</h4>
+            <p>Structured dialogue workshops for bridging difference</p>
+            <div class="sp-card-meta">Path / Bigger We / 8 steps</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="adv-nav">
+        <button class="adv-btn-back" onclick="advStep(2)">&#8592; Back</button>
+        <button class="adv-btn-next" onclick="showScreen('home')">Go to the Exchange &#8594;</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE MAP — All screens referenced by nav
+     Every dropdown item in the top nav has a screen below.
+     Pattern: Center Overview → Index Pages → Detail/Profile Pages → Topic/Pathway Pages
+     ═══════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══ COMMUNITY CENTER (Overview) ═══ -->
+<div class="screen" id="screen-community-center">
+  <div class="section-page texture">
+    <a class="back-home" onclick="showScreen('home')">&#8592; Home</a>
+    <svg class="fol-float" style="top:60px;right:40px;width:200px;height:200px;" viewBox="0 0 100 100" fill="none" stroke="var(--community)" stroke-width="0.8"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+    <div class="section-page-head">
+      <h1>Community Center</h1>
+      <p class="sp-desc">Your neighborhood, organizations, foundations, and events. Connect with the people doing the work near you.</p>
+      <div class="sp-bar" style="background:var(--community);"></div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--community);"></span> What's Inside</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('neighborhoods')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Neighborhoods</h4><p>Your block, super neighborhood, county, state, and federal connections</p><div class="sp-card-meta">5 Geographic Levels</div></div>
+        <div class="sp-card" onclick="showScreen('organizations-index')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Organizations</h4><p>Nonprofits, civic clubs, coalitions, and groups doing the work</p><div class="sp-card-meta">240+ Orgs</div></div>
+        <div class="sp-card" onclick="showScreen('foundations-index')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Foundations</h4><p>Local and national foundations supporting Houston communities</p><div class="sp-card-meta">85 Foundations</div></div>
+        <div class="sp-card" onclick="showScreen('calendar-index')"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Events &amp; Calendar</h4><p>Town halls, volunteer days, workshops, community gatherings</p><div class="sp-card-meta">This Month</div></div>
+        <div class="sp-card" onclick="showScreen('about')"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>About the Exchange</h4><p>Who we are, how it works, and how to contribute</p><div class="sp-card-meta">The Change Lab</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--health);"></span> Across All 7 Pathways</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Health</h4><p>47 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Families</h4><p>52 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Neighborhood</h4><p>41 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Voice</h4><p>44 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Money</h4><p>48 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--planet);"></div><h4>Planet</h4><p>42 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>The Bigger We</h4><p>38 topics</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEIGHBORHOODS (sub-index under Community Center) ═══ -->
+<div class="screen" id="screen-neighborhoods">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('community-center')">&#8592; Community Center</a>
+    <div class="section-page-head"><h1>Neighborhoods</h1><p class="sp-desc">Your connections at every geographic level. See what's happening where you live.</p><div class="sp-bar" style="background:var(--hood);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--hood);"></span> Your Location — ZIP 77004</div>
+      <div style="background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;">
+        <div style="font-family:var(--mono);font-size:24px;font-weight:900;color:var(--accent);margin-bottom:4px;">77004</div>
+        <div style="font-size:15px;font-weight:700;">Third Ward / Midtown</div>
+        <div style="font-size:13px;color:var(--muted);">Harris County, TX — District D — Super Neighborhood 67</div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--hood);"></span> Geographic Levels</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('neighborhood-profile')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Neighborhood</h4><p>Third Ward — 12 orgs, 5 events</p><div class="sp-card-meta">Local</div></div>
+        <div class="sp-card" onclick="showScreen('neighborhood-profile')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Super Neighborhood 67</h4><p>Greater Third Ward civic council</p><div class="sp-card-meta">SN 67</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Harris County</h4><p>County services, commissioners court</p><div class="sp-card-meta">4.7M Residents</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>State of Texas</h4><p>Legislature, governor, state agencies</p><div class="sp-card-meta">SD 13</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Federal</h4><p>Congress, senators, federal programs</p><div class="sp-card-meta">TX-09</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEIGHBORHOOD PROFILE (detail page) ═══ -->
+<div class="screen" id="screen-neighborhood-profile">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('neighborhoods')">&#8592; Neighborhoods</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('community-center')">Community Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('neighborhoods')">Neighborhoods</a><span class="tt-sep">/</span>
+      <span>Third Ward</span>
+    </div>
+    <div class="section-page-head"><h1>Third Ward</h1><p class="sp-desc">Historic Houston neighborhood. Home to Texas Southern University, Emancipation Park, and a vibrant civic community.</p><div class="sp-bar" style="background:var(--hood);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--bigger);"></span> Organizations in Third Ward</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Almeda Plaza Civic Club</h4><p>Neighborhood organization</p><div class="sp-card-meta">0.5 mi</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Emancipation Economic Dev Council</h4><p>Community development</p><div class="sp-card-meta">0.3 mi</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Project Row Houses</h4><p>Art, culture, community development</p><div class="sp-card-meta">0.4 mi</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--resource);"></span> Services Near Here</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Houston Food Bank — Mobile Pantry</h4><p>Free food distribution</p><div class="sp-card-meta">0.8 mi / Food Access</div></div>
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Free Health Screenings</h4><p>Harris Health System</p><div class="sp-card-meta">1.5 mi / Healthcare</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> Your Representatives</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>CM Tiffany Thomas</h4><p>City Council — District D</p><div class="sp-card-meta">City / Houston</div></div>
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Rep. Al Green</h4><p>U.S. House — TX-09</p><div class="sp-card-meta">Federal</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ORGANIZATIONS INDEX ═══ -->
+<div class="screen" id="screen-organizations-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('community-center')">&#8592; Community Center</a>
+    <div class="section-page-head"><h1>Organizations</h1><p class="sp-desc">Nonprofits, civic clubs, coalitions, and community groups across Houston.</p><div class="sp-bar" style="background:var(--bigger);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--bigger);"></span> All Organizations — 240+</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Impact Hub Houston</h4><p>Social enterprise</p><div class="sp-card-meta">Midtown / 1.1 mi</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Almeda Plaza Civic Club</h4><p>Neighborhood org</p><div class="sp-card-meta">Third Ward / 0.5 mi</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Houston Food Bank</h4><p>Food access</p><div class="sp-card-meta">Citywide / 12 services</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Project Row Houses</h4><p>Art + community dev</p><div class="sp-card-meta">Third Ward / 0.4 mi</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Compudopt</h4><p>Digital equity</p><div class="sp-card-meta">Citywide</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Braver Angels</h4><p>Bridging division</p><div class="sp-card-meta">Montrose</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Starts With Us</h4><p>Connection movement</p><div class="sp-card-meta">Citywide</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--muted-lt);"></div><h4>+ 233 more</h4><p>Browse all organizations</p><div class="sp-card-meta">Citywide</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ORGANIZATION PROFILE (detail page) ═══ -->
+<div class="screen" id="screen-org-profile">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('organizations-index')">&#8592; Organizations</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('community-center')">Community Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('organizations-index')">Organizations</a><span class="tt-sep">/</span>
+      <span>Impact Hub Houston</span>
+    </div>
+    <div class="section-page-head"><h1>Impact Hub Houston</h1><p class="sp-desc">A social enterprise hub and coworking space in Midtown dedicated to social innovation, impact investing, and community building.</p><div class="sp-bar" style="background:var(--bigger);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--bigger);"></span> Connected Pathways</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>The Bigger We</h4><p>Primary pathway</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Money</h4><p>Social enterprise</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Social Innovation</h4><p>Focus area</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Impact Investing</h4><p>Focus area</p></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--resource);"></span> Services</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--resource);"></div><h4>Coworking Space</h4><p>Shared workspace for social entrepreneurs</p><div class="sp-card-meta">Midtown / Membership</div></div>
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--resource);"></div><h4>Incubator Program</h4><p>12-week social venture program</p><div class="sp-card-meta">Apply / Cohort-based</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--learn);"></span> Related Content</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Houston In Action: Building Community Power</h4><p>Article about civic organizing</p><div class="sp-card-meta">Article / 3 min</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOUNDATIONS INDEX ═══ -->
+<div class="screen" id="screen-foundations-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('community-center')">&#8592; Community Center</a>
+    <div class="section-page-head"><h1>Foundations</h1><p class="sp-desc">Local and national foundations supporting Houston communities.</p><div class="sp-bar" style="background:var(--money);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--money);"></span> All Foundations — 85</div>
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Houston Endowment</h4><p>Largest private foundation in Houston</p><div class="sp-card-meta">$1.8B / Citywide</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Kinder Foundation</h4><p>Urban development, education, civic engagement</p><div class="sp-card-meta">Houston</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Greater Houston Community Foundation</h4><p>Donor-advised funds, community grants</p><div class="sp-card-meta">Regional</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CALENDAR / EVENTS INDEX ═══ -->
+<div class="screen" id="screen-calendar-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('community-center')">&#8592; Community Center</a>
+    <div class="section-page-head"><h1>Events &amp; Calendar</h1><p class="sp-desc">Community events, town halls, volunteer days, workshops, and gatherings near you.</p><div class="sp-bar" style="background:var(--action);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--action);"></span> This Week</div>
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Rock the Block 3</h4><p>Free summer event, Third Ward</p><div class="sp-card-meta">Saturday / Free</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Braver Angels Workshop</h4><p>Talk Across the Divide, Montrose</p><div class="sp-card-meta">Sunday / 2 hrs</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>City Council Public Session</h4><p>Houston City Hall</p><div class="sp-card-meta">Tuesday / Open</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div class="screen" id="screen-about">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('community-center')">&#8592; Community Center</a>
+    <div class="section-page-head"><h1>About</h1><p class="sp-desc">The Community Exchange is a civic platform connecting Houston residents with the resources, knowledge, and opportunities that strengthen communities. Built by The Change Lab.</p><div class="sp-bar" style="background:var(--bigger);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--bigger);"></span> How It Works</div>
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>312 Topics</h4><p>Every issue across 7 pathways, connected to services, officials, policies, and actions</p><div class="sp-card-meta">Knowledge Base</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>4 Centers</h4><p>Community, Learning, Resource, Action — four lenses on the same information</p><div class="sp-card-meta">Navigation</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>Your ZIP Code</h4><p>Everything personalized — reps, services, neighborhood</p><div class="sp-card-meta">Geo-Personalized</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     LEARNING CENTER
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-learning-center">
+  <div class="section-page texture">
+    <a class="back-home" onclick="showScreen('home')">&#8592; Home</a>
+    <svg class="fol-float" style="top:80px;right:60px;width:180px;height:180px;" viewBox="0 0 100 100" fill="none" stroke="var(--learning)" stroke-width="0.8"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+    <div class="section-page-head"><h1>Learning Center</h1><p class="sp-desc">Articles, guides, learning paths, and the knowledge base. Understand what's really going on.</p><div class="sp-bar" style="background:var(--learning);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--learning);"></span> What's Inside</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('library-index')"><div class="sp-card-bar" style="background:var(--learn);"></div><h4>Library</h4><p>267 articles, stories, and reports</p><div class="sp-card-meta">Updated daily</div></div>
+        <div class="sp-card" onclick="showScreen('knowledge-base')"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>Knowledge Base</h4><p>312 topics across 7 pathways</p><div class="sp-card-meta">Browse all topics</div></div>
+        <div class="sp-card" onclick="showScreen('learning-paths-index')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Learning Paths</h4><p>Structured multi-step learning journeys</p><div class="sp-card-meta">10 Paths</div></div>
+        <div class="sp-card" onclick="showScreen('guides-index')"><div class="sp-card-bar" style="background:var(--learn);"></div><h4>Guides</h4><p>In-depth how-to guides and explainers</p><div class="sp-card-meta">7 Guides</div></div>
+        <div class="sp-card" onclick="showScreen('news-index')"><div class="sp-card-bar" style="background:var(--learn);"></div><h4>News</h4><p>Latest stories from local sources</p><div class="sp-card-meta">RSS feeds</div></div>
+        <div class="sp-card" onclick="showScreen('chat')"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>Ask Chance</h4><p>AI civic assistant</p><div class="sp-card-meta">Always available</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LIBRARY INDEX ═══ -->
+<div class="screen" id="screen-library-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('learning-center')">&#8592; Learning Center</a>
+    <div class="section-page-head"><h1>Library</h1><p class="sp-desc">267 articles, stories, and reports. Written at a 6th-grade reading level so anyone can follow along.</p><div class="sp-bar" style="background:var(--learn);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--learn);"></span> Latest Articles</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Houston In Action: Building Community Power Together</h4><p>How grassroots organizing is reshaping civic life</p><div class="sp-card-meta">Article / Bigger We / 3 min</div></div>
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Fuckup Nights Houston</h4><p>A global movement celebrating learning from failure</p><div class="sp-card-meta">Story / 5 min</div></div>
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Compudopt: Free Tech for Families</h4><p>Digital equity programs in Houston</p><div class="sp-card-meta">Resource / 4 min</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ KNOWLEDGE BASE (312 topics) ═══ -->
+<div class="screen" id="screen-knowledge-base">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('learning-center')">&#8592; Learning Center</a>
+    <div class="section-page-head"><h1>Knowledge Base</h1><p class="sp-desc">312 topics organized across 7 pathways. Every topic connects to services, officials, policies, content, and actions.</p><div class="sp-bar" style="background:var(--accent);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--health);"></span> Health — 47 Topics</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Mental Health</h4><p>Counseling, crisis, wellness</p><div class="sp-card-meta">12 resources</div></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Food Access</h4><p>Pantries, SNAP, nutrition</p><div class="sp-card-meta">18 resources</div></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Health Insurance</h4><p>Marketplace, Medicaid, CHIP</p><div class="sp-card-meta">8 resources</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--health);"></div><h4>+ 44 more</h4><p>Browse all Health topics</p></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--families);"></span> Families — 52 Topics</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Childcare</h4><p>Head Start, daycare, after-school</p><div class="sp-card-meta">15 resources</div></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>K-12 Education</h4><p>HISD, charters, tutoring</p><div class="sp-card-meta">22 resources</div></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Youth Programs</h4><p>Mentoring, sports, enrichment</p><div class="sp-card-meta">19 resources</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--families);"></div><h4>+ 49 more</h4><p>Browse all Families topics</p></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--voice);"></span> + 5 More Pathways</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Neighborhood</h4><p>41 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Voice</h4><p>44 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Money</h4><p>48 topics</p></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--planet);"></div><h4>Planet</h4><p>42 topics</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOPIC PAGE (single topic — the intersection point) ═══ -->
+<div class="screen" id="screen-topic-page">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('knowledge-base')">&#8592; Knowledge Base</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('learning-center')">Learning Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('knowledge-base')">Knowledge Base</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('pathway-page')">Health</a><span class="tt-sep">/</span>
+      <span>Food Access</span>
+    </div>
+    <div class="section-page-head"><h1>Food Access</h1><p class="sp-desc">Food pantries, SNAP benefits, community gardens, nutrition programs, and food policy in Houston. Connected to 18 services, 3 policies, 6 organizations, and 12 articles.</p><div class="sp-bar" style="background:var(--health);"></div></div>
+
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--resource);"></span> Services — Resource Center</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Houston Food Bank — Mobile Pantry</h4><p>Free food, Third Ward</p><div class="sp-card-meta">0.8 mi</div></div>
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>SNAP Application Assistance</h4><p>Harris County</p><div class="sp-card-meta">1.2 mi</div></div>
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>WIC Program</h4><p>Women, Infants, Children nutrition</p><div class="sp-card-meta">2.1 mi</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--learn);"></span> Content — Learning Center</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--learn);"></div><h4>Understanding Food Deserts in Houston</h4><p>Why some neighborhoods lack grocery stores</p><div class="sp-card-meta">Article / 4 min</div></div>
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--learn);"></div><h4>How to Apply for SNAP in Texas</h4><p>Step-by-step guide</p><div class="sp-card-meta">Guide / 8 min</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> Policies — Action Center</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Houston Food Policy Ordinance</h4><p>City of Houston — Active</p><div class="sp-card-meta">City / Active</div></div>
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>TX SNAP Expansion (HB 1247)</h4><p>Texas Legislature — Pending</p><div class="sp-card-meta">State / Pending</div></div>
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Farm Bill Reauthorization</h4><p>U.S. Congress — In Committee</p><div class="sp-card-meta">Federal</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--community);"></span> Organizations — Community Center</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Houston Food Bank</h4><p>Largest food bank in the U.S.</p><div class="sp-card-meta">Citywide / 12 services</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Urban Harvest</h4><p>Community gardens, farmers markets</p><div class="sp-card-meta">Citywide</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--action);"></span> Take Action</div>
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Volunteer at Houston Food Bank</h4><p>Sort and pack food for distribution</p><div class="sp-card-meta">Ongoing / 3 hrs</div></div>
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Contact Rep. Al Green</h4><p>Ask about Farm Bill support</p><div class="sp-card-meta">Federal / TX-09</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--accent);"></span> Related Topics</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Nutrition</h4><p>4 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Community Gardens</h4><p>3 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>SNAP Benefits</h4><p>5 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Food Deserts</h4><p>2 resources</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PATHWAY PAGE (e.g. /pathways/health) ═══ -->
+<div class="screen" id="screen-pathway-page">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('knowledge-base')">&#8592; Knowledge Base</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('explore')">Explore</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('pathways-index')">Pathways</a><span class="tt-sep">/</span>
+      <span>Health</span>
+    </div>
+    <div class="section-page-head"><h1>Health</h1><p class="sp-desc">47 topics covering healthcare access, mental health, nutrition, insurance, and wellness across Houston.</p><div class="sp-bar" style="background:var(--health);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--health);"></span> Topics in Health</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Food Access</h4><p>18 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Mental Health</h4><p>12 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Health Insurance</h4><p>8 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Nutrition</h4><p>4 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Community Gardens</h4><p>3 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Substance Recovery</h4><p>7 resources</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Maternal Health</h4><p>5 resources</p></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--health);"></div><h4>+ 40 more</h4><p>All Health topics</p></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--learn);"></span> Health content by Center</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('community-center')"><div class="sp-card-bar" style="background:var(--community);"></div><h4>Community</h4><p>Health orgs near you</p></div>
+        <div class="sp-card" onclick="showScreen('learning-center')"><div class="sp-card-bar" style="background:var(--learning);"></div><h4>Learning</h4><p>Health articles + guides</p></div>
+        <div class="sp-card" onclick="showScreen('resource-center')"><div class="sp-card-bar" style="background:var(--rescenter);"></div><h4>Resource</h4><p>Health services + help</p></div>
+        <div class="sp-card" onclick="showScreen('action-center')"><div class="sp-card-bar" style="background:var(--actioncenter);"></div><h4>Action</h4><p>Health policy + volunteer</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PATHWAYS INDEX ═══ -->
+<div class="screen" id="screen-pathways-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('explore')">&#8592; Explore</a>
+    <div class="section-page-head"><h1>All 7 Pathways</h1><p class="sp-desc">Every topic in the knowledge base belongs to one of 7 pathways.</p><div class="sp-bar" style="background:var(--accent);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Health</h4><p>Clinics, mental health, nutrition, insurance</p><div class="sp-card-meta">47 Topics</div></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Families</h4><p>Schools, childcare, youth, safety</p><div class="sp-card-meta">52 Topics</div></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Neighborhood</h4><p>Housing, infrastructure, parks, transit</p><div class="sp-card-meta">41 Topics</div></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Voice</h4><p>Voting, advocacy, town halls, organizing</p><div class="sp-card-meta">44 Topics</div></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Money</h4><p>Jobs, financial literacy, small business</p><div class="sp-card-meta">48 Topics</div></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--planet);"></div><h4>Planet</h4><p>Climate, water, energy, resilience</p><div class="sp-card-meta">42 Topics</div></div>
+        <div class="sp-card" onclick="showScreen('pathway-page')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>The Bigger We</h4><p>Bridging, dialogue, inclusion, trust</p><div class="sp-card-meta">38 Topics</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LEARNING PATHS INDEX ═══ -->
+<div class="screen" id="screen-learning-paths-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('learning-center')">&#8592; Learning Center</a>
+    <div class="section-page-head"><h1>Learning Paths</h1><p class="sp-desc">Structured multi-step journeys through a topic. Each path builds understanding step by step.</p><div class="sp-bar" style="background:var(--voice);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Civics 101</h4><p>Free government classes</p><div class="sp-card-meta">5 chapters / 20 min</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Adaptive Leadership</h4><p>Harvard course</p><div class="sp-card-meta">10 sessions / 3 hrs</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Braver Angels</h4><p>Talk Across the Divide</p><div class="sp-card-meta">8 steps / 2 hrs</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GUIDES INDEX ═══ -->
+<div class="screen" id="screen-guides-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('learning-center')">&#8592; Learning Center</a>
+    <div class="section-page-head"><h1>Guides</h1><p class="sp-desc">In-depth how-to guides for navigating civic life in Houston.</p><div class="sp-bar" style="background:var(--learn);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>How to Contact Your Rep</h4><p>Email, call, or visit</p><div class="sp-card-meta">Guide / 5 min</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--families);"></div><h4>How to Apply for SNAP</h4><p>Step-by-step in Texas</p><div class="sp-card-meta">Guide / 8 min</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>How to Register to Vote</h4><p>Texas voter registration</p><div class="sp-card-meta">Guide / 3 min</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NEWS INDEX ═══ -->
+<div class="screen" id="screen-news-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('learning-center')">&#8592; Learning Center</a>
+    <div class="section-page-head"><h1>News</h1><p class="sp-desc">Latest stories, updates, and coverage from local sources, curated and classified across the knowledge base.</p><div class="sp-bar" style="background:var(--learn);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Houston In Action: Community Power</h4><p>thechangelab.org</p><div class="sp-card-meta">Today / 3 min</div></div>
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>City Council Passes Transit Funding</h4><p>Houston Chronicle</p><div class="sp-card-meta">Yesterday / 2 min</div></div>
+        <div class="sp-card" onclick="showScreen('content-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Harris Health Expands Free Clinics</h4><p>Houston Public Media</p><div class="sp-card-meta">2 days ago / 4 min</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ASK CHANCE ═══ -->
+<div class="screen" id="screen-chat">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('learning-center')">&#8592; Learning Center</a>
+    <div class="section-page-head"><h1>Ask Chance</h1><p class="sp-desc">Your AI civic assistant. Ask about services, policies, organizations, or anything happening in Houston.</p><div class="sp-bar" style="background:var(--accent);"></div></div>
+    <div style="background:var(--cream);border:2px solid var(--text);border-radius:14px;padding:32px;text-align:center;box-shadow:3px 3px 0 var(--text);">
+      <svg width="64" height="64" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1.5"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <h2 style="font-family:var(--serif);font-size:1.5rem;margin:12px 0 8px;">What would you like to know?</h2>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:16px;">Try: "Where can I get free food near Third Ward?" or "Who is my city council member?"</p>
+      <div style="max-width:500px;margin:0 auto;position:relative;">
+        <input type="text" placeholder="Ask Chance anything..." style="width:100%;padding:14px 80px 14px 16px;border:2px solid var(--text);border-radius:10px;font-size:15px;outline:none;">
+        <button style="position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:9px 18px;background:var(--text);color:white;border:none;border-radius:7px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;">Ask</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONTENT PROFILE (article/story detail) ═══ -->
+<div class="screen" id="screen-content-profile">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('library-index')">&#8592; Library</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('learning-center')">Learning Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('library-index')">Library</a><span class="tt-sep">/</span>
+      <span>Houston In Action</span>
+    </div>
+    <div class="section-page-head"><h1>Houston In Action: Building Community Power Together</h1><p class="sp-desc">How grassroots organizing is reshaping civic life in Houston. Published by The Change Lab.</p><div class="sp-bar" style="background:var(--bigger);"></div></div>
+    <div style="background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:16px;">
+      <span>Pathway: <strong style="color:var(--bigger);">The Bigger We</strong></span>
+      <span>Topics: <strong>Civic Power, Organizing, Community</strong></span>
+      <span>Read time: <strong>3 min</strong></span>
+      <span>Source: <strong>thechangelab.org</strong></span>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--bigger);"></span> Connected Topics</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Civic Power</h4><p>Focus area</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Community Organizing</h4><p>Focus area</p></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Grassroots Advocacy</h4><p>Focus area</p></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--resource);"></span> Related Resources</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Impact Hub Houston</h4><p>Social enterprise hub</p><div class="sp-card-meta">Organization</div></div>
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Starts With Us</h4><p>Connection movement</p><div class="sp-card-meta">Organization</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     RESOURCE CENTER
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-resource-center">
+  <div class="section-page texture">
+    <a class="back-home" onclick="showScreen('home')">&#8592; Home</a>
+    <svg class="fol-float" style="top:80px;right:60px;width:180px;height:180px;" viewBox="0 0 100 100" fill="none" stroke="var(--rescenter)" stroke-width="0.8"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+    <div class="section-page-head"><h1>Resource Center</h1><p class="sp-desc">Services, opportunities, and benefits matched to your ZIP code and situation. No runaround.</p><div class="sp-bar" style="background:var(--rescenter);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--rescenter);"></span> What's Inside</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('services-index')"><div class="sp-card-bar" style="background:var(--resource);"></div><h4>Services</h4><p>211 services matched to your ZIP</p><div class="sp-card-meta">Near 77004</div></div>
+        <div class="sp-card" onclick="showScreen('opportunities-index')"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Opportunities</h4><p>Jobs, volunteer, events, programs</p><div class="sp-card-meta">120+ listings</div></div>
+        <div class="sp-card" onclick="showScreen('search-page')"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>Search</h4><p>Full-text search across everything</p><div class="sp-card-meta">3,024 items</div></div>
+        <div class="sp-card" onclick="showScreen('map-page')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Map</h4><p>Interactive map of services and resources</p><div class="sp-card-meta">Geo-located</div></div>
+        <div class="sp-card" onclick="showScreen('help-page')"><div class="sp-card-bar" style="background:var(--red);"></div><h4>Get Help</h4><p>Crisis lines, immediate assistance</p><div class="sp-card-meta">Always available</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERVICES INDEX ═══ -->
+<div class="screen" id="screen-services-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('resource-center')">&#8592; Resource Center</a>
+    <div class="section-page-head"><h1>Services</h1><p class="sp-desc">211 services near ZIP 77004, organized by need.</p><div class="sp-bar" style="background:var(--resource);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--resource);"></span> Near You</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Houston Food Bank — Mobile Pantry</h4><p>Free food, Third Ward</p><div class="sp-card-meta">0.8 mi / Food Access</div></div>
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--families);"></div><h4>SNAP Application Assistance</h4><p>Harris County, Midtown</p><div class="sp-card-meta">1.2 mi / Benefits</div></div>
+        <div class="sp-card" onclick="showScreen('service-profile')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Free Health Screenings</h4><p>Harris Health, Medical Center</p><div class="sp-card-meta">1.5 mi / Healthcare</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SERVICE PROFILE (detail) ═══ -->
+<div class="screen" id="screen-service-profile">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('services-index')">&#8592; Services</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('resource-center')">Resource Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('services-index')">Services</a><span class="tt-sep">/</span>
+      <span>Houston Food Bank — Mobile Pantry</span>
+    </div>
+    <div class="section-page-head"><h1>Houston Food Bank — Mobile Pantry</h1><p class="sp-desc">Free food distribution in Third Ward. No documentation required. Open to all Harris County residents.</p><div class="sp-bar" style="background:var(--health);"></div></div>
+    <div style="background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;">
+      <span>Pathway: <strong style="color:var(--health);">Health</strong></span>
+      <span>Topic: <strong>Food Access</strong></span>
+      <span>Distance: <strong>0.8 mi</strong></span>
+      <span>Provider: <strong>Houston Food Bank</strong></span>
+      <span>Cost: <strong>Free</strong></span>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--bigger);"></span> Provided By</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('org-profile')"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Houston Food Bank</h4><p>Largest food bank in the U.S.</p><div class="sp-card-meta">Organization / Citywide</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--voice);"></span> Related Policies</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Houston Food Policy Ordinance</h4><p>City — Active</p></div>
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Farm Bill Reauthorization</h4><p>Federal — In Committee</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OPPORTUNITIES INDEX ═══ -->
+<div class="screen" id="screen-opportunities-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('resource-center')">&#8592; Resource Center</a>
+    <div class="section-page-head"><h1>Opportunities</h1><p class="sp-desc">Volunteer, jobs, events, programs, and ways to get involved.</p><div class="sp-bar" style="background:var(--action);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Rock the Block 3</h4><p>Free summer event, Third Ward</p><div class="sp-card-meta">Event / Saturday</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Braver Angels Workshop</h4><p>Talk Across the Divide</p><div class="sp-card-meta">Workshop / 2 hrs</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Food Bank Volunteer</h4><p>Sort and pack food</p><div class="sp-card-meta">Ongoing / 3 hrs</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SEARCH PAGE ═══ -->
+<div class="screen" id="screen-search-page">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('resource-center')">&#8592; Resource Center</a>
+    <div class="section-page-head"><h1>Search</h1><p class="sp-desc">Search across 3,024 resources — articles, services, organizations, officials, and policies.</p><div class="sp-bar" style="background:var(--accent);"></div></div>
+    <div style="max-width:600px;position:relative;margin-bottom:24px;">
+      <input type="text" placeholder="Search everything..." style="width:100%;padding:14px 80px 14px 16px;border:2px solid var(--text);border-radius:10px;font-size:15px;outline:none;">
+      <button style="position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:9px 18px;background:var(--text);color:white;border:none;border-radius:7px;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;">Search</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAP PAGE ═══ -->
+<div class="screen" id="screen-map-page">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('resource-center')">&#8592; Resource Center</a>
+    <div class="section-page-head"><h1>Map</h1><p class="sp-desc">Interactive map of services, organizations, polling places, and community resources.</p><div class="sp-bar" style="background:var(--hood);"></div></div>
+    <div style="background:var(--cream);border:1.5px solid var(--border);border-radius:12px;height:400px;display:flex;align-items:center;justify-content:center;color:var(--muted-lt);">
+      <div style="text-align:center;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div style="font-family:var(--mono);font-size:11px;margin-top:8px;text-transform:uppercase;">Interactive Map — ZIP 77004</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GET HELP PAGE ═══ -->
+<div class="screen" id="screen-help-page">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('resource-center')">&#8592; Resource Center</a>
+    <div class="section-page-head"><h1>Get Help</h1><p class="sp-desc">If you're in crisis or need immediate assistance, these lines are always open.</p><div class="sp-bar" style="background:var(--red);"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+      <div style="background:var(--cream);border:2px solid var(--text);border-radius:14px;padding:24px;box-shadow:3px 3px 0 var(--text);"><div style="font-family:var(--hand);font-size:40px;font-weight:700;color:var(--accent);">988</div><div style="font-size:15px;font-weight:700;">Suicide &amp; Crisis Lifeline</div><div style="font-size:13px;color:var(--muted);">Call or text 988, 24/7</div></div>
+      <div style="background:var(--cream);border:2px solid var(--text);border-radius:14px;padding:24px;box-shadow:3px 3px 0 var(--text);"><div style="font-family:var(--hand);font-size:40px;font-weight:700;color:var(--accent);">311</div><div style="font-size:15px;font-weight:700;">City of Houston Services</div><div style="font-size:13px;color:var(--muted);">Non-emergency city services</div></div>
+      <div style="background:var(--cream);border:2px solid var(--text);border-radius:14px;padding:24px;box-shadow:3px 3px 0 var(--text);"><div style="font-family:var(--hand);font-size:40px;font-weight:700;color:var(--accent);">211</div><div style="font-size:15px;font-weight:700;">Texas Health &amp; Human Services</div><div style="font-size:13px;color:var(--muted);">Social services referral</div></div>
+      <div style="background:var(--cream);border:2px solid var(--text);border-radius:14px;padding:24px;box-shadow:3px 3px 0 var(--text);"><div style="font-family:var(--hand);font-size:40px;font-weight:700;color:var(--accent);">713-528-2121</div><div style="font-size:15px;font-weight:700;">Houston Area Women's Center</div><div style="font-size:13px;color:var(--muted);">Domestic violence hotline, 24/7</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     ACTION CENTER
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-action-center">
+  <div class="section-page texture">
+    <a class="back-home" onclick="showScreen('home')">&#8592; Home</a>
+    <svg class="fol-float" style="top:80px;right:60px;width:180px;height:180px;" viewBox="0 0 100 100" fill="none" stroke="var(--actioncenter)" stroke-width="0.8"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+    <div class="section-page-head"><h1>Action Center</h1><p class="sp-desc">Officials, policies, elections, volunteering. Track what's happening and show up.</p><div class="sp-bar" style="background:var(--actioncenter);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--actioncenter);"></span> What's Inside</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('officials-index')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Elected Officials</h4><p>Who represents you at every level</p><div class="sp-card-meta">ZIP 77004</div></div>
+        <div class="sp-card" onclick="showScreen('policies-index')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Policies</h4><p>Legislation tracking at all levels</p><div class="sp-card-meta">City / County / State / Federal</div></div>
+        <div class="sp-card" onclick="showScreen('elections-index')"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Elections</h4><p>Upcoming elections, voter guides</p><div class="sp-card-meta">November 2026</div></div>
+        <div class="sp-card" onclick="showScreen('polling-index')"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Polling Places</h4><p>Find your nearest polling location</p><div class="sp-card-meta">3 locations near you</div></div>
+        <div class="sp-card" onclick="showScreen('volunteer-index')"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Volunteer</h4><p>Find volunteer opportunities near you</p><div class="sp-card-meta">30+ open spots</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OFFICIALS INDEX ═══ -->
+<div class="screen" id="screen-officials-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('action-center')">&#8592; Action Center</a>
+    <div class="section-page-head"><h1>Elected Officials</h1><p class="sp-desc">Everyone who represents ZIP 77004 — from city hall to the U.S. Capitol.</p><div class="sp-bar" style="background:var(--account);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> City of Houston</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Mayor John Whitmire</h4><p>Mayor of Houston</p><div class="sp-card-meta">City / Citywide</div></div>
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>CM Tiffany Thomas</h4><p>City Council — District D</p><div class="sp-card-meta">City / District D</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> Harris County</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Judge Lina Hidalgo</h4><p>County Judge</p><div class="sp-card-meta">County / Harris</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> State of Texas</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Sen. Borris Miles</h4><p>TX Senate — SD 13</p><div class="sp-card-meta">State / SD 13</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> Federal</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Rep. Al Green</h4><p>U.S. House — TX-09</p><div class="sp-card-meta">Federal / TX-09</div></div>
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Sen. John Cornyn</h4><p>U.S. Senate — Texas</p><div class="sp-card-meta">Federal / Senate</div></div>
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Sen. Ted Cruz</h4><p>U.S. Senate — Texas</p><div class="sp-card-meta">Federal / Senate</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OFFICIAL PROFILE (detail) ═══ -->
+<div class="screen" id="screen-official-profile">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('officials-index')">&#8592; Officials</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('action-center')">Action Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('officials-index')">Officials</a><span class="tt-sep">/</span>
+      <span>Rep. Al Green</span>
+    </div>
+    <div class="section-page-head"><h1>Rep. Al Green</h1><p class="sp-desc">U.S. House of Representatives, Texas 9th District. Serving since 2005.</p><div class="sp-bar" style="background:var(--account);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--voice);"></span> Sponsored Policies</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Farm Bill Reauthorization</h4><p>Co-sponsor</p><div class="sp-card-meta">Federal / In Committee</div></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--health);"></span> Connected Topics</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Food Access</h4></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Housing</h4></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Voting Rights</h4></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ POLICIES INDEX ═══ -->
+<div class="screen" id="screen-policies-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('action-center')">&#8592; Action Center</a>
+    <div class="section-page-head"><h1>Policies &amp; Legislation</h1><p class="sp-desc">Track policies at every level of government that affect your community.</p><div class="sp-bar" style="background:var(--voice);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Houston Food Policy Ordinance</h4><p>City of Houston — Active</p><div class="sp-card-meta">City / Health</div></div>
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>TX SNAP Expansion (HB 1247)</h4><p>Texas Legislature — Pending</p><div class="sp-card-meta">State / Families</div></div>
+        <div class="sp-card" onclick="showScreen('policy-profile')"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Farm Bill Reauthorization</h4><p>U.S. Congress — In Committee</p><div class="sp-card-meta">Federal / Money</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ POLICY PROFILE (detail) ═══ -->
+<div class="screen" id="screen-policy-profile">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('policies-index')">&#8592; Policies</a>
+    <div class="taxonomy-trail">
+      <a onclick="showScreen('action-center')">Action Center</a><span class="tt-sep">/</span>
+      <a onclick="showScreen('policies-index')">Policies</a><span class="tt-sep">/</span>
+      <span>Houston Food Policy Ordinance</span>
+    </div>
+    <div class="section-page-head"><h1>Houston Food Policy Ordinance</h1><p class="sp-desc">City of Houston policy establishing food access standards for underserved neighborhoods. Status: Active.</p><div class="sp-bar" style="background:var(--voice);"></div></div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--health);"></span> Connected Topics</div>
+      <div class="sp-grid-4">
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Food Access</h4></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Nutrition</h4></div>
+        <div class="sp-card" onclick="showScreen('topic-page')"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Food Deserts</h4></div>
+      </div>
+    </div>
+    <div class="sp-section">
+      <div class="sp-section-label"><span class="sp-dot" style="background:var(--account);"></span> Responsible Officials</div>
+      <div class="sp-grid">
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>Mayor John Whitmire</h4><p>City of Houston</p></div>
+        <div class="sp-card" onclick="showScreen('official-profile')"><div class="sp-card-bar" style="background:var(--account);"></div><h4>CM Tiffany Thomas</h4><p>District D</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ELECTIONS INDEX ═══ -->
+<div class="screen" id="screen-elections-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('action-center')">&#8592; Action Center</a>
+    <div class="section-page-head"><h1>Elections</h1><p class="sp-desc">Upcoming elections, candidate information, and voter guides.</p><div class="sp-bar" style="background:var(--action);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>November 2026 General Election</h4><p>Federal, state, and local races</p><div class="sp-card-meta">Nov 3, 2026</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Voter Registration</h4><p>Check status or register</p><div class="sp-card-meta">Deadline: Oct 4</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Early Voting</h4><p>Vote before election day</p><div class="sp-card-meta">Oct 19 - Oct 30</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ POLLING PLACES INDEX ═══ -->
+<div class="screen" id="screen-polling-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('action-center')">&#8592; Action Center</a>
+    <div class="section-page-head"><h1>Polling Places</h1><p class="sp-desc">Find your nearest polling location based on your ZIP code.</p><div class="sp-bar" style="background:var(--action);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Wheeler Avenue Baptist Church</h4><p>3826 Wheeler Ave</p><div class="sp-card-meta">0.4 mi / Third Ward</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Emancipation Park Community Center</h4><p>3018 Emancipation Ave</p><div class="sp-card-meta">0.6 mi / Third Ward</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--action);"></div><h4>Riverside General Hospital</h4><p>3204 Ennis St</p><div class="sp-card-meta">0.9 mi / Third Ward</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VOLUNTEER INDEX ═══ -->
+<div class="screen" id="screen-volunteer-index">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('action-center')">&#8592; Action Center</a>
+    <div class="section-page-head"><h1>Volunteer</h1><p class="sp-desc">30+ volunteer opportunities near you. Filter by time commitment, cause, and distance.</p><div class="sp-bar" style="background:var(--action);"></div></div>
+    <div class="sp-section">
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Food Bank Volunteer</h4><p>Sort and pack food for distribution</p><div class="sp-card-meta">Ongoing / 3 hrs / 0.8 mi</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Compudopt Tech Mentor</h4><p>Teach digital skills to families</p><div class="sp-card-meta">Weekly / 2 hrs</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>Braver Angels Facilitator</h4><p>Lead bridge-building workshops</p><div class="sp-card-meta">Monthly / Training req</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ EXPLORE (Compass / cross-cutting) ═══ -->
+<div class="screen" id="screen-explore">
+  <div class="section-page">
+    <a class="back-home" onclick="showScreen('home')">&#8592; Home</a>
+
+    <div class="section-page-head">
+      <h1>Explore</h1>
+      <p class="sp-desc">312 topics organized across 7 pathways. Browse the knowledge base, search for anything, or let the map guide you.</p>
+      <div class="sp-bar" style="background:var(--accent);"></div>
+    </div>
+
+    <div class="sp-section">
+      <div class="sp-section-label">
+        <span class="sp-dot" style="background:var(--accent);"></span>
+        Knowledge Base — 312 Topics
+      </div>
+      <div class="sp-grid-4">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--health);"></div><h4>Health</h4><p>Clinics, mental health, nutrition, insurance</p><div class="sp-card-meta">47 Topics</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--families);"></div><h4>Families</h4><p>Schools, childcare, youth, safety</p><div class="sp-card-meta">52 Topics</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--hood);"></div><h4>Neighborhood</h4><p>Housing, infrastructure, parks, transit</p><div class="sp-card-meta">41 Topics</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--voice);"></div><h4>Voice</h4><p>Voting, advocacy, town halls, organizing</p><div class="sp-card-meta">44 Topics</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--money);"></div><h4>Money</h4><p>Jobs, financial literacy, small business, benefits</p><div class="sp-card-meta">48 Topics</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--planet);"></div><h4>Planet</h4><p>Climate, water, energy, resilience</p><div class="sp-card-meta">42 Topics</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--bigger);"></div><h4>The Bigger We</h4><p>Bridging, dialogue, inclusion, trust</p><div class="sp-card-meta">38 Topics</div></div>
+      </div>
+    </div>
+
+    <div class="sp-section">
+      <div class="sp-section-label">
+        <span class="sp-dot" style="background:var(--learn);"></span>
+        Quick Access
+      </div>
+      <div class="sp-grid">
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>Search</h4><p>Full-text search across all content, services, and organizations</p><div class="sp-card-meta">3,024 items</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>News</h4><p>Latest stories, updates, and coverage from local sources</p><div class="sp-card-meta">Updated daily</div></div>
+        <div class="sp-card"><div class="sp-card-bar" style="background:var(--accent);"></div><h4>Calendar</h4><p>Community events, town halls, volunteer days, and more</p><div class="sp-card-meta">This month</div></div>
+      </div>
+    </div>
+
+    <div class="sp-section">
+      <div class="sp-section-label">
+        <span class="sp-dot" style="background:var(--hood);"></span>
+        Map &amp; Geography
+      </div>
+      <div style="background:white;border:1.5px solid var(--border);border-radius:12px;height:300px;display:flex;align-items:center;justify-content:center;color:var(--muted-lt);">
+        <div style="text-align:center;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div style="font-family:var(--mono);font-size:11px;margin-top:8px;text-transform:uppercase;">Interactive map — ZIP 77004</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Old screens removed -->
+
+
+<script>
+function setLang(btn) {
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+function toggleMenu() {
+  document.getElementById('menu-overlay').classList.toggle('open');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById('screen-' + id);
+  if (el) { el.classList.add('active'); }
+  window.scrollTo(0, 0);
+}
+
+function toggleMenuSection(btn) {
+  btn.classList.toggle('open');
+}
+
+function stopZipPulse() {
+  document.getElementById('zip-box').classList.remove('zip-pulse');
+}
+
+// Adventure flow
+var currentAdvStep = 1;
+var selectedArchetype = null;
+var selectedCenter = null;
+
+function advStep(step) {
+  currentAdvStep = step;
+  document.querySelectorAll('.adv-step').forEach(function(s) { s.classList.remove('active'); });
+  var el = document.getElementById('adv-step-' + step);
+  if (el) el.classList.add('active');
+
+  // Update progress dots
+  for (var i = 1; i <= 3; i++) {
+    var dot = document.getElementById('adv-dot-' + i);
+    dot.className = 'adv-dot';
+    if (i === step) dot.classList.add('active');
+    else if (i < step) dot.classList.add('done');
+  }
+  window.scrollTo(0, 0);
+}
+
+function selectArchetype(el, id) {
+  document.querySelectorAll('.adv-arch').forEach(function(a) { a.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedArchetype = id;
+  var label = el.querySelector('h3').textContent;
+  document.getElementById('adv-chosen-arch').textContent = label;
+}
+
+function selectCenter(el, id) {
+  document.querySelectorAll('.adv-center').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedCenter = id;
+  var label = el.querySelector('h3').textContent;
+  document.getElementById('adv-chosen-center').textContent = label;
+}
+</script>
+
+</body>
+</html>

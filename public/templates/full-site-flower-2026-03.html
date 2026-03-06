@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Exchange</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Architects+Daughter&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1EB; --text: #2C2C2C; --accent: #C75B2A; --muted: #8B7E74;
+    --border: #E8E3DB; --card: #FFFFFF; --warm-dark: #1e1a16;
+    --health: #e53e3e; --families: #dd6b20; --neighborhood: #d69e2e;
+    --voice: #38a169; --money: #3182ce; --planet: #319795; --bigger: #805ad5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--warm-dark); color: var(--text); overflow-x: hidden; }
+  .serif { font-family: 'DM Serif Display', serif; }
+  .hand { font-family: 'Architects Daughter', cursive; }
+
+  /* ── Demo tab bar ── */
+  .top-bar {
+    position: sticky; top: 0; z-index: 100; background: var(--warm-dark); border-bottom: 1px solid #3a3530;
+    padding: 10px 24px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .top-bar .brand-cluster { display: flex; align-items: center; gap: 8px; margin-right: 12px; }
+  .top-bar .brand-name { font-family: 'DM Serif Display', serif; font-size: 15px; color: #fff; }
+  .top-bar .brand-tag { font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--accent); }
+  .top-bar a {
+    color: #7a7168; text-decoration: none; font-size: 10px; font-weight: 600;
+    padding: 5px 10px; border-radius: 6px; cursor: pointer; transition: all 0.3s cubic-bezier(0.19,1,0.22,1);
+  }
+  .top-bar a:hover { color: #fff; background: #3a3530; transform: translateY(-1px); }
+  .top-bar a.active { color: var(--accent); background: rgba(199,91,42,0.15); }
+  .top-bar .sep { width: 1px; height: 18px; background: #3a3530; }
+
+  /* ── Page frame ── */
+  .page { max-width: 1200px; margin: 28px auto; background: var(--bg); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); display: none; }
+  .page.visible { display: block; }
+
+  /* ═══════════════════════════════════════════════════
+     THE MULTI-COLOR FLOWER OF LIFE
+     Each circle = one pathway color. This IS our brand.
+     ═══════════════════════════════════════════════════ */
+
+  /* ── Homepage ── */
+  .home-hero {
+    position: relative; padding: 80px 48px 60px; text-align: center;
+    background: linear-gradient(180deg, #FDFBF8 0%, var(--bg) 100%);
+    overflow: hidden;
+  }
+  .home-hero .flower-bg {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 500px; height: 500px; opacity: 0.07; pointer-events: none;
+  }
+  .home-hero h1 {
+    font-family: 'DM Serif Display', serif; font-size: 44px; line-height: 1.15;
+    color: var(--text); position: relative; letter-spacing: -1px;
+  }
+  .home-hero .tagline {
+    font-family: 'Architects Daughter', cursive; font-size: 22px; color: var(--accent);
+    margin-top: 10px; position: relative;
+  }
+  .home-hero .sub {
+    font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px;
+    color: var(--muted); margin-top: 14px; max-width: 500px; margin-left: auto; margin-right: auto;
+    line-height: 1.7; position: relative;
+  }
+  .home-hero .prompt {
+    font-family: 'Architects Daughter', cursive; font-size: 20px; color: var(--accent);
+    margin-top: 28px; position: relative;
+    display: inline-block; padding: 8px 20px;
+    background: rgba(199,91,42,0.06); border-radius: 12px;
+    border: 1px dashed rgba(199,91,42,0.25);
+  }
+
+  /* ── Section styles — alternating, colored, depth ── */
+  .section-dark {
+    background: var(--warm-dark); color: #fff; padding: 48px; position: relative; overflow: hidden;
+  }
+  .section-dark .flower-accent {
+    position: absolute; opacity: 0.04; pointer-events: none;
+  }
+  .section-dark h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #fff; }
+  .section-dark .hand-label { font-family: 'Architects Daughter', cursive; font-size: 18px; color: var(--accent); margin-bottom: 6px; }
+
+  .section-warm {
+    background: #FDFBF8; padding: 48px; position: relative; overflow: hidden;
+  }
+  .section-warm h2 { font-family: 'DM Serif Display', serif; font-size: 26px; }
+  .section-warm .hand-label { font-family: 'Architects Daughter', cursive; font-size: 18px; color: var(--accent); margin-bottom: 6px; }
+
+  .section-tinted {
+    padding: 48px; position: relative; overflow: hidden;
+  }
+  .section-tinted h2 { font-family: 'DM Serif Display', serif; font-size: 26px; }
+  .section-tinted .hand-label { font-family: 'Architects Daughter', cursive; font-size: 18px; margin-bottom: 6px; }
+
+  /* ── Stats row ── */
+  .stats-row {
+    display: flex; justify-content: center; gap: 48px; padding: 28px 0;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: #fff;
+  }
+  .stat { text-align: center; cursor: pointer; transition: transform 0.3s; }
+  .stat:hover { transform: scale(1.1); }
+  .stat .num { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--accent); }
+  .stat .lbl { font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--muted); }
+
+  /* ── Persona grid — much bigger, bolder ── */
+  .persona-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+  .persona-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+    padding: 28px 20px; text-align: center; cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.19,1,0.22,1); position: relative; overflow: hidden;
+  }
+  .persona-card::before {
+    content: ''; position: absolute; inset: 0; opacity: 0;
+    transition: opacity 0.4s; border-radius: 16px;
+  }
+  .persona-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.25); }
+  .persona-card:hover::before { opacity: 1; }
+  .persona-card:hover svg { transform: scale(1.15) rotate(-8deg); }
+  .persona-card svg { transition: transform 0.4s cubic-bezier(0.19,1,0.22,1); position: relative; z-index: 1; }
+  .persona-card .p-name { font-family: 'DM Serif Display', serif; font-size: 18px; color: #fff; margin-top: 12px; position: relative; z-index: 1; }
+  .persona-card .p-desc { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px; line-height: 1.6; position: relative; z-index: 1; }
+  .persona-card .p-cta { font-family: 'Architects Daughter', cursive; font-size: 16px; color: var(--accent); margin-top: 14px; position: relative; z-index: 1; }
+  .persona-card:nth-child(1)::before { background: radial-gradient(circle at 50% 80%, rgba(214,158,46,0.12), transparent 70%); }
+  .persona-card:nth-child(2)::before { background: radial-gradient(circle at 50% 80%, rgba(49,130,206,0.12), transparent 70%); }
+  .persona-card:nth-child(3)::before { background: radial-gradient(circle at 50% 80%, rgba(56,161,105,0.12), transparent 70%); }
+  .persona-card:nth-child(4)::before { background: radial-gradient(circle at 50% 80%, rgba(128,90,213,0.12), transparent 70%); }
+  .persona-card:nth-child(5)::before { background: radial-gradient(circle at 50% 80%, rgba(221,107,32,0.12), transparent 70%); }
+  .persona-card:nth-child(6)::before { background: radial-gradient(circle at 50% 80%, rgba(199,91,42,0.12), transparent 70%); }
+
+  /* ── Content shelf ── */
+  .shelf { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
+  .shelf > * { scroll-snap-align: start; flex-shrink: 0; }
+  .shelf::-webkit-scrollbar { height: 4px; }
+  .shelf::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+  .shelf-card {
+    width: 220px; background: var(--card); border-radius: 14px; overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.19,1,0.22,1); cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .shelf-card:hover { transform: translateY(-4px) rotate(-0.5deg); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+  .shelf-card .card-img { width: 100%; height: 130px; background-size: cover; background-position: center; }
+  .shelf-card .card-body { padding: 14px; }
+  .shelf-card .card-pathway { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .shelf-card .card-pathway .bar { width: 3px; height: 14px; border-radius: 1px; }
+  .shelf-card .card-title { font-family: 'DM Serif Display', serif; font-size: 14px; line-height: 1.3; }
+  .shelf-card .card-desc { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 4px; }
+
+  /* ── Pathway cards — BIG, with flower circles ── */
+  .pathway-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .pw-card {
+    display: flex; align-items: center; gap: 18px; padding: 22px 24px;
+    background: var(--card); border-radius: 14px; cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.19,1,0.22,1); position: relative; overflow: hidden;
+    border-left: 5px solid transparent;
+  }
+  .pw-card:hover { transform: translateX(8px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+  .pw-card .pw-circle {
+    width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.15; position: relative;
+  }
+  .pw-card .pw-circle::after {
+    content: ''; position: absolute; width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid; opacity: 0.6;
+  }
+  .pw-card .pw-name { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .pw-card .pw-desc { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+  .pw-card .pw-count { font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--accent); margin-top: 4px; }
+  .pw-card .pw-flower-bg {
+    position: absolute; right: -20px; top: 50%; transform: translateY(-50%); opacity: 0.04;
+    pointer-events: none;
+  }
+
+  /* ── Nudge cards ── */
+  .nudge {
+    background: linear-gradient(135deg, rgba(199,91,42,0.08), rgba(199,91,42,0.02));
+    border: 1px dashed rgba(199,91,42,0.3); border-radius: 14px;
+    padding: 20px 24px; margin: 24px 0;
+    display: flex; align-items: center; gap: 14px;
+    transition: all 0.3s; cursor: pointer;
+  }
+  .nudge:hover { border-color: var(--accent); background: rgba(199,91,42,0.08); transform: translateX(4px); }
+  .nudge-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 14px; color: var(--text); flex: 1; line-height: 1.5; }
+  .nudge-cta { font-family: 'Architects Daughter', cursive; font-size: 18px; color: var(--accent); white-space: nowrap; }
+
+  /* ── Shelf Braid (pathway detail) ── */
+  .braid-section { padding: 36px 40px; position: relative; overflow: hidden; }
+  .braid-section:nth-child(odd) { background: #FDFBF8; }
+  .braid-section:nth-child(even) { background: var(--bg); }
+  .braid-section .flower-corner { position: absolute; opacity: 0.03; pointer-events: none; }
+  .braid-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .braid-header h3 { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .braid-header .center-label { font-family: 'Architects Daughter', cursive; font-size: 15px; margin-left: auto; }
+
+  /* ── Help cards ── */
+  .help-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
+  .help-card {
+    background: var(--card); border-radius: 14px; padding: 22px;
+    border-left: 5px solid; cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.19,1,0.22,1); position: relative; overflow: hidden;
+  }
+  .help-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(0,0,0,0.07); }
+  .help-card .help-title { font-family: 'DM Serif Display', serif; font-size: 17px; margin-bottom: 6px; }
+  .help-card .help-desc { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .help-card .help-count { font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--accent); margin-top: 8px; }
+
+  /* ── Officials ── */
+  .officials-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .official-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px; display: flex; gap: 12px; align-items: center;
+    transition: all 0.3s cubic-bezier(0.19,1,0.22,1); cursor: pointer;
+  }
+  .official-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+  .official-photo {
+    width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #e8e3db, #d4cfc6);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--muted);
+  }
+  .official-name { font-family: 'DM Serif Display', serif; font-size: 14px; }
+  .official-title { font-size: 10px; color: var(--muted); font-style: italic; }
+  .official-badges { display: flex; gap: 4px; margin-top: 4px; }
+  .badge { font-size: 8px; padding: 2px 7px; border-radius: 4px; font-weight: 600; }
+
+  /* ── Compass ── */
+  .compass-grid { display: grid; grid-template-columns: 50px repeat(4, 1fr); gap: 6px; margin-top: 20px; }
+  .compass-header {
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); text-align: center; padding: 8px 4px;
+    display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;
+  }
+  .compass-row-label {
+    font-family: 'Architects Daughter', cursive; font-size: 12px;
+    writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+    display: flex; align-items: center; justify-content: center; padding: 4px;
+  }
+  .compass-cell {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px; min-height: 72px; cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.19,1,0.22,1); position: relative; overflow: hidden;
+  }
+  .compass-cell:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.08); transform: scale(1.04); }
+  .compass-cell .cc-count { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent); }
+  .compass-cell .cc-label { font-size: 9px; color: var(--muted); margin-top: 3px; line-height: 1.4; font-style: italic; }
+
+  /* ── Service cards ── */
+  .service-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .service-card {
+    background: var(--card); border-radius: 12px; padding: 16px;
+    border-left: 4px solid; cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.19,1,0.22,1);
+  }
+  .service-card:hover { transform: translateX(6px); box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+  .service-name { font-family: 'DM Serif Display', serif; font-size: 14px; }
+  .service-org { font-size: 10px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .service-meta { font-size: 9px; color: var(--muted); margin-top: 6px; }
+
+  /* ── Sidebar ── */
+  .sidebar { background: #FDFBF8; border-left: 1px solid var(--border); padding: 24px 18px; overflow-y: auto; }
+  .sidebar h3 { font-family: 'DM Serif Display', serif; font-size: 15px; margin-bottom: 10px; }
+  .sidebar-stat { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+  .sidebar-stat .label { color: var(--muted); font-style: italic; }
+  .sidebar-stat .value { font-family: 'DM Serif Display', serif; color: var(--accent); font-size: 14px; }
+  .sidebar .hand-label { font-family: 'Architects Daughter', cursive; font-size: 14px; color: var(--accent); margin-bottom: 8px; display: block; }
+  .sidebar .tier-card {
+    background: var(--card); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px;
+    border: 1px solid var(--border); cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.19,1,0.22,1);
+  }
+  .sidebar .tier-card:hover { transform: translateX(3px); border-color: var(--accent); }
+  .sidebar .tier-card .tc-title { font-size: 11px; font-weight: 600; }
+  .sidebar .tier-card .tc-meta { font-size: 9px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .sidebar .tier-header { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; margin-top: 14px; }
+  .sidebar .tier-name { font-size: 12px; font-weight: 700; }
+
+  /* ── Page hero (subpages) ── */
+  .page-hero { padding: 40px 48px 32px; position: relative; overflow: hidden; }
+  .page-hero .flower-bg { position: absolute; right: -60px; top: -60px; opacity: 0.05; pointer-events: none; }
+  .page-hero .hand-label { font-family: 'Architects Daughter', cursive; font-size: 17px; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .page-hero h1 { font-family: 'DM Serif Display', serif; font-size: 34px; line-height: 1.15; letter-spacing: -0.5px; position: relative; }
+  .page-hero .sub { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 14px; color: var(--muted); margin-top: 10px; max-width: 520px; line-height: 1.7; }
+  .page-hero .rule { height: 3px; width: 60px; border-radius: 2px; margin-top: 14px; }
+  .page-hero .bc { font-size: 10px; color: var(--muted); margin-bottom: 14px; }
+  .page-hero .bc a { color: var(--accent); text-decoration: none; cursor: pointer; }
+
+  /* ── Layouts ── */
+  .three-col { display: grid; grid-template-columns: 1fr 260px; min-height: 70vh; }
+  .full-width { min-height: 70vh; }
+
+  /* ── Origin footer ── */
+  .origin-footer {
+    text-align: center; padding: 20px; border-top: 1px solid var(--border);
+    font-family: 'Architects Daughter', cursive; font-size: 15px; color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="brand-cluster">
+    <svg width="28" height="28" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="18" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="100" cy="80" r="18" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="100" cy="120" r="18" stroke="#319795" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="117.3" cy="90" r="18" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="117.3" cy="110" r="18" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="82.7" cy="90" r="18" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="82.7" cy="110" r="18" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/>
+    </svg>
+    <span class="brand-name">Community Exchange</span>
+    <span class="brand-tag">built with thoughtfulness</span>
+  </div>
+  <div class="sep"></div>
+  <a class="active" onclick="show('home')">Home</a>
+  <a onclick="show('pathways')">Pathways</a>
+  <a onclick="show('pathway-detail')">Pathway Detail</a>
+  <a onclick="show('services')">Services</a>
+  <a onclick="show('officials')">Officials</a>
+  <a onclick="show('compass')">Compass</a>
+  <a onclick="show('help')">Help</a>
+  <a onclick="show('content-detail')">Content Detail</a>
+</div>
+
+<!-- SVG Defs — Multi-color Flower of Life -->
+<svg style="display:none;">
+  <defs>
+    <symbol id="flower-color" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="20" stroke="#C75B2A" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="100" cy="80" r="20" stroke="#e53e3e" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="100" cy="120" r="20" stroke="#319795" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="117.3" cy="90" r="20" stroke="#dd6b20" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="117.3" cy="110" r="20" stroke="#3182ce" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="82.7" cy="90" r="20" stroke="#d69e2e" stroke-width="1.2" opacity="0.5"/>
+      <circle cx="82.7" cy="110" r="20" stroke="#805ad5" stroke-width="1.2" opacity="0.5"/>
+    </symbol>
+    <symbol id="flower-large" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="20" stroke="#C75B2A" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="100" cy="80" r="20" stroke="#e53e3e" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="100" cy="120" r="20" stroke="#319795" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="117.3" cy="90" r="20" stroke="#dd6b20" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="117.3" cy="110" r="20" stroke="#3182ce" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="82.7" cy="90" r="20" stroke="#d69e2e" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="82.7" cy="110" r="20" stroke="#805ad5" stroke-width="0.6" opacity="0.3"/>
+      <!-- Outer ring of petals -->
+      <circle cx="100" cy="60" r="20" stroke="#e53e3e" stroke-width="0.4" opacity="0.15"/>
+      <circle cx="100" cy="140" r="20" stroke="#319795" stroke-width="0.4" opacity="0.15"/>
+      <circle cx="134.6" cy="80" r="20" stroke="#dd6b20" stroke-width="0.4" opacity="0.15"/>
+      <circle cx="134.6" cy="120" r="20" stroke="#3182ce" stroke-width="0.4" opacity="0.15"/>
+      <circle cx="65.4" cy="80" r="20" stroke="#d69e2e" stroke-width="0.4" opacity="0.15"/>
+      <circle cx="65.4" cy="120" r="20" stroke="#805ad5" stroke-width="0.4" opacity="0.15"/>
+    </symbol>
+    <symbol id="icon-understand" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="10" stroke="#e53e3e" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="20" cy="15" r="4.5" stroke="#dd6b20" stroke-width="1" opacity="0.3"/>
+      <circle cx="20" cy="25" r="4.5" stroke="#d69e2e" stroke-width="1" opacity="0.3"/>
+    </symbol>
+    <symbol id="icon-involve" viewBox="0 0 40 40">
+      <circle cx="20" cy="16" r="7" stroke="#38a169" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="14" cy="26" r="7" stroke="#3182ce" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="26" cy="26" r="7" stroke="#319795" stroke-width="1.5" opacity="0.5"/>
+    </symbol>
+    <symbol id="icon-deeper" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="5" stroke="#C75B2A" stroke-width="1.2" opacity="0.6"/>
+      <circle cx="20" cy="15" r="5" stroke="#e53e3e" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="20" cy="25" r="5" stroke="#319795" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="24.3" cy="17.5" r="5" stroke="#dd6b20" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="24.3" cy="22.5" r="5" stroke="#3182ce" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="15.7" cy="17.5" r="5" stroke="#d69e2e" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="15.7" cy="22.5" r="5" stroke="#805ad5" stroke-width="0.8" opacity="0.35"/>
+    </symbol>
+    <symbol id="icon-seeker" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="24" cy="16" r="8" stroke="#e53e3e" stroke-width="1" opacity="0.3"/>
+      <circle cx="30.9" cy="20" r="8" stroke="#dd6b20" stroke-width="1" opacity="0.3"/>
+      <circle cx="30.9" cy="28" r="8" stroke="#3182ce" stroke-width="1" opacity="0.3"/>
+      <circle cx="24" cy="32" r="8" stroke="#319795" stroke-width="1" opacity="0.3"/>
+      <circle cx="17.1" cy="28" r="8" stroke="#805ad5" stroke-width="1" opacity="0.3"/>
+      <circle cx="17.1" cy="20" r="8" stroke="#38a169" stroke-width="1" opacity="0.3"/>
+    </symbol>
+    <symbol id="icon-learner" viewBox="0 0 48 48">
+      <circle cx="19" cy="24" r="11" stroke="#3182ce" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="29" cy="24" r="11" stroke="#805ad5" stroke-width="1.5" opacity="0.5"/>
+    </symbol>
+    <symbol id="icon-builder" viewBox="0 0 48 48">
+      <circle cx="24" cy="16" r="8" stroke="#38a169" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="17" cy="28" r="8" stroke="#d69e2e" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="31" cy="28" r="8" stroke="#319795" stroke-width="1.5" opacity="0.5"/>
+    </symbol>
+    <symbol id="icon-watchdog" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="4" stroke="#805ad5" stroke-width="1.5"/>
+      <circle cx="24" cy="14" r="4" stroke="#e53e3e" stroke-width="1" opacity="0.4"/>
+      <circle cx="24" cy="34" r="4" stroke="#319795" stroke-width="1" opacity="0.4"/>
+      <circle cx="32.7" cy="19" r="4" stroke="#dd6b20" stroke-width="1" opacity="0.4"/>
+      <circle cx="32.7" cy="29" r="4" stroke="#3182ce" stroke-width="1" opacity="0.4"/>
+      <circle cx="15.3" cy="19" r="4" stroke="#d69e2e" stroke-width="1" opacity="0.4"/>
+      <circle cx="15.3" cy="29" r="4" stroke="#38a169" stroke-width="1" opacity="0.4"/>
+      <line x1="24" y1="14" x2="32.7" y2="19" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+      <line x1="32.7" y1="19" x2="32.7" y2="29" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+      <line x1="32.7" y1="29" x2="24" y2="34" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+      <line x1="24" y1="34" x2="15.3" y2="29" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+      <line x1="15.3" y1="29" x2="15.3" y2="19" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+      <line x1="15.3" y1="19" x2="24" y2="14" stroke="#805ad5" stroke-width="0.5" opacity="0.2"/>
+    </symbol>
+    <symbol id="icon-partner" viewBox="0 0 48 48">
+      <circle cx="20" cy="20" r="10" stroke="#dd6b20" stroke-width="1.5" opacity="0.45"/>
+      <circle cx="28" cy="20" r="10" stroke="#38a169" stroke-width="1.5" opacity="0.45"/>
+      <circle cx="24" cy="28" r="10" stroke="#3182ce" stroke-width="1.5" opacity="0.45"/>
+    </symbol>
+    <symbol id="icon-explorer" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="6" stroke="#C75B2A" stroke-width="1.5" opacity="0.7"/>
+      <circle cx="24" cy="18" r="6" stroke="#e53e3e" stroke-width="1" opacity="0.4"/>
+      <circle cx="29.2" cy="21" r="6" stroke="#dd6b20" stroke-width="1" opacity="0.4"/>
+      <circle cx="29.2" cy="27" r="6" stroke="#3182ce" stroke-width="1" opacity="0.4"/>
+      <circle cx="24" cy="30" r="6" stroke="#319795" stroke-width="1" opacity="0.4"/>
+      <circle cx="18.8" cy="27" r="6" stroke="#805ad5" stroke-width="1" opacity="0.4"/>
+      <circle cx="18.8" cy="21" r="6" stroke="#d69e2e" stroke-width="1" opacity="0.4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ═══════════════════════════════════════════
+     HOMEPAGE — Full width, no left nav
+     ═══════════════════════════════════════════ -->
+<div id="home" class="page visible">
+
+  <!-- Hero -->
+  <div class="home-hero">
+    <svg class="flower-bg" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <svg width="80" height="80" style="position:relative;" viewBox="0 0 200 200"><use href="#flower-color"/></svg>
+    <h1>Community Exchange</h1>
+    <div class="tagline">built with thoughtfulness</div>
+    <div class="sub">Resources, knowledge, and civic power -- woven through Houston's neighborhoods, organizations, and people</div>
+    <div class="prompt">what are you looking for today?</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat"><div class="num">847</div><div class="lbl">resources</div></div>
+    <div class="stat"><div class="num">45</div><div class="lbl">organizations</div></div>
+    <div class="stat"><div class="num">22</div><div class="lbl">officials</div></div>
+    <div class="stat"><div class="num">18</div><div class="lbl">policies</div></div>
+  </div>
+
+  <!-- Personas — dark section -->
+  <div class="section-dark">
+    <svg class="flower-accent" width="300" height="300" style="right:-80px;top:-80px;" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="hand-label">start your journey</div>
+    <h2>How do you want to engage?</h2>
+    <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:13px;color:rgba(255,255,255,0.45);margin-top:6px;max-width:450px;">Everyone enters differently. Pick the role that feels right. You can always switch.</p>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <svg width="56" height="56" viewBox="0 0 48 48"><use href="#icon-seeker"/></svg>
+        <div class="p-name">The Seeker</div>
+        <div class="p-desc">Find resources and support for yourself or someone you care about</div>
+        <div class="p-cta">start seeking &rarr;</div>
+      </div>
+      <div class="persona-card">
+        <svg width="56" height="56" viewBox="0 0 48 48"><use href="#icon-learner"/></svg>
+        <div class="p-name">The Learner</div>
+        <div class="p-desc">Understand the issues. See how the systems actually work</div>
+        <div class="p-cta">start learning &rarr;</div>
+      </div>
+      <div class="persona-card">
+        <svg width="56" height="56" viewBox="0 0 48 48"><use href="#icon-builder"/></svg>
+        <div class="p-name">The Builder</div>
+        <div class="p-desc">Volunteer your time. Organize your block. Create something that lasts</div>
+        <div class="p-cta">start building &rarr;</div>
+      </div>
+      <div class="persona-card">
+        <svg width="56" height="56" viewBox="0 0 48 48"><use href="#icon-watchdog"/></svg>
+        <div class="p-name">The Watchdog</div>
+        <div class="p-desc">Track who decides, what they decide, and whether they follow through</div>
+        <div class="p-cta">start watching &rarr;</div>
+      </div>
+      <div class="persona-card">
+        <svg width="56" height="56" viewBox="0 0 48 48"><use href="#icon-partner"/></svg>
+        <div class="p-name">The Partner</div>
+        <div class="p-desc">Connect your org or institution with the people you're trying to reach</div>
+        <div class="p-cta">start connecting &rarr;</div>
+      </div>
+      <div class="persona-card">
+        <svg width="56" height="56" viewBox="0 0 48 48"><use href="#icon-explorer"/></svg>
+        <div class="p-name">The Explorer</div>
+        <div class="p-desc">Just browse. Follow the threads. See what's happening</div>
+        <div class="p-cta">start exploring &rarr;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Latest content — warm section -->
+  <div class="section-warm">
+    <svg class="flower-accent" width="250" height="250" style="position:absolute;left:-60px;bottom:-60px;opacity:0.04;" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="hand-label">fresh from the community</div>
+    <h2>What people are reading</h2>
+    <div class="shelf" style="margin-top:16px;">
+      <div class="shelf-card">
+        <div class="card-img" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a75157aa0a83c86f81e1a4_zero-suicide-model-hospitals.jpg');"></div>
+        <div class="card-body"><div class="card-pathway"><span class="bar" style="background:var(--health);"></span> Our Health</div><div class="card-title">Community Health Workers Transform Care</div><div class="card-desc">How trusted neighbors are bridging the gap between clinics and real life.</div></div>
+      </div>
+      <div class="shelf-card">
+        <div class="card-img" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a1f2e8e405ca6e9fdc4d7c_how-to-prevent-elections-from-being-stolen.jpg');"></div>
+        <div class="card-body"><div class="card-pathway"><span class="bar" style="background:var(--voice);"></span> Our Voice</div><div class="card-title">Strengthening Election Integrity</div><div class="card-desc">What you can actually do to make elections fairer here.</div></div>
+      </div>
+      <div class="shelf-card">
+        <div class="card-img" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a730b1186e0e0cef98e04f_jane-goodall-day-of-action.jpg');"></div>
+        <div class="card-body"><div class="card-pathway"><span class="bar" style="background:var(--planet);"></span> Our Planet</div><div class="card-title">Houston's Environmental Action Day</div><div class="card-desc">Green spaces and climate resilience, happening right here.</div></div>
+      </div>
+      <div class="shelf-card">
+        <div class="card-img" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a50e8efdbf3c3c5d210c18_ms-rachel-accurso-iran-strike.jpg');"></div>
+        <div class="card-body"><div class="card-pathway"><span class="bar" style="background:var(--families);"></span> Our Families</div><div class="card-title">Youth Programs Expanding</div><div class="card-desc">New mentorship programs building futures one kid at a time.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pathways — tinted by section -->
+  <div class="section-tinted" style="background:var(--bg);">
+    <svg class="flower-accent" width="280" height="280" style="position:absolute;right:-70px;top:-40px;opacity:0.04;" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="hand-label" style="color:var(--accent);">explore by pathway</div>
+    <h2>Seven lenses on one city</h2>
+    <div class="pathway-stack">
+      <div class="pw-card" style="border-left-color:var(--health);"><div class="pw-circle" style="background:var(--health);"><svg width="28" height="28" viewBox="0 0 200 200" style="position:relative;z-index:1;"><circle cx="100" cy="100" r="20" stroke="#fff" stroke-width="2" opacity="0.8"/></svg></div><div><div class="pw-name">Our Health</div><div class="pw-desc">Wellness, healing, and the infrastructure that makes care possible</div><div class="pw-count">124 resources</div></div><svg class="pw-flower-bg" width="120" height="120" viewBox="0 0 200 200"><use href="#flower-color"/></svg></div>
+      <div class="pw-card" style="border-left-color:var(--families);"><div class="pw-circle" style="background:var(--families);"><svg width="28" height="28" viewBox="0 0 200 200" style="position:relative;z-index:1;"><circle cx="100" cy="100" r="20" stroke="#fff" stroke-width="2" opacity="0.8"/></svg></div><div><div class="pw-name">Our Families</div><div class="pw-desc">Schools, childcare, youth programs, and everything that strengthens a family</div><div class="pw-count">98 resources</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--voice);"><div class="pw-circle" style="background:var(--voice);"><svg width="28" height="28" viewBox="0 0 200 200" style="position:relative;z-index:1;"><circle cx="100" cy="100" r="20" stroke="#fff" stroke-width="2" opacity="0.8"/></svg></div><div><div class="pw-name">Our Voice</div><div class="pw-desc">Voting, organizing, showing up, and making sure the system hears you</div><div class="pw-count">76 resources</div></div></div>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <span style="font-family:'Architects Daughter',cursive;font-size:16px;color:var(--accent);cursor:pointer;">see all 7 pathways &rarr;</span>
+    </div>
+  </div>
+
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PATHWAYS LISTING
+     ═══════════════════════════════════════════ -->
+<div id="pathways" class="page">
+  <div class="page-hero" style="background:#FDFBF8;">
+    <svg class="flower-bg" width="200" height="200" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / Pathways</div>
+    <div class="hand-label" style="color:var(--accent);"><svg width="20" height="20" viewBox="0 0 200 200"><use href="#flower-color"/></svg> 7 lenses on one city</div>
+    <h1>Explore Houston<br>Through Your Lens</h1>
+    <div class="sub">Each pathway cuts across everything -- resources, knowledge, officials, organizations. Pick one. Go deep. Circle back.</div>
+    <div class="rule" style="background:var(--accent);"></div>
+  </div>
+  <div style="padding:0 48px 48px;">
+    <div class="pathway-stack">
+      <div class="pw-card" style="border-left-color:var(--health);"><div class="pw-circle" style="background:var(--health);"></div><div><div class="pw-name">Our Health</div><div class="pw-desc">Wellness, healing, care, and the infrastructure that makes it possible</div><div class="pw-count">124 resources across 4 centers</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--families);"><div class="pw-circle" style="background:var(--families);"></div><div><div class="pw-name">Our Families</div><div class="pw-desc">Schools, childcare, youth development, and family support</div><div class="pw-count">98 resources across 4 centers</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--neighborhood);"><div class="pw-circle" style="background:var(--neighborhood);"></div><div><div class="pw-name">Our Neighborhood</div><div class="pw-desc">Housing, parks, roads, libraries -- the shared spaces we call home</div><div class="pw-count">87 resources across 4 centers</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--voice);"><div class="pw-circle" style="background:var(--voice);"></div><div><div class="pw-name">Our Voice</div><div class="pw-desc">Voting, organizing, showing up, and making sure the system hears you</div><div class="pw-count">76 resources across 4 centers</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--money);"><div class="pw-circle" style="background:var(--money);"></div><div><div class="pw-name">Our Money</div><div class="pw-desc">Jobs, benefits, financial tools, and the path to economic stability</div><div class="pw-count">92 resources across 4 centers</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--planet);"><div class="pw-circle" style="background:var(--planet);"></div><div><div class="pw-name">Our Planet</div><div class="pw-desc">Climate, flooding, air quality, energy -- how Houston meets the future</div><div class="pw-count">54 resources across 4 centers</div></div></div>
+      <div class="pw-card" style="border-left-color:var(--bigger);"><div class="pw-circle" style="background:var(--bigger);"></div><div><div class="pw-name">The Bigger We</div><div class="pw-desc">Bridging difference, building trust, finding what connects us all</div><div class="pw-count">41 resources across 4 centers</div></div></div>
+    </div>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PATHWAY DETAIL — Shelf Braid
+     ═══════════════════════════════════════════ -->
+<div id="pathway-detail" class="page">
+  <div class="page-hero" style="background:linear-gradient(135deg, rgba(229,62,62,0.06), #FDFBF8);">
+    <svg class="flower-bg" width="220" height="220" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / <a>Pathways</a> / Our Health</div>
+    <div class="hand-label" style="color:var(--health);"><span style="width:5px;height:24px;border-radius:2px;background:var(--health);display:inline-block;"></span> Our Health</div>
+    <h1>Wellness, Healing,<br>and Care</h1>
+    <div class="sub">How do Houston's communities build health infrastructure that actually serves everyone? Start anywhere below.</div>
+    <div class="rule" style="background:var(--health);"></div>
+  </div>
+
+  <div class="braid-section" style="background:#FDFBF8;">
+    <svg class="flower-corner" width="180" height="180" style="right:-40px;top:-40px;" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="braid-header">
+      <svg width="26" height="26" viewBox="0 0 40 40"><use href="#icon-understand"/></svg>
+      <h3>How can I understand?</h3>
+      <span class="center-label" style="color:#92400e;">Learning Center</span>
+    </div>
+    <div class="shelf">
+      <div class="shelf-card" style="width:210px;"><div class="card-img" style="background-image:url('https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a75157aa0a83c86f81e1a4_zero-suicide-model-hospitals.jpg');height:100px;"></div><div class="card-body"><div class="card-title">CHW Programs in Houston</div><div class="card-desc">How community health workers are changing what care looks like.</div></div></div>
+      <div class="shelf-card" style="width:210px;"><div style="height:6px;background:var(--health);"></div><div class="card-body"><div class="card-title">Mental Health First Aid</div><div class="card-desc">A practical guide for showing up when someone needs it.</div></div></div>
+      <div class="shelf-card" style="width:210px;"><div style="height:6px;background:var(--health);"></div><div class="card-body"><div class="card-title">School-Based Health Centers</div><div class="card-desc">What they do, who they serve, and why they matter.</div></div></div>
+    </div>
+  </div>
+
+  <div class="nudge" style="margin:0 40px;">
+    <svg width="22" height="22" viewBox="0 0 40 40"><use href="#icon-involve"/></svg>
+    <div class="nudge-text">Read something that moved you? Here's how to take the next step.</div>
+    <div class="nudge-cta">get involved &rarr;</div>
+  </div>
+
+  <div class="braid-section" style="background:var(--bg);">
+    <svg class="flower-corner" width="160" height="160" style="left:-30px;bottom:-30px;" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="braid-header">
+      <svg width="26" height="26" viewBox="0 0 40 40"><use href="#icon-involve"/></svg>
+      <h3>How can I help?</h3>
+      <span class="center-label" style="color:#065f46;">Action Center</span>
+    </div>
+    <div class="shelf">
+      <div class="shelf-card" style="width:210px;"><div class="card-body"><div class="card-meta" style="font-size:9px;color:var(--muted);display:flex;gap:4px;margin-bottom:4px;"><span class="badge" style="background:#d1fae5;color:#065f46;">Mar 15</span><span class="badge" style="background:#f5f3ff;color:#6b46c1;">~2hrs</span></div><div class="card-title">Community Health Fair</div><div class="card-desc">Free screenings, info sessions, family fun in Sunnyside.</div></div></div>
+      <div class="shelf-card" style="width:210px;"><div class="card-body"><div class="card-meta" style="font-size:9px;color:var(--muted);display:flex;gap:4px;margin-bottom:4px;"><span class="badge" style="background:#d1fae5;color:#065f46;">Apr-Jun</span><span class="badge" style="background:#f5f3ff;color:#6b46c1;">8 weeks</span></div><div class="card-title">CHW Training Program</div><div class="card-desc">Become a certified community health worker. Change lives.</div></div></div>
+      <div class="shelf-card" style="width:210px;"><div class="card-body"><div class="card-meta" style="font-size:9px;color:var(--muted);display:flex;gap:4px;margin-bottom:4px;"><span class="badge" style="background:#d1fae5;color:#065f46;">Ongoing</span><span class="badge" style="background:#f5f3ff;color:#6b46c1;">2hrs/wk</span></div><div class="card-title">Health Literacy Mentor</div><div class="card-desc">Help someone navigate health info. No background needed.</div></div></div>
+    </div>
+  </div>
+
+  <div class="braid-section" style="background:#FDFBF8;">
+    <div class="braid-header">
+      <svg width="26" height="26" viewBox="0 0 48 48"><use href="#icon-seeker"/></svg>
+      <h3>What's available to me?</h3>
+      <span class="center-label" style="color:#d69e2e;">Resource Center</span>
+    </div>
+    <div class="service-stack">
+      <div class="service-card" style="border-left-color:var(--health);"><div class="service-name">Mental Health Counseling</div><div class="service-org">The Harris Center -- Free. Confidential. No strings.</div><div class="service-meta"><span class="badge" style="background:#d1fae5;color:#065f46;">Free</span> (713) 970-7000 / EN/ES/VI</div></div>
+      <div class="service-card" style="border-left-color:var(--health);"><div class="service-name">Crisis Hotline (24/7)</div><div class="service-org">Call anytime. Someone will answer.</div><div class="service-meta"><span class="badge" style="background:#d1fae5;color:#065f46;">Free</span> (713) 970-4600</div></div>
+      <div class="service-card" style="border-left-color:var(--health);"><div class="service-name">Substance Use Support</div><div class="service-org">Outpatient programs and people who've been there too.</div><div class="service-meta"><span class="badge" style="background:#fef3c7;color:#92400e;">Sliding scale</span></div></div>
+    </div>
+  </div>
+
+  <div class="braid-section" style="background:linear-gradient(135deg,rgba(128,90,213,0.04),var(--bg));">
+    <div class="braid-header">
+      <svg width="26" height="26" viewBox="0 0 40 40"><use href="#icon-deeper"/></svg>
+      <h3>Who makes the decisions?</h3>
+      <span class="center-label" style="color:#805ad5;">Accountability</span>
+    </div>
+    <div class="officials-grid">
+      <div class="official-card"><div class="official-photo">MG</div><div><div class="official-name">Rep. Mary Garcia</div><div class="official-title">State Rep, Dist. 145</div><div class="official-badges"><span class="badge" style="background:#ebf8ff;color:#2b6cb0;">State</span></div></div></div>
+      <div class="official-card"><div class="official-photo">LH</div><div><div class="official-name">Lina Hidalgo</div><div class="official-title">County Judge</div><div class="official-badges"><span class="badge" style="background:#fef3c7;color:#92400e;">County</span></div></div></div>
+    </div>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SERVICES
+     ═══════════════════════════════════════════ -->
+<div id="services" class="page">
+  <div class="page-hero" style="background:linear-gradient(135deg,rgba(214,158,46,0.06),#FDFBF8);">
+    <svg class="flower-bg" width="200" height="200" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / Services</div>
+    <div class="hand-label" style="color:var(--accent);"><svg width="20" height="20" viewBox="0 0 48 48"><use href="#icon-seeker"/></svg> you're looking for something specific</div>
+    <h1>Services Directory</h1>
+    <div class="sub">Real services. Real phone numbers. Real people on the other end.</div>
+    <div class="rule" style="background:#d69e2e;"></div>
+  </div>
+  <div class="three-col">
+    <div style="padding:24px 36px 40px;">
+      <div style="height:160px;background:linear-gradient(135deg,#e8f4e8,#dceadc);border-radius:14px;border:1px solid #c6dcc6;display:flex;align-items:center;justify-content:center;color:#5a8a5a;font-size:12px;margin-bottom:16px;font-style:italic;">Interactive Map</div>
+      <div class="service-stack">
+        <div class="service-card" style="border-left-color:var(--health);"><div class="service-name">Community Mental Health Counseling</div><div class="service-org">The Harris Center</div><div class="service-meta"><span class="badge" style="background:#d1fae5;color:#065f46;">Free</span> (713) 970-7000 / Mon-Fri</div></div>
+        <div class="service-card" style="border-left-color:var(--health);"><div class="service-name">Crisis Hotline</div><div class="service-org">The Harris Center</div><div class="service-meta"><span class="badge" style="background:#d1fae5;color:#065f46;">Free</span> (713) 970-4600 / 24/7</div></div>
+        <div class="service-card" style="border-left-color:var(--families);"><div class="service-name">211 Helpline</div><div class="service-org">United Way of Greater Houston</div><div class="service-meta"><span class="badge" style="background:#d1fae5;color:#065f46;">Free</span> Dial 2-1-1 / EN/ES/VI</div></div>
+        <div class="service-card" style="border-left-color:var(--money);"><div class="service-name">VITA Free Tax Prep</div><div class="service-org">United Way / BakerRipley</div><div class="service-meta"><span class="badge" style="background:#d1fae5;color:#065f46;">Free</span> Jan-Apr / 40+ locations</div></div>
+      </div>
+    </div>
+    <aside class="sidebar">
+      <h3>At a Glance</h3>
+      <div class="sidebar-stat"><span class="label">Total services</span><span class="value">312</span></div>
+      <div class="sidebar-stat"><span class="label">Free</span><span class="value">187</span></div>
+      <div class="sidebar-stat"><span class="label">Organizations</span><span class="value">45</span></div>
+      <div class="sidebar-stat"><span class="label">Languages</span><span class="value">EN, ES, VI</span></div>
+      <div style="margin-top:18px;">
+        <span class="hand-label">people are looking for</span>
+        <div style="font-size:11px;color:var(--muted);font-style:italic;display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;align-items:center;gap:6px;"><span style="width:3px;height:16px;border-radius:1px;background:var(--health);"></span> Mental health support</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="width:3px;height:16px;border-radius:1px;background:var(--health);"></span> Food access</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="width:3px;height:16px;border-radius:1px;background:var(--neighborhood);"></span> Housing stability</div>
+          <div style="display:flex;align-items:center;gap:6px;"><span style="width:3px;height:16px;border-radius:1px;background:var(--money);"></span> Job training</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     OFFICIALS
+     ═══════════════════════════════════════════ -->
+<div id="officials" class="page">
+  <div class="page-hero" style="background:linear-gradient(135deg,rgba(128,90,213,0.06),#FDFBF8);">
+    <svg class="flower-bg" width="200" height="200" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / Officials</div>
+    <div class="hand-label" style="color:#805ad5;"><svg width="20" height="20" viewBox="0 0 48 48"><use href="#icon-watchdog"/></svg> follow the power</div>
+    <h1>Your Elected Officials</h1>
+    <div class="sub">These are the people who represent you. Know their names. Know their votes. Hold them to it.</div>
+    <div class="rule" style="background:#805ad5;"></div>
+  </div>
+  <div style="padding:0 48px 48px;">
+    <div class="officials-grid">
+      <div class="official-card"><div class="official-photo">ST</div><div><div class="official-name">Sylvester Turner</div><div class="official-title">Mayor, City of Houston</div><div class="official-badges"><span class="badge" style="background:#d1fae5;color:#065f46;">City</span> <span class="badge" style="background:#fef3c7;color:#92400e;">D</span></div></div></div>
+      <div class="official-card"><div class="official-photo">LH</div><div><div class="official-name">Lina Hidalgo</div><div class="official-title">County Judge</div><div class="official-badges"><span class="badge" style="background:#fef3c7;color:#92400e;">County</span></div></div></div>
+      <div class="official-card"><div class="official-photo">MG</div><div><div class="official-name">Rep. Mary Garcia</div><div class="official-title">State Rep, Dist. 145</div><div class="official-badges"><span class="badge" style="background:#ebf8ff;color:#2b6cb0;">State</span></div></div></div>
+      <div class="official-card"><div class="official-photo">TC</div><div><div class="official-name">Ted Cruz</div><div class="official-title">U.S. Senator</div><div class="official-badges"><span class="badge" style="background:#dbeafe;color:#1e40af;">Federal</span> <span class="badge" style="background:#fef2f2;color:#991b1b;">R</span></div></div></div>
+    </div>
+    <div class="nudge" style="margin-top:24px;">
+      <svg width="22" height="22" viewBox="0 0 48 48"><use href="#icon-builder"/></svg>
+      <div class="nudge-text">Know who represents you? The next step is attending one of their public meetings. It takes about two hours.</div>
+      <div class="nudge-cta">find a meeting &rarr;</div>
+    </div>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     COMPASS
+     ═══════════════════════════════════════════ -->
+<div id="compass" class="page">
+  <div class="page-hero" style="background:#FDFBF8;">
+    <svg class="flower-bg" width="240" height="240" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / Compass</div>
+    <div class="hand-label" style="color:var(--accent);"><svg width="22" height="22" viewBox="0 0 200 200"><use href="#flower-color"/></svg> the whole picture</div>
+    <h1>The Compass</h1>
+    <div class="sub">Every cell is a doorway. Pick a theme. Pick how you want to engage. See what's there.</div>
+    <div class="rule" style="background:var(--accent);"></div>
+  </div>
+  <div style="padding:0 48px 48px;">
+    <div class="compass-grid">
+      <div></div>
+      <div class="compass-header"><svg width="22" height="22" viewBox="0 0 40 40"><use href="#icon-understand"/></svg><span>Learning</span></div>
+      <div class="compass-header"><svg width="22" height="22" viewBox="0 0 40 40"><use href="#icon-involve"/></svg><span>Action</span></div>
+      <div class="compass-header"><svg width="22" height="22" viewBox="0 0 48 48"><use href="#icon-seeker"/></svg><span>Resource</span></div>
+      <div class="compass-header"><svg width="22" height="22" viewBox="0 0 40 40"><use href="#icon-deeper"/></svg><span>Accountability</span></div>
+
+      <div class="compass-row-label" style="color:var(--health);">Health</div>
+      <div class="compass-cell" style="border-top:3px solid var(--health);"><div class="cc-count">18</div><div class="cc-label">articles, research</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--health);"><div class="cc-count">7</div><div class="cc-label">events, volunteer</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--health);"><div class="cc-count">24</div><div class="cc-label">services, orgs</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--health);"><div class="cc-count">5</div><div class="cc-label">officials, policies</div></div>
+
+      <div class="compass-row-label" style="color:var(--families);">Families</div>
+      <div class="compass-cell" style="border-top:3px solid var(--families);"><div class="cc-count">14</div><div class="cc-label">articles, guides</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--families);"><div class="cc-count">9</div><div class="cc-label">programs</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--families);"><div class="cc-count">31</div><div class="cc-label">services, orgs</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--families);"><div class="cc-count">3</div><div class="cc-label">officials, bills</div></div>
+
+      <div class="compass-row-label" style="color:var(--voice);">Voice</div>
+      <div class="compass-cell" style="border-top:3px solid var(--voice);"><div class="cc-count">11</div><div class="cc-label">articles</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--voice);"><div class="cc-count">5</div><div class="cc-label">hearings</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--voice);"><div class="cc-count">8</div><div class="cc-label">voter resources</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--voice);"><div class="cc-count">12</div><div class="cc-label">officials, policies</div></div>
+
+      <div class="compass-row-label" style="color:var(--money);">Money</div>
+      <div class="compass-cell" style="border-top:3px solid var(--money);"><div class="cc-count">8</div><div class="cc-label">guides</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--money);"><div class="cc-count">4</div><div class="cc-label">workshops</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--money);"><div class="cc-count">19</div><div class="cc-label">services</div></div>
+      <div class="compass-cell" style="border-top:3px solid var(--money);"><div class="cc-count">6</div><div class="cc-label">policies</div></div>
+    </div>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HELP
+     ═══════════════════════════════════════════ -->
+<div id="help" class="page">
+  <div class="page-hero" style="background:linear-gradient(135deg,rgba(214,158,46,0.08),#FDFBF8);">
+    <svg class="flower-bg" width="200" height="200" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / Help</div>
+    <div class="hand-label" style="color:var(--accent);"><svg width="20" height="20" viewBox="0 0 48 48"><use href="#icon-seeker"/></svg> start here</div>
+    <h1>What's Available to You</h1>
+    <div class="sub">You don't need to have it figured out. Pick the situation closest to yours and we'll show you what's there.</div>
+    <div class="rule" style="background:#d69e2e;"></div>
+  </div>
+  <div style="padding:0 48px 48px;">
+    <div class="help-grid">
+      <div class="help-card" style="border-left-color:var(--health);"><div class="help-title">Food Access & Nutrition</div><div class="help-desc">Groceries, food pantries, SNAP, WIC, and places that will feed you today</div><div class="help-count">12 services / 4 organizations</div></div>
+      <div class="help-card" style="border-left-color:var(--health);"><div class="help-title">Mental Health & Wellbeing</div><div class="help-desc">Counseling, crisis lines, peer support, and people who get it</div><div class="help-count">8 services / 3 organizations</div></div>
+      <div class="help-card" style="border-left-color:var(--neighborhood);"><div class="help-title">Housing Stability</div><div class="help-desc">Rent help, affordable housing, shelters, and someone to talk to about next steps</div><div class="help-count">15 services / 6 organizations</div></div>
+      <div class="help-card" style="border-left-color:var(--money);"><div class="help-title">Financial Stability</div><div class="help-desc">Job training, benefits you might not know about, free tax prep, coaching</div><div class="help-count">10 services / 5 organizations</div></div>
+      <div class="help-card" style="border-left-color:var(--families);"><div class="help-title">Childcare & Early Learning</div><div class="help-desc">Pre-K, childcare subsidies, after-school programs that actually have spots</div><div class="help-count">9 services / 4 organizations</div></div>
+      <div class="help-card" style="border-left-color:var(--health);"><div class="help-title">Safety & Protection</div><div class="help-desc">Support, legal aid, safety planning, and people in your corner</div><div class="help-count">7 services / 3 organizations</div></div>
+    </div>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     CONTENT DETAIL (with Wayfinder sidebar)
+     ═══════════════════════════════════════════ -->
+<div id="content-detail" class="page">
+  <div class="page-hero" style="background:linear-gradient(135deg,rgba(229,62,62,0.05),#FDFBF8);">
+    <svg class="flower-bg" width="200" height="200" viewBox="0 0 200 200"><use href="#flower-large"/></svg>
+    <div class="bc"><a>Home</a> / <a>Our Health</a> / CHW Programs</div>
+    <div class="hand-label" style="color:var(--health);"><span style="width:5px;height:24px;border-radius:2px;background:var(--health);display:inline-block;"></span> Our Health</div>
+    <h1>Community Health Workers<br>Are Changing Everything</h1>
+    <div class="sub">They're not doctors. They're your neighbors. And they're bridging a gap the system never could.</div>
+    <div class="rule" style="background:var(--health);"></div>
+  </div>
+  <div class="three-col">
+    <div style="padding:0 36px 40px;">
+      <div style="border-radius:14px;overflow:hidden;margin-bottom:22px;">
+        <img src="https://cdn.prod.website-files.com/5f6cc9cd16d59d990c8fca33/69a75157aa0a83c86f81e1a4_zero-suicide-model-hospitals.jpg" style="width:100%;height:240px;object-fit:cover;display:block;" alt="">
+      </div>
+      <div style="font-family:'DM Serif Display',serif;font-size:14px;line-height:2;color:var(--text);max-width:560px;">
+        <p>Community health workers are trusted members of their communities who serve as vital links between healthcare systems and the people they serve. In Houston, CHW programs are demonstrating real, measurable impact -- particularly in neighborhoods that have been historically underserved.</p>
+        <p style="margin-top:16px;">These programs focus on culturally competent outreach, health literacy, care coordination, and connection to social services. The evidence is clear: communities with active CHW programs see better chronic disease outcomes, higher vaccination rates, and fewer emergency room visits.</p>
+        <p style="margin-top:16px;font-style:italic;color:var(--muted);font-size:12px;">Source: Houston Chronicle, Feb 2026</p>
+      </div>
+      <div class="nudge" style="margin-top:28px;">
+        <svg width="22" height="22" viewBox="0 0 40 40"><use href="#icon-involve"/></svg>
+        <div class="nudge-text">This took about 3 minutes. Want to go further? There's a health fair next week you could walk into.</div>
+        <div class="nudge-cta">see it &rarr;</div>
+      </div>
+    </div>
+    <aside class="sidebar">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <svg width="24" height="24" viewBox="0 0 200 200"><use href="#flower-color"/></svg>
+        <h3 style="margin:0;">Wayfinder</h3>
+      </div>
+
+      <span class="hand-label">connected organizations</span>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px;">
+        <div style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg);border-radius:10px;font-size:11px;font-weight:500;cursor:pointer;transition:transform 0.2s;">
+          <div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#e8e3db,#d4cfc6);flex-shrink:0;"></div>
+          The Harris Center
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--bg);border-radius:10px;font-size:11px;font-weight:500;cursor:pointer;transition:transform 0.2s;">
+          <div style="width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#e8e3db,#d4cfc6);flex-shrink:0;"></div>
+          Avenue 360 Health
+        </div>
+      </div>
+
+      <span class="hand-label">your next steps</span>
+
+      <div class="tier-header">
+        <svg width="20" height="20" viewBox="0 0 40 40"><use href="#icon-understand"/></svg>
+        <span class="tier-name" style="color:#92400e;">Understand</span>
+      </div>
+      <div class="tier-card"><div class="tc-title">Mental Health First Aid Guide</div><div class="tc-meta">~5 min read</div></div>
+      <div class="tier-card"><div class="tc-title">School Health Center Overview</div><div class="tc-meta">~3 min read</div></div>
+
+      <div class="tier-header">
+        <svg width="20" height="20" viewBox="0 0 40 40"><use href="#icon-involve"/></svg>
+        <span class="tier-name" style="color:#065f46;">Get Involved</span>
+      </div>
+      <div class="tier-card"><div class="tc-title">Community Health Fair</div><div class="tc-meta">Mar 15 / ~2 hrs / Sunnyside</div></div>
+      <div class="tier-card"><div class="tc-title">CHW Training Program</div><div class="tc-meta">8 weeks / starts Apr</div></div>
+
+      <div class="tier-header">
+        <svg width="20" height="20" viewBox="0 0 40 40"><use href="#icon-deeper"/></svg>
+        <span class="tier-name" style="color:#1e40af;">Go Deeper</span>
+      </div>
+      <div class="tier-card"><div class="tc-title">Rep. Mary Garcia</div><div class="tc-meta">Health committee / State legislation</div></div>
+      <div class="tier-card"><div class="tc-title">SB 2047: CHW Funding Act</div><div class="tc-meta">In committee -- track this</div></div>
+    </aside>
+  </div>
+  <div class="origin-footer">built in Houston, made for everyone</div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => { p.style.display='none'; p.classList.remove('visible'); });
+  document.getElementById(id).style.display='block';
+  document.getElementById(id).classList.add('visible');
+  document.querySelectorAll('.top-bar a').forEach(a => a.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
