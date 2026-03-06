@@ -159,8 +159,13 @@ async function syncFromRss(): Promise<{ policies_upserted: number; errors: numbe
         };
 
         const result = await db('policies?on_conflict=policy_id', 'POST', [record]);
-        if (result) totalUpserted++;
-        else totalErrors++;
+        if (result) {
+          totalUpserted++;
+          // Bind to Texas geography so state bills show on maps
+          await db('policy_geography?on_conflict=policy_id,geo_type,geo_id', 'POST', [{
+            policy_id: policyId, geo_id: 'texas', geo_type: 'state',
+          }]);
+        } else totalErrors++;
       }
 
       await sleep(1000);
@@ -185,7 +190,7 @@ async function syncFromOpenStates(mode: string): Promise<{ officials_upserted: n
   let policiesUpserted = 0;
   let errors = 0;
 
-  // ── Sync state officials ────────────────────────────────────────
+  // ── Sync state legislators ──────────────────────────────────────
 
   try {
     const peopleRes = await fetch('https://v3.openstates.org/people?jurisdiction=tx&current_role=true&per_page=200', {
@@ -201,13 +206,20 @@ async function syncFromOpenStates(mode: string): Promise<{ officials_upserted: n
         const officialId = `OFF_${await sha256Short('open_states|' + person.id)}`;
         const role = person.current_role || {};
         const chamber = role.org_classification || '';
-        const districtType = chamber === 'upper' ? 'state_senate' : 'state_house';
-        const districtId = role.district || '';
+        const districtType = chamber === 'upper' ? 'state_senate'
+          : chamber === 'lower' ? 'state_house'
+          : 'statewide';
+        const districtId = role.district || 'statewide';
+
+        // Determine title based on role
+        let title = 'State Representative';
+        if (chamber === 'upper') title = 'State Senator';
+        else if (role.title) title = role.title;
 
         const record = {
           official_id: officialId,
           official_name: person.name,
-          title: chamber === 'upper' ? 'State Senator' : 'State Representative',
+          title,
           level: 'State',
           party: person.party || null,
           district_type: districtType,
@@ -226,6 +238,42 @@ async function syncFromOpenStates(mode: string): Promise<{ officials_upserted: n
   } catch (err) {
     console.error('Open States people error:', (err as Error).message);
     errors++;
+  }
+
+  // ── Sync statewide executives (Governor, AG, Comptroller, etc.) ──
+
+  const TX_STATEWIDE_OFFICIALS = [
+    { name: 'Greg Abbott', title: 'Governor', district_id: 'governor', website: 'https://gov.texas.gov' },
+    { name: 'Dan Patrick', title: 'Lieutenant Governor', district_id: 'lt-governor', website: 'https://www.ltgov.texas.gov' },
+    { name: 'Ken Paxton', title: 'Attorney General', district_id: 'attorney-general', website: 'https://www.texasattorneygeneral.gov' },
+    { name: 'Glenn Hegar', title: 'Comptroller', district_id: 'comptroller', website: 'https://comptroller.texas.gov' },
+    { name: 'Dawn Buckingham', title: 'Commissioner of the General Land Office', district_id: 'land-commissioner', website: 'https://www.glo.texas.gov' },
+    { name: 'Sid Miller', title: 'Commissioner of Agriculture', district_id: 'agriculture-commissioner', website: 'https://www.texasagriculture.gov' },
+  ];
+
+  for (const exec of TX_STATEWIDE_OFFICIALS) {
+    try {
+      const officialId = `OFF_${await sha256Short('tx_executive|' + exec.district_id)}`;
+      const record = {
+        official_id: officialId,
+        official_name: exec.name,
+        title: exec.title,
+        level: 'State',
+        party: 'Republican',
+        district_type: 'statewide',
+        district_id: exec.district_id,
+        jurisdiction: 'Texas',
+        website: exec.website,
+        data_source: 'texas_executive',
+        last_updated: new Date().toISOString(),
+      };
+      const result = await db('elected_officials?on_conflict=official_id', 'POST', [record]);
+      if (result) officialsUpserted++;
+      else errors++;
+    } catch (err) {
+      console.error(`TX executive ${exec.title} error:`, (err as Error).message);
+      errors++;
+    }
   }
 
   await sleep(1000);
@@ -282,8 +330,12 @@ async function syncFromOpenStates(mode: string): Promise<{ officials_upserted: n
         };
 
         const result = await db('policies?on_conflict=policy_id', 'POST', [record]);
-        if (result) policiesUpserted++;
-        else errors++;
+        if (result) {
+          policiesUpserted++;
+          await db('policy_geography?on_conflict=policy_id,geo_type,geo_id', 'POST', [{
+            policy_id: policyId, geo_id: 'texas', geo_type: 'state',
+          }]);
+        } else errors++;
 
         // Match sponsors to officials
         const sponsors = bill.sponsorships || [];

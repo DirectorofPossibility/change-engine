@@ -125,6 +125,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://xesojwzcnjqtpuossmuv.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key>
 SUPABASE_SECRET_KEY=<service role key>
 ANTHROPIC_API_KEY=<claude api key>
+DATA_GOV_API_KEY=<api.data.gov key — also used as CONGRESS_API_KEY>
+GOOGLE_CIVIC_API_KEY=<google civic api key>
 ```
 
 ## Local Development
@@ -169,25 +171,32 @@ git push origin master
 |------|------|------|
 | 1 AM | `batch-translate` | Translate untranslated content → ES, VI |
 | 3 AM | `poll-rss` | Poll all active RSS feeds → classify new items |
+| 5 AM Mon | `sync-federal-spending` | USAspending → federal grants/contracts/loans in Harris County |
 | 6 AM | `sync-polling-places` | Refresh voter locations |
-| 7 AM | `sync-city-houston` | Legistar API → officials + policies + classify |
-| 8 AM | `sync-officials` | Google Civic + Congress → federal/state officials + ZIP districts + classify |
-| 9 AM | `sync-state-texas` | TLO + Open States → officials + policies + classify |
+| 7 AM | `sync-city-houston` | Legistar API → Houston officials + ordinances + classify + geo bind |
+| 8 AM | `sync-county-harris` | Legistar API → Harris County officials + legislation + classify + geo bind |
+| 9 AM | `sync-officials` | Google Civic + Congress → federal officials + ZIP districts + classify |
+| 10 AM | `sync-state-texas` | TLO + Open States → TX legislators + statewide execs + bills + classify + geo bind |
 | 11 AM | `classify-pending` | Sweep ALL entity tables for unclassified items |
 
 ### Classification Pipeline
 1. All data goes through `classify-content-v2` (content) or `enrich-entity` (entities)
 2. AI classifies across **16 taxonomy dimensions** (themes, focus areas, SDGs, SDOH, NTEE, AIRS, centers, audiences, life situations, service categories, skills, time commitments, action types, gov levels, content type, geographic scope)
 3. Junction tables populated automatically for every entity type
-4. Nothing is auto-published — content goes to `needs_review` in `/dashboard/review`
-5. Translations run nightly for published content (ES + VI)
+4. `policy_geography` bindings created during sync so policies appear on maps
+5. Nothing is auto-published — content goes to `needs_review` in `/dashboard/review`
+6. Translations run nightly for published content (ES + VI)
 
-### Data Sources
+### Data Sources — Full Government Coverage
+| Level | Officials | Legislation | Spending | Sync Function |
+|-------|-----------|-------------|----------|---------------|
+| **Federal** | Congress.gov members | Congress.gov bills | USAspending (Harris County) | `sync-officials`, `sync-policies`, `sync-federal-spending` |
+| **State (TX)** | Open States legislators + statewide execs | TLO RSS + Open States bills | — | `sync-state-texas` |
+| **County (Harris)** | Legistar (Commissioners Court) | Legistar (court agenda items) | — | `sync-county-harris` |
+| **City (Houston)** | Legistar (council members) | Legistar (ordinances) | — | `sync-city-houston` |
+
 - **RSS feeds** → `rss_feeds` table → `rss-proxy` edge function → content pipeline
-- **Google Civic API** → `sync-officials` → ZIP→district mapping + officials
-- **Congress.gov API** → `sync-officials` → federal officials (TX)
-- **Legistar API** → `sync-city-houston` → Houston council + ordinances
-- **Texas Legislature** → `sync-state-texas` → state officials + bills
+- **Google Civic API** → `sync-officials` → ZIP→district mapping (Divisions endpoint)
 - **Manual URLs** → `/api/ingest` or `/api/intake` → content pipeline
 - **External APIs** → `/api/intake` with entity items → upsert + classify
 

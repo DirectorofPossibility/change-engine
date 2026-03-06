@@ -9,11 +9,13 @@ import {
 } from '../_shared/classifier.ts';
 
 /**
- * sync-city-houston — Ingests Houston City Council members and ordinances/resolutions
- * from the Legistar Web API.
+ * sync-county-harris — Ingests Harris County Commissioners Court members,
+ * county-elected officials, and county legislation from the Legistar Web API.
  *
  * API docs: https://webapi.legistar.com/Help
- * Base URL: https://webapi.legistar.com/v1/houston
+ * Base URL: https://webapi.legistar.com/v1/harriscounty
+ *
+ * Also populates policy_geography so policies show on maps.
  *
  * Request body:
  *   { mode: 'recent'|'full', trigger_classify: boolean, batch_size?: number }
@@ -29,7 +31,7 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const LEGISTAR_BASE = 'https://webapi.legistar.com/v1/houston';
+const LEGISTAR_BASE = 'https://webapi.legistar.com/v1/harriscounty';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
@@ -98,7 +100,7 @@ function mapMatterStatus(statusName: string): string {
   return 'Pending';
 }
 
-// ── Format bill number from matter type + file number ─────────────────
+// ── Format bill number ───────────────────────────────────────────────
 
 function formatBillNumber(matterType: string | null, matterFile: string | null): string {
   if (!matterType && !matterFile) return '';
@@ -106,6 +108,50 @@ function formatBillNumber(matterType: string | null, matterFile: string | null):
   const file = (matterFile || '').trim();
   if (typePrefix && file) return `${typePrefix} ${file}`;
   return file || typePrefix;
+}
+
+// ── Map official title from body name ─────────────────────────────────
+
+function parseCountyTitle(bodyName: string, personTitle?: string): { title: string; districtType: string; districtId: string } {
+  const b = (bodyName || '').toLowerCase();
+  const p = (personTitle || '').toLowerCase();
+
+  if (b.includes('judge') || p.includes('judge')) {
+    return { title: 'County Judge', districtType: 'county', districtId: 'county-judge' };
+  }
+  const precinctMatch = b.match(/precinct\s*(\d+)/i) || p.match(/precinct\s*(\d+)/i);
+  if (precinctMatch) {
+    return { title: 'County Commissioner', districtType: 'commissioner_precinct', districtId: precinctMatch[1] };
+  }
+  if (b.includes('commissioner') || p.includes('commissioner')) {
+    return { title: 'County Commissioner', districtType: 'commissioner_precinct', districtId: 'at-large' };
+  }
+  if (b.includes('clerk') || p.includes('clerk')) {
+    return { title: 'County Clerk', districtType: 'county', districtId: 'county-clerk' };
+  }
+  if (b.includes('sheriff') || p.includes('sheriff')) {
+    return { title: 'County Sheriff', districtType: 'county', districtId: 'county-sheriff' };
+  }
+  if (b.includes('attorney') || p.includes('attorney') || b.includes('da ') || p.includes('district attorney')) {
+    return { title: 'District Attorney', districtType: 'county', districtId: 'county-da' };
+  }
+  if (b.includes('treasurer') || p.includes('treasurer')) {
+    return { title: 'County Treasurer', districtType: 'county', districtId: 'county-treasurer' };
+  }
+  if (b.includes('tax') || p.includes('tax')) {
+    return { title: 'Tax Assessor-Collector', districtType: 'county', districtId: 'county-tax' };
+  }
+  return { title: personTitle || 'County Official', districtType: 'county', districtId: 'county' };
+}
+
+// ── Populate policy_geography for county policies ─────────────────────
+
+async function bindPolicyGeography(policyId: string) {
+  await db('policy_geography?on_conflict=policy_id,geo_type,geo_id', 'POST', [{
+    policy_id: policyId,
+    geo_id: 'harris-county',
+    geo_type: 'county',
+  }]);
 }
 
 // ── Main handler ──────────────────────────────────────────────────────
@@ -119,9 +165,9 @@ Deno.serve(async (req: Request) => {
     const triggerClassify: boolean = body.trigger_classify === true;
     const batchSize: number = body.batch_size || 50;
 
-    const stats = { officials_upserted: 0, policies_upserted: 0, sponsors_linked: 0, errors: 0 };
+    const stats = { officials_upserted: 0, policies_upserted: 0, sponsors_linked: 0, geo_bindings: 0, errors: 0 };
 
-    // ── 1. Sync officials (council members) ─────────────────────────
+    // ── 1. Sync officials (Commissioners Court + county elected) ────
 
     const persons = (await legistar('Persons?$filter=PersonActiveFlag eq 1&$orderby=PersonLastModifiedUtc desc') as any[]) || [];
     const personIdToOfficialId = new Map<number, string>();
@@ -130,55 +176,39 @@ Deno.serve(async (req: Request) => {
       const personId = person.PersonId;
       if (!personId) continue;
 
-      const officialId = `OFF_${await sha256Short('legistar_houston|' + personId)}`;
+      const officialId = `OFF_${await sha256Short('legistar_harris|' + personId)}`;
       personIdToOfficialId.set(personId, officialId);
-
-      // Determine district type and ID from office records or person name
-      let districtType = 'council';
-      let districtId = 'at-large';
 
       const fullName = `${person.PersonFirstName || ''} ${person.PersonLastName || ''}`.trim();
 
-      // Houston council: Mayor (At-Large), 5 At-Large, 11 Districts (A-K)
-      // We'll refine district from OfficeRecords if available
+      // Get office records to determine role
       const officeRecords = (await legistar(`Persons/${personId}/OfficeRecords?$orderby=OfficeRecordStartDate desc&$top=1`) as any[]) || [];
-      if (officeRecords.length > 0) {
-        const body = officeRecords[0].OfficeRecordTitle || officeRecords[0].OfficeRecordBodyName || '';
-        const districtMatch = body.match(/District\s+([A-K])/i);
-        if (districtMatch) {
-          districtId = districtMatch[1].toUpperCase();
-        } else if (/mayor/i.test(body)) {
-          districtId = 'mayor';
-        } else if (/at.large/i.test(body)) {
-          districtId = 'at-large';
-        }
-      }
+      const bodyName = officeRecords?.[0]?.OfficeRecordTitle || officeRecords?.[0]?.OfficeRecordBodyName || '';
+      const { title, districtType, districtId } = parseCountyTitle(bodyName, person.PersonTitle);
 
       const record = {
         official_id: officialId,
         official_name: fullName,
-        title: 'Council Member',
-        level: 'City',
+        title,
+        level: 'County',
+        jurisdiction: 'Harris County',
         district_type: districtType,
         district_id: districtId,
         email: person.PersonEmail || null,
         phone: person.PersonPhone || null,
         website: person.PersonWWW || null,
-        data_source: 'legistar_houston',
+        data_source: 'legistar_harris',
         last_updated: new Date().toISOString(),
       };
-
-      // Mayor title override
-      if (districtId === 'mayor') record.title = 'Mayor';
 
       const res = await db('elected_officials?on_conflict=official_id', 'POST', [record]);
       if (res) stats.officials_upserted++;
       else stats.errors++;
 
-      await sleep(300); // Rate limit Legistar API
+      await sleep(300);
     }
 
-    // ── 2. Sync policies (Matters) ──────────────────────────────────
+    // ── 2. Sync policies (Commissioners Court agenda items) ─────────
 
     const now = new Date();
     const lookbackDays = mode === 'recent' ? 7 : 180;
@@ -204,7 +234,7 @@ Deno.serve(async (req: Request) => {
         const matterId = matter.MatterId;
         if (!matterId) continue;
 
-        const policyId = `POL_HOU_${matterId}`;
+        const policyId = `POL_HC_${matterId}`;
         const matterType = matter.MatterTypeName || '';
         const matterFile = matter.MatterFile || '';
 
@@ -212,14 +242,14 @@ Deno.serve(async (req: Request) => {
           policy_id: policyId,
           policy_name: matter.MatterTitle || matter.MatterName || formatBillNumber(matterType, matterFile),
           bill_number: formatBillNumber(matterType, matterFile),
-          level: 'City',
+          level: 'County',
           status: mapMatterStatus(matter.MatterStatusName || ''),
           policy_type: matterType || null,
           introduced_date: matter.MatterIntroDate || null,
           last_action: matter.MatterStatusName || null,
           last_action_date: matter.MatterLastModifiedUtc?.split('T')[0] || null,
-          source_url: `https://houston.legistar.com/LegislationDetail.aspx?ID=${matterId}`,
-          data_source: 'legistar_houston',
+          source_url: `https://harriscounty.legistar.com/LegislationDetail.aspx?ID=${matterId}`,
+          data_source: 'legistar_harris',
           is_published: false,
           last_updated: new Date().toISOString(),
         };
@@ -227,60 +257,59 @@ Deno.serve(async (req: Request) => {
         const res = await db('policies?on_conflict=policy_id', 'POST', [record]);
         if (res) {
           stats.policies_upserted++;
-          // Bind to Houston geography so city policies show on maps
-          await db('policy_geography?on_conflict=policy_id,geo_type,geo_id', 'POST', [{
-            policy_id: policyId, geo_id: 'houston', geo_type: 'city',
-          }]);
-        } else stats.errors++;
+          // Bind to Harris County geography so it shows on maps
+          await bindPolicyGeography(policyId);
+          stats.geo_bindings++;
+        } else {
+          stats.errors++;
+        }
 
-        // ── 3. Fetch sponsors and link to officials ─────────────────
-
+        // Fetch sponsors and link to officials
         const sponsors = (await legistar(`Matters/${matterId}/Sponsors`) as any[]) || [];
         for (const sponsor of sponsors) {
           const sponsorPersonId = sponsor.MatterSponsorNameId;
           const officialId = personIdToOfficialId.get(sponsorPersonId);
           if (officialId) {
-            const junction = {
+            const jRes = await db('policy_officials?on_conflict=policy_id,official_id', 'POST', [{
               policy_id: policyId,
               official_id: officialId,
-            };
-            const jRes = await db('policy_officials?on_conflict=policy_id,official_id', 'POST', [junction]);
+            }]);
             if (jRes) stats.sponsors_linked++;
           }
         }
 
-        await sleep(500); // Rate limit
+        await sleep(500);
       }
 
       offset += batchSize;
       if (matters.length < batchSize) hasMore = false;
     }
 
-    // ── 4. Log to ingestion_log ─────────────────────────────────────
+    // ── 3. Log to ingestion_log ─────────────────────────────────────
 
     await db('ingestion_log', 'POST', {
-      event_type: 'sync_city_houston',
-      source: 'legistar_houston',
+      event_type: 'sync_county_harris',
+      source: 'legistar_harris',
       status: stats.errors === 0 ? 'success' : 'partial',
-      message: `Officials: ${stats.officials_upserted}, Policies: ${stats.policies_upserted}, Sponsors: ${stats.sponsors_linked}, Errors: ${stats.errors}`,
+      message: `Officials: ${stats.officials_upserted}, Policies: ${stats.policies_upserted}, Sponsors: ${stats.sponsors_linked}, Geo: ${stats.geo_bindings}, Errors: ${stats.errors}`,
       item_count: stats.officials_upserted + stats.policies_upserted,
     });
 
-    // ── 5. Inline classification for new policies + officials ──────
+    // ── 4. Inline classification ────────────────────────────────────
 
     let classified = 0;
     if (triggerClassify && ANTHROPIC_KEY) {
       try {
         const taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
 
-        // Classify unclassified policies (up to 5)
+        // Classify unclassified county policies (up to 5)
         if (stats.policies_upserted > 0) {
           const policyPrompt = buildPromptForEntity(taxonomy, 'policy');
-          const unclassifiedPolicies = await db(`policies?select=policy_id,policy_name,summary_5th_grade,policy_type,level,status,bill_number&classification_v2=is.null&limit=5`);
+          const unclassifiedPolicies = await db(`policies?select=policy_id,policy_name,summary_5th_grade,policy_type,level,status,bill_number&classification_v2=is.null&data_source=eq.legistar_harris&limit=5`);
           if (unclassifiedPolicies && unclassifiedPolicies.length > 0) {
             for (const pol of unclassifiedPolicies) {
               try {
-                const userContent = `Name: ${pol.policy_name}\nDescription: ${pol.summary_5th_grade || ''}\npolicy_type: ${pol.policy_type || ''}\nlevel: ${pol.level || ''}\nstatus: ${pol.status || ''}\nbill_number: ${pol.bill_number || ''}\nIMPORTANT: Write title_6th_grade, summary_6th_grade, and impact_statement.\n\nReturn JSON with all classification fields.`;
+                const userContent = `Name: ${pol.policy_name}\nDescription: ${pol.summary_5th_grade || ''}\npolicy_type: ${pol.policy_type || ''}\nlevel: County (Harris County, Texas)\nstatus: ${pol.status || ''}\nbill_number: ${pol.bill_number || ''}\nIMPORTANT: Write title_6th_grade, summary_6th_grade, and impact_statement.\n\nReturn JSON with all classification fields.`;
                 const rawText = await callClaude(policyPrompt, userContent, ANTHROPIC_KEY, 1200);
                 const raw = parseClaudeJson(rawText);
                 const enriched = validateAndEnrich(raw, taxonomy);
@@ -298,14 +327,14 @@ Deno.serve(async (req: Request) => {
           }
         }
 
-        // Classify unclassified officials (up to 3)
+        // Classify unclassified county officials (up to 3)
         if (stats.officials_upserted > 0) {
           const officialPrompt = buildPromptForEntity(taxonomy, 'elected_official');
-          const unclassifiedOfficials = await db(`elected_officials?select=official_id,official_name,title,party,level,jurisdiction,description_5th_grade&classification_v2=is.null&limit=3`);
+          const unclassifiedOfficials = await db(`elected_officials?select=official_id,official_name,title,party,level,jurisdiction,description_5th_grade&classification_v2=is.null&data_source=eq.legistar_harris&limit=3`);
           if (unclassifiedOfficials && unclassifiedOfficials.length > 0) {
             for (const off of unclassifiedOfficials) {
               try {
-                const userContent = `Name: ${off.official_name}\nTitle: ${off.title || ''}\nParty: ${off.party || ''}\nLevel: ${off.level || ''}\nJurisdiction: ${off.jurisdiction || ''}\nDescription: ${off.description_5th_grade || ''}\n\nReturn JSON with all classification fields.`;
+                const userContent = `Name: ${off.official_name}\nTitle: ${off.title || ''}\nParty: ${off.party || ''}\nLevel: County\nJurisdiction: Harris County, Texas\nDescription: ${off.description_5th_grade || ''}\n\nReturn JSON with all classification fields.`;
                 const rawText = await callClaude(officialPrompt, userContent, ANTHROPIC_KEY, 1000);
                 const raw = parseClaudeJson(rawText);
                 const enriched = validateAndEnrich(raw, taxonomy);
@@ -327,7 +356,7 @@ Deno.serve(async (req: Request) => {
       mode,
       ...stats,
       classified,
-      message: `Houston sync complete: ${stats.officials_upserted} officials, ${stats.policies_upserted} policies, ${classified} classified`,
+      message: `Harris County sync complete: ${stats.officials_upserted} officials, ${stats.policies_upserted} policies, ${stats.geo_bindings} geo bindings, ${classified} classified`,
     }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     });
