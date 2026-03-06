@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.org_name,
-    description: data.description_5th_grade || 'Details on The Change Engine.',
+    description: data.description_5th_grade || 'Details on the Community Exchange.',
   }
 }
 
@@ -89,26 +89,32 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const wayfinderData = await getWayfinderContext('organization', id, userProfile?.role)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Breadcrumb items={[
-        { label: 'Organizations', href: '/organizations' },
-        { label: displayOrgName }
-      ]} />
-      {/* Header */}
-      <div className="flex items-start gap-4 mb-6">
-        {org.logo_url && (
-          <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border" />
-        )}
-        <div>
-          <h1 className="text-3xl font-bold text-brand-text">{displayOrgName}</h1>
-          {org.mission_statement && <p className="text-brand-muted mt-1">{org.mission_statement}</p>}
-          {!org.mission_statement && displayOrgDesc && <p className="text-brand-muted mt-1">{displayOrgDesc}</p>}
-          <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
-            {org.year_founded && <span>Founded {org.year_founded}</span>}
-            {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg">NTEE: {org.ntee_code}</span>}
+    <div>
+      {/* Dark hero */}
+      <div className="bg-brand-dark">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <Breadcrumb variant="dark" items={[
+            { label: 'Organizations', href: '/organizations' },
+            { label: displayOrgName }
+          ]} />
+          <div className="flex items-start gap-4 mt-4">
+            {org.logo_url && (
+              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-white/10" />
+            )}
+            <div>
+              <h1 className="text-3xl font-serif font-bold text-white">{displayOrgName}</h1>
+              {org.mission_statement && <p className="text-white/60 mt-1 font-serif italic">{org.mission_statement}</p>}
+              {!org.mission_statement && displayOrgDesc && <p className="text-white/50 mt-1">{displayOrgDesc}</p>}
+              <div className="flex items-center gap-3 mt-2 text-sm text-white/40">
+                {org.year_founded && <span>Founded {org.year_founded}</span>}
+                {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-lg bg-white/10">NTEE: {org.ntee_code}</span>}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
       {/* Contact card */}
       <div className="bg-white rounded-xl border border-brand-border p-5 mb-8 flex flex-wrap gap-4">
@@ -152,7 +158,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         <div className="flex flex-wrap gap-3 mb-8">
           {socialLinks.map(function (link) {
             return (
-              <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-full text-brand-accent hover:underline capitalize">
+              <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg text-brand-accent hover:underline capitalize">
                 {link.platform}
               </a>
             )
@@ -193,7 +199,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       {/* Description (if mission wasn't shown) */}
       {org.mission_statement && displayOrgDesc && (
         <section className="mb-8">
-          <h2 className="text-xl font-bold text-brand-text mb-3">About</h2>
+          <h2 className="text-xl font-serif font-bold text-brand-text mb-3">About</h2>
           <p className="text-brand-muted">{displayOrgDesc}</p>
         </section>
       )}
@@ -202,7 +208,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       {org.tags && org.tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-8">
           {org.tags.map(function (tag) {
-            return <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">{tag}</span>
+            return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{tag}</span>
           })}
         </div>
       )}
@@ -210,7 +216,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       {/* Services */}
       {services && services.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold text-brand-text mb-4">Services ({services.length})</h2>
+          <h2 className="text-xl font-serif font-bold text-brand-text mb-4">Services ({services.length})</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {services.map(function (svc) {
               const st = serviceTranslations[svc.service_id]
@@ -237,6 +243,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
       <div className="mt-10">
         <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
+      </div>
       </div>
     </div>
   )
