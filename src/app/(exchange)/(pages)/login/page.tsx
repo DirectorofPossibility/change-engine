@@ -56,7 +56,7 @@ export default function LoginPage() {
   return (
     <div className="max-w-md mx-auto px-4 py-16">
       <h1 className="text-2xl font-bold text-brand-text mb-2">Sign In</h1>
-      <p className="text-brand-muted mb-8">Welcome back to The Change Engine.</p>
+      <p className="text-brand-muted mb-8">Welcome back to the Community Exchange.</p>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">

@@ -463,7 +463,7 @@ export default function FoundationsGalaxy() {
     <div style={{ minHeight: "60vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
         <div style={{ fontSize: 20, fontWeight: 600, color: C.tx }}>Loading Foundations...</div>
-        <div style={{ fontSize: 13, color: C.t3, marginTop: 8 }}>Connecting to The Change Engine</div>
+        <div style={{ fontSize: 13, color: C.t3, marginTop: 8 }}>Connecting to the Community Exchange</div>
       </div>
     </div>
   )

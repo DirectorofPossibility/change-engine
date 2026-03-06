@@ -3,7 +3,7 @@ import { LibraryChat } from '@/components/exchange/LibraryChat'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'Chat with Chance | The Change Engine',
+  title: 'Chat with Chance | Community Exchange',
   description: 'Ask Chance, your neighborhood guide, about Houston community resources, services, organizations, elected officials, and more.',
 }
 

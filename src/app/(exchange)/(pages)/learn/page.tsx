@@ -9,7 +9,7 @@ import { getUIStrings } from '@/lib/i18n'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Learning Paths — The Change Engine',
+  title: 'Learning Paths — Community Exchange',
   description: 'Free self-guided courses on civic engagement, housing, health, finance, community organizing, and more.',
 }
 

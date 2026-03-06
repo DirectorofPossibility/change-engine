@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'My Dashboard',
-  description: 'Your personal dashboard on The Change Engine.',
+  description: 'Your personal dashboard on the Community Exchange.',
 }
 
 export default async function MyDashboardPage() {

@@ -8,7 +8,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 900 // 15 minutes
 
 export const metadata: Metadata = {
-  title: 'Houston Live Dashboard — The Change Engine',
+  title: 'Houston Live Dashboard — Community Exchange',
   description: 'Real-time air quality, weather alerts, and bayou water levels for Houston, TX.',
 }
 

@@ -3,7 +3,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import FoundationsGalaxy from './FoundationsGalaxy'
 
 export const metadata: Metadata = {
-  title: 'Foundations Galaxy | The Change Engine',
+  title: 'Foundations Galaxy | Community Exchange',
   description: 'Explore Houston-area foundations through an interactive galaxy visualization — discover funding, focus areas, and connections across seven community pathways.',
 }
 

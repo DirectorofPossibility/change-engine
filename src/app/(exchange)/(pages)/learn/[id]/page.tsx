@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { data } = await supabase.from('learning_paths').select('path_name, description_5th_grade').eq('path_id', id).single()
   if (!data) return { title: 'Not Found' }
   return {
-    title: data.path_name + ' — The Change Engine',
-    description: data.description_5th_grade || 'A learning path on The Change Engine.',
+    title: data.path_name + ' — Community Exchange',
+    description: data.description_5th_grade || 'A learning path on the Community Exchange.',
   }
 }
 

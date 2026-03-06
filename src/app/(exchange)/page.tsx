@@ -1,8 +1,5 @@
 /**
- * @fileoverview Homepage for The Change Engine — the Community Exchange wayfinder.
- *
- * This server component fetches aggregate stats, pathway counts, center counts,
- * and latest content for the simplified "Choose Your Own Houston" homepage.
+ * @fileoverview Homepage for The Change Engine.
  *
  * @datasource Supabase tables: content_published, services_211, elected_officials,
  *   organizations, policies, focus_areas
@@ -19,12 +16,11 @@ import {
   getCenterCounts,
 } from '@/lib/data/exchange'
 import { Wayfinder } from '@/components/exchange/Wayfinder'
-import { EnvironmentBar } from '@/components/exchange/EnvironmentBar'
 
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'The Change Engine — Community Life, Organized',
+  title: 'Community Exchange — Powered by The Change Lab',
   description: 'Your wayfinder to services, civic engagement, and community resources in Houston, Texas.',
 }
 
@@ -36,7 +32,6 @@ export default async function HomePage() {
     getCenterCounts(),
   ])
 
-  // Query new-this-week count from content_published
   const weekAgo = new Date()
   weekAgo.setDate(weekAgo.getDate() - 7)
   const supabase = await createClient()
@@ -55,16 +50,13 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-bg">
-      <EnvironmentBar />
-      <Wayfinder
-        stats={circleStats}
-        pathwayCounts={pathwayCounts}
-        newThisWeek={newThisWeek}
-        latestContent={latestContent}
-        centerCounts={centerCounts}
-        organizations={stats.organizations || 0}
-      />
-    </div>
+    <Wayfinder
+      stats={circleStats}
+      pathwayCounts={pathwayCounts}
+      newThisWeek={newThisWeek}
+      latestContent={latestContent}
+      centerCounts={centerCounts}
+      organizations={stats.organizations || 0}
+    />
   )
 }

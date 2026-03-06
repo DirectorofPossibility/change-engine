@@ -95,7 +95,7 @@ export default async function ManualPage() {
 
   // Build TOC based on role
   const tocItems: { href: string; label: string }[] = [
-    { href: '#overview', label: 'What is The Change Engine?' },
+    { href: '#overview', label: 'What is the Community Exchange?' },
     { href: '#pathways', label: 'The Seven Pathways' },
     { href: '#centers', label: 'Four Centers' },
     { href: '#roles', label: 'Neighbors & Partners' },
@@ -130,8 +130,8 @@ export default async function ManualPage() {
           {isAdmin
             ? 'Complete guide for all roles — Neighbors, Partners, and Admins.'
             : isPartner
-              ? 'Your guide to managing content and representing your organization on The Change Engine.'
-              : 'Your guide to exploring and contributing to The Change Engine community.'
+              ? 'Your guide to managing content and representing your organization on the Community Exchange.'
+              : 'Your guide to exploring and contributing to the Community Exchange.'
           }
         </p>
       </div>
@@ -141,9 +141,9 @@ export default async function ManualPage() {
         <div className="space-y-0">
 
           {/* -- Overview -- */}
-          <SectionHeading id="overview">What is The Change Engine?</SectionHeading>
+          <SectionHeading id="overview">What is the Community Exchange?</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            The Change Engine is a civic platform built for Houston. It brings together articles, services, organizations, elected officials, policies, and community opportunities into one place — organized around the topics that matter most to daily life.
+            The Community Exchange is a civic platform built for Houston. It brings together articles, services, organizations, elected officials, policies, and community opportunities into one place — organized around the topics that matter most to daily life.
           </p>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
             Every piece of content is mapped onto a <strong>knowledge graph</strong> — a web of connections between pathways, focus areas, global goals, and social determinants of health. When you explore one topic, you can see how it connects to everything else.
@@ -155,7 +155,7 @@ export default async function ManualPage() {
           {/* -- The Seven Pathways -- */}
           <SectionHeading id="pathways">The Seven Pathways</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
-            Everything in The Change Engine is organized around seven pathways of civic life. Each one connects to the others through shared focus areas, officials, and policies.
+            Everything in the Community Exchange is organized around seven pathways of civic life. Each one connects to the others through shared focus areas, officials, and policies.
           </p>
           <div className="grid sm:grid-cols-2 gap-2 mb-3">
             {Object.entries(PATHWAY_COLORS).map(([name, { color, sub }]) => (
@@ -190,7 +190,7 @@ export default async function ManualPage() {
           {/* -- Roles -- */}
           <SectionHeading id="roles">Neighbors &amp; Partners</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
-            The Change Engine is built by and for the community. There are two ways to participate beyond browsing.
+            The Community Exchange is built by and for the community. There are two ways to participate beyond browsing.
           </p>
 
           <div className="space-y-4">
@@ -444,7 +444,7 @@ export default async function ManualPage() {
           {/* -- Languages -- */}
           <SectionHeading id="languages">Languages</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            The Change Engine is available in three languages:
+            The Community Exchange is available in three languages:
           </p>
           <div className="flex flex-wrap gap-2 mb-3">
             <div className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-center">

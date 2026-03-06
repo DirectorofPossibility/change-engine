@@ -54,8 +54,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const guide = await getGuideBySlug(slug)
   if (!guide) return { title: 'Not Found' }
   return {
-    title: guide.title + ' — The Change Engine',
-    description: guide.description || 'A guide on The Change Engine.',
+    title: guide.title + ' — Community Exchange',
+    description: guide.description || 'A guide on the Community Exchange.',
   }
 }
 

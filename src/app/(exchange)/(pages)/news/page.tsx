@@ -6,7 +6,7 @@ import { FileText } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const metadata: Metadata = {
-  title: 'News | The Change Engine',
+  title: 'News | Community Exchange',
   description: 'Latest news, articles, and reports from across the Houston community.',
 }
 

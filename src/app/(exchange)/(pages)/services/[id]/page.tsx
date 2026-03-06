@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.service_name,
-    description: data.description_5th_grade || 'Details on The Change Engine.',
+    description: data.description_5th_grade || 'Details on the Community Exchange.',
   }
 }
 

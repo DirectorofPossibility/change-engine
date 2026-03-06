@@ -36,7 +36,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   const { q } = await searchParams
   return {
     title: q ? 'Search: ' + q : 'Search',
-    description: 'Search across all content, services, officials, and resources in The Change Engine.',
+    description: 'Search across all content, services, officials, and resources in the Community Exchange.',
   }
 }
 

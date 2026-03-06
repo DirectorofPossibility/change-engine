@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const areas = await getFocusAreasByIds([id])
   if (areas.length === 0) return { title: 'Not Found' }
   return {
-    title: areas[0].focus_area_name + ' — The Change Engine',
+    title: areas[0].focus_area_name + ' — Community Exchange',
     description: areas[0].description || 'Explore resources related to ' + areas[0].focus_area_name,
   }
 }

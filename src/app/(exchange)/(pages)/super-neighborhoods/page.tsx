@@ -24,7 +24,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Super Neighborhoods — The Change Engine',
+  title: 'Super Neighborhoods — Community Exchange',
   description: 'Explore Houston\'s 88 super neighborhoods. View boundaries, demographics, and community resources.',
 }
 

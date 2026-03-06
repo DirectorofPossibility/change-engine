@@ -11,7 +11,7 @@ import { ENGAGEMENT_LEVEL_COLORS } from '@/lib/constants'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Guides — The Change Engine',
+  title: 'Guides — Community Exchange',
   description: 'Civic engagement guides for Houston — contacting officials, voting, community organizing, and local resources.',
 }
 

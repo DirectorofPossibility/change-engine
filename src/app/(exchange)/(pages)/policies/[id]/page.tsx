@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.title_6th_grade || data.policy_name,
-    description: data.summary_6th_grade || data.summary_5th_grade || 'Details on The Change Engine.',
+    description: data.summary_6th_grade || data.summary_5th_grade || 'Details on the Community Exchange.',
   }
 }
 

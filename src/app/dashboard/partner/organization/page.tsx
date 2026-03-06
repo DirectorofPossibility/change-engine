@@ -190,7 +190,7 @@ export default async function PartnerOrganizationPage() {
       {/* Note */}
       <div className="bg-brand-bg rounded-xl border border-brand-border p-4">
         <p className="text-xs text-brand-muted">
-          Organization details are managed by The Change Engine team. If you need to update your
+          Organization details are managed by The Change Lab team. If you need to update your
           organization information, please contact us at{' '}
           <a href="mailto:hello@changeengine.us" className="text-brand-accent hover:underline">
             hello@changeengine.us
