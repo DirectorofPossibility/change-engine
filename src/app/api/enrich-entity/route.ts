@@ -153,6 +153,10 @@ export async function POST(req: NextRequest) {
       if (config.entityType === 'policy' && enriched.impact_statement) {
         updateData.impact_statement = enriched.impact_statement
       }
+      // Write first NTEE code to top-level column so org_type trigger fires
+      if (config.entityType === 'organization' && enriched.ntee_codes?.length > 0) {
+        updateData.ntee_code = enriched.ntee_codes[0]
+      }
 
       await supaRest('PATCH', `${tableName}?${config.idCol}=eq.${entityId}`, updateData)
 
