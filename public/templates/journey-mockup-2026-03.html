@@ -241,9 +241,10 @@
   /* ═══ QUICK ACCESS GRID ═══ */
   .placeholders {
     max-width:1200px; margin:0 auto; padding:40px 32px 24px;
-    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+    display:grid; grid-template-columns:repeat(5,1fr); gap:16px;
   }
   @media(max-width:900px){ .placeholders { grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:600px){ .placeholders { grid-template-columns:1fr 1fr; } }
   .ph-card {
     aspect-ratio:1; border-radius:16px;
     display:flex; align-items:center; justify-content:center; flex-direction:column;
@@ -855,37 +856,25 @@
     </div>
   </div>
 
-  <!-- QUICK ACCESS GRID -->
+  <!-- QUICK ACCESS GRID — 5 cards -->
   <div class="placeholders">
-    <!-- Calendar -->
-    <div class="ph-card" onclick="showScreen('calendar-index')" style="background:linear-gradient(135deg,#F7F2EA 0%,#EDE4D4 100%);">
-      <svg class="ph-fol" width="200" height="200" viewBox="0 0 100 100" fill="none" stroke="var(--voice)" stroke-width="1.8"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
-      <div class="ph-label" style="color:var(--text);">Calendar</div>
-      <div class="ph-sub">Meetings, hearings, events</div>
-    </div>
-    <!-- Events -->
-    <div class="ph-card" onclick="showScreen('calendar-index')" style="background:linear-gradient(135deg,#553c9a 0%,#7c5cbf 100%);">
-      <svg class="ph-fol" width="220" height="220" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.5" style="transform:translate(-50%,-50%) rotate(30deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
-      <div class="ph-label" style="color:white;">Events</div>
-      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">What's happening this week</div>
+    <!-- Chart Your Course (Choose Your Own Adventure) -->
+    <div class="ph-card ph-cta" onclick="showScreen('adventure')" style="background:var(--cream);">
+      <svg class="ph-fol" width="260" height="260" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2.5" style="opacity:0.18;transform:translate(-50%,-50%) rotate(-10deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div style="font-family:var(--hand);font-size:20px;font-weight:700;color:var(--accent);text-align:center;line-height:1.2;position:relative;z-index:2;">Chart Your Course</div>
+      <div class="ph-sub" style="color:var(--accent);opacity:0.6;">Find where you fit in</div>
     </div>
     <!-- Library -->
     <div class="ph-card" onclick="showScreen('library-index')" style="background:linear-gradient(135deg,#2b6cb0 0%,#4299e1 100%);">
-      <svg class="ph-fol" width="190" height="190" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="2" style="transform:translate(-50%,-50%) rotate(-15deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <svg class="ph-fol" width="200" height="200" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="2" style="transform:translate(-50%,-50%) rotate(-15deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
       <div class="ph-label" style="color:white;">Library</div>
       <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Articles, guides, deep dives</div>
     </div>
-    <!-- Near You -->
-    <div class="ph-card" onclick="showScreen('map-page')" style="background:linear-gradient(135deg,#276749 0%,#48bb78 100%);">
-      <svg class="ph-fol" width="240" height="240" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.2" style="transform:translate(-50%,-50%) rotate(10deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
-      <div class="ph-label" style="color:white;">Near You</div>
-      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Services and orgs in your ZIP</div>
-    </div>
-    <!-- Trending -->
-    <div class="ph-card" onclick="showScreen('news-index')" style="background:linear-gradient(135deg,#EDE4D4 0%,#D9CDB8 100%);">
-      <svg class="ph-fol" width="180" height="180" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2.2" style="transform:translate(-50%,-50%) rotate(45deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
-      <div class="ph-label" style="color:var(--text);">Trending</div>
-      <div class="ph-sub">News and stories right now</div>
+    <!-- News -->
+    <div class="ph-card" onclick="showScreen('news-index')" style="background:linear-gradient(135deg,#553c9a 0%,#7c5cbf 100%);">
+      <svg class="ph-fol" width="190" height="190" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.8" style="transform:translate(-50%,-50%) rotate(45deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">News</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Stories and coverage</div>
     </div>
     <!-- Ask Chance -->
     <div class="ph-card" onclick="showScreen('chat')" style="background:linear-gradient(135deg,#c05621 0%,#ed8936 100%);">
@@ -893,17 +882,11 @@
       <div class="ph-label" style="color:white;">Ask Chance</div>
       <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Your civic AI guide</div>
     </div>
-    <!-- Get Help -->
-    <div class="ph-card" onclick="showScreen('services-index')" style="background:linear-gradient(135deg,#9b2c2c 0%,#e53e3e 100%);">
-      <svg class="ph-fol" width="200" height="200" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.8" style="transform:translate(-50%,-50%) rotate(20deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
-      <div class="ph-label" style="color:white;">Get Help</div>
-      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">Benefits, services, assistance</div>
-    </div>
-    <!-- Chart Your Course -->
-    <div class="ph-card ph-cta" onclick="showScreen('adventure')" style="background:var(--cream);">
-      <svg class="ph-fol" width="260" height="260" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="2.5" style="opacity:0.18;transform:translate(-50%,-50%) rotate(-10deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
-      <div style="font-family:var(--hand);font-size:20px;font-weight:700;color:var(--accent);text-align:center;line-height:1.2;position:relative;z-index:2;">Chart Your Course</div>
-      <div class="ph-sub" style="color:var(--accent);opacity:0.6;">Find where you fit in</div>
+    <!-- Events -->
+    <div class="ph-card" onclick="showScreen('calendar-index')" style="background:linear-gradient(135deg,#276749 0%,#48bb78 100%);">
+      <svg class="ph-fol" width="220" height="220" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="1.5" style="transform:translate(-50%,-50%) rotate(30deg);"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="30" r="20"/><circle cx="50" cy="70" r="20"/><circle cx="67" cy="40" r="20"/><circle cx="67" cy="60" r="20"/><circle cx="33" cy="40" r="20"/><circle cx="33" cy="60" r="20"/></svg>
+      <div class="ph-label" style="color:white;">Events</div>
+      <div class="ph-sub" style="color:rgba(255,255,255,0.7);">What's happening near you</div>
     </div>
   </div>
 
