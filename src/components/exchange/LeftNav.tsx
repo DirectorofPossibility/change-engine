@@ -25,6 +25,7 @@ const NAV_SECTIONS = [
   {
     label: 'Discover',
     items: [
+      { href: '/my-area', label: 'My Area' },
       { href: '/compass', label: 'Compass' },
       { href: '/search', label: 'Search' },
       { href: '/news', label: 'News' },
