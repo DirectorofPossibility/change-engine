@@ -25,6 +25,7 @@ import { LeftNav } from '@/components/exchange/LeftNav'
 import { Footer } from '@/components/exchange/Footer'
 import MobileBottomNav from '@/components/exchange/MobileBottomNav'
 import { ChanceChatWidget } from '@/components/exchange/ChanceChatWidget'
+import { TranslateWidget } from '@/components/exchange/TranslateWidget'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -71,7 +72,10 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           <div id="main-content" className="flex">
             <LeftNav />
             <div className="flex-1 min-w-0 flex flex-col">
-              <div className="flex-1 pb-16 lg:pb-0">
+              <div className="flex-1 pb-16 lg:pb-0 relative">
+                <div className="absolute top-3 right-4 z-30">
+                  <TranslateWidget />
+                </div>
                 {children}
               </div>
               <Footer />
