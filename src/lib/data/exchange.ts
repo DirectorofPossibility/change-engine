@@ -624,6 +624,14 @@ export async function getElectionDashboard(zip?: string) {
     officials = data ?? []
   }
 
+  // Related content (election/voting articles)
+  const { data: relatedContent } = await supabase
+    .from('content_published')
+    .select('id, title_6th_grade, summary_6th_grade, image_url, source_url, published_at')
+    .or('title_6th_grade.ilike.%elect%,title_6th_grade.ilike.%vote%,title_6th_grade.ilike.%ballot%,title_6th_grade.ilike.%civic%')
+    .order('published_at', { ascending: false })
+    .limit(6)
+
   return {
     pastElections: pastElections ?? [],
     upcomingElections: upcomingElections ?? [],
@@ -633,6 +641,7 @@ export async function getElectionDashboard(zip?: string) {
     upcomingCandidates: upcomingCandidates ?? [],
     upcomingBallotItems: upcomingBallotItems ?? [],
     officials,
+    relatedContent: relatedContent ?? [],
   }
 }
 
