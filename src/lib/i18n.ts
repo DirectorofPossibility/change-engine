@@ -104,6 +104,10 @@ const en: Record<string, string> = {
   'officials.title': 'Elected Officials',
   'officials.subtitle': 'Find and contact your elected representatives at every level of government.',
 
+  // Organizations page
+  'organizations.title': 'Organizations',
+  'organizations.subtitle': 'Nonprofits, foundations, and community groups serving Houston.',
+
   // Policies page
   'policies.title': 'Policies & Legislation',
   'policies.subtitle': 'Track bills, executive orders, and policies that affect Houston communities at every level of government.',
