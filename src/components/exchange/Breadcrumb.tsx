@@ -8,12 +8,20 @@ interface BreadcrumbItem {
 
 interface BreadcrumbProps {
   items: BreadcrumbItem[]
+  /** Use 'dark' when breadcrumb is on a dark background */
+  variant?: 'light' | 'dark'
 }
 
-export function Breadcrumb({ items }: BreadcrumbProps) {
+export function Breadcrumb({ items, variant = 'light' }: BreadcrumbProps) {
+  const isDark = variant === 'dark'
+  const baseColor = isDark ? 'text-white/40' : 'text-brand-muted'
+  const activeColor = isDark ? 'text-white/70' : 'text-brand-text'
+  const chevronColor = isDark ? 'text-white/20' : 'text-brand-muted/50'
+  const hoverColor = isDark ? 'hover:text-white/60' : 'hover:text-brand-text'
+
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-brand-muted py-3 overflow-x-auto">
-      <Link href="/" className="flex items-center gap-1 hover:text-brand-text transition-colors flex-shrink-0">
+    <nav aria-label="Breadcrumb" className={`flex items-center gap-1.5 text-sm ${baseColor} py-3 overflow-x-auto`}>
+      <Link href="/" className={`flex items-center gap-1 ${hoverColor} transition-colors flex-shrink-0`}>
         <Home size={14} />
         <span className="sr-only">Home</span>
       </Link>
@@ -21,11 +29,11 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
         const isLast = i === items.length - 1
         return (
           <span key={i} className="flex items-center gap-1.5 min-w-0">
-            <ChevronRight size={12} className="text-brand-muted/50 flex-shrink-0" />
+            <ChevronRight size={12} className={`${chevronColor} flex-shrink-0`} />
             {isLast || !item.href ? (
-              <span className="font-medium text-brand-text truncate">{item.label}</span>
+              <span className={`font-medium ${activeColor} truncate`}>{item.label}</span>
             ) : (
-              <Link href={item.href} className="hover:text-brand-text transition-colors truncate">
+              <Link href={item.href} className={`${hoverColor} transition-colors truncate`}>
                 {item.label}
               </Link>
             )}
