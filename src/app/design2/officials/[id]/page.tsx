@@ -171,9 +171,9 @@ export default async function OfficialDetailPage({
   ].filter(Boolean) as Array<{ label: string; url: string }>
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EAE0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAF8F5' }}>
       {/* Back bar */}
-      <div className="border-b" style={{ borderColor: '#D4CCBE' }}>
+      <div className="border-b" style={{ borderColor: '#E2DDD5' }}>
         <div className="mx-auto max-w-7xl px-4 py-3">
           <Link
             href="/design2/officials"
@@ -201,7 +201,7 @@ export default async function OfficialDetailPage({
             {/* Header card */}
             <div
               className="rounded-xl border p-6 sm:p-8"
-              style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+              style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
             >
               <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
                 {/* Photo */}
@@ -210,12 +210,12 @@ export default async function OfficialDetailPage({
                     src={photoUrl}
                     alt={official.official_name}
                     className="h-28 w-28 flex-shrink-0 rounded-full border-4 object-cover"
-                    style={{ borderColor: '#D4CCBE' }}
+                    style={{ borderColor: '#E2DDD5' }}
                   />
                 ) : (
                   <div
                     className="flex h-28 w-28 flex-shrink-0 items-center justify-center rounded-full border-4 text-2xl font-bold text-white"
-                    style={{ borderColor: '#D4CCBE', backgroundColor: badge.text }}
+                    style={{ borderColor: '#E2DDD5', backgroundColor: badge.text }}
                   >
                     {official.official_name
                       .split(' ')
@@ -247,7 +247,7 @@ export default async function OfficialDetailPage({
                         style={{
                           backgroundColor: '#F7FAFC',
                           color: '#4A4540',
-                          border: '1px solid #D4CCBE',
+                          border: '1px solid #E2DDD5',
                         }}
                       >
                         {official.party}
@@ -284,7 +284,7 @@ export default async function OfficialDetailPage({
 
               {/* Bio */}
               {bio && (
-                <div className="mt-6 border-t pt-5" style={{ borderColor: '#D4CCBE' }}>
+                <div className="mt-6 border-t pt-5" style={{ borderColor: '#E2DDD5' }}>
                   <p className="leading-relaxed" style={{ color: '#4A4540' }}>
                     {bio}
                   </p>
@@ -301,7 +301,7 @@ export default async function OfficialDetailPage({
               socialLinks.length > 0) && (
               <div
                 className="mt-6 rounded-xl border p-6"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <h2
                   className="font-serif text-xl font-bold mb-4"
@@ -314,7 +314,7 @@ export default async function OfficialDetailPage({
                     <a
                       href={`tel:${profile?.phone_office || official.office_phone}`}
                       className="flex items-center gap-3 rounded-lg p-3 text-sm transition-colors hover:opacity-80"
-                      style={{ backgroundColor: '#F0EAE0', color: '#C75B2A' }}
+                      style={{ backgroundColor: '#FAF8F5', color: '#C75B2A' }}
                     >
                       <Phone size={18} className="flex-shrink-0" />
                       {profile?.phone_office || official.office_phone}
@@ -324,7 +324,7 @@ export default async function OfficialDetailPage({
                     <a
                       href={`mailto:${official.email}`}
                       className="flex items-center gap-3 rounded-lg p-3 text-sm transition-colors hover:opacity-80"
-                      style={{ backgroundColor: '#F0EAE0', color: '#C75B2A' }}
+                      style={{ backgroundColor: '#FAF8F5', color: '#C75B2A' }}
                     >
                       <Mail size={18} className="flex-shrink-0" />
                       <span className="truncate">{official.email}</span>
@@ -336,7 +336,7 @@ export default async function OfficialDetailPage({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 rounded-lg p-3 text-sm transition-colors hover:opacity-80"
-                      style={{ backgroundColor: '#F0EAE0', color: '#C75B2A' }}
+                      style={{ backgroundColor: '#FAF8F5', color: '#C75B2A' }}
                     >
                       <Globe size={18} className="flex-shrink-0" />
                       Website
@@ -349,7 +349,7 @@ export default async function OfficialDetailPage({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 rounded-lg p-3 text-sm transition-colors hover:opacity-80"
-                      style={{ backgroundColor: '#F0EAE0', color: '#C75B2A' }}
+                      style={{ backgroundColor: '#FAF8F5', color: '#C75B2A' }}
                     >
                       <Globe size={18} className="flex-shrink-0" />
                       {link.label}
@@ -363,7 +363,7 @@ export default async function OfficialDetailPage({
                     {profile.address_office && (
                       <div
                         className="flex items-start gap-3 rounded-lg p-3 text-sm"
-                        style={{ backgroundColor: '#F0EAE0', color: '#4A4540' }}
+                        style={{ backgroundColor: '#FAF8F5', color: '#4A4540' }}
                       >
                         <MapPin size={18} className="mt-0.5 flex-shrink-0" style={{ color: '#6B6560' }} />
                         <div>
@@ -380,7 +380,7 @@ export default async function OfficialDetailPage({
                     {profile.address_district && (
                       <div
                         className="flex items-start gap-3 rounded-lg p-3 text-sm"
-                        style={{ backgroundColor: '#F0EAE0', color: '#4A4540' }}
+                        style={{ backgroundColor: '#FAF8F5', color: '#4A4540' }}
                       >
                         <MapPin size={18} className="mt-0.5 flex-shrink-0" style={{ color: '#6B6560' }} />
                         <div>
@@ -403,7 +403,7 @@ export default async function OfficialDetailPage({
             {focusAreas.length > 0 && (
               <div
                 className="mt-6 rounded-xl border p-6"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <h2
                   className="font-serif text-xl font-bold mb-4"
@@ -437,7 +437,7 @@ export default async function OfficialDetailPage({
             {committeeList.length > 0 && (
               <div
                 className="mt-6 rounded-xl border p-6"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <h2
                   className="font-serif text-xl font-bold mb-4"
@@ -450,7 +450,7 @@ export default async function OfficialDetailPage({
                     <div
                       key={i}
                       className="flex items-start justify-between gap-3 rounded-lg border p-4"
-                      style={{ borderColor: '#D4CCBE' }}
+                      style={{ borderColor: '#E2DDD5' }}
                     >
                       <div className="min-w-0">
                         <p className="font-medium" style={{ color: '#1A1A1A' }}>
@@ -484,7 +484,7 @@ export default async function OfficialDetailPage({
             {voteList.length > 0 && (
               <div
                 className="mt-6 rounded-xl border overflow-hidden"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <div className="p-6 pb-0">
                   <h2
@@ -494,7 +494,7 @@ export default async function OfficialDetailPage({
                     Recent Votes
                   </h2>
                 </div>
-                <div className="divide-y" style={{ borderColor: '#D4CCBE' }}>
+                <div className="divide-y" style={{ borderColor: '#E2DDD5' }}>
                   {voteList.map((v, i) => {
                     const voteColor =
                       v.vote === 'Yea'
@@ -534,7 +534,7 @@ export default async function OfficialDetailPage({
                       <Link
                         key={i}
                         href={`/design2/policies/${v.policy_id}`}
-                        className="block transition-colors hover:bg-[#F0EAE0]/50"
+                        className="block transition-colors hover:bg-[#FAF8F5]/50"
                       >
                         {inner}
                       </Link>
@@ -561,7 +561,7 @@ export default async function OfficialDetailPage({
                       key={p.policy_id}
                       href={`/design2/policies/${p.policy_id}`}
                       className="group rounded-xl border p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                      style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                      style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
                     >
                       <p
                         className="font-medium leading-snug group-hover:underline"

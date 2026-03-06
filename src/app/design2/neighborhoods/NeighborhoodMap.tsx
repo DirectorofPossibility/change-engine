@@ -42,7 +42,7 @@ export function NeighborhoodMap() {
                 mouseout: function (e: any) { e.target.setStyle({ weight: 1.5, fillOpacity: 0.08 }) },
                 click: function (e: any) {
                   const snId = feature.properties.SN_ID
-                  if (snId) window.location.href = '/super-neighborhoods/' + snId
+                  if (snId) window.location.href = '/design2/super-neighborhoods/' + snId
                 },
               })
             },
@@ -59,7 +59,7 @@ export function NeighborhoodMap() {
     <div
       ref={mapRef}
       className="w-full rounded-2xl border-2 overflow-hidden"
-      style={{ height: 500, borderColor: '#D4CCBE', background: '#F7F2EA' }}
+      style={{ height: 500, borderColor: '#E2DDD5', background: '#F7F2EA' }}
     />
   )
 }

@@ -42,7 +42,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const isRecurring = String(event.is_recurring) === 'true'
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EAE0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAF8F5' }}>
       {/* Back link */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Link
@@ -57,13 +57,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       {/* Hero card */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <div className="rounded-xl p-6 sm:p-8" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+        <div className="rounded-xl p-6 sm:p-8" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
           {/* Badges row */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
             {event.event_type && (
               <span
                 className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-lg"
-                style={{ backgroundColor: '#F0EAE0', color: '#C75B2A' }}
+                style={{ backgroundColor: '#FAF8F5', color: '#C75B2A' }}
               >
                 <Tag size={12} />
                 {event.event_type}
@@ -129,7 +129,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* When card */}
-          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
             <h2 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: '#6B6560' }}>
               When
             </h2>
@@ -166,7 +166,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           </div>
 
           {/* Where card */}
-          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
             <h2 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: '#6B6560' }}>
               Where
             </h2>
@@ -197,14 +197,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <Link
               href={'/design2/organizations/' + org.org_id}
               className="flex items-center gap-4 rounded-xl p-5 transition-shadow hover:shadow-md"
-              style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}
+              style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}
             >
               {org.logo_url && (
                 <img
                   src={org.logo_url}
                   alt={org.org_name}
                   className="w-12 h-12 rounded-lg object-contain flex-shrink-0"
-                  style={{ backgroundColor: '#F0EAE0', borderWidth: 1, borderColor: '#D4CCBE' }}
+                  style={{ backgroundColor: '#FAF8F5', borderWidth: 1, borderColor: '#E2DDD5' }}
                 />
               )}
               <div className="min-w-0">

@@ -26,43 +26,26 @@ export default async function NewsPage() {
   const news = await getNewsFeed(undefined, 50)
 
   return (
-    <div className="min-h-screen" style={{ background: '#F0EAE0' }}>
-      {/* Top navigation */}
-      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-        <Link
-          href="/design2"
-          className="inline-block text-sm font-sans transition-colors"
-          style={{ color: '#6B6560' }}
-        >
-          &larr; Home
-        </Link>
-      </div>
-
-      {/* Page header */}
-      <header className="mx-auto max-w-7xl px-4 pb-8 pt-6 sm:px-6 lg:px-8">
-        {/* Accent bar */}
-        <div
-          className="mb-6 h-1 w-16 rounded-full"
-          style={{ background: '#C75B2A' }}
-        />
-        <h1
-          className="font-serif text-4xl font-bold tracking-tight sm:text-5xl"
-          style={{ color: '#1a1a1a' }}
-        >
-          News
-        </h1>
-        <p
-          className="mt-3 max-w-2xl font-sans text-base leading-relaxed sm:text-lg"
-          style={{ color: '#6B6560' }}
-        >
-          The latest stories, reports, and announcements from across Houston —
-          rewritten for clarity and connected to the topics that matter to your
-          community.
-        </p>
-      </header>
+    <div className="min-h-screen">
+      {/* Dark editorial hero */}
+      <section style={{ background: '#2C2418' }}>
+        <div className="max-w-[1152px] mx-auto px-8 py-10 pb-12">
+          <div className="text-[13px] mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <Link href="/design2" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>Home</Link>
+            <span className="mx-2" style={{ color: '#C75B2A' }}>&rsaquo;</span>
+            <span style={{ color: 'white' }}>News</span>
+          </div>
+          <div className="h-[2px] w-10 mb-5" style={{ background: '#C75B2A' }} />
+          <h1 className="font-serif text-[clamp(1.75rem,4vw,2.5rem)]" style={{ color: 'white' }}>News</h1>
+          <p className="font-serif text-[18px] italic mt-2" style={{ color: 'rgba(255,255,255,0.6)' }}>Stories that shape Houston</p>
+          <p className="text-[16px] mt-4 max-w-[720px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            The latest stories, reports, and announcements from across Houston — rewritten for clarity and connected to the topics that matter to your community.
+          </p>
+        </div>
+      </section>
 
       {/* Card grid */}
-      <main className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <main className="max-w-[1152px] mx-auto px-8 py-12" style={{ background: '#FAF8F5' }}>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {news.map((item) => {
             const themeKey = item.pathway_primary as keyof typeof THEMES | null
@@ -77,7 +60,7 @@ export default async function NewsPage() {
                 className="group flex flex-col overflow-hidden transition-shadow duration-200 hover:shadow-lg"
                 style={{
                   background: '#FFFFFF',
-                  border: '1px solid #D4CCBE',
+                  border: '1px solid #E2DDD5',
                   borderRadius: '0.75rem',
                 }}
               >

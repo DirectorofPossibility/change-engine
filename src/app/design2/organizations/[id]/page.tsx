@@ -85,7 +85,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const wayfinderData = await getWayfinderContext('organization', id, userProfile?.role)
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EAE0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAF8F5' }}>
       {/* Back link */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Link
@@ -100,14 +100,14 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
       {/* Header card */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-        <div className="rounded-xl p-6 sm:p-8" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+        <div className="rounded-xl p-6 sm:p-8" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
           <div className="flex items-start gap-5">
             {org.logo_url && (
               <img
                 src={org.logo_url}
                 alt={org.org_name}
                 className="w-20 h-20 rounded-xl object-contain flex-shrink-0"
-                style={{ backgroundColor: '#F0EAE0', borderWidth: 1, borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FAF8F5', borderWidth: 1, borderColor: '#E2DDD5' }}
               />
             )}
             <div className="min-w-0 flex-1">
@@ -129,7 +129,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                 {org.ntee_code && (
                   <span
                     className="text-xs px-2 py-0.5 rounded-lg"
-                    style={{ backgroundColor: '#F0EAE0', borderWidth: 1, borderColor: '#D4CCBE', color: '#6B6560' }}
+                    style={{ backgroundColor: '#FAF8F5', borderWidth: 1, borderColor: '#E2DDD5', color: '#6B6560' }}
                   >
                     NTEE: {org.ntee_code}
                   </span>
@@ -143,7 +143,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
         {/* Contact card */}
-        <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+        <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
           <h2 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: '#6B6560' }}>
             Contact
           </h2>
@@ -173,7 +173,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
         {/* Hours of operation */}
         {hoursEntries.length > 0 && (
-          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
             <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: '#6B6560' }}>
               <Clock size={14} className="inline mr-1.5 -mt-0.5" />
               Hours of Operation
@@ -181,7 +181,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 text-sm">
               {hoursEntries.map(function (entry) {
                 return (
-                  <div key={entry.day} className="flex justify-between py-1" style={{ borderBottomWidth: 1, borderColor: '#F0EAE0' }}>
+                  <div key={entry.day} className="flex justify-between py-1" style={{ borderBottomWidth: 1, borderColor: '#FAF8F5' }}>
                     <span className="font-medium" style={{ color: '#1a1a1a' }}>{entry.day}</span>
                     <span style={{ color: '#6B6560' }}>{entry.time}</span>
                   </div>
@@ -193,7 +193,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
         {/* Social media */}
         {socialLinks.length > 0 && (
-          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+          <div className="rounded-xl p-5" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
             <h2 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: '#6B6560' }}>
               Social Media
             </h2>
@@ -207,7 +207,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-lg hover:opacity-80 transition-opacity capitalize"
-                    style={{ backgroundColor: '#F0EAE0', color: '#C75B2A' }}
+                    style={{ backgroundColor: '#FAF8F5', color: '#C75B2A' }}
                   >
                     <IconComponent size={16} />
                     {link.platform}
@@ -222,28 +222,28 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {(org.people_served || org.service_area || org.partner_count != null || org.annual_budget != null) && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {org.people_served && (
-              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
                 <Users size={20} className="mx-auto mb-2" style={{ color: '#C75B2A' }} />
                 <div className="text-lg font-bold" style={{ color: '#1a1a1a' }}>{org.people_served}</div>
                 <div className="text-xs" style={{ color: '#6B6560' }}>People Served</div>
               </div>
             )}
             {org.service_area && (
-              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
                 <MapPinned size={20} className="mx-auto mb-2" style={{ color: '#C75B2A' }} />
                 <div className="text-sm font-bold" style={{ color: '#1a1a1a' }}>{org.service_area}</div>
                 <div className="text-xs" style={{ color: '#6B6560' }}>Service Area</div>
               </div>
             )}
             {org.partner_count != null && (
-              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
                 <Handshake size={20} className="mx-auto mb-2" style={{ color: '#C75B2A' }} />
                 <div className="text-lg font-bold" style={{ color: '#1a1a1a' }}>{org.partner_count}</div>
                 <div className="text-xs" style={{ color: '#6B6560' }}>Partners</div>
               </div>
             )}
             {org.annual_budget != null && (
-              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+              <div className="rounded-xl p-4 text-center" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
                 <DollarSign size={20} className="mx-auto mb-2" style={{ color: '#C75B2A' }} />
                 <div className="text-lg font-bold" style={{ color: '#1a1a1a' }}>${org.annual_budget.toLocaleString()}</div>
                 <div className="text-xs" style={{ color: '#6B6560' }}>Annual Budget</div>
@@ -254,7 +254,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
         {/* Description (shown when mission was used in header) */}
         {org.mission_statement && org.description_5th_grade && (
-          <div className="rounded-xl p-6" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE' }}>
+          <div className="rounded-xl p-6" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
             <h2 className="text-xl font-serif font-bold mb-3" style={{ color: '#1a1a1a' }}>About</h2>
             <p className="leading-relaxed" style={{ color: '#6B6560' }}>{org.description_5th_grade}</p>
           </div>
@@ -268,7 +268,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                 <span
                   key={tag}
                   className="text-xs px-2.5 py-1 rounded-lg"
-                  style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#D4CCBE', color: '#6B6560' }}
+                  style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5', color: '#6B6560' }}
                 >
                   {tag}
                 </span>

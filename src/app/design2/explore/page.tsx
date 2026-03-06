@@ -26,22 +26,25 @@ export default async function ExplorePage() {
   const stats = await getExchangeStats()
 
   return (
-    <div style={{ background: '#F0EAE0' }}>
-      <div className="max-w-[1200px] mx-auto px-8 py-8">
-        <Link href="/design2" className="text-[13px] font-semibold mb-4 inline-block" style={{ color: '#6B6560' }}>← Home</Link>
-        <div className="mb-10 relative overflow-hidden">
-          <div className="absolute top-[-60px] right-[-60px] opacity-[0.05]">
-            <FlowerOfLifeIcon size={400} color="#C75B2A" />
+    <div>
+      {/* Dark editorial hero */}
+      <section style={{ background: '#2C2418' }}>
+        <div className="max-w-[1152px] mx-auto px-8 py-10 pb-12">
+          <div className="text-[13px] mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <Link href="/design2" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>Home</Link>
+            <span className="mx-2" style={{ color: '#C75B2A' }}>&rsaquo;</span>
+            <span style={{ color: 'white' }}>Explore</span>
           </div>
-          <div className="relative z-10">
-            <h1 className="font-serif text-4xl mb-3" style={{ color: '#1a1a1a' }}>Explore</h1>
-            <p className="text-[15px] max-w-[640px]" style={{ color: '#6B6560' }}>
-              Everything in the Community Exchange — browse by category, discover new connections, and find your entry point.
-            </p>
-            <div className="h-1 w-16 rounded-full mt-4" style={{ background: '#C75B2A' }} />
-          </div>
+          <div className="h-[2px] w-10 mb-5" style={{ background: '#C75B2A' }} />
+          <h1 className="font-serif text-[clamp(1.75rem,4vw,2.5rem)]" style={{ color: 'white' }}>Explore</h1>
+          <p className="font-serif text-[18px] italic mt-2" style={{ color: 'rgba(255,255,255,0.6)' }}>Everything in the Community Exchange</p>
+          <p className="text-[16px] mt-4 max-w-[720px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            Browse by category, discover new connections, and find your entry point into Houston&apos;s civic ecosystem.
+          </p>
         </div>
+      </section>
 
+      <div className="max-w-[1152px] mx-auto px-8 py-12" style={{ background: '#FAF8F5' }}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {SECTIONS.map(function (s) {
             return (
@@ -49,7 +52,7 @@ export default async function ExplorePage() {
                 key={s.href}
                 href={s.href}
                 className="bg-white rounded-xl border p-5 transition-all hover:shadow-md hover:translate-y-[-2px]"
-                style={{ borderColor: '#D4CCBE' }}
+                style={{ borderColor: '#E2DDD5' }}
               >
                 <div className="h-1 w-8 rounded-full mb-3" style={{ background: s.color }} />
                 <h3 className="font-serif text-lg font-bold" style={{ color: '#1a1a1a' }}>{s.label}</h3>

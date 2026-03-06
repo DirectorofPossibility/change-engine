@@ -18,11 +18,12 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 if [ -f "$PROJECT_DIR/.env.local" ]; then
   export $(grep '^NEXT_PUBLIC_SUPABASE_URL=' "$PROJECT_DIR/.env.local" | xargs)
   export $(grep '^SUPABASE_SECRET_KEY=' "$PROJECT_DIR/.env.local" | xargs)
+  export $(grep '^CRON_SECRET=' "$PROJECT_DIR/.env.local" | xargs 2>/dev/null) || true
 fi
 
 SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-}"
 SECRET_KEY="${SUPABASE_SECRET_KEY:-}"
-API_KEY="${INGEST_API_KEY:-}"
+CRON_SECRET="${CRON_SECRET:-}"
 BATCH_SIZE=5
 DRY_RUN=false
 
@@ -45,7 +46,10 @@ echo "  Target: $ENRICH_URL"
 echo ""
 
 # Get all inbox IDs needing re-attribution
-mapfile -t ALL_IDS < <(curl -s \
+ALL_IDS=()
+while IFS= read -r line; do
+  ALL_IDS+=("$line")
+done < <(curl -s \
   "${SUPABASE_URL}/rest/v1/content_review_queue?select=inbox_id&ai_classification->>_version=eq.v2-needs-reattribution&limit=500" \
   -H "apikey: ${SECRET_KEY}" \
   -H "Authorization: Bearer ${SECRET_KEY}" | \
@@ -77,7 +81,7 @@ for (( b=0; b<NUM_BATCHES; b++ )); do
 
   RESPONSE=$(curl -s -w "\n%{http_code}" --max-time 300 -X POST "$ENRICH_URL" \
     -H "Content-Type: application/json" \
-    -H "X-API-Key: ${API_KEY}" \
+    -H "x-api-key: ${API_KEY}" \
     -d "{\"inbox_ids\": $JSON_IDS}")
 
   HTTP_CODE=$(echo "$RESPONSE" | tail -1)

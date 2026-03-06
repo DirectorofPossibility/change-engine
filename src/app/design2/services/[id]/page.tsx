@@ -98,9 +98,9 @@ export default async function ServiceDetailPage({
   ].filter((f) => f.value)
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EAE0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAF8F5' }}>
       {/* Top bar */}
-      <div className="border-b" style={{ borderColor: '#D4CCBE' }}>
+      <div className="border-b" style={{ borderColor: '#E2DDD5' }}>
         <div className="mx-auto max-w-7xl px-4 py-3">
           <Link
             href="/design2/services"
@@ -151,7 +151,7 @@ export default async function ServiceDetailPage({
             {contactFields.length > 0 && (
               <div
                 className="mt-8 rounded-xl border p-6"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <h2
                   className="font-serif text-lg font-bold mb-4"
@@ -207,7 +207,7 @@ export default async function ServiceDetailPage({
             {(svc.eligibility || svc.fees || svc.languages) && (
               <div
                 className="mt-6 rounded-xl border p-6"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <h2
                   className="font-serif text-lg font-bold mb-4"
@@ -263,7 +263,7 @@ export default async function ServiceDetailPage({
             {parentOrg && (
               <div
                 className="mt-6 rounded-xl border p-6"
-                style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
               >
                 <h2
                   className="font-serif text-lg font-bold mb-3"
@@ -274,7 +274,7 @@ export default async function ServiceDetailPage({
                 <Link
                   href={`/design2/organizations/${svc.org_id}`}
                   className="group flex items-center gap-4 rounded-lg border p-4 transition-shadow hover:shadow-sm"
-                  style={{ borderColor: '#D4CCBE' }}
+                  style={{ borderColor: '#E2DDD5' }}
                 >
                   {parentOrg.logo_url ? (
                     <img
@@ -328,7 +328,7 @@ export default async function ServiceDetailPage({
                       key={rs.service_id}
                       href={`/design2/services/${rs.service_id}`}
                       className="group rounded-xl border p-5 transition-shadow hover:shadow-md"
-                      style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}
+                      style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}
                     >
                       <h3
                         className="font-serif text-base font-bold leading-snug group-hover:underline"

@@ -37,7 +37,7 @@ export default async function PathwayDetailPage({ params }: { params: Promise<{ 
     .eq('theme_id', theme.id)
 
   return (
-    <div style={{ background: '#F0EAE0' }}>
+    <div style={{ background: '#FAF8F5' }}>
       <div className="max-w-[1200px] mx-auto px-8 py-8">
         <Link href="/design2/pathways" className="text-[13px] font-semibold mb-4 inline-block" style={{ color: '#6B6560' }}>← All Pathways</Link>
 
@@ -60,7 +60,7 @@ export default async function PathwayDetailPage({ params }: { params: Promise<{ 
                   <span
                     key={fa.focus_area_id}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium bg-white border"
-                    style={{ borderColor: '#D4CCBE', color: '#4A4540' }}
+                    style={{ borderColor: '#E2DDD5', color: '#4A4540' }}
                   >
                     <span className="w-2 h-2 rounded-full" style={{ background: theme.color }} />
                     {fa.name}
@@ -81,7 +81,7 @@ export default async function PathwayDetailPage({ params }: { params: Promise<{ 
                   key={item.id}
                   href={'/design2/content/' + item.id}
                   className="bg-white rounded-xl overflow-hidden border transition-all hover:shadow-md hover:translate-y-[-2px]"
-                  style={{ borderColor: '#D4CCBE' }}
+                  style={{ borderColor: '#E2DDD5' }}
                 >
                   {item.image_url ? (
                     <img src={item.image_url} alt="" className="w-full h-[140px] object-cover" />
@@ -97,7 +97,7 @@ export default async function PathwayDetailPage({ params }: { params: Promise<{ 
                     )}
                     <div className="flex items-center gap-2 mt-2">
                       <span className="text-[11px] font-medium" style={{ color: '#9B9590' }}>{item.source_domain}</span>
-                      <span className="text-[11px]" style={{ color: '#D4CCBE' }}>|</span>
+                      <span className="text-[11px]" style={{ color: '#E2DDD5' }}>|</span>
                       <span className="text-[11px] uppercase tracking-wider" style={{ color: '#9B9590' }}>{item.resource_type}</span>
                     </div>
                   </div>
@@ -107,7 +107,7 @@ export default async function PathwayDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {(!content || content.length === 0) && (
-            <div className="bg-white rounded-xl border p-12 text-center" style={{ borderColor: '#D4CCBE' }}>
+            <div className="bg-white rounded-xl border p-12 text-center" style={{ borderColor: '#E2DDD5' }}>
               <p className="text-[15px]" style={{ color: '#6B6560' }}>Content for this pathway is being curated. Check back soon.</p>
             </div>
           )}

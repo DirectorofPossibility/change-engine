@@ -76,7 +76,7 @@ export function Design2Nav({ election }: Design2NavProps) {
       )}
 
       {/* Top nav */}
-      <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(247,242,234,0.95)', backdropFilter: 'blur(12px)', borderColor: '#D4CCBE' }}>
+      <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(247,242,234,0.95)', backdropFilter: 'blur(12px)', borderColor: '#E2DDD5' }}>
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between" style={{ height: 56 }}>
           {/* Brand */}
           <Link href="/design2" className="flex items-center gap-2.5">
@@ -104,7 +104,7 @@ export function Design2Nav({ election }: Design2NavProps) {
                     <ChevronDown size={12} className="opacity-40" />
                   </button>
                   {openDropdown === center.label && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border rounded-lg shadow-lg py-1.5 min-w-[180px] z-50" style={{ borderColor: '#D4CCBE' }}>
+                    <div className="absolute top-full left-0 mt-1 bg-white border rounded-lg shadow-lg py-1.5 min-w-[180px] z-50" style={{ borderColor: '#E2DDD5' }}>
                       {center.items.map(function (item) {
                         const itemActive = pathname === item.href || pathname?.startsWith(item.href + '/')
                         return (
@@ -112,7 +112,7 @@ export function Design2Nav({ election }: Design2NavProps) {
                             key={item.href}
                             href={item.href}
                             className="block px-4 py-2 text-[13px] font-medium transition-colors"
-                            style={{ color: itemActive ? '#C75B2A' : '#2d2d2d', background: itemActive ? '#F0EAE0' : undefined }}
+                            style={{ color: itemActive ? '#C75B2A' : '#2d2d2d', background: itemActive ? '#FAF8F5' : undefined }}
                           >
                             {item.label}
                           </Link>
@@ -136,7 +136,7 @@ export function Design2Nav({ election }: Design2NavProps) {
             <Link
               href="/design2/search"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs"
-              style={{ borderColor: '#D4CCBE', color: '#9B9590' }}
+              style={{ borderColor: '#E2DDD5', color: '#9B9590' }}
             >
               <Search size={13} />
               Search
@@ -152,7 +152,7 @@ export function Design2Nav({ election }: Design2NavProps) {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="lg:hidden border-t px-6 py-4" style={{ borderColor: '#D4CCBE', background: '#F7F2EA' }}>
+          <div className="lg:hidden border-t px-6 py-4" style={{ borderColor: '#E2DDD5', background: '#F7F2EA' }}>
             <div className="flex items-center gap-3 mb-4 md:hidden">
               <ZipInput />
               <LanguageSwitcher />

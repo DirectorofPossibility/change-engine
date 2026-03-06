@@ -58,109 +58,85 @@ export default async function ContentDetailPage({
   const sourceDomain = extractDomain((content as any).source_url)
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EAE0' }}>
-      {/* Top bar */}
-      <div className="border-b" style={{ borderColor: '#D4CCBE' }}>
-        <div className="mx-auto max-w-7xl px-4 py-3">
-          <Link
-            href="/design2/news"
-            className="inline-flex items-center gap-2 text-sm font-medium transition-colors hover:opacity-70"
-            style={{ color: '#6B6560' }}
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Back to News
-          </Link>
-        </div>
-      </div>
+    <div className="min-h-screen">
+      {/* Dark content hero */}
+      <section style={{ background: '#2C2418' }}>
+        <div className="max-w-[1152px] mx-auto px-8 py-10 pb-12">
+          <div className="text-[13px] mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <Link href="/design2" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>Home</Link>
+            <span className="mx-2" style={{ color: '#C75B2A' }}>&rsaquo;</span>
+            <Link href="/design2/news" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>News</Link>
+            <span className="mx-2" style={{ color: '#C75B2A' }}>&rsaquo;</span>
+            <span style={{ color: 'white' }}>Article</span>
+          </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Main content */}
-          <article className="flex-1 min-w-0">
-            {/* Hero image or gradient */}
-            {(content as any).image_url ? (
-              <div className="mb-6 overflow-hidden rounded-lg">
-                <img
-                  src={(content as any).image_url}
-                  alt={(content as any).title_6th_grade || 'Content image'}
-                  className="w-full max-h-[300px] object-cover"
-                />
+          <div className="flex flex-col lg:flex-row gap-10 items-start">
+            <div className="flex-1">
+              {/* Color dot + rule */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-3 h-3 rounded-sm" style={{ background: theme.color }} />
+                <div className="h-px flex-1 max-w-[60px]" style={{ background: theme.color, opacity: 0.4 }} />
               </div>
-            ) : (
-              <div
-                className="mb-6 h-[180px] rounded-lg"
-                style={{
-                  background: `linear-gradient(135deg, ${theme.color}33 0%, ${theme.color}11 100%)`,
-                }}
-              />
-            )}
-
-            {/* Pathway dot + name */}
-            <div className="mb-3 flex items-center gap-2">
-              <span
-                className="inline-block h-3 w-3 rounded-full"
-                style={{ backgroundColor: theme.color }}
-              />
-              <span className="text-sm font-medium" style={{ color: theme.color }}>
-                {theme.name}
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1
-              className="font-serif text-3xl font-bold leading-tight lg:text-4xl"
-              style={{ color: '#1A1A1A' }}
-            >
-              {(content as any).title_6th_grade || (content as any).title || 'Untitled'}
-            </h1>
-
-            {/* Date + source */}
-            <div className="mt-3 flex flex-wrap items-center gap-3 text-sm" style={{ color: '#6B6560' }}>
-              {publishedDate && <span>{publishedDate}</span>}
-              {publishedDate && sourceDomain && (
-                <span style={{ color: '#D4CCBE' }}>|</span>
-              )}
-              {sourceDomain && <span>{sourceDomain}</span>}
-            </div>
-
-            {/* Summary */}
-            {((content as any).summary_6th_grade || (content as any).summary) && (
-              <div className="mt-8 max-w-[720px]">
-                <p
-                  className="text-lg leading-relaxed"
-                  style={{ color: '#2C2C2C' }}
-                >
+              <h1 className="font-serif text-[clamp(1.5rem,3.5vw,2.5rem)] leading-[1.2]" style={{ color: 'white' }}>
+                {(content as any).title_6th_grade || (content as any).title || 'Untitled'}
+              </h1>
+              {((content as any).summary_6th_grade || (content as any).summary) && (
+                <p className="text-[16px] mt-3 max-w-[540px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
                   {(content as any).summary_6th_grade || (content as any).summary}
                 </p>
+              )}
+              <div className="flex items-center gap-3 mt-4 text-[14px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                {sourceDomain && <span className="font-medium">{sourceDomain}</span>}
+                {sourceDomain && publishedDate && <span style={{ opacity: 0.4 }}>/</span>}
+                {publishedDate && <span>{publishedDate}</span>}
               </div>
-            )}
-
-            {/* Read original button */}
-            {(content as any).source_url && (
-              <div className="mt-8">
+              {(content as any).source_url && (
                 <a
                   href={(content as any).source_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-                  style={{ backgroundColor: '#C75B2A' }}
+                  className="inline-flex items-center gap-2 mt-5 px-5 py-2 rounded-lg text-[14px] font-medium text-white"
+                  style={{ background: theme.color }}
                 >
-                  Read original
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M5.25 2.625H2.625V11.375H11.375V8.75" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M8.75 2.625H11.375V5.25" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M6.125 7.875L11.375 2.625" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  Visit source
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                 </a>
+              )}
+            </div>
+            {/* Image thumbnail */}
+            {(content as any).image_url ? (
+              <div className="w-full lg:w-[280px] flex-shrink-0">
+                <div className="rounded-lg overflow-hidden" style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.2)', height: '180px' }}>
+                  <img src={(content as any).image_url} alt="" className="w-full h-full object-cover" />
+                </div>
+              </div>
+            ) : (
+              <div className="hidden lg:flex w-[280px] flex-shrink-0 rounded-lg items-center justify-center" style={{ height: '180px', background: `linear-gradient(135deg, ${theme.color}25, ${theme.color}50)` }}>
+                <svg width="48" height="48" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24" fill={theme.color} opacity="0.2"/><circle cx="32" cy="32" r="14" fill={theme.color} opacity="0.3"/></svg>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="h-1" style={{ background: `linear-gradient(90deg, ${theme.color}, transparent 60%)` }} />
+      </section>
+
+      {/* Body + sidebar */}
+      <div className="max-w-[1152px] mx-auto px-8 py-10" style={{ background: '#FAF8F5' }}>
+        <div className="flex flex-col gap-8 lg:flex-row">
+          {/* Main content */}
+          <article className="flex-1 min-w-0">
+            {((content as any).summary_6th_grade || (content as any).summary) && (
+              <div className="mb-8 max-w-[720px]">
+                <p className="text-[16px] leading-relaxed" style={{ color: '#1A1A1A' }}>
+                  {(content as any).summary_6th_grade || (content as any).summary}
+                </p>
               </div>
             )}
           </article>
 
           {/* Right sidebar: Related */}
           <aside className="w-full lg:w-[320px] lg:flex-shrink-0">
-            <div className="rounded-lg border p-5" style={{ backgroundColor: '#FFFFFF', borderColor: '#D4CCBE' }}>
+            <div className="rounded-lg border p-5" style={{ backgroundColor: '#FFFFFF', borderColor: '#E2DDD5' }}>
               <h2
                 className="font-serif text-lg font-bold mb-4"
                 style={{ color: '#1A1A1A' }}
@@ -185,7 +161,7 @@ export default async function ContentDetailPage({
                           key={item.id}
                           href={`/design2/content/${item.id}`}
                           className="group flex items-start gap-2 rounded-md border p-3 transition-shadow hover:shadow-sm"
-                          style={{ borderColor: '#D4CCBE' }}
+                          style={{ borderColor: '#E2DDD5' }}
                         >
                           <span
                             className="mt-1.5 inline-block h-2 w-2 flex-shrink-0 rounded-full"
@@ -219,7 +195,7 @@ export default async function ContentDetailPage({
                         key={official.official_id}
                         href={`/design2/officials/${official.official_id}`}
                         className="group flex items-center gap-3 rounded-md border p-3 transition-shadow hover:shadow-sm"
-                        style={{ borderColor: '#D4CCBE' }}
+                        style={{ borderColor: '#E2DDD5' }}
                       >
                         {official.photo_url ? (
                           <img
@@ -269,7 +245,7 @@ export default async function ContentDetailPage({
                         key={policy.policy_id}
                         href={`/design2/policies/${policy.policy_id}`}
                         className="group flex items-start gap-2 rounded-md border p-3 transition-shadow hover:shadow-sm"
-                        style={{ borderColor: '#D4CCBE' }}
+                        style={{ borderColor: '#E2DDD5' }}
                       >
                         <svg
                           className="mt-0.5 flex-shrink-0"

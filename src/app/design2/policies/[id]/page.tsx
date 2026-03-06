@@ -153,9 +153,9 @@ export default async function PolicyDetailPage({
   const lastAction = formatDate(p.last_action_date || p.last_action)
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F0EAE0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FAF8F5' }}>
       {/* Back bar */}
-      <div className="border-b" style={{ borderColor: '#D4CCBE' }}>
+      <div className="border-b" style={{ borderColor: '#E2DDD5' }}>
         <div className="mx-auto max-w-7xl px-4 py-3">
           <Link
             href="/design2/policies"
@@ -274,7 +274,7 @@ export default async function PolicyDetailPage({
                       key={o.official_id}
                       href={`/design2/officials/${o.official_id}`}
                       className="flex items-center gap-3 bg-white rounded-xl border p-4 transition-all hover:shadow-md hover:translate-y-[-1px]"
-                      style={{ borderColor: '#D4CCBE' }}
+                      style={{ borderColor: '#E2DDD5' }}
                     >
                       <div
                         className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
@@ -324,7 +324,7 @@ export default async function PolicyDetailPage({
                         key={rp.policy_id}
                         href={`/design2/policies/${rp.policy_id}`}
                         className="bg-white rounded-xl border p-4 transition-all hover:shadow-md hover:translate-y-[-1px]"
-                        style={{ borderColor: '#D4CCBE' }}
+                        style={{ borderColor: '#E2DDD5' }}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <span className="w-2 h-2 rounded-full" style={{ background: rpColor }} />
@@ -360,7 +360,7 @@ export default async function PolicyDetailPage({
           <aside className="w-full lg:w-[340px] lg:flex-shrink-0 flex flex-col gap-5">
             {/* Focus areas */}
             {focusAreas.length > 0 && (
-              <div className="bg-white rounded-xl border p-5" style={{ borderColor: '#D4CCBE' }}>
+              <div className="bg-white rounded-xl border p-5" style={{ borderColor: '#E2DDD5' }}>
                 <h2 className="font-serif text-lg font-bold mb-3" style={{ color: '#1a1a1a' }}>
                   Focus Areas
                 </h2>
@@ -369,7 +369,7 @@ export default async function PolicyDetailPage({
                     <span
                       key={fa.focus_id}
                       className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-medium"
-                      style={{ borderColor: '#D4CCBE', color: '#1a1a1a' }}
+                      style={{ borderColor: '#E2DDD5', color: '#1a1a1a' }}
                     >
                       <span
                         className="h-2 w-2 rounded-full flex-shrink-0"
@@ -384,7 +384,7 @@ export default async function PolicyDetailPage({
 
             {/* Geography */}
             {Object.keys(geoGrouped).length > 0 && (
-              <div className="bg-white rounded-xl border p-5" style={{ borderColor: '#D4CCBE' }}>
+              <div className="bg-white rounded-xl border p-5" style={{ borderColor: '#E2DDD5' }}>
                 <h2 className="font-serif text-lg font-bold mb-3" style={{ color: '#1a1a1a' }}>
                   Areas Affected
                 </h2>
@@ -402,7 +402,7 @@ export default async function PolicyDetailPage({
                           <span
                             key={geoId}
                             className="rounded-md border px-2.5 py-1 text-[12px] font-medium"
-                            style={{ borderColor: '#D4CCBE', color: '#1a1a1a', backgroundColor: '#FAF8F5' }}
+                            style={{ borderColor: '#E2DDD5', color: '#1a1a1a', backgroundColor: '#FAF8F5' }}
                           >
                             {geoId}
                           </span>

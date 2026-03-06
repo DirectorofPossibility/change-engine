@@ -34,129 +34,231 @@ export default async function EventsPage() {
     .limit(30)
 
   return (
-    <div style={{ backgroundColor: '#F0EAE0' }} className="min-h-screen">
-      {/* Back link */}
-      <div className="max-w-4xl mx-auto px-6 pt-6">
-        <Link
-          href="/design2"
-          className="text-sm font-medium text-brand-muted hover:text-brand-accent transition-colors"
-        >
-          &larr; Back to Design2
-        </Link>
-      </div>
+    <div style={{ minHeight: '100vh' }}>
+      {/* Dark Editorial Hero */}
+      <section style={{ background: '#2C2418', padding: '40px 32px 48px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Breadcrumb */}
+          <nav style={{ marginBottom: '24px', fontSize: '13px' }}>
+            <Link href="/design2" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>
+              Home
+            </Link>
+            <span style={{ color: '#C75B2A', margin: '0 8px' }}>/</span>
+            <span style={{ color: 'rgba(255,255,255,0.8)' }}>Events</span>
+          </nav>
 
-      {/* Page Header */}
-      <header className="max-w-4xl mx-auto px-6 pt-8 pb-10">
-        <div
-          className="w-16 h-1 rounded-full mb-6"
-          style={{ backgroundColor: '#805ad5' }}
-        />
-        <h1 className="font-serif text-4xl font-bold text-[#1A1A1A] mb-3">
-          Events &amp; Calendar
-        </h1>
-        <p className="text-lg text-[#6B6560] max-w-2xl leading-relaxed">
-          Discover community events, workshops, and gatherings happening across
-          Houston. Find opportunities to connect, learn, and get involved.
-        </p>
-      </header>
+          {/* Accent bar */}
+          <div style={{ width: '40px', height: '2px', background: '#C75B2A', marginBottom: '20px' }} />
 
-      {/* Timeline List */}
-      <section className="max-w-4xl mx-auto px-6 pb-16">
-        {!events || events.length === 0 ? (
-          <div className="bg-white rounded-xl border border-[#E2DDD5] p-12 text-center">
-            <p className="text-[#6B6560] text-lg">
-              No upcoming events at this time. Check back soon.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {events.map((event) => {
-              const { month, day } = formatDate(event.start_datetime)
-              const startTime = formatTime(event.start_datetime)
-              const endTime = event.end_datetime
-                ? formatTime(event.end_datetime)
-                : null
+          {/* Title */}
+          <h1
+            className="font-serif"
+            style={{
+              fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+              color: '#FFFFFF',
+              marginBottom: '12px',
+              lineHeight: 1.2,
+            }}
+          >
+            Events
+          </h1>
 
-              const location =
-                event.address && event.city
-                  ? `${event.address}, ${event.city}`
-                  : event.city || event.address || null
+          {/* Subtitle */}
+          <p
+            className="font-serif"
+            style={{
+              fontSize: '18px',
+              fontStyle: 'italic',
+              color: 'rgba(255,255,255,0.6)',
+              marginBottom: '16px',
+            }}
+          >
+            Gatherings, workshops, and happenings across Houston
+          </p>
 
-              return (
-                <Link
-                  key={event.event_id}
-                  href={`/design2/events/${event.event_id}`}
-                  className="block group"
-                >
-                  <div className="bg-white rounded-xl border border-[#E2DDD5] hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex overflow-hidden">
-                    {/* Date Column */}
-                    <div
-                      className="flex-shrink-0 w-24 flex flex-col items-center justify-center py-5"
-                      style={{ borderRight: '3px solid #805ad5' }}
-                    >
-                      <span className="text-xs font-bold tracking-wider text-[#805ad5]">
-                        {month}
-                      </span>
-                      {day && (
-                        <span className="text-3xl font-bold text-[#1A1A1A] leading-tight">
-                          {day}
+          {/* Intro text */}
+          <p style={{ fontSize: '16px', color: 'rgba(255,255,255,0.5)', maxWidth: '720px', lineHeight: 1.6 }}>
+            Discover community events, workshops, and gatherings happening across Houston.
+            Find opportunities to connect, learn, and get involved.
+          </p>
+        </div>
+      </section>
+
+      {/* Body */}
+      <section style={{ background: '#FAF8F5', padding: '40px 32px 64px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          {!events || events.length === 0 ? (
+            <div style={{
+              background: '#FFFFFF',
+              border: '1px solid #E2DDD5',
+              borderRadius: '0.75rem',
+              padding: '48px',
+              textAlign: 'center',
+            }}>
+              <p style={{ color: '#6B6560', fontSize: '16px' }}>
+                No upcoming events at this time. Check back soon.
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {events.map((event) => {
+                const { month, day } = formatDate(event.start_datetime)
+                const startTime = formatTime(event.start_datetime)
+                const endTime = event.end_datetime ? formatTime(event.end_datetime) : null
+                const location =
+                  event.address && event.city
+                    ? `${event.address}, ${event.city}`
+                    : event.city || event.address || null
+
+                return (
+                  <Link
+                    key={event.event_id}
+                    href={`/design2/events/${event.event_id}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <div className="evt-card" style={{
+                      background: '#FFFFFF',
+                      border: '1px solid #E2DDD5',
+                      borderRadius: '0.75rem',
+                      display: 'flex',
+                      overflow: 'hidden',
+                      transition: 'box-shadow 0.2s, transform 0.2s',
+                    }}>
+                      {/* Date Column */}
+                      <div style={{
+                        flexShrink: 0,
+                        width: '96px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '20px 0',
+                        borderRight: '3px solid #C75B2A',
+                      }}>
+                        <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', color: '#C75B2A' }}>
+                          {month}
                         </span>
-                      )}
-                    </div>
-
-                    {/* Content Column */}
-                    <div className="flex-1 p-5 min-w-0">
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <h2 className="font-serif text-lg font-bold text-[#1A1A1A] group-hover:text-[#805ad5] transition-colors truncate">
-                          {event.event_name || 'Untitled Event'}
-                        </h2>
-
-                        {event.event_type && (
-                          <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#805ad5]/10 text-[#805ad5]">
-                            {event.event_type}
-                          </span>
-                        )}
-
-                        {event.is_virtual && (
-                          <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-50 text-blue-600">
-                            Virtual
-                          </span>
-                        )}
-
-                        {event.is_free && (
-                          <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-50 text-green-700">
-                            Free
+                        {day && (
+                          <span style={{ fontSize: '28px', fontWeight: 700, color: '#1A1A1A', lineHeight: 1.1 }}>
+                            {day}
                           </span>
                         )}
                       </div>
 
-                      {/* Time */}
-                      <p className="text-sm text-[#6B6560] mb-1">
-                        {startTime}
-                        {endTime ? ` — ${endTime}` : ''}
-                      </p>
+                      {/* Content Column */}
+                      <div style={{ flex: 1, padding: '20px', minWidth: 0 }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <h2
+                            className="font-serif"
+                            style={{
+                              fontSize: '16px',
+                              fontWeight: 700,
+                              color: '#1A1A1A',
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {event.event_name || 'Untitled Event'}
+                          </h2>
 
-                      {/* Location */}
-                      {location && (
-                        <p className="text-sm text-[#6B6560] truncate">
-                          {location}
-                        </p>
-                      )}
+                          {event.event_type && (
+                            <span style={{
+                              display: 'inline-block',
+                              fontSize: '9px',
+                              fontWeight: 700,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.05em',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              background: 'rgba(199,91,42,0.1)',
+                              color: '#C75B2A',
+                            }}>
+                              {event.event_type}
+                            </span>
+                          )}
 
-                      {/* Description */}
-                      {event.description_5th_grade && (
-                        <p className="text-sm text-[#6B6560] mt-2 line-clamp-2">
-                          {event.description_5th_grade}
+                          {event.is_virtual && (
+                            <span style={{
+                              display: 'inline-block',
+                              fontSize: '9px',
+                              fontWeight: 700,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.05em',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              background: '#DBEAFE',
+                              color: '#1D4ED8',
+                            }}>
+                              Virtual
+                            </span>
+                          )}
+
+                          {event.is_free && (
+                            <span style={{
+                              display: 'inline-block',
+                              fontSize: '9px',
+                              fontWeight: 700,
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.05em',
+                              padding: '2px 8px',
+                              borderRadius: '4px',
+                              background: '#D1FAE5',
+                              color: '#065F46',
+                            }}>
+                              Free
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Time */}
+                        <p style={{ fontSize: '13px', color: '#6B6560', marginBottom: '4px' }}>
+                          {startTime}{endTime ? ` — ${endTime}` : ''}
                         </p>
-                      )}
+
+                        {/* Location */}
+                        {location && (
+                          <p style={{
+                            fontSize: '13px',
+                            color: '#6B6560',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}>
+                            {location}
+                          </p>
+                        )}
+
+                        {/* Description */}
+                        {event.description_5th_grade && (
+                          <p style={{
+                            fontSize: '13px',
+                            color: '#6B6560',
+                            marginTop: '8px',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical' as const,
+                            overflow: 'hidden',
+                            lineHeight: 1.5,
+                          }}>
+                            {event.description_5th_grade}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        )}
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </section>
+
+      {/* Hover styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .evt-card:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          transform: translateY(-2px);
+        }
+      `}} />
     </div>
   )
 }

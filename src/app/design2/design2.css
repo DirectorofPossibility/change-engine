@@ -5,15 +5,15 @@
 
 /* ── Base / Reset ── */
 .d2-root {
-  --d2-bg: #F0EAE0;
+  --d2-bg: #FAF8F5;
   --d2-bg-cream: #F7F2EA;
   --d2-bg-white: #FFFFFF;
   --d2-text: #1a1a1a;
   --d2-text-secondary: #4A4540;
   --d2-text-muted: #6B6560;
   --d2-text-faint: #9B9590;
-  --d2-border: #D4CCBE;
-  --d2-border-light: #E2DDD5;
+  --d2-border: #E2DDD5;
+  --d2-border-light: #E8E3DB;
   --d2-accent: #C75B2A;
   --d2-dark: #1A1A1A;
   --d2-card-radius: 0.75rem;
