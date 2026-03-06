@@ -1899,11 +1899,10 @@ export async function getWayfinderContext(
     } catch { /* foundation lookup is best-effort */ }
   }
 
-  // ── Taxonomy metadata for admin/partner roles ──
+  // ── Taxonomy metadata — available to all users ──
   let taxonomy: import('@/lib/types/exchange').WayfinderData['taxonomy']
-  const showTaxonomy = userRole === 'admin' || userRole === 'partner'
 
-  if (showTaxonomy && entityType === 'content') {
+  if (entityType === 'content') {
     const [sdgJ, contentRow, actionTypeJ, govLevelJ] = await Promise.all([
       supabase.from('content_sdgs').select('sdg_id').eq('content_id', entityId),
       supabase.from('content_published').select('sdoh_domain, time_commitment_id, gov_level_id').eq('id', entityId).single(),

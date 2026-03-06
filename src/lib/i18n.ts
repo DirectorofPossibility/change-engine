@@ -529,7 +529,10 @@ const en: Record<string, string> = {
   'library.understanding': 'Understanding this resource',
 
   // Wayfinder
-  'wayfinder.title': 'Connected Through the Community',
+  'wayfinder.title': 'Wayfinder',
+  'wayfinder.translate_page': 'Translate this page',
+  'wayfinder.translating': 'Translating...',
+  'wayfinder.translated': 'Page translated',
   'wayfinder.understand': 'Understand',
   'wayfinder.get_involved': 'Get Involved',
   'wayfinder.go_deeper': 'Go Deeper',
@@ -1078,7 +1081,10 @@ const es: Record<string, string> = {
   'library.understanding': 'Entendiendo este recurso',
 
   // Wayfinder
-  'wayfinder.title': 'Conectados a Través de la Comunidad',
+  'wayfinder.title': 'Wayfinder',
+  'wayfinder.translate_page': 'Traducir esta página',
+  'wayfinder.translating': 'Traduciendo...',
+  'wayfinder.translated': 'Página traducida',
   'wayfinder.understand': 'Comprender',
   'wayfinder.get_involved': 'Participar',
   'wayfinder.go_deeper': 'Profundizar',
@@ -1627,7 +1633,10 @@ const vi: Record<string, string> = {
   'library.understanding': 'Hiểu về tài nguyên này',
 
   // Wayfinder
-  'wayfinder.title': 'Kết Nối Qua Cộng Đồng',
+  'wayfinder.title': 'Wayfinder',
+  'wayfinder.translate_page': 'Dịch trang này',
+  'wayfinder.translating': 'Đang dịch...',
+  'wayfinder.translated': 'Đã dịch trang',
   'wayfinder.understand': 'Tìm Hiểu',
   'wayfinder.get_involved': 'Tham Gia',
   'wayfinder.go_deeper': 'Đi Sâu Hơn',

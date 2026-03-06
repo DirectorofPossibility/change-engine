@@ -106,9 +106,10 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </div>
       )}
 
-      {/* Focus area dots */}
+      {/* Focus area dots — all linked */}
       {data.focusAreas.length > 0 && (
         <div className="px-4 py-3 border-b border-brand-border">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Focus Areas</div>
           <div className="flex flex-wrap gap-1.5">
             {data.focusAreas.map(function (fa) {
               const themeKey = fa.theme_id as keyof typeof THEMES | null
@@ -117,7 +118,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                 <Link
                   key={fa.focus_id}
                   href={'/explore/focus/' + fa.focus_id}
-                  className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-text transition-colors"
+                  className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-accent transition-colors"
                 >
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color || '#8B7E74' }} />
                   {fa.focus_area_name}
@@ -125,6 +126,128 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               )
             })}
           </div>
+        </div>
+      )}
+
+      {/* Themes — linked to pathway pages */}
+      {data.themes.length > 0 && (
+        <div className="px-4 py-3 border-b border-brand-border">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Pathways</div>
+          <div className="flex flex-wrap gap-1.5">
+            {data.themes.map(function (themeId) {
+              const theme = THEMES[themeId as keyof typeof THEMES]
+              if (!theme) return null
+              return (
+                <Link
+                  key={themeId}
+                  href={'/pathways/' + theme.slug}
+                  className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-lg hover:opacity-80 transition-opacity"
+                  style={{ backgroundColor: theme.color + '15', color: theme.color }}
+                >
+                  <span className="w-1.5 h-4 rounded-sm" style={{ backgroundColor: theme.color }} />
+                  {theme.name}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Taxonomy — SDGs, SDOH, action types, gov level (visible to all) */}
+      {data.taxonomy && (
+        <div className="px-4 py-3 border-b border-brand-border space-y-2.5">
+          {/* SDGs — linked to explore */}
+          {data.taxonomy.sdgs.length > 0 && (
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Global Goals</div>
+              <div className="flex flex-wrap gap-1">
+                {data.taxonomy.sdgs.map(function (s) {
+                  return (
+                    <Link
+                      key={s.sdg_id}
+                      href={'/search?sdg=' + encodeURIComponent(s.sdg_id)}
+                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
+                      style={{ backgroundColor: s.sdg_color || '#4C9F38' }}
+                    >
+                      {s.sdg_number}. {s.sdg_name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* SDOH — linked to search */}
+          {data.taxonomy.sdohDomain && (
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Health Determinant</div>
+              <Link
+                href={'/search?sdoh=' + encodeURIComponent(data.taxonomy.sdohDomain.sdoh_code)}
+                className="text-xs text-brand-accent hover:underline"
+              >
+                {data.taxonomy.sdohDomain.sdoh_name}
+              </Link>
+            </div>
+          )}
+
+          {/* Government Level */}
+          {data.taxonomy.govLevel && (
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Government Level</div>
+              <Link
+                href={'/search?level=' + encodeURIComponent(data.taxonomy.govLevel.gov_level_name)}
+                className="text-xs text-brand-accent hover:underline"
+              >
+                {data.taxonomy.govLevel.gov_level_name}
+              </Link>
+            </div>
+          )}
+
+          {/* Action Types — linked to search */}
+          {data.taxonomy.actionTypes.length > 0 && (
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Action Types</div>
+              <div className="flex flex-wrap gap-1">
+                {data.taxonomy.actionTypes.map(function (at) {
+                  return (
+                    <Link
+                      key={at.action_type_id}
+                      href={'/search?action=' + encodeURIComponent(at.action_type_name)}
+                      className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline"
+                    >
+                      {at.action_type_name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Time Commitment */}
+          {data.taxonomy.timeCommitment && (
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Time Commitment</div>
+              <span className="text-xs text-brand-text">{data.taxonomy.timeCommitment.time_name}</span>
+            </div>
+          )}
+
+          {/* NTEE / AIRS codes — admin/partner only */}
+          {(userRole === 'admin' || userRole === 'partner') && (
+            <>
+              {data.taxonomy.ntee_codes.length > 0 && (
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">NTEE</span>
+                  <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.ntee_codes.join(', ')}</p>
+                </div>
+              )}
+              {data.taxonomy.airs_codes.length > 0 && (
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">AIRS</span>
+                  <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.airs_codes.join(', ')}</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
       )}
 
@@ -146,7 +269,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               return (
                 <Link key={c.id} href={'/content/' + c.id} className="flex gap-2 group/card">
                   {c.image_url ? (
-                    <img src={c.image_url} alt="" className="w-12 h-9 rounded object-cover flex-shrink-0" />
+                    <img src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0" />
                   ) : (
                     <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#8B7E74') + '20' }} />
                   )}
@@ -265,7 +388,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               return (
                 <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-2 group/off">
                   {o.photo_url ? (
-                    <img src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
+                    <img src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-contain bg-brand-bg flex-shrink-0" />
                   ) : (
                     <div className="w-7 h-7 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
                       <Users size={11} className="text-brand-muted" />
@@ -311,93 +434,6 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                 </div>
               )
             })}
-          </div>
-        </details>
-      )}
-
-      {/* Taxonomy — admin/partner only */}
-      {(userRole === 'admin' || userRole === 'partner') && data.taxonomy && (
-        <details className="group border-t border-brand-border">
-          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
-            <div className="flex items-center gap-2">
-              <Tag size={15} className="text-gray-500" />
-              <span className="text-sm font-medium text-brand-text">Classification</span>
-            </div>
-            <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="px-4 pb-4 space-y-3 text-xs">
-            {/* SDGs */}
-            {data.taxonomy.sdgs.length > 0 && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">UN SDGs</span>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {data.taxonomy.sdgs.map(function (s) {
-                    return (
-                      <span key={s.sdg_id} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white" style={{ backgroundColor: s.sdg_color || '#4C9F38' }}>
-                        {s.sdg_number}. {s.sdg_name}
-                      </span>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* SDOH */}
-            {data.taxonomy.sdohDomain && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Social Determinant</span>
-                <p className="text-brand-text mt-0.5">{data.taxonomy.sdohDomain.sdoh_name}</p>
-                {data.taxonomy.sdohDomain.sdoh_description && (
-                  <p className="text-brand-muted mt-0.5">{data.taxonomy.sdohDomain.sdoh_description}</p>
-                )}
-              </div>
-            )}
-
-            {/* Government Level */}
-            {data.taxonomy.govLevel && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Government Level</span>
-                <p className="text-brand-text mt-0.5">{data.taxonomy.govLevel.gov_level_name}</p>
-              </div>
-            )}
-
-            {/* Action Types */}
-            {data.taxonomy.actionTypes.length > 0 && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Action Types</span>
-                <div className="flex flex-wrap gap-1 mt-1">
-                  {data.taxonomy.actionTypes.map(function (at) {
-                    return (
-                      <span key={at.action_type_id} className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-text">
-                        {at.action_type_name}
-                      </span>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Time Commitment */}
-            {data.taxonomy.timeCommitment && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">Time Commitment</span>
-                <p className="text-brand-text mt-0.5">{data.taxonomy.timeCommitment.time_name}</p>
-              </div>
-            )}
-
-            {/* NTEE / AIRS codes */}
-            {data.taxonomy.ntee_codes.length > 0 && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">NTEE</span>
-                <p className="text-brand-text mt-0.5 font-mono">{data.taxonomy.ntee_codes.join(', ')}</p>
-              </div>
-            )}
-            {data.taxonomy.airs_codes.length > 0 && (
-              <div>
-                <span className="font-medium text-brand-muted uppercase tracking-wide text-[10px]">AIRS</span>
-                <p className="text-brand-text mt-0.5 font-mono">{data.taxonomy.airs_codes.join(', ')}</p>
-              </div>
-            )}
           </div>
         </details>
       )}

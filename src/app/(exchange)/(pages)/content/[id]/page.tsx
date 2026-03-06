@@ -23,6 +23,7 @@ import { FileText, Users, ExternalLink } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 
 /** Strip scraped page chrome: inline scripts, tracking pixels, nav boilerplate. */
 function sanitizeBody(raw: string): string {
@@ -306,6 +307,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         {isTranslated && (
           <span className="text-xs px-2 py-0.5 rounded-lg bg-blue-100 text-blue-700">Machine translated</span>
         )}
+        <TranslatePageButton isTranslated={isTranslated} contentType="content_published" contentId={item.inbox_id || id} />
       </PageHero>
 
       {/* Quote Banner */}
@@ -466,7 +468,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
           {/* Sidebar — consolidated */}
           <div className="space-y-4">
-            {/* At a Glance */}
+            {/* Wayfinder — contextual discovery */}
+            <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
+
+            {/* At a Glance — below Wayfinder */}
             <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-serif font-bold text-brand-text mb-3">At a Glance</h3>
               <div className="space-y-2.5">
@@ -545,7 +550,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                       <div className="flex flex-wrap gap-1">
                         {segmentIds.map(function (seg) {
                           const name = segmentNames[seg] || seg.replace('SEG_', '').replace(/_/g, ' ')
-                          return <span key={seg} className="text-xs px-2 py-0.5 rounded-lg bg-purple-50 text-purple-700">{name}</span>
+                          return <Link key={seg} href={'/search?audience=' + encodeURIComponent(seg)} className="text-xs px-2 py-0.5 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">{name}</Link>
                         })}
                       </div>
                     </div>
@@ -555,7 +560,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                       <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Topics</div>
                       <div className="flex flex-wrap gap-1">
                         {keywords.slice(0, 8).map(function (kw) {
-                          return <span key={kw} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{kw}</span>
+                          return <Link key={kw} href={'/search?q=' + encodeURIComponent(kw)} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-accent hover:underline">{kw}</Link>
                         })}
                       </div>
                     </div>
@@ -744,9 +749,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-        <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
-      </div>
+      {/* Wayfinder is now in the sidebar */}
     </div>
   )
 }
