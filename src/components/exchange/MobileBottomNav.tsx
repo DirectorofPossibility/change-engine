@@ -23,12 +23,13 @@ export default function MobileBottomNav() {
             <Link
               key={href}
               href={href}
-              className={`flex flex-col items-center justify-center gap-0.5 ${
-                isActive ? 'text-brand-accent' : 'text-white/50'
+              aria-label={label}
+              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-lg transition-colors ${
+                isActive ? 'text-brand-accent bg-white/10' : 'text-white/50'
               }`}
             >
               <Icon size={20} />
-              <span className="text-[10px] font-medium">{label}</span>
+              <span className="text-xs font-medium">{label}</span>
             </Link>
           )
         })}

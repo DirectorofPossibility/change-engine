@@ -70,12 +70,12 @@ export function HeroBook() {
           </form>
 
           {/* Suggestions */}
-          <p className="text-xs text-white/40 mb-10">
+          <p className="text-xs text-white/50 mb-10">
             Try:{' '}
             {SEARCH_SUGGESTIONS.map(function (term, i) {
               return (
                 <span key={term}>
-                  {i > 0 && <span className="mx-1 text-white/20">/</span>}
+                  {i > 0 && <span className="mx-1 text-white/30">/</span>}
                   <button
                     onClick={function () { router.push('/search?q=' + encodeURIComponent(term)) }}
                     className="text-white/60 hover:text-white transition-colors"

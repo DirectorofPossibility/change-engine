@@ -13,6 +13,17 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
   }
+
+  /* Global focus indicators for keyboard accessibility */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #E8723A;
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {

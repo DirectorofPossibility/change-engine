@@ -60,7 +60,7 @@ function EntityCard({ item }: { item: ShelfItem }) {
       {/* Color top bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: item.color || '#8B7E74' }} />
       <div className="p-4">
-        <span className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">{typeLabel}</span>
+        <span className="text-xs uppercase tracking-wider text-brand-muted font-semibold">{typeLabel}</span>
         <h4 className="text-sm font-semibold text-brand-text mt-1 leading-snug line-clamp-2">{item.title}</h4>
         {item.subtitle && (
           <p className="text-xs text-brand-muted mt-1 italic">{item.subtitle}</p>
@@ -138,6 +138,8 @@ export function ContentShelf({
       <div className="relative">
         <div
           ref={scrollRef}
+          role="region"
+          aria-label={`${title} shelf`}
           className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
           style={{ scrollSnapType: 'x mandatory' }}
         >

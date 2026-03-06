@@ -10,19 +10,19 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          bg: '#FAF8F5',
-          'bg-alt': '#F0ECE6',
+          bg: '#F8F9FB',
+          'bg-alt': '#EFF1F5',
           text: '#1A1A1A',
-          accent: '#C75B2A',
-          'accent-hover': '#B5481A',
-          muted: '#6B6560',
-          'muted-light': '#9B9590',
-          border: '#E2DDD5',
+          accent: '#E8723A',
+          'accent-hover': '#D46230',
+          muted: '#6C7380',
+          'muted-light': '#9CA3AF',
+          border: '#E1E4EA',
           card: '#FFFFFF',
           success: '#2D8659',
           warning: '#C47D1A',
           danger: '#C53030',
-          dark: '#2C2418',
+          dark: '#3D3A37',
         },
         theme: {
           health: '#DC4444',
@@ -34,9 +34,9 @@ const config: Config = {
           bigger: '#7C3AED',
         },
         sidebar: {
-          bg: '#2C2418',
-          hover: '#3D3428',
-          active: '#C75B2A',
+          bg: '#3D3A37',
+          hover: '#4D4945',
+          active: '#E8723A',
         },
       },
       fontFamily: {

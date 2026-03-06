@@ -69,6 +69,7 @@ export function WayfinderNav() {
                   href={'/pathways/' + p.slug}
                   className="group relative"
                   title={p.name}
+                  aria-label={`Go to ${p.name} pathway`}
                 >
                   <span
                     className="block w-3.5 h-3.5 rounded-full transition-transform group-hover:scale-125"

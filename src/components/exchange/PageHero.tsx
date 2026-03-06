@@ -69,7 +69,7 @@ export function PageHero({
   }
 
   if (resolvedVariant === 'gradient') {
-    const gc = gradientColor || '#C75B2A'
+    const gc = gradientColor || '#E8723A'
     return (
       <section className="relative w-full overflow-hidden bg-brand-dark">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
@@ -94,7 +94,7 @@ export function PageHero({
   }
 
   if (resolvedVariant === 'content') {
-    const gc = gradientColor || '#C75B2A'
+    const gc = gradientColor || '#E8723A'
     return (
       <section className="relative w-full overflow-hidden bg-brand-bg border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
@@ -141,7 +141,7 @@ export function PageHero({
 
   // Sacred geometry variant — Flower of Life derivatives as decorative background
   if (resolvedVariant === 'sacred') {
-    const gc = gradientColor || '#C75B2A'
+    const gc = gradientColor || '#E8723A'
     return (
       <section className="relative w-full overflow-hidden bg-brand-dark">
         {/* Sacred geometry background pattern */}
@@ -160,7 +160,7 @@ export function PageHero({
             <p className="text-lg text-white/60 mt-3 font-serif italic max-w-2xl">{displaySubtitle}</p>
           )}
           {displayIntro && (
-            <p className="text-base text-white/45 mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
+            <p className="text-base text-white/60 mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
           )}
           {children}
         </div>

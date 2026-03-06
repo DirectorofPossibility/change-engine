@@ -45,7 +45,7 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <FlowerOfLifeIcon size={28} color="#C75B2A" />
+              <FlowerOfLifeIcon size={28} color="#E8723A" />
               <h3 className="font-serif text-lg text-white font-semibold">
                 Community Exchange
               </h3>
@@ -54,14 +54,14 @@ export function Footer() {
               A civic platform connecting Houston residents with the resources,
               knowledge, and opportunities that strengthen communities.
             </p>
-            <p className="text-xs text-white/30 mt-4 italic">
+            <p className="text-xs text-white/50 mt-4 italic">
               {BRAND.origin}
             </p>
           </div>
 
           {/* Pathways */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-4">
               Pathways
             </h4>
             <ul className="space-y-2">
@@ -80,7 +80,7 @@ export function Footer() {
 
           {/* Navigate */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-4">
               Navigate
             </h4>
             <ul className="space-y-2">
@@ -98,7 +98,7 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-4">
               Connect
             </h4>
             <ul className="space-y-2">
@@ -119,26 +119,26 @@ export function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/30">
+          <p className="text-xs text-white/50">
             &copy; 2026 The Change Lab
           </p>
 
           <div className="flex items-center gap-4">
             {legal.map(function (link) {
               return (
-                <Link key={link.href} href={link.href} className="text-xs text-white/30 hover:text-white/60 transition-colors">
+                <Link key={link.href} href={link.href} className="text-xs text-white/50 hover:text-white/70 transition-colors">
                   {link.label}
                 </Link>
               )
             })}
 
-            <span className="text-xs text-white/10">|</span>
+            <span className="text-xs text-white/20">|</span>
 
-            <span className="text-xs text-white/30">
+            <span className="text-xs text-white/50">
               {LANGUAGES.map(function (lang, i) {
                 return (
                   <span key={lang.code}>
-                    {i > 0 && <span className="mx-1 text-white/15">/</span>}
+                    {i > 0 && <span className="mx-1 text-white/30">/</span>}
                     {lang.name}
                   </span>
                 )
