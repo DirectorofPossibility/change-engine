@@ -1,15 +1,10 @@
 import Link from 'next/link'
-import { BRAND, LANGUAGES } from '@/lib/constants'
+import { BRAND, LANGUAGES, THEMES } from '@/lib/constants'
+import { FlowerOfLifeIcon } from './FlowerIcons'
 
-const pathways = [
-  { href: '/pathways/our-health', label: 'Our Health' },
-  { href: '/pathways/our-voice', label: 'Our Voice' },
-  { href: '/pathways/our-families', label: 'Our Families' },
-  { href: '/pathways/our-neighborhood', label: 'Our Neighborhood' },
-  { href: '/pathways/our-money', label: 'Our Money' },
-  { href: '/pathways/our-planet', label: 'Our Planet' },
-  { href: '/pathways/the-bigger-we', label: 'The Bigger We' },
-]
+const pathways = Object.values(THEMES).map(function (t) {
+  return { href: '/pathways/' + t.slug, label: t.name, color: t.color }
+})
 
 const navigate = [
   { href: '/compass', label: 'Compass' },
@@ -37,109 +32,117 @@ const legal = [
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-brand-border">
+    <footer className="bg-brand-dark text-white/70">
+      {/* Pathway spectrum bar */}
+      <div className="flex h-1">
+        {pathways.map(function (p) {
+          return <div key={p.href} className="flex-1" style={{ backgroundColor: p.color }} />
+        })}
+      </div>
+
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <h3 className="font-serif text-lg text-brand-text font-semibold">
-              The Change Engine
-            </h3>
-            <p className="text-sm text-brand-muted mt-2 leading-relaxed">
-              {BRAND.origin}
-            </p>
-            <p className="text-sm text-brand-muted mt-3 leading-relaxed">
+            <div className="flex items-center gap-3 mb-4">
+              <FlowerOfLifeIcon size={28} color="#C75B2A" />
+              <h3 className="font-serif text-lg text-white font-semibold">
+                Community Exchange
+              </h3>
+            </div>
+            <p className="text-sm text-white/50 leading-relaxed">
               A civic platform connecting Houston residents with the resources,
               knowledge, and opportunities that strengthen communities.
             </p>
+            <p className="text-xs text-white/30 mt-4 italic">
+              {BRAND.origin}
+            </p>
           </div>
 
-          {/* Explore */}
+          {/* Pathways */}
           <div>
-            <h4 className="font-serif text-sm text-brand-text font-semibold uppercase tracking-wide">
-              Explore
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-4">
+              Pathways
             </h4>
-            <ul className="mt-3 space-y-2">
-              {pathways.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-sm text-brand-muted hover:text-brand-accent transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-2">
+              {pathways.map(function (p) {
+                return (
+                  <li key={p.href} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: p.color }} />
+                    <Link href={p.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                      {p.label}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
 
           {/* Navigate */}
           <div>
-            <h4 className="font-serif text-sm text-brand-text font-semibold uppercase tracking-wide">
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-4">
               Navigate
             </h4>
-            <ul className="mt-3 space-y-2">
-              {navigate.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-sm text-brand-muted hover:text-brand-accent transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-2">
+              {navigate.map(function (link) {
+                return (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
 
           {/* Connect */}
           <div>
-            <h4 className="font-serif text-sm text-brand-text font-semibold uppercase tracking-wide">
+            <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/30 mb-4">
               Connect
             </h4>
-            <ul className="mt-3 space-y-2">
-              {connect.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-sm text-brand-muted hover:text-brand-accent transition-colors"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
+            <ul className="space-y-2">
+              {connect.map(function (link) {
+                return (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
         </div>
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-brand-border">
+      <div className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-brand-muted">
-            &copy; 2026 The Change Engine
+          <p className="text-xs text-white/30">
+            &copy; 2026 The Change Lab
           </p>
 
           <div className="flex items-center gap-4">
-            {legal.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-xs text-brand-muted hover:text-brand-accent transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
+            {legal.map(function (link) {
+              return (
+                <Link key={link.href} href={link.href} className="text-xs text-white/30 hover:text-white/60 transition-colors">
+                  {link.label}
+                </Link>
+              )
+            })}
 
-            <span className="text-xs text-brand-border">|</span>
+            <span className="text-xs text-white/10">|</span>
 
-            <span className="text-xs text-brand-muted">
-              {LANGUAGES.map((lang, i) => (
-                <span key={lang.code}>
-                  {i > 0 && <span className="mx-1">/</span>}
-                  {lang.name}
-                </span>
-              ))}
+            <span className="text-xs text-white/30">
+              {LANGUAGES.map(function (lang, i) {
+                return (
+                  <span key={lang.code}>
+                    {i > 0 && <span className="mx-1 text-white/15">/</span>}
+                    {lang.name}
+                  </span>
+                )
+              })}
             </span>
           </div>
         </div>

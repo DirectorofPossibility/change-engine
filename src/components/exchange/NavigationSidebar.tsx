@@ -7,7 +7,8 @@ import {
   Search, Home, ChevronDown, ChevronRight, Menu, X,
   Heart, Users, MapPin, Megaphone, Wallet, Leaf, Globe,
   Phone, Scale, Map, Compass, MessageCircle, Layers,
-  Landmark, PanelLeftClose, PanelLeftOpen, Vote, BookOpen,
+  Landmark, PanelLeftClose, PanelLeftOpen, Vote, BookOpen, Sparkles,
+  CalendarDays,
 } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
@@ -52,7 +53,8 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [zipInput, setZipInput] = useState('')
   const [discoverOpen, setDiscoverOpen] = useState(true)
-  const [pathwaysOpen, setPathwaysOpen] = useState(false)
+  const [learnOpen, setLearnOpen] = useState(false)
+  const [connectOpen, setConnectOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
 
@@ -183,91 +185,50 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         </Link>
       </div>
 
-      {/* Compass */}
-      <div className="px-4 py-1">
-        <Link
-          href="/compass"
-          onClick={closeMobile}
-          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
-            (pathname.startsWith('/compass')
-              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
-              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
-        >
-          <Compass size={16} style={{ color: BRAND.accent }} />
-          Compass
-        </Link>
+      <div className="h-px bg-brand-border mx-5 my-2" />
+
+      {/* ── Your Journey — 7 Pathways (always open, NOT collapsible) ── */}
+      <div className="px-5">
+        <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
+          {t('sidebar.your_journey')}
+        </span>
+        <div className="space-y-0.5">
+          {themeEntries.map(function ([id, theme]) {
+            const isActive = activePathway === id
+            const Icon = PATHWAY_ICONS[id] || Globe
+            return (
+              <Link
+                key={id}
+                href={'/pathways/' + theme.slug}
+                onClick={closeMobile}
+                className={'flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm transition-all duration-200 ' +
+                  (isActive
+                    ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
+                    : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
+              >
+                <div
+                  className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: isActive ? theme.color + '20' : theme.color + '0C' }}
+                >
+                  <Icon size={14} style={{ color: theme.color }} />
+                </div>
+                <span className="flex-1 text-left truncate">{theme.name}</span>
+              </Link>
+            )
+          })}
+        </div>
       </div>
 
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* Elections */}
-      <div className="px-4 py-1">
-        <Link
-          href="/elections"
-          onClick={closeMobile}
-          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
-            (pathname.startsWith('/elections')
-              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
-              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
-        >
-          <Vote size={16} style={{ color: BRAND.accent }} />
-          {t('sidebar.elections')}
-        </Link>
-      </div>
-
-      {/* Library */}
-      <div className="px-4 py-1">
-        <Link
-          href="/library"
-          onClick={closeMobile}
-          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
-            (pathname.startsWith('/library')
-              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
-              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
-        >
-          <BookOpen size={16} style={{ color: BRAND.accent }} />
-          {t('sidebar.library')}
-        </Link>
-      </div>
-
-      {/* Knowledge Base */}
-      <div className="px-4 py-1">
-        <Link
-          href="/explore/knowledge-base"
-          onClick={closeMobile}
-          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
-            (pathname.startsWith('/explore/knowledge-base')
-              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
-              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
-        >
-          <Layers size={16} style={{ color: BRAND.accent }} />
-          {t('sidebar.knowledge_base')}
-        </Link>
-      </div>
-
-      {/* Chat with Chance */}
-      <div className="px-4 py-1">
-        <Link
-          href="/chat"
-          onClick={closeMobile}
-          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
-            (pathname === '/chat'
-              ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
-              : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
-        >
-          <MessageCircle size={16} style={{ color: BRAND.accent }} />
-          {t('sidebar.chat')}
-        </Link>
-      </div>
-
-      {/* Discover (Your Guide) */}
+      {/* ── Discover (collapsible) — civic resources ── */}
       <div className="px-5">
         <button
           onClick={function () { setDiscoverOpen(!discoverOpen) }}
           className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
         >
           {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-          {t('sidebar.your_guide')}
+          {t('sidebar.discover')}
         </button>
         {discoverOpen && (
           <div className="space-y-0.5">
@@ -288,52 +249,133 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
                 </Link>
               )
             })}
+            <Link
+              href="/elections"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname.startsWith('/elections')
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <Vote size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.elections')}
+            </Link>
           </div>
         )}
       </div>
 
       <div className="h-px bg-brand-border mx-5 my-2" />
 
-      {/* Explore Houston — 7 Pathways (collapsible) */}
+      {/* ── Learn (collapsible) — knowledge & research ── */}
       <div className="px-5">
         <button
-          onClick={function () { setPathwaysOpen(!pathwaysOpen) }}
+          onClick={function () { setLearnOpen(!learnOpen) }}
           className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
         >
-          {pathwaysOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
-          {t('sidebar.explore_houston')}
+          {learnOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+          {t('sidebar.learn')}
         </button>
-        {pathwaysOpen && (
+        {learnOpen && (
           <div className="space-y-0.5">
-            {themeEntries.map(function ([id, theme]) {
-              const isActive = activePathway === id
-              const Icon = PATHWAY_ICONS[id] || Globe
-              return (
-                <Link
-                  key={id}
-                  href={'/pathways/' + theme.slug}
-                  onClick={closeMobile}
-                  className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
-                    (isActive
-                      ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
-                      : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
-                >
-                  <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200"
-                    style={{
-                      backgroundColor: isActive ? theme.color + '20' : theme.color + '0C',
-                      transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                    }}
-                  >
-                    <Icon size={16} style={{ color: theme.color }} />
-                  </div>
-                  <span className="flex-1 text-left truncate">{theme.name}</span>
-                </Link>
-              )
-            })}
+            <Link
+              href="/explore/knowledge-base"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname.startsWith('/explore/knowledge-base')
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <Layers size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.knowledge_base')}
+            </Link>
+            <Link
+              href="/library"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname.startsWith('/library')
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <BookOpen size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.library')}
+            </Link>
+            <Link
+              href="/knowledge-graph"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname.startsWith('/knowledge-graph')
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <Sparkles size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.knowledge_galaxy')}
+            </Link>
+            <Link
+              href="/explore"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname === '/explore'
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <Search size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.topics')}
+            </Link>
           </div>
         )}
       </div>
+
+      <div className="h-px bg-brand-border mx-5 my-2" />
+
+      {/* ── Connect (collapsible) — engagement ── */}
+      <div className="px-5">
+        <button
+          onClick={function () { setConnectOpen(!connectOpen) }}
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+        >
+          {connectOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+          {t('sidebar.connect')}
+        </button>
+        {connectOpen && (
+          <div className="space-y-0.5">
+            <Link
+              href="/compass"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname.startsWith('/compass')
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <Compass size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.compass')}
+            </Link>
+            <Link
+              href="/calendar"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname.startsWith('/calendar')
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <CalendarDays size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.calendar')}
+            </Link>
+            <Link
+              href="/chat"
+              onClick={closeMobile}
+              className={'flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+                (pathname === '/chat'
+                  ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
+                  : 'text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04]')}
+            >
+              <MessageCircle size={15} style={{ color: BRAND.accent }} />
+              {t('sidebar.chat')}
+            </Link>
+          </div>
+        )}
+      </div>
+
+      <div className="h-px bg-brand-border mx-5 my-2" />
 
       {/* Support link */}
       <div className="px-4 py-1">
