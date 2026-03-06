@@ -32,7 +32,7 @@ export const THEMES = {
  */
 export const PAGE_INTROS = {
   services: 'Houston has a deep network of services and organizations dedicated to your well-being. Browse by category, search by need, or explore the map to find what is near you.',
-  search: 'Explore everything The Change Engine has gathered for Houston — from articles and services to elected officials and community organizations.',
+  search: 'Explore everything the Community Exchange has gathered for Houston — from articles and services to elected officials and community organizations.',
   explore: 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
   elections: 'Your voting dashboard — see what just happened, what\'s coming up, who represents you, and where to vote. Start with your ZIP code to personalize your experience.',
   availableResources: 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',
@@ -58,17 +58,18 @@ export const CENTERS: Record<string, { question: string; emoji: string; slug: st
  */
 export const BRAND = {
   name: 'Community Exchange',
-  tagline: 'Built with thoughtfulness',
+  tagline: 'Powered by The Change Lab',
   origin: 'Built in Houston, made for everyone',
-  background: '#F5F1EB',
-  text: '#2C2C2C',
+  background: '#FAF8F5',
+  text: '#1A1A1A',
   accent: '#C75B2A',
-  muted: '#8B7E74',
-  border: '#E8E3DB',
+  muted: '#6B6560',
+  border: '#E2DDD5',
   cardBg: '#FFFFFF',
-  success: '#38a169',
-  warning: '#d69e2e',
-  danger: '#e53e3e',
+  dark: '#2C2418',
+  success: '#2D8659',
+  warning: '#C47D1A',
+  danger: '#C53030',
 } as const;
 
 /**

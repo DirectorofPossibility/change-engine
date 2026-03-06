@@ -6,7 +6,12 @@
 
 @layer base {
   body {
-    @apply bg-brand-bg text-brand-text font-sans;
+    @apply bg-brand-bg text-brand-text font-sans antialiased;
+  }
+
+  /* Stronger default link styling */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
   }
 }
 
@@ -20,8 +25,39 @@
   }
 }
 
+/* Section divider pattern */
+.section-rule {
+  @apply border-none h-px bg-gradient-to-r from-brand-border via-brand-border/60 to-transparent;
+}
+
+/* Card hover lift */
+.card-lift {
+  @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+}
+
+/* Color bar accent on cards */
+.color-bar-left {
+  @apply relative overflow-hidden;
+}
+.color-bar-left::before {
+  content: '';
+  @apply absolute left-0 top-0 bottom-0 w-1 transition-all duration-200;
+}
+.color-bar-left:hover::before {
+  @apply w-1.5;
+}
+
 @keyframes bounce-slow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
 }
 .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
+
+/* Fade-in for page transitions */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out both;
+}
