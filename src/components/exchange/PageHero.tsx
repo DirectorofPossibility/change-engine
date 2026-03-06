@@ -128,7 +128,7 @@ export function PageHero({
             {imageUrl && (
               <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80 xl:w-96">
                 <div className="rounded-lg overflow-hidden shadow-lg">
-                  <ImageLightbox src={imageUrl} alt={displayTitle} className="w-full h-48 sm:h-56 lg:h-64 object-cover" />
+                  <ImageLightbox src={imageUrl} alt={displayTitle} className="w-full h-48 sm:h-56 lg:h-64 object-contain bg-brand-bg" />
                 </div>
               </div>
             )}

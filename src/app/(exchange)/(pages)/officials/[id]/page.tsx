@@ -9,6 +9,7 @@ import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { OfficialDistrictMap } from './OfficialDistrictMap'
 
 function levelColor(level: string | null): string {
@@ -200,6 +201,9 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           {displayTitle && <p className="text-lg text-brand-muted mb-2">{displayTitle}</p>}
           <div className="flex items-center gap-2 text-sm text-brand-muted">
             {official.jurisdiction && <span>{official.jurisdiction}</span>}
+          </div>
+          <div className="mt-2">
+            <TranslatePageButton isTranslated={!!officialTranslation?.title} contentType="elected_officials" contentId={official.official_id} />
           </div>
           {official.term_end && (
             <p className="text-sm text-brand-muted mt-1 flex items-center gap-1">

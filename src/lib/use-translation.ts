@@ -12,5 +12,5 @@ export function useTranslation() {
   function t(key: string): string {
     return dictionaries[language]?.[key] ?? dictionaries.en[key] ?? key
   }
-  return { t }
+  return { t, lang: language }
 }

@@ -11,6 +11,7 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 
 export const revalidate = 300
 
@@ -95,6 +96,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       ]} />
 
       <h1 className="text-3xl font-bold text-brand-text mb-2">{displayName}</h1>
+      <div className="mb-2">
+        <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
+      </div>
       {org && (
         <p className="text-brand-muted mb-2">
           Provided by <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline">{org.org_name}</Link>

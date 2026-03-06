@@ -11,6 +11,7 @@ import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeo
 import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { MapPin } from 'lucide-react'
 
@@ -149,7 +150,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
       </div>
 
       <h1 className="text-3xl font-serif font-bold text-brand-text mb-2">{displayName}</h1>
-      {policy.bill_number && <p className="text-brand-muted font-mono mb-4">{policy.bill_number}</p>}
+      {policy.bill_number && <p className="text-brand-muted font-mono mb-2">{policy.bill_number}</p>}
+      <div className="mb-4">
+        <TranslatePageButton isTranslated={!!translatedName} contentType="policies" contentId={policy.policy_id} />
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Main content */}

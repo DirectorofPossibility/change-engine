@@ -8,6 +8,7 @@ import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 
 export const revalidate = 86400
 
@@ -108,6 +109,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
                 {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}</span>}
+              </div>
+              <div className="mt-2">
+                <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
               </div>
             </div>
           </div>

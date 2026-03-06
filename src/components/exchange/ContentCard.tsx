@@ -87,7 +87,7 @@ export function ContentCard({
           <ImageLightbox
             src={imageUrl}
             alt={displayTitle}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain bg-brand-bg"
           />
         </div>
       ) : (

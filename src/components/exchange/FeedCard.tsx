@@ -96,7 +96,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
             <ImageLightbox
               src={item.imageUrl}
               alt={item.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="w-full h-full object-contain bg-brand-bg group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
             <div
@@ -164,7 +164,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
           <ImageLightbox
             src={item.imageUrl}
             alt={item.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain bg-brand-bg group-hover:scale-105 transition-transform duration-500"
           />
         </div>
       )}
