@@ -5,19 +5,17 @@ import { THEMES } from '@/lib/constants'
 import { getFocusAreas, getSDGs, getSDOHDomains } from '@/lib/data/exchange'
 import { getUnifiedKBItems } from '@/lib/data/library'
 import { ExploreFilterClient } from './ExploreFilterClient'
-import { PageHero } from '@/components/exchange/PageHero'
-import { getUIStrings } from '@/lib/i18n'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { BookOpen, ArrowRight } from 'lucide-react'
+import { getUIStrings } from '@/lib/i18n'
+import { Layers, BookOpen, Sparkles, ArrowRight } from 'lucide-react'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Explore Topics — Community Exchange',
-  description: 'Browse focus areas, SDGs, and social determinants of health across all pathways.',
+  title: 'Explore — Community Exchange',
+  description: 'Your launchpad for learning: browse the Knowledge Base, Research Library, Knowledge Galaxy, and focus area explorer.',
 }
 
-/** Map theme IDs to i18n keys */
 const THEME_I18N: Record<string, string> = {
   THEME_01: 'theme.our_health',
   THEME_02: 'theme.our_families',
@@ -42,7 +40,6 @@ export default async function ExplorePage() {
 
   const totalItems = kbItems.length
 
-  // Group focus areas by theme_id, using translated theme names
   const themes = Object.entries(THEMES).map(function ([id, theme]) {
     return {
       id,
@@ -57,31 +54,111 @@ export default async function ExplorePage() {
 
   return (
     <div>
-      <PageHero variant="editorial" titleKey="explore.title" introKey="explore.intro" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Breadcrumb items={[{ label: 'Explore' }]} />
-
-        {/* Knowledge Base entry card */}
-        <Link
-          href="/explore/knowledge-base"
-          className="group flex items-center gap-4 bg-white rounded-xl border border-brand-border p-5 mb-10 hover:shadow-md transition-shadow"
-        >
-          <div className="w-12 h-12 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
-            <BookOpen size={22} className="text-brand-accent" />
+      {/* Compact hero */}
+      <div className="bg-white border-b border-brand-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <Breadcrumb items={[{ label: 'Explore' }]} />
+          <div className="flex items-center gap-3 mt-4 mb-2">
+            <div className="w-3 h-3 rounded-full bg-brand-accent" />
+            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">Explore</h1>
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">
+          <p className="text-brand-muted max-w-2xl">
+            Your launchpad for learning. Dive into articles, research, interactive visualizations, and focus areas across all seven pathways.
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        {/* ── Three feature cards ── */}
+        <div className="grid sm:grid-cols-3 gap-5 mb-14">
+          <Link
+            href="/explore/knowledge-base"
+            className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+          >
+            <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+              <Layers size={20} className="text-brand-accent" />
+            </div>
+            <h2 className="font-serif font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
               Knowledge Base
             </h2>
-            <p className="text-sm text-brand-muted">
-              Browse {totalItems > 0 ? totalItems + ' articles, reports, guides, and more' : 'articles and research'}
+            <p className="text-sm text-brand-muted leading-relaxed mb-3">
+              {totalItems > 0
+                ? 'Browse ' + totalItems + ' articles, guides, and reports organized by pathway and topic.'
+                : 'Browse articles and research organized by pathway and topic.'}
             </p>
-          </div>
-          <ArrowRight size={18} className="text-brand-muted group-hover:text-brand-accent transition-colors flex-shrink-0" />
-        </Link>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-accent group-hover:gap-2 transition-all">
+              Browse <ArrowRight size={13} />
+            </span>
+          </Link>
 
-        {/* Focus Area Explorer */}
+          <Link
+            href="/library"
+            className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+          >
+            <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+              <BookOpen size={20} className="text-brand-accent" />
+            </div>
+            <h2 className="font-serif font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
+              Research Library
+            </h2>
+            <p className="text-sm text-brand-muted leading-relaxed mb-3">
+              Curated reports, white papers, and policy documents with key takeaways and reading guides.
+            </p>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-accent group-hover:gap-2 transition-all">
+              Read <ArrowRight size={13} />
+            </span>
+          </Link>
+
+          <Link
+            href="/knowledge-graph"
+            className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+          >
+            <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+              <Sparkles size={20} className="text-brand-accent" />
+            </div>
+            <h2 className="font-serif font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
+              Knowledge Galaxy
+            </h2>
+            <p className="text-sm text-brand-muted leading-relaxed mb-3">
+              Interactive visualization of the civic knowledge network — pathways, centers, and 1,500+ connections.
+            </p>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-brand-accent group-hover:gap-2 transition-all">
+              Explore <ArrowRight size={13} />
+            </span>
+          </Link>
+        </div>
+
+        {/* ── Quick pathway links ── */}
+        <section className="mb-14">
+          <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-brand-muted mb-4 font-serif">Browse by Pathway</h2>
+          <div className="flex flex-wrap gap-3">
+            {themes.map(function (theme) {
+              return (
+                <Link
+                  key={theme.id}
+                  href={'/pathways/' + (THEMES as Record<string, { slug: string }>)[theme.id].slug}
+                  className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-brand-border hover:shadow-md transition-shadow"
+                >
+                  <div
+                    className="w-6 h-6 rounded-md flex items-center justify-center"
+                    style={{ backgroundColor: theme.color + '18' }}
+                  >
+                    <span className="text-sm">{theme.emoji}</span>
+                  </div>
+                  <span className="text-sm font-medium text-brand-text group-hover:text-brand-accent transition-colors">
+                    {theme.name}
+                  </span>
+                  <span className="text-[10px] text-brand-muted">
+                    {theme.focusAreas.length}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* ── Focus Area Explorer ── */}
         <section>
           <h2 className="text-2xl font-serif font-bold text-brand-text mb-6">Focus Areas</h2>
           <ExploreFilterClient
