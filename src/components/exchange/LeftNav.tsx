@@ -135,18 +135,18 @@ export function LeftNav() {
     })
   }
 
-  const sectionHeaderClass = 'flex items-center gap-1.5 w-full text-xs font-bold uppercase tracking-wider text-white/50 hover:text-white/70 transition-colors px-2 py-2'
+  const sectionHeaderClass = 'flex items-center gap-1.5 w-full text-xs font-bold uppercase tracking-wider text-brand-muted/60 hover:text-brand-muted transition-colors px-2 py-2'
 
   return (
-    <nav className="hidden lg:flex lg:flex-col w-[220px] flex-shrink-0 overflow-y-auto sticky top-0 h-screen bg-brand-dark">
+    <nav className="hidden lg:flex lg:flex-col w-[220px] flex-shrink-0 overflow-y-auto sticky top-0 h-screen bg-brand-sidebar border-r border-brand-border">
 
       {/* Brand mark */}
       <div className="px-4 pt-5 pb-4">
         <Link href="/" className="flex items-center gap-3">
           <FlowerOfLifeIcon size={32} color="#E8723A" />
           <div>
-            <div className="text-sm font-bold text-white leading-tight">{BRAND.name}</div>
-            <div className="text-xs text-white/50 italic">{BRAND.tagline}</div>
+            <div className="text-sm font-bold text-brand-text leading-tight">{BRAND.name}</div>
+            <div className="text-xs text-brand-muted italic">{BRAND.tagline}</div>
           </div>
         </Link>
       </div>
@@ -155,7 +155,7 @@ export function LeftNav() {
       <div className="px-3 pb-2">
         <Link
           href="/search"
-          className="flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white/50 hover:bg-white/10 hover:text-white/70 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-white/60 border border-brand-border rounded-lg text-xs text-brand-muted hover:bg-white hover:text-brand-text transition-colors"
         >
           <Search size={13} />
           Search...
@@ -185,16 +185,16 @@ export function LeftNav() {
                     onClick={function () { selectArchetype(a.id, centerObj?.slug || null) }}
                     className={`w-full flex items-center gap-3 px-2 py-1.5 rounded-lg transition-colors text-left mb-0.5 ${
                       isActive
-                        ? 'bg-brand-accent/20 border-l-2 border-brand-accent'
-                        : 'hover:bg-white/5 border-l-2 border-transparent'
+                        ? 'bg-brand-accent/10 border-l-2 border-brand-accent'
+                        : 'hover:bg-white/60 border-l-2 border-transparent'
                     }`}
                   >
                     <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                      <a.Icon size={20} color={isActive ? '#E8723A' : '#B0ACA8'} />
+                      <a.Icon size={20} color={isActive ? '#E8723A' : '#9CA3AF'} />
                     </div>
                     <div className="min-w-0">
-                      <div className={`text-xs font-bold leading-tight ${isActive ? 'text-brand-accent' : 'text-white/70'}`}>{a.name}</div>
-                      <div className="text-xs text-white/40 leading-tight truncate">{a.desc}</div>
+                      <div className={`text-xs font-bold leading-tight ${isActive ? 'text-brand-accent' : 'text-brand-text/80'}`}>{a.name}</div>
+                      <div className="text-xs text-brand-muted leading-tight truncate">{a.desc}</div>
                     </div>
                   </button>
                 )
@@ -219,14 +219,14 @@ export function LeftNav() {
                     key={t.id}
                     href={href}
                     className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors mb-0.5 ${
-                      isActive ? 'bg-white/10' : 'hover:bg-white/5'
+                      isActive ? 'bg-white shadow-sm' : 'hover:bg-white/60'
                     }`}
                   >
                     <span
                       className="w-2 h-5 rounded-sm flex-shrink-0"
-                      style={{ backgroundColor: t.color, opacity: isActive ? 1 : 0.5 }}
+                      style={{ backgroundColor: t.color, opacity: isActive ? 1 : 0.6 }}
                     />
-                    <span className={`text-[12px] font-medium ${isActive ? 'text-white' : 'text-white/60'}`}>
+                    <span className={`text-xs font-medium ${isActive ? 'text-brand-text font-semibold' : 'text-brand-text/70'}`}>
                       {t.name}
                     </span>
                   </Link>
@@ -253,14 +253,14 @@ export function LeftNav() {
                     key={c.name}
                     href={href}
                     className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors mb-0.5 ${
-                      isActive ? 'bg-white/10' : 'hover:bg-white/5'
+                      isActive ? 'bg-white shadow-sm' : 'hover:bg-white/60'
                     }`}
                   >
                     <span
                       className="w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: color, opacity: isActive ? 1 : 0.5 }}
+                      style={{ backgroundColor: color, opacity: isActive ? 1 : 0.6 }}
                     />
-                    <span className={`text-[12px] font-medium ${isActive ? 'text-white' : 'text-white/60'}`}>
+                    <span className={`text-xs font-medium ${isActive ? 'text-brand-text font-semibold' : 'text-brand-text/70'}`}>
                       {c.name}
                     </span>
                   </Link>
@@ -284,7 +284,7 @@ export function LeftNav() {
                 aria-expanded={isExpanded}
               >
                 {isExpanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
-                <span className={hasActiveItem ? 'text-white/50' : ''}>{section.label}</span>
+                <span className={hasActiveItem ? 'text-brand-muted' : ''}>{section.label}</span>
               </button>
               {isExpanded && (
                 <div className="pb-1">
@@ -294,10 +294,10 @@ export function LeftNav() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className={`block px-2 py-1 rounded-lg text-[12px] font-medium transition-colors mb-0.5 ${
+                        className={`block px-2 py-1 rounded-lg text-xs font-medium transition-colors mb-0.5 ${
                           isActive
-                            ? 'bg-white/10 text-white'
-                            : 'text-white/50 hover:bg-white/5 hover:text-white/70'
+                            ? 'bg-white shadow-sm text-brand-text font-semibold'
+                            : 'text-brand-text/60 hover:bg-white/60 hover:text-brand-text/80'
                         }`}
                       >
                         {link.label}
@@ -312,17 +312,17 @@ export function LeftNav() {
       </div>
 
       {/* Support + origin */}
-      <div className="px-3 pt-3 pb-2 border-t border-white/10">
+      <div className="px-3 pt-3 pb-2 border-t border-brand-border">
         <a
           href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-[12px] font-semibold text-brand-accent hover:bg-white/5 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-accent hover:bg-white/60 transition-colors"
         >
           <Heart size={14} className="fill-brand-accent" />
           Support Our Work
         </a>
-        <div className="px-3 pt-1 text-xs text-white/40 italic leading-relaxed">
+        <div className="px-3 pt-1 text-xs text-brand-muted italic leading-relaxed">
           {BRAND.origin || 'Built in Houston, made for everyone'}
         </div>
       </div>

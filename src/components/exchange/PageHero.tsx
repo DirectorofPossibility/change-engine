@@ -71,20 +71,20 @@ export function PageHero({
   if (resolvedVariant === 'gradient') {
     const gc = gradientColor || '#E8723A'
     return (
-      <section className="relative w-full overflow-hidden bg-brand-dark">
+      <section className="relative w-full overflow-hidden bg-brand-bg-alt border-b border-brand-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: gc }} />
             <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: gc, opacity: 0.4 }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
             {displayTitle}
           </h1>
           {displaySubtitle && (
-            <p className="text-base sm:text-lg text-white/60 mt-2 max-w-2xl font-serif italic">{displaySubtitle}</p>
+            <p className="text-base sm:text-lg text-brand-muted mt-2 max-w-2xl font-serif italic">{displaySubtitle}</p>
           )}
           {displayIntro && (
-            <p className="text-sm sm:text-base text-white/50 mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
+            <p className="text-sm sm:text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
           )}
         </div>
         {/* Bottom color bar */}
@@ -139,11 +139,11 @@ export function PageHero({
     )
   }
 
-  // Sacred geometry variant — Flower of Life derivatives as decorative background
+  // Sacred geometry variant — light background with subtle geometry
   if (resolvedVariant === 'sacred') {
     const gc = gradientColor || '#E8723A'
     return (
-      <section className="relative w-full overflow-hidden bg-brand-dark">
+      <section className="relative w-full overflow-hidden bg-brand-bg-alt border-b border-brand-border">
         {/* Sacred geometry background pattern */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <SacredGeometryBg pattern={sacredPattern} color={gc} />
@@ -153,14 +153,14 @@ export function PageHero({
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: gc }} />
             <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: gc, opacity: 0.4 }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
             {displayTitle}
           </h1>
           {displaySubtitle && (
-            <p className="text-lg text-white/60 mt-3 font-serif italic max-w-2xl">{displaySubtitle}</p>
+            <p className="text-lg text-brand-muted mt-3 font-serif italic max-w-2xl">{displaySubtitle}</p>
           )}
           {displayIntro && (
-            <p className="text-base text-white/60 mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
+            <p className="text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
           )}
           {children}
         </div>
@@ -169,19 +169,19 @@ export function PageHero({
     )
   }
 
-  // Editorial variant — the default for listing pages
+  // Editorial variant — the default for listing pages (light)
   return (
-    <section className="relative w-full overflow-hidden bg-brand-dark">
+    <section className="relative w-full overflow-hidden bg-brand-bg-alt border-b border-brand-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="w-10 h-0.5 bg-brand-accent mb-5" />
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-white leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text leading-tight">
           {displayTitle}
         </h1>
         {displaySubtitle && (
-          <p className="text-lg text-white/60 mt-2 font-serif italic">{displaySubtitle}</p>
+          <p className="text-lg text-brand-muted mt-2 font-serif italic">{displaySubtitle}</p>
         )}
         {displayIntro && (
-          <p className="text-base text-white/50 mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
+          <p className="text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
         )}
       </div>
     </section>
@@ -200,7 +200,7 @@ function SacredGeometryBg({ pattern, color }: { pattern: string; color: string }
 
   if (pattern === 'vesica') {
     return (
-      <svg className="absolute right-0 top-0 w-[500px] h-[240px] opacity-[0.08]" viewBox="0 0 500 240" fill="none">
+      <svg className="absolute right-0 top-0 w-[500px] h-[240px] opacity-[0.12]" viewBox="0 0 500 240" fill="none">
         <circle cx={cx - 20} cy={cy} r={r * 2} stroke={color} strokeWidth="1.5" />
         <circle cx={cx + 20} cy={cy} r={r * 2} stroke={color} strokeWidth="1.5" />
       </svg>
@@ -209,7 +209,7 @@ function SacredGeometryBg({ pattern, color }: { pattern: string; color: string }
 
   if (pattern === 'tripod') {
     return (
-      <svg className="absolute right-0 top-0 w-[500px] h-[240px] opacity-[0.08]" viewBox="0 0 500 240" fill="none">
+      <svg className="absolute right-0 top-0 w-[500px] h-[240px] opacity-[0.12]" viewBox="0 0 500 240" fill="none">
         <circle cx={cx} cy={cy - 30} r={r * 1.5} stroke={color} strokeWidth="1.5" />
         <circle cx={cx - 26} cy={cy + 15} r={r * 1.5} stroke={color} strokeWidth="1.5" />
         <circle cx={cx + 26} cy={cy + 15} r={r * 1.5} stroke={color} strokeWidth="1.5" />
@@ -221,7 +221,7 @@ function SacredGeometryBg({ pattern, color }: { pattern: string; color: string }
     // Seed of Life: center circle + 6 surrounding
     const angles = [0, 60, 120, 180, 240, 300]
     return (
-      <svg className="absolute right-0 top-0 w-[600px] h-[280px] opacity-[0.07]" viewBox="0 0 600 280" fill="none">
+      <svg className="absolute right-0 top-0 w-[600px] h-[280px] opacity-[0.10]" viewBox="0 0 600 280" fill="none">
         <circle cx={cx + 100} cy={cy + 20} r={r} stroke={color} strokeWidth="1.2" />
         {angles.map(function (deg) {
           const rad = (deg * Math.PI) / 180
@@ -249,7 +249,7 @@ function SacredGeometryBg({ pattern, color }: { pattern: string; color: string }
       pts.push([cxm + r * 1.73 * Math.cos(rad), cym + r * 1.73 * Math.sin(rad)])
     })
     return (
-      <svg className="absolute right-0 top-0 w-[600px] h-[280px] opacity-[0.06]" viewBox="0 0 600 280" fill="none">
+      <svg className="absolute right-0 top-0 w-[600px] h-[280px] opacity-[0.10]" viewBox="0 0 600 280" fill="none">
         {pts.map(function (p, i) {
           return <circle key={i} cx={p[0]} cy={p[1]} r={r * 0.6} stroke={color} strokeWidth="0.8" />
         })}
@@ -274,7 +274,7 @@ function SacredGeometryBg({ pattern, color }: { pattern: string; color: string }
     [-r * 0.866, r * 0.5],
   ]
   return (
-    <svg className="absolute right-0 top-0 w-[600px] h-[280px] opacity-[0.07]" viewBox="0 0 600 280" fill="none">
+    <svg className="absolute right-0 top-0 w-[600px] h-[280px] opacity-[0.10]" viewBox="0 0 600 280" fill="none">
       {offsets.map(function (o, i) {
         return <circle key={i} cx={cx + 100 + o[0]} cy={cy + 20 + o[1]} r={r} stroke={color} strokeWidth={i === 0 ? '1.5' : '1'} />
       })}

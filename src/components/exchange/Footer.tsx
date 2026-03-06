@@ -50,18 +50,18 @@ export function Footer() {
                 Community Exchange
               </h3>
             </div>
-            <p className="text-sm text-white/50 leading-relaxed">
+            <p className="text-sm text-white/60 leading-relaxed">
               A civic platform connecting Houston residents with the resources,
               knowledge, and opportunities that strengthen communities.
             </p>
-            <p className="text-xs text-white/50 mt-4 italic">
+            <p className="text-xs text-white/40 mt-4 italic">
               {BRAND.origin}
             </p>
           </div>
 
           {/* Pathways */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-4">
               Pathways
             </h4>
             <ul className="space-y-2">
@@ -69,7 +69,7 @@ export function Footer() {
                 return (
                   <li key={p.href} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: p.color }} />
-                    <Link href={p.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                    <Link href={p.href} className="text-sm text-white/60 hover:text-white transition-colors">
                       {p.label}
                     </Link>
                   </li>
@@ -80,14 +80,14 @@ export function Footer() {
 
           {/* Navigate */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-4">
               Navigate
             </h4>
             <ul className="space-y-2">
               {navigate.map(function (link) {
                 return (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                    <Link href={link.href} className="text-sm text-white/60 hover:text-white transition-colors">
                       {link.label}
                     </Link>
                   </li>
@@ -98,14 +98,14 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white/50 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-4">
               Connect
             </h4>
             <ul className="space-y-2">
               {connect.map(function (link) {
                 return (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-white/50 hover:text-white transition-colors">
+                    <Link href={link.href} className="text-sm text-white/60 hover:text-white transition-colors">
                       {link.label}
                     </Link>
                   </li>

@@ -28,28 +28,28 @@ export function NeighborhoodWidget() {
   if (zip && !editing) {
     return (
       <div className="px-3 py-3">
-        <div className="bg-white/5 rounded-lg px-3 py-2.5 border border-white/10">
+        <div className="bg-white rounded-lg px-3 py-2.5 border border-brand-border shadow-sm">
           <div className="flex items-center gap-2 mb-0.5">
             <MapPin size={12} className="text-brand-accent flex-shrink-0" />
-            <span className="text-[11px] font-bold text-white/80 truncate">
+            <span className="text-xs font-bold text-brand-text/80 truncate">
               {isLoading ? 'Finding your area...' : (neighborhood?.neighborhood_name || 'Houston Area')}
             </span>
           </div>
           {councilDistrict && (
-            <div className="text-[9px] text-white/30 ml-[20px] mb-1">District {councilDistrict}</div>
+            <div className="text-xs text-brand-muted ml-[20px] mb-1">District {councilDistrict}</div>
           )}
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-white/40 ml-[20px]">ZIP {zip}</span>
+            <span className="text-xs text-brand-muted ml-[20px]">ZIP {zip}</span>
             <div className="flex gap-2">
               <button
                 onClick={function () { setEditing(true); setInput(zip) }}
-                className="text-[10px] text-white/30 hover:text-white/60 transition-colors"
+                className="text-xs text-brand-muted hover:text-brand-text transition-colors"
               >
                 Change
               </button>
               <button
                 onClick={clearZip}
-                className="text-[10px] text-white/30 hover:text-red-400 transition-colors"
+                className="text-xs text-brand-muted hover:text-red-500 transition-colors"
               >
                 <X size={10} />
               </button>
@@ -63,10 +63,10 @@ export function NeighborhoodWidget() {
   // No ZIP or editing — show input
   return (
     <div className="px-3 py-3">
-      <form onSubmit={handleSubmit} className="bg-white/5 rounded-lg px-3 py-2.5 border border-white/10">
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg px-3 py-2.5 border border-brand-border shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <MapPin size={12} className="text-white/40" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-white/30">Your Location</span>
+          <MapPin size={12} className="text-brand-muted" />
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-muted/60">Your Location</span>
         </div>
         <div className="flex gap-1.5">
           <input
@@ -75,12 +75,12 @@ export function NeighborhoodWidget() {
             onChange={function (e) { setInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
             placeholder="ZIP code"
             maxLength={5}
-            className="flex-1 bg-white/10 border border-white/10 rounded px-2 py-1.5 text-[11px] text-white placeholder:text-white/30 focus:outline-none focus:border-brand-accent/50 w-0"
+            className="flex-1 bg-brand-bg border border-brand-border rounded px-2 py-1.5 text-xs text-brand-text placeholder:text-brand-muted/50 focus:outline-none focus:border-brand-accent/50 w-0"
           />
           <button
             type="submit"
             disabled={input.length !== 5}
-            className="px-2 py-1.5 bg-brand-accent/80 rounded text-[10px] font-bold text-white disabled:opacity-30 hover:bg-brand-accent transition-colors"
+            className="px-2 py-1.5 bg-brand-accent rounded text-xs font-bold text-white disabled:opacity-30 hover:bg-brand-accent-hover transition-colors"
           >
             <Check size={12} />
           </button>
@@ -88,13 +88,13 @@ export function NeighborhoodWidget() {
             <button
               type="button"
               onClick={function () { setEditing(false); setInput('') }}
-              className="px-1.5 py-1.5 text-white/30 hover:text-white/60"
+              className="px-1.5 py-1.5 text-brand-muted hover:text-brand-text"
             >
               <X size={12} />
             </button>
           )}
         </div>
-        <p className="text-[9px] text-white/25 mt-1.5 leading-tight">
+        <p className="text-xs text-brand-muted mt-1.5 leading-tight">
           Personalizes officials, services, and polling places
         </p>
       </form>

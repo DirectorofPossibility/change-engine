@@ -10,19 +10,20 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          bg: '#F8F9FB',
-          'bg-alt': '#EFF1F5',
+          bg: '#FAFAF8',
+          'bg-alt': '#F3F0EB',
           text: '#1A1A1A',
           accent: '#E8723A',
           'accent-hover': '#D46230',
           muted: '#6C7380',
           'muted-light': '#9CA3AF',
-          border: '#E1E4EA',
+          border: '#E5E1DB',
           card: '#FFFFFF',
           success: '#2D8659',
           warning: '#C47D1A',
           danger: '#C53030',
-          dark: '#3D3A37',
+          dark: '#292524',
+          sidebar: '#F5F0EA',
         },
         theme: {
           health: '#DC4444',
@@ -34,8 +35,8 @@ const config: Config = {
           bigger: '#7C3AED',
         },
         sidebar: {
-          bg: '#3D3A37',
-          hover: '#4D4945',
+          bg: '#1B2433',
+          hover: '#283548',
           active: '#E8723A',
         },
       },

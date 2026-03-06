@@ -15,7 +15,7 @@ export default function MobileBottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-brand-dark/95 backdrop-blur-sm border-t border-white/10 pb-[env(safe-area-inset-bottom)] lg:hidden">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-sm border-t border-brand-border pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="flex items-center justify-around h-14">
         {navItems.map(function ({ href, label, icon: Icon }) {
           const isActive = pathname === href
@@ -25,7 +25,7 @@ export default function MobileBottomNav() {
               href={href}
               aria-label={label}
               className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-lg transition-colors ${
-                isActive ? 'text-brand-accent bg-white/10' : 'text-white/50'
+                isActive ? 'text-brand-accent' : 'text-brand-muted'
               }`}
             >
               <Icon size={20} />
