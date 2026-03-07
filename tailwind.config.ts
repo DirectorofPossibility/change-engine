@@ -81,11 +81,11 @@ const config: Config = {
         },
         'fol-pulse': {
           '0%, 100%': { transform: 'translate(-50%,-50%) scale(1)', opacity: '0.05' },
-          '50%': { transform: 'translate(-50%,-50%) scale(1.02)', opacity: '0.08' },
+          '50%': { transform: 'translate(-50%,-50%) scale(1.002)', opacity: '0.053' },
         },
         'fol-pulse-cta': {
           '0%, 100%': { transform: 'translate(-50%,-50%) scale(1) rotate(0deg)', opacity: '0.06' },
-          '50%': { transform: 'translate(-50%,-50%) scale(1.03) rotate(2deg)', opacity: '0.10' },
+          '50%': { transform: 'translate(-50%,-50%) scale(1.003) rotate(0.2deg)', opacity: '0.064' },
         },
         'lens-drift': {
           '0%': { transform: 'translate(0,0)', opacity: '0' },

@@ -191,8 +191,13 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         </div>
       </section>
 
+      {/* ── ANNOUNCEMENT STRIP ── */}
+      <div className="max-w-[1200px] mx-auto px-8 pt-5 pb-2">
+        <FeaturedPromo variant="banner" />
+      </div>
+
       {/* ── QUICK ACCESS GRID — 5 cards with unique FOL patterns ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-5 pb-4">
+      <div className="max-w-[1200px] mx-auto px-8 pt-3 pb-4">
         <div className="relative inline-block mb-4">
           <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
         </div>
@@ -324,11 +329,6 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         </div>
       </div>
 
-      {/* ── FEATURED PROMO ── */}
-      <div className="max-w-[1200px] mx-auto px-8">
-        <FeaturedPromo variant="banner" />
-      </div>
-
       {/* ── 4 WAYS TO ENGAGE ── */}
       <div className="max-w-[1200px] mx-auto px-8 pt-8 pb-2">
         <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">4 ways to engage</p>
@@ -349,13 +349,8 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         </div>
       </div>
 
-      {/* ── GOOD THINGS ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-4">
-        <GoodThingsWidget variant="inline" />
-      </div>
-
       {/* ── GAP STATS ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-10">
+      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-4">
         <div className="relative inline-block mb-3">
           <InfoBubble id={TOOLTIPS.stats_bar.id} text={TOOLTIPS.stats_bar.text} position="bottom" />
         </div>
@@ -386,6 +381,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
             )
           })}
         </div>
+      </div>
+
+      {/* ── GOOD THINGS ── */}
+      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-10">
+        <GoodThingsWidget variant="inline" />
       </div>
     </div>
   )

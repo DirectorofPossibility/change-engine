@@ -27,6 +27,7 @@ const ABOUT = [
   { label: 'About The Change Lab', href: '/about' },
   { label: 'Our Approach', href: '/about' },
   { label: 'Contact', href: '/contact' },
+  { label: 'User Manual', href: '/manual' },
   { label: 'Accessibility', href: '/accessibility' },
   { label: 'Privacy Policy', href: '/privacy' },
 ]
