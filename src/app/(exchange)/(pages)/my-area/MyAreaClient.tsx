@@ -9,6 +9,7 @@ import {
 import type { TranslationMap } from '@/lib/types/exchange'
 import { THEMES } from '@/lib/constants'
 import { CompactCircleGraph } from '@/components/exchange/CompactCircleGraph'
+import { ArchetypeSelector } from '@/components/exchange/ArchetypeSelector'
 import { trackWayfinderEvent } from '@/lib/wayfinder-analytics'
 
 interface OfficialsByLevel {
@@ -259,6 +260,13 @@ export function MyAreaClient({
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Archetype selector */}
+        <div className="bg-white rounded-lg border-2 border-brand-border p-5 mt-4">
+          <h2 className="font-serif font-bold text-brand-text text-lg mb-1">Your Journey</h2>
+          <p className="text-xs text-brand-muted mb-4">Choose how you explore the community. This personalizes the order of sections below.</p>
+          <ArchetypeSelector />
         </div>
       </section>
     ),

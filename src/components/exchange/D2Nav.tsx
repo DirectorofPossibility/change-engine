@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { X, Menu, Search } from 'lucide-react'
-import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
+import { FlowerOfLifeIcon } from './FlowerIcons'
+import { ArchetypeSelector } from './ArchetypeSelector'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
 import { SpiralProgress } from './SpiralProgress'
@@ -177,33 +178,15 @@ export function D2Nav() {
                 </Link>
               </div>
 
-              {/* Journey */}
+              {/* Your Journey — archetype selector */}
               <details className="group border-b border-brand-border">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                   <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Your Journey</span>
                 </summary>
-                <div className="pb-3 space-y-0.5">
-                  {[
-                    { href: '/compass', label: 'Chart Your Course' },
-                    { href: '/for/seeker', label: 'Find Help' },
-                    { href: '/for/learner', label: 'Learn Something' },
-                    { href: '/for/builder', label: 'Take Action' },
-                    { href: '/for/watchdog', label: 'Hold Accountable' },
-                  ].map(function (item) {
-                    const itemActive = pathname === item.href
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block pl-5 py-1.5 text-[13px] font-medium transition-colors hover:text-brand-accent"
-                        style={{ color: itemActive ? '#C75B2A' : '#1A1A1A' }}
-                        onClick={closeDrawer}
-                      >
-                        {item.label}
-                      </Link>
-                    )
-                  })}
+                <div className="pb-3">
+                  <p className="pl-5 pb-2 text-[11px] text-brand-muted">Choose how you explore:</p>
+                  <ArchetypeSelector compact />
                 </div>
               </details>
 
