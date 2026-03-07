@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { ARCHETYPES } from './FlowerIcons'
 import { trackWayfinderEvent } from '@/lib/wayfinder-analytics'
 
@@ -23,6 +24,7 @@ function getCookie(name: string): string {
  */
 export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps) {
   const [selected, setSelected] = useState('')
+  const router = useRouter()
 
   useEffect(function () {
     setSelected(getCookie('archetype'))
@@ -34,6 +36,8 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
     setSelected(newValue)
     trackWayfinderEvent('archetype_select', { archetype: newValue || 'none' })
     if (onSelect) onSelect(newValue)
+    // Refresh server components so archetype-driven ordering updates instantly
+    router.refresh()
   }
 
   if (compact) {
