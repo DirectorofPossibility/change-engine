@@ -10,6 +10,8 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
+import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
+import type { EditField } from '@/components/exchange/AdminEditPanel'
 
 export const revalidate = 86400
 
@@ -259,6 +261,34 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
       </div>
       </div>
+
+      <AdminEditPanel
+        entityType="organizations"
+        entityId={id}
+        userRole={userProfile?.role}
+        fields={[
+          { key: 'org_name', label: 'Organization Name', type: 'text', value: org.org_name },
+          { key: 'org_type', label: 'Organization Type', type: 'select', value: org.org_type, options: ['Community Partner', 'Foundation/Grantmaker', 'Government Agency', 'Educational Institution', 'Media & News', 'Healthcare Provider', 'Human Services', 'Advocacy/Policy', 'Arts, Culture & Humanities', 'Environmental', 'Faith-Based'] },
+          { key: 'mission_statement', label: 'Mission Statement', type: 'textarea', value: org.mission_statement },
+          { key: 'description_5th_grade', label: 'Description (simplified)', type: 'textarea', value: org.description_5th_grade },
+          { key: 'website', label: 'Website', type: 'url', value: org.website },
+          { key: 'phone', label: 'Phone', type: 'text', value: org.phone },
+          { key: 'email', label: 'Email', type: 'text', value: org.email },
+          { key: 'address', label: 'Address', type: 'text', value: org.address },
+          { key: 'city', label: 'City', type: 'text', value: org.city },
+          { key: 'state', label: 'State', type: 'text', value: org.state },
+          { key: 'zip_code', label: 'ZIP Code', type: 'text', value: org.zip_code },
+          { key: 'logo_url', label: 'Logo URL', type: 'url', value: org.logo_url },
+          { key: 'hero_image_url', label: 'Hero Image URL', type: 'url', value: org.hero_image_url },
+          { key: 'map_link', label: 'Map Link', type: 'url', value: org.map_link },
+          { key: 'service_area', label: 'Service Area', type: 'text', value: org.service_area },
+          { key: 'people_served', label: 'People Served', type: 'text', value: org.people_served },
+          { key: 'year_founded', label: 'Year Founded', type: 'number', value: org.year_founded },
+          { key: 'annual_budget', label: 'Annual Budget', type: 'number', value: org.annual_budget },
+          { key: 'ntee_code', label: 'NTEE Code', type: 'text', value: org.ntee_code },
+          { key: 'engagement_level', label: 'Engagement Level', type: 'select', value: org.engagement_level, options: ['anchor', 'active', 'emerging', 'listed'] },
+        ] as EditField[]}
+      />
     </div>
   )
 }

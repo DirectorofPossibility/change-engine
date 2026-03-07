@@ -13,6 +13,8 @@ import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
+import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
+import type { EditField } from '@/components/exchange/AdminEditPanel'
 
 export const revalidate = 300
 
@@ -239,6 +241,27 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       <div className="mt-10">
         <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
       </div>
+
+      <AdminEditPanel
+        entityType="services_211"
+        entityId={service.service_id}
+        currentData={service}
+        fields={[
+          { key: 'service_name', label: 'Service Name', type: 'text' },
+          { key: 'description_5th_grade', label: 'Description', type: 'textarea' },
+          { key: 'phone', label: 'Phone', type: 'text' },
+          { key: 'website', label: 'Website', type: 'url' },
+          { key: 'address', label: 'Address', type: 'text' },
+          { key: 'city', label: 'City', type: 'text' },
+          { key: 'state', label: 'State', type: 'text' },
+          { key: 'zip_code', label: 'ZIP Code', type: 'text' },
+          { key: 'eligibility', label: 'Eligibility', type: 'textarea' },
+          { key: 'fee_structure', label: 'Fee Structure', type: 'text' },
+          { key: 'hours_of_operation', label: 'Hours of Operation', type: 'text' },
+          { key: 'service_area', label: 'Service Area', type: 'text' },
+        ] as EditField[]}
+        userRole={userProfile?.role}
+      />
     </div>
   )
 }

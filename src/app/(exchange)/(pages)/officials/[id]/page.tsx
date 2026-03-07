@@ -12,6 +12,8 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { OfficialDistrictMap } from './OfficialDistrictMap'
+import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
+import type { EditField } from '@/components/exchange/AdminEditPanel'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -477,6 +479,25 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       <div className="mt-10">
         <DetailWayfinder data={wayfinderData} currentType="official" currentId={id} userRole={userProfile?.role} />
       </div>
+
+      <AdminEditPanel
+        entityType="elected_officials"
+        entityId={official.official_id}
+        entityData={official}
+        userRole={userProfile?.role}
+        fields={[
+          { key: 'official_name', label: 'Official Name', type: 'text' },
+          { key: 'title', label: 'Title', type: 'text' },
+          { key: 'party', label: 'Party', type: 'select', options: ['Democrat', 'Republican', 'Independent', 'Nonpartisan'] },
+          { key: 'phone', label: 'Phone', type: 'text' },
+          { key: 'email', label: 'Email', type: 'text' },
+          { key: 'website', label: 'Website', type: 'url' },
+          { key: 'office_address', label: 'Office Address', type: 'text' },
+          { key: 'photo_url', label: 'Photo URL', type: 'url' },
+          { key: 'bio_summary', label: 'Bio Summary', type: 'textarea' },
+          { key: 'government_level', label: 'Government Level', type: 'select', options: ['federal', 'state', 'county', 'city'] },
+        ] as EditField[]}
+      />
     </div>
   )
 }

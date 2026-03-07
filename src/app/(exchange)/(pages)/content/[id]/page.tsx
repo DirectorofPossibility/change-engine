@@ -18,6 +18,8 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
+import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
+import type { EditField } from '@/components/exchange/AdminEditPanel'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -461,6 +463,23 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           <RelatedContent items={related} />
         </div>
       )}
+
+      <AdminEditPanel
+        entityType="content_published"
+        entityId={id}
+        userRole={userProfile?.role}
+        fields={[
+          { key: 'title_6th_grade', label: 'Title', type: 'text', value: item.title_6th_grade },
+          { key: 'summary_6th_grade', label: 'Summary', type: 'textarea', value: item.summary_6th_grade },
+          { key: 'body', label: 'Body', type: 'textarea', value: item.body },
+          { key: 'source_url', label: 'Source URL', type: 'url', value: item.source_url },
+          { key: 'source_org_name', label: 'Source Org', type: 'text', value: (item as any).source_org_name },
+          { key: 'image_url', label: 'Image URL', type: 'url', value: item.image_url },
+          { key: 'pathway_primary', label: 'Primary Pathway', type: 'select', value: item.pathway_primary, options: Object.keys(THEMES) },
+          { key: 'content_type', label: 'Content Type', type: 'select', value: (item as any).content_type, options: ['news', 'resource', 'guide', 'story', 'report', 'tool', 'video', 'event'] },
+          { key: 'is_active', label: 'Active', type: 'select', value: String((item as any).is_active), options: ['true', 'false'] },
+        ] as EditField[]}
+      />
     </div>
   )
 }

@@ -17,6 +17,8 @@ import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { PolicyImpactSection } from '@/components/exchange/PolicyImpactSection'
 import { MapPin, ExternalLink, Calendar, Scale, FileText, Users, ArrowRight } from 'lucide-react'
 import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
+import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
+import type { EditField } from '@/components/exchange/AdminEditPanel'
 
 function statusColor(status: string | null): { bg: string; text: string; dot: string } {
   if (!status) return { bg: 'bg-gray-50', text: 'text-gray-600', dot: 'bg-gray-400' }
@@ -414,6 +416,24 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           </div>
         )}
       </div>
+
+      <AdminEditPanel
+        entityType="policies"
+        entityId={policy.policy_id}
+        idKey="policy_id"
+        data={policy}
+        userRole={userProfile?.role}
+        fields={[
+          { name: 'policy_name', label: 'Policy Name', type: 'text' },
+          { name: 'title_6th_grade', label: 'Title (6th Grade)', type: 'text' },
+          { name: 'summary_6th_grade', label: 'Summary (6th Grade)', type: 'textarea' },
+          { name: 'policy_type', label: 'Policy Type', type: 'text' },
+          { name: 'status', label: 'Status', type: 'text' },
+          { name: 'government_level', label: 'Government Level', type: 'select', options: ['federal', 'state', 'county', 'city'] },
+          { name: 'source_url', label: 'Source URL', type: 'url' },
+          { name: 'sponsor', label: 'Sponsor', type: 'text' },
+        ] as EditField[]}
+      />
     </div>
   )
 }
