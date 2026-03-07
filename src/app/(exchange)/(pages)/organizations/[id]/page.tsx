@@ -113,11 +113,26 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border" />
             )}
             <div>
-              <h1 className="text-3xl font-serif font-bold text-brand-text">{displayOrgName}</h1>
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-3xl font-serif font-bold text-brand-text">{displayOrgName}</h1>
+                {(org as any).is_verified === 'Yes' && (
+                  <svg className="w-6 h-6 flex-shrink-0" viewBox="0 0 20 20" fill="none" aria-label="Verified">
+                    <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#805ad5" />
+                    <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
               {org.mission_statement && <p className="text-brand-muted mt-1 font-serif italic">{org.mission_statement}</p>}
               {!org.mission_statement && displayOrgDesc && <p className="text-brand-muted mt-1">{displayOrgDesc}</p>}
               <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
-                {org.org_type && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent border border-brand-accent/20">{org.org_type}</span>}
+                {org.org_type === 'Community Partner' ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg font-semibold" style={{ backgroundColor: '#805ad510', color: '#805ad5', border: '1px solid #805ad530' }}>
+                    <svg className="w-3 h-3" viewBox="0 0 20 20" fill="#805ad5"><path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" /></svg>
+                    Community Partner
+                  </span>
+                ) : org.org_type ? (
+                  <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent border border-brand-accent/20">{org.org_type}</span>
+                ) : null}
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
                 {org.ntee_code && <span className="relative text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}<WayfinderTooltipPos tipKey="ntee_code" position="bottom" /></span>}
               </div>

@@ -497,7 +497,7 @@ export async function getOrganizations() {
   const supabase = await createClient()
   const { data } = await supabase
     .from('organizations')
-    .select('org_id, org_name, description_5th_grade, website, phone, address, city, zip_code, logo_url, org_type, mission_statement, service_area, focus_area_ids, ntee_code')
+    .select('org_id, org_name, description_5th_grade, website, phone, address, city, zip_code, logo_url, org_type, mission_statement, service_area, focus_area_ids, ntee_code, is_verified')
     .order('org_name')
   return data ?? []
 }
