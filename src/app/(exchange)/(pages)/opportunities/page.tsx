@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
@@ -32,7 +31,7 @@ export default async function OpportunitiesPage() {
   // Sort local opportunities to top when ZIP is set
   let all = opportunities || []
   if (userZip) {
-    all = all.slice().sort((a: any, b: any) => {
+    all = all.slice().sort((a, b) => {
       const aLocal = a.zip_code === userZip ? -1 : 0
       const bLocal = b.zip_code === userZip ? -1 : 0
       return aLocal - bLocal
@@ -112,7 +111,7 @@ export default async function OpportunitiesPage() {
                           {opp.description_5th_grade}
                         </p>
                       )}
-                      {userZip && (opp as any).zip_code === userZip && (
+                      {userZip && opp.zip_code === userZip && (
                         <span className="text-[10px] text-brand-accent font-medium pl-3">Near you</span>
                       )}
                     </Link>

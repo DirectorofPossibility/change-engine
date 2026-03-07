@@ -1,9 +1,8 @@
-// @ts-nocheck
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Calendar, Clock, MapPin, Globe, Users } from 'lucide-react'
+import { Calendar, Clock, MapPin, Users } from 'lucide-react'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
@@ -47,10 +46,10 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
   // Focus areas via junction table
   const { data: focusJunctions } = await supabase
-    .from('opportunity_focus_areas' as any)
+    .from('opportunity_focus_areas')
     .select('focus_id')
     .eq('opportunity_id', id)
-  const focusAreaIds = (focusJunctions ?? []).map((j: any) => j.focus_id)
+  const focusAreaIds = (focusJunctions ?? []).map((j) => j.focus_id)
   let focusAreas: Array<{ focus_id: string; focus_area_name: string }> = []
   if (focusAreaIds.length > 0) {
     const { data: faData } = await supabase
@@ -60,19 +59,28 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
     focusAreas = faData ?? []
   }
 
-  // Skills via junction table
-  const { data: skillJunctions } = await supabase
-    .from('opportunity_skills' as any)
-    .select('skill_id')
-    .eq('opportunity_id', id)
-  const skillIds = (skillJunctions ?? []).map((j: any) => j.skill_id)
+  // Skills from comma-separated skill_ids on the opportunity row
   let skills: Array<{ skill_id: string; skill_name: string }> = []
-  if (skillIds.length > 0) {
-    const { data: skillData } = await supabase
-      .from('skills')
-      .select('skill_id, skill_name')
-      .in('skill_id', skillIds)
-    skills = skillData ?? []
+  if (opportunity.skill_ids) {
+    const skillIdList = opportunity.skill_ids.split(',').map((s) => s.trim()).filter(Boolean)
+    if (skillIdList.length > 0) {
+      const { data: skillData } = await supabase
+        .from('skills')
+        .select('skill_id, skill_name')
+        .in('skill_id', skillIdList)
+      skills = skillData ?? []
+    }
+  }
+
+  // Look up time commitment name if linked
+  let timeCommitmentName: string | null = null
+  if (opportunity.time_commitment_id) {
+    const { data: tcData } = await supabase
+      .from('time_commitments')
+      .select('time_name')
+      .eq('time_id', opportunity.time_commitment_id)
+      .single()
+    timeCommitmentName = tcData?.time_name ?? null
   }
 
   // Translations
@@ -86,8 +94,12 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   const userProfile = await getUserProfile()
   const wayfinderData = await getWayfinderContext('opportunity', id, userProfile?.role)
 
-  const displayName = translation?.title || (opportunity as any).title_6th_grade || opportunity.opportunity_name
-  const displayDesc = translation?.summary || (opportunity as any).summary_6th_grade || (opportunity as any).description_5th_grade
+  const displayName = translation?.title || opportunity.opportunity_name
+  const displayDesc = translation?.summary || opportunity.description_5th_grade
+
+  // Build a display location string from address/city/state
+  const locationParts = [opportunity.address, opportunity.city, opportunity.state].filter(Boolean)
+  const displayLocation = locationParts.length > 0 ? locationParts.join(', ') : null
 
   return (
     <div>
@@ -110,14 +122,14 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
                 </Link>
               )}
               <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
-                {(opportunity as any).start_date && (
+                {opportunity.start_date && (
                   <span className="flex items-center gap-1">
-                    <Calendar size={14} /> Starts {new Date((opportunity as any).start_date).toLocaleDateString()}
+                    <Calendar size={14} /> Starts {new Date(opportunity.start_date).toLocaleDateString()}
                   </span>
                 )}
-                {(opportunity as any).end_date && (
+                {opportunity.end_date && (
                   <span className="flex items-center gap-1">
-                    <Calendar size={14} /> Ends {new Date((opportunity as any).end_date).toLocaleDateString()}
+                    <Calendar size={14} /> Ends {new Date(opportunity.end_date).toLocaleDateString()}
                   </span>
                 )}
               </div>
@@ -129,29 +141,24 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick details card */}
         <div className="bg-white rounded-xl border border-brand-border p-5 mb-8 flex flex-wrap gap-4">
-          {(opportunity as any).location && (
+          {displayLocation && (
             <span className="flex items-center gap-2 text-sm text-brand-muted">
-              <MapPin size={16} /> {(opportunity as any).location}
+              <MapPin size={16} /> {displayLocation}
             </span>
           )}
-          {(opportunity as any).time_commitment && (
+          {timeCommitmentName && (
             <span className="flex items-center gap-2 text-sm text-brand-muted">
-              <Clock size={16} /> {(opportunity as any).time_commitment}
+              <Clock size={16} /> {timeCommitmentName}
             </span>
           )}
-          {(opportunity as any).capacity && (
+          {opportunity.spots_available != null && (
             <span className="flex items-center gap-2 text-sm text-brand-muted">
-              <Users size={16} /> {(opportunity as any).capacity} spots
+              <Users size={16} /> {opportunity.spots_available} spots
             </span>
           )}
-          {(opportunity as any).website && (
-            <a href={(opportunity as any).website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-              <Globe size={16} /> Learn more
-            </a>
-          )}
-          {(opportunity as any).application_url && (
-            <a href={(opportunity as any).application_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent/90 px-4 py-2 rounded-lg transition-colors">
-              Apply
+          {opportunity.registration_url && (
+            <a href={opportunity.registration_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent/90 px-4 py-2 rounded-lg transition-colors">
+              Register
             </a>
           )}
         </div>
@@ -206,11 +213,11 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           </section>
         )}
 
-        {/* Eligibility / requirements */}
-        {(opportunity as any).eligibility && (
+        {/* Age requirement */}
+        {opportunity.min_age != null && opportunity.min_age > 0 && (
           <section className="mb-8">
             <h2 className="text-xl font-serif font-bold text-brand-text mb-3">Who Can Participate</h2>
-            <p className="text-brand-muted leading-relaxed">{(opportunity as any).eligibility}</p>
+            <p className="text-brand-muted leading-relaxed">Minimum age: {opportunity.min_age} years</p>
           </section>
         )}
 

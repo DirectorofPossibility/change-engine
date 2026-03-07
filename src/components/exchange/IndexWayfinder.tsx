@@ -106,7 +106,7 @@ export function IndexWayfinder({
             onClick={function () { setPathwaysOpen(!pathwaysOpen) }}
             className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-brand-bg/50 transition-colors"
           >
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">Pathways</span>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">Topics</span>
             {pathwaysOpen ? <ChevronDown size={14} className="text-brand-muted" /> : <ChevronRight size={14} className="text-brand-muted" />}
           </button>
           {pathwaysOpen && (
