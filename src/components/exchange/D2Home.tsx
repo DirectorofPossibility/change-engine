@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { FOLWatermark } from './FOLWatermark'
 import { FeaturedPromo } from './FeaturedPromo'
+import { GoodThingsWidget } from './GoodThingsWidget'
 
 const QUICK_ACCESS = [
   {
@@ -20,6 +21,8 @@ const QUICK_ACCESS = [
     gradient: 'linear-gradient(135deg,#2b6cb0 0%,#4299e1 100%)',
     fol: 'vesica' as const,
     folImage: '/images/fol/vesica-piscis.svg',
+    folImage2: '/images/fol/seed-of-life.svg',
+    lensColor: 'rgba(66,153,225,0.5)',
   },
   {
     label: 'News',
@@ -28,6 +31,8 @@ const QUICK_ACCESS = [
     gradient: 'linear-gradient(135deg,#553c9a 0%,#7c5cbf 100%)',
     fol: 'metatron' as const,
     folImage: '/images/fol/metatrons-cube.svg',
+    folImage2: '/images/fol/genesis.svg',
+    lensColor: 'rgba(124,92,191,0.5)',
   },
   {
     label: 'Ask Chance',
@@ -36,6 +41,8 @@ const QUICK_ACCESS = [
     gradient: 'linear-gradient(135deg,#c05621 0%,#ed8936 100%)',
     fol: 'seed' as const,
     folImage: '/images/fol/seed-of-life.svg',
+    folImage2: '/images/fol/flower-full.svg',
+    lensColor: 'rgba(237,137,54,0.5)',
   },
   {
     label: 'Events',
@@ -44,6 +51,8 @@ const QUICK_ACCESS = [
     gradient: 'linear-gradient(135deg,#276749 0%,#48bb78 100%)',
     fol: 'tripod' as const,
     folImage: '/images/fol/tripod-of-life.svg',
+    folImage2: '/images/fol/vesica-piscis.svg',
+    lensColor: 'rgba(72,187,120,0.5)',
   },
 ]
 
@@ -189,27 +198,42 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                     boxShadow: '4px 4px 0 #C75B2A40',
                   }}
                 >
-                  {/* Animated FOL background — the adventure awaits */}
+                  {/* Pulsing FOL background */}
                   <img
                     src="/images/fol/flower-full.svg"
                     alt="" aria-hidden="true"
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] pointer-events-none opacity-[0.15] group-hover:opacity-[0.3] group-hover:scale-[1.15] group-hover:rotate-[30deg] transition-all duration-700"
+                    className="absolute top-1/2 left-1/2 w-[200px] h-[200px] pointer-events-none animate-fol-pulse-cta group-hover:opacity-[0.35] group-hover:scale-[1.15] group-hover:rotate-[30deg] transition-all duration-700"
                     style={{ filter: 'brightness(3)' }}
                   />
-                  {/* Second layer — seed pattern */}
+                  {/* Second layer — counter-rotating seed */}
                   <img
                     src="/images/fol/genesis.svg"
                     alt="" aria-hidden="true"
                     className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[120px] pointer-events-none opacity-[0.08] group-hover:opacity-[0.15] group-hover:scale-[0.9] group-hover:rotate-[-15deg] transition-all duration-500"
-                    style={{ filter: 'brightness(3)' }}
+                    style={{ filter: 'brightness(3)', animation: 'fol-pulse 5s ease-in-out infinite reverse' }}
                   />
+
+                  {/* Lens flare accents */}
+                  <div className="absolute top-[20%] left-[15%] w-3 h-3 rounded-full pointer-events-none animate-lens-drift" style={{ background: 'radial-gradient(circle, rgba(199,91,42,0.7) 0%, transparent 70%)' }} />
+                  <div className="absolute top-[60%] right-[20%] w-2 h-2 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%)', animation: 'lens-drift 8s ease-in-out 2s infinite' }} />
+                  <div className="absolute top-[35%] right-[30%] w-4 h-4 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(128,90,213,0.4) 0%, transparent 70%)', animation: 'lens-drift 7s ease-in-out 1s infinite' }} />
+
+                  {/* Geometric grid lines */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="0" y1="50" x2="100" y2="50" stroke="white" strokeWidth="0.3" />
+                    <line x1="50" y1="0" x2="50" y2="100" stroke="white" strokeWidth="0.3" />
+                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="0.2" />
+                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="0.2" />
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="white" strokeWidth="0.2" />
+                    <circle cx="50" cy="50" r="20" fill="none" stroke="white" strokeWidth="0.15" />
+                  </svg>
 
                   {/* Adventure book corner fold */}
                   <div className="absolute top-0 right-0 w-10 h-10 overflow-hidden">
                     <div className="absolute top-0 right-0 w-14 h-14 bg-brand-accent/20 transform rotate-45 translate-x-4 -translate-y-4" />
                   </div>
 
-                  {/* Page number — like an adventure book */}
+                  {/* Page number */}
                   <span className="absolute top-2.5 left-3 font-mono text-[9px] font-bold text-white/20 tracking-widest">PAGE 1</span>
 
                   <span className="relative z-[2] font-hand text-[22px] font-bold text-white text-center leading-tight group-hover:scale-105 transition-transform">
@@ -227,6 +251,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               )
             }
 
+            const delay = idx * 0.8
             return (
               <Link
                 key={item.label}
@@ -234,14 +259,45 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 className="relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
                 style={{ background: item.gradient }}
               >
-                {/* Unique FOL pattern per card */}
+                {/* Primary FOL — pulsing */}
                 <img
                   src={item.folImage}
                   alt="" aria-hidden="true"
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] pointer-events-none opacity-[0.12] group-hover:opacity-[0.22] group-hover:scale-[1.1] group-hover:rotate-[12deg] transition-all duration-500"
-                  style={{ filter: 'brightness(10)' }}
+                  className="absolute top-1/2 left-1/2 w-[160px] h-[160px] pointer-events-none animate-fol-pulse group-hover:opacity-[0.28] group-hover:scale-[1.12] group-hover:rotate-[15deg] transition-all duration-500"
+                  style={{ filter: 'brightness(10)', animationDelay: delay + 's' }}
                 />
-                <span className="relative z-[2] font-serif text-lg font-normal text-center text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                {/* Secondary geometry — smaller, offset, counter-pulse */}
+                <img
+                  src={(item as any).folImage2 || item.folImage}
+                  alt="" aria-hidden="true"
+                  className="absolute pointer-events-none opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500"
+                  style={{
+                    filter: 'brightness(10)',
+                    width: '80px', height: '80px',
+                    top: '8px', right: '8px',
+                    animation: 'fol-pulse 5s ease-in-out ' + (delay + 1) + 's infinite reverse',
+                  }}
+                />
+
+                {/* Geometric grid overlay */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04] group-hover:opacity-[0.09] transition-opacity duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="white" strokeWidth="0.2" />
+                  <circle cx="50" cy="50" r="22" fill="none" stroke="white" strokeWidth="0.15" />
+                  <line x1="10" y1="50" x2="90" y2="50" stroke="white" strokeWidth="0.15" />
+                  <line x1="50" y1="10" x2="50" y2="90" stroke="white" strokeWidth="0.15" />
+                </svg>
+
+                {/* Lens flare dots */}
+                <div
+                  className="absolute w-3 h-3 rounded-full pointer-events-none animate-lens-drift"
+                  style={{ top: '25%', left: '20%', background: 'radial-gradient(circle, ' + ((item as any).lensColor || 'rgba(255,255,255,0.4)') + ' 0%, transparent 70%)', animationDelay: delay + 's' }}
+                />
+                <div
+                  className="absolute w-2 h-2 rounded-full pointer-events-none"
+                  style={{ bottom: '30%', right: '18%', background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)', animation: 'lens-drift 7s ease-in-out ' + (delay + 2) + 's infinite' }}
+                />
+
+                <span className="relative z-[2] font-serif text-lg font-normal text-center text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.15)' }}>
                   {item.label}
                 </span>
                 <span className="relative z-[2] text-[11px] text-center px-4 leading-snug text-white/70">
@@ -256,6 +312,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       {/* ── FEATURED PROMO ── */}
       <div className="max-w-[1200px] mx-auto px-8">
         <FeaturedPromo variant="banner" />
+      </div>
+
+      {/* ── GOOD THINGS ── */}
+      <div className="max-w-[1200px] mx-auto px-8 pt-4">
+        <GoodThingsWidget variant="inline" />
       </div>
 
       {/* ── GAP STATS ── */}

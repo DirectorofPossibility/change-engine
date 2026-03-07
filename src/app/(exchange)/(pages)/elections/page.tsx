@@ -4,6 +4,8 @@ import { cookies } from 'next/headers'
 import { getElectionDashboard } from '@/lib/data/exchange'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { PAGE_INTROS } from '@/lib/constants'
 import { VotingDashboardClient } from './VotingDashboardClient'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -72,6 +74,8 @@ export default async function ElectionsPage({
                   { label: 'Polling Places', href: '/polling-places', color: '#38a169' },
                 ]}
               />
+              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

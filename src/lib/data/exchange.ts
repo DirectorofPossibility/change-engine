@@ -323,15 +323,17 @@ export async function getCalendarItems(pathway?: string) {
 /**
  * News feed — articles, reports, announcements. Excludes events, guides, courses, tools.
  */
-export async function getNewsFeed(pathway?: string, limit = 30) {
+export async function getNewsFeed(pathway?: string, limit = 30, contentType?: string) {
   const supabase = await createClient()
   let q = supabase
     .from('content_published')
     .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url, source_domain, published_at, content_type')
     .eq('is_active', true)
-    .in('content_type', ['article', 'report', 'announcement'])
     .order('published_at', { ascending: false })
     .limit(limit)
+  if (contentType) {
+    q = q.eq('content_type', contentType)
+  }
   if (pathway) q = q.eq('pathway_primary', pathway)
   const { data } = await q
   return data ?? []

@@ -3,6 +3,8 @@ import { getOrganizations } from '@/lib/data/exchange'
 import { OrganizationsClient } from './OrganizationsClient'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
@@ -48,6 +50,8 @@ export default async function OrganizationsPage() {
                   { label: 'Community Partners', href: '/partners', color: '#C75B2A' },
                 ]}
               />
+              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

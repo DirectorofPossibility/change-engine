@@ -79,10 +79,28 @@ const config: Config = {
           '0%, 100%': { borderColor: '#D1D5E0', boxShadow: 'none' },
           '50%': { borderColor: '#C75B2A', boxShadow: '0 0 12px rgba(199,91,42,0.35)' },
         },
+        'fol-pulse': {
+          '0%, 100%': { transform: 'translate(-50%,-50%) scale(1)', opacity: '0.12' },
+          '50%': { transform: 'translate(-50%,-50%) scale(1.06)', opacity: '0.18' },
+        },
+        'fol-pulse-cta': {
+          '0%, 100%': { transform: 'translate(-50%,-50%) scale(1) rotate(0deg)', opacity: '0.15' },
+          '50%': { transform: 'translate(-50%,-50%) scale(1.08) rotate(6deg)', opacity: '0.25' },
+        },
+        'lens-drift': {
+          '0%': { transform: 'translate(0,0)', opacity: '0' },
+          '15%': { opacity: '0.6' },
+          '50%': { transform: 'translate(60px,-30px)', opacity: '0.3' },
+          '85%': { opacity: '0.5' },
+          '100%': { transform: 'translate(0,0)', opacity: '0' },
+        },
       },
       animation: {
         'fol-spin': 'fol-spin 60s linear infinite',
         'zip-glow': 'zip-glow 2s ease-in-out infinite',
+        'fol-pulse': 'fol-pulse 4s ease-in-out infinite',
+        'fol-pulse-cta': 'fol-pulse-cta 3s ease-in-out infinite',
+        'lens-drift': 'lens-drift 6s ease-in-out infinite',
       },
     },
   },

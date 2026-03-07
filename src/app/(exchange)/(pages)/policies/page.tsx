@@ -4,6 +4,8 @@ import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { PoliciesPageClient } from './PoliciesPageClient'
 
 export const revalidate = 86400
@@ -69,6 +71,8 @@ export default async function PoliciesPage() {
                   { label: 'News', href: '/news', color: '#319795' },
                 ]}
               />
+              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

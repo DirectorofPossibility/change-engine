@@ -4,6 +4,8 @@ import { THEMES } from '@/lib/constants'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { CalendarClient } from './CalendarClient'
 
 export const metadata: Metadata = {
@@ -61,6 +63,8 @@ export default async function CalendarPage({
                   { label: 'News', href: '/news', color: '#319795' },
                 ]}
               />
+              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

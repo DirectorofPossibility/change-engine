@@ -6,10 +6,12 @@ import { FileText } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 
 export const metadata: Metadata = {
-  title: 'Community News — Community Exchange',
-  description: 'Latest news, articles, and reports from across the Houston community.',
+  title: 'Community Content — Community Exchange',
+  description: 'Articles, videos, guides, reports, tools, courses, and more from across the Houston community.',
 }
 
 export const revalidate = 3600
@@ -26,13 +28,26 @@ function timeAgo(dateStr: string | null) {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
+const CONTENT_TYPES = [
+  { key: '', label: 'All' },
+  { key: 'article', label: 'Articles' },
+  { key: 'report', label: 'Reports' },
+  { key: 'video', label: 'Videos' },
+  { key: 'guide', label: 'Guides' },
+  { key: 'tool', label: 'Tools' },
+  { key: 'course', label: 'Courses' },
+  { key: 'event', label: 'Events' },
+  { key: 'campaign', label: 'Campaigns' },
+  { key: 'opportunity', label: 'Opportunities' },
+]
+
 export default async function NewsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ pathway?: string }>
+  searchParams: Promise<{ pathway?: string; type?: string }>
 }) {
-  const { pathway } = await searchParams
-  const items = await getNewsFeed(pathway, 40)
+  const { pathway, type } = await searchParams
+  const items = await getNewsFeed(pathway, 60, type || undefined)
   const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string }][]
 
   const withImages = items.filter(i => i.image_url)
@@ -48,9 +63,9 @@ export default async function NewsPage({
       <IndexPageHero
         color="#319795"
         pattern="seed"
-        title="Community News"
-        subtitle="Stories, reports, and updates from across Houston"
-        intro="Stay informed with news that matters to your community. Filter by pathway to focus on the topics you care about most."
+        title="Community Content"
+        subtitle="Articles, videos, guides, reports, tools, and more from across Houston"
+        intro="Explore everything published in the Community Exchange. Filter by content type or pathway to find what matters to you."
         stats={[
           { value: items.length, label: 'Stories' },
           { value: uniqueSources, label: 'Sources' },
@@ -60,10 +75,32 @@ export default async function NewsPage({
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'News' }]} />
 
+        {/* Content type filter */}
+        <div className="flex flex-wrap items-center gap-2 mt-4">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mr-1">Type</span>
+          {CONTENT_TYPES.map(function (ct) {
+            const active = (type || '') === ct.key
+            const href = ct.key
+              ? '/news?type=' + ct.key + (pathway ? '&pathway=' + pathway : '')
+              : '/news' + (pathway ? '?pathway=' + pathway : '')
+            return (
+              <Link
+                key={ct.key}
+                href={href}
+                className={'text-xs px-3 py-1.5 rounded-lg border-2 font-medium transition-colors ' +
+                  (active ? 'bg-brand-accent text-white border-brand-accent' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
+              >
+                {ct.label}
+              </Link>
+            )
+          })}
+        </div>
+
         {/* Pathway filter */}
-        <div className="flex flex-wrap items-center gap-2 mt-4 mb-8">
+        <div className="flex flex-wrap items-center gap-2 mt-3 mb-8">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mr-1">Pathway</span>
           <Link
-            href="/news"
+            href={'/news' + (type ? '?type=' + type : '')}
             className={'text-xs px-3 py-1.5 rounded-lg border-2 font-medium transition-colors ' +
               (!pathway ? 'bg-brand-text text-white border-brand-text' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
           >
@@ -71,10 +108,11 @@ export default async function NewsPage({
           </Link>
           {themeEntries.map(function ([id, theme]) {
             const active = pathway === id
+            const href = '/news?pathway=' + id + (type ? '&type=' + type : '')
             return (
               <Link
                 key={id}
-                href={'/news?pathway=' + id}
+                href={href}
                 className={'text-xs px-3 py-1.5 rounded-lg border-2 font-medium transition-colors ' +
                   (active ? 'text-white border-transparent' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
                 style={active ? { backgroundColor: theme.color } : undefined}
@@ -162,7 +200,7 @@ export default async function NewsPage({
                             {item.source_domain && (
                               <span className="text-[10px] font-mono text-brand-muted">{item.source_domain}</span>
                             )}
-                            {item.content_type && item.content_type !== 'article' && (
+                            {item.content_type && (
                               <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted capitalize">{item.content_type}</span>
                             )}
                           </div>
@@ -186,6 +224,8 @@ export default async function NewsPage({
                   { label: 'Policies', href: '/policies', color: '#3182ce' },
                 ]}
               />
+              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>
