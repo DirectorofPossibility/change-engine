@@ -89,20 +89,20 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
 
   if (variant === 'banner') {
     return (
-      <div className="relative overflow-hidden rounded-xl border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 ' + color + '20' }}>
-        <div className="h-1" style={{ backgroundColor: color }} />
+      <div className="relative overflow-hidden rounded-xl border-2 border-brand-border" style={{ background: 'linear-gradient(135deg, #FAF8F5 0%, #EDE8E0 100%)', boxShadow: '3px 3px 0 #D5D0C8' }}>
+        <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, #D5D0C8, #C75B2A)' }} />
         <div className="flex items-center gap-5 p-5">
           {promo.image_url ? (
-            <img src={promo.image_url} alt="" className="w-20 h-20 rounded-lg object-cover flex-shrink-0" />
+            <img src={promo.image_url} alt="" className="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-brand-border" />
           ) : promo.logo_url ? (
             <img src={promo.logo_url} alt="" className="w-16 h-16 rounded-lg object-contain flex-shrink-0 bg-white p-1 border border-brand-border" />
           ) : (
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '15' }}>
-              <Megaphone size={24} style={{ color }} />
+            <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0 bg-brand-bg-alt border border-brand-border">
+              <Megaphone size={24} className="text-brand-accent" />
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <span className="text-[9px] font-mono font-bold uppercase tracking-widest" style={{ color }}>{typeLabel}</span>
+            <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-brand-accent">{typeLabel}</span>
             <h3 className="text-base font-bold text-brand-text mt-0.5">{promo.title}</h3>
             {promo.subtitle && <p className="text-sm text-brand-muted mt-0.5">{promo.subtitle}</p>}
             {promo.org_name && <p className="text-[10px] font-mono text-brand-muted-light mt-1">{promo.org_name}</p>}
@@ -110,8 +110,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
           {promo.cta_href && (
             <Link
               href={href}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold text-white flex-shrink-0 hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: color }}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold text-white flex-shrink-0 hover:opacity-90 transition-opacity bg-brand-accent"
             >
               {promo.cta_text || 'Learn More'}
               <ArrowRight size={14} />

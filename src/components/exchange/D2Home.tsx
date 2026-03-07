@@ -171,32 +171,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
                 </div>
 
-                {/* Fact bubbles */}
-                <div className="absolute bg-white rounded-xl px-3 py-2 border-2 border-brand-border text-center"
-                  style={{ top: '8px', left: '40px', zIndex: 10, boxShadow: '2px 2px 0 #D5D0C8', transform: 'rotate(-2deg)' }}>
-                  <span className="block font-hand text-[28px] font-bold leading-none" style={{ color: '#C75B2A' }}>90%</span>
-                  <span className="block text-[9px] text-brand-muted font-medium leading-tight max-w-[100px]">feel responsible to help</span>
-                </div>
-                <div className="absolute bg-white rounded-xl px-3 py-2 border-2 border-brand-border text-center"
-                  style={{ top: '160px', right: '0', zIndex: 10, boxShadow: '2px 2px 0 #D5D0C8', transform: 'rotate(1.5deg)' }}>
-                  <span className="block font-hand text-[28px] font-bold leading-none" style={{ color: '#c43c4c' }}>37%</span>
-                  <span className="block text-[9px] text-brand-muted font-medium leading-tight max-w-[100px]">don&apos;t know where to start</span>
-                </div>
-                <div className="absolute bg-white rounded-xl px-3 py-2 border-2 border-brand-border text-center"
-                  style={{ bottom: '20px', right: '60px', zIndex: 10, boxShadow: '2px 2px 0 #D5D0C8', transform: 'rotate(-1deg)' }}>
-                  <span className="block font-hand text-[28px] font-bold leading-none" style={{ color: '#38a169' }}>28%</span>
-                  <span className="block text-[9px] text-brand-muted font-medium leading-tight max-w-[100px]">actually volunteer</span>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* ── ANNOUNCEMENT STRIP ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-5 pb-2">
-        <FeaturedPromo variant="banner" />
-      </div>
 
       {/* ── QUICK ACCESS GRID — 5 image-backed cards ── */}
       <div className="max-w-[1200px] mx-auto px-8 pt-3 pb-4">
@@ -277,6 +256,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
             )
           })}
         </div>
+      </div>
+
+      {/* ── FEATURED PROMO ── */}
+      <div className="max-w-[1200px] mx-auto px-8 pt-6 pb-2">
+        <FeaturedPromo variant="banner" />
       </div>
 
       {/* ── GOOD THINGS ── */}
