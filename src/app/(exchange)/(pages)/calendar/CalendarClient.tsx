@@ -4,7 +4,8 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import {
   Calendar, ChevronLeft, ChevronRight, MapPin, ExternalLink,
-  Video, Landmark, Heart, Clock, X
+  Video, Landmark, Heart, Clock, X, Navigation, CalendarPlus,
+  Building2, Repeat,
 } from 'lucide-react'
 
 // ── Types ──
@@ -23,6 +24,12 @@ interface CalendarItem {
   imageUrl: string | null
   pathway: string | null
   eventType: string | null
+  orgName: string | null
+  orgId: string | null
+  detailHref: string | null
+  isFree: boolean
+  isRecurring: boolean
+  recurrencePattern: string | null
 }
 
 interface ThemeInfo {
@@ -527,6 +534,15 @@ function renderEventCard(item: CalendarItem, themes: ThemeInfo[], onClick: () =>
             <span className="flex items-center gap-1"><MapPin size={11} /> {item.location}</span>
           )}
           {dateInfo && dateInfo.time && <span>{dateInfo.time}</span>}
+          {item.orgName && (
+            <span className="flex items-center gap-1"><Building2 size={11} /> {item.orgName}</span>
+          )}
+          {item.isRecurring && (
+            <span className="flex items-center gap-1 text-brand-accent"><Repeat size={11} /> Recurring</span>
+          )}
+          {item.isFree && (
+            <span className="font-medium text-theme-money">Free</span>
+          )}
         </div>
       </div>
       <div className="flex-shrink-0 flex flex-col justify-center">
@@ -556,6 +572,21 @@ function renderEventCard(item: CalendarItem, themes: ThemeInfo[], onClick: () =>
   )
 }
 
+// ── Helpers for calendar/map URLs ──
+
+function buildGoogleCalUrl(event: CalendarItem): string {
+  if (!event.date) return ''
+  const start = new Date(event.date)
+  const end = event.endDate ? new Date(event.endDate) : new Date(start.getTime() + 3600000)
+  const fmt = function (d: Date) { return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') }
+  const loc = event.isVirtual ? 'Virtual' : event.location || ''
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(event.title) + '&dates=' + fmt(start) + '/' + fmt(end) + '&details=' + encodeURIComponent(event.description || '') + '&location=' + encodeURIComponent(loc)
+}
+
+function buildMapUrl(location: string): string {
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(location)
+}
+
 // ── Event Detail Modal Content ──
 
 function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: ThemeInfo[]; onClose: () => void }) {
@@ -564,19 +595,29 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
   const pathwayTheme = event.pathway ? themes.find(function (t) { return t.id === event.pathway }) : null
   const dt = event.date ? new Date(event.date) : null
   const endDt = event.endDate ? new Date(event.endDate) : null
+  const calUrl = buildGoogleCalUrl(event)
+  const mapUrl = event.location && !event.isVirtual ? buildMapUrl(event.location) : null
 
   return (
     <div>
       {/* Header */}
       <div className="flex items-start justify-between p-5 border-b border-brand-border">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className={'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded ' + cfg.bgClass + ' ' + cfg.textClass}>
               <Icon size={12} /> {event.eventType || cfg.label}
             </span>
             {event.isVirtual && (
               <span className="inline-flex items-center gap-1 text-xs text-blue-600">
                 <Video size={12} /> Virtual
+              </span>
+            )}
+            {event.isFree && (
+              <span className="text-xs font-medium text-theme-money">Free</span>
+            )}
+            {event.isRecurring && (
+              <span className="inline-flex items-center gap-1 text-xs text-brand-accent">
+                <Repeat size={12} /> Recurring
               </span>
             )}
             {pathwayTheme && (
@@ -606,15 +647,39 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
                 {formatTime(event.date!)}
                 {endDt ? ' - ' + formatTime(event.endDate!) : ''}
               </p>
+              {event.isRecurring && event.recurrencePattern && (
+                <p className="text-xs text-brand-accent mt-0.5">{event.recurrencePattern}</p>
+              )}
             </div>
           </div>
         )}
 
-        {/* Location */}
+        {/* Location with map link */}
         {event.location && (
+          <div className="flex items-start gap-3">
+            <MapPin size={16} className="text-brand-muted flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-brand-text">{event.location}</p>
+              {mapUrl && (
+                <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-accent hover:underline flex items-center gap-1 mt-0.5">
+                  <Navigation size={10} /> Open in Google Maps
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Organization */}
+        {event.orgName && (
           <div className="flex items-center gap-3">
-            <MapPin size={16} className="text-brand-muted flex-shrink-0" />
-            <p className="text-sm text-brand-text">{event.location}</p>
+            <Building2 size={16} className="text-brand-muted flex-shrink-0" />
+            {event.orgId ? (
+              <Link href={'/organizations/' + event.orgId} className="text-sm text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+                {event.orgName}
+              </Link>
+            ) : (
+              <p className="text-sm text-brand-text">{event.orgName}</p>
+            )}
           </div>
         )}
 
@@ -626,7 +691,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
         )}
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-wrap gap-2 pt-2">
           {event.registrationUrl && (
             <a
               href={event.registrationUrl}
@@ -637,17 +702,47 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
               Register
             </a>
           )}
-          {event.sourceUrl && (
+          {event.detailHref && (
+            <Link
+              href={event.detailHref}
+              className="flex-1 text-center py-2.5 rounded-lg border-2 border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
+              onClick={function (e) { e.stopPropagation() }}
+            >
+              Full Details
+            </Link>
+          )}
+          {event.sourceUrl && !event.detailHref && (
             <a
               href={event.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 text-center py-2.5 rounded-lg border-2 border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
             >
-              View Details
+              View Source
             </a>
           )}
         </div>
+
+        {/* Add to calendar */}
+        {calUrl && (
+          <div className="flex items-center gap-2 pt-1">
+            <a
+              href={calUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-brand-muted hover:text-brand-accent flex items-center gap-1 transition-colors"
+            >
+              <CalendarPlus size={12} /> Add to Google Calendar
+            </a>
+            <span className="text-brand-border">|</span>
+            <a
+              href="/api/calendar.ics"
+              className="text-xs text-brand-muted hover:text-brand-accent flex items-center gap-1 transition-colors"
+            >
+              <CalendarPlus size={12} /> Subscribe (.ics)
+            </a>
+          </div>
+        )}
       </div>
     </div>
   )

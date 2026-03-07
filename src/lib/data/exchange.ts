@@ -47,7 +47,7 @@ import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES, THEMES } from '@/lib/constants'
 import type { Database } from '@/lib/supabase/database.types'
-import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData, CompassPreviewData, ContentPreview } from '@/lib/types/exchange'
+import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData, CompassPreviewData, ContentPreview, TirzZone } from '@/lib/types/exchange'
 
 type ContentRow = Database['public']['Tables']['content_published']['Row'] & { content_type?: string | null }
 type MunicipalServiceRow = Database['public']['Tables']['municipal_services']['Row']
@@ -234,9 +234,25 @@ export async function getCalendarItems(pathway?: string) {
     imageUrl: string | null
     pathway: string | null
     eventType: string | null
+    orgName: string | null
+    orgId: string | null
+    detailHref: string | null
+    isFree: boolean
+    isRecurring: boolean
+    recurrencePattern: string | null
   }
 
   const items: CalendarItem[] = []
+
+  // Batch-fetch org names for events and opportunities
+  const allOrgIds = new Set<string>()
+  for (const e of (eventsRes.data ?? [])) { if (e.org_id) allOrgIds.add(e.org_id) }
+  for (const o of (oppsRes.data ?? [])) { if (o.org_id) allOrgIds.add(o.org_id) }
+  const orgMap = new Map<string, string>()
+  if (allOrgIds.size > 0) {
+    const { data: orgs } = await supabase.from('organizations').select('org_id, org_name').in('org_id', Array.from(allOrgIds))
+    for (const o of (orgs ?? [])) { orgMap.set(o.org_id, o.org_name) }
+  }
 
   for (const c of (contentRes.data ?? [])) {
     items.push({
@@ -253,6 +269,12 @@ export async function getCalendarItems(pathway?: string) {
       imageUrl: c.image_url,
       pathway: c.pathway_primary,
       eventType: 'Event',
+      orgName: (c as any).source_org_name || null,
+      orgId: null,
+      detailHref: `/content/${c.id}`,
+      isFree: false,
+      isRecurring: false,
+      recurrencePattern: null,
     })
   }
 
@@ -271,6 +293,12 @@ export async function getCalendarItems(pathway?: string) {
       imageUrl: null,
       pathway: null,
       eventType: e.event_type,
+      orgName: e.org_id ? orgMap.get(e.org_id) || null : null,
+      orgId: e.org_id || null,
+      detailHref: `/events/${e.event_id}`,
+      isFree: (e as any).is_free === 'true' || (e as any).is_free === 'Yes',
+      isRecurring: (e as any).is_recurring === 'true' || (e as any).is_recurring === 'Yes',
+      recurrencePattern: (e as any).recurrence_pattern || null,
     })
   }
 
@@ -289,6 +317,12 @@ export async function getCalendarItems(pathway?: string) {
       imageUrl: null,
       pathway: null,
       eventType: c.event_type,
+      orgName: null,
+      orgId: null,
+      detailHref: null,
+      isFree: true,
+      isRecurring: false,
+      recurrencePattern: null,
     })
   }
 
@@ -307,6 +341,12 @@ export async function getCalendarItems(pathway?: string) {
       imageUrl: null,
       pathway: null,
       eventType: 'Opportunity',
+      orgName: o.org_id ? orgMap.get(o.org_id) || null : null,
+      orgId: o.org_id || null,
+      detailHref: null,
+      isFree: false,
+      isRecurring: false,
+      recurrencePattern: null,
     })
   }
 
@@ -3374,44 +3414,44 @@ export async function getCircleGraphData(): Promise<CircleGraphData> {
 
 // ── TIRZ Zones ─────────────────────────────────────────────────────────
 
-export async function getTirzZones() {
+export async function getTirzZones(): Promise<TirzZone[]> {
   const supabase = await createClient()
   const { data } = await supabase
-    .from('tirz_zones')
+    .from('tirz_zones' as any)
     .select('*')
     .order('site_number')
-  return data ?? []
+  return (data ?? []) as TirzZone[]
 }
 
-export async function getTirzZone(tirzId: string) {
+export async function getTirzZone(tirzId: string): Promise<TirzZone | null> {
   const supabase = await createClient()
   const { data } = await supabase
-    .from('tirz_zones')
+    .from('tirz_zones' as any)
     .select('*')
     .eq('tirz_id', tirzId)
     .single()
-  return data ?? null
+  return (data as TirzZone) ?? null
 }
 
 /** Find TIRZ zone by site number (used for GeoJSON → DB lookup). */
-export async function getTirzZoneBySiteNumber(siteNo: number) {
+export async function getTirzZoneBySiteNumber(siteNo: number): Promise<TirzZone | null> {
   const supabase = await createClient()
   const { data } = await supabase
-    .from('tirz_zones')
+    .from('tirz_zones' as any)
     .select('*')
     .eq('site_number', siteNo)
     .single()
-  return data ?? null
+  return (data as TirzZone) ?? null
 }
 
 /** Get officials whose council districts overlap a TIRZ zone. */
 export async function getOfficialsForTirz(tirzId: string) {
   const supabase = await createClient()
   const { data: zone } = await supabase
-    .from('tirz_zones')
+    .from('tirz_zones' as any)
     .select('council_districts')
     .eq('tirz_id', tirzId)
-    .single()
+    .single() as { data: { council_districts: string | null } | null }
 
   if (!zone?.council_districts) {
     // Fall back to all city-level officials
