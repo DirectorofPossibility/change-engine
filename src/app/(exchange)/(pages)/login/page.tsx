@@ -59,7 +59,7 @@ export default function LoginPage() {
       <p className="text-brand-muted mb-8">Sign in to pick up where you left off.</p>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
+        <div className="bg-[#FDF2F2] border border-[#C53030]/20 text-[#C53030] text-sm rounded-lg p-3 mb-4">
           {error}
         </div>
       )}

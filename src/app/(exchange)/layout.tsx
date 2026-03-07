@@ -29,7 +29,7 @@ import { TranslateWidget } from '@/components/exchange/TranslateWidget'
 import { D2Nav } from '@/components/exchange/D2Nav'
 import { D2Footer } from '@/components/exchange/D2Footer'
 import { TranslateBar } from '@/components/exchange/TranslateBar'
-import { OnboardingFlow } from '@/components/exchange/OnboardingFlow'
+import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -104,7 +104,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
               {children}
             </main>
             <D2Footer />
-            <OnboardingFlow />
+            <OnboardingLoader />
             <ChanceChatWidget />
           </div>
         )}

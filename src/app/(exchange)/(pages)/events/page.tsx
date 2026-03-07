@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
@@ -13,14 +14,28 @@ export const metadata: Metadata = {
 }
 
 export default async function EventsPage() {
+  const cookieStore = await cookies()
+  const userZip = cookieStore.get('zip')?.value || ''
+
   const supabase = await createClient()
   const { data: events } = await supabase
     .from('events')
-    .select('event_id, event_name, description_5th_grade, event_type, start_datetime, end_datetime, address, city, is_virtual, is_free, registration_url')
+    .select('event_id, event_name, description_5th_grade, event_type, start_datetime, end_datetime, address, city, zip_code, is_virtual, is_free, registration_url')
     .order('start_datetime', { ascending: true })
 
   const now = new Date().toISOString()
-  const upcoming = (events || []).filter(function (e) { return !e.start_datetime || e.start_datetime >= now })
+
+  // Sort local events to top when ZIP is set
+  function geoSort(list: typeof events) {
+    if (!userZip || !list) return list || []
+    return list.slice().sort((a, b) => {
+      const aLocal = (a as any).zip_code === userZip ? -1 : 0
+      const bLocal = (b as any).zip_code === userZip ? -1 : 0
+      return aLocal - bLocal
+    })
+  }
+
+  const upcoming = geoSort((events || []).filter(function (e) { return !e.start_datetime || e.start_datetime >= now }))
   const past = (events || []).filter(function (e) { return e.start_datetime && e.start_datetime < now })
 
   function EventCard({ e }: { e: any }) {
@@ -40,6 +55,7 @@ export default async function EventsPage() {
             <div className="flex flex-wrap gap-3 mt-2 text-xs text-brand-muted">
               {date && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>}
               {e.is_virtual === 'true' ? <span className="flex items-center gap-1"><Video className="w-3 h-3" />Virtual</span> : e.city && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{e.city}</span>}
+              {userZip && (e as any).zip_code === userZip && <span className="text-brand-accent font-medium">Near you</span>}
               {e.is_free === 'true' && <span className="bg-theme-money/10 text-theme-money px-2 py-0.5 rounded font-medium">Free</span>}
               {e.event_type && <span className="bg-brand-bg px-2 py-0.5 rounded">{e.event_type}</span>}
             </div>

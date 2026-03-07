@@ -1,6 +1,7 @@
 // @ts-nocheck
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
@@ -18,15 +19,26 @@ export const metadata: Metadata = {
 }
 
 export default async function OpportunitiesPage() {
+  const cookieStore = await cookies()
+  const userZip = cookieStore.get('zip')?.value || ''
+
   const supabase = await createClient()
 
   const { data: opportunities } = await supabase
     .from('opportunities')
-    .select('opportunity_id, opportunity_name, description_5th_grade, org_id')
+    .select('opportunity_id, opportunity_name, description_5th_grade, org_id, zip_code, is_virtual')
     .order('opportunity_name')
     .limit(50)
 
-  const all = opportunities || []
+  // Sort local opportunities to top when ZIP is set
+  let all = opportunities || []
+  if (userZip) {
+    all = all.slice().sort((a: any, b: any) => {
+      const aLocal = a.zip_code === userZip ? -1 : 0
+      const bLocal = b.zip_code === userZip ? -1 : 0
+      return aLocal - bLocal
+    })
+  }
 
   return (
     <div>
@@ -100,6 +112,9 @@ export default async function OpportunitiesPage() {
                         <p className="text-sm text-brand-muted line-clamp-2 pl-3">
                           {opp.description_5th_grade}
                         </p>
+                      )}
+                      {userZip && (opp as any).zip_code === userZip && (
+                        <span className="text-[10px] text-brand-accent font-medium pl-3">Near you</span>
                       )}
                     </Link>
                   )

@@ -26,7 +26,7 @@ export function BridgePills({ bridges, currentColor }: BridgePillsProps) {
           <Link
             key={b.themeId}
             href={'/pathways/' + b.slug}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
             style={{
               backgroundColor: b.color + '14',
               color: b.color,
