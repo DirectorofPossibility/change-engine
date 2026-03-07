@@ -107,10 +107,19 @@ Deno.serve(async (req: Request) => {
           classification_v2: enriched,
           focus_area_ids: (enriched.focus_area_ids || []).join(','),
         };
-        if (enriched.title_6th_grade) patchBody.title_6th_grade = enriched.title_6th_grade;
-        if (enriched.summary_6th_grade) patchBody.summary_6th_grade = enriched.summary_6th_grade;
-        if (enriched.theme_primary) patchBody.theme_id = enriched.theme_primary;
+        // theme_id column only exists on organizations and campaigns
+        if (enriched.theme_primary && ['organization', 'campaign'].includes(cfg.entityType)) {
+          patchBody.theme_id = enriched.theme_primary;
+        }
         if (enriched.center) patchBody.engagement_level = enriched.center;
+        // title_6th_grade only exists on organizations and policies
+        if (enriched.title_6th_grade && ['organization', 'policy'].includes(cfg.entityType)) {
+          patchBody.title_6th_grade = enriched.title_6th_grade;
+        }
+        if (enriched.summary_6th_grade) {
+          if (cfg.entityType !== 'policy') patchBody.description_5th_grade = enriched.summary_6th_grade;
+          if (cfg.entityType === 'policy') patchBody.summary_5th_grade = enriched.summary_6th_grade;
+        }
         if (cfg.entityType === 'policy' && enriched.impact_statement) {
           patchBody.impact_statement = enriched.impact_statement;
         }

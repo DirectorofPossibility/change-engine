@@ -17,7 +17,7 @@ interface Props {
 
 const TIERS = ['platinum', 'gold', 'silver', 'bronze'] as const
 const PAGE_SIZE = 50
-const ENRICHABLE_TYPES = new Set(['organization', 'official', 'content'])
+const ENRICHABLE_TYPES = new Set(['organization', 'official', 'content', 'service', 'opportunity', 'event', 'agency', 'benefit', 'policy', 'foundation'])
 
 export function FidelityClient({ overview }: Props) {
   const [scoring, setScoring] = useState(false)

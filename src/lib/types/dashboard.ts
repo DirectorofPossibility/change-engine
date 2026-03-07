@@ -219,6 +219,17 @@ export const ENTITY_TYPE_META: Record<string, { label: string; singular: string 
   service:        { label: '211 Services',         singular: 'Service' },
   resource:       { label: 'Resources',            singular: 'Resource' },
   life_situation: { label: 'Life Situations',      singular: 'Life Situation' },
+  agency:         { label: 'Agencies',             singular: 'Agency' },
+  benefit:        { label: 'Benefit Programs',     singular: 'Benefit' },
+  campaign:       { label: 'Campaigns',            singular: 'Campaign' },
+  event:          { label: 'Events',               singular: 'Event' },
+  foundation:     { label: 'Foundations',           singular: 'Foundation' },
+  opportunity:    { label: 'Opportunities',         singular: 'Opportunity' },
+  policy:         { label: 'Policies',              singular: 'Policy' },
+  guide:          { label: 'Guides',                singular: 'Guide' },
+  learning_path:  { label: 'Learning Paths',        singular: 'Learning Path' },
+  ballot_item:    { label: 'Ballot Items',           singular: 'Ballot Item' },
+  kb_document:    { label: 'Library Documents',      singular: 'Document' },
 }
 
 export const TIER_CONFIG: Record<string, { label: string; bg: string; text: string; dot: string }> = {

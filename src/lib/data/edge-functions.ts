@@ -101,8 +101,10 @@ export async function enrichEntities(
       policy: 'policies',
       opportunity: 'opportunities',
       agency: 'agencies',
-      benefit_program: 'benefit_programs',
+      benefit: 'benefit_programs',
       campaign: 'campaigns',
+      event: 'events',
+      foundation: 'foundations',
       ballot_item: 'ballot_items',
     }
 

@@ -146,19 +146,23 @@ export async function POST(req: NextRequest) {
         classification_v2: enriched,
         focus_area_ids: enriched.focus_area_ids.join(','),
       }
-      if (enriched.theme_primary) updateData.theme_id = enriched.theme_primary
+      // theme_id column only exists on organizations and campaigns
+      if (enriched.theme_primary && ['organization', 'campaign'].includes(config.entityType)) {
+        updateData.theme_id = enriched.theme_primary
+      }
       if (enriched.center) updateData.engagement_level = enriched.center
 
       // Write plain-language rewrites to the correct columns per table
-      // Tables use different column names: some have title_6th_grade/summary_6th_grade,
-      // others have description_5th_grade/summary_5th_grade
-      if (enriched.title_6th_grade) updateData.title_6th_grade = enriched.title_6th_grade
+      // title_6th_grade only exists on organizations and policies
+      if (enriched.title_6th_grade && ['organization', 'policy'].includes(config.entityType)) {
+        updateData.title_6th_grade = enriched.title_6th_grade
+      }
       if (enriched.summary_6th_grade) {
-        updateData.summary_6th_grade = enriched.summary_6th_grade
-        // Also write to description_5th_grade / summary_5th_grade for tables that use those columns
-        if (['elected_official', 'organization', 'service', 'opportunity', 'agency', 'benefit_program', 'campaign', 'ballot_item'].includes(config.entityType)) {
+        // description_5th_grade exists on most entity tables (not policies)
+        if (config.entityType !== 'policy') {
           updateData.description_5th_grade = enriched.summary_6th_grade
         }
+        // summary_5th_grade only on policies
         if (config.entityType === 'policy') {
           updateData.summary_5th_grade = enriched.summary_6th_grade
         }
