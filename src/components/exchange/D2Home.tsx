@@ -168,15 +168,15 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   <img src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '200px', height: '170px', top: '10px', right: '0', transform: 'rotate(3deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 3 }}>
+                  style={{ width: '250px', height: '200px', top: '10px', right: '0', transform: 'rotate(3deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 3 }}>
                   <img src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '180px', height: '160px', bottom: '30px', left: '0', transform: 'rotate(2.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 4 }}>
+                  style={{ width: '180px', height: '160px', bottom: '80px', left: '0', transform: 'rotate(2.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 4 }}>
                   <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '190px', height: '150px', bottom: '50px', left: '190px', transform: 'rotate(-1.5deg)', boxShadow: '4px 3px 0 #D5D0C8', zIndex: 3 }}>
+                  style={{ width: '190px', height: '150px', top: '0', left: '190px', transform: 'rotate(-1.5deg)', boxShadow: '4px 3px 0 #D5D0C8', zIndex: 1 }}>
                   <img src="/images/editorial/health-fair.jpg" alt="Health fair" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
