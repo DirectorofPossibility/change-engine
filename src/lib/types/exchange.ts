@@ -314,6 +314,7 @@ export interface WayfinderService {
   phone: string | null
   address: string | null
   city: string | null
+  zip_code: string | null
   org_id: string | null
 }
 

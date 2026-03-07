@@ -1886,7 +1886,7 @@ export async function getWayfinderContext(
       : Promise.resolve({ data: [] }),
     relServiceIds.length > 0
       ? supabase.from('services_211')
-          .select('service_id, service_name, description_5th_grade, phone, address, city, org_id')
+          .select('service_id, service_name, description_5th_grade, phone, address, city, zip_code, org_id')
           .eq('is_active', 'Yes').in('service_id', relServiceIds)
       : Promise.resolve({ data: [] }),
     relOrgIds.length > 0
@@ -1934,6 +1934,22 @@ export async function getWayfinderContext(
 
   // ── Taxonomy metadata — available to all users ──
   let taxonomy: import('@/lib/types/exchange').WayfinderData['taxonomy']
+
+  // Helper to resolve SDGs from a junction table
+  async function resolveSDGs(table: string, idCol: string, idVal: string) {
+    const { data: junctions } = await (supabase as any).from(table).select('sdg_id').eq(idCol, idVal)
+    const ids = (junctions ?? []).map((j: any) => j.sdg_id)
+    if (ids.length === 0) return []
+    const { data } = await supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color').in('sdg_id', ids)
+    return (data ?? []) as any[]
+  }
+
+  // Helper to resolve gov level from a gov_level_id
+  async function resolveGovLevel(govLevelId: string | null) {
+    if (!govLevelId) return null
+    const { data } = await supabase.from('government_levels').select('gov_level_id, gov_level_name').eq('gov_level_id', govLevelId).single()
+    return data as any
+  }
 
   if (entityType === 'content') {
     const [sdgJ, contentRow, actionTypeJ, govLevelJ] = await Promise.all([
@@ -1990,6 +2006,46 @@ export async function getWayfinderContext(
       timeCommitment: tcRow.data as any,
       ntee_codes,
       airs_codes,
+    }
+  } else if (entityType === 'official') {
+    const { data: officialRow } = await supabase.from('elected_officials').select('gov_level_id').eq('official_id', entityId).single()
+    const [sdgs, govLevel] = await Promise.all([
+      resolveSDGs('official_sdgs', 'official_id', entityId),
+      resolveGovLevel((officialRow as any)?.gov_level_id),
+    ])
+    taxonomy = {
+      sdgs,
+      sdohDomain: null,
+      actionTypes: [],
+      govLevel,
+      timeCommitment: null,
+      ntee_codes: [],
+      airs_codes: [],
+    }
+  } else if (entityType === 'service') {
+    const sdgs = await resolveSDGs('service_sdgs', 'service_id', entityId)
+    taxonomy = {
+      sdgs,
+      sdohDomain: null,
+      actionTypes: [],
+      govLevel: null,
+      timeCommitment: null,
+      ntee_codes: [],
+      airs_codes: [],
+    }
+  } else if (entityType === 'organization') {
+    const sdgs = await resolveSDGs('organization_sdgs', 'org_id', entityId)
+    // Get NTEE from org row
+    const { data: orgRow } = await supabase.from('organizations').select('ntee_code').eq('org_id', entityId).single()
+    const ntee_codes = (orgRow as any)?.ntee_code ? [(orgRow as any).ntee_code] : []
+    taxonomy = {
+      sdgs,
+      sdohDomain: null,
+      actionTypes: [],
+      govLevel: null,
+      timeCommitment: null,
+      ntee_codes,
+      airs_codes: [],
     }
   }
 

@@ -35,6 +35,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const cookieStore = await cookies()
   const designV1 = cookieStore.get('design')?.value === 'v1'
   const lang = cookieStore.get('lang')?.value || 'en'
+  const userZip = cookieStore.get('zip')?.value || ''
   const t = getUIStrings(lang)
 
   // Separate event-type content into "What You Can Do", news/articles into "What's Happening"
@@ -65,6 +66,14 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </h3>
         <WayfinderTooltipPos tipKey="wayfinder_panel" position="bottom" />
       </div>
+
+      {/* Geo context */}
+      {userZip && (
+        <div className="px-4 py-2 border-b border-brand-border bg-brand-bg/50 flex items-center gap-1.5">
+          <MapPin size={12} className="text-brand-accent flex-shrink-0" />
+          <span className="text-[11px] text-brand-muted">Showing context near <span className="font-medium text-brand-text">{userZip}</span></span>
+        </div>
+      )}
 
       {/* Compact circle graph */}
       {!designV1 && data.themes.length > 0 && (
@@ -389,7 +398,16 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                 </div>
               )
             })}
-            {data.services.map(function (s) {
+            {data.services
+              .slice()
+              .sort((a, b) => {
+                if (!userZip) return 0
+                const aMatch = a.zip_code === userZip ? -1 : 0
+                const bMatch = b.zip_code === userZip ? -1 : 0
+                return aMatch - bMatch
+              })
+              .map(function (s) {
+              const isNearby = userZip && s.zip_code === userZip
               return (
                 <Link key={s.service_id} href={'/services/' + s.service_id} className="flex items-start gap-2 group/svc">
                   {s.phone ? (
@@ -399,9 +417,10 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                   )}
                   <div className="min-w-0">
                     <span className="text-xs font-medium text-brand-text group-hover/svc:text-brand-accent transition-colors line-clamp-2">{s.service_name}</span>
-                    {(s.address || s.city) && (
-                      <span className="text-[10px] text-brand-muted block">{[s.address, s.city].filter(Boolean).join(', ')}</span>
-                    )}
+                    <span className="text-[10px] text-brand-muted block">
+                      {[s.address, s.city].filter(Boolean).join(', ')}
+                      {isNearby && <span className="ml-1 text-brand-accent font-medium">Near you</span>}
+                    </span>
                   </div>
                 </Link>
               )
