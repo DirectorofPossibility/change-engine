@@ -183,6 +183,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   style={{ width: '170px', height: '140px', bottom: '0', right: '10px', transform: 'rotate(4deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 1 }}>
                   <img src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover" />
                 </div>
+                {/* Extra — on top, off-center right, tilted left */}
+                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '160px', height: '130px', top: '120px', right: '60px', transform: 'rotate(-3.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
+                  <img src="/images/editorial/cleanup.jpg" alt="Community volunteering" className="w-full h-full object-cover" />
+                </div>
               </div>
             </div>
           </div>
