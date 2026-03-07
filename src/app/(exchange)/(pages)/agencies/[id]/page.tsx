@@ -50,14 +50,15 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
           </h1>
           {agency.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{agency.description_5th_grade}</p>}
         </div>
+        <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, transparent 60%)' }} />
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Contact card */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-3 text-sm">
                   {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
                   {agency.website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={agency.website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline truncate">{agency.website.replace(/^https?:\/\//, '')}</a></div>}
@@ -66,8 +67,8 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               </div>
               {/* Services */}
               {services && services.length > 0 && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                  <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Services Provided</h2>
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Services Provided</h2>
                   <div className="space-y-2">
                     {services.map(function (s: any) {
                       return (
@@ -81,9 +82,9 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               )}
             </div>
           </div>
-          <aside className="lg:w-80 shrink-0">
+          <div className="space-y-4">
             <DetailWayfinder data={wayfinderData} currentType="agency" currentId={id} userRole={userProfile?.role} />
-          </aside>
+          </div>
         </div>
       </div>
     </div>

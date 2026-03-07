@@ -136,6 +136,8 @@ export function NeighborhoodProvider({
     setResolvedDistricts(null)
     setLocationMode('zip')
     document.cookie = 'zip=' + inputZip + ';path=/;max-age=31536000'
+    // Track ZIP set event
+    import('@/lib/wayfinder-analytics').then(function (m) { m.trackWayfinderEvent('zip_set', { zip: inputZip }) }).catch(function () {})
     document.cookie = 'user_address=;path=/;max-age=0'
     document.cookie = 'user_districts=;path=/;max-age=0'
 

@@ -78,6 +78,32 @@ export function CompactCircleGraph({ activePathways = [], accentColor }: Compact
           )
         })}
 
+        {/* Bridge lines between active petals — shows cross-pathway connections */}
+        {petalThemes.map(function (keyA, i) {
+          if (!activePathways.includes(keyA)) return null
+          return petalThemes.slice(i + 1).map(function (keyB, j) {
+            if (!activePathways.includes(keyB)) return null
+            const idxB = i + 1 + j
+            const radA = (petalAngles[i] * Math.PI) / 180
+            const radB = (petalAngles[idxB] * Math.PI) / 180
+            const ax = cx + orbit * Math.cos(radA)
+            const ay = cy + orbit * Math.sin(radA)
+            const bx = cx + orbit * Math.cos(radB)
+            const by = cy + orbit * Math.sin(radB)
+            return (
+              <line
+                key={keyA + '-' + keyB}
+                x1={ax} y1={ay} x2={bx} y2={by}
+                stroke="#C75B2A"
+                strokeWidth="1"
+                opacity="0.12"
+                strokeDasharray="3 3"
+                className="transition-all duration-500"
+              />
+            )
+          })
+        })}
+
         {/* Center accent circle — smaller, matching the logo's inner circle */}
         <circle
           cx={cx}

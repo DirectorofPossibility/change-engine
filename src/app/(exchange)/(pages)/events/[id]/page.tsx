@@ -55,21 +55,22 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             </a>
           )}
         </div>
+        <div className="h-1" style={{ background: 'linear-gradient(90deg, #38a169, transparent 60%)' }} />
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">When</h2>
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">When</h2>
                 <div className="space-y-2 text-sm">
                   {startDate && <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-brand-muted" /><span className="text-brand-text font-medium">{startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span></div>}
                   {startDate && <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-brand-muted" /><span className="text-brand-text">{startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}{endDate ? ` - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}` : ''}</span></div>}
                   {event.is_recurring === 'true' && event.recurrence_pattern && <div className="text-brand-muted">Recurring: {event.recurrence_pattern}</div>}
                 </div>
               </div>
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Where</h2>
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Where</h2>
                 <div className="space-y-2 text-sm">
                   {event.is_virtual === 'true' ? (
                     <div className="flex items-center gap-2"><Video className="w-4 h-4 text-brand-muted" /><span className="text-brand-text">Virtual / Online</span></div>
@@ -84,9 +85,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               </div>
             </div>
           </div>
-          <aside className="lg:w-80 shrink-0">
+          <div className="space-y-4">
             <DetailWayfinder data={wayfinderData} currentType="event" currentId={id} userRole={userProfile?.role} />
-          </aside>
+          </div>
         </div>
       </div>
     </div>

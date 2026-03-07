@@ -65,15 +65,16 @@ export default async function FoundationDetailPage({ params }: { params: Promise
             </a>
           )}
         </div>
+        <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, transparent 60%)' }} />
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
           {/* Main content */}
-          <div className="flex-1 min-w-0">
+          <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Financials & Details */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Details</h2>
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Details</h2>
                 <div className="space-y-2 text-sm">
                   {f.assets && <div className="flex items-center gap-2"><DollarSign className="w-4 h-4 text-brand-muted" /><span className="text-brand-muted">Assets:</span> <span className="font-medium text-brand-text">{f.assets}</span></div>}
                   {f.annual_giving && <div className="flex items-center gap-2"><DollarSign className="w-4 h-4 text-brand-muted" /><span className="text-brand-muted">Annual giving:</span> <span className="font-medium text-brand-text">{f.annual_giving}</span></div>}
@@ -81,8 +82,8 @@ export default async function FoundationDetailPage({ params }: { params: Promise
                 </div>
               </div>
               {/* Contact */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-2 text-sm">
                   {f.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${f.phone}`} className="text-brand-accent hover:underline">{f.phone}</a></div>}
                   {f.email && <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-brand-muted" /><a href={`mailto:${f.email}`} className="text-brand-accent hover:underline">{f.email}</a></div>}
@@ -91,8 +92,8 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               </div>
               {/* Focus Areas */}
               {focusAreas.length > 0 && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                  <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Focus Areas</h2>
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Focus Areas</h2>
                   <div className="flex flex-wrap gap-2">
                     {focusAreas.map(function (fa) {
                       return <Link key={fa.focus_id} href={`/explore/focus/${fa.focus_id}`} className="text-xs bg-brand-bg text-brand-text px-2.5 py-1 rounded hover:bg-brand-border transition-colors">{fa.focus_area_name}</Link>
@@ -102,8 +103,8 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               )}
               {/* People */}
               {people && people.length > 0 && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
-                  <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><Users className="w-4 h-4" />People</h2>
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><Users className="w-4 h-4" />People</h2>
                   <div className="space-y-2">
                     {people.map(function (p: any, i: number) {
                       return (
@@ -120,9 +121,9 @@ export default async function FoundationDetailPage({ params }: { params: Promise
           </div>
 
           {/* Wayfinder sidebar */}
-          <aside className="lg:w-80 shrink-0">
+          <div className="space-y-4">
             <DetailWayfinder data={wayfinderData} currentType="foundation" currentId={id} userRole={userProfile?.role} />
-          </aside>
+          </div>
         </div>
       </div>
     </div>

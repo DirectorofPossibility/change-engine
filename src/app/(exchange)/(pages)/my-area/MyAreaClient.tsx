@@ -9,6 +9,7 @@ import {
 import type { TranslationMap } from '@/lib/types/exchange'
 import { THEMES } from '@/lib/constants'
 import { CompactCircleGraph } from '@/components/exchange/CompactCircleGraph'
+import { trackWayfinderEvent } from '@/lib/wayfinder-analytics'
 
 interface OfficialsByLevel {
   federal: any[]
@@ -248,6 +249,7 @@ export function MyAreaClient({
                       href={'/explore/pathway/' + theme.slug}
                       className="flex items-center gap-1.5 text-xs py-1 px-2 rounded border border-brand-border hover:border-brand-accent transition-colors"
                       style={{ opacity: isActive ? 1 : 0.5 }}
+                      onClick={function () { trackWayfinderEvent('pathway_click', { pathway: theme.slug, source: 'my-area' }) }}
                     >
                       <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                       <span className="text-brand-text">{theme.name}</span>

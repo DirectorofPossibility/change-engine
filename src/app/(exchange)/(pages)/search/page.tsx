@@ -16,7 +16,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { PAGE_INTROS, CENTER_COLORS } from '@/lib/constants'
+import { PAGE_INTROS, CENTER_COLORS, THEMES } from '@/lib/constants'
 import { searchAll } from '@/lib/data/search'
 import { PageHero } from '@/components/exchange/PageHero'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
@@ -25,6 +25,7 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
+import { CompactCircleGraph } from '@/components/exchange/CompactCircleGraph'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SearchTabs } from './SearchTabs'
 import { SearchResultsHeader } from './SearchResultsHeader'
@@ -72,6 +73,18 @@ export default async function SearchPage({
     orgTranslations = orgt
     policyTranslations = pt
   }
+
+  // ── Extract active pathways from results ──
+  const THEME_ENTRIES = Object.entries(THEMES) as Array<[string, { name: string; color: string; slug: string }]>
+  const slugToKey = Object.fromEntries(THEME_ENTRIES.map(function ([k, v]) { return [v.slug, k] }))
+  const activePathwaySet = new Set<string>()
+  results.content.forEach(function (c: any) {
+    if (c.pathway_primary && slugToKey[c.pathway_primary]) activePathwaySet.add(slugToKey[c.pathway_primary])
+  })
+  results.paths.forEach(function (p: any) {
+    if (p.theme_id) activePathwaySet.add(p.theme_id)
+  })
+  const searchPathways = Array.from(activePathwaySet)
 
   // ── Tab definitions ──
   const tabs = [
@@ -238,7 +251,32 @@ export default async function SearchPage({
         <SearchResultsHeader query={query} totalCount={totalCount} />
 
         {totalCount > 0 && (
-          <SearchTabs tabs={tabs}>{sections}</SearchTabs>
+          <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex-1 min-w-0">
+              <SearchTabs tabs={tabs}>{sections}</SearchTabs>
+            </div>
+            {searchPathways.length > 0 && (
+              <aside className="lg:w-72 shrink-0">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4 lg:sticky lg:top-24">
+                  <h3 className="font-serif text-sm font-semibold text-brand-text mb-1">Pathways in Results</h3>
+                  <p className="text-[10px] text-brand-muted mb-2">{searchPathways.length} of 7 pathways represented</p>
+                  <CompactCircleGraph activePathways={searchPathways} accentColor="#C75B2A" />
+                  <div className="space-y-1.5 mt-2">
+                    {THEME_ENTRIES.map(function ([key, theme]) {
+                      const isActive = activePathwaySet.has(key)
+                      if (!isActive) return null
+                      return (
+                        <Link key={key} href={'/explore/pathway/' + theme.slug} className="flex items-center gap-1.5 text-xs text-brand-text hover:text-brand-accent transition-colors">
+                          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
+                          {theme.name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              </aside>
+            )}
+          </div>
         )}
       </div>
     </div>
