@@ -74,12 +74,12 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
   // Pre-load document context from URL param
   useEffect(function () {
     if (docParam && !documentContext && messages.length === 0) {
-      handleSend(`Tell me about document ${docParam}`)
+      handleSend('Tell me about this document', docParam)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docParam])
 
-  const handleSend = useCallback(async function (messageText?: string) {
+  const handleSend = useCallback(async function (messageText?: string, docId?: string) {
     const text = (messageText || input).trim()
     if (!text || isLoading) return
 
@@ -93,16 +93,21 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
     setMessages(function (prev) { return [...prev, streamingMsg] })
 
     try {
+      const payload: Record<string, unknown> = {
+        message: documentContext
+          ? `Regarding the document "${documentContext.title}": ${text}`
+          : text,
+        session_id: sessionId,
+        stream: true,
+      }
+      // Pass document ID so the API can fetch it directly
+      if (docId || docParam) payload.doc_id = docId || docParam
+      if (documentContext) payload.doc_id = documentContext.id
+
       const res = await fetch('/api/library/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: documentContext
-            ? `Regarding the document "${documentContext.title}": ${text}`
-            : text,
-          session_id: sessionId,
-          stream: true,
-        }),
+        body: JSON.stringify(payload),
       })
 
       if (!res.ok) throw new Error(`Chat failed: ${res.status}`)

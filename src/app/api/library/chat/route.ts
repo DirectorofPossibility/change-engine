@@ -8,7 +8,7 @@
 
 import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { multiSourceSearch } from '@/lib/data/library'
+import { multiSourceSearch, getDocumentById } from '@/lib/data/library'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { message, session_id, stream = true } = body
+    const { message, session_id, stream = true, doc_id } = body
 
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return new Response(JSON.stringify({ error: 'Message is required' }), {
@@ -139,14 +139,30 @@ export async function POST(req: NextRequest) {
       conversationHistory = messages ?? []
     }
 
-    // Multi-source search for context
-    const searchResults = await multiSourceSearch(message, 15)
+    // If a specific document ID is provided, fetch it directly
+    let docContext = ''
+    if (doc_id && typeof doc_id === 'string') {
+      const doc = await getDocumentById(doc_id)
+      if (doc) {
+        const chunksText = doc.chunks?.map((c: any) => c.content).join('\n\n') || ''
+        docContext = `[Primary Document — Research Library: "${doc.title}"]\n` +
+          `Summary: ${doc.summary || ''}\n\n` +
+          chunksText.slice(0, 6000)
+      }
+    }
+
+    // Multi-source search for additional context
+    const searchResults = await multiSourceSearch(message, docContext ? 8 : 15)
 
     // Build context from all source types
-    const context = searchResults.map(function (result, i) {
+    const searchContext = searchResults.map(function (result, i) {
       const typeLabel = SOURCE_TYPE_LABELS[result.source_type] || result.source_type
       return `[Source ${i + 1} — ${typeLabel}: "${result.title}"]\n${result.content.slice(0, 1500)}`
     }).join('\n\n---\n\n')
+
+    const context = docContext
+      ? docContext + '\n\n---\n\n' + searchContext
+      : searchContext
 
     // Build full system prompt with context
     const systemWithContext = CHANCE_SYSTEM_PROMPT + '\n\n' +
