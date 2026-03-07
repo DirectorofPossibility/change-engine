@@ -65,6 +65,7 @@ const ADMIN_GROUPS: NavGroup[] = [
   {
     label: 'Community',
     items: [
+      { href: '/dashboard/edits', label: 'Feedback Loop', icon: HelpCircle },
       { href: '/dashboard/users', label: 'Users', icon: Users },
       { href: '/dashboard/promotions', label: 'Promotions', icon: Megaphone },
       { href: '/dashboard/linkedin', label: 'LinkedIn', icon: Linkedin },
