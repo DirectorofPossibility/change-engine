@@ -5,7 +5,6 @@ import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
@@ -135,7 +134,6 @@ export default async function OpportunitiesPage() {
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>
-              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

@@ -3,7 +3,6 @@ import { getPublishedDocuments } from '@/lib/data/library'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { LibraryClient } from './LibraryClient'
 
@@ -152,7 +151,6 @@ export default async function LibraryPage() {
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>
-              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

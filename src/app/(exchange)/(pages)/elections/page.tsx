@@ -4,7 +4,6 @@ import { cookies } from 'next/headers'
 import { getElectionDashboard } from '@/lib/data/exchange'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { PAGE_INTROS } from '@/lib/constants'
 import { VotingDashboardClient } from './VotingDashboardClient'
@@ -75,7 +74,6 @@ export default async function ElectionsPage({
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>
-              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
             </div>
           </div>
         </div>

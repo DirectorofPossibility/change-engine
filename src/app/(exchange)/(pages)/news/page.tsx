@@ -4,7 +4,6 @@ import { getNewsFeed } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
 import { FileText, Video, BookOpen, Wrench, GraduationCap, Calendar, Megaphone, Heart, ArrowRight } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
@@ -394,9 +393,6 @@ export default async function NewsPage({
 
                   {/* Featured promo */}
                   <FeaturedPromo variant="card" />
-
-                  {/* Good things */}
-                  <GoodThingsWidget variant="card" />
 
                   {/* Quick links */}
                   <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>

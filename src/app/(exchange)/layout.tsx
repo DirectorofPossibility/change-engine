@@ -30,6 +30,7 @@ import { D2Nav } from '@/components/exchange/D2Nav'
 import { D2Footer } from '@/components/exchange/D2Footer'
 import { TranslateBar } from '@/components/exchange/TranslateBar'
 import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
+import { TickerTape } from '@/components/exchange/TickerTape'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -103,6 +104,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
             <main id="main-content" className="flex-1">
               {children}
             </main>
+            <TickerTape />
             <D2Footer />
             <OnboardingLoader />
             <ChanceChatWidget />
