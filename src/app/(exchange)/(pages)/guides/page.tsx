@@ -60,7 +60,7 @@ export default async function GuidesPage() {
                   <p className="text-sm text-brand-muted mb-3 line-clamp-3">{description}</p>
                 )}
                 <div className="mt-auto flex items-center gap-2 flex-wrap">
-                  {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
+                  {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" linkable={false} />}
                   {guide.engagement_level && (
                     <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
                       {guide.engagement_level}

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { MapPin, Search, Landmark, Star, Home, Building2, type LucideIcon } from 'lucide-react'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { createClient } from '@/lib/supabase/client'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { OfficialsClient } from './OfficialsClient'
@@ -138,6 +140,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
               className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
               maxLength={5}
             />
+            <InfoBubble id={TOOLTIPS.zip_lookup.id} text={TOOLTIPS.zip_lookup.text} position="bottom" />
           </div>
           <button
             type="submit"

@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import type { ElectedOfficial, GovernmentLevel, TranslationMap } from '@/lib/types/exchange'
 
@@ -30,7 +32,7 @@ export function OfficialsClient({ officials, levels, translations = {}, linkedin
         <div className="w-full sm:w-72">
           <SearchBar placeholder="Search officials..." onSearch={setSearch} />
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="relative flex gap-2 flex-wrap">
           <button
             onClick={() => setActiveLevel(null)}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
@@ -53,6 +55,7 @@ export function OfficialsClient({ officials, levels, translations = {}, linkedin
               </button>
             )
           })}
+          <InfoBubble id={TOOLTIPS.level_badges.id} text={TOOLTIPS.level_badges.text} position="bottom" />
         </div>
       </div>
 

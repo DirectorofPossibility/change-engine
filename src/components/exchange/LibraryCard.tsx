@@ -43,16 +43,16 @@ export function LibraryCard({
         <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${primaryColor}, ${primaryColor}40)` }} />
 
         <div className="p-5 flex flex-col flex-1">
-          {/* Theme pills */}
+          {/* Theme indicators */}
           {themeColors.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-3">
+            <div className="flex flex-wrap gap-3 mb-3">
               {themeColors.map(function (theme) {
                 return (
                   <span
                     key={theme.name}
-                    className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold"
-                    style={{ backgroundColor: theme.color + '15', color: theme.color }}
+                    className="inline-flex items-center gap-1.5 text-xs text-brand-muted"
                   >
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                     {theme.name}
                   </span>
                 )

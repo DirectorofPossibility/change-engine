@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { MapPin, ExternalLink } from 'lucide-react'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
 
@@ -117,26 +119,29 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
 
   return (
     <div>
-      <form onSubmit={handleLookup} className="flex gap-3 mb-8">
-        <div className="relative flex-1 max-w-xs">
-          <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
-          <input
-            type="text"
-            value={zip}
-            onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-            placeholder="Enter ZIP code"
-            className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
-            maxLength={5}
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading || zip.length !== 5}
-          className="px-6 py-3 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {loading ? 'Searching...' : 'Find Polling Places'}
-        </button>
-      </form>
+      <div className="relative mb-8">
+        <form onSubmit={handleLookup} className="flex gap-3">
+          <div className="relative flex-1 max-w-xs">
+            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
+            <input
+              type="text"
+              value={zip}
+              onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+              placeholder="Enter ZIP code"
+              className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+              maxLength={5}
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading || zip.length !== 5}
+            className="px-6 py-3 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {loading ? 'Searching...' : 'Find Polling Places'}
+          </button>
+        </form>
+        <InfoBubble id={TOOLTIPS.polling_finder.id} text={TOOLTIPS.polling_finder.text} position="bottom" />
+      </div>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 

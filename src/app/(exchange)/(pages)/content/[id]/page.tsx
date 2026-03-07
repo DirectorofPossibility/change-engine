@@ -17,6 +17,7 @@ import { ExternalLink, Globe, Sparkles } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
+import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -191,10 +192,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      <Breadcrumb items={[
-        ...(themeEntry ? [{ label: themeEntry.name, href: '/pathways/' + themeSlug }] : []),
-        { label: title || 'Content' },
-      ]} />
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <Breadcrumb items={[
+          ...(themeEntry ? [{ label: themeEntry.name, href: '/pathways/' + themeSlug }] : []),
+          { label: title || 'Content' },
+        ]} />
+        <PathwayContextBar activePathways={item.pathway_primary ? [item.pathway_primary] : []} showLabels />
+      </div>
 
       {/* ── HERO ── */}
       <section className="bg-brand-bg border-b border-brand-border">
@@ -388,7 +392,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 {themeSlug && (
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-brand-muted">Pathway</span>
-                    <Link href={'/pathways/' + themeSlug}><ThemePill themeId={item.pathway_primary} size="sm" /></Link>
+                    <ThemePill themeId={item.pathway_primary} size="sm" />
                   </div>
                 )}
                 {focusAreas.length > 0 && (

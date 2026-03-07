@@ -89,29 +89,40 @@ export default async function PathwaysPage() {
           const isEven = idx % 2 === 0
 
           return (
-            <section key={themeId} className="py-8 first:pt-4">
-              {/* Section divider */}
-              {idx > 0 && (
-                <div className="h-px mb-8" style={{ background: `linear-gradient(90deg, ${theme.color}33, transparent 60%)` }} />
-              )}
+            <section key={themeId} className="mb-12 first:mt-0">
+              {/* Pathway color band header */}
+              <div
+                className="rounded-xl overflow-hidden mb-6"
+                style={{ borderLeft: `5px solid ${theme.color}` }}
+              >
+                <div className="bg-white border border-brand-border border-l-0 rounded-r-xl px-6 py-5">
+                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div>
+                      <Link
+                        href={'/pathways/' + theme.slug}
+                        className="font-serif font-bold text-2xl sm:text-3xl text-brand-text hover:underline decoration-2 underline-offset-4"
+                        style={{ textDecorationColor: theme.color }}
+                      >
+                        {theme.name}
+                      </Link>
+                      <p className="text-sm text-brand-muted leading-relaxed mt-1 max-w-xl font-serif italic">
+                        {theme.description}
+                      </p>
+                    </div>
+                    <Link
+                      href={'/pathways/' + theme.slug}
+                      className="text-sm font-medium px-4 py-2 rounded-lg border border-brand-border hover:shadow-sm transition-shadow flex-shrink-0"
+                      style={{ color: theme.color }}
+                    >
+                      Explore {theme.name} &rarr;
+                    </Link>
+                  </div>
+                </div>
+              </div>
 
               <div className="flex flex-col lg:flex-row gap-6">
                 {/* ── Left: Pathway identity + hero ── */}
                 <div className={`flex-1 min-w-0 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-                  {/* Pathway header */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="w-3.5 h-3.5 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                    <Link
-                      href={'/pathways/' + theme.slug}
-                      className="font-serif font-bold text-2xl sm:text-3xl text-brand-text hover:underline decoration-2 underline-offset-4"
-                      style={{ textDecorationColor: theme.color }}
-                    >
-                      {theme.name}
-                    </Link>
-                  </div>
-                  <p className="text-sm text-brand-muted leading-relaxed mb-4 max-w-xl font-serif italic">
-                    {theme.description}
-                  </p>
 
                   {/* Hero content card */}
                   {hero && (
@@ -263,7 +274,7 @@ export default async function PathwaysPage() {
                     <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Go Deeper</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Keep Learning</span>
                       </div>
                       <div className="space-y-2">
                         {data.learningPaths.map(function (lp) {

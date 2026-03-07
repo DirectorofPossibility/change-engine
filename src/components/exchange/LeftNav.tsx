@@ -46,7 +46,7 @@ const NAV_SECTIONS = [
     ],
   },
   {
-    label: 'Get Involved',
+    label: 'What You Can Do',
     items: [
       { href: '/opportunities', label: 'Opportunities' },
       { href: '/calendar', label: 'Events' },

@@ -120,14 +120,14 @@ export function ContentCard({
       )}
       <div className="p-5">
       <div className="flex items-center gap-2 mb-3">
-        <ThemePill themeId={pathway} size="sm" />
-        <CenterBadge center={center} />
+        <ThemePill themeId={pathway} size="sm" linkable={false} />
+        <CenterBadge center={center} linkable={false} />
       </div>
       <h3 className="font-semibold text-brand-text mb-2 line-clamp-2">{displayTitle}</h3>
       <p className="text-sm text-brand-muted mb-3 line-clamp-3">{displaySummary}</p>
       {focusAreaNames && focusAreaNames.length > 0 && (
         <div className="mb-3">
-          <FocusAreaPills focusAreaNames={focusAreaNames} />
+          <FocusAreaPills focusAreaNames={focusAreaNames} linkable={false} />
         </div>
       )}
       <div className="flex items-center justify-between">

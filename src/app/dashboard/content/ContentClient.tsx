@@ -206,8 +206,8 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
                   />
                 </td>
                 <td className="px-4 py-3 font-medium max-w-sm truncate">{item.title_6th_grade}</td>
-                <td className="px-4 py-3"><ThemePill themeId={item.pathway_primary} /></td>
-                <td className="px-4 py-3"><CenterBadge center={item.center} /></td>
+                <td className="px-4 py-3"><ThemePill themeId={item.pathway_primary} linkable={false} /></td>
+                <td className="px-4 py-3"><CenterBadge center={item.center} linkable={false} /></td>
                 <td className="px-4 py-3"><ConfidenceBadge confidence={item.confidence} /></td>
                 <td className="px-4 py-3 text-brand-muted text-xs">
                   {item.published_at ? new Date(item.published_at).toLocaleDateString() : '-'}

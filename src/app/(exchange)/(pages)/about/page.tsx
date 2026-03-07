@@ -80,10 +80,10 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Get Involved */}
+        {/* What You Can Do */}
         <section className="mb-12">
           <h2 className="text-title font-bold text-brand-text mb-4">
-            Get Involved
+            What You Can Do
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[

@@ -57,7 +57,7 @@ export default async function DashboardPage() {
               .sort((a, b) => b[1] - a[1])
               .map(([themeId, count]) => (
                 <div key={themeId} className="flex items-center gap-3">
-                  <ThemePill themeId={themeId} size="md" />
+                  <ThemePill themeId={themeId} size="md" linkable={false} />
                   <div className="flex-1 bg-brand-bg rounded-full h-4 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-brand-accent/30"
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
           <div className="space-y-4">
             {Object.entries(byCenter).map(([center, count]) => (
               <div key={center} className="flex items-center justify-between">
-                <CenterBadge center={center} />
+                <CenterBadge center={center} linkable={false} />
                 <span className="text-lg font-bold">{count}</span>
               </div>
             ))}

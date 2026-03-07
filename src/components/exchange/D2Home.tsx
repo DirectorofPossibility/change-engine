@@ -184,16 +184,18 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </section>
 
       {/* ── QUICK ACCESS GRID — 5 cards with unique FOL patterns ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-10 pb-6">
+      <div className="max-w-[1200px] mx-auto px-8 pt-10 pb-6 relative">
+        <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {QUICK_ACCESS.map(function (item, idx) {
             if (item.cta) {
               // "Chart Your Course" — Choose Your Own Adventure style
               return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="relative col-span-2 md:col-span-1 aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-3"
+                <div key={item.label} className="relative col-span-2 md:col-span-1">
+                  <InfoBubble id={TOOLTIPS.persona_cards.id} text={TOOLTIPS.persona_cards.text} position="bottom" />
+                  <Link
+                    href={item.href}
+                    className="relative aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-3"
                   style={{
                     background: 'linear-gradient(145deg, #F0ECE6 0%, #E8E2D8 50%, #F0ECE6 100%)',
                     border: '3px solid #C75B2A',
@@ -249,7 +251,8 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   <div className="absolute bottom-3 right-3 w-6 h-6 rounded-full bg-brand-accent/30 flex items-center justify-center group-hover:bg-brand-accent/60 transition-colors">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                   </div>
-                </Link>
+                  </Link>
+                </div>
               )
             }
 

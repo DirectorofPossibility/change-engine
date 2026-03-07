@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { THEMES } from '@/lib/constants'
 import { BookOpen, Clock, BarChart3 } from 'lucide-react'
 
@@ -47,10 +48,10 @@ export function LearningPathCard({ name, description, themeId, difficulty, modul
       )}
       <div className="flex items-center gap-3 flex-wrap">
         {difficulty && (
-          <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${DIFFICULTY_TEXT[difficulty] || 'text-gray-700'}`}>
+          <Link href={'/search?q=' + encodeURIComponent(difficulty)} className={`inline-flex items-center gap-1.5 text-xs font-medium hover:opacity-80 transition-opacity ${DIFFICULTY_TEXT[difficulty] || 'text-gray-700'}`} onClick={function (e) { e.stopPropagation() }}>
             <span className={`w-1.5 h-1.5 rounded-full ${DIFFICULTY_DOTS[difficulty] || 'bg-gray-400'}`} />
             <BarChart3 size={12} /> {difficulty}
-          </span>
+          </Link>
         )}
         {moduleCount != null && (
           <span className="text-xs text-brand-muted flex items-center gap-1">

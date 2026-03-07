@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, Filter, Scale } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { useTranslation } from '@/lib/use-translation'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 
@@ -80,13 +82,16 @@ export function PoliciesPageClient({ policies, translations }: PoliciesPageClien
           />
         </div>
         <div className="flex gap-2">
-          <select
-            value={levelFilter}
-            onChange={function (e) { setLevelFilter(e.target.value) }}
-            className="px-3 py-2.5 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
-          >
-            {LEVELS.map(function (l) { return <option key={l} value={l}>{l === 'All' ? 'All Levels' : l}</option> })}
-          </select>
+          <div className="relative">
+            <select
+              value={levelFilter}
+              onChange={function (e) { setLevelFilter(e.target.value) }}
+              className="px-3 py-2.5 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+            >
+              {LEVELS.map(function (l) { return <option key={l} value={l}>{l === 'All' ? 'All Levels' : l}</option> })}
+            </select>
+            <InfoBubble id={TOOLTIPS.gov_level_filter.id} text={TOOLTIPS.gov_level_filter.text} position="bottom" />
+          </div>
           <select
             value={statusFilter}
             onChange={function (e) { setStatusFilter(e.target.value) }}

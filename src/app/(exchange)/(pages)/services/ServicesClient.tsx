@@ -8,6 +8,8 @@ import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg, TranslationMap } from '@/lib/types/exchange'
 import { List, Map as MapIcon } from 'lucide-react'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 interface ServicesClientProps {
   services: ServiceWithOrg[]
@@ -60,8 +62,9 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
   return (
     <div>
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="w-full sm:w-72">
+        <div className="relative w-full sm:w-72">
           <SearchBar placeholder="Search services..." onSearch={setSearch} />
+          <InfoBubble id={TOOLTIPS.service_type_tags.id} text={TOOLTIPS.service_type_tags.text} position="bottom" />
         </div>
         <input
           type="text"
@@ -71,10 +74,14 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
           className="border border-brand-border rounded-lg px-3 py-2 text-sm w-32"
           maxLength={5}
         />
-        <span className="text-sm text-brand-muted self-center">{filtered.length} services</span>
+        <span className="relative text-sm text-brand-muted self-center">
+          {filtered.length} services — powered by 211
+          <InfoBubble id={TOOLTIPS.badge_211.id} text={TOOLTIPS.badge_211.text} position="right" />
+        </span>
 
         {/* View toggle */}
-        <div className="flex gap-1 ml-auto bg-brand-bg rounded-lg p-1">
+        <div className="relative flex gap-1 ml-auto bg-brand-bg rounded-lg p-1">
+          <InfoBubble id={TOOLTIPS.map_view_toggle.id} text={TOOLTIPS.map_view_toggle.text} position="bottom" />
           <button
             onClick={() => setView('list')}
             className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'list' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}

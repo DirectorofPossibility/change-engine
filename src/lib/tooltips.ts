@@ -241,7 +241,7 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   engagement_tiers: {
     id: 'engagement_tiers',
     section: 'detail',
-    text: 'Understand: learn what\u2019s going on. Get Involved: take action. Go Deeper: follow the systems that shape it.',
+    text: 'What\u2019s Happening: news and research. What You Can Do: services, events, and volunteer spots. Who\u2019s In Charge: your elected officials, policies, and the organizations behind them.',
   },
   taxonomy_section: {
     id: 'taxonomy_section',

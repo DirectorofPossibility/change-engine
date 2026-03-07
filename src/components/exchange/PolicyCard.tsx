@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { useTranslation } from '@/lib/use-translation'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 interface PolicyCardProps {
   name: string
@@ -49,9 +51,12 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
           <span className="text-xs font-mono text-brand-muted">{billNumber}</span>
         )}
         {status && (
-          <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${statusText(status)}`}>
-            <span className={`w-1.5 h-1.5 rounded-full ${statusDot(status)}`} />
-            {status}
+          <span className="relative">
+            <Link href={'/search?q=' + encodeURIComponent(status)} className={`inline-flex items-center gap-1.5 text-xs font-medium hover:opacity-80 transition-opacity ${statusText(status)}`} onClick={function (e) { e.stopPropagation() }}>
+              <span className={`w-1.5 h-1.5 rounded-full ${statusDot(status)}`} />
+              {status}
+            </Link>
+            <InfoBubble id={TOOLTIPS.status_badge.id} text={TOOLTIPS.status_badge.text} position="right" />
           </span>
         )}
       </div>
@@ -64,7 +69,9 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
       )}
       <div className="flex items-center justify-between">
         {level && (
-          <span className="text-xs text-brand-muted">{level}</span>
+          <Link href={'/search?q=' + encodeURIComponent(level)} className="text-xs text-brand-muted hover:text-brand-accent transition-colors" onClick={function (e) { e.stopPropagation() }}>
+            {level}
+          </Link>
         )}
         {sourceUrl && (
           <Link

@@ -1,3 +1,13 @@
+import Link from 'next/link'
+import { CENTERS } from '@/lib/constants'
+
+const CENTER_COLORS: Record<string, string> = {
+  Learning:       '#d69e2e',
+  Action:         '#38a169',
+  Resource:       '#3182ce',
+  Accountability: '#805ad5',
+}
+
 const CENTER_CONFIG: Record<string, { question: string }> = {
   Learning:       { question: 'How can I understand?' },
   Action:         { question: 'How can I help?' },
@@ -8,17 +18,34 @@ const CENTER_CONFIG: Record<string, { question: string }> = {
 interface CenterBadgeProps {
   center: string | null
   showQuestion?: boolean
+  linkable?: boolean
 }
 
-export function CenterBadge({ center, showQuestion = false }: CenterBadgeProps) {
-  if (!center) return <span className="text-brand-muted text-xs">-</span>
+export function CenterBadge({ center, showQuestion = false, linkable = true }: CenterBadgeProps) {
+  if (!center) return null
   const config = CENTER_CONFIG[center]
-  if (!config) return <span className="text-xs">{center}</span>
+  if (!config) return <span className="text-xs text-brand-muted">{center}</span>
 
-  return (
-    <span className="inline-flex items-center gap-1 text-xs">
-      <span>{center}</span>
+  const color = CENTER_COLORS[center] || '#6B6560'
+
+  const inner = (
+    <span className="inline-flex items-center gap-1.5 text-xs text-brand-muted">
+      <span
+        className="w-2 h-2 rounded-full flex-shrink-0"
+        style={{ backgroundColor: color }}
+      />
+      {center}
       {showQuestion && <span className="text-brand-muted">— {config.question}</span>}
     </span>
   )
+
+  if (linkable) {
+    return (
+      <Link href={'/search?q=' + encodeURIComponent(center)} className="hover:text-brand-accent transition-colors">
+        {inner}
+      </Link>
+    )
+  }
+
+  return inner
 }

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import type { WayfinderData } from '@/lib/types/exchange'
 import { CompactCircleGraph } from './CompactCircleGraph'
+import { WayfinderTooltipPos } from './WayfinderTooltips'
 
 interface DetailWayfinderProps {
   data: WayfinderData
@@ -24,7 +25,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
-  // Separate event-type content into "Get Involved", news/articles into "Understand"
+  // Separate event-type content into "What You Can Do", news/articles into "What's Happening"
   const EVENT_TYPES = new Set(['event', 'opportunity', 'campaign'])
   const newsContent = data.content.filter(c => !EVENT_TYPES.has(c.content_type || ''))
   const eventContent = data.content.filter(c => EVENT_TYPES.has(c.content_type || ''))
@@ -46,10 +47,11 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   return (
     <aside className="bg-white rounded-xl border border-brand-border overflow-hidden lg:sticky lg:top-24">
       {/* Header */}
-      <div className="p-4 border-b border-brand-border">
+      <div className="p-4 border-b border-brand-border relative">
         <h3 className="font-serif text-base font-semibold text-brand-text tracking-wide">
           {t('wayfinder.title')}
         </h3>
+        <WayfinderTooltipPos tipKey="wayfinder_panel" position="bottom" />
       </div>
 
       {/* Compact circle graph */}
@@ -120,8 +122,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
       {/* Focus area dots — all linked */}
       {data.focusAreas.length > 0 && (
-        <div className="px-4 py-3 border-b border-brand-border">
+        <div className="px-4 py-3 border-b border-brand-border relative">
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Focus Areas</div>
+          <WayfinderTooltipPos tipKey="focus_area_dots" position="bottom" />
           <div className="flex flex-wrap gap-1.5">
             {data.focusAreas.map(function (fa) {
               const themeKey = fa.theme_id as keyof typeof THEMES | null
@@ -167,7 +170,8 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
       {/* Taxonomy — SDGs, SDOH, action types, gov level (visible to all) */}
       {data.taxonomy && (
-        <div className="px-4 py-3 border-b border-brand-border space-y-2.5">
+        <div className="px-4 py-3 border-b border-brand-border space-y-2.5 relative">
+          <WayfinderTooltipPos tipKey="taxonomy_section" position="top" />
           {/* SDGs — linked to explore */}
           {data.taxonomy.sdgs.length > 0 && (
             <div>
@@ -177,7 +181,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                   return (
                     <Link
                       key={s.sdg_id}
-                      href={'/search?sdg=' + encodeURIComponent(s.sdg_id)}
+                      href={'/search?q=' + encodeURIComponent(s.sdg_name)}
                       className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
                       style={{ backgroundColor: s.sdg_color || '#4C9F38' }}
                     >
@@ -194,7 +198,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Health Determinant</div>
               <Link
-                href={'/search?sdoh=' + encodeURIComponent(data.taxonomy.sdohDomain.sdoh_code)}
+                href={'/search?q=' + encodeURIComponent(data.taxonomy.sdohDomain.sdoh_name)}
                 className="text-xs text-brand-accent hover:underline"
               >
                 {data.taxonomy.sdohDomain.sdoh_name}
@@ -207,7 +211,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Government Level</div>
               <Link
-                href={'/search?level=' + encodeURIComponent(data.taxonomy.govLevel.gov_level_name)}
+                href={'/search?q=' + encodeURIComponent(data.taxonomy.govLevel.gov_level_name)}
                 className="text-xs text-brand-accent hover:underline"
               >
                 {data.taxonomy.govLevel.gov_level_name}
@@ -224,7 +228,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                   return (
                     <Link
                       key={at.action_type_id}
-                      href={'/search?action=' + encodeURIComponent(at.action_type_name)}
+                      href={'/search?q=' + encodeURIComponent(at.action_type_name)}
                       className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline"
                     >
                       {at.action_type_name}
@@ -239,7 +243,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
           {data.taxonomy.timeCommitment && (
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Time Commitment</div>
-              <span className="text-xs text-brand-text">{data.taxonomy.timeCommitment.time_name}</span>
+              <Link href={'/search?q=' + encodeURIComponent(data.taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{data.taxonomy.timeCommitment.time_name}</Link>
             </div>
           )}
 
@@ -263,10 +267,11 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </div>
       )}
 
-      {/* Tier: Understand */}
+      {/* Tier: What's Happening */}
       {understandCount > 0 && (
         <details open={firstOpenTier === 'understand'} className="group">
-          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none relative">
+            <WayfinderTooltipPos tipKey="engagement_tiers" position="right" />
             <div className="flex items-center gap-2">
               <BookOpen size={15} className="text-amber-600" />
               <span className="text-sm font-medium text-brand-text">{t('wayfinder.understand')}</span>
@@ -313,7 +318,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </details>
       )}
 
-      {/* Tier: Get Involved */}
+      {/* Tier: What You Can Do */}
       {involvedCount > 0 && (
         <details open={firstOpenTier === 'involved'} className="group border-t border-brand-border">
           <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
@@ -384,7 +389,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </details>
       )}
 
-      {/* Tier: Go Deeper */}
+      {/* Tier: Who's In Charge */}
       {deeperCount > 0 && (
         <details open={firstOpenTier === 'deeper'} className="group border-t border-brand-border">
           <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">

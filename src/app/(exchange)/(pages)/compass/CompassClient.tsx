@@ -320,7 +320,7 @@ export function CompassClient({
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-serif text-xl font-bold text-brand-text flex items-center gap-2">
                     <Calendar size={20} className="text-[#3182ce]" />
-                    Get Involved
+                    What You Can Do
                   </h2>
                   <Link href="/opportunities" className="text-sm text-brand-accent hover:underline flex items-center gap-1">
                     All opportunities <ChevronRight size={14} />

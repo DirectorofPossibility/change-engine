@@ -397,9 +397,9 @@ export function MyAreaClient({
         </section>
       )}
 
-      {/* ── Get Involved ── */}
+      {/* ── What You Can Do ── */}
       <section className="mb-10">
-        <SectionHeader icon={Briefcase} title="Get Involved" count={undefined} color="#E8723A" />
+        <SectionHeader icon={Briefcase} title="What You Can Do" count={undefined} color="#E8723A" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Link
             href="/opportunities"

@@ -13,6 +13,8 @@ import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { MapPin, ExternalLink, ChevronRight, BookOpen, ClipboardCheck, Mail, Users } from 'lucide-react'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 interface VotingDashboardClientProps {
   pastElections: any[]
@@ -199,16 +201,19 @@ export function VotingDashboardClient({
         {nextElection ? (
           <div className="space-y-4">
             {/* Countdown card */}
-            <Link href={'/elections/' + nextElection.election_id}>
-              <ElectionCountdown
-                electionName={nextElection.election_name}
-                electionDate={nextElection.election_date}
-                earlyVotingStart={nextElection.early_voting_start}
-                earlyVotingEnd={nextElection.early_voting_end}
-                registrationDeadline={nextElection.registration_deadline}
-                electionType={nextElection.election_type}
-              />
-            </Link>
+            <div className="relative">
+              <Link href={'/elections/' + nextElection.election_id}>
+                <ElectionCountdown
+                  electionName={nextElection.election_name}
+                  electionDate={nextElection.election_date}
+                  earlyVotingStart={nextElection.early_voting_start}
+                  earlyVotingEnd={nextElection.early_voting_end}
+                  registrationDeadline={nextElection.registration_deadline}
+                  electionType={nextElection.election_type}
+                />
+              </Link>
+              <InfoBubble id={TOOLTIPS.election_countdown.id} text={TOOLTIPS.election_countdown.text} position="bottom" />
+            </div>
 
             {nextElection.community_impact_summary && (
               <CommunityImpactCard summary={nextElection.community_impact_summary} />
@@ -265,7 +270,8 @@ export function VotingDashboardClient({
 
             {/* Registration + vote-by-mail CTAs — inline, no emojis */}
             {nextElection.registration_deadline && (
-              <div className="bg-brand-accent/5 border border-brand-accent/20 rounded-card p-5">
+              <div className="relative bg-brand-accent/5 border border-brand-accent/20 rounded-card p-5">
+                <InfoBubble id={TOOLTIPS.registration_deadline.id} text={TOOLTIPS.registration_deadline.text} position="bottom" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
                     <p className="text-sm font-medium text-brand-text">

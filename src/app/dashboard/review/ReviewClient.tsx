@@ -341,8 +341,8 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
                     {item.content_inbox?.source_domain || '-'}
                   </td>
                   <td className="px-4 py-3"><ConfidenceBadge confidence={item.confidence} /></td>
-                  <td className="px-4 py-3"><ThemePill themeId={c?.theme_primary || null} /></td>
-                  <td className="px-4 py-3"><CenterBadge center={c?.center || null} /></td>
+                  <td className="px-4 py-3"><ThemePill themeId={c?.theme_primary || null} linkable={false} /></td>
+                  <td className="px-4 py-3"><CenterBadge center={c?.center || null} linkable={false} /></td>
                   <td className="px-4 py-3"><StatusBadge status={item.review_status} /></td>
                   <td className="px-4 py-3 text-brand-muted text-xs">
                     {item.created_at ? new Date(item.created_at).toLocaleDateString() : '-'}
@@ -439,11 +439,11 @@ export function ReviewClient({ initialItems, segmentMap = {} }: { initialItems: 
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <span className="text-brand-muted text-xs">Pathway</span>
-                  <div className="mt-1"><ThemePill themeId={classification.theme_primary} size="md" /></div>
+                  <div className="mt-1"><ThemePill themeId={classification.theme_primary} size="md" linkable={false} /></div>
                 </div>
                 <div>
                   <span className="text-brand-muted text-xs">Center</span>
-                  <div className="mt-1"><CenterBadge center={classification.center} /></div>
+                  <div className="mt-1"><CenterBadge center={classification.center} linkable={false} /></div>
                 </div>
                 <div>
                   <span className="text-brand-muted text-xs">Confidence</span>

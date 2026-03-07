@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { Mail, Phone, Globe, Linkedin } from 'lucide-react'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { useTranslation } from '@/lib/use-translation'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 
@@ -53,13 +55,14 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
           <div className="min-w-0">
             <h3 className="font-semibold text-brand-text hover:text-brand-accent transition-colors">{name}</h3>
             {displayTitle && <p className="text-sm text-brand-muted line-clamp-1">{displayTitle}</p>}
-            <div className="flex items-center gap-1.5 mt-1.5 text-xs text-brand-muted">
-              {party && <span>{party}</span>}
+            <div className="relative flex items-center gap-1.5 mt-1.5 text-xs text-brand-muted">
+              {party && <Link href={'/search?q=' + encodeURIComponent(party)} className="hover:text-brand-accent transition-colors" onClick={function (e) { e.stopPropagation() }}>{party}</Link>}
+              {party && <InfoBubble id={TOOLTIPS.party_label.id} text={TOOLTIPS.party_label.text} position="right" />}
               {party && level && <span>&middot;</span>}
               {level && (
-                <span className="uppercase tracking-wide font-semibold" style={{ color: ringColor }}>
+                <Link href={'/search?q=' + encodeURIComponent(level)} className="uppercase tracking-wide font-semibold hover:opacity-80 transition-opacity" style={{ color: ringColor }} onClick={function (e) { e.stopPropagation() }}>
                   {level}
-                </span>
+                </Link>
               )}
             </div>
           </div>
