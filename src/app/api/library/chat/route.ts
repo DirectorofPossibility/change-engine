@@ -42,6 +42,11 @@ const SOURCE_TYPE_LABELS: Record<string, string> = {
   organization: 'Organization',
   content: 'Published Content',
   official: 'Elected Official',
+  policy: 'Policy / Legislation',
+  opportunity: 'Opportunity',
+  agency: 'Government Agency',
+  foundation: 'Foundation',
+  guide: 'Guide',
 }
 
 function buildSourceLink(sourceType: string, sourceId: string, metadata: Record<string, unknown>): string {
@@ -51,6 +56,11 @@ function buildSourceLink(sourceType: string, sourceId: string, metadata: Record<
     case 'organization': return `/organizations/${sourceId}`
     case 'content': return (metadata.source_url as string) || `/content/${sourceId}`
     case 'official': return `/officials/${sourceId}`
+    case 'policy': return `/policies/${sourceId}`
+    case 'opportunity': return `/opportunities/${sourceId}`
+    case 'agency': return `/agencies/${sourceId}`
+    case 'foundation': return `/foundations/${sourceId}`
+    case 'guide': return `/guides/${(metadata.slug as string) || sourceId}`
     default: return '#'
   }
 }
