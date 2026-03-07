@@ -143,9 +143,6 @@ export function D2Nav({ election }: D2NavProps) {
               </Link>
             </div>
             <div className="hidden md:block">
-              <ZipInput />
-            </div>
-            <div className="hidden md:block">
               <LanguageSwitcher />
             </div>
             <Link
