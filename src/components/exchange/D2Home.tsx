@@ -20,7 +20,7 @@ const QUICK_ACCESS = [
   },
   {
     label: 'Library',
-    sub: 'Articles, guides, deep dives',
+    sub: 'Read. Learn. Go deeper.',
     href: '/library',
     gradient: 'linear-gradient(135deg,#2b6cb0 0%,#4299e1 100%)',
     fol: 'vesica' as const,
@@ -30,7 +30,7 @@ const QUICK_ACCESS = [
   },
   {
     label: 'News',
-    sub: 'Stories and coverage',
+    sub: 'What\'s happening in Houston.',
     href: '/news',
     gradient: 'linear-gradient(135deg,#553c9a 0%,#7c5cbf 100%)',
     fol: 'metatron' as const,
@@ -112,28 +112,29 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
             {/* Left — text */}
             <div className="flex-1 min-w-0 max-w-xl">
+              <p className="text-sm text-brand-muted mb-2 max-w-lg">
+                Most people never show up. Not because they don&apos;t care. Because nobody showed them the way in.
+              </p>
               <h1 className="font-serif text-[clamp(2.5rem,5vw,4rem)] leading-[1.05] tracking-tight mb-4 text-brand-text">
-                You care.<br />
-                Now{' '}
-                <span className="text-brand-accent">find your place.</span>
+                This is the{' '}
+                <span className="text-brand-accent">way in.</span>
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted mb-6 max-w-lg">
-                Most people want to be part of something.
-                They just don&apos;t know where to start.{' '}
-                <strong className="text-brand-text">That&apos;s not a motivation problem. It&apos;s a navigation problem.</strong>
+                Houston has everything — the organizations, the officials, the resources, the people doing the work.{' '}
+                <strong className="text-brand-text">We made it findable.</strong>
               </p>
 
               <HeroZipInput />
 
               <div className="flex flex-wrap gap-3">
                 <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
-                  Take the quiz
+                  Find my way in
                 </Link>
-                <Link href="/search" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
-                  Search
+                <Link href="/neighborhoods" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                  In my neighborhood
                 </Link>
                 <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
-                  What&apos;s happening
+                  What&apos;s happening now
                 </Link>
               </div>
 

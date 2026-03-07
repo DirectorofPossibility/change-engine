@@ -32,7 +32,7 @@ export const THEMES = {
  */
 export const PAGE_INTROS = {
   services: 'Houston has a deep network of services and organizations dedicated to your well-being. Browse by category, search by need, or explore the map to find what is near you.',
-  search: 'Explore everything the Community Exchange has gathered for Houston — from articles and services to elected officials and community organizations.',
+  search: 'Search everything — officials, services, organizations, news, policies, opportunities. Use the tabs to narrow it down, or search across all of it at once.',
   explore: 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
   elections: 'Your voting dashboard — see what just happened, what\'s coming up, who represents you, and where to vote. Start with your ZIP code to personalize your experience.',
   availableResources: 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',

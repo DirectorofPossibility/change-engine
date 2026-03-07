@@ -45,7 +45,7 @@ export function HeroZipInput() {
         type="text"
         value={input}
         onChange={function (e) { setInput(e.target.value) }}
-        placeholder="Enter zip code or address"
+        placeholder="What do you care about?"
         aria-label="ZIP code or address"
         disabled={isLoading}
         className="flex-1 text-sm bg-transparent text-brand-text placeholder:text-brand-muted focus:outline-none"

@@ -208,7 +208,7 @@ const en: Record<string, string> = {
 
   // Polling places page
   'polling.title': 'Find Your Polling Place',
-  'polling.subtitle': 'Enter your ZIP code to find nearby voting locations.',
+  'polling.subtitle': 'Enter your address. Get your polling place, your hours, and everything you need to show up ready. No excuses. No surprises.',
 
   // Card components
   'card.read_more': 'Read more',

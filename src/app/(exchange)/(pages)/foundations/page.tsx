@@ -17,10 +17,10 @@ export default function FoundationsPage() {
         ]} />
       </div>
       <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-        <h1 className="text-3xl font-serif font-bold text-brand-text mb-2">Foundations Galaxy</h1>
+        <h1 className="text-3xl font-serif font-bold text-brand-text mb-2">The foundations funding Houston — all in one place.</h1>
         <WayfinderTooltipPos tipKey="foundation_galaxy" position="bottom" />
         <p className="text-brand-muted max-w-2xl">
-          Explore Houston-area foundations through an interactive galaxy. Each star represents a foundation, sized by grant-making capacity and colored by primary pathway. Search by name, city, or ZIP to find funders in your area.
+          Houston has one of the most generous philanthropic communities in the country. Health. Education. Housing. Arts. Civic life. There are hundreds of foundations working on all of it. Most people never know they exist. This page changes that.
         </p>
       </div>
       <FoundationsGalaxy />

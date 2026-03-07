@@ -240,7 +240,7 @@ export function GoodThingsClient() {
           </div>
           <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">Three Good Things</h1>
           <p className="text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
-            What&apos;s going well in your world? Share three good things and see positivity rippling across communities everywhere.
+            Real stories. Local. Updated daily. Because the news isn&apos;t only bad.
           </p>
           {totalEntries > 0 && (
             <div className="flex items-center justify-center gap-8 mt-7 text-sm">
@@ -474,14 +474,8 @@ export function GoodThingsClient() {
               <FlowerOfLifeIcon size={36} className="flex-shrink-0 mt-1" />
               <div>
                 <h2 className="font-serif text-lg font-bold text-brand-text mb-2">Why Three Good Things?</h2>
-                <p className="text-sm text-brand-muted leading-relaxed mb-3">
-                  Research in positive psychology shows that regularly reflecting on good things — even small ones — increases well-being,
-                  strengthens resilience, and builds a sense of community connection. When we share what&apos;s going well, we create a ripple
-                  effect that inspires others.
-                </p>
                 <p className="text-sm text-brand-muted leading-relaxed">
-                  This practice was inspired by Dr. Martin Seligman&apos;s research at the University of Pennsylvania. Studies show that
-                  people who do this exercise regularly report feeling happier and less depressed — effects that can last for months.
+                  When people believe good things are possible, they&apos;re more likely to do something. Hope isn&apos;t soft. It&apos;s fuel.
                 </p>
               </div>
             </div>

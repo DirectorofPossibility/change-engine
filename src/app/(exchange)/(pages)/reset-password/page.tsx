@@ -33,9 +33,9 @@ export default function ResetPasswordPage() {
   if (success) {
     return (
       <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-brand-text mb-4">Check your email</h1>
+        <h1 className="text-2xl font-bold text-brand-text mb-4">Check your inbox.</h1>
         <p className="text-brand-muted mb-6">
-          If an account exists for <strong>{email}</strong>, we sent a password reset link.
+          We sent a reset link to <strong>{email}</strong>. The link expires in 24 hours.
         </p>
         <Link href="/login" className="text-brand-accent hover:underline text-sm">
           Back to sign in
@@ -46,8 +46,8 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-16">
-      <h1 className="text-2xl font-bold text-brand-text mb-2">Reset Password</h1>
-      <p className="text-brand-muted mb-8">Enter your email to receive a reset link.</p>
+      <h1 className="text-2xl font-bold text-brand-text mb-2">Let&apos;s get you back in.</h1>
+      <p className="text-brand-muted mb-8">Enter your email. We&apos;ll send you a link. Check your spam if it doesn&apos;t show up in a few minutes.</p>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">

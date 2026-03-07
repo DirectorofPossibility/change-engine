@@ -189,7 +189,7 @@ export default function SettingsPage() {
   return (
     <div className="max-w-lg mx-auto px-4 py-12">
       <h1 className="text-2xl font-bold text-brand-text mb-2">Settings</h1>
-      <p className="text-sm text-brand-muted mb-8">Manage your profile, language, ZIP code, and password. Your ZIP code personalizes content, officials, and services to your area.</p>
+      <p className="text-sm text-brand-muted mb-8">Language, notifications, saved items, and account info — all in one place.</p>
 
       {message && (
         <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg p-3 mb-4">

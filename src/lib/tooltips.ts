@@ -14,22 +14,22 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   zip_input: {
     id: 'zip_input',
     section: 'nav',
-    text: 'Type your ZIP code to see your elected officials, nearby services, and what\u2019s happening in your area.',
+    text: 'Your ZIP code helps us show you your elected officials, nearby services, and what\u2019s happening in your area.',
   },
   language_switcher: {
     id: 'language_switcher',
     section: 'nav',
-    text: 'Read this page in English, Spanish, or Vietnamese. Switch any time.',
+    text: 'Read this in English, Spanish, or Vietnamese. Switch any time \u2014 no account needed.',
   },
   search_icon: {
     id: 'search_icon',
     section: 'nav',
-    text: 'Search for officials, services, organizations, news, policies, and more \u2014 all in one place.',
+    text: 'Search for officials, services, organizations, news, policies, and more. All in one place.',
   },
   pathway_dots: {
     id: 'pathway_dots',
     section: 'nav',
-    text: 'Each dot is a theme \u2014 like housing, health, or education. Tap one to explore everything in that area.',
+    text: 'Each dot is a theme. Tap one to explore everything connected to it.',
   },
   dropdown_discover: {
     id: 'dropdown_discover',
@@ -44,7 +44,7 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   dropdown_act: {
     id: 'dropdown_act',
     section: 'nav',
-    text: 'Take real action \u2014 call your representatives, volunteer, vote.',
+    text: 'Take real action. Call your representatives. Volunteer. Vote.',
   },
   dropdown_about: {
     id: 'dropdown_about',
@@ -56,24 +56,24 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   persona_cards: {
     id: 'persona_cards',
     section: 'home',
-    text: 'Not an account type \u2014 just a lens. Pick one to reorder the page around what matters most to you. You can switch any time.',
+    text: 'Not an account type \u2014 just a lens. Pick one to see the page organized around what matters most to you. Switch any time.',
   },
   pathway_cards: {
     id: 'pathway_cards',
     section: 'home',
-    text: 'Each pathway groups related topics. Tap to explore resources, services, and news for that theme.',
+    text: 'Each pathway is a theme \u2014 like housing or health. Tap to explore everything connected to it.',
   },
   stats_bar: {
     id: 'stats_bar',
     section: 'home',
-    text: 'Live numbers from our database \u2014 updated every morning from public data sources.',
+    text: 'Live numbers from our database. Updated every morning from public data sources.',
   },
 
   // ── III. OFFICIALS PAGE ──
   zip_lookup: {
     id: 'zip_lookup',
     section: 'officials',
-    text: 'Your ZIP code maps to multiple overlapping districts. We find all of them \u2014 city, county, state, and federal \u2014 so you see every person who represents you.',
+    text: 'Your ZIP overlaps multiple districts. We find all of them \u2014 city, county, state, federal \u2014 and show you every person who represents you.',
   },
   level_badges: {
     id: 'level_badges',
@@ -90,17 +90,17 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   badge_211: {
     id: 'badge_211',
     section: 'services',
-    text: '211 is Texas\u2019s free information line for health and human services. Call 2-1-1 any time to talk to someone who can help you find what you need.',
+    text: '211 is Texas\u2019s free help line for health and human services. Call 2-1-1 any time \u2014 real people answer and help you find what you need.',
   },
   map_view_toggle: {
     id: 'map_view_toggle',
     section: 'services',
-    text: 'Switch between a list and a map. The map shows you where services are located near you.',
+    text: 'Switch between a list and a map. The map shows where services are near you.',
   },
   service_type_tags: {
     id: 'service_type_tags',
     section: 'services',
-    text: 'Categories that help you find the right kind of help \u2014 like food, housing, or mental health.',
+    text: 'Categories to help you find the right kind of help \u2014 food, housing, health, legal, and more.',
   },
 
   // ── V. POLICIES & LEGISLATION ──
@@ -112,85 +112,85 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   status_badge: {
     id: 'status_badge',
     section: 'policies',
-    text: 'Where this bill or policy is right now in the process \u2014 introduced, in committee, passed, or signed into law.',
+    text: 'Where this bill is right now \u2014 introduced, in committee, passed, or signed into law.',
   },
   for_against: {
     id: 'for_against',
     section: 'policies',
-    text: 'Plain-language summaries of what supporters and opponents are saying. No spin \u2014 just the main points on each side.',
+    text: 'What supporters say. What opponents say. No spin \u2014 just the main points on each side, in plain language.',
   },
 
   // ── VI. ELECTIONS & VOTING ──
   election_countdown: {
     id: 'election_countdown',
     section: 'elections',
-    text: 'Days until the next election. Early voting usually starts two weeks before Election Day in Texas.',
+    text: 'Days until the next election. Early voting in Texas usually starts two weeks before Election Day.',
   },
   registration_deadline: {
     id: 'registration_deadline',
     section: 'elections',
-    text: 'In Texas, you must register to vote at least 30 days before an election. Don\u2019t wait.',
+    text: 'In Texas, you have to register at least 30 days before an election. Don\u2019t wait.',
   },
   polling_finder: {
     id: 'polling_finder',
     section: 'elections',
-    text: 'Enter your address to find exactly where to vote \u2014 your assigned location and early voting sites near you.',
+    text: 'Enter your address to find exactly where to vote \u2014 your assigned location plus early voting sites near you.',
   },
 
   // ── VII. LEARNING PATHS ──
   difficulty_badge: {
     id: 'difficulty_badge',
     section: 'learning',
-    text: 'Beginner: no prior knowledge needed. Intermediate: builds on the basics. Advanced: for people ready to go deeper.',
+    text: 'Beginner: start from zero.  Intermediate: builds on the basics.  Advanced: for people ready to go deeper.',
   },
   estimated_minutes: {
     id: 'estimated_minutes',
     section: 'learning',
-    text: 'How long it takes to finish \u2014 including reading, videos, and any activities.',
+    text: 'How long it takes to finish \u2014 reading, videos, and activities included.',
   },
   quiz_indicator: {
     id: 'quiz_indicator',
     section: 'learning',
-    text: 'A short knowledge check at the end. Not graded \u2014 just to help it stick.',
+    text: 'A short check at the end. Not graded \u2014 just to help it stick.',
   },
   module_media_pills: {
     id: 'module_media_pills',
     section: 'learning',
-    text: 'Resources from trusted sources like TED, PBS, and Houston community organizations. We link to them \u2014 we don\u2019t replace them.',
+    text: 'Resources from trusted sources \u2014 TED, PBS, community organizations. We link to them. We don\u2019t replace them.',
   },
 
   // ── VIII. LIBRARY & RESEARCH ──
   ai_summary_badge: {
     id: 'ai_summary_badge',
     section: 'library',
-    text: 'This summary was written by AI to make the content easier to read. The original source is linked below.',
+    text: 'AI wrote this summary to make the content easier to read. The original source is linked below \u2014 we didn\u2019t replace it.',
   },
   chat_with_chance: {
     id: 'chat_with_chance',
     section: 'library',
-    text: 'Chance is an AI assistant built on Houston community data. Ask about services, officials, policies, or anything on this platform.',
+    text: 'Chance is an AI assistant built on Houston community data. Ask anything \u2014 officials, services, policies, how things work.',
   },
   source_attribution: {
     id: 'source_attribution',
     section: 'library',
-    text: 'This content comes from this organization. We summarize it \u2014 they wrote it. Click through to read the original.',
+    text: 'This content was created by this organization. We summarized it. Click through to read the original.',
   },
 
   // ── IX. ORGANIZATIONS & FOUNDATIONS ──
   org_action_buttons: {
     id: 'org_action_buttons',
     section: 'organizations',
-    text: 'Direct links to this organization\u2019s volunteer page, donation page, or event calendar \u2014 wherever they want you to go.',
+    text: 'Direct links to this organization\u2019s volunteer page, donation page, or event calendar \u2014 wherever they want you to go next.',
   },
   foundation_galaxy: {
     id: 'foundation_galaxy',
     section: 'foundations',
-    text: 'Each dot is a foundation. Bigger dot = more funding. Color shows which theme they focus on most. Click any dot to learn more.',
+    text: 'Each dot is a foundation. Bigger = more funding. Color = primary theme. Click any dot to learn more.',
   },
   ntee_code: {
     id: 'ntee_code',
     section: 'organizations',
-    text: 'A national code that classifies nonprofits by what they do \u2014 used by the IRS and researchers to organize the sector.',
+    text: 'A national code that classifies nonprofits by what they do. Used by the IRS and researchers to organize the sector.',
   },
 
   // ── X. OPPORTUNITIES & EVENTS ──

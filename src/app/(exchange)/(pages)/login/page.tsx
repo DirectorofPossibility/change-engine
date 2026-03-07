@@ -55,8 +55,8 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-16">
-      <h1 className="text-2xl font-bold text-brand-text mb-2">Sign In</h1>
-      <p className="text-brand-muted mb-8">Welcome back to the Community Exchange.</p>
+      <h1 className="text-2xl font-bold text-brand-text mb-2">Good to have you back.</h1>
+      <p className="text-brand-muted mb-8">Sign in to pick up where you left off.</p>
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
@@ -100,11 +100,11 @@ export default function LoginPage() {
 
       <div className="mt-6 text-center space-y-2">
         <Link href="/reset-password" className="block text-sm text-brand-accent hover:underline">
-          Forgot your password?
+          Forgot your password? No stress — we&apos;ll sort it.
         </Link>
         <p className="text-sm text-brand-muted">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-brand-accent hover:underline">Create one</Link>
+          Don&apos;t have an account? You don&apos;t need one to look around. But if you want to save things and get updates —{' '}
+          <Link href="/signup" className="text-brand-accent hover:underline">it&apos;s free</Link>.
         </p>
       </div>
     </div>

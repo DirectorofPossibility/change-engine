@@ -36,7 +36,7 @@ const CENTERS = [
     items: [
       { href: '/services', label: 'Services' },
       { href: '/opportunities', label: 'Opportunities' },
-      { href: '/help', label: 'Get Help' },
+      { href: '/help', label: 'Available Resources' },
     ],
   },
   {
@@ -53,7 +53,6 @@ const CENTERS = [
     color: '#6B6560',
     items: [
       { href: '/about', label: 'About Us' },
-      { href: '/help', label: 'User Manual' },
       { href: '/contact', label: 'Contact' },
     ],
   },

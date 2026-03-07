@@ -13,22 +13,19 @@ const DISCOVER = [
 
 const LEARN = [
   { label: 'Knowledge Graph', href: '/knowledge-graph' },
-  { label: 'Quizzes', href: '/quizzes' },
-  { label: 'User Manual', href: '/manual' },
-  { label: 'Districts', href: '/districts' },
+  { label: 'Library', href: '/library' },
   { label: 'Foundations', href: '/foundations' },
 ]
 
 const ACT = [
   { label: 'Call Your Senators', href: '/call-your-senators' },
   { label: 'Volunteer', href: '/opportunities' },
-  { label: 'Donate', href: '/donate' },
   { label: 'Partner With Us', href: '/about' },
 ]
 
 const ABOUT = [
   { label: 'About The Change Lab', href: '/about' },
-  { label: 'User Manual', href: '/help' },
+  { label: 'Our Approach', href: '/about' },
   { label: 'Contact', href: '/contact' },
   { label: 'Accessibility', href: '/accessibility' },
   { label: 'Privacy Policy', href: '/privacy' },
@@ -79,7 +76,7 @@ export function D2Footer() {
                   Community life, organized.
                 </p>
                 <p className="text-[13px] leading-relaxed text-brand-muted">
-                  A community discovery platform connecting Houston residents to the officials, services, organizations, and opportunities that already exist — in their language, at their level, in their neighborhood.
+                  Community Exchange is a community discovery platform built by The Change Lab in Houston. We connect residents to the officials, services, organizations, and opportunities that already exist — in their language, at their level, in their neighborhood.
                 </p>
               </div>
             </div>
@@ -150,12 +147,11 @@ export function D2Footer() {
 
           {/* Bottom bar */}
           <div className="mt-4 pt-4 border-t border-brand-border flex flex-wrap items-center justify-between gap-4 text-[11px] text-brand-muted-light">
-            <p>&copy; {new Date().getFullYear()} The Change Lab. Fiscally sponsored by Impact Hub Houston, a 501(c)(3) organization.</p>
+            <p>&copy; {new Date().getFullYear()} The Change Lab. Fiscally sponsored by Impact Hub Houston, a 501(c)(3).</p>
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:text-brand-accent transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-brand-accent transition-colors">Terms</Link>
               <Link href="/accessibility" className="hover:text-brand-accent transition-colors">Accessibility</Link>
-              <Link href="/help" className="hover:text-brand-accent transition-colors">User Manual</Link>
               <span className="text-brand-border">|</span>
               <TipsToggle />
               <span className="text-brand-border">|</span>

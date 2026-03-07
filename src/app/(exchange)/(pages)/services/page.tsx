@@ -64,7 +64,7 @@ export default async function ServicesPage() {
                   { label: 'Organizations', href: '/organizations', color: '#dd6b20' },
                   { label: 'Opportunities', href: '/opportunities', color: '#38a169' },
                   { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
-                  { label: 'Get Help', href: '/help', color: '#e53e3e' },
+                  { label: 'Available Resources', href: '/help', color: '#e53e3e' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>
