@@ -50,13 +50,20 @@ export default async function NewsPage({
   const items = await getNewsFeed(pathway, 60, type || undefined)
   const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string }][]
 
-  const withImages = items.filter(i => i.image_url)
+  const withImages = items.filter(function (i) {
+    return i.image_url && i.image_url.trim() && i.image_url.startsWith('http')
+  })
   const featured = withImages.slice(0, 3)
   const featuredIds = new Set(featured.map(f => f.id))
   const rest = items.filter(i => !featuredIds.has(i.id))
 
-  // Count unique sources
-  const uniqueSources = new Set(items.map(i => i.source_domain).filter(Boolean)).size
+  // Count by type
+  const typeCounts: Record<string, number> = {}
+  items.forEach(function (i) {
+    const t = i.content_type || 'other'
+    typeCounts[t] = (typeCounts[t] || 0) + 1
+  })
+  const typeCount = Object.keys(typeCounts).length
 
   return (
     <div>
@@ -67,13 +74,13 @@ export default async function NewsPage({
         subtitle="Articles, videos, guides, reports, tools, and more from across Houston"
         intro="Explore everything published in the Community Exchange. Filter by content type or pathway to find what matters to you."
         stats={[
-          { value: items.length, label: 'Stories' },
-          { value: uniqueSources, label: 'Sources' },
+          { value: items.length, label: 'Published' },
+          { value: typeCount, label: 'Content Types' },
         ]}
       />
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'News' }]} />
+        <Breadcrumb items={[{ label: 'Content' }]} />
 
         {/* Content type filter */}
         <div className="flex flex-wrap items-center gap-2 mt-4">
@@ -128,7 +135,7 @@ export default async function NewsPage({
             {items.length === 0 ? (
               <div className="text-center py-16">
                 <FileText size={40} className="mx-auto text-brand-muted mb-4" />
-                <p className="text-brand-muted">No news articles found{pathway ? ' for this pathway' : ''}.</p>
+                <p className="text-brand-muted">No content found{type ? ' for this type' : ''}{pathway ? ' in this pathway' : ''}.</p>
               </div>
             ) : (
               <>
