@@ -72,7 +72,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
           <div className="flex-1 min-w-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Financials & Details */}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Details</h2>
                 <div className="space-y-2 text-sm">
                   {f.assets && <div className="flex items-center gap-2"><DollarSign className="w-4 h-4 text-brand-muted" /><span className="text-brand-muted">Assets:</span> <span className="font-medium text-brand-text">{f.assets}</span></div>}
@@ -81,7 +81,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
                 </div>
               </div>
               {/* Contact */}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-2 text-sm">
                   {f.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${f.phone}`} className="text-brand-accent hover:underline">{f.phone}</a></div>}
@@ -91,7 +91,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               </div>
               {/* Focus Areas */}
               {focusAreas.length > 0 && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                   <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Focus Areas</h2>
                   <div className="flex flex-wrap gap-2">
                     {focusAreas.map(function (fa) {
@@ -102,7 +102,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               )}
               {/* People */}
               {people && people.length > 0 && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                   <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><Users className="w-4 h-4" />People</h2>
                   <div className="space-y-2">
                     {people.map(function (p: any, i: number) {

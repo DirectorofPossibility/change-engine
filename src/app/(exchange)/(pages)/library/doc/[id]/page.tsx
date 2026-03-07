@@ -152,12 +152,12 @@ export default async function DocumentDetailPage(
         {/* Sidebar */}
         <div className="space-y-5">
           {/* Actions */}
-          <div className="bg-white rounded-xl border border-brand-border p-5 space-y-3">
+          <div className="bg-white rounded-xl border-2 border-brand-border p-5 space-y-3">
             <a
               href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kb-documents/${doc.file_path}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-brand-border text-sm font-semibold text-brand-text hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border-2 border-brand-border text-sm font-semibold text-brand-text hover:bg-gray-50 transition-colors"
             >
               <Download size={15} />
               Download PDF

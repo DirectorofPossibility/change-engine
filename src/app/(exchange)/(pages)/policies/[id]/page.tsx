@@ -207,7 +207,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                   <FileText size={18} className="text-brand-accent" />
                   What This Does
                 </h2>
-                <div className="bg-white rounded-xl border border-brand-border p-6">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-6" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
                   <p className="text-brand-text leading-relaxed text-[15px]">{displaySummary}</p>
                 </div>
               </section>
@@ -227,7 +227,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                 <Calendar size={18} className="text-brand-accent" />
                 Timeline
               </h2>
-              <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+              <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
                 <div className="divide-y divide-brand-border">
                   {policy.introduced_date && (
                     <div className="flex items-start gap-4 px-5 py-4">
@@ -331,7 +331,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           <div className="lg:w-80 shrink-0 space-y-6">
             {/* Focus areas */}
             {focusAreas.length > 0 && (
-              <div className="bg-white rounded-xl border border-brand-border p-5">
+              <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
                 <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">Topics</h3>
                 <FocusAreaPills focusAreas={focusAreas} />
               </div>
@@ -339,7 +339,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
             {/* Geographic impact */}
             {geography.length > 0 && (
-              <div className="bg-white rounded-xl border border-brand-border p-5">
+              <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
                 <h3 className="text-sm font-serif font-semibold text-brand-text mb-3 flex items-center gap-1.5">
                   <MapPin size={14} className="text-brand-muted" />
                   Where This Applies
@@ -410,6 +410,8 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
             {/* Wayfinder */}
             <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
+
+            <FeedbackLoop entityType="policies" entityId={policy.policy_id} entityName={policy.title_6th_grade || policy.policy_name || ''} />
           </div>
         </div>
 
@@ -419,12 +421,6 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
           </div>
         )}
-      </div>
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="max-w-sm">
-          <FeedbackLoop entityType="policies" entityId={policy.policy_id} entityName={policy.title_6th_grade || policy.policy_name || ''} />
-        </div>
       </div>
 
       <AdminEditPanel

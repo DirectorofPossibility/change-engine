@@ -56,7 +56,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
           <div className="flex-1 min-w-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Contact card */}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-3 text-sm">
                   {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
@@ -66,7 +66,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               </div>
               {/* Services */}
               {services && services.length > 0 && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                   <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Services Provided</h2>
                   <div className="space-y-2">
                     {services.map(function (s: any) {

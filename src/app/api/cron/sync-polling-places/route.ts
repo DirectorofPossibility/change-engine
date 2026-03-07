@@ -62,14 +62,14 @@ export async function POST(req: NextRequest) {
 
     const election = elections[0]
 
-    // Trigger the Supabase edge function with full mode
+    // Trigger the Supabase edge function — Harris County ArcGIS primary, Google Civic fallback
     const syncRes = await fetch(`${SUPABASE_URL}/functions/v1/sync-polling-places`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${SUPABASE_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ mode: 'full' }),
+      body: JSON.stringify({ mode: 'full', source: 'harris_arcgis' }),
     })
 
     if (!syncRes.ok) {

@@ -89,14 +89,14 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
       {/* Demographics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         {hood.population != null && (
-          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
             <Users size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">{hood.population.toLocaleString()}</div>
             <div className="text-xs text-brand-muted">{t('neighborhoods.population')}</div>
           </div>
         )}
         {hood.median_income != null && (
-          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
             <DollarSign size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">${hood.median_income.toLocaleString()}</div>
             <div className="text-xs text-brand-muted">{t('neighborhoods.median_income')}</div>
@@ -121,7 +121,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
       {/* ZIP code lookup link */}
       {zips.length > 0 && (
-        <div className="bg-brand-accent/5 rounded-xl border border-brand-border p-4 mb-8">
+        <div className="bg-brand-accent/5 rounded-xl border-2 border-brand-border p-4 mb-8">
           <p className="text-sm text-brand-text">
             ZIP codes: {zips.join(', ')} &mdash;{' '}
             <Link href={'/officials/lookup'} className="text-brand-accent hover:underline font-medium">

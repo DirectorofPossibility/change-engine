@@ -159,7 +159,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
         <div className="flex items-center gap-3 flex-wrap mb-6">
           {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
           {guide.engagement_level && (
-            <span className={'text-xs px-2 py-0.5 rounded-full font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
+            <span className={'text-xs px-2 py-0.5 rounded-lg font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')}>
               {guide.engagement_level}
             </span>
           )}
@@ -191,7 +191,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
               <div className="space-y-8">
                 {sections.map(function (section) {
                   return (
-                    <section key={section.id} id={'section-' + section.id} className="bg-white rounded-xl border border-brand-border p-6 scroll-mt-16">
+                    <section key={section.id} id={'section-' + section.id} className="bg-white rounded-xl border-2 border-brand-border p-6 scroll-mt-16">
                       <h2 className="text-xl font-serif font-bold text-brand-text mb-3">
                         {section.icon && <span className="mr-2">{section.icon}</span>}
                         {section.title}
@@ -209,7 +209,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
             {/* content_html */}
             {guide.content_html && (
               <div
-                className="prose prose-sm max-w-none text-brand-text mt-8 bg-white rounded-xl border border-brand-border p-6"
+                className="prose prose-sm max-w-none text-brand-text mt-8 bg-white rounded-xl border-2 border-brand-border p-6"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(guide.content_html) }}
               />
             )}
@@ -223,7 +223,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
             <aside className="lg:w-80 shrink-0 space-y-6">
               {/* Focus areas */}
               {focusAreas.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">{t('guides.focus_areas')}</h3>
                   <FocusAreaPills focusAreas={focusAreas} />
                 </div>
@@ -231,7 +231,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* SDG badges */}
               {sdgIds.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">{t('guides.global_goals')}</h3>
                   <div className="flex flex-wrap gap-1.5">
                     {sdgIds.map(function (sdg) {
@@ -253,7 +253,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* SDOH badges */}
               {sdohCodes.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">{t('guides.social_determinants')}</h3>
                   <div className="flex flex-wrap gap-1.5">
                     {sdohCodes.map(function (code) {
@@ -275,7 +275,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* Related organizations */}
               {relatedOrgs.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3 flex items-center gap-1.5">
                     <Building2 size={14} className="text-brand-muted" />
                     {t('guides.related_orgs')}
@@ -316,7 +316,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* Related opportunities */}
               {opportunities.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3 flex items-center gap-1.5">
                     <Newspaper size={14} className="text-brand-muted" />
                     {t('guides.opportunities')}
@@ -348,7 +348,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* Related policies */}
               {policies.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3 flex items-center gap-1.5">
                     <Scale size={14} className="text-brand-muted" />
                     {t('guides.related_policies')}
@@ -379,7 +379,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* Related content articles */}
               {relatedContent.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3 flex items-center gap-1.5">
                     <FileText size={14} className="text-brand-muted" />
                     {t('guides.related_articles')}
@@ -423,7 +423,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* Mini knowledge graph */}
               {focusAreas.length > 0 && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">{t('guides.knowledge_map')}</h3>
                   <GuideMiniGraph
                     guideTitle={guideTitle}
@@ -441,7 +441,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
               {/* Source link */}
               {guide.source_url && (
-                <div className="bg-white rounded-xl border border-brand-border p-4">
+                <div className="bg-white rounded-xl border-2 border-brand-border p-4">
                   <h3 className="text-sm font-serif font-semibold text-brand-text mb-2">{t('guides.source')}</h3>
                   <a
                     href={guide.source_url}

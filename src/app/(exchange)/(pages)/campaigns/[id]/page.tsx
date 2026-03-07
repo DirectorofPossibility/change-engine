@@ -54,7 +54,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
           <div className="flex-1 min-w-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {c.goal_description && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                   <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><TrendingUp className="w-4 h-4" />Goal</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{c.goal_description}</p>
                   {progress !== null && (
@@ -65,7 +65,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
                   )}
                 </div>
               )}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Details</h2>
                 <div className="space-y-2 text-sm">
                   {c.campaign_type && <div><span className="text-brand-muted">Type:</span> <span className="text-brand-text">{c.campaign_type}</span></div>}

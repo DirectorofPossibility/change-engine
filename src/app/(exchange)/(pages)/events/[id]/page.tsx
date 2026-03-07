@@ -60,7 +60,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="flex-1 min-w-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">When</h2>
                 <div className="space-y-2 text-sm">
                   {startDate && <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-brand-muted" /><span className="text-brand-text font-medium">{startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span></div>}
@@ -68,7 +68,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                   {event.is_recurring === 'true' && event.recurrence_pattern && <div className="text-brand-muted">Recurring: {event.recurrence_pattern}</div>}
                 </div>
               </div>
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Where</h2>
                 <div className="space-y-2 text-sm">
                   {event.is_virtual === 'true' ? (

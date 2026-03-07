@@ -50,7 +50,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Eligibility */}
               {b.eligibility_summary && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                   <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
                   {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
@@ -58,7 +58,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
               {/* Benefit details */}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-5">
                 <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
                 <div className="space-y-2 text-sm">
                   {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
@@ -69,7 +69,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
               </div>
               {/* Documentation */}
               {b.documentation_needed && (
-                <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
+                <div className="bg-white rounded-lg border-2 border-brand-border p-5 md:col-span-2">
                   <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
                 </div>
