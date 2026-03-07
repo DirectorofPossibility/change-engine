@@ -74,7 +74,7 @@ export function Header() {
                 onChange={function (e) { setSearchQuery(e.target.value) }}
                 placeholder={t('nav.search_placeholder')}
                 aria-label="Search the site"
-                className="w-36 pl-7 pr-2 py-1 text-xs border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
+                className="w-36 pl-7 pr-2 py-1 text-xs border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
               />
             </form>
             <LanguageSwitcher />
@@ -122,7 +122,7 @@ export function Header() {
                   onChange={function (e) { setSearchQuery(e.target.value) }}
                   placeholder={t('nav.search_placeholder')}
                   aria-label="Search the site"
-                  className="w-full pl-7 pr-2 py-2 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
+                  className="w-full pl-7 pr-2 py-2 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
                 />
               </form>
               <div className="flex items-center justify-between">

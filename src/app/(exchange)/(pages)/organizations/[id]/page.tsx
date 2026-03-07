@@ -135,7 +135,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                   <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent border border-brand-accent/20">{org.org_type}</span>
                 ) : null}
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
-                {org.ntee_code && <span className="relative text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}<WayfinderTooltipPos tipKey="ntee_code" position="bottom" /></span>}
+                {org.ntee_code && <span className="relative text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border-2 border-brand-border">NTEE: {org.ntee_code}<WayfinderTooltipPos tipKey="ntee_code" position="bottom" /></span>}
               </div>
               <div className="mt-2">
                 <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
@@ -196,7 +196,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               <div className="flex flex-wrap gap-3 mb-8">
                 {socialLinks.map(function (link) {
                   return (
-                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg border border-brand-border text-brand-accent hover:underline capitalize">
+                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg border-2 border-brand-border text-brand-accent hover:underline capitalize">
                       {link.platform}
                     </a>
                   )
@@ -246,7 +246,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             {org.tags && org.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-8">
                 {org.tags.map(function (tag) {
-                  return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg border border-brand-border text-brand-muted">{tag}</span>
+                  return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg border-2 border-brand-border text-brand-muted">{tag}</span>
                 })}
               </div>
             )}

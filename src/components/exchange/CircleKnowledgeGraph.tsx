@@ -358,7 +358,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
           const count = pw.entityCounts[key as keyof typeof pw.entityCounts] || 0
           return (
             <Link key={key} href={meta.href}
-              className="bg-white rounded-lg border border-brand-border p-2.5 text-center hover:border-brand-accent transition-colors">
+              className="bg-white rounded-lg border-2 border-brand-border p-2.5 text-center hover:border-brand-accent transition-colors">
               <p className="text-base font-bold" style={{ color: count > 0 ? meta.color : C.mutedLight }}>{count}</p>
               <p className="text-[9px] font-bold uppercase tracking-wider text-brand-muted">{meta.label}</p>
             </Link>
@@ -442,7 +442,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
           { v: data.totals.focusAreas, l: 'Focus Areas', c: '#38a169' },
         ].map(function (s) {
           return (
-            <div key={s.l} className="bg-white rounded-lg border border-brand-border p-2 text-center">
+            <div key={s.l} className="bg-white rounded-lg border-2 border-brand-border p-2 text-center">
               <p className="text-base font-bold" style={{ color: s.c }}>{s.v}</p>
               <p className="text-[9px] font-bold uppercase tracking-wider text-brand-muted">{s.l}</p>
             </div>

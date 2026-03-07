@@ -38,7 +38,7 @@ export function LibraryCard({
 
   return (
     <Link href={'/library/doc/' + id} className="block group">
-      <article className="bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
+      <article className="bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
         {/* Color bar */}
         <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${primaryColor}, ${primaryColor}40)` }} />
 

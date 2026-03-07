@@ -117,7 +117,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                 <img
                   src={org.logo_url}
                   alt=""
-                  className="w-10 h-10 rounded-md object-contain bg-brand-bg border border-brand-border flex-shrink-0 ml-1"
+                  className="w-10 h-10 rounded-md object-contain bg-brand-bg border-2 border-brand-border flex-shrink-0 ml-1"
                 />
               ) : (
                 <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0 ml-1" style={{ background: color + '12' }}>

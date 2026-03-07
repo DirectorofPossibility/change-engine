@@ -254,7 +254,7 @@ function FeaturedBook({ doc }: { doc: LibraryDoc }) {
 
             {/* Key takeaways */}
             {doc.key_points.length > 0 && (
-              <div className="bg-brand-bg rounded-lg p-5 mb-5 border border-brand-border">
+              <div className="bg-brand-bg rounded-lg p-5 mb-5 border-2 border-brand-border">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Key Takeaways</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {doc.key_points.slice(0, 4).map(function (point, i) {

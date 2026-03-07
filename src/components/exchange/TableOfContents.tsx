@@ -3,7 +3,7 @@ interface GuideSection { id: string; title: string; content: string; icon?: stri
 export function TableOfContents({ sections }: { sections: GuideSection[] }) {
   if (sections.length < 3) return null
   return (
-    <nav className="bg-white rounded-xl border border-brand-border p-4 mb-6">
+    <nav className="bg-white rounded-xl border-2 border-brand-border p-4 mb-6">
       <h3 className="font-serif text-sm font-semibold text-brand-text mb-2">In this guide</h3>
       <ol className="space-y-1.5 list-decimal list-inside">
         {sections.map(s => (

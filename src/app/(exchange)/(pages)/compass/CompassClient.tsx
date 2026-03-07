@@ -115,7 +115,7 @@ export function CompassClient({
 
             {/* ZIP input — always visible */}
             <div className="lg:flex-shrink-0 lg:w-[300px]">
-              <div className="bg-white rounded-xl border border-brand-border p-4 backdrop-blur-sm">
+              <div className="bg-white rounded-xl border-2 border-brand-border p-4 backdrop-blur-sm">
                 <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mb-2">
                   {hasZip ? 'Change location' : 'Enter your address — street, city, zip'}
                 </p>

@@ -144,7 +144,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
 
       {/* Request form */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-brand-border p-4 space-y-3">
+        <form onSubmit={handleSubmit} className="bg-white rounded-xl border-2 border-brand-border p-4 space-y-3">
           <h3 className="text-sm font-semibold text-brand-text capitalize">
             Request {requestedRole} access
           </h3>
@@ -157,7 +157,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
                 required
                 value={orgName}
                 onChange={function (e) { setOrgName(e.target.value) }}
-                className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+                className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
                 placeholder="Your organization"
               />
             </div>
@@ -171,7 +171,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
               value={reason}
               onChange={function (e) { setReason(e.target.value) }}
               rows={2}
-              className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
+              className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
               placeholder="Tell us a bit about how you'd like to contribute"
             />
           </div>

@@ -128,7 +128,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
               value={zip}
               onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
               placeholder="Enter ZIP code"
-              className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+              className="w-full pl-9 pr-4 py-3 border-2 border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
               maxLength={5}
             />
           </div>
@@ -149,7 +149,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
         <div className="space-y-6">
           {/* District info */}
           {results.districtInfo && (
-            <div className="bg-brand-accent/5 rounded-xl p-4 border border-brand-border">
+            <div className="bg-brand-accent/5 rounded-xl p-4 border-2 border-brand-border">
               <div className="flex items-center gap-2 mb-2">
                 <MapPin size={16} className="text-brand-accent" />
                 <span className="font-semibold text-brand-text">Your Districts</span>

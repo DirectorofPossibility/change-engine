@@ -121,7 +121,7 @@ export function LeftNav() {
       <div className="px-3 pb-2">
         <Link
           href="/search"
-          className="flex items-center gap-2 px-3 py-2 bg-white/60 border border-brand-border rounded-lg text-xs text-brand-muted hover:bg-white hover:text-brand-text transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-white/60 border-2 border-brand-border rounded-lg text-xs text-brand-muted hover:bg-white hover:text-brand-text transition-colors"
         >
           <Search size={13} />
           Search...

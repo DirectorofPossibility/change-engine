@@ -352,7 +352,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                         <div className="flex flex-wrap gap-1.5 mt-1">
                           {ids.map(function (gid) {
                             return (
-                              <span key={gid} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg text-brand-text border border-brand-border">
+                              <span key={gid} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg text-brand-text border-2 border-brand-border">
                                 {gid}
                               </span>
                             )
@@ -366,7 +366,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             )}
 
             {/* Quick facts card */}
-            <div className="bg-white rounded-xl border border-brand-border p-5">
+            <div className="bg-white rounded-xl border-2 border-brand-border p-5">
               <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">Quick Facts</h3>
               <div className="space-y-2.5 text-sm">
                 {policy.level && (

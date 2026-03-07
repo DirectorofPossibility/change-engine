@@ -15,7 +15,7 @@ export function CompassNeighborhoodWelcome() {
   if (!zip || isLoading) return null
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-5 mb-8">
+    <div className="bg-white rounded-xl border-2 border-brand-border p-5 mb-8">
       <div className="flex items-start gap-3">
         <div className="w-8 h-8 rounded-full bg-brand-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
           <MapPin size={16} className="text-brand-accent" />
@@ -36,7 +36,7 @@ export function CompassNeighborhoodWelcome() {
                   <Link
                     key={o.official_id}
                     href={'/officials/' + o.official_id}
-                    className="text-xs bg-brand-bg border border-brand-border rounded-lg px-2.5 py-1 text-brand-text hover:shadow-sm transition-shadow"
+                    className="text-xs bg-brand-bg border-2 border-brand-border rounded-lg px-2.5 py-1 text-brand-text hover:shadow-sm transition-shadow"
                   >
                     {o.official_name}
                     {o.title ? ' — ' + o.title : ''}

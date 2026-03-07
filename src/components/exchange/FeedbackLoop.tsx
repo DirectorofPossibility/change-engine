@@ -113,7 +113,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
                   key={k.value}
                   type="button"
                   onClick={function () { setKind(k.value) }}
-                  className="block w-full text-left px-3 py-2 text-sm font-medium text-brand-text rounded-lg border border-brand-border hover:border-brand-accent hover:text-brand-accent transition-colors"
+                  className="block w-full text-left px-3 py-2 text-sm font-medium text-brand-text rounded-lg border-2 border-brand-border hover:border-brand-accent hover:text-brand-accent transition-colors"
                 >
                   {k.label}
                 </button>
@@ -140,7 +140,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
                 rows={3}
                 maxLength={1000}
                 required
-                className="w-full text-sm border border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent resize-none"
+                className="w-full text-sm border-2 border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent resize-none"
                 placeholder="Be as specific as you can..."
               />
             </div>
@@ -152,7 +152,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
                 type="email"
                 value={email}
                 onChange={function (e) { setEmail(e.target.value) }}
-                className="w-full text-sm border border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
+                className="w-full text-sm border-2 border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
                 placeholder="you@example.com"
               />
             </div>

@@ -92,7 +92,7 @@ export function WayfinderNav() {
                 onChange={function (e) { setSearchQuery(e.target.value) }}
                 placeholder={t('nav.search_placeholder')}
                 autoFocus
-                className="w-40 sm:w-56 pl-3 pr-2 py-1 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
+                className="w-40 sm:w-56 pl-3 pr-2 py-1 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:border-brand-accent"
               />
               <button
                 type="button"

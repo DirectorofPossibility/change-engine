@@ -167,14 +167,14 @@ export default async function MyDashboardPage() {
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-3">
-                <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
+                <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border-2 border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
                   Edit Settings
                 </Link>
                 <Link href="/compass" className="inline-block px-4 py-2 bg-brand-accent rounded-xl text-sm text-white font-semibold hover:bg-brand-accent-hover transition-all">
                   My Compass
                 </Link>
                 {['admin', 'partner', 'neighbor'].includes(currentRole) && (
-                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
+                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-brand-bg-alt border-2 border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
                     Go to Dashboard
                   </Link>
                 )}

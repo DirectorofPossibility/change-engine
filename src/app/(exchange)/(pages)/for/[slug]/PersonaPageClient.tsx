@@ -122,7 +122,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                   Personalize Your View
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 flex items-center gap-2 px-3 py-2 border border-brand-border rounded-lg bg-brand-bg">
+                  <div className="flex-1 flex items-center gap-2 px-3 py-2 border-2 border-brand-border rounded-lg bg-brand-bg">
                     <MapPin size={14} className="text-brand-muted" />
                     <input
                       type="text"
@@ -149,7 +149,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                     <Link
                       key={action.label}
                       href={action.href}
-                      className="group flex items-center gap-2 px-3 py-2.5 bg-white rounded-xl border border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all duration-200"
+                      className="group flex items-center gap-2 px-3 py-2.5 bg-white rounded-xl border-2 border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all duration-200"
                     >
                       <span className="w-1.5 h-6 rounded-sm flex-shrink-0 transition-all group-hover:w-2" style={{ backgroundColor: action.color }} />
                       <span className="text-xs font-semibold text-brand-text">{action.label}</span>
@@ -233,7 +233,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
           {/* Sidebar */}
           <aside className="lg:w-[300px] flex-shrink-0 space-y-5">
             {/* Pathways */}
-            <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+            <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
               <div className="relative p-4 border-b border-brand-border overflow-hidden">
                 <img
                   src={config.folImage}
@@ -263,7 +263,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             <FeaturedPromo variant="card" />
 
             {/* Other journeys */}
-            <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+            <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
               <div className="p-4 border-b border-brand-border">
                 <h3 className="font-serif text-base font-semibold text-brand-text">Other Journeys</h3>
                 <p className="text-[11px] text-brand-muted mt-0.5">Not quite your style? Try another path.</p>
@@ -295,7 +295,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             </div>
 
             {/* Help numbers */}
-            <div className="px-4 py-3 bg-brand-bg rounded-xl border border-brand-border">
+            <div className="px-4 py-3 bg-brand-bg rounded-xl border-2 border-brand-border">
               <p className="text-[10px] font-mono font-bold text-brand-muted">
                 Need help? <span className="text-brand-text">211</span> / <span className="text-brand-text">311</span> / <span className="text-brand-text">988</span>
               </p>

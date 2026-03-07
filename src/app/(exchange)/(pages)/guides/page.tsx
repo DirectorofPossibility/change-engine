@@ -46,7 +46,7 @@ export default async function GuidesPage() {
                 <Link
                   key={guide.guide_id}
                   href={'/guides/' + guide.slug}
-                  className="bg-white rounded-xl border border-brand-border hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+                  className="bg-white rounded-xl border-2 border-brand-border hover:shadow-md transition-shadow overflow-hidden flex flex-col"
                 >
                   {guide.hero_image_url && (
                     <div className="relative w-full h-40">

@@ -31,10 +31,10 @@ export function SearchResultsHeader({ query, totalCount }: SearchResultsHeaderPr
         <div className="text-center py-12">
           <p className="text-brand-muted mb-6">{t('search.no_results')}</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Link href="/help" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('nav.help')}</Link>
-            <Link href="/services" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.find_services')}</Link>
-            <Link href="/pathways" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.browse_pathways')}</Link>
-            <Link href="/officials/lookup" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.find_reps')}</Link>
+            <Link href="/help" className="px-4 py-2 bg-white border-2 border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('nav.help')}</Link>
+            <Link href="/services" className="px-4 py-2 bg-white border-2 border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.find_services')}</Link>
+            <Link href="/pathways" className="px-4 py-2 bg-white border-2 border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.browse_pathways')}</Link>
+            <Link href="/officials/lookup" className="px-4 py-2 bg-white border-2 border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.find_reps')}</Link>
           </div>
         </div>
       )}

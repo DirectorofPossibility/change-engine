@@ -205,7 +205,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
           value={query}
           onChange={function (e) { setQuery(e.target.value) }}
           placeholder="Search the knowledge base..."
-          className="w-full pl-9 pr-4 py-3 rounded-xl border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-colors"
+          className="w-full pl-9 pr-4 py-3 rounded-xl border-2 border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-colors"
         />
         {query && (
           <button
@@ -255,7 +255,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
         <button
           onClick={function () { setActiveType(null) }}
           className={'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ' +
-            (!activeType ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
+            (!activeType ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text')}
         >
           All Types
         </button>
@@ -269,7 +269,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
               key={type}
               onClick={function () { setActiveType(isActive ? null : type) }}
               className={'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ' +
-                (isActive ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
+                (isActive ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text')}
             >
               <Icon size={12} />
               {cfg.label} ({count})
@@ -284,7 +284,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
           <button
             onClick={function () { setActiveTheme(null) }}
             className={'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ' +
-              (!activeTheme ? 'bg-brand-text text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
+              (!activeTheme ? 'bg-brand-text text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text')}
           >
             All Pathways
           </button>
@@ -320,7 +320,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
             themeGroups.map(function (group) {
               const isExpanded = expandedThemes.has(group.theme.id)
               return (
-                <div key={group.theme.id} className="bg-white rounded-xl border border-brand-border overflow-hidden">
+                <div key={group.theme.id} className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
                   <button
                     onClick={function () { toggleTheme(group.theme.id) }}
                     className="w-full flex items-center gap-3 p-4 hover:bg-brand-bg/50 transition-colors"
@@ -397,7 +397,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                   disabled={!has}
                   className={'w-8 h-8 rounded text-xs font-semibold transition-colors ' +
                     (has
-                      ? 'bg-white border border-brand-border text-brand-text hover:bg-brand-accent hover:text-white hover:border-brand-accent'
+                      ? 'bg-white border-2 border-brand-border text-brand-text hover:bg-brand-accent hover:text-white hover:border-brand-accent'
                       : 'bg-brand-bg text-brand-muted/40 cursor-default')}
                 >
                   {letter}
@@ -458,7 +458,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                   <Link
                     key={item.id}
                     href={getItemHref(item)}
-                    className="group bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                    className="group bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
                   >
                     {item.image_url && (
                       <div className="w-full h-28 rounded-lg overflow-hidden mb-3 bg-brand-bg">

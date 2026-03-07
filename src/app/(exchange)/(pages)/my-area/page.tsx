@@ -25,10 +25,10 @@ import {
   getMunicipalServices,
   getNeighborhoodByZip,
   getContentForNeighborhood,
+  getActivePathwaysForZip,
   getLangId,
   fetchTranslationsForTable,
 } from '@/lib/data/exchange'
-import { PageHero } from '@/components/exchange/PageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { MyAreaClient } from './MyAreaClient'
 
@@ -49,12 +49,15 @@ export default async function MyAreaPage() {
 
   const langId = await getLangId()
 
+  const archetype = cookieStore.get('archetype')?.value || ''
+
   // Parallel fetch everything for this ZIP
-  const [civicProfile, services, municipal, neighborhood] = await Promise.all([
+  const [civicProfile, services, municipal, neighborhood, activePathways] = await Promise.all([
     getCivicProfileByZip(zip),
     getServicesByZip(zip),
     getMunicipalServices(zip),
     getNeighborhoodByZip(zip),
+    getActivePathwaysForZip(zip),
   ])
 
   // If we got a neighborhood, fetch content for it
@@ -95,15 +98,19 @@ export default async function MyAreaPage() {
 
   return (
     <div>
-      <PageHero
-        variant="editorial"
-        title={neighborhoodName}
-        subtitle={'ZIP ' + zip + ' — Your civic profile'}
-      />
+      <div className="bg-brand-bg border-b border-brand-border">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <Breadcrumb items={[{ label: 'My Area' }]} />
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text mt-4">
+            Your Wayfinder
+          </h1>
+          <p className="text-brand-muted mt-2 max-w-2xl leading-relaxed">
+            {neighborhoodName} &middot; ZIP {zip} &mdash; Your personalized civic profile, services, and community connections.
+          </p>
+        </div>
+      </div>
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'My Area' }]} />
-
         <MyAreaClient
           zip={zip}
           neighborhoodName={neighborhoodName}
@@ -116,6 +123,8 @@ export default async function MyAreaPage() {
           municipal={municipal}
           neighborhoodContent={neighborhoodContent}
           contentTranslations={contentTranslations}
+          activePathways={activePathways}
+          archetype={archetype}
         />
       </div>
     </div>

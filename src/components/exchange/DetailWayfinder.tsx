@@ -95,7 +95,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const firstOpenTier = priority.find(t => tierCounts[t] > 0) || 'understand'
 
   return (
-    <aside className="bg-white rounded-xl border border-brand-border lg:sticky lg:top-24">
+    <aside className="bg-white rounded-xl border-2 border-brand-border lg:sticky lg:top-24">
       {/* Header */}
       <div className="p-4 border-b border-brand-border relative">
         <h3 className="font-serif text-base font-semibold text-brand-text tracking-wide">

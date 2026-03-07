@@ -29,7 +29,7 @@ export default async function StoriesPage() {
           <div className="space-y-4">
             {(stories || []).map(function (s: any) {
               return (
-                <Link key={s.story_id || s.id} href={`/stories/${s.story_id || s.id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+                <Link key={s.story_id || s.id} href={`/stories/${s.story_id || s.id}`} className="block bg-white rounded-lg border-2 border-brand-border p-5 hover:shadow-md transition-shadow">
                   <h3 className="font-semibold text-brand-text font-serif text-lg">{s.title || s.story_title}</h3>
                   {(s.summary || s.story_summary) && <p className="text-sm text-brand-muted mt-2 line-clamp-3">{s.summary || s.story_summary}</p>}
                   {s.person_name && <p className="text-xs text-brand-accent mt-2 font-medium">{s.person_name}{s.neighborhood ? ` from ${s.neighborhood}` : ''}</p>}

@@ -10,7 +10,7 @@ interface BadgeCardProps {
 
 export function BadgeCard({ name, description, points, color }: BadgeCardProps) {
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-5 flex items-start gap-4">
+    <div className="bg-white rounded-xl border-2 border-brand-border p-5 flex items-start gap-4">
       <div
         className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
         style={{ backgroundColor: (color || '#E8723A') + '20' }}

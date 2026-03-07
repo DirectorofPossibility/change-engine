@@ -224,7 +224,7 @@ export function GeographyClient({
                   onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
                   placeholder="ZIP code"
                   maxLength={5}
-                  className="w-full pl-8 pr-2 py-2 text-sm border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/40 placeholder:text-brand-muted/50"
+                  className="w-full pl-8 pr-2 py-2 text-sm border-2 border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/40 placeholder:text-brand-muted/50"
                 />
               </div>
               <button
@@ -240,7 +240,7 @@ export function GeographyClient({
               <select
                 value={selectedSN}
                 onChange={handleSNChange}
-                className="w-full appearance-none px-3 py-2 pr-8 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 text-brand-text"
+                className="w-full appearance-none px-3 py-2 pr-8 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 text-brand-text"
               >
                 <option value="">Browse neighborhoods...</option>
                 {superNeighborhoods.map(function (sn) {
@@ -371,7 +371,7 @@ export function GeographyClient({
                       if (count === 0) return null
                       const Icon = et.icon
                       return (
-                        <div key={et.key} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-brand-border">
+                        <div key={et.key} className="flex items-center gap-2 px-3 py-2 rounded-lg border-2 border-brand-border">
                           <Icon size={14} style={{ color: et.color }} />
                           <div>
                             <span className="block text-sm font-bold text-brand-text leading-none">{count}</span>
@@ -396,10 +396,10 @@ export function GeographyClient({
                           <Link
                             key={o.official_id}
                             href={'/officials/' + o.official_id}
-                            className="flex items-center gap-3 p-2.5 rounded-lg border border-brand-border hover:border-brand-accent/40 hover:bg-brand-bg/50 transition-all group"
+                            className="flex items-center gap-3 p-2.5 rounded-lg border-2 border-brand-border hover:border-brand-accent/40 hover:bg-brand-bg/50 transition-all group"
                           >
                             {o.photo_url ? (
-                              <img src={o.photo_url} alt="" className="w-9 h-9 rounded-full object-cover border border-brand-border" />
+                              <img src={o.photo_url} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-brand-border" />
                             ) : (
                               <div className="w-9 h-9 rounded-full bg-brand-border/40 flex items-center justify-center">
                                 <Users size={14} className="text-brand-muted" />

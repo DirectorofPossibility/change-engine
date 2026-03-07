@@ -176,7 +176,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
                   ? 'bg-green-500 text-white'
                   : status === 'in_progress'
                     ? 'bg-brand-accent text-white'
-                    : 'bg-brand-bg text-brand-muted border border-brand-border')
+                    : 'bg-brand-bg text-brand-muted border-2 border-brand-border')
               }>
                 {status === 'completed' ? <CheckCircle2 size={18} /> : index + 1}
               </div>

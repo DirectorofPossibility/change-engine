@@ -21,8 +21,8 @@ export function ShareButtons({ url, title, compact = false }: ShareButtonsProps)
   }
 
   const btnClass = compact
-    ? 'w-8 h-8 rounded-lg flex items-center justify-center border border-brand-border text-brand-muted hover:text-brand-text hover:border-brand-text transition-colors'
-    : 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-border text-[12px] font-medium text-brand-muted hover:text-brand-text hover:border-brand-text transition-colors'
+    ? 'w-8 h-8 rounded-lg flex items-center justify-center border-2 border-brand-border text-brand-muted hover:text-brand-text hover:border-brand-text transition-colors'
+    : 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-brand-border text-[12px] font-medium text-brand-muted hover:text-brand-text hover:border-brand-text transition-colors'
 
   return (
     <div className="flex items-center gap-1.5">

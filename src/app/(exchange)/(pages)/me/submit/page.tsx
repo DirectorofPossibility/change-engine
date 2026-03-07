@@ -44,7 +44,7 @@ export default function SubmitResourcePage() {
         &larr; Back to My Dashboard
       </Link>
 
-      <div className="bg-white rounded-xl border border-brand-border p-6">
+      <div className="bg-white rounded-xl border-2 border-brand-border p-6">
         <h1 className="text-2xl font-bold text-brand-text mb-2 font-serif">Share a Resource</h1>
         <p className="text-sm text-brand-muted mb-6">
           Know a great resource for the Houston community? Share the link and our
@@ -74,7 +74,7 @@ export default function SubmitResourcePage() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://example.com/resource"
-                className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+                className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
               />
             </div>
 
@@ -88,7 +88,7 @@ export default function SubmitResourcePage() {
                 onChange={(e) => setNote(e.target.value)}
                 rows={3}
                 placeholder="Why is this resource helpful for the community?"
-                className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
+                className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
               />
             </div>
 

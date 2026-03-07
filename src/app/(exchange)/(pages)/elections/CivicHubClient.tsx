@@ -276,7 +276,7 @@ export function CivicHubClient({
                       <Link
                         key={e.election_id}
                         href={'/elections/' + e.election_id}
-                        className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow"
+                        className="bg-white rounded-xl border-2 border-brand-border p-5 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="font-semibold text-brand-text">{e.election_name}</h4>
@@ -313,7 +313,7 @@ export function CivicHubClient({
                       <Link
                         key={e.election_id}
                         href={'/elections/' + e.election_id}
-                        className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow opacity-75"
+                        className="bg-white rounded-xl border-2 border-brand-border p-5 hover:shadow-md transition-shadow opacity-75"
                       >
                         <h4 className="font-semibold text-brand-text mb-1">{e.election_name}</h4>
                         {e.election_type && (

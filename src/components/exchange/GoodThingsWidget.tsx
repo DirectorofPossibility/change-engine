@@ -82,7 +82,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
 
   if (variant === 'inline') {
     return (
-      <div className={'bg-brand-bg rounded-xl border border-brand-border p-4 transition-all duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
+      <div className={'bg-brand-bg rounded-xl border-2 border-brand-border p-4 transition-all duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
         <div className="flex items-center gap-2 mb-3">
           <FlowerOfLifeIcon size={16} color="#d69e2e" />
           <span className="font-serif font-bold text-sm text-brand-text">Three Good Things</span>

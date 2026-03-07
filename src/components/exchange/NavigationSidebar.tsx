@@ -146,7 +146,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
               aria-label="ZIP code"
               maxLength={5}
               disabled={isLoading}
-              className="flex-1 text-sm px-3 py-1.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+              className="flex-1 text-sm px-3 py-1.5 border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
             />
             <button type="submit" disabled={zipInput.length !== 5 || isLoading}
               className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
@@ -166,7 +166,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
             onChange={function (e) { setSearchQuery(e.target.value) }}
             placeholder={t('nav.search_placeholder')}
             aria-label="Search"
-            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            className="w-full pl-9 pr-3 py-1.5 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
         </form>
       </div>
@@ -402,7 +402,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
       <button
         type="button"
         onClick={function () { setMobileOpen(true) }}
-        className="md:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md border border-brand-border text-brand-text hover:bg-gray-50 transition-colors"
+        className="md:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md border-2 border-brand-border text-brand-text hover:bg-gray-50 transition-colors"
         aria-label="Open navigation"
       >
         <Menu size={22} />
@@ -446,7 +446,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
       <button
         type="button"
         onClick={function () { setCollapsed(!collapsed) }}
-        className="hidden md:flex fixed bottom-4 z-40 p-2 rounded-lg bg-white shadow-md border border-brand-border text-brand-muted hover:text-brand-text hover:bg-gray-50 transition-all duration-300"
+        className="hidden md:flex fixed bottom-4 z-40 p-2 rounded-lg bg-white shadow-md border-2 border-brand-border text-brand-muted hover:text-brand-text hover:bg-gray-50 transition-all duration-300"
         style={{ left: collapsed ? '12px' : '248px' }}
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}

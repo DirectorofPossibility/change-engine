@@ -274,7 +274,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
           <div className="flex flex-wrap gap-1.5 mb-3">
             {book.tags.slice(0, 3).map(function (tag) {
               return (
-                <span key={tag} className="inline-flex items-center gap-1 text-[9px] font-medium text-brand-muted bg-brand-bg px-2 py-0.5 rounded border border-brand-border">
+                <span key={tag} className="inline-flex items-center gap-1 text-[9px] font-medium text-brand-muted bg-brand-bg px-2 py-0.5 rounded border-2 border-brand-border">
                   <Tag size={8} /> {tag}
                 </span>
               )

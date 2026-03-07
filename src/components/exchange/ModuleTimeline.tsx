@@ -85,7 +85,7 @@ export function ModuleTimeline({ modules }: ModuleTimelineProps) {
 
               {/* Video embed */}
               {embedId && (
-                <div className="mb-4 rounded-lg overflow-hidden border border-brand-border">
+                <div className="mb-4 rounded-lg overflow-hidden border-2 border-brand-border">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
                       className="absolute inset-0 w-full h-full"

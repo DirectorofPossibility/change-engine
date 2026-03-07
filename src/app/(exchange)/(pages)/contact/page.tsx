@@ -15,7 +15,7 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Contact' }]} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
-          <div className="bg-white rounded-lg border border-brand-border p-6">
+          <div className="bg-white rounded-lg border-2 border-brand-border p-6">
             <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-4">The Change Lab</h2>
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-brand-muted" /><a href="mailto:hello@thechangelab.org" className="text-brand-accent hover:underline">hello@thechangelab.org</a></div>
@@ -23,7 +23,7 @@ export default function ContactPage() {
               <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href="https://www.changeengine.us" className="text-brand-accent hover:underline">www.changeengine.us</a></div>
             </div>
           </div>
-          <div className="bg-white rounded-lg border border-brand-border p-6">
+          <div className="bg-white rounded-lg border-2 border-brand-border p-6">
             <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-4">Ways to Connect</h2>
             <ul className="space-y-3 text-sm text-brand-text">
               <li><strong className="text-brand-text">Report an issue</strong> — Something wrong or outdated? Let us know.</li>

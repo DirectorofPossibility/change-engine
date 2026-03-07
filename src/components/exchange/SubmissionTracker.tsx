@@ -33,7 +33,7 @@ export function SubmissionTracker({ authId }: { authId: string }) {
     return (
       <section>
         <h2 className="text-lg font-bold text-brand-text mb-4">My Submissions</h2>
-        <div className="bg-white rounded-xl border border-brand-border p-6">
+        <div className="bg-white rounded-xl border-2 border-brand-border p-6">
           <div className="h-4 w-32 bg-brand-bg rounded animate-pulse" />
         </div>
       </section>
@@ -53,11 +53,11 @@ export function SubmissionTracker({ authId }: { authId: string }) {
     <section>
       <h2 className="text-lg font-bold text-brand-text mb-4">My Submissions</h2>
       {submissions.length === 0 ? (
-        <div className="bg-white rounded-xl border border-brand-border p-6 text-center">
+        <div className="bg-white rounded-xl border-2 border-brand-border p-6 text-center">
           <p className="text-brand-muted text-sm">No submissions yet. Share a resource to get started!</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-brand-border divide-y divide-brand-border">
+        <div className="bg-white rounded-xl border-2 border-brand-border divide-y divide-brand-border">
           {submissions.map(function (s) {
             const sc = statusConfig[s.status] || { bg: 'bg-gray-50', text: 'text-gray-600', label: s.status }
             let displayUrl = s.source_url

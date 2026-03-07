@@ -204,7 +204,7 @@ export function DocumentUpload() {
           value={title}
           onChange={function (e) { setTitle(e.target.value) }}
           placeholder={t('library.title_placeholder')}
-          className="w-full text-sm px-4 py-2.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+          className="w-full text-sm px-4 py-2.5 border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
         />
       </div>
 
@@ -219,7 +219,7 @@ export function DocumentUpload() {
           value={tags}
           onChange={function (e) { setTags(e.target.value) }}
           placeholder={t('library.tags_placeholder')}
-          className="w-full text-sm px-4 py-2.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+          className="w-full text-sm px-4 py-2.5 border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
         />
       </div>
 

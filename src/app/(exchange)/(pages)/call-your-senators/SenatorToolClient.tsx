@@ -575,7 +575,7 @@ export function SenatorToolClient() {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-5 text-brand-text text-sm leading-relaxed whitespace-pre-line mb-4 border border-brand-border">
+            <div className="bg-white rounded-lg p-5 text-brand-text text-sm leading-relaxed whitespace-pre-line mb-4 border-2 border-brand-border">
               {campaign.script.intro.replace('[ZIP]', zip || '[ZIP]')}
 
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mt-5 mb-3">Pick the one closest to your view:</p>

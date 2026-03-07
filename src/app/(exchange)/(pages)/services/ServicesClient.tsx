@@ -71,7 +71,7 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
           placeholder="ZIP code"
           value={zipFilter}
           onChange={(e) => setZipFilter(e.target.value)}
-          className="border border-brand-border rounded-lg px-3 py-2 text-sm w-32"
+          className="border-2 border-brand-border rounded-lg px-3 py-2 text-sm w-32"
           maxLength={5}
         />
         <span className="relative text-sm text-brand-muted self-center">

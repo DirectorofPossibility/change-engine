@@ -113,7 +113,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="flex flex-wrap items-center gap-3 mb-2">
             <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
             {service.airs_code && (
-              <span className="text-xs px-2 py-0.5 rounded-lg bg-white border border-brand-border text-brand-muted">AIRS: {service.airs_code}</span>
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-white border-2 border-brand-border text-brand-muted">AIRS: {service.airs_code}</span>
             )}
           </div>
 

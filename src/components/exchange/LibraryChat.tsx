@@ -239,7 +239,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
   }
 
   return (
-    <div className="flex flex-col h-[650px] max-h-[85vh] bg-white rounded-xl border border-brand-border overflow-hidden">
+    <div className="flex flex-col h-[650px] max-h-[85vh] bg-white rounded-xl border-2 border-brand-border overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b border-brand-border flex items-center justify-between bg-gradient-to-r from-brand-accent/5 to-transparent">
         <div className="flex items-center gap-2.5">
@@ -284,7 +284,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
                     <button
                       key={q}
                       onClick={function () { handleSend(q) }}
-                      className="text-left text-sm px-3 py-2.5 rounded-lg border border-brand-border hover:border-brand-accent hover:bg-brand-accent/5 text-brand-muted hover:text-brand-text transition-colors"
+                      className="text-left text-sm px-3 py-2.5 rounded-lg border-2 border-brand-border hover:border-brand-accent hover:bg-brand-accent/5 text-brand-muted hover:text-brand-text transition-colors"
                     >
                       {q}
                     </button>
@@ -328,7 +328,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
                             <Link
                               key={source.source_type + ':' + source.source_id}
                               href={source.link}
-                              className="flex items-start gap-2 px-2.5 py-2 rounded-lg border border-brand-border/50 hover:border-brand-accent/40 hover:bg-brand-accent/5 transition-colors group"
+                              className="flex items-start gap-2 px-2.5 py-2 rounded-lg border-2 border-brand-border/50 hover:border-brand-accent/40 hover:bg-brand-accent/5 transition-colors group"
                             >
                               <Icon size={13} className="text-brand-muted group-hover:text-brand-accent mt-0.5 flex-shrink-0" />
                               <div className="min-w-0">
@@ -378,7 +378,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
             onKeyDown={handleKeyDown}
             placeholder={t('chat.placeholder')}
             rows={1}
-            className="flex-1 resize-none text-sm px-4 py-2.5 border border-brand-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            className="flex-1 resize-none text-sm px-4 py-2.5 border-2 border-brand-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
           <button
             onClick={function () { handleSend() }}

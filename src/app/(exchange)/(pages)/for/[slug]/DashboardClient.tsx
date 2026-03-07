@@ -152,7 +152,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
               {config.quickActions.map(function (a) {
                 return (
                   <Link key={a.label} href={a.href}
-                    className="group flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg border border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all text-xs">
+                    className="group flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg border-2 border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all text-xs">
                     <span className="w-0.5 h-4 rounded-sm" style={{ backgroundColor: a.color }} />
                     <span className="font-medium text-brand-text">{a.label}</span>
                     {a.effort && <span className="text-[9px] text-brand-muted">{a.effort}</span>}
@@ -359,7 +359,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
             )}
 
             {/* Pathways */}
-            <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+            <div className="bg-white rounded-lg border-2 border-brand-border overflow-hidden">
               <div className="px-3 py-2 border-b border-brand-border">
                 <h3 className="font-serif font-bold text-xs text-brand-text">Explore Pathways</h3>
               </div>
@@ -380,7 +380,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
             {/* Quote */}
             {quote && (
-              <div className="rounded-lg border border-brand-border px-3 py-3" style={{ background: config.color + '05' }}>
+              <div className="rounded-lg border-2 border-brand-border px-3 py-3" style={{ background: config.color + '05' }}>
                 <blockquote>
                   <p className="font-serif text-xs italic text-brand-text leading-relaxed">"{quote.quote_text}"</p>
                   {quote.attribution && (
@@ -393,7 +393,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
             )}
 
             {/* Other journeys — very compact */}
-            <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+            <div className="bg-white rounded-lg border-2 border-brand-border overflow-hidden">
               <div className="px-3 py-2 border-b border-brand-border">
                 <h3 className="font-serif font-bold text-xs text-brand-text">Other Journeys</h3>
               </div>
@@ -431,7 +431,7 @@ function ContentTypeSection({ type, items, typeInfo, centerColor }: {
 }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+    <div className="bg-white rounded-lg border-2 border-brand-border overflow-hidden">
       <button onClick={function () { setOpen(!open) }}
         className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-brand-bg-alt/30 transition-colors">
         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: centerColor }} />
@@ -484,7 +484,7 @@ function EntityPanel({ title, items, color, seeAllHref, children }: {
 }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+    <div className="bg-white rounded-lg border-2 border-brand-border overflow-hidden">
       <button onClick={function () { setOpen(!open) }}
         className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-brand-bg-alt/30 transition-colors">
         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
@@ -511,7 +511,7 @@ function SidebarCard({ title, icon, iconColor, seeAllHref, children }: {
   title: string; icon?: string; iconColor: string; seeAllHref?: string; children: React.ReactNode
 }) {
   return (
-    <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+    <div className="bg-white rounded-lg border-2 border-brand-border overflow-hidden">
       <div className="px-3 py-2 border-b border-brand-border flex items-center gap-1.5">
         {icon && (
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={iconColor}>

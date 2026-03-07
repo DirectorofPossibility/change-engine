@@ -44,7 +44,7 @@ export function CategoryArticleList({ sections }: CategoryArticleListProps) {
                   <Link
                     key={article.id}
                     href={'/library/doc/' + article.id}
-                    className="group block bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                    className="group block bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
                   >
                     <h3 className="font-serif text-base font-bold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-1">
                       {article.title}

@@ -94,7 +94,7 @@ export default async function OpenDataPage() {
         {/* Data Sources */}
         <section className="mt-14">
           <h2 className="font-serif text-2xl text-brand-text mb-6">Data Sources</h2>
-          <div className="bg-white border border-brand-border rounded-lg p-6">
+          <div className="bg-white border-2 border-brand-border rounded-lg p-6">
             <p className="text-sm text-brand-muted mb-4">
               The Community Exchange aggregates information from trusted public data sources to keep our community knowledge current and accurate.
             </p>
@@ -117,7 +117,7 @@ export default async function OpenDataPage() {
         {/* 7 Pathways */}
         <section className="mt-14">
           <h2 className="font-serif text-2xl text-brand-text mb-6">7 Pathways</h2>
-          <div className="bg-white border border-brand-border rounded-lg divide-y divide-brand-border">
+          <div className="bg-white border-2 border-brand-border rounded-lg divide-y divide-brand-border">
             {themes.map(function (theme) {
               return (
                 <Link

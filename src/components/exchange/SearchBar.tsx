@@ -26,7 +26,7 @@ export function SearchBar({ placeholder = 'Search...', 'aria-label': ariaLabel =
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
         aria-label={ariaLabel}
-        className="w-full pl-9 pr-4 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+        className="w-full pl-9 pr-4 py-2 border-2 border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
       />
     </div>
   )

@@ -78,7 +78,7 @@ export default async function ExplorePage() {
             <div className="grid sm:grid-cols-3 gap-5 mb-14">
               <Link
                 href="/explore/knowledge-base"
-                className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+                className="group bg-white rounded-xl border-2 border-brand-border p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
                   <Layers size={20} className="text-brand-accent" />
@@ -98,7 +98,7 @@ export default async function ExplorePage() {
 
               <Link
                 href="/library"
-                className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+                className="group bg-white rounded-xl border-2 border-brand-border p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
                   <BookOpen size={20} className="text-brand-accent" />
@@ -116,7 +116,7 @@ export default async function ExplorePage() {
 
               <Link
                 href="/knowledge-graph"
-                className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+                className="group bg-white rounded-xl border-2 border-brand-border p-6 hover:shadow-lg transition-shadow"
               >
                 <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
                   <Sparkles size={20} className="text-brand-accent" />
@@ -142,7 +142,7 @@ export default async function ExplorePage() {
                     <Link
                       key={theme.id}
                       href={'/pathways/' + (THEMES as Record<string, { slug: string }>)[theme.id].slug}
-                      className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-brand-border hover:shadow-md transition-shadow"
+                      className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border-2 border-brand-border hover:shadow-md transition-shadow"
                     >
                       <div
                         className="w-6 h-6 rounded-md flex items-center justify-center"

@@ -36,7 +36,7 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg border border-brand-border p-5 max-w-md">
+            <div className="bg-white rounded-lg border-2 border-brand-border p-5 max-w-md">
               <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
               <div className="space-y-2 text-sm">
                 {s.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${s.phone}`} className="text-brand-accent hover:underline">{s.phone}</a></div>}

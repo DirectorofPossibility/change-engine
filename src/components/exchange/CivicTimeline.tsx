@@ -70,7 +70,7 @@ export function CivicTimeline({ events }: CivicTimelineProps) {
               {/* Dot */}
               <div className={'absolute left-2.5 top-1.5 w-3 h-3 rounded-full z-10 ' + dotClass} />
 
-              <div className="bg-white rounded-lg border border-brand-border p-3">
+              <div className="bg-white rounded-lg border-2 border-brand-border p-3">
                 <div className="flex items-center gap-2 mb-1">
                   <Icon size={14} className={isActive ? 'text-brand-accent' : 'text-brand-muted'} />
                   <span className="text-xs font-medium text-brand-muted uppercase tracking-wider">

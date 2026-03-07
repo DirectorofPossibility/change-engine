@@ -21,7 +21,7 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           onClick={function () { setActive('all') }}
-          className={'px-3 py-1.5 text-sm rounded-lg transition-colors ' + (active === 'all' ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-text hover:bg-brand-bg')}
+          className={'px-3 py-1.5 text-sm rounded-lg transition-colors ' + (active === 'all' ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-text hover:bg-brand-bg')}
         >
           All ({total})
         </button>
@@ -31,7 +31,7 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
             <button
               key={tab.key}
               onClick={function () { setActive(tab.key) }}
-              className={'px-3 py-1.5 text-sm rounded-lg transition-colors ' + (active === tab.key ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-text hover:bg-brand-bg')}
+              className={'px-3 py-1.5 text-sm rounded-lg transition-colors ' + (active === tab.key ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-text hover:bg-brand-bg')}
             >
               <span className="inline-block w-1.5 h-1.5 rounded-full mr-1.5 flex-shrink-0" style={{ backgroundColor: CENTER_COLORS[tab.center || ''] || '#6B6560' }} />
               {t(tab.labelKey)} ({tab.count})

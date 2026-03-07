@@ -43,7 +43,7 @@ export default async function EventsPage() {
   function EventCard({ e }: { e: any }) {
     const date = e.start_datetime ? new Date(e.start_datetime) : null
     return (
-      <Link href={`/events/${e.event_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+      <Link href={`/events/${e.event_id}`} className="block bg-white rounded-lg border-2 border-brand-border p-5 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-4">
           {date && (
             <div className="flex-shrink-0 w-14 h-14 bg-brand-accent/10 rounded-lg flex flex-col items-center justify-center">

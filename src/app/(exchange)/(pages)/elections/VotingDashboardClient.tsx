@@ -146,7 +146,7 @@ export function VotingDashboardClient({
               <div className="flex flex-wrap gap-2">
                 {runoffCandidates.map(function (c) {
                   return (
-                    <span key={c.candidate_id} className="text-xs px-2 py-1 bg-white border border-brand-border rounded-lg text-brand-text">
+                    <span key={c.candidate_id} className="text-xs px-2 py-1 bg-white border-2 border-brand-border rounded-lg text-brand-text">
                       {c.candidate_name} ({c.party?.charAt(0)}) — {c.office_sought}
                     </span>
                   )
@@ -294,7 +294,7 @@ export function VotingDashboardClient({
                       href="https://www.votetexas.gov/voting/vote-by-mail.html"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border text-brand-text rounded-card text-sm font-medium hover:shadow-sm transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-brand-border text-brand-text rounded-card text-sm font-medium hover:shadow-sm transition-colors"
                     >
                       <Mail size={14} />
                       Vote by mail
@@ -337,7 +337,7 @@ export function VotingDashboardClient({
               value={zipInput}
               onChange={function (e) { setZipInput(e.target.value.replace(/\D/g, '')) }}
               placeholder="Enter your ZIP code"
-              className="w-full pl-9 pr-4 py-2.5 rounded-card border border-brand-border bg-white text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent text-sm"
+              className="w-full pl-9 pr-4 py-2.5 rounded-card border-2 border-brand-border bg-white text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent text-sm"
             />
           </div>
           <button
@@ -399,7 +399,7 @@ export function VotingDashboardClient({
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-card border border-brand-border p-6 text-center">
+          <div className="bg-white rounded-card border-2 border-brand-border p-6 text-center">
             <MapPin size={20} className="mx-auto text-brand-muted mb-2" />
             <p className="text-brand-muted text-sm">Enter your ZIP code above to see who represents you at every level of government.</p>
           </div>
@@ -418,7 +418,7 @@ export function VotingDashboardClient({
                 <Link
                   key={item.id}
                   href={'/content/' + item.id}
-                  className="bg-white rounded-card border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
+                  className="bg-white rounded-card border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
                 >
                   {item.image_url && (
                     <div className="h-32 overflow-hidden">
@@ -453,7 +453,7 @@ export function VotingDashboardClient({
             href="https://www.votetexas.gov/register-to-vote/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:shadow-sm transition-shadow"
+            className="flex items-center gap-3 bg-white rounded-card border-2 border-brand-border p-4 hover:shadow-sm transition-shadow"
           >
             <div className="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
               <ClipboardCheck size={18} className="text-brand-accent" />
@@ -468,7 +468,7 @@ export function VotingDashboardClient({
             href="https://www.votetexas.gov/voting/vote-by-mail.html"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:shadow-sm transition-shadow"
+            className="flex items-center gap-3 bg-white rounded-card border-2 border-brand-border p-4 hover:shadow-sm transition-shadow"
           >
             <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
               <Mail size={18} className="text-blue-600" />
@@ -481,7 +481,7 @@ export function VotingDashboardClient({
 
           <Link
             href="/officials"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:shadow-sm transition-shadow"
+            className="flex items-center gap-3 bg-white rounded-card border-2 border-brand-border p-4 hover:shadow-sm transition-shadow"
           >
             <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
               <Users size={18} className="text-green-600" />

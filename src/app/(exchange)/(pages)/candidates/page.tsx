@@ -28,7 +28,7 @@ export default async function CandidatesPage() {
         <div className="space-y-4 mt-4">
           {(candidates || []).map(function (c) {
             return (
-              <Link key={c.candidate_id} href={`/candidates/${c.candidate_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+              <Link key={c.candidate_id} href={`/candidates/${c.candidate_id}`} className="block bg-white rounded-lg border-2 border-brand-border p-5 hover:shadow-md transition-shadow">
                 <div className="flex items-start gap-4">
                   {c.photo_url ? (
                     <img src={c.photo_url} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0" />
