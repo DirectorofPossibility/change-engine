@@ -20,15 +20,12 @@ export default async function GeographyPage({
   const superNeighborhoods = await getSuperNeighborhoodsList()
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex items-center justify-between mb-4">
+    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <Breadcrumb items={[{ label: 'Map View' }]} />
-          <h1 className="font-serif text-2xl font-bold text-brand-text mt-1">Explore your community</h1>
+          <h1 className="font-serif text-xl font-bold text-brand-text mt-1">Explore your community</h1>
         </div>
-        <p className="text-xs text-brand-muted hidden sm:block max-w-xs text-right">
-          Click a neighborhood, enter a ZIP, or toggle boundary layers to discover what&apos;s in your area.
-        </p>
       </div>
 
       <Suspense fallback={<div className="w-full h-[650px] rounded-2xl bg-brand-border/30 animate-pulse" />}>

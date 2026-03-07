@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Constrain Leaflet z-indices so nav dropdowns stay on top */
+.leaflet-pane { z-index: 1 !important; }
+.leaflet-top, .leaflet-bottom { z-index: 10 !important; }
+.leaflet-control { z-index: 10 !important; }
+
 @layer base {
   body {
     @apply bg-brand-bg text-brand-text font-sans antialiased;
