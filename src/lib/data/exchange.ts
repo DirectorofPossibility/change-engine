@@ -958,6 +958,46 @@ export async function getRelatedOfficials(focusAreaIds: string[]) {
   return data ?? []
 }
 
+/** Fetch all foundations for the index page, with spotlight ones first. */
+export async function getFoundationsIndex() {
+  const supabase = await createClient()
+  const { data, error } = await (supabase as any)
+    .from('foundations')
+    .select('id, name, slug, mission, type, geo_level, assets, annual_giving, website_url, website_display, city, state_code, founded_year, is_spotlight, org_id')
+    .order('is_spotlight', { ascending: false })
+    .order('name')
+  if (error) { console.error('getFoundationsIndex error', error); return [] as any[] }
+  return (data ?? []) as Array<{
+    id: string; name: string; slug: string; mission: string | null; type: string | null
+    geo_level: string; assets: string | null; annual_giving: string | null
+    website_url: string | null; website_display: string | null
+    city: string | null; state_code: string | null; founded_year: number | null
+    is_spotlight: boolean; org_id: string | null
+  }>
+}
+
+/** Fetch pathway associations for a set of foundation IDs. */
+export async function getFoundationPathways(foundationIds: string[]) {
+  if (foundationIds.length === 0) return [] as Array<{ foundation_id: string; pathway_id: string }>
+  const supabase = await createClient()
+  const { data } = await (supabase as any)
+    .from('foundation_pathways')
+    .select('foundation_id, pathway_id')
+    .in('foundation_id', foundationIds)
+  return (data ?? []) as Array<{ foundation_id: string; pathway_id: string }>
+}
+
+/** Fetch focus area associations for a set of foundation IDs. */
+export async function getFoundationFocusAreas(foundationIds: string[]) {
+  if (foundationIds.length === 0) return [] as Array<{ foundation_id: string; focus_area: string; focus_id: string }>
+  const supabase = await createClient()
+  const { data } = await (supabase as any)
+    .from('foundation_focus_areas')
+    .select('foundation_id, focus_area, focus_id')
+    .in('foundation_id', foundationIds)
+  return (data ?? []) as Array<{ foundation_id: string; focus_area: string; focus_id: string }>
+}
+
 /** Fetch foundations linked to a pathway (theme) via foundation_pathways junction. */
 export async function getFoundationsByPathway(pathwayId: string) {
   const themeToPathway: Record<string, string> = {
