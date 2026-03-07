@@ -184,6 +184,8 @@ function CollapsibleSection({ title, level, children, defaultOpen = false }: {
   )
 }
 
+const THEME_KEYS = Object.keys(THEMES) as Array<keyof typeof THEMES>
+
 export function MyAreaClient({
   zip,
   neighborhoodName,
@@ -196,7 +198,20 @@ export function MyAreaClient({
   municipal,
   neighborhoodContent,
   contentTranslations,
+  activePathways,
+  archetype,
 }: MyAreaClientProps) {
+
+  // Archetype-based section ordering
+  const archetypeSections: Record<string, string[]> = {
+    seeker: ['pathways', 'services', 'officials', 'policies', 'municipal', 'news', 'action'],
+    learner: ['pathways', 'news', 'policies', 'officials', 'services', 'municipal', 'action'],
+    builder: ['pathways', 'action', 'services', 'officials', 'news', 'policies', 'municipal'],
+    watchdog: ['pathways', 'officials', 'policies', 'news', 'services', 'municipal', 'action'],
+    partner: ['pathways', 'officials', 'policies', 'services', 'action', 'news', 'municipal'],
+    explorer: ['pathways', 'news', 'services', 'officials', 'policies', 'municipal', 'action'],
+  }
+  const sectionOrder = archetypeSections[archetype.toLowerCase()] || ['pathways', 'officials', 'policies', 'services', 'municipal', 'news', 'action']
 
   // Municipal services flattened for display
   const municipalGroups = municipal ? [
@@ -208,6 +223,206 @@ export function MyAreaClient({
     { label: 'Library', items: municipal.library || [], icon: BookOpen },
     { label: 'Utilities', items: municipal.utilities || [], icon: Building2 },
   ].filter(function (g) { return g.items.length > 0 }) : []
+
+  // Section renderers keyed by section name
+  const sections: Record<string, React.ReactNode> = {
+    pathways: (
+      <section key="pathways" className="mb-10">
+        <div className="bg-white rounded-lg border-2 border-brand-border p-5">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <CompactCircleGraph activePathways={activePathways} accentColor="#C75B2A" />
+            <div className="flex-1">
+              <h2 className="font-serif font-bold text-brand-text text-lg mb-2">Your Pathways</h2>
+              <p className="text-xs text-brand-muted mb-3">
+                {activePathways.length > 0
+                  ? activePathways.length + ' pathways are active in your area'
+                  : 'Explore the 7 community pathways'}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {THEME_KEYS.map(function (key) {
+                  const theme = THEMES[key] as { name: string; color: string; slug: string }
+                  const isActive = activePathways.includes(key)
+                  return (
+                    <Link
+                      key={key}
+                      href={'/explore/pathway/' + theme.slug}
+                      className="flex items-center gap-1.5 text-xs py-1 px-2 rounded border border-brand-border hover:border-brand-accent transition-colors"
+                      style={{ opacity: isActive ? 1 : 0.5 }}
+                    >
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
+                      <span className="text-brand-text">{theme.name}</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    ),
+
+    officials: (
+      <section key="officials" className="mb-10">
+        <SectionHeader icon={Users} title="Who Represents You" count={totalOfficials} color="#2B6CB0" />
+        {officials.city.length > 0 && (
+          <CollapsibleSection title="City of Houston" level={officials.city.length + ' officials'} defaultOpen>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {officials.city.map(function (o: any) { return <OfficialCard key={o.official_id} official={o} /> })}
+            </div>
+          </CollapsibleSection>
+        )}
+        {officials.county.length > 0 && (
+          <CollapsibleSection title="Harris County" level={officials.county.length + ' officials'} defaultOpen>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {officials.county.map(function (o: any) { return <OfficialCard key={o.official_id} official={o} /> })}
+            </div>
+          </CollapsibleSection>
+        )}
+        {officials.state.length > 0 && (
+          <CollapsibleSection title="State of Texas" level={officials.state.length + ' officials'}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {officials.state.map(function (o: any) { return <OfficialCard key={o.official_id} official={o} /> })}
+            </div>
+          </CollapsibleSection>
+        )}
+        {officials.federal.length > 0 && (
+          <CollapsibleSection title="Federal" level={officials.federal.length + ' officials'}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {officials.federal.map(function (o: any) { return <OfficialCard key={o.official_id} official={o} /> })}
+            </div>
+          </CollapsibleSection>
+        )}
+        {totalOfficials === 0 && (
+          <p className="text-sm text-brand-muted italic">No officials found for ZIP {zip}. Try a different ZIP code.</p>
+        )}
+        <Link href="/officials" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mt-2">
+          View all officials <ArrowRight size={14} />
+        </Link>
+      </section>
+    ),
+
+    policies: (
+      <section key="policies" className="mb-10">
+        <SectionHeader icon={FileText} title="Policies Affecting Your Area" count={totalPolicies} color="#7C3AED" />
+        {policies.city.length > 0 && (
+          <CollapsibleSection title="City Ordinances" level={policies.city.length + ' policies'} defaultOpen>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {policies.city.slice(0, 6).map(function (p: any) { return <PolicyCard key={p.policy_id} policy={p} /> })}
+            </div>
+            {policies.city.length > 6 && (
+              <Link href="/policies?level=city" className="text-xs font-semibold text-brand-accent hover:underline">
+                View all {policies.city.length} city policies
+              </Link>
+            )}
+          </CollapsibleSection>
+        )}
+        {policies.state.length > 0 && (
+          <CollapsibleSection title="State Legislation" level={policies.state.length + ' policies'}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {policies.state.slice(0, 6).map(function (p: any) { return <PolicyCard key={p.policy_id} policy={p} /> })}
+            </div>
+            {policies.state.length > 6 && (
+              <Link href="/policies?level=state" className="text-xs font-semibold text-brand-accent hover:underline">
+                View all {policies.state.length} state policies
+              </Link>
+            )}
+          </CollapsibleSection>
+        )}
+        {policies.federal.length > 0 && (
+          <CollapsibleSection title="Federal" level={policies.federal.length + ' policies'}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+              {policies.federal.slice(0, 6).map(function (p: any) { return <PolicyCard key={p.policy_id} policy={p} /> })}
+            </div>
+          </CollapsibleSection>
+        )}
+        {totalPolicies === 0 && (
+          <p className="text-sm text-brand-muted italic">No policies mapped to your districts yet.</p>
+        )}
+        <Link href="/policies" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mt-2">
+          Browse all policies <ArrowRight size={14} />
+        </Link>
+      </section>
+    ),
+
+    services: (
+      <section key="services" className="mb-10">
+        <SectionHeader icon={Building2} title="Services Near You" count={services.length} color="#2D8659" />
+        {services.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {services.slice(0, 9).map(function (s: any) { return <ServiceCard key={s.service_id} service={s} /> })}
+          </div>
+        ) : (
+          <p className="text-sm text-brand-muted italic">No 211 services found for ZIP {zip}.</p>
+        )}
+        {services.length > 9 && (
+          <Link href={'/services?zip=' + zip} className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mt-3">
+            View all {services.length} services <ArrowRight size={14} />
+          </Link>
+        )}
+      </section>
+    ),
+
+    municipal: municipalGroups.length > 0 ? (
+      <section key="municipal" className="mb-10">
+        <SectionHeader icon={Phone} title="City Services" count={undefined} color="#CA9B1D" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {municipalGroups.map(function (group) {
+            return (
+              <div key={group.label} className="bg-white rounded-lg border-2 border-brand-border p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <group.icon size={16} className="text-brand-muted" />
+                  <h3 className="text-sm font-bold text-brand-text">{group.label}</h3>
+                </div>
+                <ul className="space-y-1.5">
+                  {group.items.slice(0, 3).map(function (item: any, i: number) {
+                    return (
+                      <li key={i} className="text-xs text-brand-muted">
+                        <span className="font-medium text-brand-text">{item.service_name || item.name}</span>
+                        {item.phone && <span className="block text-brand-accent">{item.phone}</span>}
+                        {item.address && <span className="block">{item.address}</span>}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+    ) : null,
+
+    news: neighborhoodContent.length > 0 ? (
+      <section key="news" className="mb-10">
+        <SectionHeader icon={BookOpen} title={'News from ' + neighborhoodName} count={neighborhoodContent.length} color="#D97315" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {neighborhoodContent.slice(0, 6).map(function (item: any) {
+            const tr = contentTranslations[item.inbox_id || item.id]
+            return <ContentCard key={item.id} item={item} translation={tr} />
+          })}
+        </div>
+      </section>
+    ) : null,
+
+    action: (
+      <section key="action" className="mb-10">
+        <SectionHeader icon={Briefcase} title="What You Can Do" count={undefined} color="#E8723A" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Link href="/opportunities" className="group block p-5 rounded-lg border-2 border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Volunteer</h3>
+            <p className="text-xs text-brand-muted mt-1">Find opportunities to give your time and skills</p>
+          </Link>
+          <Link href="/organizations" className="group block p-5 rounded-lg border-2 border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Organizations</h3>
+            <p className="text-xs text-brand-muted mt-1">Connect with groups working in your community</p>
+          </Link>
+          <Link href="/foundations" className="group block p-5 rounded-lg border-2 border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Foundations</h3>
+            <p className="text-xs text-brand-muted mt-1">Explore funding and grantmaking in your focus areas</p>
+          </Link>
+        </div>
+      </section>
+    ),
+  }
 
   return (
     <div className="mt-6">
@@ -231,203 +446,8 @@ export function MyAreaClient({
         </div>
       </div>
 
-      {/* ── Who Represents You ── */}
-      <section className="mb-10">
-        <SectionHeader icon={Users} title="Who Represents You" count={totalOfficials} color="#2B6CB0" />
-
-        {officials.city.length > 0 && (
-          <CollapsibleSection title="City of Houston" level={officials.city.length + ' officials'} defaultOpen>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {officials.city.map(function (o: any) {
-                return <OfficialCard key={o.official_id} official={o} />
-              })}
-            </div>
-          </CollapsibleSection>
-        )}
-
-        {officials.county.length > 0 && (
-          <CollapsibleSection title="Harris County" level={officials.county.length + ' officials'} defaultOpen>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {officials.county.map(function (o: any) {
-                return <OfficialCard key={o.official_id} official={o} />
-              })}
-            </div>
-          </CollapsibleSection>
-        )}
-
-        {officials.state.length > 0 && (
-          <CollapsibleSection title="State of Texas" level={officials.state.length + ' officials'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {officials.state.map(function (o: any) {
-                return <OfficialCard key={o.official_id} official={o} />
-              })}
-            </div>
-          </CollapsibleSection>
-        )}
-
-        {officials.federal.length > 0 && (
-          <CollapsibleSection title="Federal" level={officials.federal.length + ' officials'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {officials.federal.map(function (o: any) {
-                return <OfficialCard key={o.official_id} official={o} />
-              })}
-            </div>
-          </CollapsibleSection>
-        )}
-
-        {totalOfficials === 0 && (
-          <p className="text-sm text-brand-muted italic">No officials found for ZIP {zip}. Try a different ZIP code.</p>
-        )}
-
-        <Link href="/officials" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mt-2">
-          View all officials <ArrowRight size={14} />
-        </Link>
-      </section>
-
-      {/* ── Policies Affecting Your Area ── */}
-      <section className="mb-10">
-        <SectionHeader icon={FileText} title="Policies Affecting Your Area" count={totalPolicies} color="#7C3AED" />
-
-        {policies.city.length > 0 && (
-          <CollapsibleSection title="City Ordinances" level={policies.city.length + ' policies'} defaultOpen>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {policies.city.slice(0, 6).map(function (p: any) {
-                return <PolicyCard key={p.policy_id} policy={p} />
-              })}
-            </div>
-            {policies.city.length > 6 && (
-              <Link href={'/policies?level=city'} className="text-xs font-semibold text-brand-accent hover:underline">
-                View all {policies.city.length} city policies
-              </Link>
-            )}
-          </CollapsibleSection>
-        )}
-
-        {policies.state.length > 0 && (
-          <CollapsibleSection title="State Legislation" level={policies.state.length + ' policies'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {policies.state.slice(0, 6).map(function (p: any) {
-                return <PolicyCard key={p.policy_id} policy={p} />
-              })}
-            </div>
-            {policies.state.length > 6 && (
-              <Link href={'/policies?level=state'} className="text-xs font-semibold text-brand-accent hover:underline">
-                View all {policies.state.length} state policies
-              </Link>
-            )}
-          </CollapsibleSection>
-        )}
-
-        {policies.federal.length > 0 && (
-          <CollapsibleSection title="Federal" level={policies.federal.length + ' policies'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-              {policies.federal.slice(0, 6).map(function (p: any) {
-                return <PolicyCard key={p.policy_id} policy={p} />
-              })}
-            </div>
-          </CollapsibleSection>
-        )}
-
-        {totalPolicies === 0 && (
-          <p className="text-sm text-brand-muted italic">No policies mapped to your districts yet.</p>
-        )}
-
-        <Link href="/policies" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mt-2">
-          Browse all policies <ArrowRight size={14} />
-        </Link>
-      </section>
-
-      {/* ── Nearby Services ── */}
-      <section className="mb-10">
-        <SectionHeader icon={Building2} title="Services Near You" count={services.length} color="#2D8659" />
-
-        {services.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {services.slice(0, 9).map(function (s: any) {
-              return <ServiceCard key={s.service_id} service={s} />
-            })}
-          </div>
-        ) : (
-          <p className="text-sm text-brand-muted italic">No 211 services found for ZIP {zip}.</p>
-        )}
-
-        {services.length > 9 && (
-          <Link href={'/services?zip=' + zip} className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mt-3">
-            View all {services.length} services <ArrowRight size={14} />
-          </Link>
-        )}
-      </section>
-
-      {/* ── Municipal Services ── */}
-      {municipalGroups.length > 0 && (
-        <section className="mb-10">
-          <SectionHeader icon={Phone} title="City Services" count={undefined} color="#CA9B1D" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {municipalGroups.map(function (group) {
-              return (
-                <div key={group.label} className="bg-white rounded-lg border-2 border-brand-border p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <group.icon size={16} className="text-brand-muted" />
-                    <h3 className="text-sm font-bold text-brand-text">{group.label}</h3>
-                  </div>
-                  <ul className="space-y-1.5">
-                    {group.items.slice(0, 3).map(function (item: any, i: number) {
-                      return (
-                        <li key={i} className="text-xs text-brand-muted">
-                          <span className="font-medium text-brand-text">{item.service_name || item.name}</span>
-                          {item.phone && <span className="block text-brand-accent">{item.phone}</span>}
-                          {item.address && <span className="block">{item.address}</span>}
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* ── Local Updates ── */}
-      {neighborhoodContent.length > 0 && (
-        <section className="mb-10">
-          <SectionHeader icon={BookOpen} title={'News from ' + neighborhoodName} count={neighborhoodContent.length} color="#D97315" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {neighborhoodContent.slice(0, 6).map(function (item: any) {
-              const t = contentTranslations[item.inbox_id || item.id]
-              return <ContentCard key={item.id} item={item} translation={t} />
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* ── What You Can Do ── */}
-      <section className="mb-10">
-        <SectionHeader icon={Briefcase} title="What You Can Do" count={undefined} color="#E8723A" />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Link
-            href="/opportunities"
-            className="group block p-5 rounded-lg border-2 border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
-          >
-            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Volunteer</h3>
-            <p className="text-xs text-brand-muted mt-1">Find opportunities to give your time and skills</p>
-          </Link>
-          <Link
-            href="/organizations"
-            className="group block p-5 rounded-lg border-2 border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
-          >
-            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Organizations</h3>
-            <p className="text-xs text-brand-muted mt-1">Connect with groups working in your community</p>
-          </Link>
-          <Link
-            href="/foundations"
-            className="group block p-5 rounded-lg border-2 border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
-          >
-            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Foundations</h3>
-            <p className="text-xs text-brand-muted mt-1">Explore funding and grantmaking in your focus areas</p>
-          </Link>
-        </div>
-      </section>
+      {/* Sections rendered in archetype-driven order */}
+      {sectionOrder.map(function (key) { return sections[key] })}
     </div>
   )
 }

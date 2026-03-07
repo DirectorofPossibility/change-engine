@@ -2637,6 +2637,43 @@ export async function getPolicyFocusAreas(policyId: string) {
   return focusAreas || []
 }
 
+/**
+ * Get active theme/pathway IDs for a ZIP code.
+ * Queries service and content focus-area junctions to find which themes are
+ * represented in the user's area. Returns unique THEME_xx keys.
+ */
+export async function getActivePathwaysForZip(zip: string): Promise<string[]> {
+  const supabase = await createClient()
+
+  // Get services in this ZIP
+  const { data: services } = await supabase
+    .from('services_211')
+    .select('service_id')
+    .eq('zip_code', zip)
+    .eq('is_active', 'Yes')
+    .limit(50)
+
+  if (!services || services.length === 0) return []
+
+  const serviceIds = services.map(s => s.service_id)
+  const { data: junctions } = await supabase
+    .from('service_focus_areas')
+    .select('focus_id')
+    .in('service_id', serviceIds)
+
+  if (!junctions || junctions.length === 0) return []
+
+  const focusIds = Array.from(new Set(junctions.map(j => j.focus_id)))
+  const { data: focusAreas } = await supabase
+    .from('focus_areas')
+    .select('theme_id')
+    .in('focus_id', focusIds)
+
+  if (!focusAreas) return []
+
+  return Array.from(new Set(focusAreas.map(fa => fa.theme_id).filter(Boolean))) as string[]
+}
+
 // ── Geography page data ───────────────────────────────────────────────
 
 /** Map municipal service_type to marker type for the geography map. */
