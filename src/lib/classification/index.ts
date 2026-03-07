@@ -605,8 +605,9 @@ export function buildUserPrompt(entityType: EntityType, data: {
   if (data.source) prompt += `Source: ${data.source}\n`
   if (data.fullText) prompt += `\nFULL TEXT (${data.fullText.length} chars):\n${data.fullText.substring(0, 6000)}\n`
 
+  prompt += '\nIMPORTANT: Write title_6th_grade and summary_6th_grade so a 6th-grader can understand. Use asset-based language — focus on strengths, opportunities, and what is available. Keep summary_6th_grade to 2-3 clear sentences. Avoid jargon, acronyms, and bureaucratic language.\n'
   if (entityType === 'policy') {
-    prompt += '\nIMPORTANT: Write title_6th_grade and summary_6th_grade so a 6th-grader can understand. For impact_statement, write 2-3 sentences in asset-based language explaining how this policy connects to daily life. Focus on opportunities, protections, or resources it provides. Use "you" and "your family".\n'
+    prompt += 'For impact_statement, write 2-3 sentences explaining how this policy connects to daily life. Focus on opportunities, protections, or resources it provides. Use "you" and "your family".\n'
   }
 
   prompt += `\nClassify this ${entityLabel}. Return JSON:\n{\n`
