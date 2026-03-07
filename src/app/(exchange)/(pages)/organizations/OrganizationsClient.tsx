@@ -31,6 +31,8 @@ const ORG_TYPES: Array<{ label: string; color: string }> = [
   { label: 'Human Services', color: '#dd6b20' },
   { label: 'Advocacy/Policy', color: '#C75B2A' },
   { label: 'Arts, Culture & Humanities', color: '#805ad5' },
+  { label: 'Environmental', color: '#276749' },
+  { label: 'Faith-Based', color: '#b7791f' },
 ]
 
 const ORG_TYPE_COLOR: Record<string, string> = {}
