@@ -10,61 +10,75 @@ import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
 import { SpiralProgress } from './SpiralProgress'
 import { THEMES } from '@/lib/constants'
+import { useTranslation } from '@/lib/use-translation'
 
-const CENTERS = [
-  {
-    label: 'Community',
-    href: '/community',
-    color: '#805ad5',
-    items: [
-      { href: '/neighborhoods', label: 'Neighborhoods' },
-      { href: '/organizations', label: 'Organizations' },
-      { href: '/foundations', label: 'Foundations' },
-      { href: '/calendar', label: 'Events & Calendar' },
-    ],
-  },
-  {
-    label: 'Learning',
-    href: '/learning',
-    color: '#3182ce',
-    items: [
-      { href: '/library', label: 'Library' },
-      { href: '/news', label: 'News' },
-      { href: '/pathways', label: 'Topics' },
-      { href: '/chat', label: 'Ask Chance' },
-    ],
-  },
-  {
-    label: 'Resources',
-    href: '/resources',
-    color: '#C75B2A',
-    items: [
-      { href: '/services', label: 'Services' },
-      { href: '/opportunities', label: 'Opportunities' },
-      { href: '/help', label: 'Available Resources' },
-    ],
-  },
-  {
-    label: 'Action',
-    href: '/action',
-    color: '#38a169',
-    items: [
-      { href: '/governance', label: 'Governance' },
-      { href: '/officials', label: 'Officials' },
-      { href: '/policies', label: 'Policies' },
-      { href: '/elections', label: 'Elections' },
-    ],
-  },
-  {
-    label: 'About',
-    href: '/about',
-    color: '#6B6560',
-    items: [
-      { href: '/about', label: 'About Us' },
-      { href: '/contact', label: 'Contact' },
-    ],
-  },
-]
+function useCenters(t: (key: string) => string) {
+  return [
+    {
+      label: t('d2nav.community'),
+      href: '/community',
+      color: '#805ad5',
+      items: [
+        { href: '/neighborhoods', label: t('d2nav.neighborhoods') },
+        { href: '/organizations', label: t('d2nav.organizations') },
+        { href: '/foundations', label: t('d2nav.foundations') },
+        { href: '/calendar', label: t('d2nav.events_calendar') },
+      ],
+    },
+    {
+      label: t('d2nav.learning'),
+      href: '/learning',
+      color: '#3182ce',
+      items: [
+        { href: '/library', label: t('d2nav.library') },
+        { href: '/news', label: t('d2nav.news') },
+        { href: '/pathways', label: t('d2nav.topics') },
+        { href: '/chat', label: t('d2nav.ask_chance') },
+      ],
+    },
+    {
+      label: t('d2nav.resources'),
+      href: '/resources',
+      color: '#C75B2A',
+      items: [
+        { href: '/services', label: t('d2nav.services') },
+        { href: '/opportunities', label: t('d2nav.opportunities') },
+        { href: '/help', label: t('d2nav.available_resources') },
+      ],
+    },
+    {
+      label: t('d2nav.action'),
+      href: '/action',
+      color: '#38a169',
+      items: [
+        { href: '/governance', label: t('d2nav.governance') },
+        { href: '/officials', label: t('d2nav.officials') },
+        { href: '/policies', label: t('d2nav.policies') },
+        { href: '/elections', label: t('d2nav.elections') },
+      ],
+    },
+    {
+      label: t('d2nav.about'),
+      href: '/about',
+      color: '#6B6560',
+      items: [
+        { href: '/about', label: t('d2nav.about_us') },
+        { href: '/contact', label: t('d2nav.contact') },
+      ],
+    },
+  ]
+}
+
+function useDiscoverLinks(t: (key: string) => string) {
+  return [
+    { href: '/compass', label: t('d2nav.civic_compass') },
+    { href: '/dashboard-live', label: t('d2nav.live_dashboard') },
+    { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
+    { href: '/goodthings', label: t('d2nav.three_good_things') },
+    { href: '/call-your-senators', label: t('d2nav.call_senators') },
+    { href: '/polling-places', label: t('d2nav.polling_places') },
+  ]
+}
 
 const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
   return { id, name: (t as any).name, color: (t as any).color, slug: (t as any).slug }
@@ -73,6 +87,10 @@ const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
 export function D2Nav() {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const { t } = useTranslation()
+
+  const centers = useCenters(t)
+  const discoverLinks = useDiscoverLinks(t)
 
   const closeDrawer = useCallback(function () { setDrawerOpen(false) }, [])
 
@@ -113,15 +131,15 @@ export function D2Nav() {
               <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ boxShadow: '0 0 20px rgba(199,91,42,0.25)' }} />
             </div>
             <div className="leading-none">
-              <span className="block font-serif text-[18px] font-bold text-brand-text">Community Exchange</span>
-              <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.15em] text-brand-muted-light">The Change Lab</span>
+              <span className="block font-serif text-[18px] font-bold text-brand-text">{t('brand.name')}</span>
+              <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.15em] text-brand-muted-light">{t('brand.the_change_lab')}</span>
             </div>
           </Link>
 
           {/* Right side */}
           <div className="flex items-center gap-2.5">
             <div className="hidden md:block">
-              <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors" aria-label="Search">
+              <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors" aria-label={t('nav.search_placeholder')}>
                 <Search size={18} className="text-brand-muted" />
               </Link>
             </div>
@@ -135,7 +153,7 @@ export function D2Nav() {
               href="/me"
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"
             >
-              My Account
+              {t('d2nav.my_account')}
             </Link>
             {/* Hamburger — all screens */}
             <button
@@ -161,7 +179,7 @@ export function D2Nav() {
             <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border">
               <div className="flex items-center gap-2">
                 <FlowerOfLifeIcon size={24} color="#C75B2A" />
-                <span className="font-serif text-[15px] font-bold">Community Exchange</span>
+                <span className="font-serif text-[15px] font-bold">{t('brand.name')}</span>
               </div>
               <button onClick={function () { setDrawerOpen(false) }} aria-label="Close menu" className="p-1 rounded-md hover:bg-brand-bg transition-colors">
                 <X size={20} />
@@ -173,7 +191,7 @@ export function D2Nav() {
               <div className="flex items-center gap-3 pb-3 border-b border-brand-border">
                 <ZipInput />
                 <LanguageSwitcher />
-                <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors md:hidden" aria-label="Search" onClick={closeDrawer}>
+                <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors md:hidden" aria-label={t('nav.search_placeholder')} onClick={closeDrawer}>
                   <Search size={18} className="text-brand-muted" />
                 </Link>
               </div>
@@ -182,16 +200,16 @@ export function D2Nav() {
               <details className="group border-b border-brand-border">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Your Journey</span>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.your_journey')}</span>
                 </summary>
                 <div className="pb-3">
-                  <p className="pl-5 pb-2 text-[11px] text-brand-muted">Choose how you explore:</p>
+                  <p className="pl-5 pb-2 text-[11px] text-brand-muted">{t('d2nav.choose_explore')}</p>
                   <ArchetypeSelector compact />
                 </div>
               </details>
 
               {/* Centers — collapsible sections */}
-              {CENTERS.map(function (center) {
+              {centers.map(function (center) {
                 const isActive = pathname === center.href || center.items.some(function (item) { return pathname?.startsWith(item.href) })
                 return (
                   <details key={center.label} className="group border-b border-brand-border">
@@ -211,7 +229,7 @@ export function D2Nav() {
                         className="block pl-5 py-1.5 text-[12px] font-medium text-brand-muted hover:text-brand-accent transition-colors"
                         onClick={closeDrawer}
                       >
-                        View all &rarr;
+                        {t('d2nav.view_all')} &rarr;
                       </Link>
                       {center.items.map(function (item) {
                         const itemActive = pathname === item.href || pathname?.startsWith(item.href + '/')
@@ -236,7 +254,7 @@ export function D2Nav() {
               <details className="group border-b border-brand-border">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Topics</span>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.topics')}</span>
                 </summary>
                 <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
                   {PATHWAY_LIST.map(function (pw) {
@@ -259,17 +277,10 @@ export function D2Nav() {
               <details className="group border-b border-brand-border">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Discover</span>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.discover')}</span>
                 </summary>
                 <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
-                  {[
-                    { href: '/compass', label: 'Civic Compass' },
-                    { href: '/dashboard-live', label: 'Live Dashboard' },
-                    { href: '/knowledge-graph', label: 'Knowledge Graph' },
-                    { href: '/goodthings', label: 'Three Good Things' },
-                    { href: '/call-your-senators', label: 'Call Your Senators' },
-                    { href: '/polling-places', label: 'Polling Places' },
-                  ].map(function (item) {
+                  {discoverLinks.map(function (item) {
                     return (
                       <Link
                         key={item.href}
@@ -291,7 +302,7 @@ export function D2Nav() {
                   className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"
                   onClick={closeDrawer}
                 >
-                  My Account
+                  {t('d2nav.my_account')}
                 </Link>
               </div>
 
@@ -299,13 +310,13 @@ export function D2Nav() {
               <details className="group">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Support</span>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.support')}</span>
                 </summary>
                 <div className="pb-3 font-mono text-[11px] text-brand-muted-light space-y-1 pl-5">
-                  <p>Crisis: <strong className="text-brand-text">988</strong></p>
-                  <p>City Services: <strong className="text-brand-text">311</strong></p>
-                  <p>Social Services: <strong className="text-brand-text">211</strong></p>
-                  <p>DV Hotline: <strong className="text-brand-text">713-528-2121</strong></p>
+                  <p>{t('d2nav.crisis')}: <strong className="text-brand-text">988</strong></p>
+                  <p>{t('d2nav.city_services')}: <strong className="text-brand-text">311</strong></p>
+                  <p>{t('d2nav.social_services')}: <strong className="text-brand-text">211</strong></p>
+                  <p>{t('d2nav.dv_hotline')}: <strong className="text-brand-text">713-528-2121</strong></p>
                 </div>
               </details>
             </div>

@@ -1,38 +1,43 @@
+'use client'
+
 import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { TipsToggle } from './TipsToggle'
-
-const DISCOVER = [
-  { label: 'Civic Compass', href: '/compass' },
-  { label: 'Topics', href: '/pathways' },
-  { label: 'News', href: '/news' },
-  { label: 'Live Dashboard', href: '/dashboard-live' },
-  { label: 'Three Good Things', href: '/goodthings' },
-  { label: 'Polling Places', href: '/polling-places' },
-]
-
-const LEARN = [
-  { label: 'Knowledge Graph', href: '/knowledge-graph' },
-  { label: 'Library', href: '/library' },
-  { label: 'Foundations', href: '/foundations' },
-]
-
-const ACT = [
-  { label: 'Call Your Senators', href: '/call-your-senators' },
-  { label: 'Volunteer', href: '/opportunities' },
-  { label: 'Partner With Us', href: '/about' },
-]
-
-const ABOUT = [
-  { label: 'About The Change Lab', href: '/about' },
-  { label: 'Our Approach', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-  { label: 'User Manual', href: '/manual' },
-  { label: 'Accessibility', href: '/accessibility' },
-  { label: 'Privacy Policy', href: '/privacy' },
-]
+import { useTranslation } from '@/lib/use-translation'
 
 export function D2Footer() {
+  const { t } = useTranslation()
+
+  const DISCOVER = [
+    { label: t('d2footer.civic_compass'), href: '/compass' },
+    { label: t('d2footer.topics'), href: '/pathways' },
+    { label: t('d2footer.news'), href: '/news' },
+    { label: t('d2footer.live_dashboard'), href: '/dashboard-live' },
+    { label: t('d2footer.three_good_things'), href: '/goodthings' },
+    { label: t('d2footer.polling_places'), href: '/polling-places' },
+  ]
+
+  const LEARN = [
+    { label: t('d2footer.knowledge_graph'), href: '/knowledge-graph' },
+    { label: t('d2footer.library'), href: '/library' },
+    { label: t('d2footer.foundations'), href: '/foundations' },
+  ]
+
+  const ACT = [
+    { label: t('d2footer.call_senators'), href: '/call-your-senators' },
+    { label: t('d2footer.volunteer'), href: '/opportunities' },
+    { label: t('d2footer.partner'), href: '/about' },
+  ]
+
+  const ABOUT = [
+    { label: t('d2footer.about_change_lab'), href: '/about' },
+    { label: t('d2footer.our_approach'), href: '/about' },
+    { label: t('d2footer.contact'), href: '/contact' },
+    { label: t('d2footer.user_manual'), href: '/manual' },
+    { label: t('d2footer.accessibility'), href: '/accessibility' },
+    { label: t('d2footer.privacy_policy'), href: '/privacy' },
+  ]
+
   return (
     <>
       {/* Spectrum bar */}
@@ -69,22 +74,22 @@ export function D2Footer() {
                 <div className="flex items-center gap-3 mb-3">
                   <FlowerOfLifeIcon size={44} color="#C75B2A" />
                   <div>
-                    <span className="block font-serif text-xl font-bold text-brand-text leading-tight">Community Exchange</span>
-                    <span className="block font-mono text-[9px] font-bold uppercase tracking-widest text-brand-muted-light">Powered by The Change Lab</span>
+                    <span className="block font-serif text-xl font-bold text-brand-text leading-tight">{t('brand.name')}</span>
+                    <span className="block font-mono text-[9px] font-bold uppercase tracking-widest text-brand-muted-light">{t('brand.powered_by')}</span>
                   </div>
                 </div>
                 <p className="font-serif italic text-[15px] text-brand-muted mb-2">
-                  Community life, organized.
+                  {t('brand.tagline')}
                 </p>
                 <p className="text-[13px] leading-relaxed text-brand-muted">
-                  Community Exchange is a community discovery platform built by The Change Lab in Houston. We connect residents to the officials, services, organizations, and opportunities that already exist — in their language, at their level, in their neighborhood.
+                  {t('brand.description')}
                 </p>
               </div>
             </div>
 
             {/* Discover */}
             <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Discover</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">{t('d2footer.discover')}</p>
               <div className="space-y-1">
                 {DISCOVER.map(function (item) {
                   return (
@@ -98,7 +103,7 @@ export function D2Footer() {
 
             {/* Learn */}
             <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Learn</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">{t('d2footer.learn')}</p>
               <div className="space-y-1">
                 {LEARN.map(function (item) {
                   return (
@@ -112,7 +117,7 @@ export function D2Footer() {
 
             {/* Act */}
             <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Act</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">{t('d2footer.act')}</p>
               <div className="space-y-1">
                 {ACT.map(function (item) {
                   return (
@@ -126,7 +131,7 @@ export function D2Footer() {
 
             {/* About */}
             <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">About</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">{t('d2footer.about')}</p>
               <div className="space-y-1">
                 {ABOUT.map(function (item) {
                   return (
@@ -142,17 +147,17 @@ export function D2Footer() {
           {/* Mission line */}
           <div className="mt-8 pt-6 border-t border-brand-border">
             <p className="text-[13px] italic text-brand-muted text-center max-w-2xl mx-auto">
-              We didn&apos;t build anything new. We just made what already exists findable.
+              {t('brand.mission')}
             </p>
           </div>
 
           {/* Bottom bar */}
           <div className="mt-4 pt-4 border-t border-brand-border flex flex-wrap items-center justify-between gap-4 text-[11px] text-brand-muted-light">
-            <p>&copy; {new Date().getFullYear()} The Change Lab. Fiscally sponsored by Impact Hub Houston, a 501(c)(3).</p>
+            <p>&copy; {new Date().getFullYear()} {t('brand.copyright')}</p>
             <div className="flex items-center gap-4">
-              <Link href="/privacy" className="hover:text-brand-accent transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-brand-accent transition-colors">Terms</Link>
-              <Link href="/accessibility" className="hover:text-brand-accent transition-colors">Accessibility</Link>
+              <Link href="/privacy" className="hover:text-brand-accent transition-colors">{t('d2footer.privacy')}</Link>
+              <Link href="/terms" className="hover:text-brand-accent transition-colors">{t('d2footer.terms')}</Link>
+              <Link href="/accessibility" className="hover:text-brand-accent transition-colors">{t('d2footer.accessibility')}</Link>
               <span className="text-brand-border">|</span>
               <TipsToggle />
               <span className="text-brand-border">|</span>
@@ -162,15 +167,15 @@ export function D2Footer() {
 
           {/* Closing */}
           <p className="mt-3 text-center text-[10px] text-brand-muted-light">
-            Built in Houston. For Houston.
+            {t('brand.built_in')}
           </p>
 
           {/* Crisis line */}
           <div className="mt-3 pt-3 border-t border-brand-border/50 flex justify-center gap-4 font-mono text-[11px] text-brand-muted-light">
-            <span>Crisis: <strong className="text-brand-text">988</strong></span>
-            <span>City: <strong className="text-brand-text">311</strong></span>
-            <span>Social Services: <strong className="text-brand-text">211</strong></span>
-            <span>DV: <strong className="text-brand-text">713-528-2121</strong></span>
+            <span>{t('d2nav.crisis')}: <strong className="text-brand-text">988</strong></span>
+            <span>{t('d2nav.city_services')}: <strong className="text-brand-text">311</strong></span>
+            <span>{t('d2nav.social_services')}: <strong className="text-brand-text">211</strong></span>
+            <span>{t('d2nav.dv_hotline')}: <strong className="text-brand-text">713-528-2121</strong></span>
           </div>
         </div>
       </footer>

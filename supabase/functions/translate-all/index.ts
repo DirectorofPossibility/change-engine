@@ -115,6 +115,21 @@ const TABLE_CONFIGS: Record<string, {
     contentType: 'guides',
     selectCols: 'guide_id,title,description',
   },
+  events: {
+    idCol: 'event_id',
+    nameCol: 'event_name',
+    descCol: 'description_5th_grade',
+    contentType: 'events',
+    selectCols: 'event_id,event_name,description_5th_grade',
+    activeFilter: { col: 'is_active', val: 'true' },
+  },
+  foundations: {
+    idCol: 'id',
+    nameCol: 'name',
+    descCol: 'mission',
+    contentType: 'foundations',
+    selectCols: 'id,name,mission',
+  },
 };
 
 const SYSTEM_PROMPT = `You are a professional translator for The Change Engine, a civic engagement platform in Houston, Texas.
@@ -153,6 +168,7 @@ async function translateText(
         content: `Translate the following to ${lang.name}. Return JSON with "title" and "summary" keys only.\n\nTitle: ${title}\nSummary: ${summary}`,
       }],
     }),
+    signal: AbortSignal.timeout(30000), // 30s timeout — prevents edge function timeout
   });
   const data = await res.json();
   const text = data.content?.[0]?.text || '{}';
@@ -211,8 +227,12 @@ Deno.serve(async (req: Request) => {
     let totalErrors = 0;
     let totalSkipped = 0;
     const details: Record<string, { translated: number; skipped: number; errors: number }> = {};
+    const startTime = Date.now();
+    const TIME_BUDGET_MS = 50000; // Stop after 50s to stay under edge function limit
+    let timeBudgetExceeded = false;
 
     for (const tableName of tables) {
+      if (timeBudgetExceeded) break;
       const config = TABLE_CONFIGS[tableName];
       if (!config) {
         details[tableName] = { translated: 0, skipped: 0, errors: 0 };
@@ -235,6 +255,7 @@ Deno.serve(async (req: Request) => {
       let errors = 0;
 
       for (const row of rows) {
+        if (Date.now() - startTime > TIME_BUDGET_MS) { timeBudgetExceeded = true; break; }
         const contentId = row[config.idCol];
         const titleText = row[config.nameCol] || row['policy_name'] || row['org_name'] || '';
         const descText = row[config.descCol] || row['summary_5th_grade'] || row['description_5th_grade'] || '';
