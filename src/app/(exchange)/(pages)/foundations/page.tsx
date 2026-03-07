@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import FoundationsGalaxy from './FoundationsGalaxy'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 export const metadata: Metadata = {
   title: 'Foundations Galaxy | Community Exchange',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function FoundationsPage() {
   return (
     <div className="min-h-screen bg-brand-bg">
+      <SpiralTracker action="view_foundation" />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Breadcrumb items={[
           { label: 'Foundations' }

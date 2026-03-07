@@ -5,6 +5,7 @@ import { MapPin, Send, Mail, Download, ChevronDown, Globe } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import dynamic from 'next/dynamic'
+import { logSpiralAction } from '@/lib/spiral'
 
 const GoodThingsMap = dynamic(function () { return import('./GoodThingsMap').then(function (m) { return m.GoodThingsMap }) }, {
   ssr: false,
@@ -77,6 +78,7 @@ export function GoodThingsClient() {
       if (!res.ok) { setError(data.error || 'Something went wrong.'); setSubmitting(false); return }
 
       const newEntry = data.entry as GoodThingEntry
+      logSpiralAction('share_good_thing')
       setLastEntry(newEntry)
       setEntries(function (prev) { return [newEntry, ...prev] })
       setSubmitted(true)

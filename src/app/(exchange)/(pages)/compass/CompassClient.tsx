@@ -23,6 +23,7 @@ import { CompassView } from '@/components/exchange/CompassView'
 import { ZipInput } from '@/components/exchange/ZipInput'
 import { THEMES } from '@/lib/constants'
 import type { CompassPreviewData } from '@/lib/types/exchange'
+import { SpiralProgress } from '@/components/exchange/SpiralProgress'
 
 interface CompassClientProps {
   zip?: string
@@ -424,6 +425,9 @@ export function CompassClient({
                 </Link>
               </div>
             </div>
+
+            {/* Spiral Progress */}
+            <SpiralProgress variant="full" />
 
             {/* Pathways at a glance */}
             <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">

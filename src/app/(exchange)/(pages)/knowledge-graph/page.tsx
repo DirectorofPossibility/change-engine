@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getCircleGraphData } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import CircleKnowledgeGraph from '@/components/exchange/CircleKnowledgeGraph'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 export const metadata: Metadata = {
   title: 'Civic Knowledge Graph — Community Exchange',
@@ -15,6 +16,7 @@ export default async function KnowledgeGraphPage() {
 
   return (
     <div className="min-h-screen bg-brand-bg">
+      <SpiralTracker action="explore_knowledge_graph" />
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
         <Breadcrumb items={[{ label: 'Knowledge Graph' }]} />
       </div>

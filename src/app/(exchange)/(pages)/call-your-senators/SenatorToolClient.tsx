@@ -6,6 +6,7 @@ import {
   ExternalLink, Share2, Copy, ChevronRight, AlertCircle,
   Users, PenLine
 } from 'lucide-react'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 // ── Campaign Data ──
 
@@ -317,6 +318,7 @@ export function SenatorToolClient() {
 
   return (
     <div className="bg-white">
+      <SpiralTracker action="call_senator" />
       {/* ── Urgent Banner ── */}
       <div className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-brand-bg-alt border-b border-brand-border text-brand-text text-sm font-medium text-center">
         <AlertCircle size={16} className="text-brand-accent flex-shrink-0" />
