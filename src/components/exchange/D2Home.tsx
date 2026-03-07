@@ -112,22 +112,19 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <strong className="text-brand-text">That&apos;s not a motivation problem. It&apos;s a navigation problem.</strong>
             </p>
 
-            <Link
-              href="/search"
-              className="flex items-center gap-3 max-w-[480px] px-4 py-4 bg-white border-2 border-brand-text rounded-xl mb-4"
+            <div className="flex items-center gap-3 max-w-[480px] px-4 py-4 bg-white border-2 border-brand-text rounded-xl mb-4"
               style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-              <span className="text-sm text-brand-muted-light">What are you looking for?</span>
-              <span className="ml-auto px-3 py-1.5 bg-brand-text text-white font-mono text-[11px] font-bold uppercase rounded-lg">Go</span>
-            </Link>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+              <span className="text-sm text-brand-muted-light">Enter your zip code or address</span>
+            </div>
 
             <div className="flex flex-wrap gap-2 text-sm font-semibold">
               <Link href="/compass" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
                 Take the quiz
               </Link>
-              <Link href="/search?q=near+me" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
-                Near me
+              <Link href="/search" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
+                Search
               </Link>
               <Link href="/calendar" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
                 What&apos;s happening

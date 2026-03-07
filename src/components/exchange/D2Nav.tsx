@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, X, Menu, ChevronDown } from 'lucide-react'
+import { X, Menu, ChevronDown } from 'lucide-react'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
@@ -174,16 +174,6 @@ export function D2Nav({ election }: D2NavProps) {
             <div className="hidden md:block relative">
               <LanguageSwitcher />
               <InfoBubble id={TOOLTIPS.language_switcher.id} text={TOOLTIPS.language_switcher.text} position="bottom" />
-            </div>
-            <div className="relative">
-              <Link
-                href="/search"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-brand-border text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted-light hover:border-brand-accent hover:text-brand-accent transition-colors"
-              >
-                <Search size={13} />
-                Search
-              </Link>
-              <InfoBubble id={TOOLTIPS.search_icon.id} text={TOOLTIPS.search_icon.text} position="bottom" />
             </div>
             <Link
               href="/me"
