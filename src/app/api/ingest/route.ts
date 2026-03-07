@@ -521,6 +521,7 @@ async function extractMultipleEvents(
   taxonomyPrompt: string,
   parentInboxId: string,
   validFocusIds: Set<any>,
+  orgId?: string | null,
 ): Promise<Array<{ inbox_id: string; title: string }> | null> {
   const extractPrompt = `You are analyzing a web page that may contain MULTIPLE distinct events (like a calendar, event listing, or events page).
 
@@ -588,6 +589,7 @@ ${fullText.substring(0, 8000)}`
       }),
       status: 'needs_review',
       content_type: 'event',
+      ...(orgId ? { org_id: orgId } : {}),
     })
 
     // Build a basic classification for each event
@@ -613,6 +615,7 @@ ${fullText.substring(0, 8000)}`
       ai_classification: eventClassification,
       confidence: 0.75,
       review_status: 'pending',
+      ...(orgId ? { org_id: orgId } : {}),
     })
 
     results.push({ inbox_id: eventInboxId, title: eventTitle })
@@ -651,6 +654,7 @@ async function extractMultipleArticles(
   taxonomyPrompt: string,
   parentInboxId: string,
   validFocusIds: Set<any>,
+  orgId?: string | null,
 ): Promise<Array<{ inbox_id: string; title: string }> | null> {
   const extractPrompt = `You are analyzing a web page that may contain MULTIPLE distinct news articles or stories (like a news feed, blog listing, roundup, or newsletter).
 
@@ -715,6 +719,7 @@ ${fullText.substring(0, 8000)}`
       }),
       status: 'needs_review',
       content_type: 'article',
+      ...(orgId ? { org_id: orgId } : {}),
     })
 
     const articleClassification: any = {
@@ -732,6 +737,7 @@ ${fullText.substring(0, 8000)}`
       ai_classification: articleClassification,
       confidence: 0.70,
       review_status: 'pending',
+      ...(orgId ? { org_id: orgId } : {}),
     })
 
     results.push({ inbox_id: articleInboxId, title: articleTitle })
@@ -895,13 +901,20 @@ Return JSON:
   }
 
   // Step 4b: Multi-item extraction — split listing pages into individual items
+  // Resolve source org early so child items inherit it
+  let earlyOrgId: string | null = null
+  const earlyDomainMatch = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(meta.domain)}&select=org_id`).catch(() => [])
+  if (earlyDomainMatch && earlyDomainMatch.length > 0) {
+    earlyOrgId = earlyDomainMatch[0].org_id
+  }
+
   const isEventListing = classification.content_type === 'event'
   const isNewsListing = classification.content_type === 'article' && fullText.length > 3000
   if (isEventListing || isNewsListing) {
     try {
       const multiResult = isEventListing
-        ? await extractMultipleEvents(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds)
-        : await extractMultipleArticles(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds)
+        ? await extractMultipleEvents(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds, earlyOrgId)
+        : await extractMultipleArticles(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds, earlyOrgId)
       if (multiResult) {
         const listingType = isEventListing ? 'event_listing' : 'news_listing'
         await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: 'processed', content_type: listingType })
@@ -1031,17 +1044,29 @@ Return JSON:
     }
   }
 
-  // Step 9: Create organization entries
+  // Step 9: Create organization entries + resolve org_id for this content
   const orgsCreated: string[] = []
+  let resolvedOrgId: string | null = null
+
+  // First, try to match the source domain to an existing org
+  const sourceDomainMatch = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(meta.domain)}&select=org_id`).catch(() => [])
+  if (sourceDomainMatch && sourceDomainMatch.length > 0) {
+    resolvedOrgId = sourceDomainMatch[0].org_id
+  }
+
   for (const org of (classification.organizations || [])) {
     if (!org.name) continue
     const orgUrl = org.url || ''
     const domain = orgUrl.match(/https?:\/\/([^/]+)/)?.[1] || ''
     if (!domain) continue
 
-    const domainCheck = await supaRest('GET', `org_domains?domain=eq.${domain}&select=org_id`).catch(() => [])
+    const domainCheck = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(domain)}&select=org_id`).catch(() => [])
     if (domainCheck && domainCheck.length > 0) {
       orgsCreated.push(`${org.name} (exists)`)
+      // If this org's domain matches the source domain, use it
+      if (!resolvedOrgId && domain === meta.domain) {
+        resolvedOrgId = domainCheck[0].org_id
+      }
       continue
     }
 
@@ -1066,12 +1091,23 @@ Return JSON:
       }
 
       orgsCreated.push(`${org.name} (NEW: ${orgId})`)
+
+      // If this is the first org or matches source domain, assign it
+      if (!resolvedOrgId) {
+        resolvedOrgId = orgId
+      }
     } catch (e) {
       const msg = (e as Error).message || ''
       if (msg.includes('duplicate') || msg.includes('23505')) {
         orgsCreated.push(`${org.name} (exists)`)
       }
     }
+  }
+
+  // Step 9b: Link resolved org to this content
+  if (resolvedOrgId) {
+    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { org_id: resolvedOrgId }).catch(() => {})
+    await supaRest('PATCH', `content_review_queue?inbox_id=eq.${inboxId}`, { org_id: resolvedOrgId }).catch(() => {})
   }
 
   // Step 10: Log
