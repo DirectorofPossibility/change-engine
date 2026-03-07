@@ -1140,14 +1140,7 @@ export async function getMapMarkersForSuperNeighborhood(snId: string) {
 
   const [services, votingLocations, distributionSites, organizations] = await Promise.all([
     getServicesWithCoords(allZips),
-    (async () => {
-      const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
-      for (const z of allZips) {
-        const locs = await getVotingLocationsWithCoords(z)
-        results.push(...locs)
-      }
-      return results
-    })(),
+    getVotingLocationsWithCoords(allZips),
     getDistributionSitesWithCoords(allZips),
     getOrganizationsWithCoords(),
   ])
@@ -1223,7 +1216,7 @@ export async function getServicesWithCoords(zipCodes?: string[]): Promise<Servic
 }
 
 /** Voting locations with coordinates, optionally filtered by ZIP code. */
-export async function getVotingLocationsWithCoords(zipCode?: string) {
+export async function getVotingLocationsWithCoords(zipCodes?: string | string[]) {
   const supabase = await createClient()
   let query = supabase
     .from('voting_locations')
@@ -1232,8 +1225,9 @@ export async function getVotingLocationsWithCoords(zipCode?: string) {
     .not('latitude', 'is', null)
     .not('longitude', 'is', null)
 
-  if (zipCode) {
-    query = query.eq('zip_code', parseInt(zipCode))
+  if (zipCodes) {
+    const zips = Array.isArray(zipCodes) ? zipCodes : [zipCodes]
+    query = query.in('zip_code', zips.map(z => parseInt(z)))
   }
 
   const { data } = await query.limit(200)
@@ -1289,14 +1283,7 @@ export async function getMapMarkersForNeighborhood(neighborhoodId: string) {
 
   const [services, votingLocations, distributionSites, organizations] = await Promise.all([
     getServicesWithCoords(zips),
-    (async () => {
-      const results: Awaited<ReturnType<typeof getVotingLocationsWithCoords>> = []
-      for (const z of zips) {
-        const locs = await getVotingLocationsWithCoords(z)
-        results.push(...locs)
-      }
-      return results
-    })(),
+    getVotingLocationsWithCoords(zips),
     getDistributionSitesWithCoords(zips),
     getOrganizationsWithCoords(),
   ])

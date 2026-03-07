@@ -45,47 +45,35 @@ const LAYER_META: Record<string, {
 export default async function CentersIndexPage() {
   const supabase = await createClient()
 
-  // Get counts per center
-  const { data: centerCounts } = await supabase
+  // Single query: fetch center, pathway, and image_url for all active content
+  const centerNames = Object.keys(CENTERS)
+  const { data: allContent } = await supabase
     .from('content_published')
-    .select('center')
+    .select('center, pathway_primary, image_url')
     .eq('is_active', true)
 
+  // Compute counts, sample images, and pathway breakdown in one pass
   const counts: Record<string, number> = {}
-  for (const row of (centerCounts ?? [])) {
+  const sampleImages: Record<string, string | null> = {}
+  const pwCountsByCenter: Record<string, Record<string, number>> = {}
+
+  for (const row of (allContent ?? [])) {
     const c = row.center || 'Learning'
     counts[c] = (counts[c] || 0) + 1
-  }
 
-  // Get a sample image per center (first item with an image)
-  const centerNames = Object.keys(CENTERS)
-  const sampleImages: Record<string, string | null> = {}
-  await Promise.all(centerNames.map(async (name) => {
-    const { data } = await supabase
-      .from('content_published')
-      .select('image_url')
-      .eq('is_active', true)
-      .eq('center', name)
-      .not('image_url', 'is', null)
-      .limit(1)
-    sampleImages[name] = data?.[0]?.image_url || null
-  }))
-
-  // Get top pathways per center
-  const pathwayBreakdown: Record<string, Array<{ id: string; name: string; color: string; count: number }>> = {}
-  for (const name of centerNames) {
-    const { data } = await supabase
-      .from('content_published')
-      .select('pathway_primary')
-      .eq('is_active', true)
-      .eq('center', name)
-
-    const pwCounts: Record<string, number> = {}
-    for (const row of (data ?? [])) {
-      const pw = row.pathway_primary
-      if (pw) pwCounts[pw] = (pwCounts[pw] || 0) + 1
+    if (row.image_url && !sampleImages[c]) {
+      sampleImages[c] = row.image_url
     }
 
+    if (row.pathway_primary) {
+      if (!pwCountsByCenter[c]) pwCountsByCenter[c] = {}
+      pwCountsByCenter[c][row.pathway_primary] = (pwCountsByCenter[c][row.pathway_primary] || 0) + 1
+    }
+  }
+
+  const pathwayBreakdown: Record<string, Array<{ id: string; name: string; color: string; count: number }>> = {}
+  for (const name of centerNames) {
+    const pwCounts = pwCountsByCenter[name] || {}
     pathwayBreakdown[name] = Object.entries(pwCounts)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 4)
