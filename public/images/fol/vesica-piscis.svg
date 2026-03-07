@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="none">
+  <!-- Vesica Piscis — two overlapping circles, elegant intersection -->
+  <circle cx="160" cy="200" r="100" stroke="#C75B2A" stroke-width="2.5" opacity="0.6"/>
+  <circle cx="240" cy="200" r="100" stroke="#C75B2A" stroke-width="2.5" opacity="0.6"/>
+
+  <!-- Inner almond shape highlighted with a subtle fill -->
+  <clipPath id="left-clip">
+    <circle cx="160" cy="200" r="100"/>
+  </clipPath>
+  <circle cx="240" cy="200" r="100" fill="#C75B2A" opacity="0.04" clip-path="url(#left-clip)"/>
+
+  <!-- Center point -->
+  <circle cx="200" cy="200" r="3" fill="#C75B2A" opacity="0.5"/>
+</svg>

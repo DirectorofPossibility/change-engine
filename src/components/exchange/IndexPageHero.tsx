@@ -47,13 +47,16 @@ export function IndexPageHero({
 
   return (
     <section className="relative w-full overflow-hidden bg-brand-dark text-white">
-      {/* FOL watermark — large, right side */}
-      <div className="absolute right-[-60px] top-1/2 -translate-y-1/2 opacity-[0.06]">
-        <FOLWatermark variant={pattern} size="lg" color="#ffffff" />
-      </div>
-      {/* Secondary smaller FOL — left side */}
+      {/* FOL watermark — large static SVG, right side */}
+      <img
+        src="/images/fol/flower-white.svg"
+        alt=""
+        aria-hidden="true"
+        className="absolute right-[-80px] top-1/2 -translate-y-1/2 w-[420px] h-[420px] pointer-events-none opacity-[0.04]"
+      />
+      {/* Secondary pattern — smaller, left */}
       <div className="absolute left-[-30px] bottom-[-20px] opacity-[0.04]">
-        <FOLWatermark variant="seed" size="md" color="#ffffff" />
+        <FOLWatermark variant={pattern} size="md" color="#ffffff" />
       </div>
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">

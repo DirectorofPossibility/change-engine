@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="none">
+  <!-- Full Flower of Life — 19 circles, bold and vivid -->
+  <!-- Outer boundary -->
+  <circle cx="200" cy="200" r="190" stroke="#C75B2A" stroke-width="1.5" opacity="0.15"/>
+  <circle cx="200" cy="200" r="155" stroke="#C75B2A" stroke-width="1" opacity="0.1"/>
+
+  <!-- Outer ring — 12 petals -->
+  <circle cx="200" cy="128" r="72" stroke="#C75B2A" stroke-width="1.8" opacity="0.35"/>
+  <circle cx="262.4" cy="164" r="72" stroke="#C75B2A" stroke-width="1.8" opacity="0.35"/>
+  <circle cx="262.4" cy="236" r="72" stroke="#C75B2A" stroke-width="1.8" opacity="0.35"/>
+  <circle cx="200" cy="272" r="72" stroke="#C75B2A" stroke-width="1.8" opacity="0.35"/>
+  <circle cx="137.6" cy="236" r="72" stroke="#C75B2A" stroke-width="1.8" opacity="0.35"/>
+  <circle cx="137.6" cy="164" r="72" stroke="#C75B2A" stroke-width="1.8" opacity="0.35"/>
+
+  <!-- Second ring — offset 30deg -->
+  <circle cx="231.2" cy="146" r="72" stroke="#C75B2A" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="268.8" cy="200" r="72" stroke="#C75B2A" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="231.2" cy="254" r="72" stroke="#C75B2A" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="168.8" cy="254" r="72" stroke="#C75B2A" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="131.2" cy="200" r="72" stroke="#C75B2A" stroke-width="1.5" opacity="0.25"/>
+  <circle cx="168.8" cy="146" r="72" stroke="#C75B2A" stroke-width="1.5" opacity="0.25"/>
+
+  <!-- Inner ring — 6 petals, bold -->
+  <circle cx="200" cy="164" r="36" stroke="#C75B2A" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="231.2" cy="182" r="36" stroke="#C75B2A" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="231.2" cy="218" r="36" stroke="#C75B2A" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="200" cy="236" r="36" stroke="#C75B2A" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="168.8" cy="218" r="36" stroke="#C75B2A" stroke-width="2.5" opacity="0.7"/>
+  <circle cx="168.8" cy="182" r="36" stroke="#C75B2A" stroke-width="2.5" opacity="0.7"/>
+
+  <!-- Center circle — most prominent -->
+  <circle cx="200" cy="200" r="36" stroke="#C75B2A" stroke-width="3" opacity="0.9"/>
+  <!-- Center dot -->
+  <circle cx="200" cy="200" r="6" fill="#C75B2A" opacity="0.7"/>
+</svg>

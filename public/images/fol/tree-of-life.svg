@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500" fill="none">
+  <!-- Tree of Life — 10 sephiroth connected, vertical sacred geometry -->
+
+  <!-- Connecting paths (drawn first, behind nodes) -->
+  <!-- Pillars -->
+  <line x1="140" y1="100" x2="140" y2="200" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <line x1="260" y1="100" x2="260" y2="200" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <line x1="140" y1="200" x2="140" y2="300" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <line x1="260" y1="200" x2="260" y2="300" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <!-- Middle pillar -->
+  <line x1="200" y1="50" x2="200" y2="150" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <line x1="200" y1="150" x2="200" y2="250" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <line x1="200" y1="250" x2="200" y2="350" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <line x1="200" y1="350" x2="200" y2="450" stroke="#C75B2A" stroke-width="1" opacity="0.2"/>
+  <!-- Cross connections -->
+  <line x1="200" y1="50" x2="140" y2="100" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="200" y1="50" x2="260" y2="100" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="140" y1="100" x2="200" y2="150" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="260" y1="100" x2="200" y2="150" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="140" y1="200" x2="200" y2="150" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="260" y1="200" x2="200" y2="150" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="140" y1="200" x2="200" y2="250" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="260" y1="200" x2="200" y2="250" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="140" y1="300" x2="200" y2="250" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="260" y1="300" x2="200" y2="250" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="140" y1="300" x2="200" y2="350" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="260" y1="300" x2="200" y2="350" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+  <line x1="200" y1="350" x2="200" y2="450" stroke="#C75B2A" stroke-width="0.8" opacity="0.15"/>
+
+  <!-- 10 Sephiroth (nodes) -->
+  <!-- Keter (crown) -->
+  <circle cx="200" cy="50" r="28" stroke="#C75B2A" stroke-width="2.5" opacity="0.8"/>
+  <!-- Chokmah & Binah -->
+  <circle cx="260" cy="100" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <circle cx="140" cy="100" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <!-- Daat (hidden) -->
+  <circle cx="200" cy="150" r="20" stroke="#C75B2A" stroke-width="1" opacity="0.2" stroke-dasharray="4 4"/>
+  <!-- Chesed & Geburah -->
+  <circle cx="260" cy="200" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <circle cx="140" cy="200" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <!-- Tiferet (beauty, center) -->
+  <circle cx="200" cy="250" r="28" stroke="#C75B2A" stroke-width="2.5" opacity="0.8"/>
+  <!-- Netzach & Hod -->
+  <circle cx="260" cy="300" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <circle cx="140" cy="300" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <!-- Yesod (foundation) -->
+  <circle cx="200" cy="350" r="25" stroke="#C75B2A" stroke-width="2" opacity="0.6"/>
+  <!-- Malkuth (kingdom) -->
+  <circle cx="200" cy="450" r="28" stroke="#C75B2A" stroke-width="2.5" opacity="0.8"/>
+
+  <!-- Center dots -->
+  <circle cx="200" cy="50" r="4" fill="#C75B2A" opacity="0.5"/>
+  <circle cx="200" cy="250" r="4" fill="#C75B2A" opacity="0.5"/>
+  <circle cx="200" cy="450" r="4" fill="#C75B2A" opacity="0.5"/>
+</svg>

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
-import { FOLWatermark } from './FOLWatermark'
 
 const PATHWAYS = [
   { name: 'Our Health', href: '/pathways/our-health', color: '#e53e3e' },
@@ -28,6 +27,7 @@ const COMMUNITY = [
   { label: 'Opportunities', href: '/opportunities' },
   { label: 'Foundations', href: '/foundations' },
   { label: 'Events', href: '/calendar' },
+  { label: 'Good Things', href: '/goodthings' },
 ]
 
 const CONNECT = [
@@ -52,13 +52,24 @@ export function D2Footer() {
       </div>
 
       <footer className="bg-brand-text text-white relative overflow-hidden">
-        {/* FOL watermark */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <FOLWatermark variant="flower" size="lg" color="#ffffff" />
-        </div>
+        {/* FOL watermark — large, centered, using the static SVG */}
+        <img
+          src="/images/fol/flower-white.svg"
+          alt=""
+          aria-hidden="true"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none opacity-[0.03]"
+        />
+        {/* Second watermark — seed pattern, offset right */}
+        <img
+          src="/images/fol/seed-of-life.svg"
+          alt=""
+          aria-hidden="true"
+          className="absolute -right-20 -bottom-20 w-[300px] h-[300px] pointer-events-none opacity-[0.02]"
+          style={{ filter: 'brightness(10)' }}
+        />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
             {/* Brand */}
             <div className="md:col-span-1">
               <div className="flex items-center gap-2.5 mb-3">
@@ -129,32 +140,41 @@ export function D2Footer() {
                 })}
               </div>
             </div>
-          </div>
 
-          {/* Your Journey — Archetypes */}
-          <div className="mt-8 pt-6 border-t border-white/[0.08]">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 mb-3">Your Journey</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-              {ARCHETYPES.map(function (a) {
-                return (
-                  <div key={a.id} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/[0.08] hover:border-white/20 transition-colors group cursor-pointer">
-                    <a.Icon size={18} color="#C75B2A" />
-                    <div>
-                      <p className="text-[12px] font-medium text-white/70 group-hover:text-white transition-colors">{a.name.replace('The ', '')}</p>
-                      <p className="text-[10px] text-white/30">{a.desc}</p>
+            {/* Your Journey — now a column */}
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 mb-3">Your Journey</p>
+              <div className="space-y-1.5">
+                {ARCHETYPES.map(function (a) {
+                  return (
+                    <div key={a.id} className="flex items-center gap-2 group cursor-pointer">
+                      <a.Icon size={16} color="#C75B2A" />
+                      <div>
+                        <p className="text-[12px] text-white/60 group-hover:text-white transition-colors leading-tight">{a.name.replace('The ', '')}</p>
+                        <p className="text-[9px] text-white/25 leading-tight">{a.desc}</p>
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
 
-          {/* Who This Is For — Target Market */}
-          <div className="mt-6 pt-4 border-t border-white/[0.06]">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 mb-2">Who This Is For</p>
-            <p className="text-[13px] leading-relaxed text-white/50 max-w-3xl">
-              Residents looking for services and support. Neighbors ready to get involved. Organizers building coalitions. Watchdogs tracking policy. Partners connecting communities. Everyone curious about Houston.
-            </p>
+          {/* Who This Is For + FOL accent */}
+          <div className="mt-8 pt-6 border-t border-white/[0.06] flex items-start gap-6">
+            <img
+              src="/images/fol/genesis.svg"
+              alt=""
+              aria-hidden="true"
+              className="w-12 h-12 flex-shrink-0 opacity-20"
+              style={{ filter: 'brightness(10)' }}
+            />
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1.5">Who This Is For</p>
+              <p className="text-[13px] leading-relaxed text-white/50 max-w-3xl">
+                Residents looking for services and support. Neighbors ready to get involved. Organizers building coalitions. Watchdogs tracking policy. Partners connecting communities. Everyone curious about Houston.
+              </p>
+            </div>
           </div>
 
           {/* Bottom bar */}

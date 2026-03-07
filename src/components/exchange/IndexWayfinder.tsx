@@ -152,9 +152,15 @@ export function IndexWayfinder({
         </div>
       )}
 
-      {/* Support line */}
-      <div className="px-4 py-3 bg-brand-bg/50 border-t border-brand-border">
-        <p className="text-[10px] font-mono text-brand-muted">
+      {/* FOL accent + support line */}
+      <div className="px-4 py-3 bg-brand-bg/50 border-t border-brand-border relative overflow-hidden">
+        <img
+          src="/images/fol/seed-of-life.svg"
+          alt=""
+          aria-hidden="true"
+          className="absolute right-[-20px] top-[-20px] w-[80px] h-[80px] pointer-events-none opacity-[0.06]"
+        />
+        <p className="text-[10px] font-mono text-brand-muted relative z-10">
           Need help? <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
         </p>
       </div>
