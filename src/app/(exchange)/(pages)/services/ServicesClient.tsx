@@ -14,16 +14,18 @@ import { TOOLTIPS } from '@/lib/tooltips'
 interface ServicesClientProps {
   services: ServiceWithOrg[]
   translations?: TranslationMap
+  /** ZIP from URL query param — takes priority over saved neighborhood */
+  initialZip?: string
 }
 
-export function ServicesClient({ services, translations = {} }: ServicesClientProps) {
+export function ServicesClient({ services, translations = {}, initialZip }: ServicesClientProps) {
   const { zip: savedZip } = useNeighborhood()
   const [search, setSearch] = useState('')
-  const [zipFilter, setZipFilter] = useState('')
+  const [zipFilter, setZipFilter] = useState(initialZip || '')
   const [view, setView] = useState<'list' | 'map'>('list')
-  const autoFilled = useRef(false)
+  const autoFilled = useRef(!!initialZip)
 
-  // Auto-fill ZIP filter from saved neighborhood
+  // Auto-fill ZIP filter from saved neighborhood (only if no URL param)
   useEffect(function () {
     if (savedZip && savedZip.length === 5 && !autoFilled.current && !zipFilter) {
       autoFilled.current = true
@@ -117,7 +119,7 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
                   name={s.service_name}
                   orgName={s.org_name}
                   orgId={s.org_id ?? undefined}
-                  description={s.description_5th_grade}
+                  description={s.description_5th_grade ?? null}
                   phone={s.phone}
                   address={s.address}
                   city={s.city}

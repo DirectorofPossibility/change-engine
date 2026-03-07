@@ -50,6 +50,7 @@ export type Database = {
           city: string | null
           data_source: string | null
           description_5th_grade: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           gov_level_id: string | null
           jurisdiction: string | null
@@ -68,6 +69,7 @@ export type Database = {
           city?: string | null
           data_source?: string | null
           description_5th_grade?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           gov_level_id?: string | null
           jurisdiction?: string | null
@@ -86,6 +88,7 @@ export type Database = {
           city?: string | null
           data_source?: string | null
           description_5th_grade?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           gov_level_id?: string | null
           jurisdiction?: string | null
@@ -95,6 +98,21 @@ export type Database = {
           state?: string | null
           website?: string | null
           zip_code?: number | null
+        }
+        Relationships: []
+      }
+      agency_action_types: {
+        Row: {
+          action_type_id: string
+          agency_id: string
+        }
+        Insert: {
+          action_type_id: string
+          agency_id: string
+        }
+        Update: {
+          action_type_id?: string
+          agency_id?: string
         }
         Relationships: []
       }
@@ -127,6 +145,21 @@ export type Database = {
             referencedColumns: ["segment_id"]
           },
         ]
+      }
+      agency_government_levels: {
+        Row: {
+          agency_id: string
+          gov_level_id: string
+        }
+        Insert: {
+          agency_id: string
+          gov_level_id: string
+        }
+        Update: {
+          agency_id?: string
+          gov_level_id?: string
+        }
+        Relationships: []
       }
       agency_pathways: {
         Row: {
@@ -327,6 +360,30 @@ export type Database = {
           },
         ]
       }
+      archetypes: {
+        Row: {
+          archetype_id: string
+          archetype_name: string
+          description: string | null
+          icon_name: string | null
+          sort_order: number | null
+        }
+        Insert: {
+          archetype_id: string
+          archetype_name: string
+          description?: string | null
+          icon_name?: string | null
+          sort_order?: number | null
+        }
+        Update: {
+          archetype_id?: string
+          archetype_name?: string
+          description?: string | null
+          icon_name?: string | null
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
       audience_segments: {
         Row: {
           description: string | null
@@ -408,6 +465,21 @@ export type Database = {
         }
         Relationships: []
       }
+      ballot_item_action_types: {
+        Row: {
+          action_type_id: string
+          ballot_item_id: string
+        }
+        Insert: {
+          action_type_id: string
+          ballot_item_id: string
+        }
+        Update: {
+          action_type_id?: string
+          ballot_item_id?: string
+        }
+        Relationships: []
+      }
       ballot_item_audience_segments: {
         Row: {
           item_id: string
@@ -437,6 +509,21 @@ export type Database = {
             referencedColumns: ["segment_id"]
           },
         ]
+      }
+      ballot_item_government_levels: {
+        Row: {
+          ballot_item_id: string
+          gov_level_id: string
+        }
+        Insert: {
+          ballot_item_id: string
+          gov_level_id: string
+        }
+        Update: {
+          ballot_item_id?: string
+          gov_level_id?: string
+        }
+        Relationships: []
       }
       ballot_item_pathways: {
         Row: {
@@ -513,6 +600,7 @@ export type Database = {
           election_id: string | null
           endorsements_against: string | null
           endorsements_for: string | null
+          engagement_level: string | null
           fiscal_impact: string | null
           focus_area_ids: string | null
           for_argument: string | null
@@ -536,6 +624,7 @@ export type Database = {
           election_id?: string | null
           endorsements_against?: string | null
           endorsements_for?: string | null
+          engagement_level?: string | null
           fiscal_impact?: string | null
           focus_area_ids?: string | null
           for_argument?: string | null
@@ -559,6 +648,7 @@ export type Database = {
           election_id?: string | null
           endorsements_against?: string | null
           endorsements_for?: string | null
+          engagement_level?: string | null
           fiscal_impact?: string | null
           focus_area_ids?: string | null
           for_argument?: string | null
@@ -570,6 +660,21 @@ export type Database = {
           last_updated?: string | null
           passed?: string | null
           vote_for_pct?: number | null
+        }
+        Relationships: []
+      }
+      benefit_action_types: {
+        Row: {
+          action_type_id: string
+          benefit_id: string
+        }
+        Insert: {
+          action_type_id: string
+          benefit_id: string
+        }
+        Update: {
+          action_type_id?: string
+          benefit_id?: string
         }
         Relationships: []
       }
@@ -602,6 +707,21 @@ export type Database = {
             referencedColumns: ["segment_id"]
           },
         ]
+      }
+      benefit_government_levels: {
+        Row: {
+          benefit_id: string
+          gov_level_id: string
+        }
+        Insert: {
+          benefit_id: string
+          gov_level_id: string
+        }
+        Update: {
+          benefit_id?: string
+          gov_level_id?: string
+        }
+        Relationships: []
       }
       benefit_life_situations: {
         Row: {
@@ -681,6 +801,7 @@ export type Database = {
           description_5th_grade: string | null
           documentation_needed: string | null
           eligibility_summary: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           gov_level_id: string | null
           household_types: string | null
@@ -705,6 +826,7 @@ export type Database = {
           description_5th_grade?: string | null
           documentation_needed?: string | null
           eligibility_summary?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           gov_level_id?: string | null
           household_types?: string | null
@@ -729,6 +851,7 @@ export type Database = {
           description_5th_grade?: string | null
           documentation_needed?: string | null
           eligibility_summary?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           gov_level_id?: string | null
           household_types?: string | null
@@ -857,6 +980,72 @@ export type Database = {
           },
         ]
       }
+      bookshelf: {
+        Row: {
+          added_by: string | null
+          author: string
+          cover_image_url: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          focus_area_ids: string[] | null
+          free_url: string | null
+          id: string
+          is_active: boolean | null
+          is_featured: boolean | null
+          isbn: string | null
+          page_count: number | null
+          purchase_url: string | null
+          tags: string[] | null
+          theme_id: string | null
+          title: string
+          updated_at: string | null
+          year_published: number | null
+        }
+        Insert: {
+          added_by?: string | null
+          author: string
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          focus_area_ids?: string[] | null
+          free_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          isbn?: string | null
+          page_count?: number | null
+          purchase_url?: string | null
+          tags?: string[] | null
+          theme_id?: string | null
+          title: string
+          updated_at?: string | null
+          year_published?: number | null
+        }
+        Update: {
+          added_by?: string | null
+          author?: string
+          cover_image_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          focus_area_ids?: string[] | null
+          free_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          isbn?: string | null
+          page_count?: number | null
+          purchase_url?: string | null
+          tags?: string[] | null
+          theme_id?: string | null
+          title?: string
+          updated_at?: string | null
+          year_published?: number | null
+        }
+        Relationships: []
+      }
       calls_to_action: {
         Row: {
           action_type_id: string | null
@@ -941,6 +1130,21 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_action_types: {
+        Row: {
+          action_type_id: string
+          campaign_id: string
+        }
+        Insert: {
+          action_type_id: string
+          campaign_id: string
+        }
+        Update: {
+          action_type_id?: string
+          campaign_id?: string
+        }
+        Relationships: []
+      }
       campaign_audience_segments: {
         Row: {
           campaign_id: string
@@ -970,6 +1174,21 @@ export type Database = {
             referencedColumns: ["segment_id"]
           },
         ]
+      }
+      campaign_government_levels: {
+        Row: {
+          campaign_id: string
+          gov_level_id: string
+        }
+        Insert: {
+          campaign_id: string
+          gov_level_id: string
+        }
+        Update: {
+          campaign_id?: string
+          gov_level_id?: string
+        }
+        Relationships: []
       }
       campaign_pathways: {
         Row: {
@@ -1046,6 +1265,7 @@ export type Database = {
           data_source: string | null
           description_5th_grade: string | null
           end_date: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           goal_description: string | null
           is_featured: string | null
@@ -1072,6 +1292,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           end_date?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           goal_description?: string | null
           is_featured?: string | null
@@ -1098,6 +1319,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           end_date?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           goal_description?: string | null
           is_featured?: string | null
@@ -1112,6 +1334,39 @@ export type Database = {
           target_value?: string | null
           theme_id?: string | null
           urgency_level?: string | null
+        }
+        Relationships: []
+      }
+      candidate_focus_areas: {
+        Row: {
+          candidate_id: string
+          focus_id: string
+        }
+        Insert: {
+          candidate_id: string
+          focus_id: string
+        }
+        Update: {
+          candidate_id?: string
+          focus_id?: string
+        }
+        Relationships: []
+      }
+      candidate_pathways: {
+        Row: {
+          candidate_id: string
+          is_primary: boolean | null
+          theme_id: string
+        }
+        Insert: {
+          candidate_id: string
+          is_primary?: boolean | null
+          theme_id: string
+        }
+        Update: {
+          candidate_id?: string
+          is_primary?: boolean | null
+          theme_id?: string
         }
         Relationships: []
       }
@@ -1442,6 +1697,36 @@ export type Database = {
         }
         Relationships: []
       }
+      civic_calendar_focus_areas: {
+        Row: {
+          calendar_id: string
+          focus_id: string
+        }
+        Insert: {
+          calendar_id: string
+          focus_id: string
+        }
+        Update: {
+          calendar_id?: string
+          focus_id?: string
+        }
+        Relationships: []
+      }
+      civic_calendar_pathways: {
+        Row: {
+          calendar_id: string
+          theme_id: string
+        }
+        Insert: {
+          calendar_id: string
+          theme_id: string
+        }
+        Update: {
+          calendar_id?: string
+          theme_id?: string
+        }
+        Relationships: []
+      }
       committee_assignments: {
         Row: {
           chamber: string | null
@@ -1610,6 +1895,29 @@ export type Database = {
         }
         Relationships: []
       }
+      content_action_types: {
+        Row: {
+          action_type_id: string
+          content_id: string
+        }
+        Insert: {
+          action_type_id: string
+          content_id: string
+        }
+        Update: {
+          action_type_id?: string
+          content_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_action_types_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_audience_segments: {
         Row: {
           content_id: string
@@ -1628,7 +1936,7 @@ export type Database = {
             foreignKeyName: "content_audience_segments_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
           {
@@ -1660,6 +1968,29 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "focus_areas"
             referencedColumns: ["focus_id"]
+          },
+        ]
+      }
+      content_government_levels: {
+        Row: {
+          content_id: string
+          gov_level_id: string
+        }
+        Insert: {
+          content_id: string
+          gov_level_id: string
+        }
+        Update: {
+          content_id?: string
+          gov_level_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_government_levels_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -1740,7 +2071,7 @@ export type Database = {
             foreignKeyName: "content_life_situations_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
           {
@@ -1770,7 +2101,7 @@ export type Database = {
             foreignKeyName: "content_neighborhoods_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
         ]
@@ -1796,7 +2127,7 @@ export type Database = {
             foreignKeyName: "content_pathways_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
           {
@@ -1816,6 +2147,7 @@ export type Database = {
           action_donate: string | null
           action_register: string | null
           action_signup: string | null
+          action_type_ids: string[] | null
           action_volunteer: string | null
           audience_segments: string[] | null
           body: string | null
@@ -1825,14 +2157,18 @@ export type Database = {
           content_type: string | null
           curator_org_id: string | null
           engagement_level: string | null
+          event_end_date: string | null
+          event_start_date: string | null
           focus_area_ids: string[] | null
           fts: unknown
           geographic_scope: string | null
+          gov_level_id: string | null
           id: string
           image_url: string | null
           inbox_id: string | null
           is_active: boolean | null
           is_featured: boolean | null
+          keywords: string[] | null
           last_updated: string | null
           life_situations: string[] | null
           object_type: string | null
@@ -1847,8 +2183,10 @@ export type Database = {
           source_org_name: string | null
           source_url: string
           summary_6th_grade: string
+          time_commitment_id: string | null
           time_duration: string | null
           title_6th_grade: string
+          video_url: string | null
         }
         Insert: {
           action_apply?: string | null
@@ -1857,6 +2195,7 @@ export type Database = {
           action_donate?: string | null
           action_register?: string | null
           action_signup?: string | null
+          action_type_ids?: string[] | null
           action_volunteer?: string | null
           audience_segments?: string[] | null
           body?: string | null
@@ -1866,14 +2205,18 @@ export type Database = {
           content_type?: string | null
           curator_org_id?: string | null
           engagement_level?: string | null
+          event_end_date?: string | null
+          event_start_date?: string | null
           focus_area_ids?: string[] | null
           fts?: unknown
           geographic_scope?: string | null
+          gov_level_id?: string | null
           id?: string
           image_url?: string | null
           inbox_id?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
+          keywords?: string[] | null
           last_updated?: string | null
           life_situations?: string[] | null
           object_type?: string | null
@@ -1888,8 +2231,10 @@ export type Database = {
           source_org_name?: string | null
           source_url: string
           summary_6th_grade: string
+          time_commitment_id?: string | null
           time_duration?: string | null
           title_6th_grade: string
+          video_url?: string | null
         }
         Update: {
           action_apply?: string | null
@@ -1898,6 +2243,7 @@ export type Database = {
           action_donate?: string | null
           action_register?: string | null
           action_signup?: string | null
+          action_type_ids?: string[] | null
           action_volunteer?: string | null
           audience_segments?: string[] | null
           body?: string | null
@@ -1907,14 +2253,18 @@ export type Database = {
           content_type?: string | null
           curator_org_id?: string | null
           engagement_level?: string | null
+          event_end_date?: string | null
+          event_start_date?: string | null
           focus_area_ids?: string[] | null
           fts?: unknown
           geographic_scope?: string | null
+          gov_level_id?: string | null
           id?: string
           image_url?: string | null
           inbox_id?: string | null
           is_active?: boolean | null
           is_featured?: boolean | null
+          keywords?: string[] | null
           last_updated?: string | null
           life_situations?: string[] | null
           object_type?: string | null
@@ -1929,8 +2279,10 @@ export type Database = {
           source_org_name?: string | null
           source_url?: string
           summary_6th_grade?: string
+          time_commitment_id?: string | null
           time_duration?: string | null
           title_6th_grade?: string
+          video_url?: string | null
         }
         Relationships: [
           {
@@ -2024,7 +2376,7 @@ export type Database = {
             foreignKeyName: "content_sdgs_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
           {
@@ -2054,7 +2406,7 @@ export type Database = {
             foreignKeyName: "content_service_categories_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
           {
@@ -2084,7 +2436,7 @@ export type Database = {
             foreignKeyName: "content_skills_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
           {
@@ -2114,7 +2466,7 @@ export type Database = {
             foreignKeyName: "content_zip_codes_content_id_fkey"
             columns: ["content_id"]
             isOneToOne: false
-            referencedRelation: "content_published"
+            referencedRelation: "content_inbox"
             referencedColumns: ["id"]
           },
         ]
@@ -2366,6 +2718,7 @@ export type Database = {
           district_id: string | null
           district_type: string | null
           email: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           fts: unknown
           gov_level_id: string | null
@@ -2395,6 +2748,7 @@ export type Database = {
           district_id?: string | null
           district_type?: string | null
           email?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           gov_level_id?: string | null
@@ -2424,6 +2778,7 @@ export type Database = {
           district_id?: string | null
           district_type?: string | null
           email?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           gov_level_id?: string | null
@@ -2543,6 +2898,90 @@ export type Database = {
         }
         Relationships: []
       }
+      event_action_types: {
+        Row: {
+          action_type_id: string
+          event_id: string
+        }
+        Insert: {
+          action_type_id: string
+          event_id: string
+        }
+        Update: {
+          action_type_id?: string
+          event_id?: string
+        }
+        Relationships: []
+      }
+      event_audience_segments: {
+        Row: {
+          event_id: string
+          segment_id: string
+        }
+        Insert: {
+          event_id: string
+          segment_id: string
+        }
+        Update: {
+          event_id?: string
+          segment_id?: string
+        }
+        Relationships: []
+      }
+      event_focus_areas: {
+        Row: {
+          event_id: string
+          focus_id: string
+        }
+        Insert: {
+          event_id: string
+          focus_id: string
+        }
+        Update: {
+          event_id?: string
+          focus_id?: string
+        }
+        Relationships: []
+      }
+      event_pathways: {
+        Row: {
+          event_id: string
+          is_primary: boolean | null
+          theme_id: string
+        }
+        Insert: {
+          event_id: string
+          is_primary?: boolean | null
+          theme_id: string
+        }
+        Update: {
+          event_id?: string
+          is_primary?: boolean | null
+          theme_id?: string
+        }
+        Relationships: []
+      }
+      event_types: {
+        Row: {
+          category: string
+          created_at: string | null
+          is_active: boolean | null
+          name: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          is_active?: boolean | null
+          name: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          is_active?: boolean | null
+          name?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           action_type_id: string | null
@@ -2553,6 +2992,7 @@ export type Database = {
           data_source: string | null
           description_5th_grade: string | null
           end_datetime: string | null
+          engagement_level: string | null
           event_id: string
           event_name: string
           event_type: string | null
@@ -2579,6 +3019,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           end_datetime?: string | null
+          engagement_level?: string | null
           event_id: string
           event_name: string
           event_type?: string | null
@@ -2605,6 +3046,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           end_datetime?: string | null
+          engagement_level?: string | null
           event_id?: string
           event_name?: string
           event_type?: string | null
@@ -2992,6 +3434,7 @@ export type Database = {
           founded_year: number | null
           geo_level: string
           id: string
+          is_spotlight: boolean
           last_people_sync: string | null
           last_updated_at: string | null
           last_verified_at: string | null
@@ -3023,6 +3466,7 @@ export type Database = {
           founded_year?: number | null
           geo_level: string
           id?: string
+          is_spotlight?: boolean
           last_people_sync?: string | null
           last_updated_at?: string | null
           last_verified_at?: string | null
@@ -3054,6 +3498,7 @@ export type Database = {
           founded_year?: number | null
           geo_level?: string
           id?: string
+          is_spotlight?: boolean
           last_people_sync?: string | null
           last_updated_at?: string | null
           last_verified_at?: string | null
@@ -3169,6 +3614,51 @@ export type Database = {
           related_terms?: string | null
           term?: string
           term_id?: string
+        }
+        Relationships: []
+      }
+      good_things: {
+        Row: {
+          city: string | null
+          created_at: string | null
+          display_name: string | null
+          email: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          state: string | null
+          thing_1: string
+          thing_2: string
+          thing_3: string
+          zip_code: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          state?: string | null
+          thing_1: string
+          thing_2: string
+          thing_3: string
+          zip_code: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          state?: string | null
+          thing_1?: string
+          thing_2?: string
+          thing_3?: string
+          zip_code?: string
         }
         Relationships: []
       }
@@ -3325,6 +3815,38 @@ export type Database = {
         }
         Relationships: []
       }
+      kb_article_votes: {
+        Row: {
+          created_at: string | null
+          document_id: string
+          id: string
+          session_id: string
+          vote: string
+        }
+        Insert: {
+          created_at?: string | null
+          document_id: string
+          id?: string
+          session_id: string
+          vote: string
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string
+          id?: string
+          session_id?: string
+          vote?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_article_votes_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "kb_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       kb_chat_messages: {
         Row: {
           content: string
@@ -3386,6 +3908,7 @@ export type Database = {
           chunk_index: number
           content: string
           document_id: string
+          embedding: string | null
           id: string
           page_end: number | null
           page_start: number | null
@@ -3395,6 +3918,7 @@ export type Database = {
           chunk_index?: number
           content?: string
           document_id: string
+          embedding?: string | null
           id?: string
           page_end?: number | null
           page_start?: number | null
@@ -3404,6 +3928,7 @@ export type Database = {
           chunk_index?: number
           content?: string
           document_id?: string
+          embedding?: string | null
           id?: string
           page_end?: number | null
           page_start?: number | null
@@ -3421,52 +3946,70 @@ export type Database = {
       }
       kb_documents: {
         Row: {
+          center_id: string | null
+          classification_v2: Json | null
+          content_type: string | null
           created_at: string | null
           file_path: string
           file_size: number | null
           focus_area_ids: string[] | null
+          focus_area_ids_v2: string[] | null
           id: string
           key_points: string[] | null
+          org_id: string | null
           page_count: number | null
           published_at: string | null
           search_vector: unknown
           status: string
           summary: string | null
           tags: string[] | null
+          theme_id: string | null
           theme_ids: string[] | null
           title: string
           uploaded_by: string | null
         }
         Insert: {
+          center_id?: string | null
+          classification_v2?: Json | null
+          content_type?: string | null
           created_at?: string | null
           file_path: string
           file_size?: number | null
           focus_area_ids?: string[] | null
+          focus_area_ids_v2?: string[] | null
           id?: string
           key_points?: string[] | null
+          org_id?: string | null
           page_count?: number | null
           published_at?: string | null
           search_vector?: unknown
           status?: string
           summary?: string | null
           tags?: string[] | null
+          theme_id?: string | null
           theme_ids?: string[] | null
           title?: string
           uploaded_by?: string | null
         }
         Update: {
+          center_id?: string | null
+          classification_v2?: Json | null
+          content_type?: string | null
           created_at?: string | null
           file_path?: string
           file_size?: number | null
           focus_area_ids?: string[] | null
+          focus_area_ids_v2?: string[] | null
           id?: string
           key_points?: string[] | null
+          org_id?: string | null
           page_count?: number | null
           published_at?: string | null
           search_vector?: unknown
           status?: string
           summary?: string | null
           tags?: string[] | null
+          theme_id?: string | null
           theme_ids?: string[] | null
           title?: string
           uploaded_by?: string | null
@@ -3496,12 +4039,16 @@ export type Database = {
       }
       learning_modules: {
         Row: {
+          article_title: string | null
+          article_url: string | null
           content_type: string | null
           data_source: string | null
           description_5th_grade: string | null
           estimated_minutes: number | null
           focus_area_ids: string | null
           has_quiz: string | null
+          hook_attribution: string | null
+          hook_text: string | null
           is_active: string | null
           is_required: string | null
           last_updated: string | null
@@ -3510,17 +4057,28 @@ export type Database = {
           module_id: string
           module_name: string
           module_order: number | null
+          music_artist: string | null
+          music_title: string | null
+          music_url: string | null
           path_id: string | null
           quiz_id: string | null
           resource_ids: string | null
+          video_title: string | null
+          video_title_2: string | null
+          video_url: string | null
+          video_url_2: string | null
         }
         Insert: {
+          article_title?: string | null
+          article_url?: string | null
           content_type?: string | null
           data_source?: string | null
           description_5th_grade?: string | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
           has_quiz?: string | null
+          hook_attribution?: string | null
+          hook_text?: string | null
           is_active?: string | null
           is_required?: string | null
           last_updated?: string | null
@@ -3529,17 +4087,28 @@ export type Database = {
           module_id: string
           module_name: string
           module_order?: number | null
+          music_artist?: string | null
+          music_title?: string | null
+          music_url?: string | null
           path_id?: string | null
           quiz_id?: string | null
           resource_ids?: string | null
+          video_title?: string | null
+          video_title_2?: string | null
+          video_url?: string | null
+          video_url_2?: string | null
         }
         Update: {
+          article_title?: string | null
+          article_url?: string | null
           content_type?: string | null
           data_source?: string | null
           description_5th_grade?: string | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
           has_quiz?: string | null
+          hook_attribution?: string | null
+          hook_text?: string | null
           is_active?: string | null
           is_required?: string | null
           last_updated?: string | null
@@ -3548,9 +4117,16 @@ export type Database = {
           module_id?: string
           module_name?: string
           module_order?: number | null
+          music_artist?: string | null
+          music_title?: string | null
+          music_url?: string | null
           path_id?: string | null
           quiz_id?: string | null
           resource_ids?: string | null
+          video_title?: string | null
+          video_title_2?: string | null
+          video_url?: string | null
+          video_url_2?: string | null
         }
         Relationships: []
       }
@@ -3561,6 +4137,7 @@ export type Database = {
           description_5th_grade: string | null
           difficulty_level: string | null
           display_order: number | null
+          engagement_level: string | null
           estimated_minutes: number | null
           focus_area_ids: string | null
           fts: unknown
@@ -3573,6 +4150,7 @@ export type Database = {
           path_id: string
           path_name: string
           prerequisite_path_id: string | null
+          slug: string | null
           theme_id: string | null
         }
         Insert: {
@@ -3581,6 +4159,7 @@ export type Database = {
           description_5th_grade?: string | null
           difficulty_level?: string | null
           display_order?: number | null
+          engagement_level?: string | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
           fts?: unknown
@@ -3593,6 +4172,7 @@ export type Database = {
           path_id: string
           path_name: string
           prerequisite_path_id?: string | null
+          slug?: string | null
           theme_id?: string | null
         }
         Update: {
@@ -3601,6 +4181,7 @@ export type Database = {
           description_5th_grade?: string | null
           difficulty_level?: string | null
           display_order?: number | null
+          engagement_level?: string | null
           estimated_minutes?: number | null
           focus_area_ids?: string | null
           fts?: unknown
@@ -3613,6 +4194,7 @@ export type Database = {
           path_id?: string
           path_name?: string
           prerequisite_path_id?: string | null
+          slug?: string | null
           theme_id?: string | null
         }
         Relationships: []
@@ -3685,6 +4267,7 @@ export type Database = {
           data_source: string | null
           description_5th_grade: string | null
           display_order: number | null
+          engagement_level: string | null
           focus_area_ids: string | null
           fts: unknown
           icon_name: string | null
@@ -3706,6 +4289,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           display_order?: number | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           icon_name?: string | null
@@ -3727,6 +4311,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           display_order?: number | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           icon_name?: string | null
@@ -3740,6 +4325,84 @@ export type Database = {
           situation_slug?: string | null
           theme_id?: string | null
           urgency_level?: string | null
+        }
+        Relationships: []
+      }
+      lookup_values: {
+        Row: {
+          category: string
+          created_at: string | null
+          id: number
+          is_active: boolean | null
+          label: string
+          sort_order: number | null
+          value: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          id?: number
+          is_active?: boolean | null
+          label: string
+          sort_order?: number | null
+          value: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          id?: number
+          is_active?: boolean | null
+          label?: string
+          sort_order?: number | null
+          value?: string
+        }
+        Relationships: []
+      }
+      municipal_service_audience_segments: {
+        Row: {
+          municipal_service_id: string
+          segment_id: string
+        }
+        Insert: {
+          municipal_service_id: string
+          segment_id: string
+        }
+        Update: {
+          municipal_service_id?: string
+          segment_id?: string
+        }
+        Relationships: []
+      }
+      municipal_service_focus_areas: {
+        Row: {
+          focus_id: string
+          municipal_service_id: string
+        }
+        Insert: {
+          focus_id: string
+          municipal_service_id: string
+        }
+        Update: {
+          focus_id?: string
+          municipal_service_id?: string
+        }
+        Relationships: []
+      }
+      municipal_service_pathways: {
+        Row: {
+          is_primary: boolean | null
+          municipal_service_id: string
+          theme_id: string
+        }
+        Insert: {
+          is_primary?: boolean | null
+          municipal_service_id: string
+          theme_id: string
+        }
+        Update: {
+          is_primary?: boolean | null
+          municipal_service_id?: string
+          theme_id?: string
         }
         Relationships: []
       }
@@ -3949,6 +4612,21 @@ export type Database = {
         }
         Relationships: []
       }
+      official_action_types: {
+        Row: {
+          action_type_id: string
+          official_id: string
+        }
+        Insert: {
+          action_type_id: string
+          official_id: string
+        }
+        Update: {
+          action_type_id?: string
+          official_id?: string
+        }
+        Relationships: []
+      }
       official_aliases: {
         Row: {
           alias_id: string
@@ -4095,6 +4773,21 @@ export type Database = {
             referencedColumns: ["official_id"]
           },
         ]
+      }
+      official_government_levels: {
+        Row: {
+          gov_level_id: string
+          official_id: string
+        }
+        Insert: {
+          gov_level_id: string
+          official_id: string
+        }
+        Update: {
+          gov_level_id?: string
+          official_id?: string
+        }
+        Relationships: []
       }
       official_pathways: {
         Row: {
@@ -4268,6 +4961,7 @@ export type Database = {
           data_source: string | null
           description_5th_grade: string | null
           end_date: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           fts: unknown
           is_active: string | null
@@ -4296,6 +4990,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           end_date?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           is_active?: string | null
@@ -4324,6 +5019,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           end_date?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           is_active?: string | null
@@ -4556,6 +5252,21 @@ export type Database = {
           },
         ]
       }
+      organization_action_types: {
+        Row: {
+          action_type_id: string
+          org_id: string
+        }
+        Insert: {
+          action_type_id: string
+          org_id: string
+        }
+        Update: {
+          action_type_id?: string
+          org_id?: string
+        }
+        Relationships: []
+      }
       organization_audience_segments: {
         Row: {
           org_id: string
@@ -4615,6 +5326,21 @@ export type Database = {
             referencedColumns: ["org_id"]
           },
         ]
+      }
+      organization_government_levels: {
+        Row: {
+          gov_level_id: string
+          org_id: string
+        }
+        Insert: {
+          gov_level_id: string
+          org_id: string
+        }
+        Update: {
+          gov_level_id?: string
+          org_id?: string
+        }
+        Relationships: []
       }
       organization_life_situations: {
         Row: {
@@ -4783,6 +5509,7 @@ export type Database = {
           description_full: string | null
           ein: string | null
           email: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           fts: unknown
           google_play_url: string | null
@@ -4807,7 +5534,10 @@ export type Database = {
           service_area: string | null
           social_media: Json | null
           state: string | null
+          summary_6th_grade: string | null
           tags: string[] | null
+          theme_id: string | null
+          title_6th_grade: string | null
           website: string | null
           year_founded: number | null
           zip_code: string | null
@@ -4825,6 +5555,7 @@ export type Database = {
           description_full?: string | null
           ein?: string | null
           email?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           google_play_url?: string | null
@@ -4849,7 +5580,10 @@ export type Database = {
           service_area?: string | null
           social_media?: Json | null
           state?: string | null
+          summary_6th_grade?: string | null
           tags?: string[] | null
+          theme_id?: string | null
+          title_6th_grade?: string | null
           website?: string | null
           year_founded?: number | null
           zip_code?: string | null
@@ -4867,6 +5601,7 @@ export type Database = {
           description_full?: string | null
           ein?: string | null
           email?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           google_play_url?: string | null
@@ -4891,7 +5626,10 @@ export type Database = {
           service_area?: string | null
           social_media?: Json | null
           state?: string | null
+          summary_6th_grade?: string | null
           tags?: string[] | null
+          theme_id?: string | null
+          title_6th_grade?: string | null
           website?: string | null
           year_founded?: number | null
           zip_code?: string | null
@@ -4903,6 +5641,7 @@ export type Database = {
           bill_number: string | null
           classification_v2: Json | null
           data_source: string | null
+          engagement_level: string | null
           focus_area_ids: string | null
           fts: unknown
           impact_statement: string | null
@@ -4928,6 +5667,7 @@ export type Database = {
           bill_number?: string | null
           classification_v2?: Json | null
           data_source?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           impact_statement?: string | null
@@ -4953,6 +5693,7 @@ export type Database = {
           bill_number?: string | null
           classification_v2?: Json | null
           data_source?: string | null
+          engagement_level?: string | null
           focus_area_ids?: string | null
           fts?: unknown
           impact_statement?: string | null
@@ -4973,6 +5714,21 @@ export type Database = {
           summary_5th_grade?: string | null
           summary_6th_grade?: string | null
           title_6th_grade?: string | null
+        }
+        Relationships: []
+      }
+      policy_action_types: {
+        Row: {
+          action_type_id: string
+          policy_id: string
+        }
+        Insert: {
+          action_type_id: string
+          policy_id: string
+        }
+        Update: {
+          action_type_id?: string
+          policy_id?: string
         }
         Relationships: []
       }
@@ -5078,6 +5834,21 @@ export type Database = {
             referencedColumns: ["policy_id"]
           },
         ]
+      }
+      policy_government_levels: {
+        Row: {
+          gov_level_id: string
+          policy_id: string
+        }
+        Insert: {
+          gov_level_id: string
+          policy_id: string
+        }
+        Update: {
+          gov_level_id?: string
+          policy_id?: string
+        }
+        Relationships: []
       }
       policy_life_situations: {
         Row: {
@@ -5363,6 +6134,81 @@ export type Database = {
         }
         Relationships: []
       }
+      promotions: {
+        Row: {
+          color: string | null
+          content_id: string | null
+          created_at: string | null
+          cta_href: string | null
+          cta_text: string | null
+          description: string | null
+          display_order: number | null
+          end_date: string | null
+          image_url: string | null
+          is_active: boolean | null
+          org_id: string | null
+          promo_id: string
+          promo_type: string
+          start_date: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string | null
+          content_id?: string | null
+          created_at?: string | null
+          cta_href?: string | null
+          cta_text?: string | null
+          description?: string | null
+          display_order?: number | null
+          end_date?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          org_id?: string | null
+          promo_id?: string
+          promo_type?: string
+          start_date?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string | null
+          content_id?: string | null
+          created_at?: string | null
+          cta_href?: string | null
+          cta_text?: string | null
+          description?: string | null
+          display_order?: number | null
+          end_date?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          org_id?: string | null
+          promo_id?: string
+          promo_type?: string
+          start_date?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promotions_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_published"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promotions_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+        ]
+      }
       quizzes: {
         Row: {
           data_source: string | null
@@ -5401,6 +6247,57 @@ export type Database = {
           time_limit_minutes?: number | null
         }
         Relationships: []
+      }
+      quotes: {
+        Row: {
+          attribution: string | null
+          created_at: string | null
+          display_order: number | null
+          focus_area_id: string | null
+          is_active: boolean | null
+          pathway_id: string | null
+          quote_id: string
+          quote_text: string
+          source_url: string | null
+        }
+        Insert: {
+          attribution?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          focus_area_id?: string | null
+          is_active?: boolean | null
+          pathway_id?: string | null
+          quote_id?: string
+          quote_text: string
+          source_url?: string | null
+        }
+        Update: {
+          attribution?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          focus_area_id?: string | null
+          is_active?: boolean | null
+          pathway_id?: string | null
+          quote_id?: string
+          quote_text?: string
+          source_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_focus_area_id_fkey"
+            columns: ["focus_area_id"]
+            isOneToOne: false
+            referencedRelation: "focus_areas"
+            referencedColumns: ["focus_id"]
+          },
+          {
+            foreignKeyName: "quotes_pathway_id_fkey"
+            columns: ["pathway_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
+            referencedColumns: ["theme_id"]
+          },
+        ]
       }
       resource_types: {
         Row: {
@@ -5519,39 +6416,111 @@ export type Database = {
         }
         Relationships: []
       }
-      rss_feeds: {
+      role_requests: {
         Row: {
           created_at: string | null
+          id: string
+          org_name: string | null
+          reason: string | null
+          requested_role: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          org_name?: string | null
+          reason?: string | null
+          requested_role: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          org_name?: string | null
+          reason?: string | null
+          requested_role?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_requests_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "role_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rss_feeds: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          error_count: number | null
           feed_name: string
           feed_url: string
           id: string
           is_active: boolean | null
+          last_error: string | null
           last_item_count: number | null
           last_polled: string | null
+          notes: string | null
+          pathway_hint: string | null
           poll_interval_hours: number | null
           source_domain: string | null
+          total_items_ingested: number | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
+          error_count?: number | null
           feed_name: string
           feed_url: string
           id?: string
           is_active?: boolean | null
+          last_error?: string | null
           last_item_count?: number | null
           last_polled?: string | null
+          notes?: string | null
+          pathway_hint?: string | null
           poll_interval_hours?: number | null
           source_domain?: string | null
+          total_items_ingested?: number | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
+          error_count?: number | null
           feed_name?: string
           feed_url?: string
           id?: string
           is_active?: boolean | null
+          last_error?: string | null
           last_item_count?: number | null
           last_polled?: string | null
+          notes?: string | null
+          pathway_hint?: string | null
           poll_interval_hours?: number | null
           source_domain?: string | null
+          total_items_ingested?: number | null
         }
         Relationships: []
       }
@@ -5618,6 +6587,21 @@ export type Database = {
           sdoh_code?: string
           sdoh_description?: string | null
           sdoh_name?: string
+        }
+        Relationships: []
+      }
+      service_action_types: {
+        Row: {
+          action_type_id: string
+          service_id: string
+        }
+        Insert: {
+          action_type_id: string
+          service_id: string
+        }
+        Update: {
+          action_type_id?: string
+          service_id?: string
         }
         Relationships: []
       }
@@ -5704,6 +6688,21 @@ export type Database = {
             referencedColumns: ["service_id"]
           },
         ]
+      }
+      service_government_levels: {
+        Row: {
+          gov_level_id: string
+          service_id: string
+        }
+        Insert: {
+          gov_level_id: string
+          service_id: string
+        }
+        Update: {
+          gov_level_id?: string
+          service_id?: string
+        }
+        Relationships: []
       }
       service_life_situations: {
         Row: {
@@ -5808,6 +6807,7 @@ export type Database = {
           data_source: string | null
           description_5th_grade: string | null
           eligibility: string | null
+          engagement_level: string | null
           fees: string | null
           focus_area_ids: string | null
           fts: unknown
@@ -5833,6 +6833,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           eligibility?: string | null
+          engagement_level?: string | null
           fees?: string | null
           focus_area_ids?: string | null
           fts?: unknown
@@ -5858,6 +6859,7 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           eligibility?: string | null
+          engagement_level?: string | null
           fees?: string | null
           focus_area_ids?: string | null
           fts?: unknown
@@ -6080,6 +7082,148 @@ export type Database = {
         }
         Relationships: []
       }
+      tirz_zone_focus_areas: {
+        Row: {
+          focus_area_id: string
+          tirz_id: string
+        }
+        Insert: {
+          focus_area_id: string
+          tirz_id: string
+        }
+        Update: {
+          focus_area_id?: string
+          tirz_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tirz_zone_focus_areas_tirz_id_fkey"
+            columns: ["tirz_id"]
+            isOneToOne: false
+            referencedRelation: "tirz_zones"
+            referencedColumns: ["tirz_id"]
+          },
+        ]
+      }
+      tirz_zone_themes: {
+        Row: {
+          theme_id: string
+          tirz_id: string
+        }
+        Insert: {
+          theme_id: string
+          tirz_id: string
+        }
+        Update: {
+          theme_id?: string
+          tirz_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tirz_zone_themes_tirz_id_fkey"
+            columns: ["tirz_id"]
+            isOneToOne: false
+            referencedRelation: "tirz_zones"
+            referencedColumns: ["tirz_id"]
+          },
+        ]
+      }
+      tirz_zones: {
+        Row: {
+          council_districts: string | null
+          created_at: string | null
+          description: string | null
+          engagement_level: string | null
+          expiration_year: number | null
+          managing_entity: string | null
+          name: string
+          site_number: number
+          status: string | null
+          tirz_id: string
+          total_investment: number | null
+          updated_at: string | null
+          website: string | null
+          year_established: number | null
+          zip_codes: string | null
+        }
+        Insert: {
+          council_districts?: string | null
+          created_at?: string | null
+          description?: string | null
+          engagement_level?: string | null
+          expiration_year?: number | null
+          managing_entity?: string | null
+          name: string
+          site_number: number
+          status?: string | null
+          tirz_id: string
+          total_investment?: number | null
+          updated_at?: string | null
+          website?: string | null
+          year_established?: number | null
+          zip_codes?: string | null
+        }
+        Update: {
+          council_districts?: string | null
+          created_at?: string | null
+          description?: string | null
+          engagement_level?: string | null
+          expiration_year?: number | null
+          managing_entity?: string | null
+          name?: string
+          site_number?: number
+          status?: string | null
+          tirz_id?: string
+          total_investment?: number | null
+          updated_at?: string | null
+          website?: string | null
+          year_established?: number | null
+          zip_codes?: string | null
+        }
+        Relationships: []
+      }
+      tool_guide_items: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          levels: string[]
+          sort_order: number
+          title: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          levels?: string[]
+          sort_order?: number
+          title: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          levels?: string[]
+          sort_order?: number
+          title?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       translations: {
         Row: {
           content_id: string | null
@@ -6260,7 +7404,9 @@ export type Database = {
       user_profiles: {
         Row: {
           account_status: string
+          address: string | null
           age_range: string | null
+          archetype_id: string | null
           auth_id: string | null
           county_id: string | null
           created_at: string | null
@@ -6281,7 +7427,9 @@ export type Database = {
         }
         Insert: {
           account_status?: string
+          address?: string | null
           age_range?: string | null
+          archetype_id?: string | null
           auth_id?: string | null
           county_id?: string | null
           created_at?: string | null
@@ -6302,7 +7450,9 @@ export type Database = {
         }
         Update: {
           account_status?: string
+          address?: string | null
           age_range?: string | null
+          archetype_id?: string | null
           auth_id?: string | null
           county_id?: string | null
           created_at?: string | null
@@ -6553,6 +7703,30 @@ export type Database = {
         }
         Relationships: []
       }
+      wayfinder_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: number
+          session_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: never
+          session_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: never
+          session_id?: string | null
+        }
+        Relationships: []
+      }
       zip_codes: {
         Row: {
           city: string | null
@@ -6749,6 +7923,183 @@ export type Database = {
       }
     }
     Functions: {
+      bytea_to_text: { Args: { data: string }; Returns: string }
+      derive_org_type: { Args: { ntee: string }; Returns: string }
+      http: {
+        Args: { request: Database["public"]["CompositeTypes"]["http_request"] }
+        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        SetofOptions: {
+          from: "http_request"
+          to: "http_response"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      http_delete:
+        | {
+            Args: { uri: string }
+            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            SetofOptions: {
+              from: "*"
+              to: "http_response"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: { content: string; content_type: string; uri: string }
+            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            SetofOptions: {
+              from: "*"
+              to: "http_response"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+      http_get:
+        | {
+            Args: { uri: string }
+            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            SetofOptions: {
+              from: "*"
+              to: "http_response"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: { data: Json; uri: string }
+            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            SetofOptions: {
+              from: "*"
+              to: "http_response"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+      http_head: {
+        Args: { uri: string }
+        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        SetofOptions: {
+          from: "*"
+          to: "http_response"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      http_header: {
+        Args: { field: string; value: string }
+        Returns: Database["public"]["CompositeTypes"]["http_header"]
+        SetofOptions: {
+          from: "*"
+          to: "http_header"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      http_list_curlopt: {
+        Args: never
+        Returns: {
+          curlopt: string
+          value: string
+        }[]
+      }
+      http_patch: {
+        Args: { content: string; content_type: string; uri: string }
+        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        SetofOptions: {
+          from: "*"
+          to: "http_response"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      http_post:
+        | {
+            Args: { content: string; content_type: string; uri: string }
+            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            SetofOptions: {
+              from: "*"
+              to: "http_response"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+        | {
+            Args: { data: Json; uri: string }
+            Returns: Database["public"]["CompositeTypes"]["http_response"]
+            SetofOptions: {
+              from: "*"
+              to: "http_response"
+              isOneToOne: true
+              isSetofReturn: false
+            }
+          }
+      http_put: {
+        Args: { content: string; content_type: string; uri: string }
+        Returns: Database["public"]["CompositeTypes"]["http_response"]
+        SetofOptions: {
+          from: "*"
+          to: "http_response"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      http_reset_curlopt: { Args: never; Returns: boolean }
+      http_set_curlopt: {
+        Args: { curlopt: string; value: string }
+        Returns: boolean
+      }
+      hybrid_search: {
+        Args: {
+          fts_weight?: number
+          match_count?: number
+          query_embedding: string
+          query_text: string
+          semantic_weight?: number
+        }
+        Returns: {
+          chunk_id: string
+          combined_score: number
+          content: string
+          document_id: string
+          fts_rank: number
+          metadata: Json
+          semantic_score: number
+        }[]
+      }
+      multi_source_search:
+        | {
+            Args: {
+              match_count?: number
+              query_embedding: string
+              query_text: string
+            }
+            Returns: {
+              content: string
+              metadata: Json
+              score: number
+              source_id: string
+              source_type: string
+              title: string
+            }[]
+          }
+        | {
+            Args: {
+              embedding_text?: string
+              match_count?: number
+              search_query: string
+            }
+            Returns: {
+              content: string
+              metadata: Json
+              score: number
+              source_id: string
+              source_type: string
+              title: string
+            }[]
+          }
+      text_to_bytea: { Args: { data: string }; Returns: string }
       upsert_translation: {
         Args: {
           p_content_id: string
@@ -6760,13 +8111,43 @@ export type Database = {
         }
         Returns: undefined
       }
+      urlencode:
+        | { Args: { data: Json }; Returns: string }
+        | {
+            Args: { string: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.urlencode(string => bytea), public.urlencode(string => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { string: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.urlencode(string => bytea), public.urlencode(string => varchar). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
       user_role: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
     }
     CompositeTypes: {
-      [_ in never]: never
+      http_header: {
+        field: string | null
+        value: string | null
+      }
+      http_request: {
+        method: unknown
+        uri: string | null
+        headers: Database["public"]["CompositeTypes"]["http_header"][] | null
+        content_type: string | null
+        content: string | null
+      }
+      http_response: {
+        status: number | null
+        content_type: string | null
+        headers: Database["public"]["CompositeTypes"]["http_header"][] | null
+        content: string | null
+      }
     }
   }
 }

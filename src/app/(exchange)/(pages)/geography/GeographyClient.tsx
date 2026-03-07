@@ -73,6 +73,7 @@ const BOUNDARY_LAYERS = [
   { id: 'schoolDistricts', label: 'School Districts', short: 'ISD' },
   { id: 'zipCodes', label: 'ZIP Codes', short: 'ZIP' },
   { id: 'censusTracts', label: 'Census Tracts', short: 'CT' },
+  { id: 'tirzZones', label: 'TIRZ Zones', short: 'TIRZ' },
 ]
 
 const ENTITY_TYPES = [

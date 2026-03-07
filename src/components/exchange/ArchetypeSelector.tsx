@@ -30,14 +30,29 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
     setSelected(getCookie('archetype'))
   }, [])
 
+  // Map archetypes to their primary pathway pages
+  const ARCHETYPE_ROUTES: Record<string, string> = {
+    seeker: '/services',
+    learner: '/library',
+    builder: '/opportunities',
+    watchdog: '/governance',
+    partner: '/organizations',
+    explorer: '/pathways',
+  }
+
   function handleSelect(id: string) {
     const newValue = selected === id ? '' : id // toggle off if already selected
     document.cookie = 'archetype=' + newValue + ';path=/;max-age=31536000'
     setSelected(newValue)
     trackWayfinderEvent('archetype_select', { archetype: newValue || 'none' })
     if (onSelect) onSelect(newValue)
-    // Refresh server components so archetype-driven ordering updates instantly
-    router.refresh()
+    // Navigate to the archetype's primary page when selecting (not deselecting)
+    if (newValue && ARCHETYPE_ROUTES[newValue]) {
+      router.push(ARCHETYPE_ROUTES[newValue])
+    } else {
+      // Refresh server components so archetype-driven ordering updates instantly
+      router.refresh()
+    }
   }
 
   if (compact) {

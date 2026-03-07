@@ -20,13 +20,13 @@ interface ServiceCardProps {
   orgName?: string
   /** Parent organization ID for linking to org profile. */
   orgId?: string
-  description: string | null
-  phone: string | null
-  address: string | null
-  city: string | null
-  state: string | null
-  zipCode: string | null
-  website: string | null
+  description?: string | null
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  zipCode?: string | null
+  website?: string | null
   translatedName?: string
   translatedDescription?: string
   onSelect?: () => void

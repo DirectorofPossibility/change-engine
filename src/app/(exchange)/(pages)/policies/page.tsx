@@ -16,7 +16,8 @@ export const metadata: Metadata = {
   description: 'Track legislation and policies affecting Houston and Harris County communities.',
 }
 
-export default async function PoliciesPage() {
+export default async function PoliciesPage({ searchParams }: { searchParams: Promise<{ level?: string }> }) {
+  const { level: urlLevel } = await searchParams
   const cookieStore = await cookies()
   const userZip = cookieStore.get('zip')?.value || ''
   const supabase = await createClient()
@@ -77,7 +78,7 @@ export default async function PoliciesPage() {
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4">
           <div className="flex-1 min-w-0">
-            <PoliciesPageClient policies={all} translations={translations} />
+            <PoliciesPageClient policies={all} translations={translations} initialLevel={urlLevel} />
           </div>
 
           <div className="hidden lg:block lg:w-[280px] flex-shrink-0">

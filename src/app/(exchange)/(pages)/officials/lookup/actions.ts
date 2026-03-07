@@ -69,6 +69,14 @@ interface PolicySummary {
   impact_statement: string | null
 }
 
+interface TirzSummary {
+  tirz_id: string
+  name: string
+  site_number: number
+  description: string | null
+  status: string | null
+}
+
 export interface CivicProfileResult {
   zip: string
   federal: Official[]
@@ -79,6 +87,7 @@ export interface CivicProfileResult {
   votingLocations: VotingLocation[]
   services: MunicipalServicesByType | null
   policies: { federal: PolicySummary[]; state: PolicySummary[]; city: PolicySummary[] } | null
+  tirzZones: TirzSummary[]
 }
 
 function extractZip(input: string): string | null {
@@ -184,6 +193,12 @@ export async function lookupCivicProfile(input: string): Promise<{ data?: CivicP
     // Non-critical — degrade gracefully
   }
 
+  // Step 7: TIRZ zones overlapping this ZIP
+  const { data: tirzData } = await (supabase as any)
+    .from('tirz_zones')
+    .select('tirz_id, name, site_number, description, status')
+    .or('zip_codes.like.%' + zip + '%')
+
   return {
     data: {
       zip,
@@ -195,6 +210,7 @@ export async function lookupCivicProfile(input: string): Promise<{ data?: CivicP
       votingLocations: locations || [],
       services: servicesByType,
       policies,
+      tirzZones: tirzData || [],
     },
   }
 }

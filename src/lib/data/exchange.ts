@@ -3456,8 +3456,8 @@ export async function getCircleGraphData(): Promise<CircleGraphData> {
 
 export async function getTirzZones(): Promise<TirzZone[]> {
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('tirz_zones' as any)
+  const { data } = await (supabase as any)
+    .from('tirz_zones')
     .select('*')
     .order('site_number')
   return (data ?? []) as TirzZone[]
@@ -3466,29 +3466,29 @@ export async function getTirzZones(): Promise<TirzZone[]> {
 export async function getTirzZone(tirzId: string): Promise<TirzZone | null> {
   const supabase = await createClient()
   const { data } = await supabase
-    .from('tirz_zones' as any)
+    .from('tirz_zones')
     .select('*')
     .eq('tirz_id', tirzId)
     .single()
-  return (data as TirzZone) ?? null
+  return (data as unknown as TirzZone) ?? null
 }
 
 /** Find TIRZ zone by site number (used for GeoJSON → DB lookup). */
 export async function getTirzZoneBySiteNumber(siteNo: number): Promise<TirzZone | null> {
   const supabase = await createClient()
   const { data } = await supabase
-    .from('tirz_zones' as any)
+    .from('tirz_zones')
     .select('*')
     .eq('site_number', siteNo)
     .single()
-  return (data as TirzZone) ?? null
+  return (data as unknown as TirzZone) ?? null
 }
 
 /** Get officials whose council districts overlap a TIRZ zone. */
 export async function getOfficialsForTirz(tirzId: string) {
   const supabase = await createClient()
   const { data: zone } = await supabase
-    .from('tirz_zones' as any)
+    .from('tirz_zones')
     .select('council_districts')
     .eq('tirz_id', tirzId)
     .single() as { data: { council_districts: string | null } | null }

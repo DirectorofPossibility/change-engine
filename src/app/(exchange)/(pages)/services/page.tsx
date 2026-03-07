@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   description: 'Free and low-cost services in the Houston area — a community resource directory.',
 }
 
-export default async function ServicesPage() {
+export default async function ServicesPage({ searchParams }: { searchParams: Promise<{ zip?: string }> }) {
+  const { zip: urlZip } = await searchParams
   const services = await getServices()
 
   const langId = await getLangId()
@@ -51,7 +52,7 @@ export default async function ServicesPage() {
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4">
           <div className="flex-1 min-w-0">
-            <ServicesClient services={services} translations={translations} />
+            <ServicesClient services={services} translations={translations} initialZip={urlZip} />
           </div>
 
           <div className="hidden lg:block lg:w-[280px] flex-shrink-0">

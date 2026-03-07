@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { MapPin, Building2, Landmark, Scale, GraduationCap, Users, Flag } from 'lucide-react'
+import { MapPin, Building2, Landmark, Scale, GraduationCap, Users, Flag, TrendingUp } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Districts — Community Exchange',
@@ -59,6 +59,14 @@ const DISTRICT_TYPES = [
     href: '/officials',
     level: 'City',
   },
+  {
+    title: 'TIRZ Zones',
+    description: 'Tax Increment Reinvestment Zones capture property tax growth and reinvest it locally — funding infrastructure, housing, and development.',
+    icon: TrendingUp,
+    color: '#C75B2A',
+    href: '/tirz',
+    level: 'City',
+  },
 ]
 
 export default function DistrictsPage() {
@@ -71,7 +79,7 @@ export default function DistrictsPage() {
         subtitle="You live in more districts than you think."
         intro="City council. County precinct. State house and senate. Congress. They all overlap where you live. Understanding your districts is the first step to knowing who represents you."
         stats={[
-          { value: '6', label: 'District Types' },
+          { value: '7', label: 'District Types' },
           { value: '11', label: 'City Council' },
           { value: '4', label: 'County Precincts' },
           { value: '150', label: 'State House' },
@@ -153,7 +161,7 @@ export default function DistrictsPage() {
                           {district.description}
                         </p>
                         <div className="mt-3 flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-brand-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                          View Officials
+                          {district.href === '/tirz' ? 'Explore Zones' : 'View Officials'}
                           <span aria-hidden="true">&rarr;</span>
                         </div>
                       </div>

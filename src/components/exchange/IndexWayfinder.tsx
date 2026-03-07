@@ -58,7 +58,7 @@ export function IndexWayfinder({
   showPathways = true,
   color = '#C75B2A',
 }: IndexWayfinderProps) {
-  const [pathwaysOpen, setPathwaysOpen] = useState(false)
+  const [pathwaysOpen, setPathwaysOpen] = useState(true)
   const [exploreOpen, setExploreOpen] = useState(true)
 
   return (

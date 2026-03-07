@@ -28,15 +28,19 @@ interface Policy {
 interface PoliciesPageClientProps {
   policies: Policy[]
   translations: Record<string, { title?: string; summary?: string }>
+  /** Level filter from URL query param (e.g. ?level=City) */
+  initialLevel?: string
 }
 
 const LEVELS = ['All', 'Federal', 'State', 'County', 'City']
 const STATUSES = ['All', 'Enacted', 'Passed', 'Introduced', 'Pending', 'Failed']
 
-export function PoliciesPageClient({ policies, translations }: PoliciesPageClientProps) {
+export function PoliciesPageClient({ policies, translations, initialLevel }: PoliciesPageClientProps) {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
-  const [levelFilter, setLevelFilter] = useState('All')
+  // Capitalize first letter to match LEVELS array (e.g. "city" → "City")
+  const normalizedLevel = initialLevel ? initialLevel.charAt(0).toUpperCase() + initialLevel.slice(1).toLowerCase() : ''
+  const [levelFilter, setLevelFilter] = useState(LEVELS.includes(normalizedLevel) ? normalizedLevel : 'All')
   const [statusFilter, setStatusFilter] = useState('All')
 
   const filtered = useMemo(function () {

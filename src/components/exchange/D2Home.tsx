@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { FeaturedPromo } from './FeaturedPromo'
+import { GoodThingsWidget } from './GoodThingsWidget'
 import { InfoBubble } from './InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { HeroZipInput } from './HeroZipInput'
@@ -264,6 +265,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       {/* ── FEATURED PROMO ── */}
       <div className="max-w-[1200px] mx-auto px-8 pt-6 pb-2">
         <FeaturedPromo variant="banner" />
+      </div>
+
+      {/* ── THREE GOOD THINGS ── */}
+      <div className="max-w-[1200px] mx-auto px-8 pt-2 pb-4">
+        <GoodThingsWidget variant="banner" />
       </div>
 
     </div>

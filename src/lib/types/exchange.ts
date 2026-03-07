@@ -42,7 +42,7 @@ export interface ExchangeStats {
 }
 
 /** Service row enriched with its parent organization's name and coordinates. */
-export interface ServiceWithOrg extends Service211 {
+export type ServiceWithOrg = Service211 & {
   org_name?: string
   latitude?: number | null
   longitude?: number | null
@@ -206,6 +206,22 @@ export interface SuperNeighborhood {
   population: number | null
   median_income: number | null
   description: string | null
+}
+
+/** Houston TIRZ — Tax Increment Reinvestment Zone. */
+export interface TirzZone {
+  tirz_id: string
+  name: string
+  site_number: number
+  description: string | null
+  year_established: number | null
+  expiration_year: number | null
+  managing_entity: string | null
+  website: string | null
+  council_districts: string | null
+  zip_codes: string | null
+  total_investment: number | null
+  status: string | null
 }
 
 /** Properties bag for a clicked GeoJSON polygon feature (dynamic keys from the GeoJSON). */

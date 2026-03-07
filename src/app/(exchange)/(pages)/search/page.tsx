@@ -19,6 +19,7 @@ import type { Metadata } from 'next'
 import { PAGE_INTROS, CENTER_COLORS, THEMES } from '@/lib/constants'
 import { searchAll } from '@/lib/data/search'
 import { PageHero } from '@/components/exchange/PageHero'
+import { HeroSearchInput } from '@/components/exchange/HeroSearchInput'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
@@ -248,6 +249,9 @@ export default async function SearchPage({
       )}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Search' }]} />
+        <div className="mb-6 max-w-2xl">
+          <HeroSearchInput />
+        </div>
         <SearchResultsHeader query={query} totalCount={totalCount} />
 
         {totalCount > 0 && (
@@ -266,7 +270,7 @@ export default async function SearchPage({
                       const isActive = activePathwaySet.has(key)
                       if (!isActive) return null
                       return (
-                        <Link key={key} href={'/explore/pathway/' + theme.slug} className="flex items-center gap-1.5 text-xs text-brand-text hover:text-brand-accent transition-colors">
+                        <Link key={key} href={'/pathways/' + theme.slug} className="flex items-center gap-1.5 text-xs text-brand-text hover:text-brand-accent transition-colors">
                           <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                           {theme.name}
                         </Link>

@@ -247,7 +247,7 @@ export function MyAreaClient({
                   return (
                     <Link
                       key={key}
-                      href={'/explore/pathway/' + theme.slug}
+                      href={'/pathways/' + theme.slug}
                       className="flex items-center gap-1.5 text-xs py-1 px-2 rounded border border-brand-border hover:border-brand-accent transition-colors"
                       style={{ opacity: isActive ? 1 : 0.5 }}
                       onClick={function () { trackWayfinderEvent('pathway_click', { pathway: theme.slug, source: 'my-area' }) }}

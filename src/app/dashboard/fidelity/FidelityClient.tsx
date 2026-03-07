@@ -19,11 +19,23 @@ const TIERS = ['platinum', 'gold', 'silver', 'bronze'] as const
 const PAGE_SIZE = 50
 const ENRICHABLE_TYPES = new Set(['organization', 'official', 'content', 'service', 'opportunity', 'event', 'agency', 'benefit', 'policy', 'foundation'])
 
-/** Fields that are editable per entity type, with their input type */
-type FieldInput = { label: string; key: string; type: 'text' | 'url' | 'tel' | 'email' | 'dropdown'; options?: string[] }
+/**
+ * Fields editable per entity type.
+ * type = 'lookup:category' means a dropdown from the lookup_values table.
+ * type = 'ref:themes' or 'ref:focus_areas' means a dropdown from taxonomy tables.
+ */
+type FieldInput = {
+  label: string
+  key: string
+  type: 'text' | 'url' | 'tel' | 'email' | 'lookup' | 'ref'
+  lookupCategory?: string   // for 'lookup' type — category in lookup_values
+  refTable?: string         // for 'ref' type — 'themes' or 'focus_areas'
+}
 
 const EDITABLE_FIELDS: Record<string, FieldInput[]> = {
   organization: [
+    { label: 'Org Type', key: 'org_type', type: 'lookup', lookupCategory: 'org_type' },
+    { label: 'Theme', key: 'theme_id', type: 'ref', refTable: 'themes' },
     { label: 'Phone', key: 'phone', type: 'tel' },
     { label: 'Email', key: 'email', type: 'email' },
     { label: 'Website', key: 'website', type: 'url' },
@@ -35,19 +47,19 @@ const EDITABLE_FIELDS: Record<string, FieldInput[]> = {
     { label: 'Hero Image URL', key: 'hero_image_url', type: 'url' },
     { label: 'Hours', key: 'hours_of_operation', type: 'text' },
     { label: 'Year Founded', key: 'year_founded', type: 'text' },
-    { label: 'Service Area', key: 'service_area', type: 'text' },
+    { label: 'Service Area', key: 'service_area', type: 'lookup', lookupCategory: 'geo_scope' },
     { label: 'App Store URL', key: 'app_store_url', type: 'url' },
     { label: 'Google Play URL', key: 'google_play_url', type: 'url' },
   ],
   official: [
+    { label: 'Party', key: 'party', type: 'lookup', lookupCategory: 'party' },
+    { label: 'Level', key: 'level', type: 'lookup', lookupCategory: 'gov_level' },
+    { label: 'Jurisdiction', key: 'jurisdiction', type: 'lookup', lookupCategory: 'jurisdiction' },
     { label: 'Email', key: 'email', type: 'email' },
     { label: 'Office Phone', key: 'office_phone', type: 'tel' },
     { label: 'Website', key: 'website', type: 'url' },
     { label: 'Photo URL', key: 'photo_url', type: 'url' },
     { label: 'Title', key: 'title', type: 'text' },
-    { label: 'Party', key: 'party', type: 'dropdown', options: ['Democrat', 'Republican', 'Independent', 'Libertarian', 'Green', 'Nonpartisan'] },
-    { label: 'Level', key: 'level', type: 'dropdown', options: ['federal', 'state', 'county', 'city'] },
-    { label: 'Jurisdiction', key: 'jurisdiction', type: 'text' },
     { label: 'Office Address', key: 'office_address', type: 'text' },
     { label: 'Bio', key: 'bio', type: 'text' },
   ],
@@ -62,13 +74,14 @@ const EDITABLE_FIELDS: Record<string, FieldInput[]> = {
     { label: 'Hours', key: 'hours', type: 'text' },
     { label: 'Fees', key: 'fees', type: 'text' },
     { label: 'Languages', key: 'languages', type: 'text' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
   policy: [
+    { label: 'Policy Type', key: 'policy_type', type: 'lookup', lookupCategory: 'policy_type' },
+    { label: 'Level', key: 'level', type: 'lookup', lookupCategory: 'gov_level' },
+    { label: 'Status', key: 'status', type: 'lookup', lookupCategory: 'policy_status' },
     { label: 'Bill Number', key: 'bill_number', type: 'text' },
     { label: 'Source URL', key: 'source_url', type: 'url' },
-    { label: 'Policy Type', key: 'policy_type', type: 'dropdown', options: ['ordinance', 'resolution', 'bill', 'executive_order', 'regulation', 'amendment', 'proclamation'] },
-    { label: 'Level', key: 'level', type: 'dropdown', options: ['federal', 'state', 'county', 'city'] },
-    { label: 'Status', key: 'status', type: 'dropdown', options: ['introduced', 'in_committee', 'passed_one_chamber', 'passed', 'signed', 'vetoed', 'enacted', 'expired', 'withdrawn'] },
   ],
   opportunity: [
     { label: 'Address', key: 'address', type: 'text' },
@@ -76,8 +89,10 @@ const EDITABLE_FIELDS: Record<string, FieldInput[]> = {
     { label: 'State', key: 'state', type: 'text' },
     { label: 'ZIP', key: 'zip_code', type: 'text' },
     { label: 'Registration URL', key: 'registration_url', type: 'url' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
   agency: [
+    { label: 'Jurisdiction', key: 'jurisdiction', type: 'lookup', lookupCategory: 'jurisdiction' },
     { label: 'Phone', key: 'phone', type: 'tel' },
     { label: 'Website', key: 'website', type: 'url' },
     { label: 'Address', key: 'address', type: 'text' },
@@ -85,28 +100,33 @@ const EDITABLE_FIELDS: Record<string, FieldInput[]> = {
     { label: 'State', key: 'state', type: 'text' },
     { label: 'ZIP', key: 'zip_code', type: 'text' },
     { label: 'Acronym', key: 'agency_acronym', type: 'text' },
-    { label: 'Jurisdiction', key: 'jurisdiction', type: 'dropdown', options: ['federal', 'state', 'county', 'city', 'regional'] },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
   benefit: [
-    { label: 'Benefit Type', key: 'benefit_type', type: 'dropdown', options: ['cash', 'food', 'housing', 'healthcare', 'education', 'employment', 'utility', 'tax_credit', 'insurance', 'childcare', 'legal', 'transportation'] },
+    { label: 'Benefit Type', key: 'benefit_type', type: 'lookup', lookupCategory: 'benefit_type' },
     { label: 'Application URL', key: 'application_url', type: 'url' },
     { label: 'Benefit Amount', key: 'benefit_amount', type: 'text' },
     { label: 'Eligibility', key: 'eligibility', type: 'text' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
   campaign: [
-    { label: 'Campaign Type', key: 'campaign_type', type: 'dropdown', options: ['advocacy', 'fundraising', 'awareness', 'petition', 'voter_registration', 'community_action', 'mutual_aid'] },
-    { label: 'Status', key: 'status', type: 'dropdown', options: ['planned', 'active', 'completed', 'paused', 'cancelled'] },
+    { label: 'Campaign Type', key: 'campaign_type', type: 'lookup', lookupCategory: 'campaign_type' },
+    { label: 'Status', key: 'status', type: 'lookup', lookupCategory: 'campaign_status' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
   event: [
+    { label: 'Event Type', key: 'event_type', type: 'lookup', lookupCategory: 'event_type' },
     { label: 'Address', key: 'address', type: 'text' },
     { label: 'City', key: 'city', type: 'text' },
     { label: 'State', key: 'state', type: 'text' },
     { label: 'ZIP', key: 'zip_code', type: 'text' },
-    { label: 'Event Type', key: 'event_type', type: 'dropdown', options: ['workshop', 'town_hall', 'rally', 'fundraiser', 'volunteer', 'meeting', 'webinar', 'festival', 'training', 'hearing'] },
     { label: 'Registration URL', key: 'registration_url', type: 'url' },
     { label: 'Cost', key: 'cost', type: 'text' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
   foundation: [
+    { label: 'Type', key: 'type', type: 'lookup', lookupCategory: 'foundation_type' },
+    { label: 'Geo Level', key: 'geo_level', type: 'lookup', lookupCategory: 'geo_scope' },
     { label: 'Phone', key: 'phone', type: 'tel' },
     { label: 'Email', key: 'email', type: 'email' },
     { label: 'Website', key: 'website_url', type: 'url' },
@@ -117,12 +137,18 @@ const EDITABLE_FIELDS: Record<string, FieldInput[]> = {
     { label: 'Founded Year', key: 'founded_year', type: 'text' },
   ],
   content: [
+    { label: 'Content Type', key: 'content_type', type: 'lookup', lookupCategory: 'content_type' },
+    { label: 'Theme', key: 'pathway_primary', type: 'ref', refTable: 'themes' },
+    { label: 'Center', key: 'center', type: 'lookup', lookupCategory: 'engagement_level' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
+    { label: 'Geographic Scope', key: 'geographic_scope', type: 'lookup', lookupCategory: 'geo_scope' },
     { label: 'Image URL', key: 'image_url', type: 'url' },
     { label: 'Source URL', key: 'source_url', type: 'url' },
   ],
   ballot_item: [
-    { label: 'Item Type', key: 'item_type', type: 'dropdown', options: ['proposition', 'amendment', 'bond', 'referendum', 'initiative', 'measure'] },
-    { label: 'Jurisdiction', key: 'jurisdiction', type: 'dropdown', options: ['federal', 'state', 'county', 'city', 'school_district', 'special_district'] },
+    { label: 'Item Type', key: 'item_type', type: 'lookup', lookupCategory: 'ballot_item_type' },
+    { label: 'Jurisdiction', key: 'jurisdiction', type: 'lookup', lookupCategory: 'jurisdiction' },
+    { label: 'Engagement', key: 'engagement_level', type: 'lookup', lookupCategory: 'engagement_level' },
   ],
 }
 
@@ -144,23 +170,32 @@ export function FidelityClient({ overview }: Props) {
   const [editLoading, setEditLoading] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  // Taxonomy dropdowns (fetched once)
+  // Dropdown data (fetched once from database)
+  const [lookups, setLookups] = useState<Record<string, { value: string; label: string }[]>>({})
   const [themes, setThemes] = useState<{ id: string; name: string }[]>([])
   const [focusAreas, setFocusAreas] = useState<{ id: string; name: string; theme_id: string }[]>([])
-  const [taxonomyLoaded, setTaxonomyLoaded] = useState(false)
+  const [dropdownsLoaded, setDropdownsLoaded] = useState(false)
 
   useEffect(() => {
-    if (taxonomyLoaded) return
+    if (dropdownsLoaded) return
     const supabase = createClient()
     Promise.all([
+      supabase.from('lookup_values' as any).select('category, value, label').eq('is_active', true).order('sort_order', { ascending: true }),
       supabase.from('themes' as any).select('theme_id, theme_name'),
       supabase.from('focus_areas' as any).select('focus_id, focus_area_name, theme_id'),
-    ]).then(([themesRes, faRes]) => {
+    ]).then(([lookupRes, themesRes, faRes]) => {
+      // Group lookups by category
+      const grouped: Record<string, { value: string; label: string }[]> = {}
+      for (const row of (lookupRes.data as any[] || [])) {
+        if (!grouped[row.category]) grouped[row.category] = []
+        grouped[row.category].push({ value: row.value, label: row.label })
+      }
+      setLookups(grouped)
       setThemes((themesRes.data as any[] || []).map((t: any) => ({ id: t.theme_id, name: t.theme_name })))
       setFocusAreas((faRes.data as any[] || []).map((f: any) => ({ id: f.focus_id, name: f.focus_area_name, theme_id: f.theme_id })))
-      setTaxonomyLoaded(true)
+      setDropdownsLoaded(true)
     })
-  }, [taxonomyLoaded])
+  }, [dropdownsLoaded])
 
   async function handleScore() {
     setScoring(true)
@@ -623,23 +658,46 @@ export function FidelityClient({ overview }: Props) {
                                       const isMissing = (e.critical_missing || []).some(
                                         m => m === field.key || m.includes(field.key)
                                       )
+                                      const baseClass = `w-full px-2.5 py-1.5 text-xs border rounded-lg bg-white focus:ring-1 focus:ring-brand-accent focus:border-brand-accent ${
+                                        isMissing ? 'border-red-300' : 'border-brand-border'
+                                      }`
                                       return (
                                         <div key={field.key}>
                                           <label className={`block text-[11px] font-medium mb-1 ${isMissing ? 'text-red-600' : 'text-brand-muted'}`}>
                                             {field.label}
                                             {isMissing && <span className="ml-1 text-red-400">*</span>}
                                           </label>
-                                          {field.type === 'dropdown' ? (
+                                          {field.type === 'lookup' && field.lookupCategory ? (
                                             <select
                                               value={editDraft[field.key] || ''}
                                               onChange={(ev) => setEditDraft({ ...editDraft, [field.key]: ev.target.value })}
-                                              className={`w-full px-2.5 py-1.5 text-xs border rounded-lg bg-white focus:ring-1 focus:ring-brand-accent focus:border-brand-accent ${
-                                                isMissing ? 'border-red-300' : 'border-brand-border'
-                                              }`}
+                                              className={baseClass}
                                             >
                                               <option value="">— Select —</option>
-                                              {(field.options || []).map(opt => (
-                                                <option key={opt} value={opt}>{opt.replace(/_/g, ' ')}</option>
+                                              {(lookups[field.lookupCategory] || []).map(opt => (
+                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                              ))}
+                                            </select>
+                                          ) : field.type === 'ref' && field.refTable === 'themes' ? (
+                                            <select
+                                              value={editDraft[field.key] || ''}
+                                              onChange={(ev) => setEditDraft({ ...editDraft, [field.key]: ev.target.value })}
+                                              className={baseClass}
+                                            >
+                                              <option value="">— Select —</option>
+                                              {themes.map(t => (
+                                                <option key={t.id} value={t.id}>{t.name}</option>
+                                              ))}
+                                            </select>
+                                          ) : field.type === 'ref' && field.refTable === 'focus_areas' ? (
+                                            <select
+                                              value={editDraft[field.key] || ''}
+                                              onChange={(ev) => setEditDraft({ ...editDraft, [field.key]: ev.target.value })}
+                                              className={baseClass}
+                                            >
+                                              <option value="">— Select —</option>
+                                              {focusAreas.map(f => (
+                                                <option key={f.id} value={f.id}>{f.name}</option>
                                               ))}
                                             </select>
                                           ) : (
@@ -648,9 +706,7 @@ export function FidelityClient({ overview }: Props) {
                                               value={editDraft[field.key] || ''}
                                               onChange={(ev) => setEditDraft({ ...editDraft, [field.key]: ev.target.value })}
                                               placeholder={field.label}
-                                              className={`w-full px-2.5 py-1.5 text-xs border rounded-lg focus:ring-1 focus:ring-brand-accent focus:border-brand-accent ${
-                                                isMissing ? 'border-red-300 bg-red-50/30' : 'border-brand-border'
-                                              }`}
+                                              className={`${baseClass} ${isMissing ? 'bg-red-50/30' : ''}`}
                                             />
                                           )}
                                         </div>

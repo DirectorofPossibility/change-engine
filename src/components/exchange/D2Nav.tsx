@@ -55,6 +55,7 @@ function useCenters(t: (key: string) => string) {
         { href: '/officials', label: t('d2nav.officials') },
         { href: '/policies', label: t('d2nav.policies') },
         { href: '/elections', label: t('d2nav.elections') },
+        { href: '/tirz', label: 'TIRZ Zones' },
       ],
     },
     {
@@ -250,8 +251,8 @@ export function D2Nav() {
                 )
               })}
 
-              {/* Topics (formerly Pathways) */}
-              <details className="group border-b border-brand-border">
+              {/* Topics (formerly Pathways) — open by default */}
+              <details open className="group border-b border-brand-border">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                   <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.topics')}</span>

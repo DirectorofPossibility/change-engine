@@ -139,14 +139,14 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
             <section className="mb-10">
               <h2 className="text-xl font-bold text-brand-text mb-4">Services</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {services.map(function (svc) {
+                {services.map(function (svc: any) {
                   const st = serviceTranslations[svc.service_id]
                   return (
                     <ServiceCard
                       key={svc.service_id}
                       name={svc.service_name}
                       orgName={svc.org_name}
-                      description={svc.description_5th_grade}
+                      description={svc.description_5th_grade || null}
                       phone={svc.phone}
                       address={svc.address}
                       city={svc.city}

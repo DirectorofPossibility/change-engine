@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MapPin, Vote, Landmark, Star, Home, Building2, Phone, Globe, Shield, Flame, Heart, Trees, BookOpen, Zap, AlertTriangle, Scale } from 'lucide-react'
+import { MapPin, Vote, Landmark, Star, Home, Building2, Phone, Globe, Shield, Flame, Heart, Trees, BookOpen, Zap, AlertTriangle, Scale, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { VotingLocationsMap } from './VotingLocationsMap'
 import { useTranslation } from '@/lib/use-translation'
@@ -103,6 +103,33 @@ export function ZipLookupForm() {
               <div className="flex gap-4 text-sm text-brand-muted">
                 {results.neighborhood.population != null && <span>Population: {results.neighborhood.population.toLocaleString()}</span>}
                 {results.neighborhood.median_income != null && <span>Median Income: ${results.neighborhood.median_income.toLocaleString()}</span>}
+              </div>
+            </div>
+          )}
+
+          {/* TIRZ Zones */}
+          {results.tirzZones && results.tirzZones.length > 0 && (
+            <div className="bg-brand-accent/5 rounded-xl p-4 border-2 border-brand-border">
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingUp size={16} style={{ color: '#C75B2A' }} />
+                <span className="font-semibold text-brand-text">TIRZ Zone{results.tirzZones.length > 1 ? 's' : ''}</span>
+              </div>
+              <div className="space-y-2">
+                {results.tirzZones.map(function (zone: any) {
+                  return (
+                    <Link
+                      key={zone.tirz_id}
+                      href={'/tirz/' + zone.tirz_id}
+                      className="flex items-center gap-2 text-sm hover:text-brand-accent transition-colors"
+                    >
+                      <span className="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0" style={{ backgroundColor: '#C75B2A' }}>
+                        {zone.site_number}
+                      </span>
+                      <span className="text-brand-text font-medium">{zone.name}</span>
+                      <span className="text-brand-muted text-xs">TIRZ-{zone.site_number}</span>
+                    </Link>
+                  )
+                })}
               </div>
             </div>
           )}

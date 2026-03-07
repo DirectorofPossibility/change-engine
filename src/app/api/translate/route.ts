@@ -58,7 +58,7 @@ const TABLE_CONFIGS: Record<string, {
     descCol: 'description_5th_grade',
     contentType: 'services_211',
     selectCols: 'service_id,service_name,description_5th_grade',
-    activeFilter: { col: 'is_active', val: 'true' },
+    activeFilter: { col: 'is_active', val: 'Yes' },
   },
   elected_officials: {
     idCol: 'official_id',
@@ -80,7 +80,7 @@ const TABLE_CONFIGS: Record<string, {
     descCol: 'description_5th_grade',
     contentType: 'opportunities',
     selectCols: 'opportunity_id,opportunity_name,description_5th_grade',
-    activeFilter: { col: 'is_active', val: 'true' },
+    activeFilter: { col: 'is_active', val: 'Yes' },
   },
   agencies: {
     idCol: 'agency_id',
@@ -95,7 +95,7 @@ const TABLE_CONFIGS: Record<string, {
     descCol: 'description_5th_grade',
     contentType: 'benefit_programs',
     selectCols: 'benefit_id,benefit_name,description_5th_grade',
-    activeFilter: { col: 'is_active', val: 'true' },
+    activeFilter: { col: 'is_active', val: 'Yes' },
   },
   campaigns: {
     idCol: 'campaign_id',
@@ -110,7 +110,7 @@ const TABLE_CONFIGS: Record<string, {
     descCol: 'description_5th_grade',
     contentType: 'events',
     selectCols: 'event_id,event_name,description_5th_grade',
-    activeFilter: { col: 'is_active', val: 'true' },
+    activeFilter: { col: 'is_active', val: 'Yes' },
   },
   foundations: {
     idCol: 'id',
@@ -125,7 +125,7 @@ const TABLE_CONFIGS: Record<string, {
     descCol: 'description_5th_grade',
     contentType: 'learning_paths',
     selectCols: 'path_id,path_name,description_5th_grade',
-    activeFilter: { col: 'is_active', val: 'true' },
+    activeFilter: { col: 'is_active', val: 'Yes' },
   },
   life_situations: {
     idCol: 'situation_id',

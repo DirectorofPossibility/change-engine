@@ -107,6 +107,9 @@ export async function updateEntityField(
       'agency_acronym', 'bill_number', 'benefit_type', 'benefit_amount',
       'event_type', 'campaign_type', 'item_type', 'party', 'title',
       'jurisdiction', 'level', 'status', 'app_store_url', 'google_play_url',
+      'theme_id', 'org_type', 'pathway_primary', 'center', 'engagement_level',
+      'geo_level', 'type', 'geographic_scope', 'policy_type', 'content_type',
+      'state_code',
     ])
 
     const cleanUpdates: Record<string, string | null> = {}

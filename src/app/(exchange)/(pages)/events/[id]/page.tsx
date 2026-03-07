@@ -54,7 +54,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   const [orgResult, wayfinderData] = await Promise.all([
     event.org_id
-      ? supabase.from('organizations').select('org_id, org_name, description_5th_grade, website, phone, logo_url, donate_url, volunteer_url').eq('org_id', event.org_id).single()
+      ? (supabase.from('organizations') as any).select('org_id, org_name, description_5th_grade, website, phone, logo_url, donate_url, volunteer_url').eq('org_id', event.org_id).single()
       : Promise.resolve({ data: null }),
     getWayfinderContext('event', id, userProfile?.role),
   ])
@@ -63,7 +63,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const startDate = event.start_datetime ? new Date(event.start_datetime) : null
   const endDate = event.end_datetime ? new Date(event.end_datetime) : null
   const address = [event.address, event.city, event.state, event.zip_code].filter(Boolean).join(', ')
-  const mapUrl = address ? buildMapUrl(event.address, event.city, event.state, event.zip_code) : null
+  const mapUrl = address ? buildMapUrl(event.address || '', event.city || '', event.state || '', event.zip_code || '') : null
   const calendarUrl = buildAddToCalendarUrl(event as any)
 
   return (
