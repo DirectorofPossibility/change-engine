@@ -82,10 +82,10 @@ export function D2Nav({ election }: D2NavProps) {
     <>
       {/* Election banner — links to elections page */}
       {election && (
-        <Link href="/elections" className="block text-center font-mono text-[11px] font-bold uppercase tracking-wider py-2 px-4 bg-brand-dark text-brand-accent hover:bg-brand-dark/90 transition-colors">
+        <Link href="/elections" className="block text-center font-mono text-[11px] font-bold uppercase tracking-wider py-2 px-4 bg-brand-bg-alt text-brand-accent border-b border-brand-border hover:bg-brand-border/50 transition-colors">
           {election.election_name} — {new Date(election.election_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           {election.find_polling_url && (
-            <span className="ml-3 underline text-white">
+            <span className="ml-3 underline text-brand-text">
               Find your polling place
             </span>
           )}
@@ -137,7 +137,7 @@ export function D2Nav({ election }: D2NavProps) {
                     }}
                   >
                     <span className="w-2 h-2 rounded-sm" style={{ background: center.color, opacity: isActive ? 1 : 0.4 }} />
-                    <span style={{ color: isActive ? '#C75B2A' : '#2d2d2d' }}>{center.label}</span>
+                    <span style={{ color: isActive ? '#C75B2A' : '#1A1A1A' }}>{center.label}</span>
                     <ChevronDown size={12} className="opacity-40" />
                   </button>
                   {openDrop === center.label && (
@@ -150,7 +150,7 @@ export function D2Nav({ election }: D2NavProps) {
                             href={item.href}
                             role="menuitem"
                             className="block px-4 py-2 text-[13px] font-medium transition-colors hover:bg-brand-bg hover:text-brand-accent"
-                            style={{ color: itemActive ? '#C75B2A' : '#2d2d2d' }}
+                            style={{ color: itemActive ? '#C75B2A' : '#1A1A1A' }}
                           >
                             {item.label}
                           </Link>

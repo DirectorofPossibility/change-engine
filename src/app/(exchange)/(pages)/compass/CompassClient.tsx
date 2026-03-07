@@ -66,13 +66,13 @@ export function CompassClient({
   return (
     <div>
       {/* ─── HERO ─── */}
-      <section className="relative bg-brand-dark text-white overflow-hidden">
+      <section className="relative bg-brand-bg overflow-hidden">
         {/* FOL watermarks */}
         <div className="absolute right-[-80px] top-[-40px] opacity-[0.04]">
-          <FOLWatermark variant="flower" size="lg" color="#ffffff" />
+          <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
         </div>
         <div className="absolute left-[-40px] bottom-[-30px] opacity-[0.03]">
-          <FOLWatermark variant="seed" size="md" color="#ffffff" />
+          <FOLWatermark variant="seed" size="md" color="#C75B2A" />
         </div>
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
@@ -87,25 +87,25 @@ export function CompassClient({
 
               {neighborhoodName ? (
                 <>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40 mb-2">Your Community Dashboard</p>
+                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">Your Community Dashboard</p>
                   <h1 className="text-3xl sm:text-4xl lg:text-display font-serif font-bold leading-tight">
                     Welcome to{' '}
                     <span className="text-brand-accent">{neighborhoodName}</span>
                   </h1>
-                  <p className="text-base text-white/60 mt-2 font-serif italic">
+                  <p className="text-base text-brand-muted mt-2 font-serif italic">
                     ZIP {zip}{councilDistrict ? ' — District ' + councilDistrict : ''}
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40 mb-2">Community Exchange</p>
+                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">Community Exchange</p>
                   <h1 className="text-3xl sm:text-4xl lg:text-display font-serif font-bold leading-tight">
                     The Compass
                   </h1>
-                  <p className="text-base text-white/60 mt-2 font-serif italic">
+                  <p className="text-base text-brand-muted mt-2 font-serif italic">
                     Where am I, and what&rsquo;s around me?
                   </p>
-                  <p className="text-sm text-white/40 mt-1">
+                  <p className="text-sm text-brand-muted-light mt-1">
                     Enter your ZIP code to personalize your experience.
                   </p>
                 </>
@@ -114,8 +114,8 @@ export function CompassClient({
 
             {/* ZIP input — always visible */}
             <div className="lg:flex-shrink-0 lg:w-[300px]">
-              <div className="bg-white/[0.08] rounded-xl border border-white/[0.1] p-4 backdrop-blur-sm">
-                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/40 mb-2">
+              <div className="bg-white rounded-xl border border-brand-border p-4 backdrop-blur-sm">
+                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mb-2">
                   {hasZip ? 'Change location' : 'Personalize'}
                 </p>
                 <ZipInput />
@@ -124,26 +124,26 @@ export function CompassClient({
           </div>
 
           {/* Stats bar */}
-          <div className="mt-8 pt-5 border-t border-white/[0.08] flex flex-wrap items-center gap-6 sm:gap-10">
+          <div className="mt-8 pt-5 border-t border-brand-border flex flex-wrap items-center gap-6 sm:gap-10">
             <div className="text-center">
               <p className="text-2xl sm:text-3xl font-serif font-bold text-brand-accent">{totalItems}</p>
-              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/35 mt-0.5">Resources</p>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Resources</p>
             </div>
             {hasZip && zipOfficials.length > 0 && (
               <div className="text-center">
                 <p className="text-2xl sm:text-3xl font-serif font-bold text-[#805ad5]">{zipOfficials.length}</p>
-                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/35 mt-0.5">Your Officials</p>
+                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Your Officials</p>
               </div>
             )}
             {hasZip && nearbyServices.length > 0 && (
               <div className="text-center">
                 <p className="text-2xl sm:text-3xl font-serif font-bold text-[#38a169]">{nearbyServices.length}</p>
-                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/35 mt-0.5">Nearby Services</p>
+                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Nearby Services</p>
               </div>
             )}
             <div className="text-center">
               <p className="text-2xl sm:text-3xl font-serif font-bold text-[#3182ce]">7</p>
-              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/35 mt-0.5">Pathways</p>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Pathways</p>
             </div>
           </div>
         </div>

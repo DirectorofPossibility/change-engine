@@ -48,13 +48,13 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
 
   if (variant === 'banner') {
     return (
-      <Link href="/goodthings" className="block bg-brand-dark text-white py-3 px-4 hover:bg-brand-dark/90 transition-colors">
+      <Link href="/goodthings" className="block bg-brand-bg-alt text-brand-text py-3 px-4 hover:bg-brand-border/50 transition-colors border-t border-brand-border">
         <div className="max-w-[1200px] mx-auto flex items-center gap-3 text-sm">
           <Sparkles size={14} className="text-[#d69e2e] flex-shrink-0" />
-          <span className="text-white/50 flex-shrink-0">Good Thing:</span>
-          <span className="text-white/80 truncate">&quot;{thing}&quot;</span>
-          {loc && <span className="text-white/30 text-xs flex-shrink-0">— {loc}</span>}
-          <span className="ml-auto text-white/40 text-xs flex-shrink-0 flex items-center gap-1">
+          <span className="text-brand-muted flex-shrink-0">Good Thing:</span>
+          <span className="text-brand-text truncate">&quot;{thing}&quot;</span>
+          {loc && <span className="text-brand-muted-light text-xs flex-shrink-0">— {loc}</span>}
+          <span className="ml-auto text-brand-muted text-xs flex-shrink-0 flex items-center gap-1">
             Share yours <ArrowRight size={10} />
           </span>
         </div>

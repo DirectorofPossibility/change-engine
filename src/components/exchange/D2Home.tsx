@@ -113,7 +113,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
             <Link
               href="/search"
               className="flex items-center gap-3 max-w-[480px] px-4 py-4 bg-white border-2 border-brand-text rounded-xl mb-4"
-              style={{ boxShadow: '3px 3px 0 #2d2d2d' }}
+              style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
               <span className="text-sm text-brand-muted-light">What are you looking for?</span>
@@ -169,11 +169,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               New
             </div>
 
-            <Link href="/services" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ bottom: 20, left: 0, boxShadow: '3px 3px 0 #2d2d2d' }}>
+            <Link href="/services" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ bottom: 20, left: 0, boxShadow: '3px 3px 0 #D5D0C8' }}>
               <span className="block text-[28px] font-black text-brand-accent leading-none">{(stats.resources || 0).toLocaleString()}</span>
               resources
             </Link>
-            <Link href="/organizations" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ top: 60, right: -20, boxShadow: '3px 3px 0 #2d2d2d' }}>
+            <Link href="/organizations" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ top: 60, right: -20, boxShadow: '3px 3px 0 #D5D0C8' }}>
               <span className="block text-[28px] font-black text-brand-accent leading-none">{(organizations || 0).toLocaleString()}</span>
               organizations
             </Link>
@@ -193,7 +193,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   href={item.href}
                   className="relative col-span-2 md:col-span-1 aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-3"
                   style={{
-                    background: 'linear-gradient(145deg, #2C2418 0%, #2d1b4e 50%, #2C2418 100%)',
+                    background: 'linear-gradient(145deg, #F0ECE6 0%, #E8E2D8 50%, #F0ECE6 100%)',
                     border: '3px solid #C75B2A',
                     boxShadow: '4px 4px 0 #C75B2A40',
                   }}
@@ -203,14 +203,14 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                     src="/images/fol/flower-full.svg"
                     alt="" aria-hidden="true"
                     className="absolute top-1/2 left-1/2 w-[200px] h-[200px] pointer-events-none animate-fol-pulse-cta group-hover:opacity-[0.35] group-hover:scale-[1.15] group-hover:rotate-[30deg] transition-all duration-700"
-                    style={{ filter: 'brightness(3)' }}
+                    style={{ opacity: 0.08 }}
                   />
                   {/* Second layer — counter-rotating seed */}
                   <img
                     src="/images/fol/genesis.svg"
                     alt="" aria-hidden="true"
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[120px] pointer-events-none opacity-[0.08] group-hover:opacity-[0.15] group-hover:scale-[0.9] group-hover:rotate-[-15deg] transition-all duration-500"
-                    style={{ filter: 'brightness(3)', animation: 'fol-pulse 5s ease-in-out infinite reverse' }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[120px] pointer-events-none opacity-[0.06] group-hover:opacity-[0.12] group-hover:scale-[0.9] group-hover:rotate-[-15deg] transition-all duration-500"
+                    style={{ animation: 'fol-pulse 5s ease-in-out infinite reverse' }}
                   />
 
                   {/* Lens flare accents */}
@@ -219,13 +219,13 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   <div className="absolute top-[35%] right-[30%] w-4 h-4 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(128,90,213,0.4) 0%, transparent 70%)', animation: 'lens-drift 7s ease-in-out 1s infinite' }} />
 
                   {/* Geometric grid lines */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04] group-hover:opacity-[0.08] transition-opacity duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <line x1="0" y1="50" x2="100" y2="50" stroke="white" strokeWidth="0.3" />
-                    <line x1="50" y1="0" x2="50" y2="100" stroke="white" strokeWidth="0.3" />
-                    <line x1="0" y1="0" x2="100" y2="100" stroke="white" strokeWidth="0.2" />
-                    <line x1="100" y1="0" x2="0" y2="100" stroke="white" strokeWidth="0.2" />
-                    <circle cx="50" cy="50" r="35" fill="none" stroke="white" strokeWidth="0.2" />
-                    <circle cx="50" cy="50" r="20" fill="none" stroke="white" strokeWidth="0.15" />
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.06] group-hover:opacity-[0.10] transition-opacity duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <line x1="0" y1="50" x2="100" y2="50" stroke="#C75B2A" strokeWidth="0.3" />
+                    <line x1="50" y1="0" x2="50" y2="100" stroke="#C75B2A" strokeWidth="0.3" />
+                    <line x1="0" y1="0" x2="100" y2="100" stroke="#C75B2A" strokeWidth="0.2" />
+                    <line x1="100" y1="0" x2="0" y2="100" stroke="#C75B2A" strokeWidth="0.2" />
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="#C75B2A" strokeWidth="0.2" />
+                    <circle cx="50" cy="50" r="20" fill="none" stroke="#C75B2A" strokeWidth="0.15" />
                   </svg>
 
                   {/* Adventure book corner fold */}
@@ -234,18 +234,18 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   </div>
 
                   {/* Page number */}
-                  <span className="absolute top-2.5 left-3 font-mono text-[9px] font-bold text-white/20 tracking-widest">PAGE 1</span>
+                  <span className="absolute top-2.5 left-3 font-mono text-[9px] font-bold text-brand-muted-light/40 tracking-widest">PAGE 1</span>
 
-                  <span className="relative z-[2] font-hand text-[22px] font-bold text-white text-center leading-tight group-hover:scale-105 transition-transform">
+                  <span className="relative z-[2] font-hand text-[22px] font-bold text-brand-text text-center leading-tight group-hover:scale-105 transition-transform">
                     Chart Your<br />Course
                   </span>
-                  <span className="relative z-[2] text-[11px] text-white/50 mt-1.5 text-center px-3 group-hover:text-white/70 transition-colors">
+                  <span className="relative z-[2] text-[11px] text-brand-muted mt-1.5 text-center px-3 group-hover:text-brand-text transition-colors">
                     Choose your own adventure
                   </span>
 
                   {/* Arrow indicator */}
                   <div className="absolute bottom-3 right-3 w-6 h-6 rounded-full bg-brand-accent/30 flex items-center justify-center group-hover:bg-brand-accent/60 transition-colors">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                   </div>
                 </Link>
               )
@@ -328,7 +328,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <div
                 key={stat.label}
                 className="relative overflow-hidden border-2 border-brand-text rounded-xl p-5 text-center"
-                style={{ background: '#F8F9FC', boxShadow: '3px 3px 0 #2d2d2d' }}
+                style={{ background: '#F8F9FC', boxShadow: '3px 3px 0 #D5D0C8' }}
               >
                 <img
                   src={folImages[i]}

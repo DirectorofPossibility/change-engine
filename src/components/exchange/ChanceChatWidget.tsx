@@ -54,9 +54,9 @@ export function ChanceChatWidget() {
             <span className="absolute inset-0 rounded-full bg-brand-accent/30 animate-ping" />
           )}
           {/* Label */}
-          <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-dark text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
+          <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-text text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
             Chat with Chance
-            <div className="absolute top-full right-4 w-2 h-2 bg-brand-dark rotate-45 -mt-1" />
+            <div className="absolute top-full right-4 w-2 h-2 bg-brand-text rotate-45 -mt-1" />
           </div>
         </div>
       </button>

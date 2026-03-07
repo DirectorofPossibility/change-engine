@@ -318,7 +318,7 @@ export function SenatorToolClient() {
   return (
     <div className="bg-white">
       {/* ── Urgent Banner ── */}
-      <div className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-brand-dark text-white text-sm font-medium text-center">
+      <div className="flex items-center justify-center gap-3 w-full py-4 px-6 bg-brand-bg-alt border-b border-brand-border text-brand-text text-sm font-medium text-center">
         <AlertCircle size={16} className="text-brand-accent flex-shrink-0" />
         <span>
           <strong className="text-brand-accent">{campaign.status}</strong> &mdash; {campaign.title}
@@ -479,7 +479,7 @@ export function SenatorToolClient() {
         {/* Right: Action Panel */}
         <aside className="p-8 sm:p-10 bg-brand-bg">
           {/* Find Your Senators */}
-          <div className="bg-white border-2 border-brand-border rounded-xl p-7 mb-6" style={{ boxShadow: '3px 3px 0 #2d2d2d' }}>
+          <div className="bg-white border-2 border-brand-border rounded-xl p-7 mb-6" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 rounded-lg bg-brand-bg flex items-center justify-center">
                 <MapPin size={22} className="text-brand-text" />
@@ -557,21 +557,21 @@ export function SenatorToolClient() {
           )}
 
           {/* Call Script */}
-          <div className="bg-brand-dark border-2 border-brand-dark rounded-xl p-7 mb-6" style={{ boxShadow: '3px 3px 0 #2d2d2d' }}>
+          <div className="bg-brand-bg-alt border-2 border-brand-border rounded-xl p-7 mb-6" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center">
-                <Phone size={22} className="text-white" />
+              <div className="w-12 h-12 rounded-lg bg-brand-accent/10 flex items-center justify-center">
+                <Phone size={22} className="text-brand-accent" />
               </div>
               <div>
-                <h3 className="font-serif text-lg text-white">Your Call Script</h3>
-                <p className="text-sm text-white/50">Tap to select your position</p>
+                <h3 className="font-serif text-lg text-brand-text">Your Call Script</h3>
+                <p className="text-sm text-brand-muted">Tap to select your position</p>
               </div>
             </div>
 
-            <div className="bg-white/10 rounded-lg p-5 text-white text-sm leading-relaxed whitespace-pre-line mb-4">
+            <div className="bg-white rounded-lg p-5 text-brand-text text-sm leading-relaxed whitespace-pre-line mb-4 border border-brand-border">
               {campaign.script.intro.replace('[ZIP]', zip || '[ZIP]')}
 
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-white/40 mt-5 mb-3">Pick the one closest to your view:</p>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mt-5 mb-3">Pick the one closest to your view:</p>
 
               {campaign.script.options.map(function (opt) {
                 const isSelected = selectedOption === opt.id
@@ -579,10 +579,10 @@ export function SenatorToolClient() {
                   <button
                     key={opt.id}
                     onClick={function () { setSelectedOption(opt.id) }}
-                    className={'block w-full text-left rounded-lg px-5 py-4 mb-3 border-2 transition-colors ' + (isSelected ? 'border-white bg-white/15' : 'border-white/15 bg-white/5 hover:bg-white/10')}
+                    className={'block w-full text-left rounded-lg px-5 py-4 mb-3 border-2 transition-colors ' + (isSelected ? 'border-brand-accent bg-brand-accent/10' : 'border-brand-border bg-white hover:bg-brand-bg')}
                   >
-                    <strong className="block text-white text-sm font-bold mb-1">&ldquo;{opt.label}&rdquo;</strong>
-                    <span className="text-white/80 text-sm">{opt.text}</span>
+                    <strong className="block text-brand-text text-sm font-bold mb-1">&ldquo;{opt.label}&rdquo;</strong>
+                    <span className="text-brand-muted text-sm">{opt.text}</span>
                   </button>
                 )
               })}
@@ -592,14 +592,14 @@ export function SenatorToolClient() {
 
             <button
               onClick={handleCopyScript}
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-white/15 hover:bg-white/20 text-white text-sm font-semibold rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-semibold rounded-lg transition-colors"
             >
               <Copy size={16} /> {copied ? 'Copied!' : 'Copy Script'}
             </button>
           </div>
 
           {/* Log Your Call */}
-          <div className="bg-white border-2 border-brand-border rounded-xl p-7" style={{ boxShadow: '3px 3px 0 #2d2d2d' }}>
+          <div className="bg-white border-2 border-brand-border rounded-xl p-7" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 rounded-lg bg-brand-bg flex items-center justify-center">
                 <PenLine size={22} className="text-brand-text" />

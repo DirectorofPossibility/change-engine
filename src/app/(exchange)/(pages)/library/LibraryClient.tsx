@@ -107,7 +107,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
           onChange={function (e) { setQuery(e.target.value) }}
           placeholder="Search the collection..."
           className="w-full pl-12 pr-10 py-3.5 border-2 border-brand-text rounded-xl bg-white text-sm text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
-          style={{ boxShadow: '3px 3px 0 #2d2d2d' }}
+          style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
         />
         {query && (
           <button onClick={function () { setQuery('') }} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-brand-muted hover:text-brand-text">
@@ -143,15 +143,15 @@ export function LibraryClient({ documents }: LibraryClientProps) {
           {/* ── Ask Chance ── */}
           <Link
             href="/library/chat"
-            className="group flex items-center gap-5 my-10 p-6 border-2 border-brand-text rounded-xl bg-brand-dark text-white hover:-translate-y-1 transition-all"
-            style={{ boxShadow: '4px 4px 0 #2d2d2d' }}
+            className="group flex items-center gap-5 my-10 p-6 border-2 border-brand-border rounded-xl bg-brand-bg-alt text-brand-text hover:-translate-y-1 transition-all"
+            style={{ boxShadow: '4px 4px 0 #E2DDD5' }}
           >
-            <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
               <MessageCircle size={24} className="text-brand-accent" />
             </div>
             <div className="flex-1">
-              <h3 className="font-serif text-lg mb-0.5">Chat with Chance</h3>
-              <p className="text-white/60 text-sm">Ask questions about any document. Summarize, compare, and explore connections.</p>
+              <h3 className="font-serif text-lg mb-0.5 text-brand-text">Chat with Chance</h3>
+              <p className="text-brand-muted text-sm">Ask questions about any document. Summarize, compare, and explore connections.</p>
             </div>
             <ChevronRight size={20} className="text-white/30 group-hover:text-white/70 transition-colors flex-shrink-0" />
           </Link>
@@ -214,7 +214,7 @@ function FeaturedBook({ doc }: { doc: LibraryDoc }) {
 
   return (
     <Link href={'/library/doc/' + doc.id} className="group block mb-8">
-      <article className="border-2 border-brand-text rounded-xl overflow-hidden hover:-translate-y-1 transition-all" style={{ boxShadow: '4px 4px 0 #2d2d2d' }}>
+      <article className="border-2 border-brand-text rounded-xl overflow-hidden hover:-translate-y-1 transition-all" style={{ boxShadow: '4px 4px 0 #D5D0C8' }}>
         {/* Spine color */}
         <div className="flex">
           <div className="w-2 flex-shrink-0" style={{ background: primary?.color || '#3182ce' }} />

@@ -65,7 +65,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
               onMouseEnter={function () { setHoveredKey(key) }}
               onMouseLeave={function () { setHoveredKey(null) }}
               style={{
-                background: 'linear-gradient(145deg, #2C2418 0%, ' + color + '15 100%)',
+                background: 'linear-gradient(145deg, #F0ECE6 0%, ' + color + '10 100%)',
                 border: '2px solid ' + (isHovered ? color : '#D1D5E0'),
                 boxShadow: isHovered
                   ? '4px 4px 0 ' + color + '40'
@@ -78,9 +78,8 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                 alt="" aria-hidden="true"
                 className="absolute right-[-20px] top-[-20px] w-[140px] h-[140px] pointer-events-none transition-all duration-500"
                 style={{
-                  opacity: isHovered ? 0.12 : 0.05,
+                  opacity: isHovered ? 0.12 : 0.06,
                   transform: isHovered ? 'rotate(15deg) scale(1.1)' : 'rotate(0deg)',
-                  filter: 'brightness(5)',
                 }}
               />
 
@@ -108,7 +107,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                 {/* Center name */}
                 <h3
                   className="font-serif text-xl font-bold mb-2 transition-colors"
-                  style={{ color: isHovered ? color : '#2C2418' }}
+                  style={{ color: isHovered ? color : '#1A1A1A' }}
                 >
                   {key} Center
                 </h3>

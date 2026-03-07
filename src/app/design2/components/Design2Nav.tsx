@@ -97,7 +97,7 @@ export function Design2Nav({ election }: Design2NavProps) {
                 >
                   <button
                     className="flex items-center gap-1 px-3 py-1.5 text-[13px] font-semibold rounded-md transition-colors"
-                    style={{ color: isActive ? '#C75B2A' : '#2d2d2d' }}
+                    style={{ color: isActive ? '#C75B2A' : '#D5D0C8' }}
                   >
                     <span className="w-2 h-2 rounded-full" style={{ background: center.color, opacity: isActive ? 1 : 0.4 }} />
                     {center.label}
@@ -112,7 +112,7 @@ export function Design2Nav({ election }: Design2NavProps) {
                             key={item.href}
                             href={item.href}
                             className="block px-4 py-2 text-[13px] font-medium transition-colors"
-                            style={{ color: itemActive ? '#C75B2A' : '#2d2d2d', background: itemActive ? '#FAF8F5' : undefined }}
+                            style={{ color: itemActive ? '#C75B2A' : '#D5D0C8', background: itemActive ? '#FAF8F5' : undefined }}
                           >
                             {item.label}
                           </Link>
@@ -170,7 +170,7 @@ export function Design2Nav({ election }: Design2NavProps) {
                         key={item.href}
                         href={item.href}
                         className="block py-1.5 pl-4 text-[13px] font-medium"
-                        style={{ color: '#2d2d2d' }}
+                        style={{ color: '#D5D0C8' }}
                         onClick={function () { setMenuOpen(false) }}
                       >
                         {item.label}

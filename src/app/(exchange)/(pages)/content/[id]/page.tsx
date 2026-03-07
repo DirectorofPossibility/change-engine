@@ -240,7 +240,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-brand-text rounded-lg text-sm font-semibold text-brand-text hover:bg-brand-text hover:text-white transition-colors"
-                style={{ boxShadow: '2px 2px 0 #2d2d2d' }}
+                style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
               >
                 <ExternalLink size={15} />
                 Visit source

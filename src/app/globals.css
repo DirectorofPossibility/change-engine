@@ -47,8 +47,8 @@
 }
 .card-lift:hover {
   transform: translateY(-3px);
-  box-shadow: 3px 3px 0 #2d2d2d;
-  border-color: #2d2d2d;
+  box-shadow: 3px 3px 0 #D5D0C8;
+  border-color: #D5D0C8;
 }
 
 /* Color bar accent on cards */
@@ -69,14 +69,14 @@
 }
 .card-chunky:hover {
   transform: translateY(-3px);
-  border-color: #2d2d2d;
-  box-shadow: 3px 3px 0 #2d2d2d;
+  border-color: #D5D0C8;
+  box-shadow: 3px 3px 0 #D5D0C8;
 }
 
 /* Stat card — offset shadow, always visible */
 .card-stat {
   @apply bg-brand-cream border-2 border-brand-text rounded-xl p-5 text-center relative overflow-hidden;
-  box-shadow: 3px 3px 0 #2d2d2d;
+  box-shadow: 3px 3px 0 #D5D0C8;
 }
 
 /* Meta label — Space Mono, uppercase, small */

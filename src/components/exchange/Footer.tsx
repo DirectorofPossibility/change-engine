@@ -32,7 +32,7 @@ const legal = [
 
 export function Footer() {
   return (
-    <footer className="bg-brand-dark text-white/70">
+    <footer className="bg-brand-bg border-t border-brand-border">
       {/* Pathway spectrum bar */}
       <div className="flex h-1">
         {pathways.map(function (p) {
@@ -45,23 +45,23 @@ export function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <FlowerOfLifeIcon size={28} color="#E8723A" />
-              <h3 className="font-serif text-lg text-white font-semibold">
+              <FlowerOfLifeIcon size={28} color="#C75B2A" />
+              <h3 className="font-serif text-lg text-brand-text font-semibold">
                 Community Exchange
               </h3>
             </div>
-            <p className="text-sm text-white/60 leading-relaxed">
+            <p className="text-sm text-brand-muted leading-relaxed">
               A civic platform connecting Houston residents with the resources,
               knowledge, and opportunities that strengthen communities.
             </p>
-            <p className="text-xs text-white/40 mt-4 italic">
+            <p className="text-xs text-brand-muted-light mt-4 italic">
               {BRAND.origin}
             </p>
           </div>
 
           {/* Pathways */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
               Pathways
             </h4>
             <ul className="space-y-2">
@@ -69,7 +69,7 @@ export function Footer() {
                 return (
                   <li key={p.href} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: p.color }} />
-                    <Link href={p.href} className="text-sm text-white/60 hover:text-white transition-colors">
+                    <Link href={p.href} className="text-sm text-brand-muted hover:text-brand-accent transition-colors">
                       {p.label}
                     </Link>
                   </li>
@@ -80,14 +80,14 @@ export function Footer() {
 
           {/* Navigate */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
               Navigate
             </h4>
             <ul className="space-y-2">
               {navigate.map(function (link) {
                 return (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-white/60 hover:text-white transition-colors">
+                    <Link href={link.href} className="text-sm text-brand-muted hover:text-brand-accent transition-colors">
                       {link.label}
                     </Link>
                   </li>
@@ -98,14 +98,14 @@ export function Footer() {
 
           {/* Connect */}
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-white/40 mb-4">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
               Connect
             </h4>
             <ul className="space-y-2">
               {connect.map(function (link) {
                 return (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-white/60 hover:text-white transition-colors">
+                    <Link href={link.href} className="text-sm text-brand-muted hover:text-brand-accent transition-colors">
                       {link.label}
                     </Link>
                   </li>
@@ -117,28 +117,28 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-white/10">
+      <div className="border-t border-brand-border">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-brand-muted-light">
             &copy; 2026 The Change Lab
           </p>
 
           <div className="flex items-center gap-4">
             {legal.map(function (link) {
               return (
-                <Link key={link.href} href={link.href} className="text-xs text-white/50 hover:text-white/70 transition-colors">
+                <Link key={link.href} href={link.href} className="text-xs text-brand-muted-light hover:text-brand-accent transition-colors">
                   {link.label}
                 </Link>
               )
             })}
 
-            <span className="text-xs text-white/20">|</span>
+            <span className="text-xs text-brand-border">|</span>
 
-            <span className="text-xs text-white/50">
+            <span className="text-xs text-brand-muted-light">
               {LANGUAGES.map(function (lang, i) {
                 return (
                   <span key={lang.code}>
-                    {i > 0 && <span className="mx-1 text-white/30">/</span>}
+                    {i > 0 && <span className="mx-1 text-brand-border">/</span>}
                     {lang.name}
                   </span>
                 )

@@ -143,9 +143,9 @@ export default async function MyDashboardPage() {
   return (
     <div>
       {/* Welcome hero */}
-      <section className="relative bg-brand-dark text-white overflow-hidden">
+      <section className="relative bg-brand-bg overflow-hidden">
         <div className="absolute right-[-60px] top-[-20px] opacity-[0.04]">
-          <FOLWatermark variant="flower" size="lg" color="#ffffff" />
+          <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
         </div>
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex items-center gap-5">
@@ -154,20 +154,20 @@ export default async function MyDashboardPage() {
             </div>
             <div>
               <h1 className="text-2xl font-serif font-bold">Welcome back, {displayName}</h1>
-              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-white/60">
-                <span className="px-2 py-0.5 rounded-lg bg-white/10 text-[11px] font-mono font-bold uppercase tracking-wide">{roleLabel}</span>
+              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-brand-muted">
+                <span className="px-2 py-0.5 rounded-lg bg-brand-bg-alt text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted">{roleLabel}</span>
                 {profile?.zip_code && <span>ZIP {profile.zip_code}</span>}
                 <span>Impact Points: <strong className="text-brand-accent">{totalPoints}</strong></span>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-3">
-                <Link href="/me/settings" className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white hover:bg-white/20 transition-all">
+                <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
                   Edit Settings
                 </Link>
                 <Link href="/compass" className="inline-block px-4 py-2 bg-brand-accent rounded-xl text-sm text-white font-semibold hover:bg-brand-accent-hover transition-all">
                   My Compass
                 </Link>
                 {['admin', 'partner', 'neighbor'].includes(currentRole) && (
-                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white hover:bg-white/20 transition-all">
+                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
                     Go to Dashboard
                   </Link>
                 )}

@@ -111,7 +111,7 @@ export default async function LibraryPage() {
               {/* Floating stat */}
               <div
                 className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3 py-2 font-mono text-[10px]"
-                style={{ bottom: 15, left: 10, boxShadow: '3px 3px 0 #2d2d2d' }}
+                style={{ bottom: 15, left: 10, boxShadow: '3px 3px 0 #D5D0C8' }}
               >
                 <span className="block text-[24px] font-black text-[#3182ce] leading-none">{documents.length}</span>
                 documents

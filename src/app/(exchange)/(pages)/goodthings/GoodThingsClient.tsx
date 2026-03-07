@@ -104,7 +104,7 @@ export function GoodThingsClient() {
     const w = 800; const h = 600
     canvas.width = w; canvas.height = h
 
-    ctx.fillStyle = '#2C2418'
+    ctx.fillStyle = '#1A1A1A'
     ctx.fillRect(0, 0, w, h)
 
     // FOL watermark circles
@@ -171,9 +171,9 @@ export function GoodThingsClient() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative bg-brand-dark text-white overflow-hidden">
+      <section className="relative bg-brand-bg overflow-hidden">
         <div className="absolute right-[-80px] top-[-40px] opacity-[0.04]">
-          <FOLWatermark variant="flower" size="lg" color="#ffffff" />
+          <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
         </div>
         <div className="h-1 bg-gradient-to-r from-[#e53e3e] via-[#38a169] to-[#805ad5]" />
         <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
@@ -216,14 +216,14 @@ export function GoodThingsClient() {
 
       {/* ── Ticker ── */}
       {tickerItems.length > 0 && (
-        <div className="bg-brand-dark overflow-hidden border-b border-white/10">
+        <div className="bg-brand-bg-alt overflow-hidden border-b border-brand-border">
           <div className="ticker-track flex items-center gap-8 py-3 whitespace-nowrap">
             {tickerItems.concat(tickerItems).map(function (item, i) {
               return (
-                <span key={i} className="inline-flex items-center gap-2 text-sm text-white/70 flex-shrink-0">
+                <span key={i} className="inline-flex items-center gap-2 text-sm text-brand-muted flex-shrink-0">
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
                   <span>{item.text}</span>
-                  <span className="text-white/30 text-[10px]">{item.loc}</span>
+                  <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
                 </span>
               )
             })}
@@ -348,7 +348,7 @@ export function GoodThingsClient() {
 
               <div className="flex items-center justify-center gap-3 flex-wrap">
                 <button onClick={downloadPng}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-brand-dark text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity">
+                  className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-xl text-sm font-semibold hover:bg-brand-accent-hover transition-colors">
                   <Download size={16} /> Download as Image
                 </button>
                 <button onClick={resetForm}

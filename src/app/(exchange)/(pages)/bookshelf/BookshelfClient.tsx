@@ -91,7 +91,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
             onChange={function (e) { setQuery(e.target.value) }}
             placeholder="Search by title, author, or topic..."
             className="w-full pl-12 pr-10 py-3.5 border-2 border-brand-text rounded-xl bg-white text-sm text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
-            style={{ boxShadow: '3px 3px 0 #2d2d2d' }}
+            style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
           />
           {query && (
             <button onClick={function () { setQuery('') }} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-brand-muted hover:text-brand-text">
@@ -213,7 +213,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
   return (
     <article
       className={'flex border-2 rounded-lg overflow-hidden hover:-translate-y-0.5 transition-all ' + (featured ? 'border-brand-text' : 'border-brand-border hover:border-brand-text')}
-      style={{ boxShadow: featured ? '4px 4px 0 #2d2d2d' : '2px 2px 0 #D1D5E0' }}
+      style={{ boxShadow: featured ? '4px 4px 0 #D5D0C8' : '2px 2px 0 #D1D5E0' }}
     >
       {/* Book spine */}
       <div className="w-2 flex-shrink-0" style={{ background: theme?.color || '#805ad5' }} />

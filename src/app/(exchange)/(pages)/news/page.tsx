@@ -2,30 +2,48 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getNewsFeed } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
-import { FileText } from 'lucide-react'
+import { FileText, Video, BookOpen, Wrench, GraduationCap, Calendar, Megaphone, Heart, ArrowRight } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 
 export const metadata: Metadata = {
-  title: 'Community Content — Community Exchange',
+  title: 'The News Stand — Community Exchange',
   description: 'Articles, videos, guides, reports, tools, courses, and more from across the Houston community.',
 }
 
-export const revalidate = 3600
+export const revalidate = 600
 
-function timeAgo(dateStr: string | null) {
+function formatDate(dateStr: string | null) {
   if (!dateStr) return null
-  const diff = Date.now() - new Date(dateStr).getTime()
+  const d = new Date(dateStr)
+  const diff = Date.now() - d.getTime()
   const hours = Math.floor(diff / 3600000)
   if (hours < 1) return 'Just now'
   if (hours < 24) return hours + 'h ago'
   const days = Math.floor(hours / 24)
-  if (days < 7) return days + 'd ago'
-  if (days < 30) return Math.floor(days / 7) + 'w ago'
+  if (days < 2) return 'Yesterday'
+  if (days < 7) return days + ' days ago'
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
+
+function shortDate(dateStr: string | null) {
+  if (!dateStr) return ''
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+function typeIcon(t: string | null) {
+  if (!t) return <FileText size={14} />
+  switch (t) {
+    case 'video': return <Video size={14} />
+    case 'guide': return <BookOpen size={14} />
+    case 'tool': return <Wrench size={14} />
+    case 'course': return <GraduationCap size={14} />
+    case 'event': return <Calendar size={14} />
+    case 'campaign': return <Megaphone size={14} />
+    case 'opportunity': return <Heart size={14} />
+    default: return <FileText size={14} />
+  }
 }
 
 const CONTENT_TYPES = [
@@ -41,201 +59,361 @@ const CONTENT_TYPES = [
   { key: 'opportunity', label: 'Opportunities' },
 ]
 
+type Item = { id: string; title_6th_grade: string | null; summary_6th_grade: string | null; pathway_primary: string | null; center: string | null; image_url: string | null; source_url: string | null; source_domain: string | null; published_at: string | null; content_type: string | null }
+
+function hasValidImage(item: Item) {
+  return item.image_url && item.image_url.trim() && item.image_url.startsWith('http')
+}
+
+function getTheme(item: Item) {
+  return item.pathway_primary ? (THEMES as Record<string, { color: string; name: string }>)[item.pathway_primary] : null
+}
+
 export default async function NewsPage({
   searchParams,
 }: {
   searchParams: Promise<{ pathway?: string; type?: string }>
 }) {
   const { pathway, type } = await searchParams
-  const items = await getNewsFeed(pathway, 60, type || undefined)
+  const items = await getNewsFeed(pathway, 80, type || undefined)
   const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string }][]
 
-  const withImages = items.filter(function (i) {
-    return i.image_url && i.image_url.trim() && i.image_url.startsWith('http')
-  })
-  const featured = withImages.slice(0, 3)
-  const featuredIds = new Set(featured.map(f => f.id))
-  const rest = items.filter(i => !featuredIds.has(i.id))
+  // Split into hero, secondary, and the rest
+  const withImages = items.filter(hasValidImage)
+  const hero = withImages[0] || items[0]
+  const secondary = withImages.slice(1, 4).length >= 2 ? withImages.slice(1, 4) : items.slice(1, 4)
+  const usedIds = new Set([hero?.id, ...secondary.map(function (s) { return s.id })].filter(Boolean))
+  const remaining = items.filter(function (i) { return !usedIds.has(i.id) })
 
-  // Count by type
-  const typeCounts: Record<string, number> = {}
-  items.forEach(function (i) {
-    const t = i.content_type || 'other'
-    typeCounts[t] = (typeCounts[t] || 0) + 1
-  })
-  const typeCount = Object.keys(typeCounts).length
+  // Group remaining by content type for section display
+  const sections: { type: string; label: string; items: Item[] }[] = []
+  const typeOrder = ['article', 'report', 'video', 'guide', 'tool', 'course', 'event', 'campaign', 'opportunity']
+  const typeLabels: Record<string, string> = {
+    article: 'Latest Articles', report: 'Reports & Research', video: 'Watch',
+    guide: 'Guides', tool: 'Tools & Resources', course: 'Courses',
+    event: 'Events', campaign: 'Campaigns', opportunity: 'Opportunities',
+  }
+
+  if (!type) {
+    // When showing all, group by type
+    typeOrder.forEach(function (t) {
+      const group = remaining.filter(function (i) { return i.content_type === t })
+      if (group.length > 0) sections.push({ type: t, label: typeLabels[t] || t, items: group })
+    })
+    // Catch any ungrouped
+    const grouped = new Set(typeOrder)
+    const other = remaining.filter(function (i) { return !grouped.has(i.content_type || '') })
+    if (other.length > 0) sections.push({ type: 'other', label: 'More', items: other })
+  } else {
+    // When filtered to one type, just show all as one section
+    if (remaining.length > 0) {
+      sections.push({ type: type, label: typeLabels[type] || type, items: remaining })
+    }
+  }
+
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
 
   return (
-    <div>
-      <IndexPageHero
-        color="#319795"
-        pattern="seed"
-        title="Community Content"
-        subtitle="Articles, videos, guides, reports, tools, and more from across Houston"
-        intro="Explore everything published in the Community Exchange. Filter by content type or pathway to find what matters to you."
-        stats={[
-          { value: items.length, label: 'Published' },
-          { value: typeCount, label: 'Content Types' },
-        ]}
-      />
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Content' }]} />
-
-        {/* Content type filter */}
-        <div className="flex flex-wrap items-center gap-2 mt-4">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mr-1">Type</span>
-          {CONTENT_TYPES.map(function (ct) {
-            const active = (type || '') === ct.key
-            const href = ct.key
-              ? '/news?type=' + ct.key + (pathway ? '&pathway=' + pathway : '')
-              : '/news' + (pathway ? '?pathway=' + pathway : '')
-            return (
-              <Link
-                key={ct.key}
-                href={href}
-                className={'text-xs px-3 py-1.5 rounded-lg border-2 font-medium transition-colors ' +
-                  (active ? 'bg-brand-accent text-white border-brand-accent' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
-              >
-                {ct.label}
-              </Link>
-            )
-          })}
-        </div>
-
-        {/* Pathway filter */}
-        <div className="flex flex-wrap items-center gap-2 mt-3 mb-8">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mr-1">Pathway</span>
-          <Link
-            href={'/news' + (type ? '?type=' + type : '')}
-            className={'text-xs px-3 py-1.5 rounded-lg border-2 font-medium transition-colors ' +
-              (!pathway ? 'bg-brand-text text-white border-brand-text' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
-          >
-            All
-          </Link>
-          {themeEntries.map(function ([id, theme]) {
-            const active = pathway === id
-            const href = '/news?pathway=' + id + (type ? '&type=' + type : '')
-            return (
-              <Link
-                key={id}
-                href={href}
-                className={'text-xs px-3 py-1.5 rounded-lg border-2 font-medium transition-colors ' +
-                  (active ? 'text-white border-transparent' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
-                style={active ? { backgroundColor: theme.color } : undefined}
-              >
-                {theme.name}
-              </Link>
-            )
-          })}
-        </div>
-
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="flex-1 min-w-0">
-            {items.length === 0 ? (
-              <div className="text-center py-16">
-                <FileText size={40} className="mx-auto text-brand-muted mb-4" />
-                <p className="text-brand-muted">No content found{type ? ' for this type' : ''}{pathway ? ' in this pathway' : ''}.</p>
-              </div>
-            ) : (
-              <>
-                {/* Featured row */}
-                {featured.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    {featured.map(function (item) {
-                      const theme = item.pathway_primary ? (THEMES as Record<string, { color: string; name: string }>)[item.pathway_primary] : null
-                      return (
-                        <Link key={item.id} href={'/content/' + item.id} className="group">
-                          <div className="rounded-xl overflow-hidden border-2 border-brand-border hover:border-brand-text transition-all" style={{ boxShadow: '3px 3px 0 #D1D5E0' }}>
-                            {item.image_url && (
-                              <div className="aspect-[16/10] overflow-hidden">
-                                <img
-                                  src={item.image_url}
-                                  alt=""
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                              </div>
-                            )}
-                            <div className="p-3">
-                              <div className="flex items-center gap-2 mb-1.5">
-                                {theme && (
-                                  <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                                )}
-                                <span className="text-[10px] font-mono text-brand-muted">{timeAgo(item.published_at)}</span>
-                                {item.source_domain && (
-                                  <span className="text-[10px] font-mono text-brand-muted">{item.source_domain}</span>
-                                )}
-                              </div>
-                              <h3 className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
-                                {item.title_6th_grade}
-                              </h3>
-                            </div>
-                          </div>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                )}
-
-                {/* List view */}
-                <div className="space-y-1">
-                  {rest.map(function (item) {
-                    const theme = item.pathway_primary ? (THEMES as Record<string, { color: string; name: string }>)[item.pathway_primary] : null
-                    return (
-                      <Link
-                        key={item.id}
-                        href={'/content/' + item.id}
-                        className="flex items-start gap-3 py-3 border-b border-brand-border/50 hover:bg-brand-bg/30 -mx-2 px-2 rounded-lg transition-colors group"
-                      >
-                        {item.image_url ? (
-                          <img src={item.image_url} alt="" className="w-16 h-12 rounded object-cover flex-shrink-0" />
-                        ) : (
-                          <div className="w-16 h-12 rounded flex-shrink-0 flex items-center justify-center"
-                            style={{ backgroundColor: (theme?.color || '#C75B2A') + '15' }}>
-                            <FileText size={16} style={{ color: theme?.color || '#C75B2A' }} />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-medium text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
-                            {item.title_6th_grade}
-                          </h3>
-                          <div className="flex items-center gap-2 mt-1">
-                            {theme && (
-                              <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                            )}
-                            <span className="text-[10px] font-mono text-brand-muted">{timeAgo(item.published_at)}</span>
-                            {item.source_domain && (
-                              <span className="text-[10px] font-mono text-brand-muted">{item.source_domain}</span>
-                            )}
-                            {item.content_type && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted capitalize">{item.content_type}</span>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    )
-                  })}
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="news"
-                color="#319795"
-                related={[
-                  { label: 'Library', href: '/library', color: '#d69e2e' },
-                  { label: 'Officials', href: '/officials', color: '#805ad5' },
-                  { label: 'Policies', href: '/policies', color: '#3182ce' },
-                ]}
-              />
-              <div className="mt-4"><FeaturedPromo variant="card" /></div>
-              <div className="mt-4"><GoodThingsWidget variant="card" /></div>
+    <div className="bg-brand-bg min-h-screen">
+      {/* Masthead */}
+      <div className="border-b-2 border-brand-text">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+          <Breadcrumb items={[{ label: 'News Stand' }]} />
+          <h1 className="font-serif text-5xl sm:text-6xl font-bold text-brand-text tracking-tight mt-2">
+            The News Stand
+          </h1>
+          <p className="text-sm text-brand-muted mt-2 font-serif italic">{today}</p>
+          <div className="flex justify-center mt-3">
+            <div className="flex h-1 w-48 rounded overflow-hidden">
+              {Object.values(THEMES).map(function (theme) {
+                return <div key={theme.slug} className="flex-1" style={{ backgroundColor: theme.color }} />
+              })}
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Filter bar */}
+      <div className="border-b border-brand-border bg-white/60 backdrop-blur-sm sticky top-0 z-20">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {CONTENT_TYPES.map(function (ct) {
+              const active = (type || '') === ct.key
+              const href = ct.key
+                ? '/news?type=' + ct.key + (pathway ? '&pathway=' + pathway : '')
+                : '/news' + (pathway ? '?pathway=' + pathway : '')
+              return (
+                <Link
+                  key={ct.key}
+                  href={href}
+                  className={'text-xs px-3 py-1.5 font-medium transition-colors ' +
+                    (active
+                      ? 'text-brand-text border-b-2 border-brand-text'
+                      : 'text-brand-muted hover:text-brand-text')}
+                >
+                  {ct.label}
+                </Link>
+              )
+            })}
+            <span className="w-px h-4 bg-brand-border mx-1" />
+            {themeEntries.map(function ([id, theme]) {
+              const active = pathway === id
+              const href = '/news?pathway=' + id + (type ? '&type=' + type : '')
+              return (
+                <Link
+                  key={id}
+                  href={active ? '/news' + (type ? '?type=' + type : '') : href}
+                  className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-brand-text"
+                  style={active ? { color: theme.color } : { color: '#6B6560' }}
+                >
+                  <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color, opacity: active ? 1 : 0.5 }} />
+                  {active ? theme.name : ''}
+                </Link>
+              )
+            })}
+            {pathway && (
+              <Link href={'/news' + (type ? '?type=' + type : '')} className="text-[10px] text-brand-muted hover:text-brand-text ml-1">clear</Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {items.length === 0 ? (
+          <div className="text-center py-24">
+            <FileText size={48} className="mx-auto text-brand-muted mb-4" />
+            <p className="font-serif text-xl text-brand-muted">No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
+          </div>
+        ) : (
+          <>
+            {/* ABOVE THE FOLD: Hero + Secondary */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b-2 border-brand-text">
+              {/* Hero story */}
+              {hero && (
+                <Link href={'/content/' + hero.id} className="lg:col-span-7 group">
+                  {hasValidImage(hero) && (
+                    <div className="aspect-[16/9] rounded-lg overflow-hidden mb-4">
+                      <img
+                        src={hero.image_url!}
+                        alt=""
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      />
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 mb-2">
+                    {getTheme(hero) && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: getTheme(hero)!.color }}>
+                        {getTheme(hero)!.name}
+                      </span>
+                    )}
+                    {hero.content_type && hero.content_type !== 'article' && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                        {hero.content_type}
+                      </span>
+                    )}
+                  </div>
+                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-brand-text leading-tight group-hover:text-brand-accent transition-colors">
+                    {hero.title_6th_grade}
+                  </h2>
+                  {hero.summary_6th_grade && (
+                    <p className="text-brand-muted mt-3 text-base leading-relaxed line-clamp-3">
+                      {hero.summary_6th_grade}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-3 mt-3 text-xs text-brand-muted">
+                    {hero.source_domain && <span className="font-medium">{hero.source_domain}</span>}
+                    <span>{formatDate(hero.published_at)}</span>
+                  </div>
+                </Link>
+              )}
+
+              {/* Secondary stories */}
+              <div className="lg:col-span-5 flex flex-col divide-y divide-brand-border">
+                {secondary.map(function (item, idx) {
+                  const theme = getTheme(item)
+                  return (
+                    <Link key={item.id} href={'/content/' + item.id} className={'group flex gap-4 ' + (idx === 0 ? 'pb-5' : 'py-5')}>
+                      {hasValidImage(item) ? (
+                        <img
+                          src={item.image_url!}
+                          alt=""
+                          className="w-28 h-20 rounded-lg object-cover flex-shrink-0 group-hover:opacity-90 transition-opacity"
+                        />
+                      ) : (
+                        <div
+                          className="w-28 h-20 rounded-lg flex-shrink-0 flex items-center justify-center"
+                          style={{ backgroundColor: (theme?.color || '#C75B2A') + '12' }}
+                        >
+                          {typeIcon(item.content_type)}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        {theme && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider block mb-1" style={{ color: theme.color }}>
+                            {theme.name}
+                          </span>
+                        )}
+                        <h3 className="font-serif text-lg font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-3">
+                          {item.title_6th_grade}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-1.5 text-[11px] text-brand-muted">
+                          {item.source_domain && <span>{item.source_domain}</span>}
+                          <span>{shortDate(item.published_at)}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* SECTIONS BY CONTENT TYPE */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+              {/* Main column */}
+              <div className="lg:col-span-8">
+                {sections.map(function (section) {
+                  return (
+                    <section key={section.type} className="mb-10">
+                      {/* Section header */}
+                      <div className="flex items-center gap-3 mb-4 pb-2 border-b-2 border-brand-text">
+                        <span className="text-brand-muted">{typeIcon(section.type)}</span>
+                        <h2 className="font-serif text-xl font-bold text-brand-text">{section.label}</h2>
+                        <span className="text-xs text-brand-muted">{section.items.length}</span>
+                      </div>
+
+                      {/* First item large if it has an image */}
+                      {hasValidImage(section.items[0]) && (
+                        <Link href={'/content/' + section.items[0].id} className="group block mb-5">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="aspect-[16/10] rounded-lg overflow-hidden">
+                              <img
+                                src={section.items[0].image_url!}
+                                alt=""
+                                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                              />
+                            </div>
+                            <div>
+                              {getTheme(section.items[0]) && (
+                                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: getTheme(section.items[0])!.color }}>
+                                  {getTheme(section.items[0])!.name}
+                                </span>
+                              )}
+                              <h3 className="font-serif text-xl font-bold text-brand-text leading-snug mt-1 group-hover:text-brand-accent transition-colors">
+                                {section.items[0].title_6th_grade}
+                              </h3>
+                              {section.items[0].summary_6th_grade && (
+                                <p className="text-sm text-brand-muted mt-2 line-clamp-3 leading-relaxed">
+                                  {section.items[0].summary_6th_grade}
+                                </p>
+                              )}
+                              <div className="flex items-center gap-2 mt-2 text-[11px] text-brand-muted">
+                                {section.items[0].source_domain && <span className="font-medium">{section.items[0].source_domain}</span>}
+                                <span>{shortDate(section.items[0].published_at)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      )}
+
+                      {/* Remaining items */}
+                      <div className="divide-y divide-brand-border/60">
+                        {section.items.slice(hasValidImage(section.items[0]) ? 1 : 0).map(function (item) {
+                          const theme = getTheme(item)
+                          return (
+                            <Link
+                              key={item.id}
+                              href={'/content/' + item.id}
+                              className="group flex items-start gap-4 py-3 hover:bg-white/50 -mx-3 px-3 rounded-lg transition-colors"
+                            >
+                              {hasValidImage(item) ? (
+                                <img src={item.image_url!} alt="" className="w-20 h-14 rounded object-cover flex-shrink-0" />
+                              ) : (
+                                <div
+                                  className="w-20 h-14 rounded flex-shrink-0 flex items-center justify-center"
+                                  style={{ backgroundColor: (theme?.color || '#C75B2A') + '10' }}
+                                >
+                                  {typeIcon(item.content_type)}
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-serif text-base font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2 leading-snug">
+                                  {item.title_6th_grade}
+                                </h3>
+                                <div className="flex items-center gap-2 mt-1 text-[11px] text-brand-muted">
+                                  {theme && (
+                                    <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
+                                  )}
+                                  {item.source_domain && <span>{item.source_domain}</span>}
+                                  <span>{shortDate(item.published_at)}</span>
+                                </div>
+                              </div>
+                              <ArrowRight size={14} className="text-brand-muted/30 group-hover:text-brand-accent flex-shrink-0 mt-1 transition-colors" />
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    </section>
+                  )
+                })}
+              </div>
+
+              {/* Sidebar */}
+              <aside className="lg:col-span-4">
+                <div className="sticky top-16 space-y-6">
+                  {/* Pathway quick links */}
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted mb-3">Browse by Pathway</h3>
+                    <div className="space-y-1">
+                      {themeEntries.map(function ([id, theme]) {
+                        const active = pathway === id
+                        return (
+                          <Link
+                            key={id}
+                            href={active ? '/news' + (type ? '?type=' + type : '') : '/news?pathway=' + id + (type ? '&type=' + type : '')}
+                            className="flex items-center gap-2.5 py-1.5 group"
+                          >
+                            <span className="w-3 h-3 rounded-sm flex-shrink-0 transition-transform group-hover:scale-110" style={{ backgroundColor: theme.color }} />
+                            <span className={'text-sm transition-colors ' + (active ? 'font-bold text-brand-text' : 'text-brand-muted group-hover:text-brand-text')}>
+                              {theme.name}
+                            </span>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Featured promo */}
+                  <FeaturedPromo variant="card" />
+
+                  {/* Good things */}
+                  <GoodThingsWidget variant="card" />
+
+                  {/* Quick links */}
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted mb-3">Explore More</h3>
+                    <div className="space-y-2">
+                      {[
+                        { label: 'Research Library', href: '/library', color: '#d69e2e' },
+                        { label: 'Learning Paths', href: '/learn', color: '#3182ce' },
+                        { label: 'Community Bookshelf', href: '/bookshelf', color: '#805ad5' },
+                        { label: 'Civic Glossary', href: '/glossary', color: '#38a169' },
+                      ].map(function (link) {
+                        return (
+                          <Link key={link.href} href={link.href} className="flex items-center gap-2 text-sm text-brand-muted hover:text-brand-text transition-colors group">
+                            <span className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: link.color }} />
+                            {link.label}
+                            <ArrowRight size={12} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
