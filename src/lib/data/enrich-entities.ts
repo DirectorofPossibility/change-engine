@@ -91,28 +91,37 @@ export async function enrichEntityDirect(
   let failed = 0
   let skipped = 0
 
+  // Filter to enrichable rows
+  const toProcess: typeof rows = []
   for (const row of rows) {
     const entityId = row[config.idCol]
-
     if (!force && (row.classification_v2?._version === 'v4-unified' || row.classification_v2?._version === 'v3-entity-enrich')) {
       skipped++
       continue
     }
-
     const name = row[config.nameCol] || ''
     if (!name) {
       results.push({ id: entityId, success: false, error: 'No name' })
       failed++
       continue
     }
+    toProcess.push(row)
+  }
 
-    const desc = row[config.descCol] || ''
-    const context = config.contextCols
-      .map(col => row[col] ? `${col}: ${row[col]}` : '')
-      .filter(Boolean)
-      .join('\n')
+  // Process in parallel chunks of 3 (respects Claude rate limits)
+  const CHUNK_SIZE = 3
+  for (let i = 0; i < toProcess.length; i += CHUNK_SIZE) {
+    const chunk = toProcess.slice(i, i + CHUNK_SIZE)
 
-    try {
+    const chunkResults = await Promise.allSettled(chunk.map(async (row) => {
+      const entityId = row[config.idCol]
+      const name = row[config.nameCol] || ''
+      const desc = row[config.descCol] || ''
+      const context = config.contextCols
+        .map(col => row[col] ? `${col}: ${row[col]}` : '')
+        .filter(Boolean)
+        .join('\n')
+
       const userPromptText = buildUserPrompt(config.entityType, { name, description: desc, context })
       const rawResponse = await classifyEntity(systemPrompt, userPromptText, ANTHROPIC_KEY)
       const classification = parseClaudeJson(rawResponse)
@@ -130,10 +139,13 @@ export async function enrichEntityDirect(
         updateData.impact_statement = enriched.impact_statement
       }
 
-      await supaRest('PATCH', `${tableName}?${config.idCol}=eq.${entityId}`, updateData)
-      await populateAllJunctions(config.entityType, entityId, enriched, SUPABASE_URL, SUPABASE_KEY)
+      // DB write + junction population in parallel
+      await Promise.all([
+        supaRest('PATCH', `${tableName}?${config.idCol}=eq.${entityId}`, updateData),
+        populateAllJunctions(config.entityType, entityId, enriched, SUPABASE_URL, SUPABASE_KEY),
+      ])
 
-      results.push({
+      return {
         success: true,
         id: entityId,
         name,
@@ -141,15 +153,24 @@ export async function enrichEntityDirect(
         center: enriched.center,
         theme: enriched.theme_primary,
         confidence: enriched.confidence,
-      })
-      succeeded++
-    } catch (err) {
-      results.push({ id: entityId, success: false, error: (err as Error).message })
-      failed++
+      }
+    }))
+
+    for (let j = 0; j < chunkResults.length; j++) {
+      const result = chunkResults[j]
+      if (result.status === 'fulfilled') {
+        results.push(result.value)
+        succeeded++
+      } else {
+        results.push({ id: chunk[j][config.idCol], success: false, error: result.reason?.message || 'Unknown error' })
+        failed++
+      }
     }
 
-    // Rate limit between Claude calls
-    await new Promise(r => setTimeout(r, 1000))
+    // Rate limit between chunks
+    if (i + CHUNK_SIZE < toProcess.length) {
+      await new Promise(r => setTimeout(r, 1500))
+    }
   }
 
   return { processed: succeeded + failed, succeeded, failed, skipped, results }
@@ -209,44 +230,63 @@ export async function enrichContentDirect(inboxIds: string[]): Promise<EnrichRes
     return { processed: 0, succeeded: 0, failed: 0, skipped: 0, results: [] }
   }
 
+  // Batch-fetch all published items at once (eliminates N+1 query)
+  const allInboxIds = inboxItems.map((item: any) => item.id)
+  const pubFilter = allInboxIds.map((id: string) => `"${id}"`).join(',')
+  const allPubItems = await supaRest('GET', `content_published?inbox_id=in.(${pubFilter})&select=*`)
+  const pubByInboxId = new Map<string, any>()
+  for (const pub of (allPubItems || [])) {
+    pubByInboxId.set(pub.inbox_id, pub)
+  }
+
+  // Filter to processable items
+  const toProcess: Array<{ inbox: any; published: any }> = []
   const results: any[] = []
   let succeeded = 0
   let failed = 0
   let skipped = 0
 
   for (const inboxItem of inboxItems) {
-    // Get published item
-    const pubItems = await supaRest('GET', `content_published?inbox_id=eq.${inboxItem.id}&select=*`)
-    if (!pubItems || pubItems.length === 0) {
+    const publishedItem = pubByInboxId.get(inboxItem.id)
+    if (!publishedItem) {
       results.push({ inbox_id: inboxItem.id, success: false, error: 'Not published' })
       skipped++
       continue
     }
-    const publishedItem = pubItems[0]
-
-    // Parse extracted text
-    let extracted: any = {}
-    try {
-      extracted = typeof inboxItem.extracted_text === 'string'
-        ? JSON.parse(inboxItem.extracted_text)
-        : inboxItem.extracted_text || {}
-    } catch {
-      extracted = { full_text: inboxItem.extracted_text || '' }
-    }
-
-    const fullText = extracted.full_text || inboxItem.description || ''
-    const sourceTags = extracted.tags || []
-    const externalLinks = extracted.external_links || []
     const pageTitle = inboxItem.title || ''
-
+    const fullText = (() => {
+      try {
+        const ext = typeof inboxItem.extracted_text === 'string'
+          ? JSON.parse(inboxItem.extracted_text) : inboxItem.extracted_text || {}
+        return ext.full_text || inboxItem.description || ''
+      } catch { return inboxItem.extracted_text || inboxItem.description || '' }
+    })()
     if (!pageTitle && fullText.length < 50) {
       results.push({ inbox_id: inboxItem.id, success: false, error: 'Insufficient content' })
       failed++
       continue
     }
+    toProcess.push({ inbox: inboxItem, published: publishedItem })
+  }
 
-    try {
-      const systemPrompt = `You are the Change Engine v2 knowledge graph enricher for Houston, Texas civic content.
+  // Process in parallel chunks of 3
+  const CHUNK_SIZE = 3
+  for (let i = 0; i < toProcess.length; i += CHUNK_SIZE) {
+    const chunk = toProcess.slice(i, i + CHUNK_SIZE)
+
+    const chunkResults = await Promise.allSettled(chunk.map(async ({ inbox: inboxItem, published: publishedItem }) => {
+      let extracted: any = {}
+      try {
+        extracted = typeof inboxItem.extracted_text === 'string'
+          ? JSON.parse(inboxItem.extracted_text) : inboxItem.extracted_text || {}
+      } catch { extracted = { full_text: inboxItem.extracted_text || '' } }
+
+      const fullText = extracted.full_text || inboxItem.description || ''
+      const sourceTags = extracted.tags || []
+      const externalLinks = extracted.external_links || []
+      const pageTitle = inboxItem.title || ''
+
+      const sysPrompt = `You are the Change Engine v2 knowledge graph enricher for Houston, Texas civic content.
 You have the FULL article text (not just a summary). Your job is to:
 1. Write a clear, engaging title at 6th-grade reading level (max 80 chars)
 2. Write a comprehensive summary at 6th-grade reading level (150-300 words)
@@ -288,14 +328,12 @@ Return a single JSON object:
   "reasoning": "..."
 }`
 
-      const rawResponse = await classifyEntity(systemPrompt, userPrompt, ANTHROPIC_KEY, 3000)
+      const rawResponse = await classifyEntity(sysPrompt, userPrompt, ANTHROPIC_KEY, 3000)
       const classification = parseClaudeJson(rawResponse)
 
       // Validate focus areas and inherit taxonomy
       const enrichedFocusAreas: any[] = []
       const inheritedSdgs = new Set<string>()
-      const inheritedNtee = new Set<string>()
-      const inheritedAirs = new Set<string>()
       let inheritedSdoh = ''
 
       for (const faId of (classification.focus_area_ids || [])) {
@@ -304,8 +342,6 @@ Return a single JSON object:
           if (fa) {
             enrichedFocusAreas.push(fa)
             if (fa.sdg_id) inheritedSdgs.add(fa.sdg_id)
-            if (fa.ntee_code) inheritedNtee.add(fa.ntee_code)
-            if (fa.airs_code) inheritedAirs.add(fa.airs_code)
             if (fa.sdoh_code && !inheritedSdoh) inheritedSdoh = fa.sdoh_code
           }
         }
@@ -316,7 +352,6 @@ Return a single JSON object:
       const sdohCode = classification.sdoh_code || inheritedSdoh
       const confidence = classification.confidence ?? 0.85
 
-      // Update content_published
       const publishUpdate: any = {
         title_6th_grade: classification.title_6th_grade || publishedItem.title_6th_grade,
         summary_6th_grade: classification.summary_6th_grade || publishedItem.summary_6th_grade,
@@ -336,22 +371,31 @@ Return a single JSON object:
 
       await supaRest('PATCH', `content_published?inbox_id=eq.${inboxItem.id}`, publishUpdate)
 
-      results.push({
+      return {
         success: true,
         inbox_id: inboxItem.id,
         title: classification.title_6th_grade,
         focus_areas: validFocusAreaIds,
         center: classification.center,
         confidence,
-      })
-      succeeded++
-    } catch (err) {
-      results.push({ inbox_id: inboxItem.id, success: false, error: (err as Error).message })
-      failed++
+      }
+    }))
+
+    for (let j = 0; j < chunkResults.length; j++) {
+      const result = chunkResults[j]
+      if (result.status === 'fulfilled') {
+        results.push(result.value)
+        succeeded++
+      } else {
+        results.push({ inbox_id: chunk[j].inbox.id, success: false, error: result.reason?.message || 'Unknown error' })
+        failed++
+      }
     }
 
-    // Rate limit
-    await new Promise(r => setTimeout(r, 1500))
+    // Rate limit between chunks
+    if (i + CHUNK_SIZE < toProcess.length) {
+      await new Promise(r => setTimeout(r, 2000))
+    }
   }
 
   return { processed: succeeded + failed, succeeded, failed, skipped, results }
