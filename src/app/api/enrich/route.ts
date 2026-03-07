@@ -115,6 +115,7 @@ async function callClaude(system: string, user: string, maxTokens = 3000): Promi
       'x-api-key': ANTHROPIC_KEY,
       'anthropic-version': '2023-06-01',
     },
+    signal: AbortSignal.timeout(30000),
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: maxTokens,
