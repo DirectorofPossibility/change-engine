@@ -41,9 +41,14 @@
   @apply border-none h-px bg-gradient-to-r from-brand-border via-brand-border/60 to-transparent;
 }
 
-/* Card hover lift */
+/* Card hover lift — editorial style with offset shadow */
 .card-lift {
-  @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+  @apply transition-all duration-200;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 3px 3px 0 #2d2d2d;
+  border-color: #2d2d2d;
 }
 
 /* Color bar accent on cards */
@@ -56,6 +61,56 @@
 }
 .color-bar-left:hover::before {
   @apply w-1.5;
+}
+
+/* Chunky bordered card — mockup style */
+.card-chunky {
+  @apply bg-white border-2 border-brand-border rounded-xl p-5 transition-all duration-200;
+}
+.card-chunky:hover {
+  transform: translateY(-3px);
+  border-color: #2d2d2d;
+  box-shadow: 3px 3px 0 #2d2d2d;
+}
+
+/* Stat card — offset shadow, always visible */
+.card-stat {
+  @apply bg-brand-cream border-2 border-brand-text rounded-xl p-5 text-center relative overflow-hidden;
+  box-shadow: 3px 3px 0 #2d2d2d;
+}
+
+/* Meta label — Space Mono, uppercase, small */
+.meta-label {
+  @apply font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted;
+}
+
+/* Source attribution — Space Mono, small */
+.meta-source {
+  @apply font-mono text-[9px] uppercase tracking-wider text-brand-muted-light;
+}
+
+/* Effort tag — square badge, never pill */
+.effort-tag {
+  @apply inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-bg-alt text-brand-muted;
+}
+
+/* Noise texture overlay */
+.texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+}
+
+/* Spectrum bar — 7 pathway colors */
+.spectrum-bar {
+  @apply flex h-1;
+}
+.spectrum-bar > div {
+  @apply flex-1;
 }
 
 @keyframes bounce-slow {

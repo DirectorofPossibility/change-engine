@@ -7,9 +7,10 @@ import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { ThemePill } from '@/components/ui/ThemePill'
-import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography, getWayfinderContext } from '@/lib/data/exchange'
+import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
@@ -126,7 +127,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
   }
 
   const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('policy', id, userProfile?.role)
+  const [wayfinderData, quote] = await Promise.all([
+    getWayfinderContext('policy', id, userProfile?.role),
+    getRandomQuote(),
+  ])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -301,6 +305,13 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           </aside>
         )}
       </div>
+
+      {/* Quote */}
+      {quote && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
+        </div>
+      )}
     </div>
   )
 }

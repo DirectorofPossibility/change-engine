@@ -26,12 +26,16 @@ import { Footer } from '@/components/exchange/Footer'
 import MobileBottomNav from '@/components/exchange/MobileBottomNav'
 import { ChanceChatWidget } from '@/components/exchange/ChanceChatWidget'
 import { TranslateWidget } from '@/components/exchange/TranslateWidget'
+import { D2Nav } from '@/components/exchange/D2Nav'
+import { D2Footer } from '@/components/exchange/D2Footer'
+import { TranslateBar } from '@/components/exchange/TranslateBar'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value
   const zip = cookieStore.get('zip')?.value
+  const designV1 = cookieStore.get('design')?.value === 'v1'
   const nextElection = await getNextElection()
 
   // ── Schema.org JSON-LD ──
@@ -64,26 +68,45 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <div className="min-h-screen bg-brand-bg">
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-accent focus:text-white focus:rounded-lg focus:text-sm">
-            Skip to main content
-          </a>
-          <ElectionBanner election={nextElection} />
-          <div id="main-content" className="flex">
-            <LeftNav />
-            <div className="flex-1 min-w-0 flex flex-col">
-              <div className="flex-1 pb-16 lg:pb-0 relative">
-                <div className="absolute top-3 right-4 z-30">
-                  <TranslateWidget />
+
+        {designV1 ? (
+          /* ── V1: Legacy layout (opt-in via design=v1 cookie) ── */
+          <div className="min-h-screen bg-brand-bg">
+            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-accent focus:text-white focus:rounded-lg focus:text-sm">
+              Skip to main content
+            </a>
+            <ElectionBanner election={nextElection} />
+            <div id="main-content" className="flex">
+              <LeftNav />
+              <div className="flex-1 min-w-0 flex flex-col">
+                <div className="flex-1 pb-16 lg:pb-0 relative">
+                  <div className="absolute top-3 right-4 z-30">
+                    <TranslateWidget />
+                  </div>
+                  {children}
                 </div>
-                {children}
+                <Footer />
               </div>
-              <Footer />
             </div>
+            <MobileBottomNav />
+            <ChanceChatWidget />
           </div>
-          <MobileBottomNav />
-          <ChanceChatWidget />
-        </div>
+        ) : (
+          /* ── D2: Journey mockup design (default) ── */
+          <div className="min-h-screen bg-brand-bg">
+            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-accent focus:text-white focus:rounded-lg focus:text-sm">
+              Skip to main content
+            </a>
+            <D2Nav election={nextElection} />
+            <TranslateBar />
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+            <D2Footer />
+            <ChanceChatWidget />
+          </div>
+        )}
+
       </NeighborhoodProvider>
     </LanguageProvider>
   )

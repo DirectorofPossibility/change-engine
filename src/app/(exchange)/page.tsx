@@ -8,14 +8,17 @@
  */
 
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import {
   getExchangeStats,
   getPathwayCounts,
   getLatestContent,
   getCenterCounts,
+  getRandomQuote,
 } from '@/lib/data/exchange'
 import { Wayfinder } from '@/components/exchange/Wayfinder'
+import { D2Home } from '@/components/exchange/D2Home'
 
 export const revalidate = 600
 
@@ -25,6 +28,9 @@ export const metadata: Metadata = {
 }
 
 export default async function HomePage() {
+  const cookieStore = await cookies()
+  const designV1 = cookieStore.get('design')?.value === 'v1'
+
   const [stats, pathwayCounts, latestContent, centerCounts] = await Promise.all([
     getExchangeStats(),
     getPathwayCounts(),
@@ -49,14 +55,29 @@ export default async function HomePage() {
     focusAreas: 0,
   }
 
+  if (designV1) {
+    return (
+      <Wayfinder
+        stats={circleStats}
+        pathwayCounts={pathwayCounts}
+        newThisWeek={newThisWeek}
+        latestContent={latestContent}
+        centerCounts={centerCounts}
+        organizations={stats.organizations || 0}
+      />
+    )
+  }
+
+  const quote = await getRandomQuote()
   return (
-    <Wayfinder
+    <D2Home
       stats={circleStats}
       pathwayCounts={pathwayCounts}
       newThisWeek={newThisWeek}
       latestContent={latestContent}
       centerCounts={centerCounts}
       organizations={stats.organizations || 0}
+      quote={quote}
     />
   )
 }

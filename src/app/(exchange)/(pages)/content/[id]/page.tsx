@@ -12,7 +12,7 @@ import { ActionBar } from '@/components/exchange/ActionBar'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
-import { getWayfinderContext } from '@/lib/data/exchange'
+import { getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
@@ -23,6 +23,7 @@ import { FileText, Users, ExternalLink } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
+import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 
 /** Strip scraped page chrome: inline scripts, tracking pixels, nav boilerplate. */
@@ -276,7 +277,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     .slice(0, 6)
 
   const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('content', id, userProfile?.role)
+  const [wayfinderData, quote] = await Promise.all([
+    getWayfinderContext('content', id, userProfile?.role),
+    getRandomQuote(item.pathway_primary || undefined),
+  ])
 
   const title = translatedTitle || item.title_6th_grade
   const summary = translatedSummary || item.summary_6th_grade
@@ -291,6 +295,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div>
+      {/* Breadcrumb */}
+      <Breadcrumb items={[
+        ...(themeEntry ? [{ label: themeEntry.name, href: '/pathways/' + themeSlug }] : []),
+        { label: title || 'Content' },
+      ]} />
+
       {/* Hero Section */}
       <PageHero
         variant="content"
@@ -739,6 +749,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             variant="section"
             color={themeColor}
           />
+        </div>
+      )}
+
+      {/* Quote */}
+      {quote && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />
         </div>
       )}
 

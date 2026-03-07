@@ -6,9 +6,10 @@ import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin, Vote, Building2 
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
-import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
+import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { OfficialDistrictMap } from './OfficialDistrictMap'
 
@@ -161,9 +162,12 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     policyTranslations = results[1]
   }
 
-  // Wayfinder data
+  // Wayfinder data + quote
   const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('official', id, userProfile?.role)
+  const [wayfinderData, quote] = await Promise.all([
+    getWayfinderContext('official', id, userProfile?.role),
+    getRandomQuote(),
+  ])
 
   const displayTitle = officialTranslation?.title || official.title
   const rawPhotoUrl = profile?.photo_url || (official as any).photo_url as string | null
@@ -463,6 +467,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         <div className="mt-10">
           <RelatedContent title="Related Content" items={related} />
         </div>
+      )}
+
+      {/* Quote */}
+      {quote && (
+        <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
       )}
 
       <div className="mt-10">

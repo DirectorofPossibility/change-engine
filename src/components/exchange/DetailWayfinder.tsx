@@ -8,6 +8,7 @@ import {
   FileText, Tag,
 } from 'lucide-react'
 import type { WayfinderData } from '@/lib/types/exchange'
+import { CompactCircleGraph } from './CompactCircleGraph'
 
 interface DetailWayfinderProps {
   data: WayfinderData
@@ -19,6 +20,7 @@ interface DetailWayfinderProps {
 
 export async function DetailWayfinder({ data, currentType, currentId, userRole }: DetailWayfinderProps) {
   const cookieStore = await cookies()
+  const designV1 = cookieStore.get('design')?.value === 'v1'
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
@@ -49,6 +51,16 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
           {t('wayfinder.title')}
         </h3>
       </div>
+
+      {/* Compact circle graph */}
+      {!designV1 && data.themes.length > 0 && (
+        <div className="border-b border-brand-border">
+          <CompactCircleGraph
+            activePathways={data.themes}
+            accentColor={data.themes.length > 0 ? (THEMES as any)[data.themes[0]]?.color : undefined}
+          />
+        </div>
+      )}
 
       {/* Organization anchors */}
       {data.organizations.length > 0 && (

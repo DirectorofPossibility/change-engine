@@ -1,0 +1,76 @@
+'use client'
+
+import { useState } from 'react'
+import { useLanguage } from '@/lib/contexts/LanguageContext'
+import { LANGUAGES } from '@/lib/constants'
+
+interface TranslateBarProps {
+  contentType?: string
+  contentId?: string
+  isTranslated?: boolean
+}
+
+export function TranslateBar({ contentType, contentId, isTranslated }: TranslateBarProps) {
+  const { language, setLanguage } = useLanguage()
+
+  if (language === 'en') return null
+
+  const langName = LANGUAGES.find(function (l) { return l.code === language })?.name || language
+
+  return (
+    <div className="w-full bg-brand-bg-alt border-b border-brand-border">
+      <div className="max-w-[1200px] mx-auto px-8 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+            Viewing in {langName}
+          </span>
+          {contentType && contentId && !isTranslated && (
+            <TranslateNowButton contentType={contentType} contentId={contentId} lang={language} />
+          )}
+          {isTranslated && (
+            <span className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-success/10 text-brand-success">
+              Translated
+            </span>
+          )}
+        </div>
+        <button
+          onClick={function () { setLanguage('en') }}
+          className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted hover:text-brand-accent transition-colors"
+        >
+          Back to English
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function TranslateNowButton({ contentType, contentId, lang }: { contentType: string; contentId: string; lang: string }) {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle')
+
+  async function handleTranslate() {
+    setStatus('loading')
+    try {
+      await fetch('/api/translate-page', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contentType, contentId, lang }),
+      })
+      setStatus('done')
+      window.location.reload()
+    } catch {
+      setStatus('idle')
+    }
+  }
+
+  if (status === 'done') return null
+
+  return (
+    <button
+      onClick={handleTranslate}
+      disabled={status === 'loading'}
+      className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white transition-colors disabled:opacity-50"
+    >
+      {status === 'loading' ? 'Translating...' : 'Translate Now'}
+    </button>
+  )
+}

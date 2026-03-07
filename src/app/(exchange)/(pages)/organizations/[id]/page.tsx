@@ -5,8 +5,9 @@ import { createClient } from '@/lib/supabase/server'
 import { Phone, Mail, Globe, MapPin } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
-import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
+import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 
@@ -87,7 +88,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const displayOrgDesc = orgTranslation?.summary || org.description_5th_grade
 
   const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('organization', id, userProfile?.role)
+  const [wayfinderData, quote] = await Promise.all([
+    getWayfinderContext('organization', id, userProfile?.role),
+    getRandomQuote(),
+  ])
 
   return (
     <div>
@@ -244,6 +248,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             })}
           </div>
         </section>
+      )}
+
+      {/* Quote */}
+      {quote && (
+        <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
       )}
 
       <div className="mt-10">

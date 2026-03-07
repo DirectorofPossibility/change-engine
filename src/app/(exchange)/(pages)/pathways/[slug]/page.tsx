@@ -9,10 +9,12 @@ import {
   getFocusAreas, getFoundationsByPathway, getBridgesForPathway,
   getPathwayNewsCount,
   getLangId, fetchTranslationsForTable,
+  getRandomQuote,
 } from '@/lib/data/exchange'
 import { ShelfBraid } from '@/components/exchange/ShelfBraid'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { getUIStrings } from '@/lib/i18n'
 
@@ -53,13 +55,14 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const themeFocusAreaIds = themeFocusAreas.map(function (fa) { return fa.focus_id })
 
   // Phase 2: fetch all related entities via focus area junctions
-  const [opportunities, policies, relatedServices, relatedOfficials, foundations, libraryNuggets] = await Promise.all([
+  const [opportunities, policies, relatedServices, relatedOfficials, foundations, libraryNuggets, quote] = await Promise.all([
     getRelatedOpportunities(themeFocusAreaIds),
     getRelatedPolicies(themeFocusAreaIds),
     getRelatedServices(themeFocusAreaIds),
     getRelatedOfficials(themeFocusAreaIds),
     getFoundationsByPathway(theme.id),
     getLibraryNuggets([theme.id], themeFocusAreaIds, 3),
+    getRandomQuote(theme.id),
   ])
 
   // Translations
@@ -223,6 +226,13 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               })}
             </div>
           </section>
+        )}
+
+        {/* Quote */}
+        {quote && (
+          <div className="mt-8">
+            <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={theme.color} />
+          </div>
         )}
 
         {/* Bottom spacing */}

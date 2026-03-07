@@ -2711,3 +2711,26 @@ export async function getPolicyGeography(policyId: string): Promise<Array<{ geo_
     return { geo_type: row.geo_type, geo_id: row.geo_id }
   })
 }
+
+// ── Quotes ──────────────────────────────────────────────────────────────
+
+export async function getQuotes(pathwayId?: string, limit = 10) {
+  const supabase = await createClient()
+  let query = (supabase as any)
+    .from('quotes')
+    .select('quote_id, quote_text, attribution, source_url, pathway_id, focus_area_id')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+    .limit(limit)
+  if (pathwayId) {
+    query = query.or(`pathway_id.eq.${pathwayId},pathway_id.is.null`)
+  }
+  const { data } = await query
+  return data || []
+}
+
+export async function getRandomQuote(pathwayId?: string) {
+  const quotes = await getQuotes(pathwayId, 50)
+  if (quotes.length === 0) return null
+  return quotes[Math.floor(Math.random() * quotes.length)]
+}

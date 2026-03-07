@@ -6,10 +6,11 @@ import { Phone, Globe, MapPin, Clock } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { SingleLocationMap } from '@/components/maps/dynamic'
-import { getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
+import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
+import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 
@@ -86,7 +87,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const displayDesc = translatedDesc || service.description_5th_grade
 
   const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('service', id, userProfile?.role)
+  const [wayfinderData, quote] = await Promise.all([
+    getWayfinderContext('service', id, userProfile?.role),
+    getRandomQuote(),
+  ])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -225,6 +229,11 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             labels={{ goDeeper: 'Understanding this resource' }}
           />
         </section>
+      )}
+
+      {/* Quote */}
+      {quote && (
+        <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
       )}
 
       <div className="mt-10">
