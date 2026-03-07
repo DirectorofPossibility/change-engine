@@ -22,6 +22,7 @@ interface Policy {
   impact_statement: string | null
   policy_type: string | null
   classification_v2: any | null
+  last_action_date: string | null
 }
 
 interface PoliciesPageClientProps {
@@ -137,6 +138,7 @@ export function PoliciesPageClient({ policies, translations }: PoliciesPageClien
                       translatedName={tr?.title}
                       translatedSummary={tr?.summary}
                       impactPreview={p.impact_statement}
+                      lastActionDate={p.last_action_date}
                     />
                   </Link>
                 )

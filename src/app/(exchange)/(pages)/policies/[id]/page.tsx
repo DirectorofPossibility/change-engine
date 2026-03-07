@@ -79,8 +79,8 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
     geography,
   ] = await Promise.all([
     supabase.from('policy_officials').select('official_id').eq('policy_id', id),
-    supabase.from('policies').select('policy_id, policy_name, title_6th_grade, policy_type, level, status, summary_5th_grade, summary_6th_grade, bill_number, source_url, impact_statement')
-      .neq('policy_id', id).eq('level', policy.level || '').limit(4),
+    supabase.from('policies').select('policy_id, policy_name, title_6th_grade, policy_type, level, status, summary_5th_grade, summary_6th_grade, bill_number, source_url, impact_statement, last_action_date')
+      .neq('policy_id', id).eq('level', policy.level || '').order('last_action_date', { ascending: false }).limit(4),
     getPolicyFocusAreas(id),
     getPolicyGeography(id),
   ])
@@ -317,6 +317,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                           translatedName={rpt?.title}
                           translatedSummary={rpt?.summary}
                           impactPreview={p.impact_statement}
+                          lastActionDate={(p as any).last_action_date}
                         />
                       </Link>
                     )

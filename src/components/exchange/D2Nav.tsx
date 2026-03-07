@@ -48,6 +48,7 @@ const CENTERS = [
     href: '/action',
     color: '#38a169',
     items: [
+      { href: '/governance', label: 'Governance' },
       { href: '/officials', label: 'Officials' },
       { href: '/policies', label: 'Policies' },
       { href: '/elections', label: 'Elections' },

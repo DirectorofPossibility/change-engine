@@ -450,6 +450,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     sourceUrl={null}
                     translatedName={pt?.title}
                     translatedSummary={pt?.summary}
+                    lastActionDate={p.last_action_date}
                   />
                 </Link>
               )

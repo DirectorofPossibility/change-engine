@@ -77,9 +77,9 @@ export default async function OfficialsPage() {
                 currentPage="officials"
                 color="#805ad5"
                 related={[
+                  { label: 'Governance Overview', href: '/governance', color: '#805ad5' },
                   { label: 'Policies & Legislation', href: '/policies', color: '#3182ce' },
                   { label: 'Elections', href: '/elections', color: '#38a169' },
-                  { label: 'Call Your Senators', href: '/call-your-senators', color: '#e53e3e' },
                   { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
                 ]}
               />
