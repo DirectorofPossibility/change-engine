@@ -19,11 +19,13 @@ import { cookies } from 'next/headers'
 import { Users, DollarSign, MapPin, Scale } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
-import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood, getLangId, fetchTranslationsForTable, getPoliciesForNeighborhood } from '@/lib/data/exchange'
+import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood, getLangId, fetchTranslationsForTable, getPoliciesForNeighborhood, getWayfinderContext } from '@/lib/data/exchange'
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { getUIStrings } from '@/lib/i18n'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
 
@@ -39,11 +41,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function SuperNeighborhoodDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const [sn, neighborhoods, mapData, snPolicies] = await Promise.all([
+  const userProfile = await getUserProfile()
+  const [sn, neighborhoods, mapData, snPolicies, wayfinderData] = await Promise.all([
     getSuperNeighborhood(id),
     getNeighborhoodsBySuperNeighborhood(id),
     getMapMarkersForSuperNeighborhood(id),
     getPoliciesForNeighborhood(id),
+    getWayfinderContext('super_neighborhood' as any, id, userProfile?.role),
   ])
 
   if (!sn) notFound()
@@ -122,6 +126,9 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: t('superNeighborhoods.breadcrumb'), href: '/super-neighborhoods' }, { label: snName }]} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="lg:col-span-2">
 
       <div className="flex items-center gap-3 mb-2">
         <span
@@ -269,6 +276,11 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
           </div>
         </section>
       )}
+      </div>
+      <div>
+        <DetailWayfinder data={wayfinderData} currentType={'super_neighborhood' as any} currentId={sn.sn_id} userRole={userProfile?.role} />
+      </div>
+      </div>
     </div>
   )
 }

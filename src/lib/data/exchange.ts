@@ -1851,6 +1851,36 @@ export async function getWayfinderContext(
   } else if (entityType === 'foundation') {
     const { data } = await supabase.from('foundation_focus_areas').select('focus_id').eq('foundation_id', entityId)
     focusIds = (data ?? []).map((j: any) => j.focus_id)
+  } else if (entityType === 'candidate') {
+    const { data } = await (supabase as any).from('candidate_focus_areas').select('focus_id').eq('candidate_id', entityId)
+    focusIds = (data ?? []).map((j: any) => j.focus_id)
+  } else if (entityType === 'municipal_service') {
+    const { data } = await (supabase as any).from('municipal_service_focus_areas').select('focus_id').eq('municipal_service_id', entityId)
+    focusIds = (data ?? []).map((j: any) => j.focus_id)
+  } else if (entityType === 'election') {
+    // Elections don't have focus areas directly — aggregate from their candidates
+    const { data: cands } = await (supabase as any).from('candidates').select('candidate_id').eq('election_id', entityId)
+    if (cands && cands.length > 0) {
+      const candIds = cands.map((c: any) => c.candidate_id)
+      const { data: cfa } = await (supabase as any).from('candidate_focus_areas').select('focus_id').in('candidate_id', candIds)
+      focusIds = [...new Set((cfa ?? []).map((j: any) => j.focus_id))]
+    }
+  } else if (entityType === 'neighborhood') {
+    const { data } = await (supabase as any).from('neighborhoods').select('focus_area_ids, theme_id').eq('neighborhood_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'super_neighborhood') {
+    const { data } = await (supabase as any).from('super_neighborhoods').select('focus_area_ids, theme_id').eq('sn_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'story') {
+    const { data } = await (supabase as any).from('success_stories').select('focus_area_ids, theme_id').or(`story_id.eq.${entityId},id.eq.${entityId}`).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'collection') {
+    const { data } = await (supabase as any).from('featured_collections').select('focus_area_ids, theme_id').or(`collection_id.eq.${entityId},id.eq.${entityId}`).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
   } else {
     return empty
   }
@@ -1867,7 +1897,10 @@ export async function getWayfinderContext(
   const themes = Array.from(new Set(faList.map(fa => fa.theme_id).filter(Boolean))) as string[]
 
   // ── Hop 2: Fan out through focus areas to find related entity IDs ──
-  const [contentJ, officialJ, policyJ, serviceJ, orgJ, oppJ] = await Promise.all([
+  // Foundation junction uses focus_area name strings, not IDs
+  const faNames = faList.map(fa => fa.focus_area_name)
+
+  const [contentJ, officialJ, policyJ, serviceJ, orgJ, oppJ, foundationJ] = await Promise.all([
     entityType !== 'content'
       ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusIds)
       : Promise.resolve({ data: [] as any[] }),
@@ -1876,6 +1909,9 @@ export async function getWayfinderContext(
     (supabase as any).from('service_focus_areas').select('service_id').in('focus_id', focusIds),
     supabase.from('organization_focus_areas').select('org_id').in('focus_id', focusIds),
     supabase.from('opportunity_focus_areas').select('opportunity_id').in('focus_id', focusIds),
+    faNames.length > 0
+      ? (supabase as any).from('foundation_focus_areas').select('foundation_id').in('focus_area', faNames)
+      : Promise.resolve({ data: [] as any[] }),
   ])
 
   // Exclude the current entity from its own related results (M3 self-referencing fix)
@@ -1886,9 +1922,10 @@ export async function getWayfinderContext(
   const relServiceIds = exclude(Array.from<string>(new Set((serviceJ.data ?? []).map((j: any) => String(j.service_id))))).slice(0, 6)
   const relOrgIds = exclude(Array.from<string>(new Set((orgJ.data ?? []).map((j: any) => String(j.org_id))))).slice(0, 4)
   const relOppIds = exclude(Array.from<string>(new Set((oppJ.data ?? []).map((j: any) => String(j.opportunity_id))))).slice(0, 4)
+  const relFoundationIds = Array.from<string>(new Set((foundationJ.data ?? []).map((j: any) => String(j.foundation_id)))).slice(0, 3)
 
   // ── Hop 3: Fetch enriched entity details in parallel ──
-  const [relContent, relOfficials, relPolicies, relServices, relOrgs, relOpps, nuggets] = await Promise.all([
+  const [relContent, relOfficials, relPolicies, relServices, relOrgs, relOpps, nuggets, relFoundations] = await Promise.all([
     relContentIds.length > 0
       ? supabase.from('content_published')
           .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url, inbox_id, content_type')
@@ -1920,37 +1957,18 @@ export async function getWayfinderContext(
           .eq('is_active', 'Yes').in('opportunity_id', relOppIds)
       : Promise.resolve({ data: [] }),
     getLibraryNuggets(themes, focusIds, 2),
+    relFoundationIds.length > 0
+      ? (supabase as any).from('foundations').select('id, name, mission, website_url').in('id', relFoundationIds)
+      : Promise.resolve({ data: [] }),
   ])
 
-  // Fetch foundations via focus area names (junction uses names not IDs)
-  let foundations: any[] = []
-  const faNames = faList.map(fa => fa.focus_area_name)
-  if (faNames.length > 0) {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
-    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    const hd = { apikey: key, Authorization: `Bearer ${key}` }
-    try {
-      const jRes = await fetch(
-        `${url}/rest/v1/foundation_focus_areas?focus_area=in.(${faNames.map(n => encodeURIComponent(`"${n}"`)).join(',')})&select=foundation_id&limit=10`,
-        { headers: hd }
-      )
-      const fJunctions: any[] = jRes.ok ? await jRes.json() : []
-      const fIds = Array.from(new Set(fJunctions.map(j => j.foundation_id))).slice(0, 3)
-      if (fIds.length > 0) {
-        const fRes = await fetch(
-          `${url}/rest/v1/foundations?id=in.(${fIds.join(',')})&select=id,name,mission,website_url`,
-          { headers: hd }
-        )
-        const fData: any[] = fRes.ok ? await fRes.json() : []
-        foundations = fData.map(f => ({
-          foundation_id: f.id,
-          name: f.name,
-          description: f.mission || null,
-          website: f.website_url || null,
-        }))
-      }
-    } catch { /* foundation lookup is best-effort */ }
-  }
+  // Map foundation results from parallel queries above
+  const foundations = ((relFoundations.data ?? []) as any[]).map((f: any) => ({
+    foundation_id: f.id,
+    name: f.name,
+    description: f.mission || null,
+    website: f.website_url || null,
+  }))
 
   // ── Taxonomy metadata — available to all users ──
   let taxonomy: import('@/lib/types/exchange').WayfinderData['taxonomy']

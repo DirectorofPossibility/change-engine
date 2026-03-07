@@ -10,6 +10,8 @@ import {
 } from '@/lib/data/exchange'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { getUIStrings } from '@/lib/i18n'
@@ -78,6 +80,8 @@ export default async function PathwaysPage() {
           <Breadcrumb items={[{ label: 'Pathways' }]} />
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+        <div>
         {/* ── Pathway Sections ── */}
         {Object.entries(THEMES).map(function ([themeId, theme], idx) {
           const data = hubData[themeId]
@@ -412,6 +416,22 @@ export default async function PathwaysPage() {
           {Object.values(THEMES).map(function (theme) {
             return <div key={theme.slug} className="flex-1" style={{ backgroundColor: theme.color }} />
           })}
+        </div>
+        </div>
+        <div className="hidden lg:block">
+          <div className="sticky top-24 space-y-4">
+            <IndexWayfinder
+              currentPage="pathways"
+              color="#C75B2A"
+              related={[
+                { label: 'Explore', href: '/explore' },
+                { label: 'Centers', href: '/centers' },
+                { label: 'Guides', href: '/guides' },
+              ]}
+            />
+            <FeaturedPromo variant="card" />
+          </div>
+        </div>
         </div>
       </div>
     </div>

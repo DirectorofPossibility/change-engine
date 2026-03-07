@@ -1,12 +1,4 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import {
-  fetchFullTaxonomy,
-  buildPromptForEntity,
-  callClaude,
-  parseClaudeJson,
-  validateAndEnrich,
-  populateAllJunctions,
-} from '../_shared/classifier.ts';
 
 /**
  * sync-county-harris — Ingests Harris County Commissioners Court members,
@@ -18,12 +10,11 @@ import {
  * Also populates policy_geography so policies show on maps.
  *
  * Request body:
- *   { mode: 'recent'|'full', trigger_classify: boolean, batch_size?: number }
+ *   { mode: 'recent'|'full', batch_size?: number }
  */
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const ANTHROPIC_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 const LEGISTAR_TOKEN = Deno.env.get('LEGISTAR_TOKEN') || '';
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -162,7 +153,6 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json().catch(() => ({}));
     const mode: string = body.mode || 'recent';
-    const triggerClassify: boolean = body.trigger_classify === true;
     const batchSize: number = body.batch_size || 50;
 
     const stats = { officials_upserted: 0, policies_upserted: 0, sponsors_linked: 0, geo_bindings: 0, errors: 0 };

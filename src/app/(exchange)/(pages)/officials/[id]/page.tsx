@@ -127,18 +127,12 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     else if (districtType.includes('house')) districtZipColumn = 'state_house_district'
   }
 
-  // Build related content junction query
-  const contentJunctionPromise = focusAreaIds.length > 0
-    ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusAreaIds)
-    : Promise.resolve({ data: [] as any[] })
-
   const pIds = (policies || []).map(function (p) { return p.policy_id })
 
-  const [districtZipResult, contentJunctionResult, translationResults, wayfinderData, quote] = await Promise.all([
+  const [districtZipResult, translationResults, wayfinderData, quote] = await Promise.all([
     districtZipColumn && official.district_id
       ? supabase.from('zip_codes').select('zip_code').eq(districtZipColumn, official.district_id).limit(50)
       : Promise.resolve({ data: [] as any[] }),
-    contentJunctionPromise,
     langId
       ? Promise.all([
           fetchTranslationsForTable('elected_officials', [official.official_id], langId),
@@ -151,18 +145,17 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   const districtZips = (districtZipResult.data ?? []).map((z: any) => z.zip_code)
 
-  // Resolve related content from junction IDs
-  const contentIds = Array.from(new Set((contentJunctionResult.data ?? []).map((j: any) => j.content_id)))
-  let related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null; image_url: string | null }> = []
-  if (contentIds.length > 0) {
-    const { data: contentData } = await supabase
-      .from('content_published')
-      .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, image_url')
-      .eq('is_active', true)
-      .in('id', contentIds)
-      .limit(4)
-    related = contentData || []
-  }
+  // Use related content from wayfinderData (already fetched via getWayfinderContext)
+  const related = (wayfinderData.content ?? []).slice(0, 4).map(c => ({
+    id: c.id,
+    title_6th_grade: c.title_6th_grade || '',
+    summary_6th_grade: c.summary_6th_grade || '',
+    pathway_primary: c.pathway_primary,
+    center: c.center,
+    source_url: c.source_url || '',
+    published_at: null as string | null,
+    image_url: c.image_url,
+  }))
 
   let officialTranslation: { title?: string; summary?: string } | undefined
   let policyTranslations: Record<string, { title?: string; summary?: string }> = {}

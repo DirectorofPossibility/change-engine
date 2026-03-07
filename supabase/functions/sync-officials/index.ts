@@ -1,16 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import {
-  fetchFullTaxonomy,
-  buildPromptForEntity,
-  callClaude,
-  parseClaudeJson,
-  validateAndEnrich,
-  populateAllJunctions,
-} from '../_shared/classifier.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const ANTHROPIC_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 const GOOGLE_CIVIC_API_KEY = Deno.env.get('GOOGLE_CIVIC_API_KEY')!;
 const CONGRESS_API_KEY = Deno.env.get('CONGRESS_API_KEY')!;
 const CORS = {'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Access-Control-Allow-Methods':'POST, OPTIONS'};
@@ -288,7 +279,6 @@ Deno.serve(async (req: Request) => {
     const mode: string = body.mode || 'sample';
     const offset: number = body.offset || 0;
     const batchSize: number = Math.min(body.batch_size || 50, 250);
-    const triggerClassify: boolean = body.trigger_classify === true;
 
     // Fetch government_levels for level mapping
     const govLevels = await db('government_levels?select=gov_level_id,level_name&limit=50') || [];
@@ -338,36 +328,6 @@ Deno.serve(async (req: Request) => {
       item_count: upserted,
     });
 
-    // Inline classification for newly upserted officials
-    let classified = 0;
-    if (triggerClassify && upserted > 0 && ANTHROPIC_KEY) {
-      try {
-        const taxonomy = await fetchFullTaxonomy(SUPABASE_URL, SUPABASE_KEY);
-        const systemPrompt = buildPromptForEntity(taxonomy, 'elected_official');
-
-        // Classify officials that don't have v4-unified classification yet
-        const unclassified = await db(`elected_officials?select=official_id,official_name,title,party,level,jurisdiction,description_5th_grade&classification_v2=is.null&limit=5`);
-        if (unclassified && unclassified.length > 0) {
-          for (const official of unclassified) {
-            try {
-              const userContent = `Name: ${official.official_name}\nTitle: ${official.title || ''}\nParty: ${official.party || ''}\nLevel: ${official.level || ''}\nJurisdiction: ${official.jurisdiction || ''}\nDescription: ${official.description_5th_grade || ''}\n\nReturn JSON with: theme_primary, theme_secondary, focus_area_ids, sdg_ids, sdoh_code, ntee_codes, airs_codes, center, audience_segment_ids, life_situation_ids, gov_level_id, keywords, geographic_scope, title_6th_grade, summary_6th_grade, confidence, reasoning`;
-              const rawText = await callClaude(systemPrompt, userContent, ANTHROPIC_KEY, 1000);
-              const raw = parseClaudeJson(rawText);
-              const enriched = validateAndEnrich(raw, taxonomy);
-
-              await db(`elected_officials?official_id=eq.${official.official_id}`, 'PATCH', {
-                classification_v2: enriched,
-                focus_area_ids: (enriched.focus_area_ids || []).join(','),
-              });
-              await populateAllJunctions('elected_official', official.official_id, enriched, SUPABASE_URL, SUPABASE_KEY);
-              classified++;
-              await sleep(1000);
-            } catch (err) { console.error(`Classify error for ${official.official_id}:`, (err as Error).message); }
-          }
-        }
-      } catch (err) { console.error('Inline classification error:', (err as Error).message); }
-    }
-
     return new Response(JSON.stringify({
       success: true, mode, offset,
       zips_processed: zipsProcessed,
@@ -383,8 +343,7 @@ Deno.serve(async (req: Request) => {
       bill_api_calls: billResult.apiCalls,
       bill_api_errors: billResult.apiErrors,
       next_offset: offset + zipsProcessed,
-      classified,
-      message: `Synced ${upserted} officials, ${districtResult.zipsUpdated} ZIP districts, ${billResult.billsUpserted} bills, ${billResult.sponsorLinks} sponsor links, ${classified} classified inline`,
+      message: `Synced ${upserted} officials, ${districtResult.zipsUpdated} ZIP districts, ${billResult.billsUpserted} bills, ${billResult.sponsorLinks} sponsor links`,
     }), { headers: { ...CORS, 'Content-Type': 'application/json' } });
 
   } catch (err) {

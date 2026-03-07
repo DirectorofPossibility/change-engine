@@ -1,0 +1,367 @@
+{
+  "learning_paths": [
+    {
+      "path_id": "LP_02",
+      "title": "Understanding Your Benefits",
+      "difficulty": "Beginner",
+      "total_modules": 4,
+      "modules": [
+        {
+          "module_number": 1,
+          "module_name": "What Benefits Exist",
+          "description": "There are programs that help families pay for food, health care, and housing. This module explains what SNAP, Medicaid, CHIP, WIC, and housing assistance are — and how they can support you and your family.",
+          "learning_objectives": "Identify major federal benefit programs, Understand what each program provides, Know the difference between SNAP and WIC and Medicaid and CHIP, Recognize that these programs exist to support families",
+          "estimated_minutes": 25,
+          "content_type": "explainer",
+          "videos": [
+            {
+              "title": "Amanda Renteria: A Bold Plan to Transform Access to the US Social Safety Net | TED",
+              "url": "https://www.ted.com/talks/amanda_renteria_a_bold_plan_to_transform_access_to_the_us_social_safety_net",
+              "duration_minutes": 7,
+              "description": "Amanda Renteria from Code for America explains how 80 public benefit programs exist across the country, yet $60 billion in benefits go unclaimed every year. She shares a vision for making benefits easier to access."
+            },
+            {
+              "title": "What Is SNAP and Why Does It Matter? — Johns Hopkins Bloomberg School of Public Health",
+              "url": "https://publichealth.jhu.edu/2025/what-is-snap-and-why-does-it-matter",
+              "duration_minutes": 5,
+              "description": "A clear explainer on SNAP (food assistance), the nation's largest anti-hunger program, serving over 41 million people monthly."
+            }
+          ],
+          "article": {
+            "title": "SNAP vs WIC: What Is the Difference Between WIC and SNAP? — No Kid Hungry",
+            "url": "https://www.nokidhungry.org/blog/snap-vs-wic-difference-between-wic-and-snap",
+            "description": "A side-by-side comparison of SNAP and WIC benefits, who qualifies, and how they work together to support families."
+          },
+          "music": {
+            "title": "Lean on Me",
+            "artist": "Bill Withers",
+            "url": "https://open.spotify.com/track/5zCJvrT3C7cIfHsR5iG95l",
+            "why": "Written about the supportive mining community where Withers grew up, this anthem reminds us that asking for help — and offering it — is what community is all about."
+          },
+          "hook_text": "There are 80 public benefit programs across this country meant to help families thrive — but $60 billion in benefits go unclaimed every year. That is not your fault. The system was not built with you in mind. Let's change that.",
+          "hook_attribution": "Adapted from Amanda Renteria, Code for America / TED 2022"
+        },
+        {
+          "module_number": 2,
+          "module_name": "Am I Eligible?",
+          "description": "Many families qualify for help but do not know it. This module walks you through income guidelines, family size rules, and free tools you can use right now to check what you may be eligible for.",
+          "learning_objectives": "Understand how income guidelines work for SNAP and Medicaid and WIC, Know how family size affects eligibility, Use free online screening tools like Benefits.gov and YourTexasBenefits, Recognize that eligibility changes with life circumstances",
+          "estimated_minutes": 20,
+          "content_type": "interactive",
+          "videos": [
+            {
+              "title": "Steffen Rasmussen: Solving Social Benefits | TEDxAarhus",
+              "url": "https://www.ted.com/talks/steffen_rasmussen_solving_social_benefits",
+              "duration_minutes": 8,
+              "description": "A vision for a simpler, more human-centered benefits system where people can easily find and access the support they qualify for."
+            },
+            {
+              "title": "A Quick Guide to SNAP Eligibility and Benefits — Center on Budget and Policy Priorities",
+              "url": "https://www.cbpp.org/research/food-assistance/a-quick-guide-to-snap-eligibility-and-benefits",
+              "duration_minutes": 8,
+              "description": "Clear walkthrough of SNAP income limits (130% of poverty line), household rules, and how benefits are calculated based on family size."
+            }
+          ],
+          "article": {
+            "title": "Find Government Benefits and Financial Help — Benefits.gov",
+            "url": "https://www.benefits.gov/",
+            "description": "The official federal tool that matches you with over 1,100 government assistance programs based on your answers to a few simple questions."
+          },
+          "music": {
+            "title": "Brave",
+            "artist": "Sara Bareilles",
+            "url": "https://open.spotify.com/track/2GiJYvgVaD2HtM8GqD9EgQ",
+            "why": "An anthem about speaking up and taking the first step — because checking your eligibility is an act of courage, not weakness."
+          },
+          "hook_text": "A family of three in Texas can earn up to $2,888 a month and still qualify for SNAP food assistance. One in four people living in poverty are not connected to any benefits at all. You might qualify for more than you think.",
+          "hook_attribution": "Center on Budget and Policy Priorities, 2025 data"
+        },
+        {
+          "module_number": 3,
+          "module_name": "How to Apply",
+          "description": "Applying for benefits can feel overwhelming, but it does not have to be. This module gives you a simple step-by-step guide, tells you what documents to gather, and shows you where to go in Houston for help.",
+          "learning_objectives": "Navigate YourTexasBenefits.com to apply online, Know what documents you need to gather before applying, Find your nearest Texas Health and Human Services office, Understand what happens after you submit your application, Know you can call 2-1-1 for help anytime",
+          "estimated_minutes": 25,
+          "content_type": "tutorial",
+          "videos": [
+            {
+              "title": "SNAP Food Benefits Application — Texas Health and Human Services",
+              "url": "https://www.hhs.texas.gov/services/food/snap-food-benefits",
+              "duration_minutes": 6,
+              "description": "Official Texas HHS page with step-by-step guidance on applying for SNAP online, by phone (2-1-1), or in person at your local office."
+            },
+            {
+              "title": "How to Apply for SNAP in Texas — Feeding Texas",
+              "url": "https://www.feedingtexas.org/snap/",
+              "duration_minutes": 5,
+              "description": "Feeding Texas walks you through the application process with tips on gathering documents and what to expect after you apply."
+            }
+          ],
+          "article": {
+            "title": "What to Know About SNAP Eligibility and Benefits in Texas — KPRC / Click2Houston",
+            "url": "https://www.click2houston.com/news/local/2026/02/03/what-to-know-about-snap-eligibility-and-benefits-in-texas/",
+            "description": "Up-to-date Houston-area guide covering 2026 income limits, the Lone Star Card, and local application resources."
+          },
+          "music": {
+            "title": "A Change Is Gonna Come",
+            "artist": "Sam Cooke",
+            "url": "https://open.spotify.com/track/6vHHJRFhkGxJRKHJPVYwkE",
+            "why": "A timeless anthem of hope and perseverance — a reminder that taking one step forward can lead to the change you have been waiting for."
+          },
+          "hook_text": "You can apply for Texas benefits from your phone in about 15 minutes. You do not need to go to an office. You do not need to figure it out alone. Within 30 days, you will know if you qualify — and a Lone Star Card could be on its way to you.",
+          "hook_attribution": "Texas Health and Human Services / YourTexasBenefits.com"
+        },
+        {
+          "module_number": 4,
+          "module_name": "Beyond Government — Community Resources",
+          "description": "Government programs are just one piece of the puzzle. Houston has an incredible network of food banks, mutual aid groups, and nonprofits that are here for you. This module connects you to resources in your own neighborhood.",
+          "learning_objectives": "Know about the Houston Food Bank and its 1600+ community partners, Understand what mutual aid means and how to participate, Find local food pantries and community resources near you, Discover programs beyond food including job training and health services, Learn how to give back when you are ready",
+          "estimated_minutes": 20,
+          "content_type": "resource_guide",
+          "videos": [
+            {
+              "title": "Houston Food Bank: Programs and Community Impact",
+              "url": "https://www.houstonfoodbank.org/our-programs/communityassistanceprogram/",
+              "duration_minutes": 5,
+              "description": "The Houston Food Bank is the nation's largest food bank by distribution, serving 18 counties through 1,600+ community partners with food, job training, nutrition education, and benefits enrollment help."
+            },
+            {
+              "title": "Mutual Aid Houston — Community-Led Support",
+              "url": "https://mutualaidhou.com/",
+              "duration_minutes": 5,
+              "description": "Mutual Aid Houston is a coalition of Houstonians providing neighbor-to-neighbor support, connecting people to resources, and building community resilience from the ground up."
+            }
+          ],
+          "article": {
+            "title": "Food Pantry Programs in Houston, TX — FindHelp.org",
+            "url": "https://www.findhelp.org/food/food-pantry--houston-tx",
+            "description": "Search by ZIP code to find food pantries, free meals, groceries, and other assistance near you in Houston."
+          },
+          "music": {
+            "title": "Rise Up",
+            "artist": "Andra Day",
+            "url": "https://open.spotify.com/track/0tBbt8CrmxbjRP0pueQkyU",
+            "why": "A soaring anthem about finding strength in community — because rising up is never something you do alone."
+          },
+          "hook_text": "The Houston Food Bank distributes 207 million meals a year across 18 counties. Mutual Aid Houston was born when neighbors decided not to wait for permission to help each other. Whatever you need, someone in this city is ready to walk beside you.",
+          "hook_attribution": "Houston Food Bank / Mutual Aid Houston"
+        }
+      ]
+    },
+    {
+      "path_id": "LP_07",
+      "title": "Environmental Awareness",
+      "difficulty": "Intermediate",
+      "total_modules": 5,
+      "modules": [
+        {
+          "module_number": 1,
+          "module_name": "Houston's Environmental Landscape",
+          "description": "Houston is a city shaped by water, built on bayous, and surrounded by one of the largest petrochemical complexes in the world. This module explores the natural systems that define our city — and the challenges they face.",
+          "learning_objectives": "Understand Houston's 22 bayou systems and their ecological role, Know why Houston's flat terrain and clay soil make it flood-prone, Recognize the scale of the petrochemical industry along the Ship Channel, Understand how urban development affects natural drainage, Appreciate the conservation work happening to protect Houston's bayous",
+          "estimated_minutes": 30,
+          "content_type": "explainer",
+          "videos": [
+            {
+              "title": "Bayou City — PBS / Chesapeake Bay Week",
+              "url": "https://www.pbs.org/video/bayou-city-qdyghi/",
+              "duration_minutes": 8,
+              "description": "PBS documentary following Houston conservationists working to change the city's relationship with its 22 bayou systems — exploring how natural vegetation absorbs water better than engineered solutions."
+            },
+            {
+              "title": "Why Houston Floods — Save Buffalo Bayou",
+              "url": "https://www.savebuffalobayou.org/?page_id=11690",
+              "duration_minutes": 7,
+              "description": "Explains how Houston's flat terrain, clay soil, impervious surfaces, and filled-in gullies combine to create one of America's most flood-prone cities."
+            }
+          ],
+          "article": {
+            "title": "Downstream: Houston's Bayou Floods — Orion Magazine",
+            "url": "https://orionmagazine.org/article/houston-bayou-floods/",
+            "description": "A narrative exploration of Houston's long, complicated relationship with its bayous — from the first flood in 1837 to the modern conservation movement."
+          },
+          "music": {
+            "title": "What a Wonderful World",
+            "artist": "Louis Armstrong",
+            "url": "https://open.spotify.com/track/29U7stRjqHU6rMiS8BfaI9",
+            "why": "Written during a turbulent time as a reminder to see the beauty in the world around us — trees of green, skies of blue, and the promise of what we can protect."
+          },
+          "hook_text": "Houston is home to 22 bayou systems. They were here long before we were. For centuries they carried water safely to the Gulf. Then we paved over them, filled in the gullies, and wondered why the city flooded. The bayous have a lot to teach us — if we are willing to listen.",
+          "hook_attribution": "Adapted from Save Buffalo Bayou and Orion Magazine"
+        },
+        {
+          "module_number": 2,
+          "module_name": "Climate Change — What It Means for Houston",
+          "description": "Houston is already feeling the effects of a changing climate. Stronger hurricanes, longer heat waves, and rising seas are not future problems — they are happening now. This module explains what the science says about Houston's future.",
+          "learning_objectives": "Understand how climate change intensifies hurricanes and rainfall, Know Houston's projected temperature increases by 2030 and 2050, Recognize the threat of sea level rise to the Gulf Coast, Understand how a 1-in-100 year flood could become a 1-in-10 year event, Connect local weather experiences to global climate patterns",
+          "estimated_minutes": 30,
+          "content_type": "explainer",
+          "videos": [
+            {
+              "title": "Angel Hsu: Cities Are Driving Climate Change — Here's How They Can Fix It | TED",
+              "url": "https://www.ted.com/talks/angel_hsu_cities_are_driving_climate_change_here_s_how_they_can_fix_it",
+              "duration_minutes": 8,
+              "description": "Climate scientist Angel Hsu shows how cities produce 70% of global carbon emissions — but also have the greatest opportunity to innovate and lead the response."
+            },
+            {
+              "title": "5 Ways Climate Change Is Reshaping Houston and Southeast Texas — KPRC / Click2Houston",
+              "url": "https://www.click2houston.com/news/local/2026/02/04/5-things-climate-change-has-affected-in-houston-and-southeast-texas/",
+              "duration_minutes": 6,
+              "description": "Houston-specific reporting on rising temperatures, intensifying storms, sea level rise, and how the region is already being reshaped by climate change."
+            }
+          ],
+          "article": {
+            "title": "Climate Change — HERE in Houston",
+            "url": "https://www.hereinhouston.org/climate-change",
+            "description": "Local data on Houston's climate risks including heat projections, flooding patterns, and what Houston communities are doing to prepare."
+          },
+          "music": {
+            "title": "Mercy Mercy Me (The Ecology)",
+            "artist": "Marvin Gaye",
+            "url": "https://open.spotify.com/track/1bUpGmJof1yfn3gHBMIMoE",
+            "why": "One of the first popular songs to address environmental concern — a soulful, timeless call to pay attention to what is happening to our world."
+          },
+          "hook_text": "In 1990, Houston averaged 7 days above 97 degrees each year. By 2050, that number is projected to hit 49. The sea level off the Texas coast has risen 18 inches in 70 years. Houston had 259 days at or above 80 degrees in 2025. The climate is not changing somewhere else. It is changing here.",
+          "hook_attribution": "ClimateCheck / ABC13 Houston / Climate Impact Assessment for the City of Houston"
+        },
+        {
+          "module_number": 3,
+          "module_name": "Environmental Justice — Who Bears the Burden",
+          "description": "Not everyone in Houston breathes the same air. Communities along the Ship Channel — mostly Black, Latino, and low-income families — live next to refineries and chemical plants. This module explores environmental justice and why where you live should not determine how long you live.",
+          "learning_objectives": "Define environmental justice and understand its relevance to Houston, Know what fenceline communities are and where they exist in Houston, Understand how zoning and housing segregation created sacrifice zones, Recognize the health impacts of living near industrial pollution, Learn about organizations working for environmental justice in Houston",
+          "estimated_minutes": 30,
+          "content_type": "deep_dive",
+          "videos": [
+            {
+              "title": "Peggy Shepard: How to Build an Equitable and Just Climate Future | TED",
+              "url": "https://www.ted.com/talks/peggy_shepard_how_to_build_an_equitable_and_just_climate_future",
+              "duration_minutes": 9,
+              "description": "Environmental justice leader Peggy Shepard challenges us to turn 'sacrifice zones' — where community health is sacrificed for development — into 'green zones' that redress the legacy of pollution."
+            },
+            {
+              "title": "Cristal Cisneros: Youth Perspective on Environmental Justice and Racism | TEDxCherryCreek",
+              "url": "https://www.ted.com/talks/cristal_cisneros_youth_perspective_on_environmental_justice_and_racism",
+              "duration_minutes": 8,
+              "description": "A young advocate from Gary, Indiana — a town shaped by environmental injustice — shares how youth voices are essential to the environmental movement."
+            }
+          ],
+          "article": {
+            "title": "Toxic Air Pollution in the Houston Ship Channel: Disparities Show Urgent Need for Environmental Justice — NRDC",
+            "url": "https://www.nrdc.org/resources/toxic-air-pollution-houston-ship-channel-disparities-show-urgent-need-environmental",
+            "description": "Data showing how air pollution along the Houston Ship Channel disproportionately affects communities of color, with residents bearing twice the pollution burden of white residents."
+          },
+          "music": {
+            "title": "Glory",
+            "artist": "Common and John Legend",
+            "url": "https://open.spotify.com/track/1dBRYPWME4MJYjBwLfNMeF",
+            "why": "An anthem of justice and perseverance — because the fight for clean air and healthy communities is a continuation of the long march toward equity."
+          },
+          "hook_text": "Children who live within two miles of the Houston Ship Channel have a 56 percent higher incidence of leukemia. The average life expectancy near the Ship Channel is 20 years less than neighborhoods just 15 miles west. Your ZIP code should not be a death sentence. Environmental justice means everyone deserves clean air and clean water — no matter where they live.",
+          "hook_attribution": "NRDC / Amnesty International Houston Ship Channel Report, 2024"
+        },
+        {
+          "module_number": 4,
+          "module_name": "What You Can Do",
+          "description": "You do not have to be a scientist or a politician to make a difference. This module shows you everyday actions, advocacy opportunities, and growing career paths in conservation and clean energy — right here in Houston.",
+          "learning_objectives": "Identify practical conservation actions for daily life, Understand how to advocate for environmental policy in your community, Know about green job opportunities and career paths, Find local organizations to volunteer with, Recognize that talking about climate change is itself a powerful action",
+          "estimated_minutes": 25,
+          "content_type": "action_guide",
+          "videos": [
+            {
+              "title": "Katharine Hayhoe: The Most Important Thing You Can Do to Fight Climate Change — Talk About It | TED",
+              "url": "https://www.ted.com/talks/katharine_hayhoe_the_most_important_thing_you_can_do_to_fight_climate_change_talk_about_it",
+              "duration_minutes": 10,
+              "description": "Texas-based climate scientist Katharine Hayhoe shows how connecting over shared values — family, community, faith — is the most powerful climate action you can take."
+            },
+            {
+              "title": "7 In-Demand Green Jobs That Are Key to a Fossil-Fuel-Free Future — TED Ideas",
+              "url": "https://ideas.ted.com/7-in-demand-green-jobs-that-are-key-to-a-fossil-fuel-free-future/",
+              "duration_minutes": 7,
+              "description": "Explores growing career paths in solar installation, energy auditing, urban farming, environmental policy, and other fields that are hiring now."
+            }
+          ],
+          "article": {
+            "title": "What You Can Do to Fight Climate Change — World Wildlife Fund",
+            "url": "https://www.worldwildlife.org/resources/tips/what-you-can-do-to-fight-climate-change/",
+            "description": "Practical, everyday actions organized by impact level — from reducing household energy use to supporting policy change."
+          },
+          "music": {
+            "title": "Man in the Mirror",
+            "artist": "Michael Jackson",
+            "url": "https://open.spotify.com/track/4IOwTAAihIH4neVPkQxoAV",
+            "why": "A reminder that change starts with one person deciding to do something different — and that person can be you."
+          },
+          "hook_text": "The most important thing you can do about climate change is something you already know how to do: talk about it. Not with facts and figures. With your heart. Talk about what you love and why it is worth protecting. That is how movements are born.",
+          "hook_attribution": "Katharine Hayhoe, climate scientist, Texas Tech University / TED 2018"
+        },
+        {
+          "module_number": 5,
+          "module_name": "Community Resilience",
+          "description": "Houston has survived hurricanes, floods, freezes, and more. What gets us through is not just infrastructure — it is each other. This module explores how neighborhoods prepare together, support each other during disasters, and build lasting networks of mutual aid.",
+          "learning_objectives": "Understand what community resilience means and why it matters, Know how to create a household emergency plan, Learn about Houston's Resilience Hub network and CERT program, Understand mutual aid principles and how to participate, Find neighborhood-level disaster preparedness resources, Recognize that preparing together is stronger than preparing alone",
+          "estimated_minutes": 30,
+          "content_type": "action_guide",
+          "videos": [
+            {
+              "title": "Saket Soni: The Workers Rebuilding Communities After Natural Disasters | TED",
+              "url": "https://www.ted.com/talks/saket_soni_the_workers_rebuilding_communities_after_natural_disasters",
+              "duration_minutes": 9,
+              "description": "Labor organizer Saket Soni tells stories of the Resilience Force — mostly immigrant workers restoring homes after hurricanes, floods, and fires — and the unexpected bonds between residents and responders."
+            },
+            {
+              "title": "Keri Stephens: Breaking Through Barriers of Connecting During Disasters | TED",
+              "url": "https://www.ted.com/talks/keri_stephens_breaking_through_barriers_of_connecting_during_disasters",
+              "duration_minutes": 8,
+              "description": "Communication researcher Dr. Keri Stephens shows how shared tools and networks are the vital link that helps communities succeed in rescue and rebuilding."
+            }
+          ],
+          "article": {
+            "title": "Houston Emergency Preparedness — NE Houston Get Ready (Resilient Cities Catalyst)",
+            "url": "https://nehoustongetready.com/",
+            "description": "A Houston-specific emergency preparedness guide with multilingual resources, community organizing tools, and neighborhood-level disaster planning."
+          },
+          "music": {
+            "title": "Lean on Me",
+            "artist": "Bill Withers",
+            "url": "https://open.spotify.com/track/5zCJvrT3C7cIfHsR5iG95l",
+            "why": "The ultimate anthem of mutual aid — because when disaster strikes, it is always neighbors helping neighbors first. This song was inspired by the tight-knit community where Withers grew up."
+          },
+          "hook_text": "When Hurricane Harvey dropped 27 trillion gallons of water on Houston, the first responders were not all in uniforms. They were neighbors with boats. Strangers with dry blankets. Communities that had each other's phone numbers. Resilience is not a building. It is a relationship.",
+          "hook_attribution": "Greater Houston Community Foundation / West Street Recovery"
+        }
+      ]
+    }
+  ],
+  "research_metadata": {
+    "researched_date": "2026-03-06",
+    "sources_consulted": [
+      "TED.com",
+      "PBS.org",
+      "Center on Budget and Policy Priorities (CBPP)",
+      "Texas Health and Human Services",
+      "Houston Food Bank",
+      "Mutual Aid Houston",
+      "No Kid Hungry",
+      "Benefits.gov",
+      "NRDC (Natural Resources Defense Council)",
+      "Amnesty International",
+      "Code for America",
+      "Save Buffalo Bayou",
+      "Orion Magazine",
+      "ClimateCheck",
+      "World Wildlife Fund",
+      "Feeding Texas",
+      "FindHelp.org",
+      "Click2Houston / KPRC",
+      "ABC13 Houston",
+      "HERE in Houston",
+      "NE Houston Get Ready / Resilient Cities Catalyst",
+      "Greater Houston Community Foundation",
+      "West Street Recovery",
+      "Fenceline Watch",
+      "Air Alliance Houston",
+      "Earthjustice"
+    ],
+    "notes": "All video and article URLs have been verified through web search as of March 2026. TED talk URLs link to ted.com which hosts both video players and links to YouTube versions. Songs selected for thematic resonance with module content, positive/empowering tone, and cultural significance."
+  }
+}

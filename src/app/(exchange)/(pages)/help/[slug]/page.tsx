@@ -5,8 +5,10 @@ import { createClient } from '@/lib/supabase/server'
 import {
   getLifeSituation, getLifeSituationContent, getLearningPaths,
   getRelatedOpportunities, getRelatedPolicies,
-  getLangId, fetchTranslationsForTable,
+  getLangId, fetchTranslationsForTable, getWayfinderContext,
 } from '@/lib/data/exchange'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getUserProfile } from '@/lib/auth/roles'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
@@ -73,6 +75,9 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
     ])
   }
 
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('life_situation', situation.situation_id, userProfile?.role)
+
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: 'Available Resources', href: '/help' }, { label: situation.situation_name }]} />
@@ -97,135 +102,140 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
       {/* Map of services and opportunities */}
       <HelpMap services={services} opportunities={opportunities} />
 
-      {/* Matched Content */}
-      {content.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Related Resources</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {content.map(function (item) {
-              const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
-              return (
-                <ContentCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title_6th_grade}
-                  summary={item.summary_6th_grade}
-                  pathway={item.pathway_primary}
-                  center={item.center}
-                  sourceUrl={item.source_url}
-                  publishedAt={item.published_at}
-                  imageUrl={item.image_url ?? null}
-                  translatedTitle={ct?.title}
-                  translatedSummary={ct?.summary}
-                />
-              )
-            })}
-          </div>
-        </section>
-      )}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+        <div className="lg:col-span-2">
+          {/* Matched Content */}
+          {content.length > 0 && (
+            <section className="mb-10">
+              <h2 className="text-xl font-bold text-brand-text mb-4">Related Resources</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {content.map(function (item) {
+                  const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
+                  return (
+                    <ContentCard
+                      key={item.id}
+                      id={item.id}
+                      title={item.title_6th_grade}
+                      summary={item.summary_6th_grade}
+                      pathway={item.pathway_primary}
+                      center={item.center}
+                      sourceUrl={item.source_url}
+                      publishedAt={item.published_at}
+                      imageUrl={item.image_url ?? null}
+                      translatedTitle={ct?.title}
+                      translatedSummary={ct?.summary}
+                    />
+                  )
+                })}
+              </div>
+            </section>
+          )}
 
-      {/* Library Nuggets */}
-      <LibraryNugget nuggets={libraryNuggets} variant="inline" />
+          {/* Library Nuggets */}
+          <LibraryNugget nuggets={libraryNuggets} variant="inline" />
 
-      {/* Matched Services */}
-      {services.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Services</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services.map(function (svc) {
-              const st = serviceTranslations[svc.service_id]
-              return (
-                <ServiceCard
-                  key={svc.service_id}
-                  name={svc.service_name}
-                  orgName={svc.org_name}
-                  description={svc.description_5th_grade}
-                  phone={svc.phone}
-                  address={svc.address}
-                  city={svc.city}
-                  state={svc.state}
-                  zipCode={svc.zip_code}
-                  website={svc.website}
-                  translatedName={st?.title}
-                  translatedDescription={st?.summary}
-                />
-              )
-            })}
-          </div>
-        </section>
-      )}
+          {/* Matched Services */}
+          {services.length > 0 && (
+            <section className="mb-10">
+              <h2 className="text-xl font-bold text-brand-text mb-4">Services</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {services.map(function (svc) {
+                  const st = serviceTranslations[svc.service_id]
+                  return (
+                    <ServiceCard
+                      key={svc.service_id}
+                      name={svc.service_name}
+                      orgName={svc.org_name}
+                      description={svc.description_5th_grade}
+                      phone={svc.phone}
+                      address={svc.address}
+                      city={svc.city}
+                      state={svc.state}
+                      zipCode={svc.zip_code}
+                      website={svc.website}
+                      translatedName={st?.title}
+                      translatedDescription={st?.summary}
+                    />
+                  )
+                })}
+              </div>
+            </section>
+          )}
 
-      {/* Opportunities */}
-      {opportunities.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Opportunities</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {opportunities.map(function (o) {
-              const ot = opportunityTranslations[o.opportunity_id]
-              return (
-                <OpportunityCard
-                  key={o.opportunity_id}
-                  name={o.opportunity_name}
-                  description={o.description_5th_grade}
-                  startDate={o.start_date}
-                  endDate={o.end_date}
-                  address={o.address}
-                  city={o.city}
-                  isVirtual={o.is_virtual}
-                  registrationUrl={o.registration_url}
-                  spotsAvailable={o.spots_available}
-                  translatedName={ot?.title}
-                  translatedDescription={ot?.summary}
-                />
-              )
-            })}
-          </div>
-        </section>
-      )}
+          {/* Opportunities */}
+          {opportunities.length > 0 && (
+            <section className="mb-10">
+              <h2 className="text-xl font-bold text-brand-text mb-4">Opportunities</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {opportunities.map(function (o) {
+                  const ot = opportunityTranslations[o.opportunity_id]
+                  return (
+                    <OpportunityCard
+                      key={o.opportunity_id}
+                      name={o.opportunity_name}
+                      description={o.description_5th_grade}
+                      startDate={o.start_date}
+                      endDate={o.end_date}
+                      address={o.address}
+                      city={o.city}
+                      isVirtual={o.is_virtual}
+                      registrationUrl={o.registration_url}
+                      spotsAvailable={o.spots_available}
+                      translatedName={ot?.title}
+                      translatedDescription={ot?.summary}
+                    />
+                  )
+                })}
+              </div>
+            </section>
+          )}
 
-      {/* Policies */}
-      {policies.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Related Policies</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {policies.map(function (p) {
-              const pt = policyTranslations[p.policy_id]
-              return (
-                <PolicyCard
-                  key={p.policy_id}
-                  name={p.title_6th_grade || p.policy_name}
-                  summary={p.summary_6th_grade || p.summary_5th_grade}
-                  billNumber={p.bill_number}
-                  status={p.status}
-                  level={p.level}
-                  sourceUrl={p.source_url}
-                  translatedName={pt?.title}
-                  translatedSummary={pt?.summary}
-                />
-              )
-            })}
-          </div>
-        </section>
-      )}
+          {/* Policies */}
+          {policies.length > 0 && (
+            <section className="mb-10">
+              <h2 className="text-xl font-bold text-brand-text mb-4">Related Policies</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {policies.map(function (p) {
+                  const pt = policyTranslations[p.policy_id]
+                  return (
+                    <PolicyCard
+                      key={p.policy_id}
+                      name={p.title_6th_grade || p.policy_name}
+                      summary={p.summary_6th_grade || p.summary_5th_grade}
+                      billNumber={p.bill_number}
+                      status={p.status}
+                      level={p.level}
+                      sourceUrl={p.source_url}
+                      translatedName={pt?.title}
+                      translatedSummary={pt?.summary}
+                    />
+                  )
+                })}
+              </div>
+            </section>
+          )}
 
-      {/* Related Learning Path */}
-      {relatedPath && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Learning Path</h2>
-          <div className="max-w-md">
-            <Link href={'/learn/' + ((relatedPath as any).slug || relatedPath.path_id)}>
-              <LearningPathCard
-                name={relatedPath.path_name}
-                description={relatedPath.description_5th_grade}
-                themeId={relatedPath.theme_id}
-                difficulty={relatedPath.difficulty_level}
-                moduleCount={relatedPath.module_count}
-                estimatedMinutes={relatedPath.estimated_minutes}
-              />
-            </Link>
-          </div>
-        </section>
-      )}
+          {/* Related Learning Path */}
+          {relatedPath && (
+            <section className="mb-10">
+              <h2 className="text-xl font-bold text-brand-text mb-4">Learning Path</h2>
+              <div className="max-w-md">
+                <Link href={'/learn/' + ((relatedPath as any).slug || relatedPath.path_id)}>
+                  <LearningPathCard
+                    name={relatedPath.path_name}
+                    description={relatedPath.description_5th_grade}
+                    themeId={relatedPath.theme_id}
+                    difficulty={relatedPath.difficulty_level}
+                    moduleCount={relatedPath.module_count}
+                    estimatedMinutes={relatedPath.estimated_minutes}
+                  />
+                </Link>
+              </div>
+            </section>
+          )}
+        </div>
+        <DetailWayfinder data={wayfinderData} currentType="life_situation" currentId={situation.situation_id} userRole={userProfile?.role} />
+      </div>
     </div>
   )
 }

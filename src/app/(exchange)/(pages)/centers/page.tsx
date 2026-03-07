@@ -7,6 +7,8 @@ import {
   UnderstandIcon, InvolveIcon, DeeperIcon, FlowerOfLifeIcon,
 } from '@/components/exchange/FlowerIcons'
 import { BookOpen, Heart, Gift, Scale } from 'lucide-react'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 
 export const metadata: Metadata = {
   title: 'Layers of Engagement | Community Exchange',
@@ -94,109 +96,119 @@ export default async function CentersIndexPage() {
         </p>
       </div>
 
-      {/* Visual — concentric rings hint */}
-      <div className="flex justify-center mb-10">
-        <div className="relative">
-          {centerNames.map(function (name, i) {
-            const color = CENTER_COLORS[name] || '#8B7E74'
-            const size = 180 - i * 30
-            return (
-              <div
-                key={name}
-                className="absolute rounded-full border-2"
-                style={{
-                  width: size,
-                  height: size,
-                  borderColor: color,
-                  opacity: 0.2 + i * 0.15,
-                  top: (180 - size) / 2,
-                  left: (180 - size) / 2,
-                }}
-              />
-            )
-          })}
-          <div className="w-[180px] h-[180px] flex items-center justify-center">
-            <FlowerOfLifeIcon size={60} />
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+        <div>
+          {/* Visual — concentric rings hint */}
+          <div className="flex justify-center mb-10">
+            <div className="relative">
+              {centerNames.map(function (name, i) {
+                const color = CENTER_COLORS[name] || '#8B7E74'
+                const size = 180 - i * 30
+                return (
+                  <div
+                    key={name}
+                    className="absolute rounded-full border-2"
+                    style={{
+                      width: size,
+                      height: size,
+                      borderColor: color,
+                      opacity: 0.2 + i * 0.15,
+                      top: (180 - size) / 2,
+                      left: (180 - size) / 2,
+                    }}
+                  />
+                )
+              })}
+              <div className="w-[180px] h-[180px] flex items-center justify-center">
+                <FlowerOfLifeIcon size={60} />
+              </div>
+            </div>
+          </div>
+
+          {/* Center cards */}
+          <div className="space-y-6">
+            {centerNames.map(function (name, i) {
+              const config = CENTERS[name]
+              const color = CENTER_COLORS[name] || '#8B7E74'
+              const meta = LAYER_META[name]
+              const Icon = meta?.icon || BookOpen
+              const count = counts[name] || 0
+              const pathways = pathwayBreakdown[name] || []
+              const image = sampleImages[name]
+
+              return (
+                <Link
+                  key={name}
+                  href={'/centers/' + config.slug}
+                  className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
+                >
+                  <div className="flex flex-col sm:flex-row">
+                    {/* Color accent + icon */}
+                    <div
+                      className="sm:w-48 flex-shrink-0 flex items-center justify-center p-6"
+                      style={{ backgroundColor: color + '10' }}
+                    >
+                      <div className="text-center">
+                        <Icon size={32} style={{ color }} className="mx-auto mb-2" />
+                        <div className="font-serif text-xl font-bold" style={{ color }}>{name}</div>
+                        <div className="text-xs text-brand-muted mt-1">{count} resources</div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 p-5">
+                      <p className="text-sm font-serif italic text-brand-muted mb-2">{config.question}</p>
+                      <p className="text-sm text-brand-text leading-relaxed mb-3">{meta?.description}</p>
+
+                      {/* What you'll find */}
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {(meta?.examples || []).map(function (ex) {
+                          return (
+                            <span
+                              key={ex}
+                              className="text-[11px] px-2 py-0.5 rounded"
+                              style={{ backgroundColor: color + '12', color }}
+                            >
+                              {ex}
+                            </span>
+                          )
+                        })}
+                      </div>
+
+                      {/* Top pathways */}
+                      {pathways.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-brand-muted">Top pathways:</span>
+                          {pathways.map(function (pw) {
+                            return (
+                              <span key={pw.id} className="flex items-center gap-1 text-[10px] text-brand-muted">
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: pw.color }} />
+                                {pw.name}
+                              </span>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Preview image */}
+                    {image && (
+                      <div className="hidden md:block w-36 flex-shrink-0">
+                        <img src={image} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
-      </div>
-
-      {/* Center cards */}
-      <div className="space-y-6">
-        {centerNames.map(function (name, i) {
-          const config = CENTERS[name]
-          const color = CENTER_COLORS[name] || '#8B7E74'
-          const meta = LAYER_META[name]
-          const Icon = meta?.icon || BookOpen
-          const count = counts[name] || 0
-          const pathways = pathwayBreakdown[name] || []
-          const image = sampleImages[name]
-
-          return (
-            <Link
-              key={name}
-              href={'/centers/' + config.slug}
-              className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
-            >
-              <div className="flex flex-col sm:flex-row">
-                {/* Color accent + icon */}
-                <div
-                  className="sm:w-48 flex-shrink-0 flex items-center justify-center p-6"
-                  style={{ backgroundColor: color + '10' }}
-                >
-                  <div className="text-center">
-                    <Icon size={32} style={{ color }} className="mx-auto mb-2" />
-                    <div className="font-serif text-xl font-bold" style={{ color }}>{name}</div>
-                    <div className="text-xs text-brand-muted mt-1">{count} resources</div>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 p-5">
-                  <p className="text-sm font-serif italic text-brand-muted mb-2">{config.question}</p>
-                  <p className="text-sm text-brand-text leading-relaxed mb-3">{meta?.description}</p>
-
-                  {/* What you'll find */}
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {(meta?.examples || []).map(function (ex) {
-                      return (
-                        <span
-                          key={ex}
-                          className="text-[11px] px-2 py-0.5 rounded"
-                          style={{ backgroundColor: color + '12', color }}
-                        >
-                          {ex}
-                        </span>
-                      )
-                    })}
-                  </div>
-
-                  {/* Top pathways */}
-                  {pathways.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-brand-muted">Top pathways:</span>
-                      {pathways.map(function (pw) {
-                        return (
-                          <span key={pw.id} className="flex items-center gap-1 text-[10px] text-brand-muted">
-                            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: pw.color }} />
-                            {pw.name}
-                          </span>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {/* Preview image */}
-                {image && (
-                  <div className="hidden md:block w-36 flex-shrink-0">
-                    <img src={image} alt="" className="w-full h-full object-cover" />
-                  </div>
-                )}
-              </div>
-            </Link>
-          )
-        })}
+        <div className="hidden lg:block">
+          <div className="sticky top-24 space-y-4">
+            <IndexWayfinder currentPage="centers" related={[{label:'Pathways',href:'/pathways'},{label:'Explore',href:'/explore'},{label:'Collections',href:'/collections'}]} color="#C75B2A" />
+            <FeaturedPromo variant="card" />
+          </div>
+        </div>
       </div>
     </div>
   )

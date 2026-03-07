@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -16,6 +17,8 @@ export const metadata: Metadata = {
 }
 
 export default async function PoliciesPage() {
+  const cookieStore = await cookies()
+  const userZip = cookieStore.get('zip')?.value || ''
   const supabase = await createClient()
 
   const { data: policies } = await supabase
@@ -24,7 +27,19 @@ export default async function PoliciesPage() {
     .eq('is_published', true)
     .order('last_action_date', { ascending: false })
 
-  const all = policies || []
+  const rawPolicies = policies || []
+
+  // When user has a ZIP, prioritize local policies (city > county > state > federal)
+  const govLevelPriority: Record<string, number> = { City: 0, County: 1, State: 2, Federal: 3 }
+  const all = userZip
+    ? [...rawPolicies].sort(function (a: any, b: any) {
+        const aPri = govLevelPriority[a.government_level] ?? 4
+        const bPri = govLevelPriority[b.government_level] ?? 4
+        if (aPri !== bPri) return aPri - bPri
+        // Within same level, preserve original order (last_action_date desc)
+        return 0
+      })
+    : rawPolicies
 
   const langId = await getLangId()
   const policyIds = all.map(function (p) { return p.policy_id })

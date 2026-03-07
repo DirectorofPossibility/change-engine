@@ -17,6 +17,8 @@ import { PAGE_INTROS, URGENCY_LEVELS } from '@/lib/constants'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
 import { HelpUrgencyHeader } from './HelpUrgencyHeader'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 
 export const revalidate = 300
 
@@ -54,31 +56,39 @@ export default async function HelpPage() {
         <Breadcrumb items={[{ label: 'Available Resources' }]} />
         <HelpCrisisBanner />
 
-        <div className="space-y-10">
-          {URGENCY_LEVELS.map((level) => {
-            const items = grouped[level]
-            if (!items || items.length === 0) return null
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+          <div className="space-y-10">
+            {URGENCY_LEVELS.map((level) => {
+              const items = grouped[level]
+              if (!items || items.length === 0) return null
 
-            return (
-              <section key={level}>
-                <HelpUrgencyHeader level={level} />
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {items.map((s) => (
-                    <LifeSituationCard
-                      key={s.situation_id}
-                      name={s.situation_name}
-                      slug={s.situation_slug}
-                      description={s.description_5th_grade}
-                      urgency={s.urgency_level}
-                      iconName={s.icon_name}
-                      translatedName={translations[s.situation_id]?.title}
-                      translatedDescription={translations[s.situation_id]?.summary}
-                    />
-                  ))}
-                </div>
-              </section>
-            )
-          })}
+              return (
+                <section key={level}>
+                  <HelpUrgencyHeader level={level} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {items.map((s) => (
+                      <LifeSituationCard
+                        key={s.situation_id}
+                        name={s.situation_name}
+                        slug={s.situation_slug}
+                        description={s.description_5th_grade}
+                        urgency={s.urgency_level}
+                        iconName={s.icon_name}
+                        translatedName={translations[s.situation_id]?.title}
+                        translatedDescription={translations[s.situation_id]?.summary}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )
+            })}
+          </div>
+          <div className="hidden lg:block">
+            <div className="sticky top-24 space-y-4">
+              <IndexWayfinder currentPage="help" related={[{label:'Services',href:'/services'},{label:'Benefits',href:'/benefits'},{label:'Agencies',href:'/agencies'}]} color="#C75B2A" />
+              <FeaturedPromo variant="card" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

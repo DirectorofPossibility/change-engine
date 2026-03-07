@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { getOrganizations } from '@/lib/data/exchange'
 import { OrganizationsClient } from './OrganizationsClient'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
@@ -14,7 +15,17 @@ export const metadata: Metadata = {
 }
 
 export default async function OrganizationsPage() {
-  const organizations = await getOrganizations()
+  const cookieStore = await cookies()
+  const userZip = cookieStore.get('zip')?.value || ''
+  const allOrgs = await getOrganizations()
+
+  // When user has a ZIP, sort matching organizations to the top
+  const organizations = userZip
+    ? [
+        ...allOrgs.filter(function (o: any) { return o.zip_code === userZip }),
+        ...allOrgs.filter(function (o: any) { return o.zip_code !== userZip }),
+      ]
+    : allOrgs
 
   return (
     <div>

@@ -6,9 +6,11 @@ import { createClient } from '@/lib/supabase/server'
 import { MapPin, Users, DollarSign } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
-import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUIStrings } from '@/lib/i18n'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 86400
 
@@ -56,7 +58,11 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   }
 
   // Fetch map markers for neighborhood
-  const mapData = await getMapMarkersForNeighborhood(id)
+  const userProfile = await getUserProfile()
+  const [mapData, wayfinderData] = await Promise.all([
+    getMapMarkersForNeighborhood(id),
+    getWayfinderContext('neighborhood' as any, id, userProfile?.role),
+  ])
 
   // Translation support
   const langId = await getLangId()
@@ -70,6 +76,9 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: 'Neighborhoods' }, { label: hood.neighborhood_name }]} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="lg:col-span-2">
       <h1 className="text-3xl font-bold text-brand-text mb-2">{hood.neighborhood_name}</h1>
       <div className="flex items-center gap-3 text-sm text-brand-muted mb-6">
         {hood.neighborhood_type && <span>{hood.neighborhood_type}</span>}
@@ -146,6 +155,11 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </div>
         </section>
       )}
+      </div>
+      <div>
+        <DetailWayfinder data={wayfinderData} currentType={'neighborhood' as any} currentId={id} userRole={userProfile?.role} />
+      </div>
+      </div>
     </div>
   )
 }

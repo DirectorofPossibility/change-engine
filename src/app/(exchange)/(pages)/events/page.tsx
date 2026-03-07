@@ -4,6 +4,8 @@ import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Calendar, MapPin, Clock, Video } from 'lucide-react'
 
 export const revalidate = 300
@@ -70,18 +72,36 @@ export default async function EventsPage() {
       <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#d69e2e" title="Community Events" subtitle="Town halls, workshops, volunteer days, and civic gatherings happening across Houston." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Events' }]} />
-        {upcoming.length > 0 && (
-          <div className="mb-10">
-            <h2 className="text-lg font-serif font-bold text-brand-text mb-4">Upcoming</h2>
-            <div className="space-y-3">{upcoming.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
-          </div>
-        )}
-        {past.length > 0 && (
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
           <div>
-            <h2 className="text-lg font-serif font-bold text-brand-muted mb-4">Past Events</h2>
-            <div className="space-y-3 opacity-70">{past.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
+            {upcoming.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-lg font-serif font-bold text-brand-text mb-4">Upcoming</h2>
+                <div className="space-y-3">{upcoming.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
+              </div>
+            )}
+            {past.length > 0 && (
+              <div>
+                <h2 className="text-lg font-serif font-bold text-brand-muted mb-4">Past Events</h2>
+                <div className="space-y-3 opacity-70">{past.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
+              </div>
+            )}
           </div>
-        )}
+          <div className="hidden lg:block">
+            <div className="sticky top-24 space-y-4">
+              <IndexWayfinder
+                currentPage="events"
+                color="#38a169"
+                related={[
+                  { label: 'Calendar', href: '/calendar' },
+                  { label: 'Organizations', href: '/organizations' },
+                  { label: 'Opportunities', href: '/opportunities' },
+                ]}
+              />
+              <FeaturedPromo variant="card" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

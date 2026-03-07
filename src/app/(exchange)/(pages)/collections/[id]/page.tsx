@@ -3,6 +3,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { THEMES } from '@/lib/constants'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { ExternalLink } from 'lucide-react'
@@ -46,6 +49,10 @@ export default async function CollectionDetailPage({ params }: { params: Promise
     }
   }
 
+  const collectionId = c.collection_id || c.id
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('collection' as any, collectionId, userProfile?.role)
+
   // If no item_ids, try fetching by focus area or theme
   if (items.length === 0 && (c.focus_area_ids || c.theme_id)) {
     const { data } = await supabase
@@ -73,57 +80,62 @@ export default async function CollectionDetailPage({ params }: { params: Promise
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Collections', href: '/collections' }, { label: c.collection_name }]} />
 
-        {items.length === 0 ? (
-          <div className="text-center py-16">
-            <FlowerOfLifeIcon size={40} color={color} className="mx-auto mb-3 opacity-30" />
-            <p className="text-brand-muted font-serif italic">This collection is being curated. Check back soon.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-            {items.map(function (item) {
-              const itemId = item.id || item.service_id || item.org_id
-              const title = item.title_6th_grade || item.service_name || item.org_name || ''
-              const summary = item.summary_6th_grade || item.description_5th_grade || ''
-              const image = item.image_url || item.logo_url
-              const href = item.id ? '/content/' + item.id
-                : item.service_id ? '/services/' + item.service_id
-                : item.org_id ? '/organizations/' + item.org_id
-                : '#'
-              const themeColor = item.pathway_primary ? (THEMES as any)[item.pathway_primary]?.color || color : color
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+          <div className="lg:col-span-2">
+            {items.length === 0 ? (
+              <div className="text-center py-16">
+                <FlowerOfLifeIcon size={40} color={color} className="mx-auto mb-3 opacity-30" />
+                <p className="text-brand-muted font-serif italic">This collection is being curated. Check back soon.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {items.map(function (item) {
+                  const itemId = item.id || item.service_id || item.org_id
+                  const title = item.title_6th_grade || item.service_name || item.org_name || ''
+                  const summary = item.summary_6th_grade || item.description_5th_grade || ''
+                  const image = item.image_url || item.logo_url
+                  const href = item.id ? '/content/' + item.id
+                    : item.service_id ? '/services/' + item.service_id
+                    : item.org_id ? '/organizations/' + item.org_id
+                    : '#'
+                  const themeColor = item.pathway_primary ? (THEMES as any)[item.pathway_primary]?.color || color : color
 
-              return (
-                <Link
-                  key={itemId}
-                  href={href}
-                  className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                  style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
-                >
-                  {image ? (
-                    <div className="h-36 overflow-hidden">
-                      <img src={image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </div>
-                  ) : (
-                    <div className="h-3" style={{ backgroundColor: themeColor }} />
-                  )}
-                  <div className="p-4">
-                    <h3 className="font-serif font-bold text-brand-text text-sm leading-tight group-hover:text-brand-accent transition-colors line-clamp-2">
-                      {title}
-                    </h3>
-                    {summary && (
-                      <p className="text-xs text-brand-muted mt-1.5 line-clamp-3">{summary}</p>
-                    )}
-                    {item.source_url && (
-                      <div className="flex items-center gap-1 mt-2 text-[10px] text-brand-muted-light">
-                        <ExternalLink size={10} />
-                        <span className="truncate">{new URL(item.source_url).hostname.replace('www.', '')}</span>
+                  return (
+                    <Link
+                      key={itemId}
+                      href={href}
+                      className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                      style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                    >
+                      {image ? (
+                        <div className="h-36 overflow-hidden">
+                          <img src={image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        </div>
+                      ) : (
+                        <div className="h-3" style={{ backgroundColor: themeColor }} />
+                      )}
+                      <div className="p-4">
+                        <h3 className="font-serif font-bold text-brand-text text-sm leading-tight group-hover:text-brand-accent transition-colors line-clamp-2">
+                          {title}
+                        </h3>
+                        {summary && (
+                          <p className="text-xs text-brand-muted mt-1.5 line-clamp-3">{summary}</p>
+                        )}
+                        {item.source_url && (
+                          <div className="flex items-center gap-1 mt-2 text-[10px] text-brand-muted-light">
+                            <ExternalLink size={10} />
+                            <span className="truncate">{new URL(item.source_url).hostname.replace('www.', '')}</span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </Link>
-              )
-            })}
+                    </Link>
+                  )
+                })}
+              </div>
+            )}
           </div>
-        )}
+          <DetailWayfinder data={wayfinderData} currentType={'collection' as any} currentId={collectionId} userRole={userProfile?.role} />
+        </div>
       </div>
     </div>
   )

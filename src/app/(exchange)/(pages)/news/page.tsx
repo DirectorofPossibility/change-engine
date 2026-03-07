@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { getNewsFeed } from '@/lib/data/exchange'
+import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
 import { FileText, Video, BookOpen, Wrench, GraduationCap, Calendar, Megaphone, Heart, ArrowRight } from 'lucide-react'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
 export const metadata: Metadata = {
@@ -75,7 +78,28 @@ export default async function NewsPage({
   searchParams: Promise<{ pathway?: string; type?: string }>
 }) {
   const { pathway, type } = await searchParams
-  const items = await getNewsFeed(pathway, 80, type || undefined)
+  const cookieStore = await cookies()
+  const userZip = cookieStore.get('zip')?.value || ''
+
+  const rawItems = await getNewsFeed(pathway, 80, type || undefined)
+
+  // When user has a ZIP, look up matching content IDs and sort them to the top
+  let items = rawItems
+  if (userZip && rawItems.length > 0) {
+    const supabase = await createClient()
+    const { data: zipRows } = await supabase
+      .from('content_zip_codes' as any)
+      .select('content_id')
+      .eq('zip_code', userZip)
+    const localIds = new Set((zipRows || []).map(function (r: any) { return r.content_id }))
+    if (localIds.size > 0) {
+      items = [
+        ...rawItems.filter(function (i) { return localIds.has(i.id) }),
+        ...rawItems.filter(function (i) { return !localIds.has(i.id) }),
+      ]
+    }
+  }
+
   const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string }][]
 
   // Split into hero, secondary, and the rest
@@ -365,55 +389,18 @@ export default async function NewsPage({
               </div>
 
               {/* Sidebar */}
-              <aside className="lg:col-span-4">
-                <div className="sticky top-16 space-y-6">
-                  {/* Pathway quick links */}
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
-                    <h3 className="relative text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted mb-3">Browse by Pathway
-                      <WayfinderTooltipPos tipKey="pathway_color_bar" position="bottom" />
-                    </h3>
-                    <div className="space-y-1">
-                      {themeEntries.map(function ([id, theme]) {
-                        const active = pathway === id
-                        return (
-                          <Link
-                            key={id}
-                            href={active ? '/news' + (type ? '?type=' + type : '') : '/news?pathway=' + id + (type ? '&type=' + type : '')}
-                            className="flex items-center gap-2.5 py-1.5 group"
-                          >
-                            <span className="w-3 h-3 rounded-sm flex-shrink-0 transition-transform group-hover:scale-110" style={{ backgroundColor: theme.color }} />
-                            <span className={'text-sm transition-colors ' + (active ? 'font-bold text-brand-text' : 'text-brand-muted group-hover:text-brand-text')}>
-                              {theme.name}
-                            </span>
-                          </Link>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Featured promo */}
+              <aside className="lg:col-span-4 hidden lg:block">
+                <div className="sticky top-24 space-y-4">
+                  <IndexWayfinder
+                    currentPage="news"
+                    color="#319795"
+                    related={[
+                      { label: 'Library', href: '/library' },
+                      { label: 'Events', href: '/calendar' },
+                      { label: 'Pathways', href: '/pathways' },
+                    ]}
+                  />
                   <FeaturedPromo variant="card" />
-
-                  {/* Quick links */}
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
-                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted mb-3">Explore More</h3>
-                    <div className="space-y-2">
-                      {[
-                        { label: 'Research Library', href: '/library', color: '#d69e2e' },
-                        { label: 'Learning Paths', href: '/learn', color: '#3182ce' },
-                        { label: 'Community Bookshelf', href: '/bookshelf', color: '#805ad5' },
-                        { label: 'Civic Glossary', href: '/glossary', color: '#38a169' },
-                      ].map(function (link) {
-                        return (
-                          <Link key={link.href} href={link.href} className="flex items-center gap-2 text-sm text-brand-muted hover:text-brand-text transition-colors group">
-                            <span className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: link.color }} />
-                            {link.label}
-                            <ArrowRight size={12} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </Link>
-                        )
-                      })}
-                    </div>
-                  </div>
                 </div>
               </aside>
             </div>

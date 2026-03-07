@@ -3,9 +3,11 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies, getSDGMap, getSDOHMap, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies, getSDGMap, getSDOHMap, getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUIStrings } from '@/lib/i18n'
 import { Clock, BookOpen, Award, ChevronRight } from 'lucide-react'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getUserProfile } from '@/lib/auth/roles'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { SDGBadge } from '@/components/ui/SDGBadge'
 import { SDOHBadge } from '@/components/ui/SDOHBadge'
@@ -132,6 +134,9 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('learning_path', pathId, userProfile?.role)
+
   const pathName = pathTranslations[pathId]?.title || path.path_name
   const pathDescription = pathTranslations[pathId]?.summary || path.description_5th_grade
 
@@ -210,9 +215,9 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
-        <div className="flex-1 min-w-0">
+        <div className="lg:col-span-2">
           {/* Prerequisite */}
           {prerequisitePath && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
@@ -292,7 +297,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         </div>
 
         {/* Sidebar — Knowledge Mesh Connections */}
-        <aside className="lg:w-80 shrink-0 space-y-6">
+        <aside className="space-y-6">
+          <DetailWayfinder data={wayfinderData} currentType="learning_path" currentId={pathId} userRole={userProfile?.role} />
           {/* Focus Areas */}
           {focusAreas.length > 0 && (
             <div className="bg-white rounded-xl border border-brand-border p-4">

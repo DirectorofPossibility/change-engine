@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Heart, ExternalLink } from 'lucide-react'
 
 export const revalidate = 300
@@ -24,25 +26,43 @@ export default async function BenefitsPage() {
       <PageHero variant="sacred" sacredPattern="flower" gradientColor="#38a169" title="Benefit Programs" subtitle="Government programs that provide financial assistance, food, healthcare, and other support to eligible Houston-area residents." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Benefits' }]} />
-        <div className="space-y-4 mt-4">
-          {(benefits || []).map(function (b) {
-            return (
-              <Link key={b.benefit_id} href={`/benefits/${b.benefit_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
-                <div className="flex items-start gap-3">
-                  <Heart className="w-5 h-5 text-theme-health mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-brand-text">{b.benefit_name}</h3>
-                    {b.description_5th_grade && <p className="text-sm text-brand-muted mt-1 line-clamp-2">{b.description_5th_grade}</p>}
-                    <div className="flex flex-wrap gap-3 mt-2 text-xs text-brand-muted">
-                      {b.benefit_type && <span className="bg-brand-bg px-2 py-0.5 rounded">{b.benefit_type}</span>}
-                      {b.benefit_amount && <span className="font-medium text-theme-money">{b.benefit_amount}</span>}
-                      {b.application_url && <span className="flex items-center gap-1 text-brand-accent"><ExternalLink className="w-3 h-3" />Apply online</span>}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 mt-4">
+          <div>
+            <div className="space-y-4">
+              {(benefits || []).map(function (b) {
+                return (
+                  <Link key={b.benefit_id} href={`/benefits/${b.benefit_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+                    <div className="flex items-start gap-3">
+                      <Heart className="w-5 h-5 text-theme-health mt-0.5 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-brand-text">{b.benefit_name}</h3>
+                        {b.description_5th_grade && <p className="text-sm text-brand-muted mt-1 line-clamp-2">{b.description_5th_grade}</p>}
+                        <div className="flex flex-wrap gap-3 mt-2 text-xs text-brand-muted">
+                          {b.benefit_type && <span className="bg-brand-bg px-2 py-0.5 rounded">{b.benefit_type}</span>}
+                          {b.benefit_amount && <span className="font-medium text-theme-money">{b.benefit_amount}</span>}
+                          {b.application_url && <span className="flex items-center gap-1 text-brand-accent"><ExternalLink className="w-3 h-3" />Apply online</span>}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+          <div className="hidden lg:block">
+            <div className="sticky top-24 space-y-4">
+              <IndexWayfinder
+                currentPage="benefits"
+                color="#38a169"
+                related={[
+                  { label: 'Services', href: '/services' },
+                  { label: 'Agencies', href: '/agencies' },
+                  { label: 'Available Resources', href: '/help' },
+                ]}
+              />
+              <FeaturedPromo variant="card" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

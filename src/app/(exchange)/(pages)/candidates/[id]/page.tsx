@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { User, Globe, Mail, Phone, ExternalLink } from 'lucide-react'
 
 export const revalidate = 300
@@ -18,8 +21,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function CandidateDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: c } = await supabase.from('candidates').select('*').eq('candidate_id', id).single()
+  const [{ data: c }, userProfile] = await Promise.all([
+    supabase.from('candidates').select('*').eq('candidate_id', id).single(),
+    getUserProfile(),
+  ])
   if (!c) notFound()
+  const wayfinderData = await getWayfinderContext('candidate' as any, id, userProfile?.role)
 
   return (
     <div>
@@ -44,6 +51,8 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
         </div>
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {c.bio_summary && (
             <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
@@ -67,6 +76,11 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
               {c.endorsements && <p className="text-sm text-brand-muted mt-2">{c.endorsements}</p>}
             </div>
           )}
+        </div>
+        </div>
+        <div>
+          <DetailWayfinder data={wayfinderData} currentType={'candidate' as any} currentId={id} userRole={userProfile?.role} />
+        </div>
         </div>
       </div>
     </div>

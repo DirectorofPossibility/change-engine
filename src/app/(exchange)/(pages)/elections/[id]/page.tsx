@@ -11,6 +11,9 @@ import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
 import { VotingLocationsMap } from '@/components/exchange/VotingLocationsMap'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 3600
 
@@ -37,10 +40,12 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
   if (!election) notFound()
 
-  const [candidatesRes, ballotRes, locationsRes] = await Promise.all([
+  const userProfile = await getUserProfile()
+  const [candidatesRes, ballotRes, locationsRes, wayfinderData] = await Promise.all([
     supabase.from('candidates').select('*').eq('election_id', id).eq('is_active', 'Yes'),
     supabase.from('ballot_items').select('*').eq('election_id', id),
     supabase.from('voting_locations').select('*').eq('election_id', id).eq('is_active', 'Yes'),
+    getWayfinderContext('election' as any, id, userProfile?.role),
   ])
 
   const candidates = candidatesRes.data || []
@@ -69,6 +74,9 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
         { label: 'Elections', href: '/elections' },
         { label: election.election_name }
       ]} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="lg:col-span-2">
 
       {/* Countdown banner */}
       <div className="mb-8">
@@ -243,6 +251,11 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           </div>
         </section>
       )}
+      </div>
+      <div>
+        <DetailWayfinder data={wayfinderData} currentType={'election' as any} currentId={id} userRole={userProfile?.role} />
+      </div>
+      </div>
     </div>
   )
 }
