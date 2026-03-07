@@ -106,7 +106,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted mb-6 max-w-lg">
                 Houston has everything — the organizations, the officials, the resources, the people doing the work.{' '}
-                <strong className="text-brand-text">We made it findable.</strong>
+                <strong className="text-brand-text">Where do you want to jump in?</strong>
               </p>
 
               <HeroZipInput />
@@ -169,6 +169,23 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
                   style={{ width: '250px', height: '180px', bottom: '0', left: '10px', transform: 'rotate(1.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
                   <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
+                </div>
+
+                {/* Fact bubbles */}
+                <div className="absolute bg-white rounded-xl px-3 py-2 border-2 border-brand-border text-center"
+                  style={{ top: '8px', left: '40px', zIndex: 10, boxShadow: '2px 2px 0 #D5D0C8', transform: 'rotate(-2deg)' }}>
+                  <span className="block font-hand text-[28px] font-bold leading-none" style={{ color: '#C75B2A' }}>90%</span>
+                  <span className="block text-[9px] text-brand-muted font-medium leading-tight max-w-[100px]">feel responsible to help</span>
+                </div>
+                <div className="absolute bg-white rounded-xl px-3 py-2 border-2 border-brand-border text-center"
+                  style={{ top: '160px', right: '0', zIndex: 10, boxShadow: '2px 2px 0 #D5D0C8', transform: 'rotate(1.5deg)' }}>
+                  <span className="block font-hand text-[28px] font-bold leading-none" style={{ color: '#c43c4c' }}>37%</span>
+                  <span className="block text-[9px] text-brand-muted font-medium leading-tight max-w-[100px]">don&apos;t know where to start</span>
+                </div>
+                <div className="absolute bg-white rounded-xl px-3 py-2 border-2 border-brand-border text-center"
+                  style={{ bottom: '20px', right: '60px', zIndex: 10, boxShadow: '2px 2px 0 #D5D0C8', transform: 'rotate(-1deg)' }}>
+                  <span className="block font-hand text-[28px] font-bold leading-none" style={{ color: '#38a169' }}>28%</span>
+                  <span className="block text-[9px] text-brand-muted font-medium leading-tight max-w-[100px]">actually volunteer</span>
                 </div>
               </div>
             </div>
