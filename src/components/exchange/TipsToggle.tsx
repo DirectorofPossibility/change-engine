@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Info } from 'lucide-react'
 
 const TOGGLE_KEY = 'ce-tips-enabled'
-const STORAGE_KEY = 'ce-dismissed-tips'
 
 export function TipsToggle() {
   const [enabled, setEnabled] = useState(true)
@@ -20,7 +19,6 @@ export function TipsToggle() {
     if (!next) {
       window.dispatchEvent(new CustomEvent('ce-tips-toggle', { detail: { enabled: false } }))
     } else {
-      localStorage.removeItem(STORAGE_KEY)
       window.location.reload()
     }
   }

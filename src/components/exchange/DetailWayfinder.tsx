@@ -11,6 +11,7 @@ import type { WayfinderData } from '@/lib/types/exchange'
 import { getNeighborhoodByZip } from '@/lib/data/exchange'
 import { CompactCircleGraph } from './CompactCircleGraph'
 import { WayfinderTooltipPos } from './WayfinderTooltips'
+import { WayfinderTracker } from './WayfinderTracker'
 
 interface DetailWayfinderProps {
   data: WayfinderData
@@ -96,6 +97,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
   return (
     <aside className="bg-white rounded-xl border-2 border-brand-border lg:sticky lg:top-24">
+      <WayfinderTracker entityType={currentType} entityId={currentId} />
       {/* Header */}
       <div className="p-4 border-b border-brand-border relative">
         <h3 className="font-serif text-base font-semibold text-brand-text tracking-wide">

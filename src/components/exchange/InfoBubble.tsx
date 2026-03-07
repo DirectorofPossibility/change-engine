@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { X, Info } from 'lucide-react'
 
-const STORAGE_KEY = 'ce-dismissed-tips'
 const TOGGLE_KEY = 'ce-tips-enabled'
 
 /** Check if tips are globally enabled (default: true) */
@@ -12,25 +11,10 @@ function areTipsEnabled(): boolean {
   return localStorage.getItem(TOGGLE_KEY) !== 'false'
 }
 
-function getDismissed(): string[] {
-  if (typeof window === 'undefined') return []
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-  } catch { return [] }
-}
-
-function dismiss(id: string) {
-  const list = getDismissed()
-  if (!list.includes(id)) {
-    list.push(id)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
-  }
-}
-
 interface InfoBubbleProps {
   id: string
   text: string
-  /** Where the bubble appears relative to its positioned parent */
+  /** Where the bubble appears relative to the icon */
   position?: 'top' | 'bottom' | 'left' | 'right'
   /** Horizontal alignment for top/bottom positions */
   align?: 'center' | 'start' | 'end'
@@ -38,33 +22,50 @@ interface InfoBubbleProps {
 }
 
 export function InfoBubble({ id, text, position = 'bottom', align = 'start', accent = '#C75B2A' }: InfoBubbleProps) {
-  const [visible, setVisible] = useState(false)
+  const [enabled, setEnabled] = useState(false)
+  const [open, setOpen] = useState(false)
+  const wrapperRef = useRef<HTMLSpanElement>(null)
 
   useEffect(function () {
-    const timer = setTimeout(function () {
-      if (areTipsEnabled() && !getDismissed().includes(id)) {
-        setVisible(true)
-      }
-    }, 300)
-    return function () { clearTimeout(timer) }
-  }, [id])
+    setEnabled(areTipsEnabled())
+  }, [])
 
-  // Listen for global toggle-off
+  // Listen for global toggle
   useEffect(function () {
     function handleToggle(e: Event) {
       const detail = (e as CustomEvent).detail
-      if (detail && !detail.enabled) setVisible(false)
+      if (detail && !detail.enabled) {
+        setEnabled(false)
+        setOpen(false)
+      }
     }
     window.addEventListener('ce-tips-toggle', handleToggle)
     return function () { window.removeEventListener('ce-tips-toggle', handleToggle) }
   }, [])
 
-  if (!visible) return null
+  // Close on click outside
+  useEffect(function () {
+    if (!open) return
+    function handleClick(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return function () { document.removeEventListener('mousedown', handleClick) }
+  }, [open])
 
-  function handleDismiss() {
-    setVisible(false)
-    dismiss(id)
-  }
+  // Close on Escape
+  useEffect(function () {
+    if (!open) return
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', handleKey)
+    return function () { document.removeEventListener('keydown', handleKey) }
+  }, [open])
+
+  if (!enabled) return null
 
   const alignClass = align === 'center'
     ? 'left-1/2 -translate-x-1/2'
@@ -93,36 +94,44 @@ export function InfoBubble({ id, text, position = 'bottom', align = 'start', acc
   }
 
   return (
-    <div
-      className={'absolute z-50 animate-fade-up ' + arrowMap[position]}
-      style={{ maxWidth: 300, minWidth: 200 }}
-    >
-      <div className="bg-white rounded-xl shadow-lg border-2 border-brand-border p-3.5 relative">
-        {/* Accent bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl" style={{ background: accent }} />
+    <span ref={wrapperRef} className="relative inline-flex items-center">
+      <button
+        onClick={function () { setOpen(!open) }}
+        className="inline-flex items-center justify-center w-4 h-4 rounded-full border border-brand-border hover:border-brand-muted transition-colors"
+        aria-label={'Tip: ' + id}
+        aria-expanded={open}
+      >
+        <Info size={10} style={{ color: accent }} />
+      </button>
 
-        <div className="flex gap-2.5 items-start pt-1">
-          <Info size={14} className="flex-shrink-0 mt-0.5" style={{ color: accent }} />
-          <p className="text-[13px] leading-relaxed text-brand-text flex-1">{text}</p>
-          <button
-            onClick={handleDismiss}
-            className="flex-shrink-0 p-0.5 rounded hover:bg-brand-bg-alt transition-colors"
-            aria-label="Dismiss tip"
-          >
-            <X size={14} className="text-brand-muted" />
-          </button>
+      {open && (
+        <div
+          className={'absolute z-50 animate-fade-up ' + arrowMap[position]}
+          style={{ maxWidth: 300, minWidth: 200 }}
+        >
+          <div className="bg-white rounded-xl shadow-lg border-2 border-brand-border p-3.5 relative">
+            <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl" style={{ background: accent }} />
+            <div className="flex gap-2.5 items-start pt-1">
+              <Info size={14} className="flex-shrink-0 mt-0.5" style={{ color: accent }} />
+              <p className="text-[13px] leading-relaxed text-brand-text flex-1">{text}</p>
+              <button
+                onClick={function () { setOpen(false) }}
+                className="flex-shrink-0 p-0.5 rounded hover:bg-brand-bg-alt transition-colors"
+                aria-label="Close tip"
+              >
+                <X size={14} className="text-brand-muted" />
+              </button>
+            </div>
+          </div>
+          <div className={'absolute w-0 h-0 border-[6px] ' + caretMap[position]} />
         </div>
-      </div>
-      {/* Caret */}
-      <div className={'absolute w-0 h-0 border-[6px] ' + caretMap[position]} />
-    </div>
+      )}
+    </span>
   )
 }
 
-/** Reset all dismissed tooltips — useful for testing */
+/** Reset all dismissed tooltips — kept for API compatibility */
 export function resetAllTips() {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem(STORAGE_KEY)
-  }
+  // No-op: tips are now click-to-open, no dismiss state needed
 }
 
