@@ -5,6 +5,7 @@
  * data sources and passes them to the GuidePage client component.
  */
 import { Metadata } from 'next'
+import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import {
   getExchangeStats,
   getLatestContent,
@@ -57,11 +58,14 @@ export default async function GuidePageServer() {
 
   return (
     <>
+      <IndexPageHero
+        title="Your guide to what's going on."
+        subtitle="Curated. Local. Updated daily."
+        intro="News. Analysis. Community stories. Explainers about how Houston works. Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you. Pick your perspective below."
+        color="#C75B2A"
+        pattern="flower"
+      />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <p className="text-sm text-brand-muted mb-2 font-mono uppercase tracking-widest">What&apos;s happening in Houston civic life. Written so anyone can understand it.</p>
-        <h2 className="font-serif text-xl font-bold tracking-tight mb-1">Your guide to what&apos;s going on.</h2>
-        <p className="text-sm text-brand-muted mb-2 font-serif italic">Curated. Local. Updated daily.</p>
-        <p className="text-sm text-brand-muted mb-4 leading-relaxed max-w-[640px]">News. Analysis. Community stories. Explainers about how Houston works. Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you. Pick your perspective below.</p>
         <PersonaSelector />
       </div>
       <GuidePage

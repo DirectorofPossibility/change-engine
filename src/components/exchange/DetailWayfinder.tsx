@@ -149,14 +149,14 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
           <div className="flex flex-wrap gap-1.5">
             {data.focusAreas.map(function (fa) {
               const themeKey = fa.theme_id as keyof typeof THEMES | null
-              const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
+              const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
               return (
                 <Link
                   key={fa.focus_id}
                   href={'/explore/focus/' + fa.focus_id}
                   className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-accent transition-colors"
                 >
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color || '#8B7E74' }} />
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color || '#6B6560' }} />
                   {fa.focus_area_name}
                 </Link>
               )
@@ -308,16 +308,16 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ConnectionContext focusAreas={data.focusAreas} />
             {newsContent.map(function (c) {
               const themeKey = c.pathway_primary as keyof typeof THEMES | null
-              const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
+              const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
               return (
                 <Link key={c.id} href={'/content/' + c.id} className="flex gap-2 group/card">
                   {c.image_url ? (
                     <img src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0" />
                   ) : (
-                    <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#8B7E74') + '20' }} />
+                    <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#6B6560') + '20' }} />
                   )}
                   <div className="min-w-0">
-                    <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ backgroundColor: color || '#8B7E74' }} />
+                    <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ backgroundColor: color || '#6B6560' }} />
                     <span className="text-xs font-medium text-brand-text group-hover/card:text-brand-accent transition-colors line-clamp-2">
                       {c.title_6th_grade || 'Untitled'}
                     </span>
@@ -362,7 +362,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ConnectionContext focusAreas={data.focusAreas} />
             {eventContent.map(function (c) {
               const themeKey = c.pathway_primary as keyof typeof THEMES | null
-              const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
+              const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
               return (
                 <Link key={c.id} href={'/content/' + c.id} className="flex items-start gap-2 group/evt">
                   <Calendar size={12} className="text-green-600 mt-0.5 flex-shrink-0" />

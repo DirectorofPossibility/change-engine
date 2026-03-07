@@ -31,7 +31,7 @@ const PATHWAY_GRADIENTS: Record<string, { from: string; to: string }> = {
 }
 
 /** Default gradient used when no pathway is specified. */
-const DEFAULT_GRADIENT = { from: '#8B7E74', to: '#6b5e52' }
+const DEFAULT_GRADIENT = { from: '#9B9590', to: '#6B6560' }
 
 interface ContentCardProps {
   id: string

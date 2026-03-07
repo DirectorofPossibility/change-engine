@@ -49,10 +49,7 @@ export function ChanceChatWidget() {
           <div className="w-14 h-14 rounded-full bg-brand-accent shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
             <MessageCircle size={24} className="text-white" />
           </div>
-          {/* Pulse ring */}
-          {!hasOpened && (
-            <span className="absolute inset-0 rounded-full bg-brand-accent/30 animate-ping" />
-          )}
+          {/* Pulse ring removed — too distracting */}
           {/* Label */}
           <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-text text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
             Chat with Chance
@@ -69,7 +66,7 @@ export function ChanceChatWidget() {
       <div className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-50">
         <button
           onClick={function () { setIsMinimized(false) }}
-          className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+          className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
         >
           <MessageCircle size={16} />
           <span className="text-sm font-medium">Chance</span>

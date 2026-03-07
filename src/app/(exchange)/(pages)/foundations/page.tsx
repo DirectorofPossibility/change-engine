@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import FoundationsGalaxy from './FoundationsGalaxy'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
@@ -18,18 +19,15 @@ export default function FoundationsPage() {
           { label: 'Foundations' }
         ]} />
       </div>
+      <IndexPageHero
+        title="The foundations funding Houston — all in one place."
+        subtitle="They fund the work. We make it findable."
+        intro="Houston has one of the most generous philanthropic communities in the country. Health. Education. Housing. Arts. Civic life. There are hundreds of foundations working on all of it. Most people never know they exist. This page changes that."
+        color="#C75B2A"
+        pattern="metatron"
+      />
+      <WayfinderTooltipPos tipKey="foundation_galaxy" position="bottom" />
       <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-        <p className="text-sm font-semibold text-brand-accent mb-2">Billions of dollars are invested in Houston every year. Most residents have no idea.</p>
-        <h1 className="text-3xl font-serif font-bold text-brand-text mb-1">The foundations funding Houston — all in one place.</h1>
-        <WayfinderTooltipPos tipKey="foundation_galaxy" position="bottom" />
-        <p className="text-sm font-semibold text-brand-muted mb-3">They fund the work. We make it findable.</p>
-        <div className="text-brand-muted max-w-2xl space-y-3 mb-6">
-          <p>
-            Houston has one of the most generous philanthropic communities in the country. Health. Education. Housing. Arts. Civic life. There are hundreds of foundations working on all of it.
-          </p>
-          <p>Most people never know they exist.</p>
-          <p>This page changes that.</p>
-        </div>
         <div className="max-w-2xl mb-6">
           <h2 className="text-lg font-serif font-bold text-brand-text mb-3">What You Can Do</h2>
           <ul className="space-y-2 text-brand-muted">

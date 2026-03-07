@@ -16,22 +16,22 @@ interface PolicyCardProps {
   onSelect?: () => void
 }
 
-function statusDot(status: string | null): string {
-  if (!status) return 'bg-gray-400'
+function statusDotColor(status: string | null): string {
+  if (!status) return '#9B9590'
   const s = status.toLowerCase()
-  if (s === 'passed' || s === 'enacted' || s === 'signed') return 'bg-green-500'
-  if (s === 'pending' || s === 'introduced' || s === 'in committee') return 'bg-yellow-500'
-  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'bg-red-500'
-  return 'bg-gray-400'
+  if (s === 'passed' || s === 'enacted' || s === 'signed') return '#2D8659'
+  if (s === 'pending' || s === 'introduced' || s === 'in committee') return '#C47D1A'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return '#C53030'
+  return '#9B9590'
 }
 
-function statusText(status: string | null): string {
-  if (!status) return 'text-gray-600'
+function statusTextColor(status: string | null): string {
+  if (!status) return '#6B6560'
   const s = status.toLowerCase()
-  if (s === 'passed' || s === 'enacted' || s === 'signed') return 'text-green-700'
-  if (s === 'pending' || s === 'introduced' || s === 'in committee') return 'text-yellow-700'
-  if (s === 'failed' || s === 'vetoed' || s === 'dead') return 'text-red-700'
-  return 'text-gray-600'
+  if (s === 'passed' || s === 'enacted' || s === 'signed') return '#2D8659'
+  if (s === 'pending' || s === 'introduced' || s === 'in committee') return '#C47D1A'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return '#C53030'
+  return '#6B6560'
 }
 
 export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl, translatedName, translatedSummary, impactPreview, onSelect }: PolicyCardProps) {
@@ -49,8 +49,8 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
           <span className="text-xs font-mono text-brand-muted">{billNumber}</span>
         )}
         {status && (
-          <Link href={'/search?q=' + encodeURIComponent(status)} className={`inline-flex items-center gap-1.5 text-xs font-medium hover:opacity-80 transition-opacity ${statusText(status)}`} onClick={function (e) { e.stopPropagation() }}>
-            <span className={`w-1.5 h-1.5 rounded-full ${statusDot(status)}`} />
+          <Link href={'/search?q=' + encodeURIComponent(status)} className="inline-flex items-center gap-1.5 text-xs font-medium hover:opacity-80 transition-opacity" style={{ color: statusTextColor(status) }} onClick={function (e) { e.stopPropagation() }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusDotColor(status) }} />
             {status}
           </Link>
         )}

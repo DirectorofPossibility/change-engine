@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { PageHero } from '@/components/exchange/PageHero'
+import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { THEMES } from '@/lib/constants'
 
 export const revalidate = 300
@@ -25,12 +25,11 @@ export default async function LearningPathsPage() {
 
   return (
     <div>
-      <PageHero
-        variant="sacred"
-        sacredPattern="tripod"
-        gradientColor="#3182ce"
+      <IndexPageHero
         title="Learning Paths"
         subtitle="Structured journeys to deepen your understanding of civic life"
+        color="#3182ce"
+        pattern="tripod"
       />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Learning Paths' }]} />
