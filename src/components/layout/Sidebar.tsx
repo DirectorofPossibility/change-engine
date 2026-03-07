@@ -12,7 +12,7 @@ import {
   LogOut, Compass, BookMarked, Quote, Library,
   ChevronDown, Rss, Scale, Megaphone, Key,
   Tag, Network, Linkedin, CircleDot, Map,
-  Settings, Layers,
+  Settings, Layers, Activity,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -60,6 +60,7 @@ const ADMIN_GROUPS: NavGroup[] = [
       { href: '/dashboard/graph-coverage', label: 'Coverage Map', icon: Map },
       { href: '/dashboard/circles', label: 'Circle Graph', icon: CircleDot },
       { href: '/dashboard/fidelity', label: 'Fidelity Check', icon: Layers },
+      { href: '/dashboard/analytics', label: 'Engagement', icon: Activity },
     ],
   },
   {

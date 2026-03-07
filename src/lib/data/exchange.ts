@@ -1857,6 +1857,10 @@ export async function getWayfinderContext(
   } else if (entityType === 'municipal_service') {
     const { data } = await (supabase as any).from('municipal_service_focus_areas').select('focus_id').eq('municipal_service_id', entityId)
     focusIds = (data ?? []).map((j: any) => j.focus_id)
+  } else if (entityType === 'ballot_item') {
+    const { data } = await (supabase as any).from('ballot_items').select('focus_area_ids').eq('item_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
   } else if (entityType === 'election') {
     // Elections don't have focus areas directly — aggregate from their candidates
     const { data: cands } = await (supabase as any).from('candidates').select('candidate_id').eq('election_id', entityId)
@@ -2083,6 +2087,35 @@ export async function getWayfinderContext(
       govLevel: null,
       timeCommitment: null,
       ntee_codes,
+      airs_codes: [],
+    }
+  } else if (entityType === 'ballot_item') {
+    const sdgs = await resolveSDGs('ballot_item_sdgs', 'item_id', entityId)
+    const { data: biRow } = await (supabase as any).from('ballot_items').select('jurisdiction').eq('item_id', entityId).single()
+    // Map jurisdiction to gov level
+    let govLevel = null
+    if (biRow?.jurisdiction) {
+      const { data: gl } = await supabase.from('government_levels').select('gov_level_id, gov_level_name').ilike('gov_level_name', `%${biRow.jurisdiction}%`).limit(1)
+      if (gl && gl.length > 0) govLevel = gl[0]
+    }
+    taxonomy = {
+      sdgs,
+      sdohDomain: null,
+      actionTypes: [],
+      govLevel,
+      timeCommitment: null,
+      ntee_codes: [],
+      airs_codes: [],
+    }
+  } else if (entityType === 'election' || entityType === 'neighborhood' || entityType === 'super_neighborhood') {
+    // Minimal taxonomy for these entity types
+    taxonomy = {
+      sdgs: [],
+      sdohDomain: null,
+      actionTypes: [],
+      govLevel: null,
+      timeCommitment: null,
+      ntee_codes: [],
       airs_codes: [],
     }
   }
