@@ -33,7 +33,7 @@ interface D2HomeProps {
     title?: string | null
     summary_6th_grade?: string | null
     image_url?: string | null
-    source_name?: string | null
+    source_org_name?: string | null
     published_at?: string | null
   }>
   centerCounts: Record<string, number>
@@ -188,7 +188,7 @@ export function D2Home({ stats, pathwayCounts, newThisWeek, latestContent, organ
             <Link href={'/content/' + featured.id} className="card-chunky p-0 overflow-hidden group">
               {featured.image_url && (
                 <div className="h-48 overflow-hidden">
-                  <img src={featured.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={featured.image_url} alt={featured.title_6th_grade || featured.title || ''} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
               )}
               <div className="p-5">
@@ -198,7 +198,7 @@ export function D2Home({ stats, pathwayCounts, newThisWeek, latestContent, organ
                 {featured.summary_6th_grade && (
                   <p className="text-sm text-brand-muted leading-relaxed line-clamp-2">{featured.summary_6th_grade}</p>
                 )}
-                {featured.source_name && <p className="meta-source mt-2">{featured.source_name}</p>}
+                {featured.source_org_name && <p className="meta-source mt-2">{featured.source_org_name}</p>}
               </div>
             </Link>
 
@@ -209,14 +209,14 @@ export function D2Home({ stats, pathwayCounts, newThisWeek, latestContent, organ
                   <Link key={item.id} href={'/content/' + item.id} className="card-chunky flex gap-3 group">
                     {item.image_url && (
                       <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                        <img src={item.image_url} alt={item.title_6th_grade || item.title || ''} className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-sans text-sm font-bold text-brand-text leading-snug line-clamp-2">
                         {item.title_6th_grade || item.title}
                       </h4>
-                      {item.source_name && <p className="meta-source mt-1">{item.source_name}</p>}
+                      {item.source_org_name && <p className="meta-source mt-1">{item.source_org_name}</p>}
                     </div>
                   </Link>
                 )
