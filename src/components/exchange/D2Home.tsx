@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import { FlowerOfLifeIcon } from './FlowerIcons'
-import { FOLWatermark } from './FOLWatermark'
 import { FeaturedPromo } from './FeaturedPromo'
 import { GoodThingsWidget } from './GoodThingsWidget'
 import { InfoBubble } from './InfoBubble'
@@ -13,50 +11,37 @@ const QUICK_ACCESS = [
     label: 'Chart Your Course',
     sub: 'Choose your own adventure',
     href: '/compass',
-    gradient: '',
+    image: '/images/editorial/community-meeting.jpg',
+    color: '#C75B2A',
     cta: true,
-    fol: 'flower' as const,
-    folImage: '/images/fol/flower-full.svg',
   },
   {
     label: 'Library',
     sub: 'Read. Learn. Go deeper.',
     href: '/library',
-    gradient: 'linear-gradient(135deg,#2b6cb0 0%,#4299e1 100%)',
-    fol: 'vesica' as const,
-    folImage: '/images/fol/vesica-piscis.svg',
-    folImage2: '/images/fol/seed-of-life.svg',
-    lensColor: 'rgba(66,153,225,0.5)',
+    image: '/images/editorial/person-reading.jpg',
+    color: '#2b6cb0',
   },
   {
     label: 'News',
     sub: 'What\'s happening in Houston.',
     href: '/news',
-    gradient: 'linear-gradient(135deg,#553c9a 0%,#7c5cbf 100%)',
-    fol: 'metatron' as const,
-    folImage: '/images/fol/metatrons-cube.svg',
-    folImage2: '/images/fol/genesis.svg',
-    lensColor: 'rgba(124,92,191,0.5)',
+    image: '/images/editorial/town-hall.jpg',
+    color: '#553c9a',
   },
   {
     label: 'Ask Chance',
     sub: 'Your civic AI guide',
     href: '/chat',
-    gradient: 'linear-gradient(135deg,#c05621 0%,#ed8936 100%)',
-    fol: 'seed' as const,
-    folImage: '/images/fol/seed-of-life.svg',
-    folImage2: '/images/fol/flower-full.svg',
-    lensColor: 'rgba(237,137,54,0.5)',
+    image: '/images/editorial/two-people-talking.jpg',
+    color: '#c05621',
   },
   {
     label: 'Events',
     sub: "What's happening near you",
     href: '/calendar',
-    gradient: 'linear-gradient(135deg,#276749 0%,#48bb78 100%)',
-    fol: 'tripod' as const,
-    folImage: '/images/fol/tripod-of-life.svg',
-    folImage2: '/images/fol/vesica-piscis.svg',
-    lensColor: 'rgba(72,187,120,0.5)',
+    image: '/images/editorial/volunteers.jpg',
+    color: '#276749',
   },
 ]
 
@@ -196,133 +181,46 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         <FeaturedPromo variant="banner" />
       </div>
 
-      {/* ── QUICK ACCESS GRID — 5 cards with unique FOL patterns ── */}
+      {/* ── QUICK ACCESS GRID — 5 image-backed cards ── */}
       <div className="max-w-[1200px] mx-auto px-8 pt-3 pb-4">
         <div className="relative inline-block mb-4">
           <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {QUICK_ACCESS.map(function (item, idx) {
-            if (item.cta) {
-              // "Chart Your Course" — Choose Your Own Adventure style
-              return (
-                <div key={item.label} className="relative col-span-2 md:col-span-1">
-                  <InfoBubble id={TOOLTIPS.persona_cards.id} text={TOOLTIPS.persona_cards.text} position="bottom" />
-                  <Link
-                    href={item.href}
-                    className="relative aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-3"
-                  style={{
-                    background: 'linear-gradient(145deg, #F0ECE6 0%, #E8E2D8 50%, #F0ECE6 100%)',
-                    border: '3px solid #C75B2A',
-                    boxShadow: '4px 4px 0 #C75B2A40',
-                  }}
-                >
-                  {/* Pulsing FOL background */}
-                  <img
-                    src="/images/fol/flower-full.svg"
-                    alt="" aria-hidden="true"
-                    className="absolute top-1/2 left-1/2 w-[200px] h-[200px] pointer-events-none animate-fol-pulse-cta group-hover:opacity-[0.35] group-hover:scale-[1.15] group-hover:rotate-[30deg] transition-all duration-700"
-                    style={{ opacity: 0.08 }}
-                  />
-                  {/* Second layer — counter-rotating seed */}
-                  <img
-                    src="/images/fol/genesis.svg"
-                    alt="" aria-hidden="true"
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[120px] pointer-events-none opacity-[0.06] group-hover:opacity-[0.12] group-hover:scale-[0.9] group-hover:rotate-[-15deg] transition-all duration-500"
-                    style={{ animation: 'fol-pulse 5s ease-in-out infinite reverse' }}
-                  />
-
-                  {/* Lens flare accents */}
-                  <div className="absolute top-[20%] left-[15%] w-3 h-3 rounded-full pointer-events-none animate-lens-drift" style={{ background: 'radial-gradient(circle, rgba(199,91,42,0.7) 0%, transparent 70%)' }} />
-                  <div className="absolute top-[60%] right-[20%] w-2 h-2 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%)', animation: 'lens-drift 8s ease-in-out 2s infinite' }} />
-                  <div className="absolute top-[35%] right-[30%] w-4 h-4 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(128,90,213,0.4) 0%, transparent 70%)', animation: 'lens-drift 7s ease-in-out 1s infinite' }} />
-
-                  {/* Geometric grid lines */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.06] group-hover:opacity-[0.10] transition-opacity duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <line x1="0" y1="50" x2="100" y2="50" stroke="#C75B2A" strokeWidth="0.3" />
-                    <line x1="50" y1="0" x2="50" y2="100" stroke="#C75B2A" strokeWidth="0.3" />
-                    <line x1="0" y1="0" x2="100" y2="100" stroke="#C75B2A" strokeWidth="0.2" />
-                    <line x1="100" y1="0" x2="0" y2="100" stroke="#C75B2A" strokeWidth="0.2" />
-                    <circle cx="50" cy="50" r="35" fill="none" stroke="#C75B2A" strokeWidth="0.2" />
-                    <circle cx="50" cy="50" r="20" fill="none" stroke="#C75B2A" strokeWidth="0.15" />
-                  </svg>
-
-                  {/* Adventure book corner fold */}
-                  <div className="absolute top-0 right-0 w-10 h-10 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-14 h-14 bg-brand-accent/20 transform rotate-45 translate-x-4 -translate-y-4" />
-                  </div>
-
-                  {/* Page number */}
-                  <span className="absolute top-2.5 left-3 font-mono text-[9px] font-bold text-brand-muted-light/40 tracking-widest">PAGE 1</span>
-
-                  <span className="relative z-[2] font-hand text-[22px] font-bold text-brand-text text-center leading-tight group-hover:scale-105 transition-transform">
-                    Chart Your<br />Course
-                  </span>
-                  <span className="relative z-[2] text-[11px] text-brand-muted mt-1.5 text-center px-3 group-hover:text-brand-text transition-colors">
-                    Choose your own adventure
-                  </span>
-
-                  {/* Arrow indicator */}
-                  <div className="absolute bottom-3 right-3 w-6 h-6 rounded-full bg-brand-accent/30 flex items-center justify-center group-hover:bg-brand-accent/60 transition-colors">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-                  </div>
-                  </Link>
-                </div>
-              )
-            }
-
-            const delay = idx * 0.8
+          {QUICK_ACCESS.map(function (item) {
             return (
               <Link
                 key={item.label}
                 href={item.href}
-                className="relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
-                style={{ background: item.gradient }}
+                className={'relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-2' + (item.cta ? ' col-span-2 md:col-span-1' : '')}
+                style={{ aspectRatio: '1', borderColor: item.color + '40', boxShadow: '3px 3px 0 ' + item.color + '25' }}
               >
-                {/* Primary FOL — pulsing */}
+                {item.cta && (
+                  <div className="relative inline-block" style={{ position: 'absolute', top: 4, left: 4, zIndex: 5 }}>
+                    <InfoBubble id={TOOLTIPS.persona_cards.id} text={TOOLTIPS.persona_cards.text} position="bottom" />
+                  </div>
+                )}
+                {/* Background image */}
                 <img
-                  src={item.folImage}
-                  alt="" aria-hidden="true"
-                  className="absolute top-1/2 left-1/2 w-[160px] h-[160px] pointer-events-none animate-fol-pulse group-hover:opacity-[0.28] group-hover:scale-[1.12] group-hover:rotate-[15deg] transition-all duration-500"
-                  style={{ filter: 'brightness(10)', animationDelay: delay + 's' }}
+                  src={item.image}
+                  alt={item.label}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                {/* Secondary geometry — smaller, offset, counter-pulse */}
-                <img
-                  src={(item as any).folImage2 || item.folImage}
-                  alt="" aria-hidden="true"
-                  className="absolute pointer-events-none opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500"
-                  style={{
-                    filter: 'brightness(10)',
-                    width: '80px', height: '80px',
-                    top: '8px', right: '8px',
-                    animation: 'fol-pulse 5s ease-in-out ' + (delay + 1) + 's infinite reverse',
-                  }}
-                />
-
-                {/* Geometric grid overlay */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.04] group-hover:opacity-[0.09] transition-opacity duration-500" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <circle cx="50" cy="50" r="40" fill="none" stroke="white" strokeWidth="0.2" />
-                  <circle cx="50" cy="50" r="22" fill="none" stroke="white" strokeWidth="0.15" />
-                  <line x1="10" y1="50" x2="90" y2="50" stroke="white" strokeWidth="0.15" />
-                  <line x1="50" y1="10" x2="50" y2="90" stroke="white" strokeWidth="0.15" />
-                </svg>
-
-                {/* Lens flare dots */}
-                <div
-                  className="absolute w-3 h-3 rounded-full pointer-events-none animate-lens-drift"
-                  style={{ top: '25%', left: '20%', background: 'radial-gradient(circle, ' + ((item as any).lensColor || 'rgba(255,255,255,0.4)') + ' 0%, transparent 70%)', animationDelay: delay + 's' }}
-                />
-                <div
-                  className="absolute w-2 h-2 rounded-full pointer-events-none"
-                  style={{ bottom: '30%', right: '18%', background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)', animation: 'lens-drift 7s ease-in-out ' + (delay + 2) + 's infinite' }}
-                />
-
-                <span className="relative z-[2] font-serif text-lg font-normal text-center text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.15)' }}>
-                  {item.label}
-                </span>
-                <span className="relative z-[2] text-[11px] text-center px-4 leading-snug text-white/70">
-                  {item.sub}
-                </span>
+                {/* Gradient overlay */}
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, ' + item.color + ' 0%, ' + item.color + '99 35%, transparent 70%)' }} />
+                {/* Text */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 z-[2]">
+                  <span className="block font-serif text-lg font-bold text-white leading-tight" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+                    {item.label}
+                  </span>
+                  <span className="block text-[11px] text-white/80 mt-0.5 leading-snug">
+                    {item.sub}
+                  </span>
+                </div>
+                {/* Arrow */}
+                <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-[2]">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                </div>
               </Link>
             )
           })}
@@ -331,18 +229,33 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
 
       {/* ── 4 WAYS TO ENGAGE ── */}
       <div className="max-w-[1200px] mx-auto px-8 pt-8 pb-2">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">4 ways to engage</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">4 ways to jump in</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Object.entries(CENTERS_DATA).map(function ([key, c]) {
             return (
               <Link
                 key={key}
                 href={'/centers/' + c.slug}
-                className="relative border-2 border-brand-border rounded-xl p-4 hover:-translate-y-0.5 transition-all group"
-                style={{ borderLeftColor: c.color, borderLeftWidth: '4px', boxShadow: '2px 2px 0 #D5D0C8' }}
+                className="relative border-2 rounded-xl overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
+                style={{ borderColor: c.color + '50', boxShadow: '3px 3px 0 ' + c.color + '20' }}
               >
-                <span className="block text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors">{key}</span>
-                <span className="block text-xs text-brand-muted mt-1">{c.question}</span>
+                {/* Color header with icon */}
+                <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, ' + c.color + ' 0%, ' + c.color + 'dd 100%)' }}>
+                  <img
+                    src={'/images/centers/' + key.toLowerCase() + '.svg'}
+                    alt="" aria-hidden="true"
+                    className="absolute w-[100px] h-[100px] opacity-[0.15] pointer-events-none"
+                  />
+                  <span className="relative z-[1] font-serif text-xl font-bold text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{key}</span>
+                </div>
+                {/* Body */}
+                <div className="p-4 bg-white">
+                  <p className="text-sm text-brand-text font-medium leading-snug">{c.question}</p>
+                  <span className="inline-flex items-center gap-1 mt-3 text-xs font-bold transition-colors" style={{ color: c.color }}>
+                    Explore
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+                  </span>
+                </div>
               </Link>
             )
           })}

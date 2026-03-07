@@ -8,6 +8,7 @@ import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
+import { SpiralProgress } from '@/components/exchange/SpiralProgress'
 
 export const dynamic = 'force-dynamic'
 
@@ -259,6 +260,11 @@ export default async function MyDashboardPage() {
                 </div>
               </section>
             )}
+
+            {/* Spiral Progress */}
+            <section className="mb-6">
+              <SpiralProgress variant="full" />
+            </section>
 
             {/* Recent Activity */}
             <section>

@@ -7,6 +7,7 @@ import { X, Menu, Search } from 'lucide-react'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
+import { SpiralProgress } from './SpiralProgress'
 import { THEMES } from '@/lib/constants'
 
 const CENTERS = [
@@ -144,6 +145,9 @@ export function D2Nav({ election }: D2NavProps) {
             </div>
             <div className="hidden md:block">
               <LanguageSwitcher />
+            </div>
+            <div className="hidden md:block">
+              <SpiralProgress variant="compact" />
             </div>
             <Link
               href="/me"
