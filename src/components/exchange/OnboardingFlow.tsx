@@ -1,56 +1,80 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { isOnboarded, completeOnboarding } from '@/lib/spiral'
 import { THEMES } from '@/lib/constants'
 
 const PERSONAS = [
-  { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', icon: '↗' },
-  { slug: 'learner', label: 'Learn', desc: 'I want to understand what\'s happening.', icon: '↗' },
-  { slug: 'builder', label: 'Take Action', desc: 'I want to volunteer or contribute.', icon: '↗' },
-  { slug: 'watchdog', label: 'Hold Accountable', desc: 'I want to follow who makes decisions.', icon: '↗' },
+  { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', color: '#d69e2e', fol: '/images/fol/seed-of-life.svg' },
+  { slug: 'learner', label: 'Learn', desc: 'I want to understand what\'s happening.', color: '#3182ce', fol: '/images/fol/vesica-piscis.svg' },
+  { slug: 'builder', label: 'Take Action', desc: 'I want to volunteer or contribute.', color: '#38a169', fol: '/images/fol/tripod-of-life.svg' },
+  { slug: 'watchdog', label: 'Hold Accountable', desc: 'I want to follow who makes decisions.', color: '#805ad5', fol: '/images/fol/metatrons-cube.svg' },
 ]
 
 const PATHWAY_OPTIONS = Object.entries(THEMES).map(function ([id, t]) {
   return { id, name: t.name, color: t.color, slug: t.slug }
 })
 
-type Step = 'address' | 'intent' | 'interests'
+type Step = 'welcome' | 'address' | 'intent' | 'interests'
 
 export function OnboardingFlow() {
   const router = useRouter()
   const { zip, neighborhood, lookupZip, lookupAddress, isLoading } = useNeighborhood()
-  const [step, setStep] = useState<Step>('address')
+  const [step, setStep] = useState<Step>('welcome')
   const [input, setInput] = useState('')
   const [persona, setPersona] = useState('')
   const [interests, setInterests] = useState<string[]>([])
   const [show, setShow] = useState(false)
+  const [error, setError] = useState('')
+  const [lookupAttempted, setLookupAttempted] = useState(false)
 
   useEffect(function () {
-    // Only show if not onboarded and no ZIP set
-    if (!isOnboarded() && !zip) {
-      const timer = setTimeout(function () { setShow(true) }, 800)
+    // Show if not onboarded — regardless of ZIP
+    if (!isOnboarded()) {
+      const timer = setTimeout(function () { setShow(true) }, 1200)
       return function () { clearTimeout(timer) }
     }
-  }, [zip])
+  }, [])
 
-  // Auto-advance when ZIP resolves
+  // Auto-advance when ZIP resolves after a lookup attempt
   useEffect(function () {
-    if (zip && neighborhood && step === 'address') {
+    if (lookupAttempted && zip && step === 'address') {
+      setError('')
       setStep('intent')
     }
-  }, [zip, neighborhood, step])
+  }, [zip, lookupAttempted, step])
+
+  // If user already has a ZIP, skip address step
+  const handleGetStarted = useCallback(function () {
+    if (zip) {
+      setStep('intent')
+    } else {
+      setStep('address')
+    }
+  }, [zip])
 
   function handleAddressSubmit(e: React.FormEvent) {
     e.preventDefault()
     const trimmed = input.trim()
     if (!trimmed) return
+    setError('')
+    setLookupAttempted(true)
+
     if (/^\d{5}$/.test(trimmed)) {
       lookupZip(trimmed)
+      // Set a timeout to catch failures
+      setTimeout(function () {
+        setLookupAttempted(function (prev) {
+          // If still on address step after 5s, show error
+          return prev
+        })
+      }, 5000)
     } else if (trimmed.length >= 5) {
       lookupAddress(trimmed)
+    } else {
+      setError('Enter a 5-digit ZIP code or a full address.')
     }
   }
 
@@ -60,9 +84,8 @@ export function OnboardingFlow() {
   }
 
   function handleFinish() {
-    completeOnboarding(persona, interests)
+    completeOnboarding(persona || 'explorer', interests)
     setShow(false)
-    // Navigate to personalized view
     if (persona) {
       router.push('/for/' + persona)
     } else {
@@ -84,67 +107,154 @@ export function OnboardingFlow() {
 
   if (!show) return null
 
+  const steps: Step[] = ['welcome', 'address', 'intent', 'interests']
+  const stepIndex = steps.indexOf(step)
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-up">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
       <div
-        className="relative bg-white rounded-2xl border-2 border-brand-border w-full max-w-lg mx-4 overflow-hidden"
+        className="relative w-full max-w-lg mx-4 overflow-hidden rounded-2xl border-2 border-brand-border animate-fade-up"
         style={{ boxShadow: '6px 6px 0 #D5D0C8' }}
       >
-        {/* Progress dots */}
-        <div className="flex items-center justify-center gap-2 pt-5">
-          {(['address', 'intent', 'interests'] as Step[]).map(function (s, i) {
-            const active = s === step
-            const done = (['address', 'intent', 'interests'] as Step[]).indexOf(step) > i
-            return (
-              <div
-                key={s}
-                className="h-1.5 rounded-full transition-all duration-300"
-                style={{
-                  width: active ? '32px' : '12px',
-                  backgroundColor: active ? '#C75B2A' : done ? '#38a169' : '#E2DDD5',
-                }}
-              />
-            )
-          })}
+        {/* ── Branded header ── */}
+        <div className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
+          {/* FOL watermarks */}
+          <img
+            src="/images/fol/flower-full.svg"
+            alt="" aria-hidden="true"
+            className="absolute pointer-events-none animate-fol-pulse"
+            style={{ width: '300px', height: '300px', top: '-80px', right: '-60px', opacity: 0.06 }}
+          />
+          <img
+            src="/images/fol/seed-of-life.svg"
+            alt="" aria-hidden="true"
+            className="absolute pointer-events-none"
+            style={{ width: '150px', height: '150px', bottom: '-40px', left: '-30px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
+          />
+
+          {/* Spectrum bar at top */}
+          <div className="flex h-1">
+            <div className="flex-1" style={{ background: '#e53e3e' }} />
+            <div className="flex-1" style={{ background: '#dd6b20' }} />
+            <div className="flex-1" style={{ background: '#d69e2e' }} />
+            <div className="flex-1" style={{ background: '#38a169' }} />
+            <div className="flex-1" style={{ background: '#3182ce' }} />
+            <div className="flex-1" style={{ background: '#319795' }} />
+            <div className="flex-1" style={{ background: '#805ad5' }} />
+          </div>
+
+          <div className="relative z-10 px-6 pt-5 pb-4">
+            <div className="flex items-center gap-3 mb-1">
+              <img src="/images/fol/flower-full.svg" alt="" className="w-8 h-8" style={{ filter: 'hue-rotate(-10deg) saturate(0.6)' }} />
+              <div>
+                <span className="block font-serif text-lg font-bold text-brand-text leading-tight">Community Exchange</span>
+                <span className="block font-mono text-[8px] font-bold uppercase tracking-widest text-brand-muted-light">Powered by The Change Lab</span>
+              </div>
+            </div>
+
+            {/* Progress dots */}
+            <div className="flex items-center gap-1.5 mt-3">
+              {steps.map(function (s, i) {
+                const active = i === stepIndex
+                const done = i < stepIndex
+                return (
+                  <div
+                    key={s}
+                    className="h-1 rounded-full transition-all duration-500"
+                    style={{
+                      width: active ? '40px' : '16px',
+                      backgroundColor: active ? '#C75B2A' : done ? '#38a169' : '#E2DDD5',
+                    }}
+                  />
+                )
+              })}
+              <span className="ml-auto text-[10px] font-mono text-brand-muted-light">
+                {stepIndex + 1} / {steps.length}
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Skip button */}
-        <button
-          onClick={handleSkip}
-          className="absolute top-4 right-4 text-xs text-brand-muted hover:text-brand-accent transition-colors"
-        >
-          Skip
-        </button>
+        {/* ── Content ── */}
+        <div className="bg-white px-6 py-5">
+          {/* Skip */}
+          <button
+            onClick={handleSkip}
+            className="absolute top-3 right-4 text-[11px] text-brand-muted hover:text-brand-accent transition-colors z-20"
+          >
+            Skip
+          </button>
 
-        <div className="p-6 pt-4">
+          {/* ── Step 0: Welcome ── */}
+          {step === 'welcome' && (
+            <div className="text-center">
+              <div className="relative w-20 h-20 mx-auto mb-4">
+                <img
+                  src="/images/fol/flower-full.svg"
+                  alt="" aria-hidden="true"
+                  className="w-full h-full animate-fol-pulse"
+                  style={{ opacity: 0.15 }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="1.5">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+              </div>
+              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
+                Welcome to Community Exchange
+              </h2>
+              <p className="text-sm text-brand-muted mb-1 max-w-xs mx-auto">
+                Houston&apos;s civic life — officials, services, organizations, opportunities — all in one place.
+              </p>
+              <p className="text-sm text-brand-muted mb-6 max-w-xs mx-auto">
+                Three quick questions to personalize your experience.
+              </p>
+              <button
+                onClick={handleGetStarted}
+                className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm rounded-xl hover:brightness-110 transition-all"
+                style={{ boxShadow: '3px 3px 0 #C75B2A30' }}
+              >
+                Get started
+              </button>
+            </div>
+          )}
+
           {/* ── Step 1: Address ── */}
           {step === 'address' && (
             <div className="text-center">
               <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
                 Where are you?
               </h2>
-              <p className="text-sm text-brand-muted mb-6 max-w-sm mx-auto">
+              <p className="text-sm text-brand-muted mb-5 max-w-sm mx-auto">
                 Your address helps us show you your officials, nearby services, and what&apos;s happening in your area.
               </p>
               <form onSubmit={handleAddressSubmit} className="max-w-sm mx-auto">
                 <div
-                  className="flex items-center gap-2 border-2 border-brand-text rounded-xl px-4 py-3 bg-white mb-3"
-                  style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                  className="flex items-center gap-2 border-2 rounded-xl px-4 py-3 bg-white mb-2 transition-colors"
+                  style={{
+                    borderColor: error ? '#C53030' : '#1A1A1A',
+                    boxShadow: '3px 3px 0 #D5D0C8',
+                  }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
                   <input
                     type="text"
                     value={input}
-                    onChange={function (e) { setInput(e.target.value) }}
-                    placeholder="Enter your address or ZIP code"
+                    onChange={function (e) { setInput(e.target.value); setError('') }}
+                    placeholder="ZIP code or street address"
                     autoFocus
                     disabled={isLoading}
                     className="flex-1 text-sm bg-transparent text-brand-text placeholder:text-brand-muted focus:outline-none"
                   />
                 </div>
+                {error && (
+                  <p className="text-xs text-[#C53030] mb-2">{error}</p>
+                )}
                 <button
                   type="submit"
-                  disabled={input.trim().length < 5 || isLoading}
+                  disabled={input.trim().length < 3 || isLoading}
                   className="w-full py-3 bg-brand-text text-white font-semibold text-sm rounded-xl disabled:opacity-30 hover:bg-brand-accent transition-colors"
                   style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
                 >
@@ -153,9 +263,9 @@ export function OnboardingFlow() {
               </form>
               <button
                 onClick={function () { setStep('intent') }}
-                className="mt-4 text-xs text-brand-muted hover:text-brand-accent transition-colors"
+                className="mt-3 text-xs text-brand-muted hover:text-brand-accent transition-colors"
               >
-                I&apos;ll do this later
+                I&apos;ll add my location later
               </button>
             </div>
           )}
@@ -163,16 +273,16 @@ export function OnboardingFlow() {
           {/* ── Step 2: Intent ── */}
           {step === 'intent' && (
             <div className="text-center">
-              {neighborhood && (
-                <p className="text-xs font-mono uppercase tracking-widest text-brand-accent mb-1">
-                  {neighborhood.neighborhood_name || zip}
+              {(neighborhood || zip) && (
+                <p className="text-[11px] font-mono uppercase tracking-widest text-brand-accent mb-1">
+                  {neighborhood?.neighborhood_name || ('ZIP ' + zip)}
                 </p>
               )}
               <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
                 What brings you here?
               </h2>
-              <p className="text-sm text-brand-muted mb-5">
-                This helps us show you the right things first. You can always explore everything.
+              <p className="text-sm text-brand-muted mb-4">
+                Pick one. You can always explore everything.
               </p>
               <div className="grid grid-cols-2 gap-3">
                 {PERSONAS.map(function (p) {
@@ -180,9 +290,17 @@ export function OnboardingFlow() {
                     <button
                       key={p.slug}
                       onClick={function () { handlePersonaSelect(p.slug) }}
-                      className="text-left border-2 border-brand-border rounded-xl p-4 hover:border-brand-accent hover:-translate-y-0.5 transition-all group"
+                      className="relative text-left border-2 border-brand-border rounded-xl p-4 overflow-hidden hover:border-brand-accent hover:-translate-y-0.5 transition-all group"
                       style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
                     >
+                      {/* FOL watermark per card */}
+                      <img
+                        src={p.fol}
+                        alt="" aria-hidden="true"
+                        className="absolute pointer-events-none opacity-[0.06] group-hover:opacity-[0.12] transition-opacity"
+                        style={{ width: '60px', height: '60px', top: '-8px', right: '-8px' }}
+                      />
+                      <div className="w-2 h-2 rounded-full mb-2" style={{ backgroundColor: p.color }} />
                       <span className="block text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                         {p.label}
                       </span>
@@ -200,10 +318,10 @@ export function OnboardingFlow() {
               <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
                 What do you care about?
               </h2>
-              <p className="text-sm text-brand-muted mb-5">
-                Pick as many as you want. This helps us connect the dots for you.
+              <p className="text-sm text-brand-muted mb-4">
+                Pick as many as you want.
               </p>
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <div className="flex flex-wrap justify-center gap-2 mb-5">
                 {PATHWAY_OPTIONS.map(function (pw) {
                   const selected = interests.includes(pw.id)
                   return (
@@ -219,8 +337,11 @@ export function OnboardingFlow() {
                       }}
                     >
                       <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: pw.color }}
+                        className="w-3 h-3 rounded-full transition-transform"
+                        style={{
+                          backgroundColor: pw.color,
+                          transform: selected ? 'scale(1.3)' : 'scale(1)',
+                        }}
                       />
                       {pw.name}
                     </button>
@@ -229,13 +350,24 @@ export function OnboardingFlow() {
               </div>
               <button
                 onClick={handleFinish}
-                className="w-full max-w-xs mx-auto py-3 bg-brand-text text-white font-semibold text-sm rounded-xl hover:bg-brand-accent transition-colors"
-                style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm rounded-xl hover:brightness-110 transition-all"
+                style={{ boxShadow: '3px 3px 0 #C75B2A30' }}
               >
                 Show me my community
               </button>
             </div>
           )}
+        </div>
+
+        {/* Bottom spectrum bar */}
+        <div className="flex h-0.5">
+          <div className="flex-1" style={{ background: '#e53e3e' }} />
+          <div className="flex-1" style={{ background: '#dd6b20' }} />
+          <div className="flex-1" style={{ background: '#d69e2e' }} />
+          <div className="flex-1" style={{ background: '#38a169' }} />
+          <div className="flex-1" style={{ background: '#3182ce' }} />
+          <div className="flex-1" style={{ background: '#319795' }} />
+          <div className="flex-1" style={{ background: '#805ad5' }} />
         </div>
       </div>
     </div>

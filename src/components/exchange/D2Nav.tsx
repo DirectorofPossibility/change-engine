@@ -186,9 +186,9 @@ export function D2Nav({ election }: D2NavProps) {
               </button>
             </div>
 
-            <div className="px-5 py-4 space-y-5">
+            <div className="px-5 py-4 space-y-1">
               {/* ZIP + Language + Search (mobile) */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pb-3 border-b border-brand-border">
                 <ZipInput />
                 <LanguageSwitcher />
                 <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors md:hidden" aria-label="Search" onClick={closeDrawer}>
@@ -196,26 +196,59 @@ export function D2Nav({ election }: D2NavProps) {
                 </Link>
               </div>
 
-              {/* Centers — each links to its index page */}
+              {/* Journey */}
+              <details className="group border-b border-brand-border">
+                <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Your Journey</span>
+                </summary>
+                <div className="pb-3 space-y-0.5">
+                  {[
+                    { href: '/compass', label: 'Chart Your Course' },
+                    { href: '/for/seeker', label: 'Find Help' },
+                    { href: '/for/learner', label: 'Learn Something' },
+                    { href: '/for/builder', label: 'Take Action' },
+                    { href: '/for/watchdog', label: 'Hold Accountable' },
+                  ].map(function (item) {
+                    const itemActive = pathname === item.href
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block pl-5 py-1.5 text-[13px] font-medium transition-colors hover:text-brand-accent"
+                        style={{ color: itemActive ? '#C75B2A' : '#1A1A1A' }}
+                        onClick={closeDrawer}
+                      >
+                        {item.label}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </details>
+
+              {/* Centers — collapsible sections */}
               {CENTERS.map(function (center) {
                 const isActive = pathname === center.href || center.items.some(function (item) { return pathname?.startsWith(item.href) })
                 return (
-                  <div key={center.label}>
-                    <Link
-                      href={center.href}
-                      className="flex items-center gap-2 mb-2 group"
-                      onClick={closeDrawer}
-                    >
+                  <details key={center.label} className="group border-b border-brand-border">
+                    <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                       <span className="w-2.5 h-2.5 rounded-sm" style={{ background: center.color }} />
                       <span
-                        className="font-mono text-[11px] font-bold uppercase tracking-wider group-hover:text-brand-accent transition-colors"
+                        className="font-mono text-[11px] font-bold uppercase tracking-wider group-open:text-brand-accent transition-colors"
                         style={{ color: isActive ? center.color : '#9B9590' }}
                       >
                         {center.label}
                       </span>
-                      <span className="text-brand-muted-light text-xs group-hover:text-brand-accent">&rarr;</span>
-                    </Link>
-                    <div className="space-y-0.5">
+                    </summary>
+                    <div className="pb-3 space-y-0.5">
+                      <Link
+                        href={center.href}
+                        className="block pl-5 py-1.5 text-[12px] font-medium text-brand-muted hover:text-brand-accent transition-colors"
+                        onClick={closeDrawer}
+                      >
+                        View all &rarr;
+                      </Link>
                       {center.items.map(function (item) {
                         const itemActive = pathname === item.href || pathname?.startsWith(item.href + '/')
                         return (
@@ -231,17 +264,17 @@ export function D2Nav({ election }: D2NavProps) {
                         )
                       })}
                     </div>
-                  </div>
+                  </details>
                 )
               })}
 
-              {/* Pathways */}
-              <div className="pt-3 border-t border-brand-border">
-                <Link href="/pathways" className="flex items-center gap-2 mb-2 group" onClick={closeDrawer}>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-hover:text-brand-accent transition-colors">Pathways</span>
-                  <span className="text-brand-muted-light text-xs group-hover:text-brand-accent">&rarr;</span>
-                </Link>
-                <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+              {/* Topics (formerly Pathways) */}
+              <details className="group border-b border-brand-border">
+                <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Topics</span>
+                </summary>
+                <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
                   {PATHWAY_LIST.map(function (pw) {
                     return (
                       <Link
@@ -256,12 +289,15 @@ export function D2Nav({ election }: D2NavProps) {
                     )
                   })}
                 </div>
-              </div>
+              </details>
 
               {/* Discover */}
-              <div className="pt-3 border-t border-brand-border">
-                <p className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light mb-2">Discover</p>
-                <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+              <details className="group border-b border-brand-border">
+                <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Discover</span>
+                </summary>
+                <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
                   {[
                     { href: '/compass', label: 'Civic Compass' },
                     { href: '/dashboard-live', label: 'Live Dashboard' },
@@ -282,10 +318,10 @@ export function D2Nav({ election }: D2NavProps) {
                     )
                   })}
                 </div>
-              </div>
+              </details>
 
               {/* Account */}
-              <div className="pt-3 border-t border-brand-border">
+              <div className="pt-3">
                 <Link
                   href="/me"
                   className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"
@@ -296,15 +332,18 @@ export function D2Nav({ election }: D2NavProps) {
               </div>
 
               {/* Support */}
-              <div className="pt-3 border-t border-brand-border">
-                <p className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light mb-2">Support</p>
-                <div className="font-mono text-[11px] text-brand-muted-light space-y-1">
+              <details className="group">
+                <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">Support</span>
+                </summary>
+                <div className="pb-3 font-mono text-[11px] text-brand-muted-light space-y-1 pl-5">
                   <p>Crisis: <strong className="text-brand-text">988</strong></p>
                   <p>City Services: <strong className="text-brand-text">311</strong></p>
                   <p>Social Services: <strong className="text-brand-text">211</strong></p>
                   <p>DV Hotline: <strong className="text-brand-text">713-528-2121</strong></p>
                 </div>
-              </div>
+              </details>
             </div>
           </div>
         </>
