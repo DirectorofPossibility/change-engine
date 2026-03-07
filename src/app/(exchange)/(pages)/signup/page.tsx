@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -227,7 +229,8 @@ export default function SignupPage() {
         </p>
 
         {/* Account tiers info */}
-        <div className="mt-8 grid grid-cols-2 gap-3">
+        <div className="relative mt-8 grid grid-cols-2 gap-3">
+          <InfoBubble id={TOOLTIPS.neighbor_vs_partner.id} text={TOOLTIPS.neighbor_vs_partner.text} position="bottom" />
           <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
             <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-theme-voice mb-1">Neighbor</p>
             <p className="text-xl font-serif font-bold text-brand-text">Free</p>

@@ -1,4 +1,6 @@
 import { Clock, FileText, Video, BookOpen, HelpCircle, ExternalLink, Music, Quote } from 'lucide-react'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 interface Module {
   moduleId: string
@@ -44,11 +46,14 @@ function youtubeEmbedId(url: string): string | null {
 export function ModuleTimeline({ modules }: ModuleTimelineProps) {
   if (modules.length === 0) return null
 
+  let mediaPillTooltipShown = false
+
   return (
     <div className="space-y-0">
       {modules.map(function (mod, index) {
         const embedId = mod.videoUrl ? youtubeEmbedId(mod.videoUrl) : null
         const hasMedia = mod.videoUrl || mod.articleUrl || mod.musicUrl
+        const showMediaTooltip = hasMedia && !mediaPillTooltipShown && (mediaPillTooltipShown = true)
 
         return (
           <div key={mod.moduleId} className="relative pl-10 pb-8 last:pb-0">
@@ -98,7 +103,8 @@ export function ModuleTimeline({ modules }: ModuleTimelineProps) {
 
               {/* Resource links row */}
               {hasMedia && (
-                <div className="flex flex-wrap gap-2 mb-3">
+                <div className="relative flex flex-wrap gap-2 mb-3">
+                  {showMediaTooltip && <InfoBubble id={TOOLTIPS.module_media_pills.id} text={TOOLTIPS.module_media_pills.text} position="bottom" />}
                   {mod.videoUrl && !embedId && (
                     <a href={mod.videoUrl} target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors">

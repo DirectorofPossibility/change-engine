@@ -4,6 +4,8 @@ import { cookies } from 'next/headers'
 import { getLearningPaths, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { getUIStrings } from '@/lib/i18n'
 
 export const revalidate = 3600
@@ -55,15 +57,17 @@ export default async function LearnPage() {
       </div>
 
       {/* Grouped by difficulty */}
-      {(['Beginner', 'Intermediate', 'Advanced'] as const).map(level => {
+      {(() => { let diffTooltipShown = false; return (['Beginner', 'Intermediate', 'Advanced'] as const).map(level => {
         const group = grouped[level]
         if (group.length === 0) return null
         const colors = DIFF_COLORS[level]
+        const showDiffTooltip = !diffTooltipShown && (diffTooltipShown = true)
         return (
           <section key={level} className="mb-10">
             <div className="flex items-center gap-3 mb-4">
-              <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${colors.bg} ${colors.text} ${colors.border} border`}>
+              <span className={`relative text-xs px-2.5 py-1 rounded-full font-medium ${colors.bg} ${colors.text} ${colors.border} border`}>
                 {level}
+                {showDiffTooltip && <InfoBubble id={TOOLTIPS.difficulty_badge.id} text={TOOLTIPS.difficulty_badge.text} position="bottom" />}
               </span>
               <span className="text-sm text-brand-muted">{group.length} path{group.length !== 1 ? 's' : ''}</span>
               <div className="flex-1 h-px bg-brand-border" />
@@ -86,7 +90,7 @@ export default async function LearnPage() {
             </div>
           </section>
         )
-      })}
+      }) })()}
 
       {paths.length === 0 && (
         <p className="text-center text-brand-muted py-12">{t('learn.coming_soon')}</p>

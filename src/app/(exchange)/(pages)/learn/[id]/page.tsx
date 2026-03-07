@@ -14,6 +14,8 @@ import { ModuleTimeline } from '@/components/exchange/ModuleTimeline'
 import { ModuleProgressTimeline } from '@/components/exchange/ModuleProgressTimeline'
 import { BadgeCard } from '@/components/exchange/BadgeCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 export const dynamic = 'force-dynamic'
 
@@ -195,7 +197,9 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
         <div className="flex items-center gap-5 text-sm text-brand-muted">
           {path.estimated_minutes != null && (
-            <span className="flex items-center gap-1.5"><Clock size={15} /> {path.estimated_minutes} min</span>
+            <span className="relative flex items-center gap-1.5"><Clock size={15} /> {path.estimated_minutes} min
+              <InfoBubble id={TOOLTIPS.estimated_minutes.id} text={TOOLTIPS.estimated_minutes.text} position="bottom" />
+            </span>
           )}
           {path.module_count != null && (
             <span className="flex items-center gap-1.5"><BookOpen size={15} /> {path.module_count} modules</span>
@@ -232,7 +236,9 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           {/* Module Timeline */}
           {timelineModules.length > 0 && (
             <section className="mb-10">
-              <h2 className="text-xl font-bold text-brand-text font-serif mb-6">{t('learn.modules_heading')}</h2>
+              <h2 className="relative text-xl font-bold text-brand-text font-serif mb-6">{t('learn.modules_heading')}
+                <InfoBubble id={TOOLTIPS.quiz_indicator.id} text={TOOLTIPS.quiz_indicator.text} position="bottom" />
+              </h2>
               {user ? (
                 <ModuleProgressTimeline
                   modules={timelineModules}

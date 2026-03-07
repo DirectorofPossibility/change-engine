@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { X, Menu, ChevronDown } from 'lucide-react'
+import { X, Menu, ChevronDown, Search } from 'lucide-react'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
@@ -56,6 +56,13 @@ const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
   return { id, name: (t as any).name, color: (t as any).color, slug: (t as any).slug }
 })
 
+const CENTER_TOOLTIP_MAP: Record<string, { id: string; text: string } | undefined> = {
+  Community: TOOLTIPS.dropdown_discover,
+  Learning: TOOLTIPS.dropdown_learn,
+  Action: TOOLTIPS.dropdown_act,
+  Resources: TOOLTIPS.dropdown_about,
+}
+
 interface D2NavProps {
   election?: {
     election_name: string
@@ -95,7 +102,7 @@ export function D2Nav({ election }: D2NavProps) {
       )}
 
       {/* Spectrum bar */}
-      <div className="spectrum-bar">
+      <div className="spectrum-bar relative">
         <div style={{ background: '#e53e3e' }} />
         <div style={{ background: '#dd6b20' }} />
         <div style={{ background: '#d69e2e' }} />
@@ -103,6 +110,7 @@ export function D2Nav({ election }: D2NavProps) {
         <div style={{ background: '#3182ce' }} />
         <div style={{ background: '#319795' }} />
         <div style={{ background: '#805ad5' }} />
+        <InfoBubble id={TOOLTIPS.pathway_dots.id} text={TOOLTIPS.pathway_dots.text} position="bottom" />
       </div>
 
       {/* Top nav */}
@@ -142,6 +150,9 @@ export function D2Nav({ election }: D2NavProps) {
                     <span style={{ color: isActive ? '#C75B2A' : '#1A1A1A' }}>{center.label}</span>
                     <ChevronDown size={12} className="opacity-40" />
                   </button>
+                  {CENTER_TOOLTIP_MAP[center.label] && (
+                    <InfoBubble id={CENTER_TOOLTIP_MAP[center.label]!.id} text={CENTER_TOOLTIP_MAP[center.label]!.text} position="bottom" />
+                  )}
                   {openDrop === center.label && (
                     <div role="menu" className="absolute top-full left-0 mt-1 bg-white border-2 border-brand-border rounded-lg shadow-drop py-1.5 min-w-[180px] z-50">
                       {center.items.map(function (item) {
@@ -167,6 +178,12 @@ export function D2Nav({ election }: D2NavProps) {
 
           {/* Right side */}
           <div className="flex items-center gap-2.5">
+            <div className="hidden md:block relative">
+              <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors" aria-label="Search">
+                <Search size={18} className="text-brand-muted" />
+              </Link>
+              <InfoBubble id={TOOLTIPS.search_icon.id} text={TOOLTIPS.search_icon.text} position="bottom" />
+            </div>
             <div className="hidden md:block relative">
               <ZipInput />
               <InfoBubble id={TOOLTIPS.zip_input.id} text={TOOLTIPS.zip_input.text} position="bottom" />

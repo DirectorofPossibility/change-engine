@@ -6,6 +6,7 @@ import { FileText, Video, BookOpen, Wrench, GraduationCap, Calendar, Megaphone, 
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
 export const metadata: Metadata = {
   title: 'The News Stand — Community Exchange',
@@ -136,7 +137,8 @@ export default async function NewsPage({
       {/* Filter bar */}
       <div className="border-b border-brand-border bg-white/60 backdrop-blur-sm sticky top-0 z-20">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="relative flex flex-wrap items-center gap-2">
+            <WayfinderTooltipPos tipKey="content_type_badge" position="bottom" />
             {CONTENT_TYPES.map(function (ct) {
               const active = (type || '') === ct.key
               const href = ct.key
@@ -188,7 +190,8 @@ export default async function NewsPage({
         ) : (
           <>
             {/* ABOVE THE FOLD: Hero + Secondary */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b-2 border-brand-text">
+            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b-2 border-brand-text">
+              <WayfinderTooltipPos tipKey="source_attribution_card" position="bottom" />
               {/* Hero story */}
               {hero && (
                 <Link href={'/content/' + hero.id} className="lg:col-span-7 group">
@@ -363,7 +366,9 @@ export default async function NewsPage({
                 <div className="sticky top-16 space-y-6">
                   {/* Pathway quick links */}
                   <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #E2DDD5' }}>
-                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted mb-3">Browse by Pathway</h3>
+                    <h3 className="relative text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted mb-3">Browse by Pathway
+                      <WayfinderTooltipPos tipKey="pathway_color_bar" position="bottom" />
+                    </h3>
                     <div className="space-y-1">
                       {themeEntries.map(function ([id, theme]) {
                         const active = pathway === id

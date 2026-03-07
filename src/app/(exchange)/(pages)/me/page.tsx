@@ -7,6 +7,7 @@ import { SubmissionTracker } from '@/components/exchange/SubmissionTracker'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
 export const dynamic = 'force-dynamic'
 
@@ -155,9 +156,14 @@ export default async function MyDashboardPage() {
             <div>
               <h1 className="text-2xl font-serif font-bold">Welcome back, {displayName}</h1>
               <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-brand-muted">
-                <span className="px-2 py-0.5 rounded-lg bg-brand-bg-alt text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted">{roleLabel}</span>
+                <span className="relative px-2 py-0.5 rounded-lg bg-brand-bg-alt text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted">
+                  {roleLabel}
+                  <WayfinderTooltipPos tipKey="role_badge" position="bottom" />
+                </span>
                 {profile?.zip_code && <span>ZIP {profile.zip_code}</span>}
-                <span>Impact Points: <strong className="text-brand-accent">{totalPoints}</strong></span>
+                <span className="relative">Impact Points: <strong className="text-brand-accent">{totalPoints}</strong>
+                  <WayfinderTooltipPos tipKey="impact_points" position="bottom" />
+                </span>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-3">
                 <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
@@ -292,7 +298,9 @@ export default async function MyDashboardPage() {
           <div className="space-y-6">
             {/* Badges */}
             <section>
-              <h2 className="font-serif text-lg font-bold text-brand-text mb-4">My Badges</h2>
+              <h2 className="relative font-serif text-lg font-bold text-brand-text mb-4">My Badges
+                <WayfinderTooltipPos tipKey="badges" position="bottom" />
+              </h2>
               {(!userBadges || userBadges.length === 0) ? (
                 <div className="bg-white rounded-xl border-2 border-brand-border p-6 text-center" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
                   <p className="text-sm text-brand-muted">Complete learning paths and take action to earn badges!</p>
@@ -323,7 +331,9 @@ export default async function MyDashboardPage() {
             {/* Account upgrades */}
             {(currentRole === 'user' || currentRole === 'neighbor') && (
               <section>
-                <h2 className="font-serif text-lg font-bold text-brand-text mb-4">Upgrade Your Account</h2>
+                <h2 className="relative font-serif text-lg font-bold text-brand-text mb-4">Upgrade Your Account
+                  <WayfinderTooltipPos tipKey="neighbor_vs_partner" position="bottom" />
+                </h2>
                 <div className="space-y-3">
                   {currentRole === 'user' && (
                     <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-4 relative overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>

@@ -7,6 +7,8 @@ import { Search, ChevronDown, Users, Loader2, Map } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
 import { GEO_LAYERS, THEMES } from '@/lib/constants'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { MapEntityDrawer } from '@/components/maps/MapEntityDrawer'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { GeoLayerConfig } from '@/lib/constants'
@@ -298,6 +300,10 @@ export function GeographyClient({
 
       {/* Interactive Map — always visible, all layers OFF by default */}
       <div className="bg-white rounded-xl border border-brand-border overflow-hidden shadow-sm relative">
+        <h3 className="relative inline-flex items-center gap-2 px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+          Map Boundaries
+          <InfoBubble id={TOOLTIPS.geojson_boundaries.id} text={TOOLTIPS.geojson_boundaries.text} position="bottom" />
+        </h3>
         <InteractiveMap
           markers={markers}
           layers={layers}

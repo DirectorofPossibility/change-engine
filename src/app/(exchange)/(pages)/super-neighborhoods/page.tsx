@@ -20,6 +20,7 @@ import { SuperNeighborhoodsMap } from './SuperNeighborhoodsMap'
 import { PageHero } from '@/components/exchange/PageHero'
 import { getUIStrings } from '@/lib/i18n'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
 export const revalidate = 300
 
@@ -61,9 +62,16 @@ export default async function SuperNeighborhoodsPage() {
 
         {/* Grid of super neighborhoods */}
         <section className="mt-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">
-            {t('superNeighborhoods.all_heading')} ({superNeighborhoods.length})
-          </h2>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-4">
+            <h2 className="relative text-xl font-bold text-brand-text">
+              {t('superNeighborhoods.all_heading')} ({superNeighborhoods.length})
+              <WayfinderTooltipPos tipKey="super_neighborhood_number" position="bottom" />
+            </h2>
+            <span className="relative text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+              Population &amp; Income
+              <WayfinderTooltipPos tipKey="population_income" position="bottom" />
+            </span>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {superNeighborhoods.map(sn => (
               <Link

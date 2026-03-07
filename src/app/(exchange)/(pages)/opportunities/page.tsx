@@ -8,6 +8,7 @@ import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
 export const revalidate = 3600
 
@@ -45,6 +46,24 @@ export default async function OpportunitiesPage() {
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4">
           <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-4">
+              <h2 className="font-serif text-xl font-bold text-brand-text">
+                All Opportunities ({all.length})
+              </h2>
+              <span className="relative text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                Time Commitment
+                <WayfinderTooltipPos tipKey="time_commitment" position="bottom" />
+              </span>
+              <span className="relative text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                Virtual
+                <WayfinderTooltipPos tipKey="virtual_badge" position="bottom" />
+              </span>
+              <span className="relative text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                Spots Available
+                <WayfinderTooltipPos tipKey="spots_available" position="bottom" />
+              </span>
+            </div>
+
             {all.length === 0 ? (
               <div className="relative text-center py-16 bg-white rounded-xl border-2 border-brand-border overflow-hidden">
                 <div className="absolute right-4 top-4 opacity-[0.06]">

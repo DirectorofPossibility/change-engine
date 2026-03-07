@@ -14,6 +14,7 @@ import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from 
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { ExternalLink, Globe, Sparkles } from 'lucide-react'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
@@ -224,8 +225,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   </>
                 )}
                 {isTranslated && (
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-success flex items-center gap-1">
+                  <span className="relative font-mono text-[10px] font-bold uppercase tracking-wider text-brand-success flex items-center gap-1">
                     <Globe size={11} /> Translated
+                    <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
                   </span>
                 )}
               </div>
@@ -235,22 +237,32 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </h1>
 
               {summary && (
-                <p className="text-lg leading-relaxed text-brand-muted max-w-2xl mb-6">
-                  {summary}
-                </p>
+                <div className="relative mb-6">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <Sparkles size={12} className="text-brand-accent" />
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">AI Summary</span>
+                    <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
+                  </div>
+                  <p className="text-lg leading-relaxed text-brand-muted max-w-2xl">
+                    {summary}
+                  </p>
+                </div>
               )}
 
               {/* Single source button */}
-              <a
-                href={item.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-brand-text rounded-lg text-sm font-semibold text-brand-text hover:bg-brand-text hover:text-white transition-colors"
-                style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
-              >
-                <ExternalLink size={15} />
-                Visit source
-              </a>
+              <div className="relative inline-block">
+                <a
+                  href={item.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-brand-text rounded-lg text-sm font-semibold text-brand-text hover:bg-brand-text hover:text-white transition-colors"
+                  style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                >
+                  <ExternalLink size={15} />
+                  Visit source
+                </a>
+                <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
+              </div>
             </div>
 
             {/* Image */}
@@ -430,7 +442,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             )}
 
             {/* Suggest Edit */}
-            <div className="border-2 border-brand-border rounded-lg p-4 text-center" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+            <div className="relative border-2 border-brand-border rounded-lg p-4 text-center" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+              <WayfinderTooltipPos tipKey="suggest_edit" position="bottom" />
               <Link
                 href={'/dashboard/submit?ref=' + encodeURIComponent(id)}
                 className="text-sm text-brand-accent hover:underline font-semibold"

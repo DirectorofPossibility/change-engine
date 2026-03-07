@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import FoundationsGalaxy from './FoundationsGalaxy'
 
 export const metadata: Metadata = {
@@ -15,8 +16,9 @@ export default function FoundationsPage() {
           { label: 'Foundations' }
         ]} />
       </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+      <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <h1 className="text-3xl font-serif font-bold text-brand-text mb-2">Foundations Galaxy</h1>
+        <WayfinderTooltipPos tipKey="foundation_galaxy" position="bottom" />
         <p className="text-brand-muted max-w-2xl">
           Explore Houston-area foundations through an interactive galaxy. Each star represents a foundation, sized by grant-making capacity and colored by primary pathway. Search by name, city, or ZIP to find funders in your area.
         </p>

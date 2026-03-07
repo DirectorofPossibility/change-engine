@@ -21,6 +21,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null)
@@ -279,7 +281,7 @@ export default function SettingsPage() {
             <option value="vi">Tiếng Việt</option>
           </select>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="relative flex items-center gap-3">
           <input
             id="gamification"
             type="checkbox"
@@ -288,6 +290,7 @@ export default function SettingsPage() {
             className="rounded border-brand-border"
           />
           <label htmlFor="gamification" className="text-sm text-brand-text">Enable badges and points</label>
+          <InfoBubble id={TOOLTIPS.gamification_toggle.id} text={TOOLTIPS.gamification_toggle.text} position="bottom" />
         </div>
         <button
           type="submit"

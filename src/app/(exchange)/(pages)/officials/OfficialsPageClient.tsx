@@ -207,7 +207,9 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
       )}
 
       {/* Full Officials Listing */}
-      <h2 className="font-serif text-2xl font-bold text-brand-text mb-6">All Civic Leaders</h2>
+      <h2 className="relative font-serif text-2xl font-bold text-brand-text mb-6">All Civic Leaders
+        <InfoBubble id={TOOLTIPS.party_label.id} text={TOOLTIPS.party_label.text} position="bottom" />
+      </h2>
       <OfficialsClient officials={officials} levels={levels} translations={translations} linkedinProfiles={linkedinProfiles} />
     </div>
   )

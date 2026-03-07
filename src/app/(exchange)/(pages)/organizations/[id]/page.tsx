@@ -12,6 +12,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
+import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 
 export const revalidate = 86400
 
@@ -115,7 +116,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
                 {org.org_type && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent border border-brand-accent/20">{org.org_type}</span>}
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
-                {org.ntee_code && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}</span>}
+                {org.ntee_code && <span className="relative text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}<WayfinderTooltipPos tipKey="ntee_code" position="bottom" /></span>}
               </div>
               <div className="mt-2">
                 <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
@@ -128,7 +129,8 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
       {/* Contact card */}
-      <div className="bg-white rounded-xl border border-brand-border p-5 mb-8 flex flex-wrap gap-4">
+      <div className="relative bg-white rounded-xl border border-brand-border p-5 mb-8 flex flex-wrap gap-4">
+        <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
         {org.phone && (
           <a href={'tel:' + org.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
             <Phone size={16} /> {org.phone}

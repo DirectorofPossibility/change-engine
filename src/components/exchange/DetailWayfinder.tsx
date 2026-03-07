@@ -251,8 +251,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
           {(userRole === 'admin' || userRole === 'partner') && (
             <>
               {data.taxonomy.ntee_codes.length > 0 && (
-                <div>
+                <div className="relative">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">NTEE</span>
+                  <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
                   <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.ntee_codes.join(', ')}</p>
                 </div>
               )}
