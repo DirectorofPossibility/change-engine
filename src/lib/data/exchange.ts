@@ -45,7 +45,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
-import { LANGUAGES } from '@/lib/constants'
+import { LANGUAGES, THEMES } from '@/lib/constants'
 import type { Database } from '@/lib/supabase/database.types'
 import type { ExchangeStats, ServiceWithOrg, TranslationMap, FocusArea, SDG, SDOHDomain, DistributionSite, SuperNeighborhood, GeographyData, MapMarkerData, CompassPreviewData, ContentPreview } from '@/lib/types/exchange'
 
@@ -3068,6 +3068,152 @@ export async function getArchetypeDashboardData(): Promise<ArchetypeDashboardDat
       learningPaths: (learningPaths ?? []).length,
       guides: (guides ?? []).length,
       library: (libraryDocs ?? []).length,
+    },
+  }
+}
+
+/* ─── Circle Graph data for public CircleKnowledgeGraph ─── */
+
+export interface CircleGraphData {
+  pathways: Array<{
+    id: string; name: string; color: string; slug: string
+    focusAreas: Array<{ id: string; name: string }>
+    entityCounts: { content: number; services: number; officials: number; organizations: number; policies: number }
+  }>
+  bridges: Array<{ from: string; to: string; count: number }>
+  totals: { content: number; services: number; officials: number; organizations: number; policies: number; focusAreas: number }
+}
+
+export async function getCircleGraphData(): Promise<CircleGraphData> {
+  const supabase = await createClient()
+
+  const [
+    { data: focusAreas },
+    { data: contentFocus },
+    { data: serviceFocus },
+    { data: officialFocus },
+    { data: orgFocus },
+    { data: policyFocus },
+    { data: contentAll },
+    { data: servicesAll },
+    { data: officialsAll },
+    { data: orgsAll },
+    { data: policiesAll },
+  ] = await Promise.all([
+    supabase.from('focus_areas').select('focus_id, focus_area_name, theme_id'),
+    supabase.from('content_focus_areas').select('content_id, focus_id').limit(5000),
+    supabase.from('service_focus_areas').select('service_id, focus_id').limit(5000),
+    supabase.from('official_focus_areas').select('official_id, focus_id').limit(5000),
+    supabase.from('organization_focus_areas').select('org_id, focus_id').limit(5000),
+    supabase.from('policy_focus_areas').select('policy_id, focus_id').limit(5000),
+    supabase.from('content_published').select('id, pathway_primary').eq('is_active', true),
+    supabase.from('services_211').select('service_id'),
+    supabase.from('elected_officials').select('official_id'),
+    supabase.from('organizations').select('org_id'),
+    supabase.from('policies').select('policy_id'),
+  ])
+
+  // Group focus areas by theme
+  const faByTheme: Record<string, Array<{ id: string; name: string }>> = {}
+  for (const fa of focusAreas ?? []) {
+    if (!fa.theme_id) continue
+    if (!faByTheme[fa.theme_id]) faByTheme[fa.theme_id] = []
+    faByTheme[fa.theme_id].push({ id: fa.focus_id, name: fa.focus_area_name || '' })
+  }
+
+  // Count entities per focus area
+  const faEntityCount: Record<string, { content: number; services: number; officials: number; organizations: number; policies: number }> = {}
+  function ensureFa(fid: string) {
+    if (!faEntityCount[fid]) faEntityCount[fid] = { content: 0, services: 0, officials: 0, organizations: 0, policies: 0 }
+  }
+  for (const r of contentFocus ?? []) { ensureFa(r.focus_id); faEntityCount[r.focus_id].content++ }
+  for (const r of serviceFocus ?? []) { ensureFa(r.focus_id); faEntityCount[r.focus_id].services++ }
+  for (const r of officialFocus ?? []) { ensureFa(r.focus_id); faEntityCount[r.focus_id].officials++ }
+  for (const r of orgFocus ?? []) { ensureFa(r.focus_id); faEntityCount[r.focus_id].organizations++ }
+  for (const r of policyFocus ?? []) { ensureFa(r.focus_id); faEntityCount[r.focus_id].policies++ }
+
+  // Aggregate counts per theme
+  const themeIds = Object.keys(THEMES)
+  const pathways = themeIds.map(function (tid) {
+    const t = THEMES[tid as keyof typeof THEMES]
+    const fas = faByTheme[tid] || []
+    const counts = { content: 0, services: 0, officials: 0, organizations: 0, policies: 0 }
+    for (const fa of fas) {
+      const fc = faEntityCount[fa.id]
+      if (fc) {
+        counts.content += fc.content
+        counts.services += fc.services
+        counts.officials += fc.officials
+        counts.organizations += fc.organizations
+        counts.policies += fc.policies
+      }
+    }
+    return { id: tid, name: t.name, color: t.color, slug: t.slug, focusAreas: fas, entityCounts: counts }
+  })
+
+  // Bridge connections: themes that share focus areas connected to the same entities
+  const bridges: Array<{ from: string; to: string; count: number }> = []
+  // Build focus_id -> theme_id map
+  const faToTheme: Record<string, string> = {}
+  for (const fa of focusAreas ?? []) { if (fa.theme_id) faToTheme[fa.focus_id] = fa.theme_id }
+
+  // For each entity's focus areas, find which themes are connected
+  function addBridges(rows: Array<{ focus_id: string }>, idKey: string) {
+    const entityThemes: Record<string, Set<string>> = {}
+    for (const r of rows) {
+      const eid = (r as any)[idKey]
+      const theme = faToTheme[r.focus_id]
+      if (!eid || !theme) continue
+      if (!entityThemes[eid]) entityThemes[eid] = new Set()
+      entityThemes[eid].add(theme)
+    }
+    const bridgeCount: Record<string, number> = {}
+    for (const themes of Object.values(entityThemes)) {
+      const arr = Array.from(themes).sort()
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          const key = arr[i] + '|' + arr[j]
+          bridgeCount[key] = (bridgeCount[key] || 0) + 1
+        }
+      }
+    }
+    return bridgeCount
+  }
+
+  const allBridgeCounts: Record<string, number> = {}
+  for (const src of [
+    { rows: contentFocus ?? [], key: 'content_id' },
+    { rows: orgFocus ?? [], key: 'org_id' },
+    { rows: officialFocus ?? [], key: 'official_id' },
+  ]) {
+    const bc = addBridges(src.rows, src.key)
+    for (const [k, v] of Object.entries(bc)) {
+      allBridgeCounts[k] = (allBridgeCounts[k] || 0) + v
+    }
+  }
+  for (const [key, count] of Object.entries(allBridgeCounts)) {
+    if (count < 2) continue
+    const [from, to] = key.split('|')
+    bridges.push({ from, to, count })
+  }
+  bridges.sort(function (a, b) { return b.count - a.count })
+
+  // Content counts by pathway_primary
+  const contentByPw: Record<string, number> = {}
+  for (const c of contentAll ?? []) {
+    if (c.pathway_primary) contentByPw[c.pathway_primary] = (contentByPw[c.pathway_primary] || 0) + 1
+  }
+
+  return {
+    pathways,
+    bridges: bridges.slice(0, 21),
+    totals: {
+      content: (contentAll ?? []).length,
+      services: (servicesAll ?? []).length,
+      officials: (officialsAll ?? []).length,
+      organizations: (orgsAll ?? []).length,
+      policies: (policiesAll ?? []).length,
+      focusAreas: (focusAreas ?? []).length,
     },
   }
 }

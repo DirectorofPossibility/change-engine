@@ -286,7 +286,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           { key: 'year_founded', label: 'Year Founded', type: 'number', value: org.year_founded },
           { key: 'annual_budget', label: 'Annual Budget', type: 'number', value: org.annual_budget },
           { key: 'ntee_code', label: 'NTEE Code', type: 'text', value: org.ntee_code },
-          { key: 'engagement_level', label: 'Engagement Level', type: 'select', value: org.engagement_level, options: ['anchor', 'active', 'emerging', 'listed'] },
+          { key: 'engagement_level', label: 'Engagement Level', type: 'select', value: (org as any).engagement_level, options: ['anchor', 'active', 'emerging', 'listed'] },
         ] as EditField[]}
       />
     </div>

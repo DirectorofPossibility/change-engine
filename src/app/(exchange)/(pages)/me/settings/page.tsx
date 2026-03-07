@@ -24,6 +24,8 @@ import { createClient } from '@/lib/supabase/client'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
   const [displayName, setDisplayName] = useState('')
   const [address, setAddress] = useState('')
   const [zipCode, setZipCode] = useState('')
@@ -32,6 +34,7 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -44,6 +47,9 @@ export default function SettingsPage() {
         router.push('/login?redirect=/me/settings')
         return
       }
+      setUserId(data.user.id)
+      const meta = data.user.user_metadata || {}
+      setAvatarUrl(meta.avatar_url || meta.picture || null)
       supabase
         .from('user_profiles')
         .select('*')
@@ -124,6 +130,47 @@ export default function SettingsPage() {
     setSaving(false)
   }
 
+  // ── Upload profile picture ──
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !userId) return
+    if (!file.type.startsWith('image/')) { setError('Please select an image file.'); return }
+    if (file.size > 2 * 1024 * 1024) { setError('Image must be under 2MB.'); return }
+
+    setUploadingAvatar(true)
+    setError(null)
+    setMessage(null)
+
+    const supabase = createClient()
+    const ext = file.name.split('.').pop() || 'jpg'
+    const path = 'avatars/' + userId + '.' + ext
+
+    const { error: uploadErr } = await supabase.storage
+      .from('public')
+      .upload(path, file, { upsert: true, contentType: file.type })
+
+    if (uploadErr) {
+      setError('Upload failed: ' + uploadErr.message)
+      setUploadingAvatar(false)
+      return
+    }
+
+    const { data: urlData } = supabase.storage.from('public').getPublicUrl(path)
+    const newUrl = urlData.publicUrl + '?t=' + Date.now()
+
+    const { error: metaErr } = await supabase.auth.updateUser({
+      data: { avatar_url: newUrl },
+    })
+
+    if (metaErr) {
+      setError('Failed to update profile: ' + metaErr.message)
+    } else {
+      setAvatarUrl(newUrl)
+      setMessage('Profile picture updated.')
+    }
+    setUploadingAvatar(false)
+  }
+
   if (loading) {
     return (
       <div className="max-w-lg mx-auto px-4 py-16">
@@ -152,6 +199,35 @@ export default function SettingsPage() {
           {error}
         </div>
       )}
+
+      {/* ── Profile Picture ── */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-brand-text mb-3">Profile Picture</h2>
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-brand-bg-alt border-2 border-brand-border overflow-hidden flex items-center justify-center flex-shrink-0">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-xl font-bold text-brand-accent">
+                {displayName ? displayName.charAt(0).toUpperCase() : '?'}
+              </span>
+            )}
+          </div>
+          <div>
+            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border rounded-lg text-sm font-medium text-brand-text hover:border-brand-accent transition-colors cursor-pointer">
+              {uploadingAvatar ? 'Uploading...' : 'Change Picture'}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                disabled={uploadingAvatar}
+                className="sr-only"
+              />
+            </label>
+            <p className="text-xs text-brand-muted mt-1">JPG or PNG, max 2MB. Shown in the Knowledge Graph and across the site.</p>
+          </div>
+        </div>
+      </div>
 
       {/* ── Profile Settings ── */}
       <form onSubmit={handleSaveProfile} className="space-y-4 mb-10">

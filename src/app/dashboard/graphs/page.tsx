@@ -1,25 +1,18 @@
-/**
- * @fileoverview Unified Graphs page with tabs for each graph type.
- *
- * Consolidates Knowledge Graph, Circle Graph, Coverage Heatmap, and
- * Graph Explorer into a single page with a tabbed interface.
- *
- * @route GET /dashboard/graphs
- */
-
 import type { Metadata } from 'next'
 import { getGraphExplorerData, getGraphCoverage } from '@/lib/data/dashboard'
+import { getCircleGraphData } from '@/lib/data/exchange'
 import { GraphsClient } from './GraphsClient'
 
 export const metadata: Metadata = {
   title: 'Graphs — Pipeline Admin',
-  description: 'Unified graph visualizations: knowledge graph, circles, coverage, and explorer.',
+  description: 'Unified graph visualizations: circles, coverage, and explorer.',
 }
 
 export default async function GraphsPage() {
-  const [{ nodes, edges }, { cells, entityCounts }] = await Promise.all([
+  const [{ nodes, edges }, { cells, entityCounts }, knowledgeGraphData] = await Promise.all([
     getGraphExplorerData(),
     getGraphCoverage(),
+    getCircleGraphData(),
   ])
 
   return (
@@ -35,6 +28,7 @@ export default async function GraphsPage() {
         explorerEdges={edges}
         coverageCells={cells}
         coverageEntityCounts={entityCounts}
+        knowledgeGraphData={knowledgeGraphData}
       />
     </div>
   )

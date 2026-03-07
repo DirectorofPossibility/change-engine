@@ -488,13 +488,13 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           { key: 'official_name', label: 'Official Name', type: 'text', value: official.official_name },
           { key: 'title', label: 'Title', type: 'text', value: official.title },
           { key: 'party', label: 'Party', type: 'select', value: official.party, options: ['Democrat', 'Republican', 'Independent', 'Nonpartisan'] },
-          { key: 'phone', label: 'Phone', type: 'text', value: official.phone },
-          { key: 'email', label: 'Email', type: 'text', value: official.email },
+          { key: 'phone', label: 'Phone', type: 'text', value: (official as any).phone },
+          { key: 'email', label: 'Email', type: 'text', value: (official as any).email },
           { key: 'website', label: 'Website', type: 'url', value: official.website },
           { key: 'office_address', label: 'Office Address', type: 'text', value: (official as any).office_address },
           { key: 'photo_url', label: 'Photo URL', type: 'url', value: official.photo_url },
           { key: 'bio_summary', label: 'Bio Summary', type: 'textarea', value: (official as any).bio_summary },
-          { key: 'government_level', label: 'Government Level', type: 'select', value: official.government_level, options: ['federal', 'state', 'county', 'city'] },
+          { key: 'government_level', label: 'Government Level', type: 'select', value: (official as any).government_level, options: ['federal', 'state', 'county', 'city'] },
         ] as EditField[]}
       />
     </div>

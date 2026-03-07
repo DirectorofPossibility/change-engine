@@ -3,14 +3,10 @@
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { CoverageHeatmap } from '../graph-coverage/CoverageHeatmap'
+import type { CircleGraphData } from '@/lib/data/exchange'
 
 const CircleKnowledgeGraph = dynamic(
   () => import('@/components/exchange/CircleKnowledgeGraph'),
-  { ssr: false, loading: () => <div className="h-[600px] flex items-center justify-center text-gray-400">Loading graph...</div> }
-)
-
-const KnowledgeGraphClient = dynamic(
-  () => import('@/components/KnowledgeGraphClient'),
   { ssr: false, loading: () => <div className="h-[600px] flex items-center justify-center text-gray-400">Loading graph...</div> }
 )
 
@@ -20,7 +16,6 @@ const ForceGraph = dynamic(
 )
 
 const TABS = [
-  { id: 'knowledge', label: 'Knowledge Graph' },
   { id: 'circles', label: 'Circle Graph' },
   { id: 'coverage', label: 'Coverage Heatmap' },
   { id: 'explorer', label: 'Graph Explorer' },
@@ -33,10 +28,11 @@ interface GraphsClientProps {
   explorerEdges: any[]
   coverageCells: any[]
   coverageEntityCounts: any
+  knowledgeGraphData: CircleGraphData
 }
 
-export function GraphsClient({ explorerNodes, explorerEdges, coverageCells, coverageEntityCounts }: GraphsClientProps) {
-  const [activeTab, setActiveTab] = useState<TabId>('knowledge')
+export function GraphsClient({ explorerNodes, explorerEdges, coverageCells, coverageEntityCounts, knowledgeGraphData }: GraphsClientProps) {
+  const [activeTab, setActiveTab] = useState<TabId>('circles')
 
   return (
     <div>
@@ -59,25 +55,9 @@ export function GraphsClient({ explorerNodes, explorerEdges, coverageCells, cove
 
       {/* Tab Content */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        {activeTab === 'knowledge' && (
-          <div>
-            <div className="px-5 py-4 border-b border-gray-100">
-              <p className="text-sm text-gray-500">
-                Full knowledge graph showing entities, relationships, and taxonomy mappings.
-              </p>
-            </div>
-            <KnowledgeGraphClient />
-          </div>
-        )}
-
         {activeTab === 'circles' && (
-          <div>
-            <div className="px-5 py-4 border-b border-gray-100">
-              <p className="text-sm text-gray-500">
-                Interactive visualization of 7 pathways, 4 centers, bridge connections, SDGs, and social determinants.
-              </p>
-            </div>
-            <CircleKnowledgeGraph />
+          <div className="p-6">
+            <CircleKnowledgeGraph data={knowledgeGraphData} />
           </div>
         )}
 

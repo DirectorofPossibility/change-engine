@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   delete updates[config.pk]
 
   const supabase = await createClient()
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from(config.table)
     .update(updates)
     .eq(config.pk, entityId)
