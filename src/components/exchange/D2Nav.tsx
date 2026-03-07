@@ -7,6 +7,8 @@ import { Search, X, Menu, ChevronDown } from 'lucide-react'
 import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
+import { InfoBubble } from './InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 import { THEMES } from '@/lib/constants'
 
 const CENTERS = [
@@ -104,7 +106,7 @@ export function D2Nav({ election }: D2NavProps) {
       </div>
 
       {/* Top nav */}
-      <nav className="sticky top-0 z-50 border-b border-brand-border" style={{ background: 'rgba(245,247,250,0.95)', backdropFilter: 'blur(12px)' }}>
+      <nav className="sticky top-0 z-50 border-b border-brand-border" style={{ background: 'rgba(237,232,224,0.95)', backdropFilter: 'blur(12px)' }}>
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-14">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5">
@@ -165,15 +167,24 @@ export function D2Nav({ election }: D2NavProps) {
 
           {/* Right side */}
           <div className="flex items-center gap-2.5">
-            <div className="hidden md:block"><ZipInput /></div>
-            <div className="hidden md:block"><LanguageSwitcher /></div>
-            <Link
-              href="/search"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-brand-border text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted-light hover:border-brand-accent hover:text-brand-accent transition-colors"
-            >
-              <Search size={13} />
-              Search
-            </Link>
+            <div className="hidden md:block relative">
+              <ZipInput />
+              <InfoBubble id={TOOLTIPS.zip_input.id} text={TOOLTIPS.zip_input.text} position="bottom" />
+            </div>
+            <div className="hidden md:block relative">
+              <LanguageSwitcher />
+              <InfoBubble id={TOOLTIPS.language_switcher.id} text={TOOLTIPS.language_switcher.text} position="bottom" />
+            </div>
+            <div className="relative">
+              <Link
+                href="/search"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-brand-border text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted-light hover:border-brand-accent hover:text-brand-accent transition-colors"
+              >
+                <Search size={13} />
+                Search
+              </Link>
+              <InfoBubble id={TOOLTIPS.search_icon.id} text={TOOLTIPS.search_icon.text} position="bottom" />
+            </div>
             <Link
               href="/me"
               className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"

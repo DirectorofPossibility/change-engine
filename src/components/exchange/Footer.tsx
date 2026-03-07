@@ -32,7 +32,7 @@ const legal = [
 
 export function Footer() {
   return (
-    <footer className="bg-brand-bg border-t border-brand-border">
+    <footer className="bg-brand-bg-alt border-t border-brand-border">
       {/* Pathway spectrum bar */}
       <div className="flex h-1">
         {pathways.map(function (p) {

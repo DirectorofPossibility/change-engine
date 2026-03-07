@@ -11,7 +11,7 @@ const config: Config = {
       colors: {
         brand: {
           bg: '#FAF8F5',
-          'bg-alt': '#F0ECE6',
+          'bg-alt': '#EDE8E0',
           cream: '#FBF9F6',
           text: '#1A1A1A',
           accent: '#C75B2A',

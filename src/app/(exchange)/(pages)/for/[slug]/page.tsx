@@ -324,7 +324,7 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         return {
           type: 'content' as const,
           id: lp.path_id,
-          title: lp.title || lp.path_id,
+          title: lp.path_name || lp.title || 'Learning Path',
           summary: lp.description,
           subtitle: lp.difficulty_level,
           href: '/learn/' + ((lp as any).slug || lp.path_id),

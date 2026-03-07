@@ -3,6 +3,8 @@ import { FlowerOfLifeIcon } from './FlowerIcons'
 import { FOLWatermark } from './FOLWatermark'
 import { FeaturedPromo } from './FeaturedPromo'
 import { GoodThingsWidget } from './GoodThingsWidget'
+import { InfoBubble } from './InfoBubble'
+import { TOOLTIPS } from '@/lib/tooltips'
 
 const QUICK_ACCESS = [
   {
@@ -320,7 +322,8 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </div>
 
       {/* ── GAP STATS ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-10">
+      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-10 relative">
+        <InfoBubble id={TOOLTIPS.stats_bar.id} text={TOOLTIPS.stats_bar.text} position="top" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {GAP_STATS.map(function (stat, i) {
             const folImages = ['/images/fol/genesis.svg', '/images/fol/vesica-piscis.svg', '/images/fol/tripod-of-life.svg']
