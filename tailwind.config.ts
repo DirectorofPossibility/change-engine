@@ -42,6 +42,11 @@ const config: Config = {
           resource: '#C75B2A',
           action: '#38a169',
         },
+        sidebar: {
+          bg: '#1a1a2e',
+          active: 'rgba(199,91,42,0.2)',
+          hover: 'rgba(255,255,255,0.08)',
+        },
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', '-apple-system', 'sans-serif'],

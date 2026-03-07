@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Search, FileText, Zap, BarChart3,
   Languages, Wrench, Users, BookOpen, HelpCircle,
   Briefcase, CalendarDays, Building2, Globe,
-  LogOut, Compass, BookMarked,
+  LogOut, Compass, BookMarked, Quote,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -28,6 +28,7 @@ const ADMIN_NAV: NavItem[] = [
   { href: '/dashboard/users', label: 'Users', icon: Users },
   { href: '/dashboard/library', label: 'Library', icon: BookOpen },
   { href: '/dashboard/tools-guides', label: 'Tools & Guides', icon: BookMarked },
+  { href: '/dashboard/quotes', label: 'Quotes', icon: Quote },
   { href: '/dashboard/manual', label: 'Users Manual', icon: HelpCircle },
 ]
 
