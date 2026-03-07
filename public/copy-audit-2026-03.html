@@ -20,7 +20,7 @@
   h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; }
 
   .cover {
-    background: #2C2418;
+    background: #1A1A2E;
     color: white;
     padding: 80px 60px 60px;
     page-break-after: always;
@@ -104,7 +104,7 @@
   }
 
   .section-divider {
-    background: #2C2418;
+    background: #1A1A2E;
     color: white;
     padding: 40px 32px;
     margin: 0 -32px;
@@ -162,7 +162,7 @@
   thead th {
     text-align: left;
     padding: 10px 12px;
-    background: #2C2418;
+    background: #1A1A2E;
     color: white;
     font-size: 11px;
     font-weight: 700;
@@ -936,6 +936,125 @@
       <div class="location">Translated content</div>
       <div class="text">This content is available in your selected language</div>
     </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ PLAIN TEXT LIST ═══════════════════════════════════════ -->
+  <div class="section-divider">
+    <h2>Plain Text Lists (Copy &amp; Paste)</h2>
+    <p>Select and copy these lists for use in docs, spreadsheets, or task trackers</p>
+  </div>
+
+  <div style="margin:32px 0;">
+    <h3 style="font-size:18px; margin-bottom:12px;">Pages Needing Copy</h3>
+    <textarea readonly style="width:100%; height:520px; font-family:'SF Mono','Fira Code',monospace; font-size:12px; line-height:1.7; padding:16px; border:2px solid #E2DDD5; border-radius:8px; background:white; color:#1A1A1A; resize:vertical;" onclick="this.select()">PAGES THAT EXIST BUT NEED COPY
+================================
+1. [HIGH] /call-your-senators — No hero, no intro copy. Needs compelling "make your voice heard" copy.
+2. [HIGH] /foundations — No hero, no intro copy. Needs hero explaining Houston's philanthropic ecosystem.
+3. [MED]  /knowledge-graph — No hero, no intro copy. Needs hero explaining the Civic Knowledge Galaxy.
+4. [MED]  /goodthings — No server-side copy. Needs hero explaining "Three Good Things."
+5. [MED]  /dashboard-live — Minimal copy. Needs richer intro about real-time data.
+6. [LOW]  /search — Could use persistent intro above tabs explaining what's searchable.
+7. [MED]  /polling-places — Uses i18n keys. Verify strings exist. No editorial intro paragraph.
+8. [LOW]  /me/settings — Bare "Settings" header. Needs one-liner about what you can manage.
+9. [LOW]  /login — Minimal welcome text. Could be warmer.
+10. [LOW] /reset-password — Functional but could be warmer.
+
+PAGES THAT NEED TO BE CREATED
+================================
+11. [HIGH] /manual — User Manual. Full page explaining how to use the platform. #1 priority.
+12. [HIGH] /donate — Donation page. Mission statement, impact stats, tiers, CTA.
+13. [LOW]  /districts — Political district explorer. Blocked by geo Phase 2.
+14. [LOW]  /quizzes — Civic engagement quizzes. Needs intro copy + quiz content.
+
+PAGES THAT MAY NEED REFRESH
+================================
+15. /guide — Magazine aggregator. Has PersonaSelector but no PageHero.
+16. /learning-paths — Duplicate of /learn. Consider deduplicating.
+17. /compass — All copy in client component. Verify intro copy exists.</textarea>
+  </div>
+
+  <div style="margin:32px 0;">
+    <h3 style="font-size:18px; margin-bottom:12px;">All 53 Tooltips &amp; Info Bubbles</h3>
+    <textarea readonly style="width:100%; height:900px; font-family:'SF Mono','Fira Code',monospace; font-size:12px; line-height:1.7; padding:16px; border:2px solid #E2DDD5; border-radius:8px; background:white; color:#1A1A1A; resize:vertical;" onclick="this.select()">TOOLTIPS &amp; INFO BUBBLES — FULL LIST
+======================================
+
+I. GLOBAL NAVIGATION (every page)
+1. ZIP Code Input — "Enter your ZIP code to see your elected officials, nearby services, and neighborhood resources"
+2. Language Switcher — "Read this page in English, Spanish, or Vietnamese"
+3. Search Icon — "Search across resources, services, officials, policies, organizations, and learning paths"
+4. Pathway Dots — Each dot: "[Pathway name] — [one-line description]"
+5-8. Dropdown Menus — Each link needs a brief one-line description below the label
+
+II. HOMEPAGE
+9. PersonaSelector Cards — "These aren't account types — they're lenses. Pick one to reorder the page by what matters most to you."
+10. Pathway Cards — "Each pathway groups related topics. Tap to explore resources, services, and learning for that theme."
+11. Stats Bar — "Live counts from our database — updated daily from public data sources"
+
+III. OFFICIALS PAGE
+12. ZIP Lookup — "We match your ZIP to congressional, state, county, and city districts to find all ~30 of your representatives"
+13. Level Badges — "Federal = Washington DC. State = Austin. County = Harris County. City = Houston."
+14. Party Label — "Political party affiliation"
+
+IV. SERVICES PAGE
+15. 211 Badge — "211 is Texas's health and human services information line. Call 2-1-1 for free help finding services."
+16. Map View Toggle — "Switch between list and map view to see services plotted by location"
+17. Service Type Tags — "Service categories from the 211 Texas taxonomy"
+
+V. POLICIES &amp; LEGISLATION
+18. Government Level Filter — "Filter by which level of government introduced this legislation"
+19. Status Badge — "Current status of this legislation in the legislative process"
+20. For/Against Arguments — "Plain-language summaries of the main arguments on each side"
+
+VI. ELECTIONS &amp; VOTING
+21. Election Countdown — "Days until the next election. Early voting often starts 2 weeks before Election Day."
+22. Registration Deadline — "You must register 30 days before an election to vote in Texas"
+23. Polling Place Finder — "Enter your address or ZIP to find your assigned polling location and early voting sites"
+
+VII. LEARNING PATHS
+24. Difficulty Badge — "Beginner: no prior knowledge needed. Intermediate: builds on basics. Advanced: deeper civic engagement."
+25. Estimated Minutes — "Total time to complete all modules, including videos and reading"
+26. Quiz Indicator — "Short knowledge check — not graded, just to reinforce what you learned"
+27. Module Media Pills — "Curated resources from trusted sources like TED, PBS, and community organizations"
+
+VIII. LIBRARY &amp; RESEARCH
+28. AI Summary Badge — "This summary was generated by AI to make research accessible at a 6th-grade reading level"
+29. Chat with Chance — "Chance is an AI assistant trained on Houston community data. Ask about services, officials, policies, or anything in our knowledge base."
+30. Source Attribution — "Original research from this organization — we summarize, they author"
+
+IX. ORGANIZATIONS &amp; FOUNDATIONS
+31. Org Action Buttons — "Direct links to this organization's engagement pages"
+32. Foundation Galaxy — "Each dot is a foundation. Size shows funding level. Color shows primary pathway. Click to explore."
+33. NTEE Code — "National Taxonomy of Exempt Entities — a standardized classification for nonprofits"
+
+X. OPPORTUNITIES &amp; EVENTS
+34. Time Commitment — "Estimated time: one-time, weekly, monthly, or ongoing"
+35. Virtual Badge — "This opportunity can be done remotely"
+36. Spots Available — "Number of openings remaining"
+
+XI. NEIGHBORHOODS &amp; GEOGRAPHY
+37. Super Neighborhood Number — "Houston divides into 88 super neighborhoods, each with a council that advises City Hall"
+38. Population/Income Stats — "Census data — used to understand community needs and allocate resources"
+39. GeoJSON Boundaries — "Boundaries from the City of Houston Planning Department"
+
+XII. DETAIL PAGE WAYFINDER (sidebar)
+40. Wayfinder Panel — "The Wayfinder shows related resources connected to what you're viewing — officials, policies, services, and content that share the same focus areas"
+41. Focus Area Dots — "Focus areas are specific topics within a pathway. Tap any dot to explore everything tagged with that focus."
+42. Engagement Tiers — "Three levels: Understand (learn about it), Get Involved (take action), Go Deeper (follow the systems)"
+43. Taxonomy Section — "Classification metadata — how this item connects to SDGs, social determinants, and government systems"
+44. Suggest an Edit — "See something that needs updating? Community members help keep our information accurate."
+
+XIII. USER ACCOUNT
+45. Impact Points — "Points earned from completing learning modules, taking civic actions, and engaging with community resources"
+46. Badges — "Earned by completing learning paths, attending events, and taking civic action"
+47. Role Badge — "Member: browse and learn. Neighbor: submit resources and track activity. Partner: manage organization, post events."
+48. Gamification Toggle — "Turn badges and points on or off. Your progress is still tracked either way."
+49. Neighbor vs Partner — "Neighbor accounts are free for individuals. Partner accounts ($100-$5,000/yr) are for organizations."
+
+XIV. CONTENT CARDS (global)
+50. Pathway Color Bar — Show pathway name on hover
+51. Content Type Badge — "How this resource is meant to be consumed: article, video, report, tool, etc."
+52. Source Attribution — "Original source — we link to them, not replace them"
+53. Translation Indicator — "This content is available in your selected language"</textarea>
   </div>
 
   <!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
