@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { MapPin, Send, Sparkles, Mail, Download, ChevronDown, Globe } from 'lucide-react'
+import { MapPin, Send, Mail, Download, ChevronDown, Globe } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import dynamic from 'next/dynamic'
@@ -104,53 +104,106 @@ export function GoodThingsClient() {
     const w = 800; const h = 600
     canvas.width = w; canvas.height = h
 
-    ctx.fillStyle = '#1A1A1A'
+    // Background — warm cream with subtle noise texture
+    ctx.fillStyle = '#FAF8F5'
     ctx.fillRect(0, 0, w, h)
 
-    // FOL watermark circles
-    ctx.globalAlpha = 0.06; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5
-    const cx = w - 120; const cy = 100; const r = 60
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3
-      ctx.beginPath(); ctx.arc(cx + r * Math.cos(angle), cy + r * Math.sin(angle), r, 0, Math.PI * 2); ctx.stroke()
+    // Noise texture overlay
+    ctx.globalAlpha = 0.03
+    for (let x = 0; x < w; x += 3) {
+      for (let y = 0; y < h; y += 3) {
+        const v = Math.random() * 80
+        ctx.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')'
+        ctx.fillRect(x, y, 3, 3)
+      }
     }
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke()
     ctx.globalAlpha = 1
 
+    // Large FOL watermark — center-right, faded
+    ctx.globalAlpha = 0.04; ctx.strokeStyle = '#C75B2A'; ctx.lineWidth = 1.5
+    const folCx = w - 180; const folCy = h / 2; const folR = 140
+    ctx.beginPath(); ctx.arc(folCx, folCy, folR, 0, Math.PI * 2); ctx.stroke()
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3
+      ctx.beginPath(); ctx.arc(folCx + folR * Math.cos(angle), folCy + folR * Math.sin(angle), folR, 0, Math.PI * 2); ctx.stroke()
+    }
+    // Inner ring
+    const folR2 = folR * 0.577
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3 + Math.PI / 6
+      ctx.beginPath(); ctx.arc(folCx + folR2 * Math.cos(angle), folCy + folR2 * Math.sin(angle), folR2, 0, Math.PI * 2); ctx.stroke()
+    }
+    ctx.globalAlpha = 1
+
+    // Spectrum bar — top
     const spectrum = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#319795', '#3182ce', '#805ad5']
     const barW = w / spectrum.length
-    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, 0, barW + 1, 4) })
+    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, 0, barW + 1, 5) })
 
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 32px serif'
-    ctx.fillText('Three Good Things', 48, 70)
+    // Brand header
+    ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 14px sans-serif'
+    ctx.fillText('COMMUNITY EXCHANGE', 48, 40)
+    ctx.fillStyle = '#9B9590'; ctx.font = '11px sans-serif'
+    ctx.fillText('Powered by The Change Lab', 48, 58)
 
-    ctx.font = '16px sans-serif'; ctx.fillStyle = 'rgba(255,255,255,0.5)'
+    // Accent line under header
+    ctx.fillStyle = '#C75B2A'; ctx.fillRect(48, 68, 60, 3)
+
+    // Title
+    ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 28px serif'
+    ctx.fillText('Three Good Things', 48, 105)
+
+    // Location + date
+    ctx.font = '13px sans-serif'; ctx.fillStyle = '#6B6560'
     const loc = [lastEntry.city, lastEntry.state, lastEntry.zip_code].filter(Boolean).join(', ')
-    ctx.fillText(loc || 'ZIP ' + lastEntry.zip_code, 48, 100)
-    ctx.fillText(new Date(lastEntry.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), 48, 125)
+    ctx.fillText(loc || 'ZIP ' + lastEntry.zip_code, 48, 130)
+    ctx.fillText(new Date(lastEntry.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), 48, 150)
 
+    // Thin separator
+    ctx.fillStyle = '#E2DDD5'; ctx.fillRect(48, 168, w - 96, 1)
+
+    // Three things
     const things = [lastEntry.thing_1, lastEntry.thing_2, lastEntry.thing_3]
-    let y = 180
+    let y = 200
     things.forEach(function (thing, i) {
-      ctx.fillStyle = THING_COLORS[i]; ctx.beginPath(); ctx.arc(72, y + 2, 16, 0, Math.PI * 2); ctx.fill()
-      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center'
-      ctx.fillText(String(i + 1), 72, y + 7); ctx.textAlign = 'left'
-      ctx.font = '20px sans-serif'; ctx.fillStyle = '#ffffff'
-      const maxW = w - 150; const words = thing.split(' ')
+      // Left color bar
+      ctx.fillStyle = THING_COLORS[i]; ctx.fillRect(48, y - 8, 4, 50)
+
+      // Number
+      ctx.fillStyle = THING_COLORS[i]; ctx.font = 'bold 24px serif'
+      ctx.fillText(String(i + 1), 68, y + 16)
+
+      // Text — word wrap
+      ctx.font = '18px sans-serif'; ctx.fillStyle = '#1A1A1A'
+      const maxW = w - 200; const words = thing.split(' ')
       let line = ''; let lineY = y
       words.forEach(function (word) {
         const test = line + (line ? ' ' : '') + word
         if (ctx.measureText(test).width > maxW && line) {
-          ctx.fillText(line, 104, lineY + 7); line = word; lineY += 28
+          ctx.fillText(line, 100, lineY + 14); line = word; lineY += 26
         } else { line = test }
       })
-      if (line) ctx.fillText(line, 104, lineY + 7)
-      y = lineY + 60
+      if (line) ctx.fillText(line, 100, lineY + 14)
+      y = lineY + 65
     })
 
-    ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '13px sans-serif'
-    ctx.fillText('Community Exchange  |  changeengine.us/goodthings', 48, h - 30)
-    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, h - 4, barW + 1, 4) })
+    // Footer
+    ctx.fillStyle = '#E2DDD5'; ctx.fillRect(48, h - 55, w - 96, 1)
+    ctx.fillStyle = '#9B9590'; ctx.font = 'bold 11px sans-serif'
+    ctx.fillText('changeengine.us/goodthings', 48, h - 30)
+
+    // Small FOL icon bottom-right
+    ctx.globalAlpha = 0.08; ctx.strokeStyle = '#C75B2A'; ctx.lineWidth = 1
+    const smR = 18; const smCx = w - 70; const smCy = h - 35
+    ctx.beginPath(); ctx.arc(smCx, smCy, smR, 0, Math.PI * 2); ctx.stroke()
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * Math.PI) / 3
+      ctx.beginPath(); ctx.arc(smCx + smR * Math.cos(angle), smCy + smR * Math.sin(angle), smR, 0, Math.PI * 2); ctx.stroke()
+    }
+    ctx.globalAlpha = 1
+
+    // Spectrum bar — bottom
+    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, h - 5, barW + 1, 5) })
 
     const link = document.createElement('a')
     link.download = 'three-good-things-' + lastEntry.zip_code + '.png'
@@ -178,9 +231,8 @@ export function GoodThingsClient() {
         <div className="h-1 bg-gradient-to-r from-[#e53e3e] via-[#38a169] to-[#805ad5]" />
         <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <div className="inline-flex items-center gap-2 mb-5">
-            <Sparkles size={18} className="text-[#d69e2e]" />
-            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-white/40">A Community Practice</span>
-            <Sparkles size={18} className="text-[#d69e2e]" />
+            <FlowerOfLifeIcon size={18} color="#C75B2A" />
+            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-muted">A Community Practice</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">Three Good Things</h1>
           <p className="text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
@@ -322,7 +374,7 @@ export function GoodThingsClient() {
           <section className="mb-12">
             <div className="bg-white rounded-2xl border-2 border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden" style={{ boxShadow: '4px 4px 0 #D1D5E0' }}>
               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#38a169]" />
-              <Sparkles size={32} className="mx-auto mb-3 text-[#d69e2e]" />
+              <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
               <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">Your good things are on the map!</h2>
               <p className="text-sm text-brand-muted mb-6 max-w-md mx-auto">
                 Thank you for sharing positivity with the community. Your entry is now part of the story.
