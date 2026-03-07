@@ -28,6 +28,9 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { ExternalLink, Building2, Newspaper, FileText, Scale } from 'lucide-react'
 import { getUIStrings } from '@/lib/i18n'
 import { ENGAGEMENT_LEVEL_COLORS } from '@/lib/constants'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 
 /** Strip dangerous HTML tags and attributes to prevent XSS. */
 function sanitizeHtml(html: string): string {
@@ -81,6 +84,8 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
   const guideTitle = guideTranslations[guide.guide_id]?.title || guide.title
   const guideDescription = guideTranslations[guide.guide_id]?.summary || guide.description
 
+  const userProfile = await getUserProfile()
+
   // Fetch all related data in parallel
   const [
     focusAreas,
@@ -89,6 +94,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     opportunities,
     policies,
     adjacentGuides,
+    wayfinderData,
   ] = await Promise.all([
     focusAreaIds.length > 0 ? getFocusAreasByIds(focusAreaIds) : Promise.resolve([]),
     focusAreaIds.length > 0 ? getRelatedOrgsForGuide(focusAreaIds) : Promise.resolve([]),
@@ -96,6 +102,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     focusAreaIds.length > 0 ? getRelatedOpportunities(focusAreaIds) : Promise.resolve([]),
     focusAreaIds.length > 0 ? getRelatedPolicies(focusAreaIds) : Promise.resolve([]),
     getAdjacentGuides(guide.display_order, guide.theme_id),
+    getWayfinderContext('guide', guide.guide_id, userProfile?.role),
   ])
 
   // Fetch translations for related content
@@ -447,6 +454,9 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                   </a>
                 </div>
               )}
+
+              {/* Wayfinder */}
+              <DetailWayfinder data={wayfinderData} currentType="guide" currentId={guide.guide_id} userRole={userProfile?.role} />
             </aside>
           )}
         </div>

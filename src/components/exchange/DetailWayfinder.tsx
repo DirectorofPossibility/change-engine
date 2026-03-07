@@ -19,6 +19,18 @@ interface DetailWayfinderProps {
   userRole?: string
 }
 
+/** Small "Connected through" label showing shared focus areas */
+function ConnectionContext({ focusAreas }: { focusAreas: Array<{ focus_area_name: string; theme_id: string | null }> }) {
+  if (focusAreas.length === 0) return null
+  const names = focusAreas.slice(0, 3).map(fa => fa.focus_area_name)
+  const more = focusAreas.length > 3 ? ' +' + (focusAreas.length - 3) + ' more' : ''
+  return (
+    <p className="text-[10px] text-brand-muted-light italic mb-2">
+      Connected through: {names.join(', ')}{more}
+    </p>
+  )
+}
+
 export async function DetailWayfinder({ data, currentType, currentId, userRole }: DetailWayfinderProps) {
   const cookieStore = await cookies()
   const designV1 = cookieStore.get('design')?.value === 'v1'
@@ -284,6 +296,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-4 pb-4 space-y-2">
+            <ConnectionContext focusAreas={data.focusAreas} />
             {newsContent.map(function (c) {
               const themeKey = c.pathway_primary as keyof typeof THEMES | null
               const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
@@ -337,6 +350,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-4 pb-4 space-y-2">
+            <ConnectionContext focusAreas={data.focusAreas} />
             {eventContent.map(function (c) {
               const themeKey = c.pathway_primary as keyof typeof THEMES | null
               const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
@@ -411,6 +425,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
           <div className="px-4 pb-4 space-y-2">
+            <ConnectionContext focusAreas={data.focusAreas} />
             {data.officials.map(function (o) {
               return (
                 <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-2 group/off">
