@@ -5,6 +5,7 @@ import { FeaturedPromo } from './FeaturedPromo'
 import { GoodThingsWidget } from './GoodThingsWidget'
 import { InfoBubble } from './InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
+import { HeroZipInput } from './HeroZipInput'
 import { CENTERS, CENTER_COLORS } from '@/lib/constants'
 
 const QUICK_ACCESS = [
@@ -122,12 +123,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 <strong className="text-brand-text">That&apos;s not a motivation problem. It&apos;s a navigation problem.</strong>
               </p>
 
-              <div className="flex items-center gap-3 max-w-sm px-4 py-3 bg-white border-2 border-brand-text rounded-xl mb-5"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-                <span className="text-sm text-brand-muted">Enter your zip code or address</span>
-              </div>
+              <HeroZipInput />
 
               <div className="flex flex-wrap gap-3">
                 <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
@@ -160,33 +156,33 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               </div>
             </div>
 
-            {/* Right — image collage (scattered, organic) */}
-            <div className="hidden lg:block flex-1 min-w-0 max-w-[540px]">
+            {/* Right — image collage (scattered polaroids) */}
+            <div className="hidden lg:block flex-1 min-w-0 max-w-[520px]">
               <div className="relative h-[440px]">
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '300px', height: '220px', top: '0', left: '20px', transform: 'rotate(-2deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 2 }}>
+                {/* Top-left — large, friends laughing */}
+                <div className="absolute rounded-2xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '260px', height: '200px', top: '0', left: '0', transform: 'rotate(-2deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 2 }}>
                   <img src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover" />
                 </div>
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '250px', height: '200px', top: '10px', right: '0', transform: 'rotate(3deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 3 }}>
+                {/* Top-right — volunteer, overlapping */}
+                <div className="absolute rounded-2xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '230px', height: '180px', top: '-10px', right: '0', transform: 'rotate(2.5deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 3 }}>
                   <img src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover" />
                 </div>
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '180px', height: '160px', bottom: '80px', left: '0', transform: 'rotate(2.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 4 }}>
+                {/* Center — cleanup, on top of everything */}
+                <div className="absolute rounded-2xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '200px', height: '140px', top: '140px', left: '140px', transform: 'rotate(-1deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 4 }}>
+                  <img src="/images/editorial/cleanup.jpg" alt="Community cleanup" className="w-full h-full object-cover" />
+                </div>
+                {/* Bottom-left — group sitting */}
+                <div className="absolute rounded-2xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '240px', height: '170px', bottom: '0', left: '-10px', transform: 'rotate(1.5deg)', boxShadow: '4px 3px 0 #D5D0C8', zIndex: 2 }}>
                   <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
                 </div>
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '190px', height: '150px', top: '0', left: '190px', transform: 'rotate(-1.5deg)', boxShadow: '4px 3px 0 #D5D0C8', zIndex: 1 }}>
-                  <img src="/images/editorial/health-fair.jpg" alt="Health fair" className="w-full h-full object-cover" />
-                </div>
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '170px', height: '140px', bottom: '0', right: '10px', transform: 'rotate(4deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 1 }}>
+                {/* Bottom-right — workshop/meeting */}
+                <div className="absolute rounded-2xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '220px', height: '160px', bottom: '10px', right: '-10px', transform: 'rotate(2deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 1 }}>
                   <img src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover" />
-                </div>
-                {/* Extra — on top, off-center right, tilted left */}
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
-                  style={{ width: '160px', height: '130px', top: '120px', right: '60px', transform: 'rotate(-3.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
-                  <img src="/images/editorial/cleanup.jpg" alt="Community volunteering" className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>
