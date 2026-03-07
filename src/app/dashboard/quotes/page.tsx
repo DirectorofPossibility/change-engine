@@ -2,6 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { THEMES } from '@/lib/constants'
+
+const PATHWAY_OPTIONS = Object.entries(THEMES).map(function ([id, t]) {
+  return { id, name: (t as any).name, color: (t as any).color }
+})
 
 interface Quote {
   quote_id: string
@@ -132,13 +137,17 @@ export default function QuotesAdmin() {
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Pathway ID</label>
-                <input
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Pathway</label>
+                <select
                   value={form.pathway_id}
                   onChange={function (e) { setForm({ ...form, pathway_id: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
-                  placeholder="Optional"
-                />
+                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
+                >
+                  <option value="">All pathways (general)</option>
+                  {PATHWAY_OPTIONS.map(function (pw) {
+                    return <option key={pw.id} value={pw.id}>{pw.name}</option>
+                  })}
+                </select>
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Display Order</label>
@@ -191,11 +200,15 @@ export default function QuotesAdmin() {
                       {q.attribution}
                     </span>
                   )}
-                  {q.pathway_id && (
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-brand-muted-light">
-                      {q.pathway_id}
-                    </span>
-                  )}
+                  {q.pathway_id && (() => {
+                    const pw = PATHWAY_OPTIONS.find(function (p) { return p.id === q.pathway_id })
+                    return (
+                      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide text-brand-muted-light">
+                        <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: pw?.color || '#999' }} />
+                        {pw?.name || q.pathway_id}
+                      </span>
+                    )
+                  })()}
                   <span className="font-mono text-[10px] text-brand-muted-light">
                     #{q.display_order}
                   </span>
