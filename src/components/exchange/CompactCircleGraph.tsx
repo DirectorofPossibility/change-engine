@@ -7,69 +7,70 @@ const THEME_KEYS = Object.keys(THEMES) as Array<keyof typeof THEMES>
 interface CompactCircleGraphProps {
   /** Highlighted pathway IDs (e.g. from focus areas on the current entity) */
   activePathways?: string[]
-  /** Accent color for the glow ring */
+  /** Accent color for the center circle */
   accentColor?: string
 }
 
 /**
- * Compact 7-circle flower arrangement for the wayfinder sidebar.
- * Shows the 7 pathways as small circles in a Flower-of-Life pattern,
- * with active pathways pulsing/highlighted.
+ * Compact Flower-of-Life circle graph for the Wayfinder sidebar.
+ * Matches the Change Engine logo: 6 overlapping stroked circles
+ * arranged in a FOL pattern with a small accent center circle.
+ * Active pathways glow brighter; inactive are faint.
  */
 export function CompactCircleGraph({ activePathways = [], accentColor }: CompactCircleGraphProps) {
-  const r = 18
   const cx = 80
   const cy = 80
-  const orbit = 28
+  const r = 28 // petal radius — sized so circles overlap significantly
+  const orbit = 28 // distance from center to petal center (equal to r for classic FOL)
 
-  const angles = [0, 60, 120, 180, 240, 300]
+  // 6 petals at 60-degree intervals, starting from top (-90 deg)
+  // This matches the logo's arrangement
+  const petalAngles = [-90, -30, 30, 90, 150, 210]
+
+  // Map petals to theme keys (skip THEME_01 which is the center)
+  const petalThemes = THEME_KEYS.slice(1, 7)
+
+  // Center theme (THEME_01)
+  const centerKey = THEME_KEYS[0]
+  const centerTheme = THEMES[centerKey] as { name: string; color: string }
+  const centerActive = activePathways.includes(centerKey)
 
   return (
     <div className="flex items-center justify-center py-3">
       <svg width="160" height="160" viewBox="0 0 160 160" className="overflow-visible">
-        {/* Outer bounding circle */}
-        <circle cx={cx} cy={cy} r={orbit + r + 6} fill="none" stroke="#D1D5E0" strokeWidth="0.5" opacity="0.4" />
-
-        {/* Center circle — always the brand accent or first active pathway */}
-        <circle
-          cx={cx}
-          cy={cy}
-          r={r}
-          fill="none"
-          stroke={accentColor || '#C75B2A'}
-          strokeWidth="1.5"
-          opacity="0.3"
-        />
-
-        {/* 6 surrounding pathway circles (THEME_01 is center, THEME_02–07 are petals) */}
-        {THEME_KEYS.slice(1).map(function (key, i) {
+        {/* 6 petal circles — stroked, overlapping */}
+        {petalThemes.map(function (key, i) {
           const theme = THEMES[key] as { name: string; color: string }
-          const rad = (angles[i] * Math.PI) / 180
+          const angle = petalAngles[i]
+          const rad = (angle * Math.PI) / 180
           const px = cx + orbit * Math.cos(rad)
           const py = cy + orbit * Math.sin(rad)
           const isActive = activePathways.includes(key)
 
           return (
             <g key={key}>
+              {/* Glow ring for active pathways */}
               {isActive && (
                 <circle
                   cx={px}
                   cy={py}
-                  r={r + 4}
+                  r={r + 3}
                   fill="none"
                   stroke={theme.color}
-                  strokeWidth="1"
-                  opacity="0.3"
+                  strokeWidth="2"
+                  opacity="0.2"
                 >
-                  <animate attributeName="r" values={`${r + 2};${r + 6};${r + 2}`} dur="3s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.3;0.15;0.3" dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.2;0.08;0.2" dur="4s" repeatCount="indefinite" />
                 </circle>
               )}
+              {/* Main petal circle — stroked like the logo */}
               <circle
                 cx={px}
                 cy={py}
-                r={isActive ? r * 0.65 : r * 0.45}
-                fill={theme.color}
+                r={r}
+                fill="none"
+                stroke={theme.color}
+                strokeWidth={isActive ? 2.5 : 1.5}
                 opacity={isActive ? 0.85 : 0.25}
                 className="transition-all duration-500"
               />
@@ -77,38 +78,17 @@ export function CompactCircleGraph({ activePathways = [], accentColor }: Compact
           )
         })}
 
-        {/* Center pathway (THEME_01) */}
-        {(() => {
-          const key = THEME_KEYS[0]
-          const theme = THEMES[key] as { name: string; color: string }
-          const isActive = activePathways.includes(key)
-          return (
-            <g>
-              {isActive && (
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r={r + 4}
-                  fill="none"
-                  stroke={theme.color}
-                  strokeWidth="1"
-                  opacity="0.3"
-                >
-                  <animate attributeName="r" values={`${r + 2};${r + 6};${r + 2}`} dur="3s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.3;0.15;0.3" dur="3s" repeatCount="indefinite" />
-                </circle>
-              )}
-              <circle
-                cx={cx}
-                cy={cy}
-                r={isActive ? r * 0.65 : r * 0.45}
-                fill={theme.color}
-                opacity={isActive ? 0.85 : 0.25}
-                className="transition-all duration-500"
-              />
-            </g>
-          )
-        })()}
+        {/* Center accent circle — smaller, matching the logo's inner circle */}
+        <circle
+          cx={cx}
+          cy={cy}
+          r={r * 0.4}
+          fill="none"
+          stroke={accentColor || centerTheme.color || '#C75B2A'}
+          strokeWidth={centerActive ? 2.5 : 1.5}
+          opacity={centerActive ? 0.85 : 0.35}
+          className="transition-all duration-500"
+        />
       </svg>
     </div>
   )

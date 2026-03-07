@@ -8,6 +8,7 @@ import {
   FileText, Tag,
 } from 'lucide-react'
 import type { WayfinderData } from '@/lib/types/exchange'
+import { getNeighborhoodByZip } from '@/lib/data/exchange'
 import { CompactCircleGraph } from './CompactCircleGraph'
 import { WayfinderTooltipPos } from './WayfinderTooltips'
 
@@ -31,11 +32,35 @@ function ConnectionContext({ focusAreas }: { focusAreas: Array<{ focus_area_name
   )
 }
 
+/** Geo-context bar: shows ZIP + resolved neighborhood name with link */
+async function GeoContext({ zip }: { zip: string }) {
+  const hood = await getNeighborhoodByZip(zip)
+  return (
+    <div className="px-4 py-2 border-b border-brand-border bg-brand-bg/50">
+      <div className="flex items-center gap-1.5">
+        <MapPin size={12} className="text-brand-accent flex-shrink-0" />
+        <span className="text-[11px] text-brand-muted">
+          Near <span className="font-medium text-brand-text">{zip}</span>
+          {hood && (
+            <>
+              {' '}&middot;{' '}
+              <Link href={'/neighborhoods/' + hood.neighborhood_id} className="text-brand-accent hover:underline">
+                {hood.neighborhood_name}
+              </Link>
+            </>
+          )}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 export async function DetailWayfinder({ data, currentType, currentId, userRole }: DetailWayfinderProps) {
   const cookieStore = await cookies()
   const designV1 = cookieStore.get('design')?.value === 'v1'
   const lang = cookieStore.get('lang')?.value || 'en'
   const userZip = cookieStore.get('zip')?.value || ''
+  const archetype = cookieStore.get('archetype')?.value || ''
   const t = getUIStrings(lang)
 
   // Separate event-type content into "What You Can Do", news/articles into "What's Happening"
@@ -55,7 +80,19 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const involvedCount = data.opportunities.length + data.services.length + eventContent.length
   const deeperCount = data.officials.length + data.policies.length + data.foundations.length
 
-  const firstOpenTier = understandCount > 0 ? 'understand' : involvedCount > 0 ? 'involved' : 'deeper'
+  // Archetype-based tier priority: which tier opens first
+  // Seeker/Explorer → understand, Learner → understand, Builder → involved, Watchdog/Partner → deeper
+  const archetypePriority: Record<string, string[]> = {
+    seeker: ['understand', 'involved', 'deeper'],
+    learner: ['understand', 'deeper', 'involved'],
+    builder: ['involved', 'understand', 'deeper'],
+    watchdog: ['deeper', 'understand', 'involved'],
+    partner: ['deeper', 'involved', 'understand'],
+    explorer: ['understand', 'involved', 'deeper'],
+  }
+  const tierCounts: Record<string, number> = { understand: understandCount, involved: involvedCount, deeper: deeperCount }
+  const priority = archetypePriority[archetype.toLowerCase()] || ['understand', 'involved', 'deeper']
+  const firstOpenTier = priority.find(t => tierCounts[t] > 0) || 'understand'
 
   return (
     <aside className="bg-white rounded-xl border border-brand-border lg:sticky lg:top-24">
@@ -67,12 +104,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         <WayfinderTooltipPos tipKey="wayfinder_panel" position="bottom" />
       </div>
 
-      {/* Geo context */}
+      {/* Geo context with neighborhood */}
       {userZip && (
-        <div className="px-4 py-2 border-b border-brand-border bg-brand-bg/50 flex items-center gap-1.5">
-          <MapPin size={12} className="text-brand-accent flex-shrink-0" />
-          <span className="text-[11px] text-brand-muted">Showing context near <span className="font-medium text-brand-text">{userZip}</span></span>
-        </div>
+        <GeoContext zip={userZip} />
       )}
 
       {/* Compact circle graph */}
