@@ -1863,7 +1863,7 @@ export async function getWayfinderContext(
     if (cands && cands.length > 0) {
       const candIds = cands.map((c: any) => c.candidate_id)
       const { data: cfa } = await (supabase as any).from('candidate_focus_areas').select('focus_id').in('candidate_id', candIds)
-      focusIds = [...new Set((cfa ?? []).map((j: any) => j.focus_id))]
+      focusIds = Array.from(new Set((cfa ?? []).map((j: any) => j.focus_id)))
     }
   } else if (entityType === 'neighborhood') {
     const { data } = await (supabase as any).from('neighborhoods').select('focus_area_ids, theme_id').eq('neighborhood_id', entityId).single()
