@@ -2940,3 +2940,134 @@ export async function getPathwaysHubData(): Promise<Record<string, PathwayHubIte
 
   return result
 }
+
+// ── Archetype Dashboard ─────────────────────────────────────────────────
+
+export interface ArchetypeDashboardData {
+  contentByCenter: Record<string, Array<{
+    id: string; title: string; summary: string | null; pathway: string | null
+    center: string | null; content_type: string | null; image_url: string | null
+    source_domain: string | null; published_at: string | null
+  }>>
+  contentCountsByType: Record<string, number>
+  contentCountsByPathway: Record<string, number>
+  services: Array<{ service_id: string; service_name: string; description: string | null; org_name: string | null; category: string | null }>
+  officials: Array<{ official_id: string; official_name: string; title: string | null; party: string | null; level: string | null; photo_url: string | null }>
+  policies: Array<{ policy_id: string; policy_name: string; summary: string | null; policy_type: string | null; level: string | null; status: string | null }>
+  opportunities: Array<{ opportunity_id: string; title: string; description: string | null; org_name: string | null; time_commitment: string | null; is_virtual: boolean | null }>
+  learningPaths: Array<{ path_id: string; path_name: string; description: string | null; theme_id: string | null; estimated_minutes: number | null; difficulty_level: string | null }>
+  guides: Array<{ guide_id: string; title: string; slug: string; description: string | null; theme_id: string | null; hero_image_url: string | null }>
+  libraryDocs: Array<{ id: string; title: string; summary: string | null; tags: string[]; theme_ids: string[]; page_count: number | null }>
+  totalCounts: { content: number; services: number; officials: number; policies: number; opportunities: number; learningPaths: number; guides: number; library: number }
+}
+
+export async function getArchetypeDashboardData(): Promise<ArchetypeDashboardData> {
+  const supabase = await createClient()
+
+  const [
+    { data: allContent },
+    { data: services },
+    { data: officials },
+    { data: policies },
+    { data: opportunities },
+    { data: learningPaths },
+    { data: guides },
+    { data: libraryDocs },
+  ] = await Promise.all([
+    supabase
+      .from('content_published')
+      .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, content_type, image_url, source_domain, published_at')
+      .eq('is_active', true)
+      .order('published_at', { ascending: false })
+      .limit(200),
+    supabase
+      .from('services_211')
+      .select('service_id, service_name, description_5th_grade, org_id, service_category')
+      .eq('is_active', 'Yes')
+      .limit(30),
+    supabase
+      .from('elected_officials')
+      .select('official_id, official_name, title, party, level, photo_url')
+      .limit(30),
+    supabase
+      .from('policies')
+      .select('policy_id, policy_name, summary_5th_grade, policy_type, level, status')
+      .limit(30),
+    (supabase as any)
+      .from('opportunities')
+      .select('opportunity_id, title, description_5th_grade, organization_name, time_commitment, is_virtual')
+      .eq('is_active', 'Yes')
+      .limit(30),
+    (supabase as any)
+      .from('learning_paths')
+      .select('path_id, path_name, description, theme_id, estimated_minutes, difficulty_level')
+      .eq('is_active', 'Yes')
+      .order('display_order', { ascending: true }),
+    (supabase as any)
+      .from('guides')
+      .select('guide_id, title, slug, description, theme_id, hero_image_url')
+      .eq('is_active', true),
+    supabase
+      .from('kb_documents')
+      .select('id, title, summary, tags, theme_ids, page_count')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .limit(20),
+  ])
+
+  const contentByCenter: Record<string, any[]> = { Learning: [], Action: [], Resource: [], Accountability: [] }
+  const contentCountsByType: Record<string, number> = {}
+  const contentCountsByPathway: Record<string, number> = {}
+
+  for (const c of allContent ?? []) {
+    const center = c.center || 'Learning'
+    if (!contentByCenter[center]) contentByCenter[center] = []
+    if (contentByCenter[center].length < 20) {
+      contentByCenter[center].push({
+        id: c.id, title: c.title_6th_grade || '', summary: c.summary_6th_grade,
+        pathway: c.pathway_primary, center: c.center, content_type: c.content_type,
+        image_url: c.image_url, source_domain: c.source_domain, published_at: c.published_at,
+      })
+    }
+    const ct = c.content_type || 'other'
+    contentCountsByType[ct] = (contentCountsByType[ct] || 0) + 1
+    if (c.pathway_primary) contentCountsByPathway[c.pathway_primary] = (contentCountsByPathway[c.pathway_primary] || 0) + 1
+  }
+
+  return {
+    contentByCenter,
+    contentCountsByType,
+    contentCountsByPathway,
+    services: (services ?? []).map(function (s: any) {
+      return { service_id: s.service_id, service_name: s.service_name, description: s.description_5th_grade, org_name: null, category: s.service_category }
+    }),
+    officials: (officials ?? []).map(function (o: any) {
+      return { official_id: o.official_id, official_name: o.official_name, title: o.title, party: o.party, level: o.level, photo_url: o.photo_url }
+    }),
+    policies: (policies ?? []).map(function (p: any) {
+      return { policy_id: p.policy_id, policy_name: p.policy_name, summary: p.summary_5th_grade, policy_type: p.policy_type, level: p.level, status: p.status }
+    }),
+    opportunities: (opportunities ?? []).map(function (o: any) {
+      return { opportunity_id: o.opportunity_id, title: o.title, description: o.description_5th_grade, org_name: o.organization_name, time_commitment: o.time_commitment, is_virtual: o.is_virtual }
+    }),
+    learningPaths: (learningPaths ?? []).map(function (lp: any) {
+      return { path_id: lp.path_id, path_name: lp.path_name, description: lp.description, theme_id: lp.theme_id, estimated_minutes: lp.estimated_minutes, difficulty_level: lp.difficulty_level }
+    }),
+    guides: (guides ?? []).map(function (g: any) {
+      return { guide_id: g.guide_id, title: g.title, slug: g.slug, description: g.description, theme_id: g.theme_id, hero_image_url: g.hero_image_url }
+    }),
+    libraryDocs: (libraryDocs ?? []).map(function (d: any) {
+      return { id: d.id, title: d.title, summary: d.summary, tags: d.tags || [], theme_ids: d.theme_ids || [], page_count: d.page_count }
+    }),
+    totalCounts: {
+      content: (allContent ?? []).length,
+      services: (services ?? []).length,
+      officials: (officials ?? []).length,
+      policies: (policies ?? []).length,
+      opportunities: (opportunities ?? []).length,
+      learningPaths: (learningPaths ?? []).length,
+      guides: (guides ?? []).length,
+      library: (libraryDocs ?? []).length,
+    },
+  }
+}
