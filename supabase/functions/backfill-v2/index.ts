@@ -71,7 +71,13 @@ Deno.serve(async (req: Request) => {
     }
 
     const results: any[] = [];
+    const startTime = Date.now();
+    const TIME_BUDGET_MS = 45000; // Stop processing after 45s to stay under 60s edge function limit
     for (const item of items) {
+      if (Date.now() - startTime > TIME_BUDGET_MS) {
+        results.push({ id: item[cfg.pk], name: item[cfg.nm] || '?', status: 'skipped', reason: 'time budget exceeded' });
+        continue;
+      }
       const id = item[cfg.pk];
       const name = item[cfg.nm] || '?';
 

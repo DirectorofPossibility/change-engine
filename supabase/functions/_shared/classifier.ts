@@ -151,6 +151,7 @@ export async function callClaude(system: string, user: string, apiKey: string, m
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
         body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: maxTokens, system, messages: [{ role: 'user', content: user }] }),
+        signal: AbortSignal.timeout(30000), // 30s timeout — prevents edge function timeout
       })
       const d = await r.json()
       if (d.error) {

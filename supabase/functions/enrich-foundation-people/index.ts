@@ -126,6 +126,7 @@ async function extractPeopleWithClaude(
       'x-api-key': ANTHROPIC_KEY,
       'anthropic-version': '2023-06-01',
     },
+    signal: AbortSignal.timeout(30000), // 30s timeout — prevents edge function timeout
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 2000,
