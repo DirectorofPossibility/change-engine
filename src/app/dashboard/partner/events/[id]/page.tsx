@@ -46,17 +46,18 @@ export default async function EditEventPage({ params }: EditEventPageProps) {
     notFound()
   }
 
-  // Fetch focus areas for the multi-select
-  const { data: focusAreas } = await supabase
-    .from('focus_areas')
-    .select('focus_id, focus_area_name, theme_id')
-    .order('focus_area_name')
+  // Fetch focus areas and event types
+  const [{ data: focusAreas }, { data: eventTypes }] = await Promise.all([
+    supabase.from('focus_areas').select('focus_id, focus_area_name, theme_id').order('focus_area_name'),
+    supabase.from('event_types' as any).select('name, category').eq('is_active', true).order('category').order('name'),
+  ])
 
   // Normalize event data for the form
   const eventData = {
     opportunity_id: (event as any).opportunity_id,
     opportunity_name: (event as any).opportunity_name,
     description_5th_grade: (event as any).description_5th_grade,
+    event_type: (event as any).event_type,
     start_date: (event as any).start_date,
     end_date: (event as any).end_date,
     address: (event as any).address,
@@ -79,7 +80,7 @@ export default async function EditEventPage({ params }: EditEventPageProps) {
       </div>
 
       <div className="bg-white rounded-xl border border-brand-border p-6">
-        <EventFormClient event={eventData} focusAreas={focusAreas || []} />
+        <EventFormClient event={eventData} focusAreas={focusAreas || []} eventTypes={(eventTypes as any) || []} />
       </div>
     </div>
   )

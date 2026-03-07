@@ -35,6 +35,8 @@ const CONNECT = [
   { label: 'My Account', href: '/me' },
   { label: 'Share a Resource', href: '/me/submit' },
   { label: 'Contact', href: '/contact' },
+  { label: 'Accessibility', href: '/accessibility' },
+  { label: 'User Manual', href: '/manual' },
 ]
 
 export function D2Footer() {
@@ -51,7 +53,7 @@ export function D2Footer() {
         <div style={{ background: '#805ad5' }} />
       </div>
 
-      <footer className="bg-brand-text text-white relative overflow-hidden">
+      <footer className="bg-brand-dark relative overflow-hidden text-white">
         {/* FOL watermark — large, centered, using the static SVG */}
         <img
           src="/images/fol/flower-white.svg"

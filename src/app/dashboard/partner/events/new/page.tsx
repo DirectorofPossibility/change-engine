@@ -27,11 +27,11 @@ export default async function NewEventPage() {
     redirect('/dashboard')
   }
 
-  // Fetch focus areas for the multi-select
-  const { data: focusAreas } = await supabase
-    .from('focus_areas')
-    .select('focus_id, focus_area_name, theme_id')
-    .order('focus_area_name')
+  // Fetch focus areas and event types
+  const [{ data: focusAreas }, { data: eventTypes }] = await Promise.all([
+    supabase.from('focus_areas').select('focus_id, focus_area_name, theme_id').order('focus_area_name'),
+    supabase.from('event_types' as any).select('name, category').eq('is_active', true).order('category').order('name'),
+  ])
 
   return (
     <div className="space-y-6">
@@ -43,7 +43,7 @@ export default async function NewEventPage() {
       </div>
 
       <div className="bg-white rounded-xl border border-brand-border p-6">
-        <EventFormClient focusAreas={focusAreas || []} />
+        <EventFormClient focusAreas={focusAreas || []} eventTypes={(eventTypes as any) || []} />
       </div>
     </div>
   )

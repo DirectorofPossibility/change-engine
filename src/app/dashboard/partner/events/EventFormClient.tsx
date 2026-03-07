@@ -29,10 +29,16 @@ interface FocusArea {
   theme_id: string | null
 }
 
+interface EventType {
+  name: string
+  category: string
+}
+
 interface EventData {
   opportunity_id: string
   opportunity_name: string
   description_5th_grade: string | null
+  event_type: string | null
   start_date: string | null
   end_date: string | null
   address: string | null
@@ -48,14 +54,16 @@ interface EventData {
 interface EventFormClientProps {
   event?: EventData | null
   focusAreas: FocusArea[]
+  eventTypes?: EventType[]
 }
 
-export default function EventFormClient({ event, focusAreas }: EventFormClientProps) {
+export default function EventFormClient({ event, focusAreas, eventTypes = [] }: EventFormClientProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const isEditing = !!event
 
   const [opportunityName, setOpportunityName] = useState(event?.opportunity_name || '')
+  const [eventType, setEventType] = useState(event?.event_type || '')
   const [description, setDescription] = useState(event?.description_5th_grade || '')
   const [startDate, setStartDate] = useState(event?.start_date?.slice(0, 10) || '')
   const [endDate, setEndDate] = useState(event?.end_date?.slice(0, 10) || '')
@@ -97,6 +105,7 @@ export default function EventFormClient({ event, focusAreas }: EventFormClientPr
 
     const formData = new FormData()
     formData.set('opportunity_name', opportunityName.trim())
+    formData.set('event_type', eventType)
     formData.set('description_5th_grade', description.trim())
     formData.set('start_date', startDate)
     formData.set('end_date', endDate)
@@ -179,6 +188,45 @@ export default function EventFormClient({ event, focusAreas }: EventFormClientPr
           className="w-full px-3 py-2 border border-brand-border rounded-lg text-brand-text bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
           required
         />
+      </div>
+
+      {/* Event Type */}
+      <div>
+        <label htmlFor="event_type" className="block text-sm font-medium text-brand-text mb-1">
+          Event Type
+        </label>
+        {eventTypes.length > 0 ? (
+          <select
+            id="event_type"
+            value={eventType}
+            onChange={(e) => setEventType(e.target.value)}
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-brand-text bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+          >
+            <option value="">Select a type...</option>
+            {Object.entries(
+              eventTypes.reduce<Record<string, EventType[]>>((acc, et) => {
+                if (!acc[et.category]) acc[et.category] = []
+                acc[et.category].push(et)
+                return acc
+              }, {})
+            ).map(([category, types]) => (
+              <optgroup key={category} label={category}>
+                {types.map((et) => (
+                  <option key={et.name} value={et.name}>{et.name}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        ) : (
+          <input
+            id="event_type"
+            type="text"
+            value={eventType}
+            onChange={(e) => setEventType(e.target.value)}
+            placeholder="Workshop, Town Hall, Art Show..."
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-brand-text bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+          />
+        )}
       </div>
 
       {/* Description */}

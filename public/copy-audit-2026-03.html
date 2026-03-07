@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Exchange — Copy &amp; Tooltip Audit (March 2026)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #FAF8F5;
+    color: #1A1A1A;
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4 { font-family: 'DM Serif Display', serif; }
+
+  .cover {
+    background: #2C2418;
+    color: white;
+    padding: 80px 60px 60px;
+    page-break-after: always;
+  }
+  .cover h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .cover .subtitle {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+  }
+  .cover .meta span { display: block; margin-bottom: 4px; }
+  .cover .spectrum {
+    display: flex;
+    height: 4px;
+    margin-bottom: 40px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .cover .spectrum div { flex: 1; }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px;
+  }
+
+  .toc {
+    page-break-after: always;
+    padding: 60px 32px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .toc h2 {
+    font-size: 28px;
+    margin-bottom: 24px;
+    color: #2C2418;
+  }
+  .toc-section {
+    margin-bottom: 20px;
+  }
+  .toc-section h3 {
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #6B6560;
+    margin-bottom: 8px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #1A1A1A;
+  }
+  .toc-item .num {
+    color: #C75B2A;
+    font-weight: 700;
+    min-width: 24px;
+  }
+  .toc-item .dots {
+    flex: 1;
+    border-bottom: 1px dotted #E2DDD5;
+    margin-bottom: 4px;
+  }
+  .toc-item .page {
+    color: #6B6560;
+    font-size: 12px;
+  }
+
+  .section-divider {
+    background: #2C2418;
+    color: white;
+    padding: 40px 32px;
+    margin: 0 -32px;
+    page-break-before: always;
+  }
+  .section-divider h2 {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .section-divider p {
+    color: rgba(255,255,255,0.5);
+    font-size: 15px;
+  }
+
+  .summary-box {
+    background: white;
+    border: 2px solid #E2DDD5;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+    box-shadow: 3px 3px 0 #E2DDD5;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  .stat-card {
+    text-align: center;
+    padding: 16px;
+    background: #FAF8F5;
+    border-radius: 8px;
+  }
+  .stat-card .number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: #C75B2A;
+    line-height: 1;
+  }
+  .stat-card .label {
+    font-size: 12px;
+    color: #6B6560;
+    margin-top: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 32px;
+    font-size: 13px;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 12px;
+    background: #2C2418;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  thead th:first-child {
+    border-radius: 8px 0 0 0;
+  }
+  thead th:last-child {
+    border-radius: 0 8px 0 0;
+  }
+  tbody tr {
+    border-bottom: 1px solid #E2DDD5;
+  }
+  tbody tr:nth-child(even) {
+    background: #F5F1EB;
+  }
+  tbody tr:hover {
+    background: #EDE8E0;
+  }
+  tbody td {
+    padding: 10px 12px;
+    vertical-align: top;
+  }
+  td.route {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: #C75B2A;
+    white-space: nowrap;
+  }
+  td.priority {
+    text-align: center;
+    white-space: nowrap;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-high { background: #e53e3e20; color: #e53e3e; }
+  .badge-med { background: #d69e2e20; color: #9a7b1e; }
+  .badge-low { background: #38a16920; color: #2d7d53; }
+  .badge-create { background: #3182ce20; color: #3182ce; }
+  .badge-improve { background: #dd6b2020; color: #dd6b20; }
+  .badge-refresh { background: #805ad520; color: #805ad5; }
+
+  .category-header {
+    margin: 40px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #C75B2A;
+  }
+  .category-header h3 {
+    font-size: 22px;
+    color: #1A1A1A;
+  }
+  .category-header p {
+    font-size: 13px;
+    color: #6B6560;
+    margin-top: 4px;
+  }
+
+  .tooltip-section {
+    margin: 32px 0;
+    page-break-inside: avoid;
+  }
+  .tooltip-section h4 {
+    font-size: 16px;
+    color: #1A1A1A;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tooltip-section h4 .section-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #C75B2A;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .tooltip-section .section-desc {
+    font-size: 13px;
+    color: #6B6560;
+    margin-bottom: 12px;
+    padding-left: 38px;
+  }
+
+  .tooltip-card {
+    background: white;
+    border: 1px solid #E2DDD5;
+    border-left: 4px solid #C75B2A;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 8px 0;
+  }
+  .tooltip-card .element {
+    font-weight: 700;
+    font-size: 13px;
+    color: #1A1A1A;
+    margin-bottom: 2px;
+  }
+  .tooltip-card .location {
+    font-size: 11px;
+    color: #6B6560;
+    margin-bottom: 6px;
+  }
+  .tooltip-card .text {
+    font-size: 13px;
+    color: #2C2418;
+    background: #FAF8F5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px dashed #E2DDD5;
+    line-height: 1.5;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 40px;
+    color: #6B6560;
+    font-size: 12px;
+    border-top: 1px solid #E2DDD5;
+    margin-top: 60px;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .cover { page-break-after: always; }
+    .section-divider { page-break-before: always; }
+    .tooltip-section { page-break-inside: avoid; }
+    table { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ COVER ═══════════════════════════════════════ -->
+<div class="cover">
+  <div class="spectrum">
+    <div style="background:#e53e3e"></div>
+    <div style="background:#dd6b20"></div>
+    <div style="background:#d69e2e"></div>
+    <div style="background:#38a169"></div>
+    <div style="background:#3182ce"></div>
+    <div style="background:#319795"></div>
+    <div style="background:#805ad5"></div>
+  </div>
+  <h1>Copy &amp; Tooltip Audit</h1>
+  <p class="subtitle">Community Exchange &mdash; Month 1 Launch Checklist</p>
+  <div class="meta">
+    <span>Prepared: March 6, 2026</span>
+    <span>Platform: www.changeengine.us</span>
+    <span>Pages audited: 59 listing pages + detail pages</span>
+    <span>Powered by The Change Lab</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ SUMMARY ═══════════════════════════════════════ -->
+<div class="container">
+
+  <div class="summary-box">
+    <h3 style="font-size:20px; margin-bottom:16px;">At a Glance</h3>
+    <div class="summary-grid">
+      <div class="stat-card">
+        <div class="number">17</div>
+        <div class="label">Pages Need Copy</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">53</div>
+        <div class="label">Tooltips Needed</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">14</div>
+        <div class="label">Site Sections</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">31</div>
+        <div class="label">Pages Complete</div>
+      </div>
+    </div>
+  </div>
+
+<!-- ═══════════════════════════════════════ PART 1: PAGES ═══════════════════════════════════════ -->
+
+  <div class="section-divider">
+    <h2>Part 1: Pages Needing Copy</h2>
+    <p>Every page that needs editorial copy written, improved, or created</p>
+  </div>
+
+  <!-- ─── A. Exist but need copy ─── -->
+  <div class="category-header">
+    <h3>A. Pages That Exist But Need Copy</h3>
+    <p>These pages are live but have minimal, missing, or placeholder editorial copy</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Page</th>
+        <th>Route</th>
+        <th>Priority</th>
+        <th>What's Needed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Call Your Senators</strong></td>
+        <td class="route">/call-your-senators</td>
+        <td class="priority"><span class="badge badge-high">High</span></td>
+        <td>No hero, no intro copy. Just a breadcrumb + embedded tool. Needs a hero with compelling "make your voice heard in 2 minutes" copy and context about why calling matters.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Foundations Galaxy</strong></td>
+        <td class="route">/foundations</td>
+        <td class="priority"><span class="badge badge-high">High</span></td>
+        <td>No hero, no intro copy. Just breadcrumb + visualization. Needs hero explaining Houston's philanthropic ecosystem and how to use the interactive galaxy.</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>Knowledge Graph</strong></td>
+        <td class="route">/knowledge-graph</td>
+        <td class="priority"><span class="badge badge-med">Med</span></td>
+        <td>No hero, no intro copy. Just breadcrumb + visualization. Needs hero explaining what the Civic Knowledge Galaxy shows and how to explore it.</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Good Things</strong></td>
+        <td class="route">/goodthings</td>
+        <td class="priority"><span class="badge badge-med">Med</span></td>
+        <td>No server-side copy at all &mdash; just renders GoodThingsClient. Needs hero explaining "Three Good Things" and how to share positivity from your community.</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Dashboard Live</strong></td>
+        <td class="route">/dashboard-live</td>
+        <td class="priority"><span class="badge badge-med">Med</span></td>
+        <td>Minimal &mdash; "Real-time conditions for Harris County" is the only copy. Needs richer intro: what data is shown, why it matters, how often it updates.</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><strong>Search</strong></td>
+        <td class="route">/search</td>
+        <td class="priority"><span class="badge badge-low">Low</span></td>
+        <td>Uses PAGE_INTROS.search but only when there's no query. Could use a persistent intro above the tabs explaining what's searchable across 8 entity types.</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><strong>Polling Places</strong></td>
+        <td class="route">/polling-places</td>
+        <td class="priority"><span class="badge badge-med">Med</span></td>
+        <td>Uses i18n keys (polling.title/polling.subtitle). Verify those strings exist and are compelling. No editorial intro paragraph beyond the header.</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><strong>Settings</strong></td>
+        <td class="route">/me/settings</td>
+        <td class="priority"><span class="badge badge-low">Low</span></td>
+        <td>Bare "Settings" header. Could use a one-liner: "Manage your profile, language, and notification preferences."</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td><strong>Login</strong></td>
+        <td class="route">/login</td>
+        <td class="priority"><span class="badge badge-low">Low</span></td>
+        <td>Minimal &mdash; "Welcome back to the Community Exchange." Could be warmer with a one-liner about what they can do once signed in.</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td><strong>Reset Password</strong></td>
+        <td class="route">/reset-password</td>
+        <td class="priority"><span class="badge badge-low">Low</span></td>
+        <td>Minimal &mdash; "Enter your email to receive a reset link." Functional but could be warmer.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ─── B. Need to create ─── -->
+  <div class="category-header">
+    <h3>B. Pages That Need to Be Created</h3>
+    <p>These routes are linked from the site but the page file doesn't exist yet</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Page</th>
+        <th>Route</th>
+        <th>Priority</th>
+        <th>What's Needed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>11</td>
+        <td><strong>User Manual</strong></td>
+        <td class="route">/manual</td>
+        <td class="priority"><span class="badge badge-high">High</span></td>
+        <td>Just added to footer. Full page explaining how to use the platform: ZIP personalization, pathways, search, learning paths, officials lookup, submitting resources, earning badges. <strong>#1 copy priority.</strong></td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td><strong>Donate</strong></td>
+        <td class="route">/donate</td>
+        <td class="priority"><span class="badge badge-high">High</span></td>
+        <td>Linked from /me page. Needs page with mission statement, impact stats, donation tiers, and CTA.</td>
+      </tr>
+      <tr>
+        <td>13</td>
+        <td><strong>Districts</strong></td>
+        <td class="route">/districts</td>
+        <td class="priority"><span class="badge badge-low">Low</span></td>
+        <td>Political district explorer. Needs copy explaining district types and how representation works. (Blocked by geo Phase 2.)</td>
+      </tr>
+      <tr>
+        <td>14</td>
+        <td><strong>Quizzes</strong></td>
+        <td class="route">/quizzes</td>
+        <td class="priority"><span class="badge badge-low">Low</span></td>
+        <td>Civic engagement quizzes. Needs intro copy and quiz content authoring.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ─── C. May need refresh ─── -->
+  <div class="category-header">
+    <h3>C. Pages With Copy That May Need Refresh</h3>
+    <p>Copy exists but may be stale, duplicated, or lacking depth</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Page</th>
+        <th>Route</th>
+        <th>Priority</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>15</td>
+        <td><strong>Guide (legacy)</strong></td>
+        <td class="route">/guide</td>
+        <td class="priority"><span class="badge badge-refresh">Refresh</span></td>
+        <td>Magazine-style aggregator. Has PersonaSelector intro but no PageHero. "Not sure where to start?" is the only editorial copy. May want a proper hero.</td>
+      </tr>
+      <tr>
+        <td>16</td>
+        <td><strong>Learning Paths (dup)</strong></td>
+        <td class="route">/learning-paths</td>
+        <td class="priority"><span class="badge badge-refresh">Refresh</span></td>
+        <td>Exists alongside /learn with similar content. Has a PageHero but copy is generic: "Structured journeys to deepen your understanding of civic life." Consider deduplicating or differentiating.</td>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td><strong>Compass</strong></td>
+        <td class="route">/compass</td>
+        <td class="priority"><span class="badge badge-refresh">Refresh</span></td>
+        <td>All copy lives in CompassClient component. Server page has none. Verify the client has proper intro copy and onboarding guidance.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ─── Pages with complete copy ─── -->
+  <div class="category-header">
+    <h3>D. Pages With Complete Copy (No Action Needed)</h3>
+    <p>These 31 pages have full editorial copy &mdash; hero descriptions, section intros, and contextual text</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Page</th>
+        <th>Route</th>
+        <th>Page</th>
+        <th>Route</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Homepage</td><td class="route">/</td><td>About</td><td class="route">/about</td></tr>
+      <tr><td>Contact</td><td class="route">/contact</td><td>Terms</td><td class="route">/terms</td></tr>
+      <tr><td>Privacy</td><td class="route">/privacy</td><td>Accessibility</td><td class="route">/accessibility</td></tr>
+      <tr><td>FAQ</td><td class="route">/faq</td><td>Glossary</td><td class="route">/glossary</td></tr>
+      <tr><td>Officials</td><td class="route">/officials</td><td>Services</td><td class="route">/services</td></tr>
+      <tr><td>Organizations</td><td class="route">/organizations</td><td>Policies</td><td class="route">/policies</td></tr>
+      <tr><td>Opportunities</td><td class="route">/opportunities</td><td>Elections</td><td class="route">/elections</td></tr>
+      <tr><td>Neighborhoods</td><td class="route">/neighborhoods</td><td>Library</td><td class="route">/library</td></tr>
+      <tr><td>Bookshelf</td><td class="route">/bookshelf</td><td>News</td><td class="route">/news</td></tr>
+      <tr><td>Learn</td><td class="route">/learn</td><td>Guides</td><td class="route">/guides</td></tr>
+      <tr><td>Stories</td><td class="route">/stories</td><td>Collections</td><td class="route">/collections</td></tr>
+      <tr><td>Events</td><td class="route">/events</td><td>Calendar</td><td class="route">/calendar</td></tr>
+      <tr><td>Campaigns</td><td class="route">/campaigns</td><td>Candidates</td><td class="route">/candidates</td></tr>
+      <tr><td>Ballot</td><td class="route">/ballot</td><td>Agencies</td><td class="route">/agencies</td></tr>
+      <tr><td>Benefits</td><td class="route">/benefits</td><td>Municipal Svcs</td><td class="route">/municipal-services</td></tr>
+      <tr><td>My Account</td><td class="route">/me</td><td>Signup</td><td class="route">/signup</td></tr>
+      <tr><td>Submit Resource</td><td class="route">/me/submit</td><td>Personas</td><td class="route">/personas</td></tr>
+      <tr><td>Chat</td><td class="route">/chat</td><td>Explore</td><td class="route">/explore</td></tr>
+      <tr><td>Centers</td><td class="route">/centers</td><td>Pathways</td><td class="route">/pathways</td></tr>
+      <tr><td>Help</td><td class="route">/help</td><td>Open Data</td><td class="route">/data</td></tr>
+      <tr><td>Geography / Map</td><td class="route">/geography</td><td>Super Neighborhoods</td><td class="route">/super-neighborhoods</td></tr>
+    </tbody>
+  </table>
+
+<!-- ═══════════════════════════════════════ PART 2: TOOLTIPS ═══════════════════════════════════════ -->
+
+  <div class="section-divider">
+    <h2>Part 2: Tooltips &amp; Info Bubbles</h2>
+    <p>Every element across the site that needs a tooltip, info bubble, or contextual hint for first-month users</p>
+  </div>
+
+  <!-- ─── I. Global Nav ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">I</span> Global Navigation (every page)</h4>
+    <p class="section-desc">Elements that appear in D2Nav and D2Footer on every page of the site</p>
+
+    <div class="tooltip-card">
+      <div class="element">1. ZIP Code Input</div>
+      <div class="location">D2Nav top bar</div>
+      <div class="text">Enter your ZIP code to see your elected officials, nearby services, and neighborhood resources</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">2. Language Switcher</div>
+      <div class="location">D2Nav top bar</div>
+      <div class="text">Read this page in English, Spanish, or Vietnamese</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">3. Search Icon</div>
+      <div class="location">D2Nav top bar</div>
+      <div class="text">Search across resources, services, officials, policies, organizations, and learning paths</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">4. Pathway Dots (7 colors)</div>
+      <div class="location">D2Nav spectrum bar</div>
+      <div class="text">Each dot: "[Pathway name] &mdash; [one-line description]" (e.g. "Our Health &mdash; Physical, mental, and community well-being")</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">5-8. Dropdown Menus (Community / Learning / Resources / Action)</div>
+      <div class="location">D2Nav center navigation</div>
+      <div class="text">Each link in the dropdown needs a brief one-line description below the link label</div>
+    </div>
+  </div>
+
+  <!-- ─── II. Homepage ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">II</span> Homepage Sections</h4>
+    <p class="section-desc">Elements on the homepage that need contextual guidance</p>
+
+    <div class="tooltip-card">
+      <div class="element">9. PersonaSelector Cards</div>
+      <div class="location">Homepage / Guide page</div>
+      <div class="text">These aren't account types &mdash; they're lenses. Pick one to reorder the page by what matters most to you.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">10. Pathway Cards</div>
+      <div class="location">Homepage pathways section</div>
+      <div class="text">Each pathway groups related topics. Tap to explore resources, services, and learning for that theme.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">11. Stats Bar</div>
+      <div class="location">Homepage (content count, officials, services)</div>
+      <div class="text">Live counts from our database &mdash; updated daily from public data sources</div>
+    </div>
+  </div>
+
+  <!-- ─── III. Officials ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">III</span> Officials Page</h4>
+    <p class="section-desc">Helping users understand representation and government levels</p>
+
+    <div class="tooltip-card">
+      <div class="element">12. ZIP Lookup</div>
+      <div class="location">Officials page hero</div>
+      <div class="text">We match your ZIP to congressional, state, county, and city districts to find all ~30 of your representatives</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">13. Level Badges (Federal / State / County / City)</div>
+      <div class="location">Official cards</div>
+      <div class="text">Federal officials represent you in Washington DC. State officials work in Austin. County officials serve Harris County. City officials serve Houston.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">14. Party Label</div>
+      <div class="location">Official cards</div>
+      <div class="text">Political party affiliation</div>
+    </div>
+  </div>
+
+  <!-- ─── IV. Services ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">IV</span> Services Page</h4>
+    <p class="section-desc">Context for the 211 service network and service discovery</p>
+
+    <div class="tooltip-card">
+      <div class="element">15. 211 Badge</div>
+      <div class="location">Service cards</div>
+      <div class="text">211 is Texas's health and human services information line. Call 2-1-1 for free help finding services.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">16. Map View Toggle</div>
+      <div class="location">Services page</div>
+      <div class="text">Switch between list and map view to see services plotted by location</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">17. Service Type Tags</div>
+      <div class="location">Service cards</div>
+      <div class="text">Service categories from the 211 Texas taxonomy</div>
+    </div>
+  </div>
+
+  <!-- ─── V. Policies ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">V</span> Policies &amp; Legislation</h4>
+    <p class="section-desc">Making the legislative process understandable</p>
+
+    <div class="tooltip-card">
+      <div class="element">18. Government Level Filter</div>
+      <div class="location">Policies page</div>
+      <div class="text">Filter by which level of government introduced this legislation</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">19. Status Badge (Introduced / In Committee / Passed / Signed)</div>
+      <div class="location">Policy cards</div>
+      <div class="text">Current status of this legislation in the legislative process</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">20. For/Against Arguments</div>
+      <div class="location">Ballot items page</div>
+      <div class="text">Plain-language summaries of the main arguments on each side</div>
+    </div>
+  </div>
+
+  <!-- ─── VI. Elections ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">VI</span> Elections &amp; Voting</h4>
+    <p class="section-desc">Voter education and polling logistics</p>
+
+    <div class="tooltip-card">
+      <div class="element">21. Election Countdown</div>
+      <div class="location">Elections page</div>
+      <div class="text">Days until the next election. Early voting often starts 2 weeks before Election Day.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">22. Registration Deadline</div>
+      <div class="location">Elections page</div>
+      <div class="text">You must register 30 days before an election to vote in Texas</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">23. Polling Place Finder</div>
+      <div class="location">Polling places page</div>
+      <div class="text">Enter your address or ZIP to find your assigned polling location and early voting sites</div>
+    </div>
+  </div>
+
+  <!-- ─── VII. Learning ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">VII</span> Learning Paths</h4>
+    <p class="section-desc">Onboarding learners to the structured module system</p>
+
+    <div class="tooltip-card">
+      <div class="element">24. Difficulty Badge (Beginner / Intermediate / Advanced)</div>
+      <div class="location">Learning path cards</div>
+      <div class="text">Beginner: no prior knowledge needed. Intermediate: builds on basics. Advanced: deeper civic engagement.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">25. Estimated Minutes</div>
+      <div class="location">Learning path cards</div>
+      <div class="text">Total time to complete all modules, including videos and reading</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">26. Quiz Indicator</div>
+      <div class="location">Module timeline</div>
+      <div class="text">Short knowledge check &mdash; not graded, just to reinforce what you learned</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">27. Module Media Pills (video / article / music)</div>
+      <div class="location">Module timeline</div>
+      <div class="text">Curated resources from trusted sources like TED, PBS, and community organizations</div>
+    </div>
+  </div>
+
+  <!-- ─── VIII. Library ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">VIII</span> Library &amp; Research</h4>
+    <p class="section-desc">Contextualizing AI-assisted research and source attribution</p>
+
+    <div class="tooltip-card">
+      <div class="element">28. AI Summary Badge</div>
+      <div class="location">Library documents</div>
+      <div class="text">This summary was generated by AI to make research accessible at a 6th-grade reading level</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">29. Chat with Chance</div>
+      <div class="location">Library chat (/chat)</div>
+      <div class="text">Chance is an AI assistant trained on Houston community data. Ask about services, officials, policies, or anything in our knowledge base.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">30. Source Attribution</div>
+      <div class="location">Library documents</div>
+      <div class="text">Original research from this organization &mdash; we summarize, they author</div>
+    </div>
+  </div>
+
+  <!-- ─── IX. Organizations ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">IX</span> Organizations &amp; Foundations</h4>
+    <p class="section-desc">Helping users understand the nonprofit and philanthropic ecosystem</p>
+
+    <div class="tooltip-card">
+      <div class="element">31. Organization Action Buttons (Donate / Volunteer / Subscribe)</div>
+      <div class="location">Org detail Wayfinder sidebar</div>
+      <div class="text">Direct links to this organization's engagement pages</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">32. Foundation Galaxy Visualization</div>
+      <div class="location">Foundations page (/foundations)</div>
+      <div class="text">Each dot is a foundation. Size shows funding level. Color shows primary pathway. Click to explore.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">33. NTEE Code</div>
+      <div class="location">Org/Foundation taxonomy section</div>
+      <div class="text">National Taxonomy of Exempt Entities &mdash; a standardized classification for nonprofits</div>
+    </div>
+  </div>
+
+  <!-- ─── X. Opportunities ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">X</span> Opportunities &amp; Events</h4>
+    <p class="section-desc">Setting expectations for time and engagement level</p>
+
+    <div class="tooltip-card">
+      <div class="element">34. Time Commitment</div>
+      <div class="location">Opportunity cards</div>
+      <div class="text">Estimated time: one-time, weekly, monthly, or ongoing</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">35. Virtual Badge</div>
+      <div class="location">Event / opportunity cards</div>
+      <div class="text">This opportunity can be done remotely</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">36. Spots Available</div>
+      <div class="location">Opportunity cards</div>
+      <div class="text">Number of openings remaining</div>
+    </div>
+  </div>
+
+  <!-- ─── XI. Neighborhoods ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">XI</span> Neighborhoods &amp; Geography</h4>
+    <p class="section-desc">Explaining Houston's unique super neighborhood system</p>
+
+    <div class="tooltip-card">
+      <div class="element">37. Super Neighborhood Number</div>
+      <div class="location">Neighborhood cards</div>
+      <div class="text">Houston divides into 88 super neighborhoods, each with a council that advises City Hall</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">38. Population / Income Stats</div>
+      <div class="location">Neighborhood cards</div>
+      <div class="text">Census data &mdash; used to understand community needs and allocate resources</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">39. GeoJSON Boundaries</div>
+      <div class="location">Map overlays</div>
+      <div class="text">Boundaries from the City of Houston Planning Department</div>
+    </div>
+  </div>
+
+  <!-- ─── XII. Wayfinder ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">XII</span> Detail Page Wayfinder (Sidebar)</h4>
+    <p class="section-desc">The contextual sidebar that appears on every detail page</p>
+
+    <div class="tooltip-card">
+      <div class="element">40. Wayfinder Panel</div>
+      <div class="location">All detail pages (right sidebar)</div>
+      <div class="text">The Wayfinder shows related resources connected to what you're viewing &mdash; officials, policies, services, and content that share the same focus areas</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">41. Focus Area Dots</div>
+      <div class="location">Wayfinder sidebar</div>
+      <div class="text">Focus areas are specific topics within a pathway. Tap any dot to explore everything tagged with that focus.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">42. Engagement Tiers (Understand / Get Involved / Go Deeper)</div>
+      <div class="location">Wayfinder sidebar</div>
+      <div class="text">Three levels of engagement: Understand (learn about it), Get Involved (take action), Go Deeper (follow the systems)</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">43. Taxonomy Section</div>
+      <div class="location">Wayfinder sidebar (admin/partner only)</div>
+      <div class="text">Classification metadata &mdash; how this item connects to SDGs, social determinants, and government systems</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">44. Suggest an Edit Link</div>
+      <div class="location">All detail pages</div>
+      <div class="text">See something that needs updating? Community members help keep our information accurate.</div>
+    </div>
+  </div>
+
+  <!-- ─── XIII. Account ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">XIII</span> User Account Pages</h4>
+    <p class="section-desc">Onboarding new users to the engagement and gamification system</p>
+
+    <div class="tooltip-card">
+      <div class="element">45. Impact Points</div>
+      <div class="location">My Account dashboard (/me)</div>
+      <div class="text">Points earned from completing learning modules, taking civic actions, and engaging with community resources</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">46. Badges</div>
+      <div class="location">My Account dashboard (/me)</div>
+      <div class="text">Earned by completing learning paths, attending events, and taking civic action</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">47. Role Badge (Member / Neighbor / Partner)</div>
+      <div class="location">My Account hero</div>
+      <div class="text">Member: browse and learn. Neighbor: submit resources and track activity. Partner: manage organization, post events.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">48. Gamification Toggle</div>
+      <div class="location">Settings page (/me/settings)</div>
+      <div class="text">Turn badges and points on or off. Your progress is still tracked either way.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">49. Neighbor vs Partner Tier</div>
+      <div class="location">Signup page (/signup)</div>
+      <div class="text">Neighbor accounts are free for individuals. Partner accounts ($100-$5,000/yr) are for organizations that want a verified profile and event management.</div>
+    </div>
+  </div>
+
+  <!-- ─── XIV. Content Cards ─── -->
+  <div class="tooltip-section">
+    <h4><span class="section-num">XIV</span> Content Cards (Global Pattern)</h4>
+    <p class="section-desc">Reusable card elements that appear across many pages</p>
+
+    <div class="tooltip-card">
+      <div class="element">50. Pathway Color Bar</div>
+      <div class="location">All cards with left color bar</div>
+      <div class="text">[Pathway name] (show on hover &mdash; e.g. "Our Health")</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">51. Content Type Badge</div>
+      <div class="location">Content cards</div>
+      <div class="text">How this resource is meant to be consumed: article, video, report, tool, etc.</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">52. Source Attribution</div>
+      <div class="location">Content cards</div>
+      <div class="text">Original source &mdash; we link to them, not replace them</div>
+    </div>
+    <div class="tooltip-card">
+      <div class="element">53. Translation Indicator</div>
+      <div class="location">Translated content</div>
+      <div class="text">This content is available in your selected language</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+  <div class="footer">
+    <div class="spectrum" style="display:flex;height:3px;border-radius:2px;overflow:hidden;margin-bottom:20px;max-width:200px;margin-left:auto;margin-right:auto;">
+      <div style="background:#e53e3e;flex:1"></div>
+      <div style="background:#dd6b20;flex:1"></div>
+      <div style="background:#d69e2e;flex:1"></div>
+      <div style="background:#38a169;flex:1"></div>
+      <div style="background:#3182ce;flex:1"></div>
+      <div style="background:#319795;flex:1"></div>
+      <div style="background:#805ad5;flex:1"></div>
+    </div>
+    Community Exchange &mdash; Copy &amp; Tooltip Audit<br>
+    Prepared March 6, 2026 &middot; Powered by The Change Lab<br>
+    <span style="color:#C75B2A">www.changeengine.us</span>
+  </div>
+
+</div>
+</body>
+</html>

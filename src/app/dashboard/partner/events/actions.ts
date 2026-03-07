@@ -53,6 +53,7 @@ export async function createEvent(formData: FormData) {
   }
 
   const opportunityName = formData.get('opportunity_name') as string
+  const eventType = formData.get('event_type') as string || null
   const description = formData.get('description_5th_grade') as string || null
   const startDate = formData.get('start_date') as string || null
   const endDate = formData.get('end_date') as string || null
@@ -75,6 +76,7 @@ export async function createEvent(formData: FormData) {
   const { error } = await supabase.from('opportunities').insert({
     opportunity_id: opportunityId,
     opportunity_name: opportunityName.trim(),
+    event_type: eventType,
     description_5th_grade: description,
     start_date: startDate || null,
     end_date: endDate || null,
@@ -122,6 +124,7 @@ export async function updateEvent(opportunityId: string, formData: FormData) {
   }
 
   const opportunityName = formData.get('opportunity_name') as string
+  const eventType = formData.get('event_type') as string || null
   const description = formData.get('description_5th_grade') as string || null
   const startDate = formData.get('start_date') as string || null
   const endDate = formData.get('end_date') as string || null
@@ -143,6 +146,7 @@ export async function updateEvent(opportunityId: string, formData: FormData) {
     .from('opportunities')
     .update({
       opportunity_name: opportunityName.trim(),
+      event_type: eventType,
       description_5th_grade: description,
       start_date: startDate || null,
       end_date: endDate || null,
