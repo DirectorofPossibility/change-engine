@@ -48,22 +48,13 @@ export default function SignupPage() {
       return
     }
 
+    // Profile is auto-created by DB trigger; update with extra fields
     if (authData.user) {
-      const { error: profileError } = await supabase.from('user_profiles').insert({
-        auth_id: authData.user.id,
-        display_name: displayName,
-        email: email,
+      await supabase.from('user_profiles').update({
         zip_code: zipCode || null,
         preferred_language: language,
         gamification_enabled: true,
-        role: 'user',
-        created_at: new Date().toISOString(),
-        last_active: new Date().toISOString(),
-      })
-
-      if (profileError) {
-        console.error('Profile creation error:', profileError)
-      }
+      }).eq('auth_id', authData.user.id)
     }
 
     setSuccess(true)
