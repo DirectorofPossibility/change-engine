@@ -8,25 +8,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-// Simple ZIP → lat/lng via Census geocoder
+// ZIP → lat/lng: try Census geocoder, then fall back to Zippopotam.us
 async function geocodeZip(zip: string): Promise<{ lat: number; lng: number; city: string; state: string } | null> {
+  // Try Census geocoder first
   try {
     const url = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=' +
       encodeURIComponent(zip + ', USA') + '&benchmark=Public_AR_Current&format=json'
-    const res = await fetch(url, { headers: { Accept: 'application/json' } })
-    if (!res.ok) return null
-    const data = await res.json()
-    const match = data.result?.addressMatches?.[0]
-    if (!match) return null
-    return {
-      lat: match.coordinates.y,
-      lng: match.coordinates.x,
-      city: match.addressComponents?.city || '',
-      state: match.addressComponents?.state || '',
+    const res = await fetch(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(5000) })
+    if (res.ok) {
+      const data = await res.json()
+      const match = data.result?.addressMatches?.[0]
+      if (match) {
+        return {
+          lat: match.coordinates.y,
+          lng: match.coordinates.x,
+          city: match.addressComponents?.city || '',
+          state: match.addressComponents?.state || '',
+        }
+      }
     }
-  } catch {
-    return null
-  }
+  } catch { /* fall through */ }
+
+  // Fallback: Zippopotam.us (free, no key needed)
+  try {
+    const res = await fetch('https://api.zippopotam.us/us/' + zip, { signal: AbortSignal.timeout(5000) })
+    if (res.ok) {
+      const data = await res.json()
+      const place = data.places?.[0]
+      if (place) {
+        return {
+          lat: parseFloat(place.latitude),
+          lng: parseFloat(place.longitude),
+          city: place['place name'] || '',
+          state: place['state abbreviation'] || '',
+        }
+      }
+    }
+  } catch { /* fall through */ }
+
+  return null
 }
 
 export async function POST(request: NextRequest) {
