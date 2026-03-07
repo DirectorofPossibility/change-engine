@@ -497,6 +497,50 @@ export async function getArticleVotes(
   }
 }
 
+// ── Bookshelf queries ──
+
+export interface BookshelfItem {
+  id: string
+  title: string
+  author: string
+  description: string | null
+  cover_image_url: string | null
+  purchase_url: string | null
+  free_url: string | null
+  isbn: string | null
+  theme_id: string | null
+  focus_area_ids: string[]
+  tags: string[]
+  page_count: number | null
+  year_published: number | null
+  is_featured: boolean
+  display_order: number
+  created_at: string
+}
+
+export async function getBookshelfItems(): Promise<BookshelfItem[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('bookshelf' as any)
+    .select('*')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+
+  return (data ?? []) as unknown as BookshelfItem[]
+}
+
+export async function getFeaturedBooks(): Promise<BookshelfItem[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('bookshelf' as any)
+    .select('*')
+    .eq('is_active', true)
+    .eq('is_featured', true)
+    .order('display_order', { ascending: true })
+
+  return (data ?? []) as unknown as BookshelfItem[]
+}
+
 // ── Admin queries ──
 
 export async function getPendingDocuments(): Promise<KBDocument[]> {
