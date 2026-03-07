@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { FeaturedPromo } from './FeaturedPromo'
-import { TickerTape } from './TickerTape'
 import { InfoBubble } from './InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { HeroZipInput } from './HeroZipInput'
@@ -267,10 +266,6 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         <FeaturedPromo variant="banner" />
       </div>
 
-      {/* ── TICKER TAPE ── */}
-      <div className="mt-6">
-        <TickerTape />
-      </div>
     </div>
   )
 }
