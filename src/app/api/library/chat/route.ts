@@ -77,28 +77,24 @@ Guidelines:
 
 export async function POST(req: NextRequest) {
   try {
-    // Auth check
+    // Auth check — allow anonymous users but check account status for logged-in users
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'Authentication required' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
 
-    const { data: profileRow } = await supabase
-      .from('user_profiles')
-      .select('account_status')
-      .eq('auth_id', user.id)
-      .single()
+    if (user) {
+      const { data: profileRow } = await supabase
+        .from('user_profiles')
+        .select('account_status')
+        .eq('auth_id', user.id)
+        .single()
 
-    const acctStatus = (profileRow as any)?.account_status
-    if (acctStatus === 'read_only' || acctStatus === 'locked') {
-      return new Response(JSON.stringify({ error: 'Your account does not have chat permissions' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      const acctStatus = (profileRow as any)?.account_status
+      if (acctStatus === 'read_only' || acctStatus === 'locked') {
+        return new Response(JSON.stringify({ error: 'Your account does not have chat permissions' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        })
+      }
     }
 
     const body = await req.json()
@@ -113,12 +109,14 @@ export async function POST(req: NextRequest) {
 
     // Get or create session
     let sessionId = session_id
-    if (!sessionId) {
-      const sessions = await supaRest('POST', 'kb_chat_sessions', {
-        user_id: user.id,
-        title: message.slice(0, 100),
-      })
-      sessionId = sessions?.[0]?.id
+    if (!sessionId && user) {
+      try {
+        const sessions = await supaRest('POST', 'kb_chat_sessions', {
+          user_id: user.id,
+          title: message.slice(0, 100),
+        })
+        sessionId = sessions?.[0]?.id
+      } catch { /* anonymous users skip session creation */ }
     }
 
     // Get conversation history

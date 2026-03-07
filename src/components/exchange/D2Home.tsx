@@ -4,6 +4,7 @@ import { TickerTape } from './TickerTape'
 import { InfoBubble } from './InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { HeroZipInput } from './HeroZipInput'
+import { HeroSearchInput } from './HeroSearchInput'
 import { CENTERS, CENTER_COLORS } from '@/lib/constants'
 
 const QUICK_ACCESS = [
@@ -109,7 +110,10 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 <strong className="text-brand-text">Where do you want to jump in?</strong>
               </p>
 
-              <HeroZipInput />
+              <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mb-5">
+                <HeroZipInput />
+                <HeroSearchInput />
+              </div>
 
               <div className="flex flex-wrap gap-3">
                 <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
