@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { CENTERS, CENTER_COLORS } from '@/lib/constants'
+import { ArrowRight } from 'lucide-react'
+import { CENTER_COLORS } from '@/lib/constants'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import {
   SeekerIcon, LearnerIcon, BuilderIcon,
@@ -75,12 +76,6 @@ const PERSONAS = [
   },
 ]
 
-function getCenterLink(center: string | null) {
-  if (!center) return null
-  const c = CENTERS[center]
-  return c ? '/centers/' + c.slug : null
-}
-
 export default function PersonasPage() {
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -95,24 +90,28 @@ export default function PersonasPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {PERSONAS.map(function (p) {
-          const centerLink = getCenterLink(p.center)
           const centerColor = p.center ? CENTER_COLORS[p.center] || p.color : p.color
 
           return (
-            <div
+            <Link
               key={p.id}
-              className="bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow"
+              href={'/for/' + p.id}
+              className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              style={{ borderColor: undefined }}
             >
+              {/* Color top bar */}
+              <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: centerColor }} />
+
               {/* Header */}
               <div className="flex items-center gap-4 p-5 pb-3">
                 <div
-                  className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: centerColor + '15' }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-colors"
+                  style={{ backgroundColor: centerColor + '15', border: '2px solid ' + centerColor + '25' }}
                 >
                   <p.Icon size={32} color={centerColor} />
                 </div>
                 <div>
-                  <h2 className="font-serif text-lg font-bold text-brand-text">{p.name}</h2>
+                  <h2 className="font-serif text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">{p.name}</h2>
                   <p className="text-sm text-brand-muted italic">{p.tagline}</p>
                 </div>
               </div>
@@ -140,18 +139,16 @@ export default function PersonasPage() {
               </div>
 
               {/* CTA */}
-              {centerLink && (
-                <div className="border-t border-brand-border px-5 py-3">
-                  <Link
-                    href={centerLink}
-                    className="text-sm font-medium hover:underline transition-colors"
-                    style={{ color: centerColor }}
-                  >
-                    Start as {p.name} &rarr;
-                  </Link>
-                </div>
-              )}
-            </div>
+              <div className="border-t border-brand-border px-5 py-3 flex items-center justify-between">
+                <span
+                  className="text-sm font-semibold transition-colors group-hover:underline"
+                  style={{ color: centerColor }}
+                >
+                  Start as {p.name}
+                </span>
+                <ArrowRight size={16} style={{ color: centerColor }} />
+              </div>
+            </Link>
           )
         })}
       </div>

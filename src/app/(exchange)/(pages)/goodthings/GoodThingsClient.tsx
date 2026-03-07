@@ -104,7 +104,7 @@ export function GoodThingsClient() {
     const w = 800; const h = 600
     canvas.width = w; canvas.height = h
 
-    ctx.fillStyle = '#1a1a2e'
+    ctx.fillStyle = '#2C2418'
     ctx.fillRect(0, 0, w, h)
 
     // FOL watermark circles

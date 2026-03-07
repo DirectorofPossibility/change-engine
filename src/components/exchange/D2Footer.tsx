@@ -149,13 +149,13 @@ export function D2Footer() {
               <div className="space-y-1.5">
                 {ARCHETYPES.map(function (a) {
                   return (
-                    <div key={a.id} className="flex items-center gap-2 group cursor-pointer">
+                    <Link key={a.id} href={'/for/' + a.id} className="flex items-center gap-2 group">
                       <a.Icon size={16} color="#C75B2A" />
                       <div>
                         <p className="text-[12px] text-white/60 group-hover:text-white transition-colors leading-tight">{a.name.replace('The ', '')}</p>
                         <p className="text-[9px] text-white/25 leading-tight">{a.desc}</p>
                       </div>
-                    </div>
+                    </Link>
                   )
                 })}
               </div>

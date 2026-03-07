@@ -65,7 +65,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
               onMouseEnter={function () { setHoveredKey(key) }}
               onMouseLeave={function () { setHoveredKey(null) }}
               style={{
-                background: 'linear-gradient(145deg, #1a1a2e 0%, ' + color + '15 100%)',
+                background: 'linear-gradient(145deg, #2C2418 0%, ' + color + '15 100%)',
                 border: '2px solid ' + (isHovered ? color : '#D1D5E0'),
                 boxShadow: isHovered
                   ? '4px 4px 0 ' + color + '40'
@@ -108,7 +108,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                 {/* Center name */}
                 <h3
                   className="font-serif text-xl font-bold mb-2 transition-colors"
-                  style={{ color: isHovered ? color : '#1a1a2e' }}
+                  style={{ color: isHovered ? color : '#2C2418' }}
                 >
                   {key} Center
                 </h3>

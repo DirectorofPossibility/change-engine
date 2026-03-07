@@ -88,7 +88,7 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
           [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
             return '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:flex-start;">' +
               '<span style="width:16px;height:16px;border-radius:50%;background:' + MARKER_COLORS[i] + ';color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">' + (i + 1) + '</span>' +
-              '<span style="font-size:13px;color:#1a1a2e;line-height:1.4;">' + thing + '</span>' +
+              '<span style="font-size:13px;color:#2C2418;line-height:1.4;">' + thing + '</span>' +
             '</div>'
           }).join('') +
         '</div>',

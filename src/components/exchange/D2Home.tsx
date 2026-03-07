@@ -159,14 +159,14 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               New
             </div>
 
-            <div className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px]" style={{ bottom: 20, left: 0, boxShadow: '3px 3px 0 #2d2d2d' }}>
+            <Link href="/services" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ bottom: 20, left: 0, boxShadow: '3px 3px 0 #2d2d2d' }}>
               <span className="block text-[28px] font-black text-brand-accent leading-none">{(stats.resources || 0).toLocaleString()}</span>
               resources
-            </div>
-            <div className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px]" style={{ top: 60, right: -20, boxShadow: '3px 3px 0 #2d2d2d' }}>
+            </Link>
+            <Link href="/organizations" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ top: 60, right: -20, boxShadow: '3px 3px 0 #2d2d2d' }}>
               <span className="block text-[28px] font-black text-brand-accent leading-none">{(organizations || 0).toLocaleString()}</span>
               organizations
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -183,7 +183,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   href={item.href}
                   className="relative col-span-2 md:col-span-1 aspect-square rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-3"
                   style={{
-                    background: 'linear-gradient(145deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%)',
+                    background: 'linear-gradient(145deg, #2C2418 0%, #2d1b4e 50%, #2C2418 100%)',
                     border: '3px solid #C75B2A',
                     boxShadow: '4px 4px 0 #C75B2A40',
                   }}
