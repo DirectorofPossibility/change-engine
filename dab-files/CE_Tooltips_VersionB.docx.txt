@@ -1,0 +1,316 @@
+﻿Tooltips & Info Bubbles — Version B Voice53 Total  ·  March 2026
+Tooltips & Info Bubbles — Version B Voice
+Community Exchange  ·  53 Total  ·  6th Grade  ·  March 2026
+Three columns: #  |  Element name  |  Copy. Paste directly. Rewrite only if the UI context demands it.
+
+
+I  GLOBAL NAVIGATION
+	
+
+1
+	ZIP Code Input
+	Your ZIP code helps us show you your elected officials, nearby services, and what's happening in your area.
+	
+
+2
+	Language Switcher
+	Read this in English, Spanish, or Vietnamese. Switch any time — no account needed.
+	
+
+3
+	Search Icon
+	Search for officials, services, organizations, news, policies, and more. All in one place.
+	
+
+4
+	Pathway Dots
+Fill in pathway name per dot
+	Each dot is a theme. Tap one to explore everything connected to it.
+	
+
+5
+	Dropdown — Discover
+	Find resources, services, and civic life in your neighborhood.
+	
+
+6
+	Dropdown — Learn
+	Understand how government works — and how to use it.
+	
+
+7
+	Dropdown — Act
+	Take real action. Call your representatives. Volunteer. Vote.
+	
+
+8
+	Dropdown — About
+	Learn about The Change Lab and how this platform works.
+	
+
+II  HOMEPAGE
+	
+
+9
+	PersonaSelector
+	Not an account type — just a lens. Pick one to see the page organized around what matters most to you. Switch any time.
+	
+
+10
+	Pathway Cards
+	Each pathway is a theme — like housing or health. Tap to explore everything connected to it.
+	
+
+11
+	Stats Bar
+	Live numbers from our database. Updated every morning from public data sources.
+	
+
+III  OFFICIALS PAGE
+	
+
+12
+	ZIP Lookup
+	Your ZIP overlaps multiple districts. We find all of them — city, county, state, federal — and show you every person who represents you.
+	
+
+13
+	Level Badges
+	Federal = Washington, D.C.  State = Austin.  County = Harris County.  City = Houston.
+	
+
+14
+	Party Label
+	The political party this official belongs to.
+	
+
+IV  SERVICES PAGE
+	
+
+15
+	211 Badge
+	211 is Texas's free help line for health and human services. Call 2-1-1 any time — real people answer and help you find what you need.
+	
+
+16
+	Map View Toggle
+	Switch between a list and a map. The map shows where services are near you.
+	
+
+17
+	Service Type Tags
+	Categories to help you find the right kind of help — food, housing, health, legal, and more.
+	
+
+V  POLICIES & LEGISLATION
+	
+
+18
+	Government Level Filter
+	Filter by which level of government is working on this — city, county, state, or federal.
+	
+
+19
+	Status Badge
+	Where this bill is right now — introduced, in committee, passed, or signed into law.
+	
+
+20
+	For / Against Arguments
+	What supporters say. What opponents say. No spin — just the main points on each side, in plain language.
+	
+
+VI  ELECTIONS & VOTING
+	
+
+21
+	Election Countdown
+	Days until the next election. Early voting in Texas usually starts two weeks before Election Day.
+	
+
+22
+	Registration Deadline
+	In Texas, you have to register at least 30 days before an election. Don't wait.
+	
+
+23
+	Polling Place Finder
+	Enter your address to find exactly where to vote — your assigned location plus early voting sites near you.
+	
+
+VII  LEARNING PATHS
+	
+
+24
+	Difficulty Badge
+	Beginner: start from zero.  Intermediate: builds on the basics.  Advanced: for people ready to go deeper.
+	
+
+25
+	Estimated Minutes
+	How long it takes to finish — reading, videos, and activities included.
+	
+
+26
+	Quiz Indicator
+	A short check at the end. Not graded — just to help it stick.
+	
+
+27
+	Module Media Pills
+	Resources from trusted sources — TED, PBS, community organizations. We link to them. We don't replace them.
+	
+
+VIII  LIBRARY & RESEARCH
+	
+
+28
+	AI Summary Badge
+	AI wrote this summary to make the content easier to read. The original source is linked below — we didn't replace it.
+	
+
+29
+	Chat with Chance
+	Chance is an AI assistant built on Houston community data. Ask anything — officials, services, policies, how things work.
+	
+
+30
+	Source Attribution
+	This content was created by this organization. We summarized it. Click through to read the original.
+	
+
+IX  ORGANIZATIONS & FOUNDATIONS
+	
+
+31
+	Org Action Buttons
+	Direct links to this organization's volunteer page, donation page, or event calendar — wherever they want you to go next.
+	
+
+32
+	Foundation Galaxy
+	Each dot is a foundation. Bigger = more funding. Color = primary theme. Click any dot to learn more.
+	
+
+33
+	NTEE Code
+	A national code that classifies nonprofits by what they do. Used by the IRS and researchers to organize the sector.
+	
+
+X  OPPORTUNITIES & EVENTS
+	
+
+34
+	Time Commitment
+	How much of your time this takes — one-time, weekly, monthly, or ongoing. No surprises.
+	
+
+35
+	Virtual Badge
+	You can do this from home. No travel needed.
+	
+
+36
+	Spots Available
+	How many openings are left. First come, first served.
+	
+
+XI  NEIGHBORHOODS & GEOGRAPHY
+	
+
+37
+	Super Neighborhood
+	Houston has 88 super neighborhoods. Each one has a council that gives input to City Hall on local decisions.
+	
+
+38
+	Population / Income Stats
+	U.S. Census data — used to understand what communities need and how resources get distributed.
+	
+
+39
+	GeoJSON Boundaries
+	Map boundaries from the City of Houston Planning Department. Updated when official boundaries change.
+	
+
+XII  WAYFINDER
+	
+
+40
+	Wayfinder Panel
+	Everything connected to what you're looking at — officials, services, organizations, policies, and news that share the same focus areas. Three hops out from any starting point.
+	
+
+41
+	Focus Area Dots
+	Focus areas are specific topics inside a pathway. Tap any dot to explore everything tagged with it.
+	
+
+42
+	Engagement Tiers
+	Understand: learn what's happening.  Get Involved: take action.  Go Deeper: follow the systems that shape it.
+	
+
+43
+	Taxonomy Section
+	How this item is classified — pathway, focus area, UN goals, and federal codes. Useful for researchers and partners.
+	
+
+44
+	Suggest an Edit
+	See something wrong or outdated? Tell us. Community members help keep this accurate.
+	
+
+XIII  USER ACCOUNT
+	
+
+45
+	Impact Points
+	Points earned by completing learning modules, taking civic action, and engaging with community resources.
+	
+
+46
+	Badges
+	Earned by finishing learning paths, attending events, and showing up. Each one marks something real you did.
+	
+
+47
+	Role Badge
+	Member: browse and learn.  Neighbor: submit resources and track activity.  Partner: manage your organization, post events, access analytics.
+	
+
+48
+	Gamification Toggle
+	Turn badges and points on or off. Your progress is still saved either way — this just changes whether you see it.
+	
+
+49
+	Neighbor vs. Partner
+	Neighbor accounts are free for individuals. Partner accounts — for organizations — start at $100/year and include tools for managing your presence on the platform.
+	
+
+XIV  CONTENT CARDS
+	
+
+50
+	Pathway Color Bar
+Show pathway name on hover
+	The color shows which pathway this belongs to. Hover to see the name.
+	
+
+51
+	Content Type Badge
+	How this is meant to be used — article, video, report, tool, event, or course.
+	
+
+52
+	Source Attribution
+	The organization that created this. We link to them. We don't replace them.
+	
+
+53
+	Translation Indicator
+	This is available in your selected language.
+	
+
+The Change Lab  ·  changeengine.us  ·  Houston, Texas

@@ -35,7 +35,7 @@ export default function ResetPasswordPage() {
       <div className="max-w-md mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-bold text-brand-text mb-4">Check your inbox.</h1>
         <p className="text-brand-muted mb-6">
-          We sent a reset link to <strong>{email}</strong>. The link expires in 24 hours.
+          The link expires in 24 hours. We sent it to <strong>{email}</strong>.
         </p>
         <Link href="/login" className="text-brand-accent hover:underline text-sm">
           Back to sign in

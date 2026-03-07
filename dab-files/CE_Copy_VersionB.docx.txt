@@ -1,0 +1,879 @@
+﻿Website Copy — Community Exchange  ·  Version B Voice6th Grade  ·  March 2026
+Website Copy — Version B Voice
+Community Exchange  ·  All Pages  ·  6th Grade Reading Level  ·  March 2026
+Voice: direct, honest, short sentences, no jargon. Meets people where they are. Never above them.
+
+
+HOME
+	/
+Homepage
+	
+
+HOOK
+
+
+	Most people never show up. Not because they don't care. Because nobody showed them the way in.
+	
+
+HEADLINE
+
+
+	This is the way in.
+	
+
+SUBHEAD
+
+
+	Houston has everything — the organizations, the officials, the resources, the people doing the work. We made it findable.
+	
+
+SEARCH PLACEHOLDER
+
+
+	What do you care about?
+	
+
+QUICK LINKS
+
+
+	Find my way in  ·  In my neighborhood  ·  What's happening now
+	
+
+CARDS
+
+
+	**Chart Your Course** — Choose your own adventure.
+**Library** — Read. Learn. Go deeper.
+**News** — What's happening in Houston.
+	
+
+
+
+HIGH
+	/call-your-senators
+Call Your Senators
+	
+
+HOOK
+
+
+	Most people think their voice doesn't matter. Most people are wrong.
+	
+
+HEADLINE
+
+
+	Call your senators. It works.
+	
+
+SUBHEAD
+
+
+	Two minutes. One call. Your senators have staff whose only job is to count opinions like yours.
+	
+
+INTRO
+
+
+	You don't need a speech. You don't need to be an expert. You just need to say what you think and where you live.
+
+
+That's it. That's the whole thing.
+	
+
+HOW IT WORKS
+
+
+	**Pick an issue.** Housing. Schools. Healthcare. Pick one thing.
+**We find your senators.** Both of them, based on your state.
+**We give you a script.** Short. Clear. In plain English.
+**You call.** Two minutes. Done.
+	
+
+CTA
+
+
+	Find My Senators
+	
+
+CLOSING
+
+
+	Democracy doesn't run on autopilot. It runs on people like you picking up the phone.
+	
+
+
+
+HIGH
+	/foundations
+Foundations
+	
+
+HOOK
+
+
+	Billions of dollars are invested in Houston every year. Most residents have no idea.
+	
+
+HEADLINE
+
+
+	The foundations funding Houston — all in one place.
+	
+
+SUBHEAD
+
+
+	They fund the work. We make it findable.
+	
+
+INTRO
+
+
+	Houston has one of the most generous philanthropic communities in the country. Health. Education. Housing. Arts. Civic life. There are hundreds of foundations working on all of it.
+
+
+Most people never know they exist.
+
+
+This page changes that.
+	
+
+WHAT YOU CAN DO
+
+
+	**Find foundations working on what you care about.** Browse by issue area.
+**See who they fund.** Connect the dots between money and mission.
+**Understand the landscape.** Whether you're a nonprofit, a researcher, or just curious — start here.
+	
+
+CTA
+
+
+	Explore Houston Foundations
+	
+
+
+
+MED
+	/knowledge-graph
+Knowledge Graph
+	
+
+HOOK
+
+
+	Everything in Houston civic life is connected. Nobody was showing you how.
+	
+
+HEADLINE
+
+
+	The Civic Knowledge Galaxy.
+	
+
+SUBHEAD
+
+
+	Not a list. Not a directory. A living map of how it all fits together.
+	
+
+INTRO
+
+
+	A city council vote affects a neighborhood. A nonprofit serves families in that neighborhood. A foundation funds the nonprofit. A state law shapes what the foundation can do.
+
+
+Those connections are real. Until now, nobody was showing them to you.
+
+
+We built a knowledge graph — 174 tables, 16 types of entities, updated every day — that maps all of it.
+	
+
+WHAT'S CONNECTED
+
+
+	**Officials** — Every elected representative at every level of government.
+**Services** — Real help for real needs. Housing, food, legal, health.
+**Organizations** — Houston's nonprofit and civic community.
+**Policies** — Legislation tracked from introduction to law.
+**Opportunities** — Ways to show up and get involved.
+**News** — Civic content in plain language, classified so you can find it.
+	
+
+THE POINT
+
+
+	Most platforms show you one thing. We show you how everything connects. That's the difference between a list and a map.
+	
+
+
+
+MED
+	/goodthings
+Three Good Things
+	
+
+HOOK
+
+
+	The news can make you feel like everything is broken. It isn't.
+	
+
+HEADLINE
+
+
+	Three good things. Every day.
+	
+
+SUBHEAD
+
+
+	Real stories. Local. Updated daily. Because the news isn't only bad.
+	
+
+INTRO
+
+
+	Every day in Houston, people are showing up. Nonprofits are solving hard problems. Neighbors are helping neighbors. Civic leaders are fighting for something.
+
+
+Three Good Things is three of those stories — every day.
+
+
+We're not ignoring the hard stuff. We're making sure the good stuff gets seen too.
+	
+
+WHY IT MATTERS
+
+
+	When people believe good things are possible, they're more likely to do something. Hope isn't soft. It's fuel.
+	
+
+CTA
+
+
+	See Today's Three Good Things
+	
+
+
+
+MED
+	/dashboard-live
+Live Dashboard
+	
+
+HOOK
+
+
+	You can't shape what you can't see.
+	
+
+HEADLINE
+
+
+	Houston civic life — right now.
+	
+
+SUBHEAD
+
+
+	Real data. Updated every morning. No spin.
+	
+
+INTRO
+
+
+	Not a snapshot from last year. Not a press release. Live data from the sources that matter — city, county, state, and federal — updated before you wake up.
+
+
+City Council votes. County decisions. State bills moving through committees. Federal dollars coming into Houston.
+
+
+All of it. Plain language. One place.
+	
+
+WHAT YOU'RE LOOKING AT
+
+
+	**Legislative activity** — What's moving, what passed, what failed.
+**Civic organizations** — Who's active and what they're working on.
+**Community resources** — Services available right now, by neighborhood.
+**Ways to show up** — Meetings, hearings, volunteer shifts, events.
+	
+
+NOTE
+
+
+	Data syncs every morning between 7 and 10 AM Central. Check back after 10 if something looks off.
+	
+
+
+
+LOW
+	/search
+Search
+	
+
+PERSISTENT INTRO
+
+
+	Search everything — officials, services, organizations, news, policies, opportunities. Use the tabs to narrow it down, or search across all of it at once.
+	
+
+PLACEHOLDER
+
+
+	What are you looking for?
+	
+
+EMPTY STATE
+
+
+	Nothing yet. Try a neighborhood name, an issue, or a person.
+	
+
+NO RESULTS
+
+
+	We didn't find that. Try fewer words, or search something nearby.
+	
+
+
+
+MED
+	/polling-places
+Polling Places
+	
+
+HOOK
+
+
+	Voting is the one thing nobody can do for you.
+	
+
+HEADLINE
+
+
+	Find where to vote. Thirty seconds.
+	
+
+SUBHEAD
+
+
+	Early voting. Election Day. Mail ballots. It's all here.
+	
+
+INTRO
+
+
+	Enter your address. Get your polling place, your hours, and everything you need to show up ready.
+
+
+No excuses. No surprises.
+	
+
+I18N STRINGS TO VERIFY (EN / ES / VI)
+
+
+	find_polling_place — "Find your polling place"
+enter_address — "Enter your address"
+early_voting — "Early voting locations"
+election_day — "Election Day location"
+hours — "Hours"
+bring_id — "What to bring"
+mail_ballot — "Request a mail ballot"
+	
+
+CTA
+
+
+	Find My Polling Place
+	
+
+
+
+LOW
+	/me/settings
+Settings
+	
+
+HEADER
+
+
+	Your settings.
+	
+
+ONE-LINER
+
+
+	Language, notifications, saved items, and account info — all in one place.
+	
+
+SECTION LABELS
+
+
+	**Language** — English, Spanish, or Vietnamese. Switch any time.
+**Notifications** — Tell us what to keep you updated on.
+**Saved** — Everything you've bookmarked.
+**Account** — Update your email or password.
+	
+
+
+
+LOW
+	/login
+Login
+	
+
+HEADLINE
+
+
+	Good to have you back.
+	
+
+SUBHEAD
+
+
+	Sign in to pick up where you left off.
+	
+
+NO ACCOUNT
+
+
+	Don't have an account? You don't need one to look around. But if you want to save things and get updates — it's free.
+	
+
+FORGOT PASSWORD
+
+
+	Forgot your password? No stress — we'll sort it.
+	
+
+
+
+LOW
+	/reset-password
+Reset Password
+	
+
+HEADLINE
+
+
+	Let's get you back in.
+	
+
+SUBHEAD
+
+
+	Enter your email. We'll send you a link. Check your spam if it doesn't show up in a few minutes.
+	
+
+SUCCESS
+
+
+	Check your inbox. The link expires in 24 hours.
+	
+
+CTA
+
+
+	Send Reset Link
+	
+
+
+
+HIGH
+	/manual
+User Manual
+	
+
+HOOK
+
+
+	You don't need a guide to use this. But here's one anyway.
+	
+
+HEADLINE
+
+
+	How Community Exchange works.
+	
+
+SUBHEAD
+
+
+	Start anywhere. The platform will show you what connects.
+	
+
+START WITH YOUR ADDRESS
+
+
+	The fastest way in is your address. Type it into Civic Compass and we'll show you every elected official who represents you — city council, county commissioner, state rep, state senator, U.S. representative, U.S. senator.
+
+
+All of them. One place. Right now.
+	
+
+BROWSE BY WHAT MATTERS TO YOU
+
+
+	Not sure where to start? Pick a pathway. Seven themes — housing, health, education, environment, economy, safety, civic life. Pick the one that's closest to what you care about.
+
+
+Inside each pathway: organizations working on it, services available for it, news about it, officials responsible for it.
+	
+
+SEARCH FOR ANYTHING
+
+
+	Use the search bar. A name, a place, an issue, an organization. Use the tabs to filter by type. Everything updates daily.
+	
+
+FOLLOW WHAT'S HAPPENING
+
+
+	The live dashboard shows what's moving right now — legislation, community activity, events you can attend.
+
+
+Three Good Things shows you three positive civic stories every day.
+	
+
+SAVE WHAT MATTERS
+
+
+	Create a free account to save officials, organizations, and articles. Set your language. Get notified about things in your area.
+
+
+You don't need an account. But it helps if you want to keep track.
+	
+
+LANGUAGES
+
+
+	English, Spanish, and Vietnamese. Switch in the top navigation or in your settings.
+
+
+All service content is reviewed by a human editor before it publishes in any language.
+	
+
+WAYFINDER
+
+
+	At the bottom of every page — every official, every organization, every service — you'll see Wayfinder. It shows you what's connected to what you're looking at. Three hops out from any starting point.
+
+
+It's how you go from 'I need help with rent' to 'here are the organizations, the officials responsible, and the policy that funds it' — without having to already know where to look.
+	
+
+CLOSING
+
+
+	That's it. Start with what you know. The platform shows you the rest.
+
+
+Questions? Reach us at hello@changeengine.us.
+	
+
+
+
+HIGH
+	/donate
+Donate
+	
+
+HOOK
+
+
+	Civic infrastructure shouldn't cost money to access. Building it does.
+	
+
+HEADLINE
+
+
+	Help us keep it free for everyone.
+	
+
+SUBHEAD
+
+
+	Community Exchange is free. It stays free because people like you think it should be.
+	
+
+MISSION
+
+
+	Knowing who represents you. Finding services in your neighborhood. Understanding how to get involved. That information shouldn't cost anything to access.
+
+
+But building and maintaining the platform that makes it all findable — that costs real money.
+
+
+Your donation keeps the data accurate, the platform running, and the doors open.
+	
+
+WHAT YOUR MONEY DOES
+
+
+	**174 tables** of connected civic data — updated every day.
+**4 levels of government** synced every morning.
+**3 languages** — English, Spanish, Vietnamese.
+**6th-grade reading level** on every piece of content.
+**Zero ads.** Ever.
+	
+
+TIERS
+
+
+	**$10/month — Neighbor.** Keeps one data source synced for a month.
+**$25/month — Block Captain.** Covers translation costs for one language.
+**$50/month — Connector.** Supports one week of editorial review.
+**$100/month — Infrastructure Partner.** Covers hosting and database for a month.
+**Your amount.** Give what you can. All of it matters.
+	
+
+TAX INFO
+
+
+	The Change Lab is fiscally sponsored by Impact Hub Houston, a 501(c)(3). Your donation is tax-deductible.
+	
+
+CTA
+
+
+	Make a Donation
+	
+
+CLOSING
+
+
+	Civic infrastructure only works if someone maintains it. Thank you for being that someone.
+	
+
+
+
+LOW
+	/districts
+Districts
+	
+
+HOOK
+
+
+	You live in more districts than you think.
+	
+
+HEADLINE
+
+
+	Every district. Every representative. Mapped.
+	
+
+SUBHEAD
+
+
+	City council. County precinct. State house and senate. Congress. They all overlap where you live.
+	
+
+INTRO
+
+
+	Enter your address. See every political boundary that covers your block — and every person responsible for what happens inside it.
+	
+
+COMING SOON NOTE
+
+
+	Full district mapping launches with Geographic Phase 2.
+	
+
+CTA
+
+
+	Enter Your Address
+	
+
+
+
+LOW
+	/quizzes
+Civic Quizzes
+	
+
+HOOK
+
+
+	You know more than you think. Let's find out.
+	
+
+HEADLINE
+
+
+	How well do you know your city?
+	
+
+SUBHEAD
+
+
+	Short quizzes. Free. Actually interesting.
+	
+
+INTRO
+
+
+	Civic engagement starts with civic knowledge. And the best way to learn is to test yourself.
+
+
+Pick a quiz. Take five minutes. Walk away knowing something you didn't before.
+	
+
+QUIZ TYPES
+
+
+	**Know Your Government** — Who does what at city, county, state, and federal levels.
+**Houston History** — The people, places, and moments that shaped this city.
+**Voting & Elections** — Your rights, the process, and how it all works.
+**Civic Superpower** — What kind of civic person are you? Find out.
+	
+
+CTA
+
+
+	Take a Quiz
+	
+
+
+
+MED
+	/guide
+Guide — Magazine
+	
+
+HOOK
+
+
+	What's happening in Houston civic life. Written so anyone can understand it.
+	
+
+HEADLINE
+
+
+	Your guide to what's going on.
+	
+
+SUBHEAD
+
+
+	Curated. Local. Updated daily.
+	
+
+INTRO
+
+
+	News. Analysis. Community stories. Explainers about how Houston works.
+
+
+Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you.
+
+
+Pick your perspective below.
+	
+
+
+
+MED
+	/compass
+Civic Compass
+	
+
+HOOK
+
+
+	Most people don't know who represents them. That's not their fault. It's a design problem. We fixed it.
+	
+
+INTRO (VERIFY RENDERS IN CLIENT COMPONENT)
+
+
+	Type in your Houston address. We'll show you every elected official who represents you — from City Council to Congress — with their contact info, committees, and recent activity.
+
+
+No account needed. No fine print. Just your address.
+	
+
+PLACEHOLDER
+
+
+	Enter your address — street, city, zip
+	
+
+EMPTY STATE
+
+
+	Enter your address above to find your representatives.
+	
+
+ERROR STATE
+
+
+	We couldn't find that address. Try adding your zip code.
+	
+
+
+
+ALL
+	/footer
+Footer
+	
+
+TAGLINE
+
+
+	Community life, organized.
+	
+
+ABOUT BLURB
+
+
+	Community Exchange is a community discovery platform built by The Change Lab in Houston. We connect residents to the officials, services, organizations, and opportunities that already exist — in their language, at their level, in their neighborhood.
+	
+
+COLUMN 1 — DISCOVER
+
+
+	Civic Compass  ·  Pathways  ·  Guide  ·  Live Dashboard  ·  Three Good Things  ·  Polling Places
+	
+
+COLUMN 2 — LEARN
+
+
+	Knowledge Graph  ·  Quizzes  ·  User Manual  ·  Districts  ·  Foundations
+	
+
+COLUMN 3 — ACT
+
+
+	Call Your Senators  ·  Volunteer  ·  Donate  ·  Partner With Us
+	
+
+COLUMN 4 — ABOUT
+
+
+	About The Change Lab  ·  Our Approach  ·  Contact  ·  Accessibility  ·  Privacy Policy
+	
+
+BOTTOM BAR
+
+
+	© 2026 The Change Lab. Fiscally sponsored by Impact Hub Houston, a 501(c)(3).
+Built in Houston. For Houston.
+English  ·  Español  ·  Tiếng Việt
+	
+
+MISSION LINE
+
+
+	We didn't build anything new. We just made what already exists findable.
+	
+
+The Change Lab  ·  changeengine.us  ·  Houston, Texas
