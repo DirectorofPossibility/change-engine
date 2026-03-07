@@ -537,8 +537,23 @@ export async function getOfficialsByZip(zip: string) {
     'TX',
   ].filter(Boolean)
 
+  // Look up city council district from neighborhoods table
+  const { data: hoodRows } = await supabase
+    .from('neighborhoods')
+    .select('council_district')
+    .like('zip_codes', '%' + zip + '%')
+    .not('council_district', 'is', null)
+    .limit(1)
+
+  const councilDistrict = hoodRows?.[0]?.council_district || null
+
   let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-  filterParts += ',level.eq.City'
+  // City officials: Mayor (null district) + At-Large + specific council district
+  if (councilDistrict) {
+    filterParts += ',district_id.eq.' + councilDistrict
+  }
+  // Always include At-Large and Mayor (city-wide officials)
+  filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
   if (zipData.county_id) {
     filterParts += ',counties_served.like.%' + zipData.county_id + '%'
   }
@@ -2620,8 +2635,20 @@ export async function getGeographyData(zip?: string, superNeighborhoodId?: strin
         'TX',
       ].filter(Boolean)
 
+      // Look up council district from neighborhoods
+      const { data: hoodRows2 } = await supabase
+        .from('neighborhoods')
+        .select('council_district')
+        .like('zip_codes', '%' + zip + '%')
+        .not('council_district', 'is', null)
+        .limit(1)
+      const councilDist = hoodRows2?.[0]?.council_district || null
+
       let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-      filterParts += ',level.eq.City'
+      if (councilDist) {
+        filterParts += ',district_id.eq.' + councilDist
+      }
+      filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
       if (zipData.county_id) {
         filterParts += ',counties_served.like.%' + zipData.county_id + '%'
       }

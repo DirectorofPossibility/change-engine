@@ -70,8 +70,21 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
         'TX',
       ].filter(Boolean)
 
+      // Look up city council district from neighborhoods
+      const { data: hoodRows } = await supabase
+        .from('neighborhoods')
+        .select('council_district')
+        .like('zip_codes', '%' + searchZip + '%')
+        .not('council_district', 'is', null)
+        .limit(1)
+      const councilDistrict = hoodRows?.[0]?.council_district || null
+
       let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-      filterParts += ',level.eq.City'
+      // City: specific district + at-large + mayor
+      if (councilDistrict) {
+        filterParts += ',district_id.eq.' + councilDistrict
+      }
+      filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
       if (zipData.county_id) {
         filterParts += ',counties_served.like.%' + zipData.county_id + '%'
       }

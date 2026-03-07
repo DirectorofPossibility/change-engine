@@ -220,8 +220,20 @@ export async function GET(req: Request) {
         'TX',
       ].filter(Boolean)
 
+      // Look up council district from neighborhoods
+      const { data: hoodRows } = await supabase
+        .from('neighborhoods')
+        .select('council_district')
+        .like('zip_codes', '%' + zips[0] + '%')
+        .not('council_district', 'is', null)
+        .limit(1)
+      const councilDist = hoodRows?.[0]?.council_district || null
+
       let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-      filterParts += ',level.eq.City'
+      if (councilDist) {
+        filterParts += ',district_id.eq.' + councilDist
+      }
+      filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
       if (zipData.county_id) {
         filterParts += ',counties_served.like.%' + zipData.county_id + '%'
       }
