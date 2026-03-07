@@ -143,16 +143,37 @@ export function DeeperIcon({ size = 16, color = '#1e40af', className }: IconProp
 
 // ─── FULL FLOWER OF LIFE (brand mark) ──────────────────────
 
-export function FlowerOfLifeIcon({ size = 48, color = '#E8723A', className }: IconProps) {
+export function FlowerOfLifeIcon({ size = 48, color = '#C75B2A', className }: IconProps) {
+  // Bold, vivid Flower of Life — the brand mark should COMMAND attention
+  const r = 18
+  const cx = 100, cy = 100
+  // Inner ring of 6 around center
+  const inner = [0, 60, 120, 180, 240, 300].map(deg => {
+    const rad = (deg * Math.PI) / 180
+    return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)] as [number, number]
+  })
+  // Outer ring of 6 (offset 30deg, radius * sqrt(3))
+  const outerR = r * 1.732
+  const outer = [30, 90, 150, 210, 270, 330].map(deg => {
+    const rad = (deg * Math.PI) / 180
+    return [cx + outerR * Math.cos(rad), cy + outerR * Math.sin(rad)] as [number, number]
+  })
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true">
-      <circle cx="100" cy="100" r="20" stroke={color} strokeWidth="1.5" opacity="0.6" />
-      <circle cx="100" cy="80" r="20" stroke={color} strokeWidth="1.2" opacity="0.45" />
-      <circle cx="100" cy="120" r="20" stroke={color} strokeWidth="1.2" opacity="0.45" />
-      <circle cx="117.3" cy="90" r="20" stroke={color} strokeWidth="1.2" opacity="0.45" />
-      <circle cx="117.3" cy="110" r="20" stroke={color} strokeWidth="1.2" opacity="0.45" />
-      <circle cx="82.7" cy="90" r="20" stroke={color} strokeWidth="1.2" opacity="0.45" />
-      <circle cx="82.7" cy="110" r="20" stroke={color} strokeWidth="1.2" opacity="0.45" />
+      {/* Outer bounding circle */}
+      <circle cx={cx} cy={cy} r={r * 2.2} stroke={color} strokeWidth="1.2" opacity="0.25" />
+      {/* Outer ring — 6 petals */}
+      {outer.map(([x, y], i) => (
+        <circle key={'o' + i} cx={x} cy={y} r={r} stroke={color} strokeWidth="1.5" opacity="0.5" />
+      ))}
+      {/* Inner ring — 6 petals */}
+      {inner.map(([x, y], i) => (
+        <circle key={'i' + i} cx={x} cy={y} r={r} stroke={color} strokeWidth="2" opacity="0.85" />
+      ))}
+      {/* Center circle — strongest */}
+      <circle cx={cx} cy={cy} r={r} stroke={color} strokeWidth="2.5" opacity="1" />
+      {/* Center dot — fills with color for warmth */}
+      <circle cx={cx} cy={cy} r="3" fill={color} opacity="0.6" />
     </svg>
   )
 }

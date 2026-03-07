@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getPublishedDocuments } from '@/lib/data/library'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { LibraryClient } from './LibraryClient'
 
 export const revalidate = 300
@@ -21,7 +22,7 @@ export default async function LibraryPage() {
       <Breadcrumb items={[{ label: 'Library' }]} />
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ background: '#F7F2EA' }}>
+      <section className="relative overflow-hidden" style={{ background: '#F8F9FC' }}>
         {/* Dot pattern */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: [
@@ -131,7 +132,26 @@ export default async function LibraryPage() {
 
       {/* ── CONTENT ── */}
       <div className="max-w-[1200px] mx-auto px-8 py-10">
-        <LibraryClient documents={documents} />
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <LibraryClient documents={documents} />
+          </div>
+
+          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
+            <div className="sticky top-24">
+              <IndexWayfinder
+                currentPage="library"
+                color="#3182ce"
+                related={[
+                  { label: 'Bookshelf', href: '/bookshelf', color: '#805ad5' },
+                  { label: 'News', href: '/news', color: '#319795' },
+                  { label: 'Ask Chance', href: '/chat', color: '#3182ce' },
+                  { label: 'Explore Topics', href: '/explore', color: '#d69e2e' },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

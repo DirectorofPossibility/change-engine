@@ -15,7 +15,7 @@ export default async function PathwaysPage() {
   return (
     <div style={{ minHeight: '100vh' }}>
       {/* Dark Editorial Hero */}
-      <section style={{ background: '#2C2418', padding: '40px 32px 48px' }}>
+      <section style={{ background: '#1a1a2e', padding: '40px 32px 48px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           {/* Breadcrumb */}
           <nav style={{ marginBottom: '24px', fontSize: '13px' }}>

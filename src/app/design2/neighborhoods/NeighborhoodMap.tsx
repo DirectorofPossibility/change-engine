@@ -59,7 +59,7 @@ export function NeighborhoodMap() {
     <div
       ref={mapRef}
       className="w-full rounded-2xl border-2 overflow-hidden"
-      style={{ height: 500, borderColor: '#E2DDD5', background: '#F7F2EA' }}
+      style={{ height: 500, borderColor: '#E2DDD5', background: '#F8F9FC' }}
     />
   )
 }

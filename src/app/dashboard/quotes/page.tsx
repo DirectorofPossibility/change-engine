@@ -189,7 +189,7 @@ export default function QuotesAdmin() {
         {quotes.map(function (q) {
           return (
             <div key={q.quote_id} className="p-4 bg-white border-2 border-brand-border rounded-xl flex gap-4">
-              <div className="w-1 rounded flex-shrink-0" style={{ background: q.is_active ? '#C75B2A' : '#D4CCBE' }} />
+              <div className="w-1 rounded flex-shrink-0" style={{ background: q.is_active ? '#C75B2A' : '#D1D5E0' }} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm italic leading-relaxed text-brand-text">
                   &ldquo;{q.quote_text}&rdquo;

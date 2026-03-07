@@ -393,7 +393,7 @@ export function SenatorToolClient() {
 
           {/* Impact Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 my-10">
-            <div className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+            <div className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
               <div className="h-1.5 bg-brand-text" />
               <div className="p-6">
                 <h3 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-text mb-5">
@@ -411,7 +411,7 @@ export function SenatorToolClient() {
                 </ul>
               </div>
             </div>
-            <div className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+            <div className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
               <div className="h-1.5 bg-brand-muted-light" />
               <div className="p-6">
                 <h3 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted mb-5">
@@ -432,7 +432,7 @@ export function SenatorToolClient() {
           </div>
 
           {/* FAQ */}
-          <div className="border-2 border-brand-border rounded-lg p-7 mb-8" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+          <div className="border-2 border-brand-border rounded-lg p-7 mb-8" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
             <h3 className="flex items-center gap-3 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-text mb-6">
               <Users size={18} /> Who&apos;s Affected &amp; How
             </h3>
@@ -454,7 +454,7 @@ export function SenatorToolClient() {
           </div>
 
           {/* Other Issues */}
-          <div className="border-2 border-brand-border rounded-lg p-7" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+          <div className="border-2 border-brand-border rounded-lg p-7" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
             <h3 className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Other Issues You Can Call About</h3>
             <div className="space-y-3">
               {campaignKeys.map(function (key) {
@@ -544,7 +544,7 @@ export function SenatorToolClient() {
 
           {/* What to Expect */}
           {senators.length > 0 && (
-            <div className="bg-white border-2 border-brand-border rounded-xl p-7 mb-6" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+            <div className="bg-white border-2 border-brand-border rounded-xl p-7 mb-6" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
               <div className="bg-brand-bg rounded-lg p-5">
                 <h4 className="flex items-center gap-2 text-sm font-bold text-brand-text mb-2">
                   <Info size={14} className="text-brand-muted" /> What to Expect

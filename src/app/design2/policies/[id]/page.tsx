@@ -22,7 +22,7 @@ function levelColor(level: string | null): string {
 }
 
 function statusStyle(status: string | null): { bg: string; text: string } {
-  if (!status) return { bg: '#F7F2EA', text: '#6B6560' }
+  if (!status) return { bg: '#F8F9FC', text: '#6B6560' }
   const s = status.toLowerCase()
   if (s.includes('passed') || s.includes('enacted') || s.includes('signed'))
     return { bg: '#dcfce7', text: '#166534' }
@@ -30,7 +30,7 @@ function statusStyle(status: string | null): { bg: string; text: string } {
     return { bg: '#fef9c3', text: '#854d0e' }
   if (s.includes('failed') || s.includes('vetoed') || s.includes('dead'))
     return { bg: '#fee2e2', text: '#991b1b' }
-  return { bg: '#F7F2EA', text: '#6B6560' }
+  return { bg: '#F8F9FC', text: '#6B6560' }
 }
 
 function formatDate(d: string | null): string | null {

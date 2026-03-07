@@ -43,7 +43,7 @@ export default async function Design2Home() {
   return (
     <div>
       {/* ── DARK HERO ── */}
-      <section className="relative" style={{ background: '#2C2418' }}>
+      <section className="relative" style={{ background: '#1a1a2e' }}>
         <div className="max-w-[1152px] mx-auto px-8 py-16">
           <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
             Houston, Texas

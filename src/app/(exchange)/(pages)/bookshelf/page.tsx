@@ -21,7 +21,7 @@ export default async function BookshelfPage() {
       <Breadcrumb items={[{ label: 'Library', href: '/library' }, { label: 'Bookshelf' }]} />
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ background: '#F7F2EA' }}>
+      <section className="relative overflow-hidden" style={{ background: '#F8F9FC' }}>
         {/* Dot pattern */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: [

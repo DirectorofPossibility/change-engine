@@ -250,7 +250,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* Image */}
             {item.image_url && (
               <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80">
-                <div className="rounded-lg overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D4CCBE' }}>
+                <div className="rounded-lg overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D1D5E0' }}>
                   <img src={item.image_url} alt={title || ''} className="w-full h-56 object-cover" />
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               if (!videoId) return null
               return (
                 <div className="mb-8">
-                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-brand-border" style={{ paddingBottom: '56.25%', boxShadow: '3px 3px 0 #D4CCBE' }}>
+                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-brand-border" style={{ paddingBottom: '56.25%', boxShadow: '3px 3px 0 #D1D5E0' }}>
                     <iframe
                       className="absolute inset-0 w-full h-full"
                       src={'https://www.youtube-nocookie.com/embed/' + videoId}
@@ -356,7 +356,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {programs.map(function (prog, i) {
                     return (
-                      <div key={i} className="border-2 border-brand-border rounded-lg p-4 flex gap-3" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+                      <div key={i} className="border-2 border-brand-border rounded-lg p-4 flex gap-3" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
                         <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
                         <div>
                           <p className="text-sm font-semibold text-brand-text">{prog.name}</p>
@@ -376,7 +376,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
 
             {/* At a Glance */}
-            <div className="border-2 border-brand-border rounded-lg p-4" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+            <div className="border-2 border-brand-border rounded-lg p-4" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">At a Glance</p>
               <div className="space-y-2">
                 {orgInfo && (
@@ -402,7 +402,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Take Action */}
             {(opportunities.length > 0 || policies.length > 0) && (
-              <div className="border-2 border-brand-border rounded-lg p-4" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+              <div className="border-2 border-brand-border rounded-lg p-4" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
                 <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Take Action</p>
                 <div className="space-y-2">
                   {opportunities.slice(0, 3).map(function (o: any) {
@@ -424,7 +424,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             )}
 
             {/* Suggest Edit */}
-            <div className="border-2 border-brand-border rounded-lg p-4 text-center" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+            <div className="border-2 border-brand-border rounded-lg p-4 text-center" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
               <Link
                 href={'/dashboard/submit?ref=' + encodeURIComponent(id)}
                 className="text-sm text-brand-accent hover:underline font-semibold"

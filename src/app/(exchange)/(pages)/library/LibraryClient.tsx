@@ -173,7 +173,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {collections.map(function (col) {
                   return (
-                    <div key={col.theme.id} className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+                    <div key={col.theme.id} className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
                       <div className="h-1.5" style={{ backgroundColor: col.theme.color }} />
                       <div className="p-4">
                         <p className="font-serif text-sm font-bold text-brand-text mb-2">{col.theme.name}</p>
@@ -297,7 +297,7 @@ function BookCard({ doc }: { doc: LibraryDoc }) {
 
   return (
     <Link href={'/library/doc/' + doc.id} className="group block">
-      <article className="flex border-2 border-brand-border rounded-lg overflow-hidden hover:-translate-y-0.5 hover:border-brand-text hover:shadow-md transition-all" style={{ boxShadow: '2px 2px 0 #E8DFCF' }}>
+      <article className="flex border-2 border-brand-border rounded-lg overflow-hidden hover:-translate-y-0.5 hover:border-brand-text hover:shadow-md transition-all" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
         {/* Book spine */}
         <div className="w-1.5 flex-shrink-0" style={{ background: primary?.color || '#3182ce' }} />
 

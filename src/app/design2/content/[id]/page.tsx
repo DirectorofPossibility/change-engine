@@ -60,7 +60,7 @@ export default async function ContentDetailPage({
   return (
     <div className="min-h-screen">
       {/* Dark content hero */}
-      <section style={{ background: '#2C2418' }}>
+      <section style={{ background: '#1a1a2e' }}>
         <div className="max-w-[1152px] mx-auto px-8 py-10 pb-12">
           <div className="text-[13px] mb-4" style={{ color: 'rgba(255,255,255,0.5)' }}>
             <Link href="/design2" className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>Home</Link>

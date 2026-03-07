@@ -56,7 +56,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
   return (
     <div>
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ background: '#F7F2EA' }}>
+      <section className="relative overflow-hidden" style={{ background: '#F8F9FC' }}>
         {/* Dot pattern + radial gradients */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: [
@@ -210,7 +210,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 className="relative aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
                 style={
                   item.cta
-                    ? { background: '#F7F2EA', border: '3px solid #C75B2A' }
+                    ? { background: '#F8F9FC', border: '3px solid #C75B2A' }
                     : { background: item.gradient }
                 }
               >
@@ -248,7 +248,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <div
                 key={stat.label}
                 className="relative overflow-hidden border-2 border-brand-text rounded-xl p-5 text-center"
-                style={{ background: '#F7F2EA', boxShadow: '3px 3px 0 #2d2d2d' }}
+                style={{ background: '#F8F9FC', boxShadow: '3px 3px 0 #2d2d2d' }}
               >
                 <span className="block font-hand text-[52px] font-bold leading-none mb-1.5" style={{ color: stat.color }}>
                   {stat.pct}

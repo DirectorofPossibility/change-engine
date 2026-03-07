@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FlowerOfLifeIcon } from './FlowerIcons'
+import { FlowerOfLifeIcon, ARCHETYPES } from './FlowerIcons'
 import { FOLWatermark } from './FOLWatermark'
 
 const PATHWAYS = [
@@ -131,8 +131,34 @@ export function D2Footer() {
             </div>
           </div>
 
+          {/* Your Journey — Archetypes */}
+          <div className="mt-8 pt-6 border-t border-white/[0.08]">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 mb-3">Your Journey</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+              {ARCHETYPES.map(function (a) {
+                return (
+                  <div key={a.id} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/[0.08] hover:border-white/20 transition-colors group cursor-pointer">
+                    <a.Icon size={18} color="#C75B2A" />
+                    <div>
+                      <p className="text-[12px] font-medium text-white/70 group-hover:text-white transition-colors">{a.name.replace('The ', '')}</p>
+                      <p className="text-[10px] text-white/30">{a.desc}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Who This Is For — Target Market */}
+          <div className="mt-6 pt-4 border-t border-white/[0.06]">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 mb-2">Who This Is For</p>
+            <p className="text-[13px] leading-relaxed text-white/50 max-w-3xl">
+              Residents looking for services and support. Neighbors ready to get involved. Organizers building coalitions. Watchdogs tracking policy. Partners connecting communities. Everyone curious about Houston.
+            </p>
+          </div>
+
           {/* Bottom bar */}
-          <div className="mt-8 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-[11px] text-white/25">
+          <div className="mt-6 pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4 text-[11px] text-white/25">
             <p>&copy; {new Date().getFullYear()} The Change Lab. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy</Link>

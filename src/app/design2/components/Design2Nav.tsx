@@ -67,7 +67,7 @@ export function Design2Nav({ election }: Design2NavProps) {
     <>
       {/* Election banner */}
       {election && (
-        <div className="text-center text-sm py-2 px-4 font-semibold" style={{ background: '#2C2418', color: '#C75B2A' }}>
+        <div className="text-center text-sm py-2 px-4 font-semibold" style={{ background: '#1a1a2e', color: '#C75B2A' }}>
           {election.election_name} — {new Date(election.election_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           {election.find_polling_url && (
             <a href={election.find_polling_url} target="_blank" rel="noopener noreferrer" className="ml-3 underline" style={{ color: 'white' }}>Find your polling place</a>
@@ -152,7 +152,7 @@ export function Design2Nav({ election }: Design2NavProps) {
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="lg:hidden border-t px-6 py-4" style={{ borderColor: '#E2DDD5', background: '#F7F2EA' }}>
+          <div className="lg:hidden border-t px-6 py-4" style={{ borderColor: '#E2DDD5', background: '#F8F9FC' }}>
             <div className="flex items-center gap-3 mb-4 md:hidden">
               <ZipInput />
               <LanguageSwitcher />

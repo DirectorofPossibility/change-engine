@@ -28,7 +28,7 @@ export function CompactCircleGraph({ activePathways = [], accentColor }: Compact
     <div className="flex items-center justify-center py-3">
       <svg width="160" height="160" viewBox="0 0 160 160" className="overflow-visible">
         {/* Outer bounding circle */}
-        <circle cx={cx} cy={cy} r={orbit + r + 6} fill="none" stroke="#D4CCBE" strokeWidth="0.5" opacity="0.4" />
+        <circle cx={cx} cy={cy} r={orbit + r + 6} fill="none" stroke="#D1D5E0" strokeWidth="0.5" opacity="0.4" />
 
         {/* Center circle — always the brand accent or first active pathway */}
         <circle

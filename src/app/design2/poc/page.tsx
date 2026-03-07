@@ -176,7 +176,7 @@ export default function ProofOfConceptPage() {
       <SpectrumBar />
 
       {/* ════ HERO ════ */}
-      <section className="relative overflow-hidden text-center" style={{ background: '#2C2418', color: '#FAF8F5', padding: '80px 40px 60px' }}>
+      <section className="relative overflow-hidden text-center" style={{ background: '#1a1a2e', color: '#FAF8F5', padding: '80px 40px 60px' }}>
         <FlowerHero />
         {/* Left-side smaller flower watermark */}
         <FlowerWatermark className="absolute left-[-80px] bottom-[-40px] opacity-[0.04] text-white pointer-events-none" />
@@ -202,7 +202,7 @@ export default function ProofOfConceptPage() {
       {/* ════ EXECUTIVE SUMMARY ════ */}
       <div className="max-w-[860px] mx-auto px-8">
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Executive Summary</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Executive Summary</h2>
           <p className="mb-4">Community Exchange is a civic discovery platform that connects Houston residents with the resources, services, elected officials, policies, and opportunities relevant to their lives &mdash; organized through a unified knowledge graph, delivered in three languages, and written at a 6th-grade reading level.</p>
           <p>The platform eliminates the fragmentation that defines civic infrastructure today. Instead of expecting residents to know which agency to call, which nonprofit serves their area, or which elected official represents them, Community Exchange surfaces relevant information based on where people live, what they care about, and how they want to engage.</p>
         </section>
@@ -213,7 +213,7 @@ export default function ProofOfConceptPage() {
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
           <div className="relative">
             <FlowerWatermark className="absolute right-[-100px] top-[-40px] opacity-[0.03] text-[#C75B2A] pointer-events-none" />
-            <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>The Opportunity</h2>
+            <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>The Opportunity</h2>
           </div>
           <p className="mb-4">Houston has extraordinary civic assets: thousands of nonprofits, one of the most diverse populations in America, multi-level government representation, a robust 211 service network, and deep traditions of civic leadership through programs like Leadership Houston, the American Leadership Forum, and the Center for Houston&apos;s Future.</p>
           <p className="mb-4">What&apos;s missing is the connective tissue. These assets exist in silos &mdash; separate websites, separate databases, separate languages. Community Exchange weaves them into a single, navigable fabric so that every resident can find what&apos;s already there for them.</p>
@@ -229,7 +229,7 @@ export default function ProofOfConceptPage() {
 
         {/* ════ WHO IT'S FOR ════ */}
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-3" style={{ color: '#2C2418' }}>Who It&apos;s For</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-3" style={{ color: '#1a1a2e' }}>Who It&apos;s For</h2>
           <p className="mb-8">Community Exchange serves six audiences. Each one brings different strengths, arrives with different intent, and moves through the platform differently. The system adapts &mdash; not by creating separate apps, but by reordering the same knowledge graph based on how someone wants to engage.</p>
 
           {/* Audience 1: Civic Leadership Alumni */}
@@ -302,24 +302,24 @@ export default function ProofOfConceptPage() {
 
         {/* ════ SOLUTION ════ */}
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Solution</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Solution</h2>
 
           {/* Knowledge Graph */}
           <div className="relative">
-            <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-4" style={{ color: '#2C2418' }}>Knowledge Graph Architecture</h3>
+            <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-4" style={{ color: '#1a1a2e' }}>Knowledge Graph Architecture</h3>
             <p className="mb-4">Every piece of content &mdash; articles, services, officials, policies, organizations, opportunities &mdash; is classified across <strong>16 taxonomy dimensions</strong> and linked through a shared knowledge graph. An article about affordable housing is automatically connected to relevant 211 services, housing officials, zoning policies, and volunteer opportunities.</p>
           </div>
 
           {/* Seven Pathways — with Flower geometry */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Seven Thematic Pathways</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Seven Thematic Pathways</h3>
           <p className="mb-4">Content is organized into seven pathways representing dimensions of community life:</p>
 
           {/* Pathway flower visualization */}
           <div className="relative flex justify-center my-8">
             <svg width="280" height="280" viewBox="0 0 280 280" fill="none" aria-hidden="true">
               {/* Center circle */}
-              <circle cx="140" cy="140" r="32" fill="#2C241810" stroke="#2C2418" strokeWidth="1" />
-              <text x="140" y="144" textAnchor="middle" fill="#2C2418" fontSize="8" fontWeight="700" fontFamily="'DM Sans', sans-serif">COMMUNITY</text>
+              <circle cx="140" cy="140" r="32" fill="#1a1a2e10" stroke="#1a1a2e" strokeWidth="1" />
+              <text x="140" y="144" textAnchor="middle" fill="#1a1a2e" fontSize="8" fontWeight="700" fontFamily="'DM Sans', sans-serif">COMMUNITY</text>
               {/* 7 pathway circles arranged in flower pattern */}
               {[
                 { cx: 140, cy: 75, color: '#E05A33', label: 'Health' },
@@ -342,8 +342,8 @@ export default function ProofOfConceptPage() {
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Pathway</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Theme</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Pathway</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Theme</th>
                 </tr>
               </thead>
               <tbody>
@@ -366,7 +366,7 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* Wayfinder tiers — with tier-specific Flower geometry */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Wayfinder &mdash; Contextual Discovery</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Wayfinder &mdash; Contextual Discovery</h3>
           <p className="mb-4">The Wayfinder appears on every detail page, performing a <strong>3-hop graph traversal</strong> to surface related content across three engagement tiers:</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
             <div className="bg-white border rounded-xl p-6 text-center" style={{ borderColor: '#E2DDD5' }}>
@@ -393,7 +393,7 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* Archetypes — with Flower geometry for each */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Navigational Archetypes</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Navigational Archetypes</h3>
           <p className="mb-4">Six archetypes serve as navigational lenses that reorder information by intent:</p>
 
           {/* Archetype visual grid with their Flower of Life patterns */}
@@ -410,7 +410,7 @@ export default function ProofOfConceptPage() {
                 <div className="absolute top-0 left-0 bottom-0 w-1" style={{ background: a.color }} />
                 <div className="flex items-center gap-2 mb-1.5 pl-2">
                   <SeedOfLife size={28} color={a.color} />
-                  <span className="font-serif text-[1rem] font-normal" style={{ color: '#2C2418' }}>{a.name}</span>
+                  <span className="font-serif text-[1rem] font-normal" style={{ color: '#1a1a2e' }}>{a.name}</span>
                 </div>
                 <p className="text-[0.8rem] pl-2" style={{ color: '#6B6560' }}>{a.intent}</p>
               </div>
@@ -418,7 +418,7 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* Pipeline */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Multilingual Content Pipeline</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Multilingual Content Pipeline</h3>
           <div className="my-6">
             {[
               { num: 1, title: 'Ingest', desc: 'RSS feeds, government APIs, and manual submissions' },
@@ -429,7 +429,7 @@ export default function ProofOfConceptPage() {
             ].map((step, i) => (
               <div key={step.num}>
                 <div className="flex items-start gap-4 py-3.5">
-                  <div className="w-8 h-8 min-w-[32px] rounded-full flex items-center justify-center text-[0.8rem] font-bold" style={{ background: '#2C2418', color: '#FAF8F5' }}>
+                  <div className="w-8 h-8 min-w-[32px] rounded-full flex items-center justify-center text-[0.8rem] font-bold" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>
                     {step.num}
                   </div>
                   <div>
@@ -442,15 +442,15 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* Geographic Personalization */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Geographic Personalization</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Geographic Personalization</h3>
           <p className="mb-4">Residents enter a ZIP code for a quick start, or a street address for precision. The platform resolves their location against multiple geographic layers, because the boundaries that shape civic life don&apos;t all follow the same lines:</p>
           <div className="overflow-x-auto mb-6">
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Layer</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Boundary Type</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>What It Unlocks</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Layer</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Boundary Type</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>What It Unlocks</th>
                 </tr>
               </thead>
               <tbody>
@@ -480,17 +480,17 @@ export default function ProofOfConceptPage() {
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
           <div className="relative">
             <FlowerWatermark className="absolute right-[-60px] top-[-20px] opacity-[0.025] text-[#805ad5] pointer-events-none" />
-            <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Technical Architecture</h2>
+            <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Technical Architecture</h2>
           </div>
 
-          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-4" style={{ color: '#2C2418' }}>Technology Stack</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-4" style={{ color: '#1a1a2e' }}>Technology Stack</h3>
           <div className="overflow-x-auto mb-6">
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Layer</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Technology</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Details</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Layer</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Technology</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -516,7 +516,7 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* Data Model with Flower-inspired knowledge graph visualization */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Data Model &mdash; 174 Tables</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Data Model &mdash; 174 Tables</h3>
           <p className="mb-4">The database is organized into entity tables (the things people interact with), taxonomy tables (how those things are classified), junction tables (the connections between them), and supporting infrastructure. Together they form the knowledge graph that powers the Wayfinder.</p>
 
           {/* Knowledge graph as Flower of Life visualization */}
@@ -548,10 +548,10 @@ export default function ProofOfConceptPage() {
               <text x="245" y="138" textAnchor="middle" fill="#6B6560" fontSize="8" fontWeight="600" fontFamily="'DM Sans', sans-serif">Tables</text>
 
               {/* Connecting lines */}
-              <line x1="160" y1="85" x2="160" y2="93" stroke="#2C2418" strokeWidth="0.8" opacity="0.3" />
-              <line x1="160" y1="175" x2="160" y2="167" stroke="#2C2418" strokeWidth="0.8" opacity="0.3" />
-              <line x1="113" y1="130" x2="115" y2="130" stroke="#2C2418" strokeWidth="0.8" opacity="0.3" />
-              <line x1="205" y1="130" x2="207" y2="130" stroke="#2C2418" strokeWidth="0.8" opacity="0.3" />
+              <line x1="160" y1="85" x2="160" y2="93" stroke="#1a1a2e" strokeWidth="0.8" opacity="0.3" />
+              <line x1="160" y1="175" x2="160" y2="167" stroke="#1a1a2e" strokeWidth="0.8" opacity="0.3" />
+              <line x1="113" y1="130" x2="115" y2="130" stroke="#1a1a2e" strokeWidth="0.8" opacity="0.3" />
+              <line x1="205" y1="130" x2="207" y2="130" stroke="#1a1a2e" strokeWidth="0.8" opacity="0.3" />
             </svg>
           </div>
 
@@ -561,8 +561,8 @@ export default function ProofOfConceptPage() {
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Table</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>What It Holds</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Table</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>What It Holds</th>
                 </tr>
               </thead>
               <tbody>
@@ -601,9 +601,9 @@ export default function ProofOfConceptPage() {
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Dimension</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Description</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Scale</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Dimension</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Description</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Scale</th>
                 </tr>
               </thead>
               <tbody>
@@ -635,15 +635,15 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* Government Data Coverage */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Government Data Coverage</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Government Data Coverage</h3>
           <div className="overflow-x-auto mb-6">
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Level</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Officials</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Legislation</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Schedule</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Level</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Officials</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Legislation</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Schedule</th>
                 </tr>
               </thead>
               <tbody>
@@ -670,9 +670,9 @@ export default function ProofOfConceptPage() {
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Time</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Job</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Description</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Time</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Job</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Description</th>
                 </tr>
               </thead>
               <tbody>
@@ -697,8 +697,8 @@ export default function ProofOfConceptPage() {
           </div>
 
           {/* App structure code block */}
-          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#2C2418' }}>Application Structure</h3>
-          <pre className="rounded-lg overflow-x-auto text-[0.8rem] leading-relaxed" style={{ background: '#2C2418', color: '#E2DDD5', padding: '20px 24px', margin: '16px 0 24px' }}>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-10 mb-4" style={{ color: '#1a1a2e' }}>Application Structure</h3>
+          <pre className="rounded-lg overflow-x-auto text-[0.8rem] leading-relaxed" style={{ background: '#1a1a2e', color: '#E2DDD5', padding: '20px 24px', margin: '16px 0 24px' }}>
             <code>{`src/app/(exchange)/                Public-facing route group
   page.tsx                         Homepage (Wayfinder, shelves)
   (pages)/
@@ -733,7 +733,7 @@ supabase/functions/                Edge functions (Deno)
 
         {/* ════ DESIGN PHILOSOPHY ════ */}
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Design Philosophy: Asset-Based Framing</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Design Philosophy: Asset-Based Framing</h2>
           <p className="mb-4">Every design decision, every word choice, and every data structure in Community Exchange starts from the same premise: <strong>Houston&apos;s communities are rich with assets</strong> &mdash; people, organizations, knowledge, services, leadership, culture, and resilience. The platform&apos;s job is to make those assets visible and connected.</p>
           <p className="mb-6">This isn&apos;t just a content guideline. It&apos;s an architectural principle that shapes the entire system:</p>
 
@@ -746,7 +746,7 @@ supabase/functions/                Edge functions (Deno)
           ].map((card) => (
             <div key={card.title} className="relative bg-white border rounded-xl p-7 my-4 overflow-hidden" style={{ borderColor: '#E2DDD5' }}>
               <FlowerWatermark className="absolute right-[-60px] top-[-60px] opacity-[0.02] text-[#C75B2A] pointer-events-none" />
-              <h3 className="font-serif text-[1.15rem] font-normal mb-3 relative z-10" style={{ color: '#2C2418' }}>{card.title}</h3>
+              <h3 className="font-serif text-[1.15rem] font-normal mb-3 relative z-10" style={{ color: '#1a1a2e' }}>{card.title}</h3>
               <p className="text-[0.9rem] relative z-10 mb-0" style={{ color: '#6B6560' }}>{card.body}</p>
             </div>
           ))}
@@ -756,13 +756,13 @@ supabase/functions/                Edge functions (Deno)
 
         {/* ════ DIFFERENTIATORS ════ */}
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>What Makes This Different</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>What Makes This Different</h2>
 
           <div className="bg-white border rounded-xl p-7 my-4" style={{ borderColor: '#E2DDD5' }}>
             <div className="flex items-start gap-4">
               <SeedOfLife size={48} color="#C75B2A" />
               <div>
-                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#2C2418' }}>Spiral Engagement, Not a Funnel</h3>
+                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#1a1a2e' }}>Spiral Engagement, Not a Funnel</h3>
                 <p className="text-[0.9rem] mb-0" style={{ color: '#6B6560' }}>Traditional civic platforms assume a linear journey: learn, then act. Community Exchange uses a <strong>spiral model</strong> &mdash; residents cycle through Understand, Get Involved, and Go Deeper repeatedly as their engagement deepens. The platform supports re-entry at any point. There is no &ldquo;end state&rdquo; &mdash; civic life is ongoing.</p>
               </div>
             </div>
@@ -772,7 +772,7 @@ supabase/functions/                Edge functions (Deno)
             <div className="flex items-start gap-4">
               <MetatronsCube size={48} color="#805ad5" />
               <div>
-                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#2C2418' }}>16-Dimension Classification</h3>
+                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#1a1a2e' }}>16-Dimension Classification</h3>
                 <p className="text-[0.9rem] mb-3" style={{ color: '#6B6560' }}>Every entity in the database is classified by AI across 16 taxonomy dimensions simultaneously. This produces ~75 junction tables connecting 16 entity types to 15 taxonomy dimensions &mdash; a densely connected knowledge graph where any entity can be reached from any other through shared classification.</p>
               </div>
             </div>
@@ -782,7 +782,7 @@ supabase/functions/                Edge functions (Deno)
             <div className="flex items-start gap-4">
               <TripodOfLife size={48} color="#38a169" />
               <div>
-                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#2C2418' }}>Full Government Coverage</h3>
+                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#1a1a2e' }}>Full Government Coverage</h3>
                 <p className="text-[0.9rem] mb-0" style={{ color: '#6B6560' }}>From city council ordinances to federal spending in Harris County &mdash; the platform tracks officials, legislation, and spending at every level of government, synced daily from authoritative sources. Vote records connect officials to the policies they&apos;ve supported or opposed.</p>
               </div>
             </div>
@@ -802,7 +802,7 @@ supabase/functions/                Edge functions (Deno)
                 </svg>
               </div>
               <div>
-                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#2C2418' }}>Multi-Layer Geographic Resolution</h3>
+                <h3 className="font-serif text-[1.15rem] font-normal mb-2" style={{ color: '#1a1a2e' }}>Multi-Layer Geographic Resolution</h3>
                 <p className="text-[0.9rem] mb-0" style={{ color: '#6B6560' }}>A single street address resolves against 7 overlapping boundary systems (congressional districts, state districts, commissioner precincts, council districts, super neighborhoods, voting precincts, census tracts). Cross-reference tables handle the reality that these boundaries don&apos;t align with each other or with ZIP codes.</p>
               </div>
             </div>
@@ -813,9 +813,9 @@ supabase/functions/                Edge functions (Deno)
 
         {/* ════ STATUS ════ */}
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Current Status</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Current Status</h2>
 
-          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-3" style={{ color: '#2C2418' }}>Operational</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-3" style={{ color: '#1a1a2e' }}>Operational</h3>
           <div className="mb-3">
             <span className="inline-block text-[0.7rem] font-bold uppercase tracking-wider px-2.5 py-1 rounded mr-1.5" style={{ background: '#d4edda', color: '#155724' }}>Live</span>
           </div>
@@ -830,7 +830,7 @@ supabase/functions/                Edge functions (Deno)
             <li className="mb-2">Admin dashboard for content management</li>
           </ul>
 
-          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-3" style={{ color: '#2C2418' }}>In Progress</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-3" style={{ color: '#1a1a2e' }}>In Progress</h3>
           <div className="mb-3">
             <span className="inline-block text-[0.7rem] font-bold uppercase tracking-wider px-2.5 py-1 rounded mr-1.5" style={{ background: '#fff3cd', color: '#856404' }}>Building</span>
           </div>
@@ -841,7 +841,7 @@ supabase/functions/                Edge functions (Deno)
             <li className="mb-2">Federal spending tracker integration</li>
           </ul>
 
-          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-3" style={{ color: '#2C2418' }}>Planned</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-3" style={{ color: '#1a1a2e' }}>Planned</h3>
           <div className="mb-3">
             <span className="inline-block text-[0.7rem] font-bold uppercase tracking-wider px-2.5 py-1 rounded mr-1.5" style={{ background: '#E2DDD5', color: '#6B6560' }}>Planned</span>
           </div>
@@ -857,14 +857,14 @@ supabase/functions/                Edge functions (Deno)
 
         {/* ════ INFRASTRUCTURE ════ */}
         <section className="py-14" style={{ borderBottom: '1px solid #E2DDD5' }}>
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Infrastructure &amp; Deployment</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Infrastructure &amp; Deployment</h2>
           <div className="overflow-x-auto mb-8">
             <table className="w-full border-collapse text-[0.9rem]">
               <thead>
                 <tr>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Component</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#2C2418', color: '#FAF8F5' }}>Provider</th>
-                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#2C2418', color: '#FAF8F5' }}>Details</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tl-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Component</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Provider</th>
+                  <th className="text-left px-3.5 py-2.5 text-[0.75rem] uppercase tracking-wider font-medium rounded-tr-md" style={{ background: '#1a1a2e', color: '#FAF8F5' }}>Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -886,7 +886,7 @@ supabase/functions/                Edge functions (Deno)
             </table>
           </div>
 
-          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-4" style={{ color: '#2C2418' }}>Security &amp; Privacy</h3>
+          <h3 className="font-serif text-[1.35rem] font-normal mt-8 mb-4" style={{ color: '#1a1a2e' }}>Security &amp; Privacy</h3>
           <ul className="pl-6 mb-4">
             <li className="mb-2"><strong>Row-level security</strong> on all Supabase tables</li>
             <li className="mb-2"><strong>API key authentication</strong> for ingestion endpoints</li>
@@ -898,7 +898,7 @@ supabase/functions/                Edge functions (Deno)
 
         {/* ════ SUMMARY ════ */}
         <section className="py-14">
-          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#2C2418' }}>Summary</h2>
+          <h2 className="font-serif text-[2rem] font-normal mb-6" style={{ color: '#1a1a2e' }}>Summary</h2>
           <div className="relative rounded-r-lg bg-white p-6 pl-7 overflow-hidden" style={{ borderLeft: '4px solid #C75B2A' }}>
             <FlowerWatermark className="absolute right-[-40px] bottom-[-40px] opacity-[0.03] text-[#C75B2A] pointer-events-none" />
             <p className="mb-3 relative z-10">Community Exchange demonstrates that civic infrastructure can be unified, accessible, and intelligent. By connecting a knowledge graph, AI classification, multilingual delivery, and geographic personalization into a single platform, it transforms Houston&apos;s fragmented civic landscape into a coherent, navigable experience for every resident &mdash; regardless of language, literacy level, or prior civic knowledge.</p>
@@ -910,7 +910,7 @@ supabase/functions/                Edge functions (Deno)
       <SpectrumBar />
 
       {/* ════ FOOTER ════ */}
-      <footer className="text-center py-10" style={{ background: '#2C2418', color: 'rgba(250,248,245,0.5)', fontSize: '0.85rem' }}>
+      <footer className="text-center py-10" style={{ background: '#1a1a2e', color: 'rgba(250,248,245,0.5)', fontSize: '0.85rem' }}>
         <div className="flex justify-center mb-4">
           <SeedOfLife size={40} color="rgba(250,248,245,0.15)" />
         </div>
@@ -945,7 +945,7 @@ function AudienceCard({
       <div className="absolute right-[-80px] top-[-60px] opacity-[0.015] pointer-events-none" style={{ color }}>
         <FlowerWatermark />
       </div>
-      <h3 className="font-serif text-[1.2rem] font-normal mt-0 mb-2 relative z-10" style={{ color: '#2C2418' }}>
+      <h3 className="font-serif text-[1.2rem] font-normal mt-0 mb-2 relative z-10" style={{ color: '#1a1a2e' }}>
         {number}. {title}
       </h3>
       <p className="text-[0.95rem] mb-3 relative z-10">{description}</p>

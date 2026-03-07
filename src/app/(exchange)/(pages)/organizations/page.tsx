@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { getOrganizations } from '@/lib/data/exchange'
 import { OrganizationsClient } from './OrganizationsClient'
-import { PageHero } from '@/components/exchange/PageHero'
-import { PAGE_INTROS } from '@/lib/constants'
+import { IndexPageHero } from '@/components/exchange/IndexPageHero'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
@@ -17,17 +17,40 @@ export default async function OrganizationsPage() {
 
   return (
     <div>
-      <PageHero
-        variant="sacred"
-        sacredPattern="seed"
-        gradientColor="#dd6b20"
+      <IndexPageHero
+        color="#dd6b20"
+        pattern="seed"
         titleKey="organizations.title"
         subtitleKey="organizations.subtitle"
-        intro={PAGE_INTROS.organizations}
+        intro="Houston is powered by hundreds of nonprofits, foundations, agencies, and community groups. Browse, search, and connect with the organizations strengthening your neighborhood."
+        stats={[
+          { value: organizations.length, label: 'Organizations' },
+        ]}
       />
+
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Organizations' }]} />
-        <OrganizationsClient organizations={organizations} />
+
+        <div className="flex flex-col lg:flex-row gap-8 mt-4">
+          <div className="flex-1 min-w-0">
+            <OrganizationsClient organizations={organizations} />
+          </div>
+
+          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
+            <div className="sticky top-24">
+              <IndexWayfinder
+                currentPage="organizations"
+                color="#dd6b20"
+                related={[
+                  { label: 'Services', href: '/services', color: '#38a169' },
+                  { label: 'Foundations', href: '/foundations', color: '#805ad5' },
+                  { label: 'Opportunities', href: '/opportunities', color: '#38a169' },
+                  { label: 'Community Partners', href: '/partners', color: '#C75B2A' },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -80,16 +80,16 @@ export function D2Nav({ election }: D2NavProps) {
 
   return (
     <>
-      {/* Election banner */}
+      {/* Election banner — links to elections page */}
       {election && (
-        <div className="text-center font-mono text-[11px] font-bold uppercase tracking-wider py-2 px-4 bg-brand-dark text-brand-accent">
+        <Link href="/elections" className="block text-center font-mono text-[11px] font-bold uppercase tracking-wider py-2 px-4 bg-brand-dark text-brand-accent hover:bg-brand-dark/90 transition-colors">
           {election.election_name} — {new Date(election.election_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           {election.find_polling_url && (
-            <a href={election.find_polling_url} target="_blank" rel="noopener noreferrer" className="ml-3 underline text-white">
+            <span className="ml-3 underline text-white">
               Find your polling place
-            </a>
+            </span>
           )}
-        </div>
+        </Link>
       )}
 
       {/* Spectrum bar */}
@@ -104,7 +104,7 @@ export function D2Nav({ election }: D2NavProps) {
       </div>
 
       {/* Top nav */}
-      <nav className="sticky top-0 z-50 border-b border-brand-border" style={{ background: 'rgba(247,242,234,0.95)', backdropFilter: 'blur(12px)' }}>
+      <nav className="sticky top-0 z-50 border-b border-brand-border" style={{ background: 'rgba(245,247,250,0.95)', backdropFilter: 'blur(12px)' }}>
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-14">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5">
@@ -173,6 +173,12 @@ export function D2Nav({ election }: D2NavProps) {
             >
               <Search size={13} />
               Search
+            </Link>
+            <Link
+              href="/me"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"
+            >
+              My Account
             </Link>
             {/* Hamburger — mobile only */}
             <button

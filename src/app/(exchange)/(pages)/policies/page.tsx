@@ -2,13 +2,14 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { PageHero } from '@/components/exchange/PageHero'
+import { IndexPageHero } from '@/components/exchange/IndexPageHero'
+import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { PoliciesPageClient } from './PoliciesPageClient'
 
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Policies & Legislation',
+  title: 'Policies & Legislation — Community Exchange',
   description: 'Track legislation and policies affecting Houston and Harris County communities.',
 }
 
@@ -27,18 +28,50 @@ export default async function PoliciesPage() {
   const policyIds = all.map(function (p) { return p.policy_id })
   const translations = langId ? await fetchTranslationsForTable('policies', policyIds, langId) : {}
 
+  // Stats — government_level may not be in generated types yet
+  const federalPolicies = all.filter(function (p) { return (p as any).government_level === 'Federal' }).length
+  const statePolicies = all.filter(function (p) { return (p as any).government_level === 'State' }).length
+  const localPolicies = all.filter(function (p) { return (p as any).government_level === 'County' || (p as any).government_level === 'City' }).length
+
   return (
     <div>
-      <PageHero
-        variant="sacred"
-        sacredPattern="vesica"
-        gradientColor="#3182ce"
+      <IndexPageHero
+        color="#3182ce"
+        pattern="vesica"
         titleKey="policies.title"
         subtitleKey="policies.subtitle"
+        intro="Legislation shapes everyday life. Track bills, ordinances, and policy actions at every level of government — from Houston City Council to the U.S. Congress."
+        stats={[
+          { value: all.length, label: 'Active Policies' },
+          { value: federalPolicies, label: 'Federal' },
+          { value: statePolicies, label: 'State' },
+          { value: localPolicies, label: 'Local' },
+        ]}
       />
+
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Policies' }]} />
-        <PoliciesPageClient policies={all} translations={translations} />
+
+        <div className="flex flex-col lg:flex-row gap-8 mt-4">
+          <div className="flex-1 min-w-0">
+            <PoliciesPageClient policies={all} translations={translations} />
+          </div>
+
+          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
+            <div className="sticky top-24">
+              <IndexWayfinder
+                currentPage="policies"
+                color="#3182ce"
+                related={[
+                  { label: 'Officials', href: '/officials', color: '#805ad5' },
+                  { label: 'Elections', href: '/elections', color: '#38a169' },
+                  { label: 'Call Your Senators', href: '/call-your-senators', color: '#e53e3e' },
+                  { label: 'News', href: '/news', color: '#319795' },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
