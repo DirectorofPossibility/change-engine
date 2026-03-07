@@ -5,6 +5,7 @@ import { FeaturedPromo } from './FeaturedPromo'
 import { GoodThingsWidget } from './GoodThingsWidget'
 import { InfoBubble } from './InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
+import { CENTERS, CENTER_COLORS } from '@/lib/constants'
 
 const QUICK_ACCESS = [
   {
@@ -64,6 +65,12 @@ const GAP_STATS = [
   { pct: '28%', label: 'actually volunteer', source: 'AmeriCorps 2024', color: '#38a169' },
 ]
 
+const CENTERS_DATA = Object.fromEntries(
+  Object.entries(CENTERS).map(function ([key, c]) {
+    return [key, { ...c, color: CENTER_COLORS[key] || '#6B6560' }]
+  })
+)
+
 interface D2HomeProps {
   stats: { resources: number; officials: number; policies: number; focusAreas: number }
   pathwayCounts: Record<string, number>
@@ -100,61 +107,85 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
           style={{ width: '400px', height: '400px', bottom: '-80px', left: '-80px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
         />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-20 lg:py-24">
-          <div className="max-w-2xl">
-            <h1 className="font-serif text-[clamp(3rem,6vw,5rem)] leading-[1.0] tracking-tight mb-6 text-brand-text">
-              You care.<br />
-              Now{' '}
-              <span className="text-brand-accent">find<br />your place.</span>
-            </h1>
-            <p className="text-xl leading-relaxed text-brand-muted mb-8 max-w-lg">
-              Most people want to be part of something.
-              They just don&apos;t know where to start.{' '}
-              <strong className="text-brand-text">That&apos;s not a motivation problem. It&apos;s a navigation problem.</strong>
-            </p>
+        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-12 lg:py-14">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
+            {/* Left — text */}
+            <div className="flex-1 min-w-0 max-w-xl">
+              <h1 className="font-serif text-[clamp(2.5rem,5vw,4rem)] leading-[1.05] tracking-tight mb-4 text-brand-text">
+                You care.<br />
+                Now{' '}
+                <span className="text-brand-accent">find your place.</span>
+              </h1>
+              <p className="text-lg leading-relaxed text-brand-muted mb-6 max-w-lg">
+                Most people want to be part of something.
+                They just don&apos;t know where to start.{' '}
+                <strong className="text-brand-text">That&apos;s not a motivation problem. It&apos;s a navigation problem.</strong>
+              </p>
 
-            <div className="flex items-center gap-3 max-w-[520px] px-5 py-5 bg-white border-2 border-brand-text rounded-xl mb-6"
-              style={{ boxShadow: '4px 4px 0 #D5D0C8' }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-              <span className="text-brand-muted">Enter your zip code or address</span>
+              <div className="flex items-center gap-3 max-w-sm px-4 py-3 bg-white border-2 border-brand-text rounded-xl mb-5"
+                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+                <span className="text-sm text-brand-muted">Enter your zip code or address</span>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                  Take the quiz
+                </Link>
+                <Link href="/search" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                  Search
+                </Link>
+                <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                  What&apos;s happening
+                </Link>
+              </div>
+
+              {/* Stats row */}
+              <div className="flex items-center gap-6 mt-8">
+                <Link href="/services" className="group">
+                  <span className="block text-[32px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.resources || 0).toLocaleString()}</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">resources</span>
+                </Link>
+                <div className="w-px h-8 bg-brand-border" />
+                <Link href="/organizations" className="group">
+                  <span className="block text-[32px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(organizations || 0).toLocaleString()}</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">organizations</span>
+                </Link>
+                <div className="w-px h-8 bg-brand-border" />
+                <Link href="/officials" className="group">
+                  <span className="block text-[32px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.officials || 0).toLocaleString()}</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">officials</span>
+                </Link>
+              </div>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
-                Take the quiz
-              </Link>
-              <Link href="/search" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
-                Search
-              </Link>
-              <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
-                What&apos;s happening
-              </Link>
-            </div>
-
-            {/* Stats row */}
-            <div className="flex items-center gap-6 mt-10">
-              <Link href="/services" className="group">
-                <span className="block text-[36px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.resources || 0).toLocaleString()}</span>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">resources</span>
-              </Link>
-              <div className="w-px h-10 bg-brand-border" />
-              <Link href="/organizations" className="group">
-                <span className="block text-[36px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(organizations || 0).toLocaleString()}</span>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">organizations</span>
-              </Link>
-              <div className="w-px h-10 bg-brand-border" />
-              <Link href="/officials" className="group">
-                <span className="block text-[36px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.officials || 0).toLocaleString()}</span>
-                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">officials</span>
-              </Link>
+            {/* Right — image collage */}
+            <div className="hidden lg:block flex-1 min-w-0 max-w-[520px]">
+              <div className="grid grid-cols-6 grid-rows-4 gap-2.5 h-[420px]">
+                <div className="col-span-4 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <img src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover" />
+                </div>
+                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <img src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover" />
+                </div>
+                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
+                </div>
+                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <img src="/images/editorial/health-fair.jpg" alt="Health fair" className="w-full h-full object-cover" />
+                </div>
+                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <img src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ── QUICK ACCESS GRID — 5 cards with unique FOL patterns ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-10 pb-6">
+      <div className="max-w-[1200px] mx-auto px-8 pt-5 pb-4">
         <div className="relative inline-block mb-4">
           <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
         </div>
@@ -289,6 +320,26 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       {/* ── FEATURED PROMO ── */}
       <div className="max-w-[1200px] mx-auto px-8">
         <FeaturedPromo variant="banner" />
+      </div>
+
+      {/* ── 4 WAYS TO ENGAGE ── */}
+      <div className="max-w-[1200px] mx-auto px-8 pt-8 pb-2">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">4 ways to engage</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {Object.entries(CENTERS_DATA).map(function ([key, c]) {
+            return (
+              <Link
+                key={key}
+                href={'/centers/' + c.slug}
+                className="relative border-2 border-brand-border rounded-xl p-4 hover:-translate-y-0.5 transition-all group"
+                style={{ borderLeftColor: c.color, borderLeftWidth: '4px', boxShadow: '2px 2px 0 #D5D0C8' }}
+              >
+                <span className="block text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors">{key}</span>
+                <span className="block text-xs text-brand-muted mt-1">{c.question}</span>
+              </Link>
+            )
+          })}
+        </div>
       </div>
 
       {/* ── GOOD THINGS ── */}
