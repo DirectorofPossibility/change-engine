@@ -13,6 +13,8 @@ import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
+import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 export const revalidate = 86400
 
@@ -98,6 +100,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   return (
     <div>
+      <SpiralTracker action="view_organization" />
       {/* Hero */}
       <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -262,6 +265,12 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       <div className="mt-10">
         <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
       </div>
+      </div>
+
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="max-w-sm">
+          <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
+        </div>
       </div>
 
       <AdminEditPanel

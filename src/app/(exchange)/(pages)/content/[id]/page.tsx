@@ -15,12 +15,14 @@ import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { ExternalLink, Globe, Sparkles } from 'lucide-react'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
+import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -195,6 +197,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div>
+      <SpiralTracker action="read_article" pathway={item.pathway_primary || undefined} />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <Breadcrumb items={[
           ...(themeEntry ? [{ label: themeEntry.name, href: '/pathways/' + themeSlug }] : []),
@@ -441,17 +444,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
-            {/* Suggest Edit */}
-            <div className="relative border-2 border-brand-border rounded-lg p-4 text-center" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
-              <WayfinderTooltipPos tipKey="suggest_edit" position="bottom" />
-              <Link
-                href={'/dashboard/submit?ref=' + encodeURIComponent(id)}
-                className="text-sm text-brand-accent hover:underline font-semibold"
-              >
-                Suggest an edit
-              </Link>
-              <p className="text-xs text-brand-muted mt-1">Help us keep information accurate</p>
-            </div>
+            {/* Feedback Loop */}
+            <FeedbackLoop
+              entityType="content_published"
+              entityId={id}
+              entityName={item.title_6th_grade || ''}
+            />
           </div>
         </div>
       </div>

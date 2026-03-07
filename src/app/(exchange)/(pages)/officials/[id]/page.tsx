@@ -14,6 +14,8 @@ import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { OfficialDistrictMap } from './OfficialDistrictMap'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -178,6 +180,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <SpiralTracker action="view_official" />
       <Breadcrumb items={[
         { label: 'Civic Leaders', href: '/officials' },
         { label: official.official_name }
@@ -478,6 +481,12 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
       <div className="mt-10">
         <DetailWayfinder data={wayfinderData} currentType="official" currentId={id} userRole={userProfile?.role} />
+      </div>
+
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="max-w-sm">
+          <FeedbackLoop entityType="elected_officials" entityId={official.official_id} entityName={official.official_name || ''} />
+        </div>
       </div>
 
       <AdminEditPanel

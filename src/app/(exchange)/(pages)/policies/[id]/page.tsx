@@ -17,8 +17,10 @@ import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { PolicyImpactSection } from '@/components/exchange/PolicyImpactSection'
 import { MapPin, ExternalLink, Calendar, Scale, FileText, Users, ArrowRight } from 'lucide-react'
 import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
+import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 
 function statusColor(status: string | null): { bg: string; text: string; dot: string } {
   if (!status) return { bg: 'bg-gray-50', text: 'text-gray-600', dot: 'bg-gray-400' }
@@ -138,6 +140,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div>
+      <SpiralTracker action="view_policy" />
       {/* Hero header */}
       <div className="bg-brand-bg-alt border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -415,6 +418,12 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
           </div>
         )}
+      </div>
+
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="max-w-sm">
+          <FeedbackLoop entityType="policies" entityId={policy.policy_id} entityName={policy.title_6th_grade || policy.policy_name || ''} />
+        </div>
       </div>
 
       <AdminEditPanel
