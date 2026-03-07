@@ -146,7 +146,7 @@ export function D2Home({ stats, pathwayCounts, newThisWeek, latestContent, organ
             return (
               <Link
                 key={pw.id}
-                href={'/pathways/' + pw.id}
+                href={'/pathways/' + pw.slug}
                 className="card-chunky text-center py-4 group"
               >
                 <div className="w-3 h-3 rounded-sm mx-auto mb-2" style={{ background: pw.color }} />

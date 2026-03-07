@@ -3,13 +3,13 @@ import { FlowerOfLifeIcon } from './FlowerIcons'
 import { FOLWatermark } from './FOLWatermark'
 
 const PATHWAYS = [
-  { name: 'Health & Wellbeing', href: '/pathways/health', color: '#e53e3e' },
-  { name: 'Families & Education', href: '/pathways/families', color: '#dd6b20' },
-  { name: 'Neighborhood & Home', href: '/pathways/neighborhood', color: '#d69e2e' },
-  { name: 'Voice & Power', href: '/pathways/voice', color: '#38a169' },
-  { name: 'Money & Mobility', href: '/pathways/money', color: '#3182ce' },
-  { name: 'Planet & Place', href: '/pathways/planet', color: '#319795' },
-  { name: 'The Bigger We', href: '/pathways/bigger', color: '#805ad5' },
+  { name: 'Our Health', href: '/pathways/our-health', color: '#e53e3e' },
+  { name: 'Our Families', href: '/pathways/our-families', color: '#dd6b20' },
+  { name: 'Our Neighborhood', href: '/pathways/our-neighborhood', color: '#d69e2e' },
+  { name: 'Our Voice', href: '/pathways/our-voice', color: '#38a169' },
+  { name: 'Our Money', href: '/pathways/our-money', color: '#3182ce' },
+  { name: 'Our Planet', href: '/pathways/our-planet', color: '#319795' },
+  { name: 'The Bigger We', href: '/pathways/the-bigger-we', color: '#805ad5' },
 ]
 
 const NAVIGATE = [

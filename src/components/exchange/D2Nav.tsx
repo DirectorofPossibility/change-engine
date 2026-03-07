@@ -51,7 +51,7 @@ const CENTERS = [
 ]
 
 const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
-  return { id, name: (t as any).name, color: (t as any).color }
+  return { id, name: (t as any).name, color: (t as any).color, slug: (t as any).slug }
 })
 
 interface D2NavProps {
@@ -215,7 +215,7 @@ export function D2Nav({ election }: D2NavProps) {
                     return (
                       <Link
                         key={pw.id}
-                        href={'/pathways/' + pw.id}
+                        href={'/pathways/' + pw.slug}
                         className="flex items-center gap-2.5 px-2 py-1.5 text-[13px] font-medium hover:text-brand-accent transition-colors"
                         onClick={function () { setDrawerOpen(false) }}
                       >
