@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { Building2, Globe, Phone, MapPin } from 'lucide-react'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
 
@@ -21,12 +24,14 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
   const { data: agency } = await supabase.from('agencies').select('*').eq('agency_id', id).single()
   if (!agency) notFound()
 
-  // Related services from this agency
-  const { data: services } = await supabase
-    .from('municipal_services')
-    .select('service_id, service_name, description_5th_grade')
-    .eq('agency_id', id)
-    .limit(10)
+  const userProfile = await getUserProfile()
+
+  // Related services and wayfinder data in parallel
+  const [servicesResult, wayfinderData] = await Promise.all([
+    supabase.from('municipal_services').select('service_id, service_name, description_5th_grade').eq('agency_id', id).limit(10),
+    getWayfinderContext('agency', id, userProfile?.role),
+  ])
+  const services = servicesResult.data
 
   const address = [agency.address, agency.city, agency.state, agency.zip_code].filter(Boolean).join(', ')
 
@@ -47,31 +52,38 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
         </div>
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Contact card */}
-          <div className="bg-white rounded-lg border border-brand-border p-5">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
-            <div className="space-y-3 text-sm">
-              {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
-              {agency.website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={agency.website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline truncate">{agency.website.replace(/^https?:\/\//, '')}</a></div>}
-              {address && <div className="flex items-start gap-2"><MapPin className="w-4 h-4 text-brand-muted mt-0.5" /><span className="text-brand-text">{address}</span></div>}
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Contact card */}
+              <div className="bg-white rounded-lg border border-brand-border p-5">
+                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
+                <div className="space-y-3 text-sm">
+                  {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
+                  {agency.website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={agency.website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline truncate">{agency.website.replace(/^https?:\/\//, '')}</a></div>}
+                  {address && <div className="flex items-start gap-2"><MapPin className="w-4 h-4 text-brand-muted mt-0.5" /><span className="text-brand-text">{address}</span></div>}
+                </div>
+              </div>
+              {/* Services */}
+              {services && services.length > 0 && (
+                <div className="bg-white rounded-lg border border-brand-border p-5">
+                  <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Services Provided</h2>
+                  <div className="space-y-2">
+                    {services.map(function (s: any) {
+                      return (
+                        <Link key={s.service_id} href={`/municipal-services/${s.service_id}`} className="block text-sm text-brand-accent hover:underline">
+                          {s.service_name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-          {/* Services */}
-          {services && services.length > 0 && (
-            <div className="bg-white rounded-lg border border-brand-border p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Services Provided</h2>
-              <div className="space-y-2">
-                {services.map(function (s: any) {
-                  return (
-                    <Link key={s.service_id} href={`/municipal-services/${s.service_id}`} className="block text-sm text-brand-accent hover:underline">
-                      {s.service_name}
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          )}
+          <aside className="lg:w-80 shrink-0">
+            <DetailWayfinder data={wayfinderData} currentType="agency" currentId={id} userRole={userProfile?.role} />
+          </aside>
         </div>
       </div>
     </div>

@@ -114,64 +114,62 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     policy_id: string | null; chamber: string | null
   }>
 
-  // ZIP codes that map to this official's district
-  let districtZips: number[] = []
+  // Batch 3: All remaining lookups in parallel (district ZIPs, related content, translations, wayfinder, quote)
+  const userProfile = await getUserProfile()
+  const langId = await getLangId()
+
+  // Build district ZIP query
+  let districtZipColumn = ''
   if (official.district_id) {
     const districtType = official.district_type?.toLowerCase() || ''
-    let column = ''
-    if (districtType.includes('congressional')) column = 'congressional_district'
-    else if (districtType.includes('senate')) column = 'state_senate_district'
-    else if (districtType.includes('house')) column = 'state_house_district'
-
-    if (column) {
-      const { data: zipData } = await supabase
-        .from('zip_codes')
-        .select('zip_code')
-        .eq(column, official.district_id)
-        .limit(50)
-      districtZips = (zipData ?? []).map(z => z.zip_code)
-    }
+    if (districtType.includes('congressional')) districtZipColumn = 'congressional_district'
+    else if (districtType.includes('senate')) districtZipColumn = 'state_senate_district'
+    else if (districtType.includes('house')) districtZipColumn = 'state_house_district'
   }
 
-  // Related content via focus areas
-  let related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null; image_url: string | null }> = []
-  if (focusAreaIds.length > 0) {
-    const { data: contentJunctions } = await supabase
-      .from('content_focus_areas')
-      .select('content_id')
-      .in('focus_id', focusAreaIds)
-    const contentIds = Array.from(new Set((contentJunctions ?? []).map(j => j.content_id)))
-    if (contentIds.length > 0) {
-      const { data: contentData } = await supabase
-        .from('content_published')
-        .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, image_url')
-        .eq('is_active', true)
-        .in('id', contentIds)
-        .limit(4)
-      related = contentData || []
-    }
-  }
+  // Build related content junction query
+  const contentJunctionPromise = focusAreaIds.length > 0
+    ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusAreaIds)
+    : Promise.resolve({ data: [] as any[] })
 
-  // Fetch translations for non-English
-  const langId = await getLangId()
-  let officialTranslation: { title?: string; summary?: string } | undefined
-  let policyTranslations: Record<string, { title?: string; summary?: string }> = {}
-  if (langId) {
-    const pIds = (policies || []).map(function (p) { return p.policy_id })
-    const results = await Promise.all([
-      fetchTranslationsForTable('elected_officials', [official.official_id], langId),
-      pIds.length > 0 ? fetchTranslationsForTable('policies', pIds, langId) : {},
-    ])
-    officialTranslation = results[0][official.official_id]
-    policyTranslations = results[1]
-  }
+  const pIds = (policies || []).map(function (p) { return p.policy_id })
 
-  // Wayfinder data + quote
-  const userProfile = await getUserProfile()
-  const [wayfinderData, quote] = await Promise.all([
+  const [districtZipResult, contentJunctionResult, translationResults, wayfinderData, quote] = await Promise.all([
+    districtZipColumn && official.district_id
+      ? supabase.from('zip_codes').select('zip_code').eq(districtZipColumn, official.district_id).limit(50)
+      : Promise.resolve({ data: [] as any[] }),
+    contentJunctionPromise,
+    langId
+      ? Promise.all([
+          fetchTranslationsForTable('elected_officials', [official.official_id], langId),
+          pIds.length > 0 ? fetchTranslationsForTable('policies', pIds, langId) : {},
+        ])
+      : Promise.resolve([{}, {}] as [Record<string, any>, Record<string, any>]),
     getWayfinderContext('official', id, userProfile?.role),
     getRandomQuote(),
   ])
+
+  const districtZips = (districtZipResult.data ?? []).map((z: any) => z.zip_code)
+
+  // Resolve related content from junction IDs
+  const contentIds = Array.from(new Set((contentJunctionResult.data ?? []).map((j: any) => j.content_id)))
+  let related: Array<{ id: string; title_6th_grade: string; summary_6th_grade: string; pathway_primary: string | null; center: string | null; source_url: string; published_at: string | null; image_url: string | null }> = []
+  if (contentIds.length > 0) {
+    const { data: contentData } = await supabase
+      .from('content_published')
+      .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, source_url, published_at, image_url')
+      .eq('is_active', true)
+      .in('id', contentIds)
+      .limit(4)
+    related = contentData || []
+  }
+
+  let officialTranslation: { title?: string; summary?: string } | undefined
+  let policyTranslations: Record<string, { title?: string; summary?: string }> = {}
+  if (langId) {
+    officialTranslation = (translationResults as any)[0][official.official_id]
+    policyTranslations = (translationResults as any)[1]
+  }
 
   const displayTitle = officialTranslation?.title || official.title
   const rawPhotoUrl = profile?.photo_url || (official as any).photo_url as string | null

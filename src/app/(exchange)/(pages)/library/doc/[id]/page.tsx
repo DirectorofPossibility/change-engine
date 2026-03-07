@@ -6,6 +6,9 @@ import { getDocumentById, getRelatedDocuments } from '@/lib/data/library'
 import { THEMES } from '@/lib/constants'
 import { LibraryCard } from '@/components/exchange/LibraryCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { ArticleVoting } from './ArticleVoting'
 
 export const revalidate = 300
@@ -29,7 +32,11 @@ export default async function DocumentDetailPage(
   const doc = await getDocumentById(id)
   if (!doc) notFound()
 
-  const related = await getRelatedDocuments(doc.id, doc.theme_ids, doc.tags)
+  const userProfile = await getUserProfile()
+  const [related, wayfinderData] = await Promise.all([
+    getRelatedDocuments(doc.id, doc.theme_ids, doc.tags),
+    getWayfinderContext('kb_document', id, userProfile?.role),
+  ])
 
   // Resolve theme info
   const themeInfo = doc.theme_ids
@@ -187,6 +194,9 @@ export default async function DocumentDetailPage(
               </div>
             </div>
           )}
+
+          {/* Wayfinder */}
+          <DetailWayfinder data={wayfinderData} currentType="kb_document" currentId={id} userRole={userProfile?.role} />
         </div>
       </div>
     </div>

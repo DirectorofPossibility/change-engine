@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { Heart, ExternalLink, FileText, DollarSign, Users, Clock, CheckCircle } from 'lucide-react'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
 
@@ -19,6 +22,9 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
   const supabase = await createClient()
   const { data: b } = await supabase.from('benefit_programs').select('*').eq('benefit_id', id).single()
   if (!b) notFound()
+
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('benefit', id, userProfile?.role)
 
   return (
     <div>
@@ -39,33 +45,40 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
         </div>
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Eligibility */}
-          {b.eligibility_summary && (
-            <div className="bg-white rounded-lg border border-brand-border p-5">
-              <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
-              <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
-              {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
-              {b.household_types && <p className="text-sm text-brand-muted mt-1">Household types: {b.household_types}</p>}
-            </div>
-          )}
-          {/* Benefit details */}
-          <div className="bg-white rounded-lg border border-brand-border p-5">
-            <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
-            <div className="space-y-2 text-sm">
-              {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
-              {b.renewal_frequency && <div><span className="text-brand-muted">Renewal:</span> <span className="text-brand-text">{b.renewal_frequency}</span></div>}
-              {b.application_method && <div><span className="text-brand-muted">How to apply:</span> <span className="text-brand-text">{b.application_method}</span></div>}
-              {b.processing_days && <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-muted">Processing:</span> <span className="text-brand-text">{b.processing_days} days</span></div>}
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Eligibility */}
+              {b.eligibility_summary && (
+                <div className="bg-white rounded-lg border border-brand-border p-5">
+                  <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
+                  <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
+                  {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
+                  {b.household_types && <p className="text-sm text-brand-muted mt-1">Household types: {b.household_types}</p>}
+                </div>
+              )}
+              {/* Benefit details */}
+              <div className="bg-white rounded-lg border border-brand-border p-5">
+                <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
+                <div className="space-y-2 text-sm">
+                  {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
+                  {b.renewal_frequency && <div><span className="text-brand-muted">Renewal:</span> <span className="text-brand-text">{b.renewal_frequency}</span></div>}
+                  {b.application_method && <div><span className="text-brand-muted">How to apply:</span> <span className="text-brand-text">{b.application_method}</span></div>}
+                  {b.processing_days && <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-muted">Processing:</span> <span className="text-brand-text">{b.processing_days} days</span></div>}
+                </div>
+              </div>
+              {/* Documentation */}
+              {b.documentation_needed && (
+                <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
+                  <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
+                  <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
+                </div>
+              )}
             </div>
           </div>
-          {/* Documentation */}
-          {b.documentation_needed && (
-            <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
-              <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
-              <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
-            </div>
-          )}
+          <aside className="lg:w-80 shrink-0">
+            <DetailWayfinder data={wayfinderData} currentType="benefit" currentId={id} userRole={userProfile?.role} />
+          </aside>
         </div>
       </div>
     </div>

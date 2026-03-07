@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { Target, Users, Calendar, TrendingUp } from 'lucide-react'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
 
@@ -21,11 +24,15 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
   const { data: c } = await supabase.from('campaigns').select('*').eq('campaign_id', id).single()
   if (!c) notFound()
 
-  let org: { org_id: string; org_name: string } | null = null
-  if (c.org_id) {
-    const { data } = await supabase.from('organizations').select('org_id, org_name').eq('org_id', c.org_id).single()
-    org = data
-  }
+  const userProfile = await getUserProfile()
+
+  const [orgResult, wayfinderData] = await Promise.all([
+    c.org_id
+      ? supabase.from('organizations').select('org_id, org_name').eq('org_id', c.org_id).single()
+      : Promise.resolve({ data: null }),
+    getWayfinderContext('campaign', id, userProfile?.role),
+  ])
+  const org = orgResult.data
 
   const progress = c.target_value && c.current_value ? Math.min(100, Math.round((Number(c.current_value) / Number(c.target_value)) * 100)) : null
 
@@ -43,28 +50,35 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
         </div>
       </div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {c.goal_description && (
-            <div className="bg-white rounded-lg border border-brand-border p-5">
-              <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><TrendingUp className="w-4 h-4" />Goal</h2>
-              <p className="text-sm text-brand-text leading-relaxed">{c.goal_description}</p>
-              {progress !== null && (
-                <div className="mt-4">
-                  <div className="flex justify-between text-xs text-brand-muted mb-1"><span>Progress</span><span>{progress}%</span></div>
-                  <div className="h-2 bg-brand-bg rounded-full overflow-hidden"><div className="h-full bg-brand-accent rounded-full" style={{ width: progress + '%' }} /></div>
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex-1 min-w-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {c.goal_description && (
+                <div className="bg-white rounded-lg border border-brand-border p-5">
+                  <h2 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-brand-muted mb-3"><TrendingUp className="w-4 h-4" />Goal</h2>
+                  <p className="text-sm text-brand-text leading-relaxed">{c.goal_description}</p>
+                  {progress !== null && (
+                    <div className="mt-4">
+                      <div className="flex justify-between text-xs text-brand-muted mb-1"><span>Progress</span><span>{progress}%</span></div>
+                      <div className="h-2 bg-brand-bg rounded-full overflow-hidden"><div className="h-full bg-brand-accent rounded-full" style={{ width: progress + '%' }} /></div>
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
-          <div className="bg-white rounded-lg border border-brand-border p-5">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Details</h2>
-            <div className="space-y-2 text-sm">
-              {c.campaign_type && <div><span className="text-brand-muted">Type:</span> <span className="text-brand-text">{c.campaign_type}</span></div>}
-              {c.participant_count && <div className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.participant_count} participants</span></div>}
-              {c.start_date && <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.start_date}{c.end_date ? ` to ${c.end_date}` : ''}</span></div>}
-              {org && <div className="pt-2 border-t border-brand-border mt-2"><span className="text-brand-muted">Led by </span><Link href={`/organizations/${org.org_id}`} className="text-brand-accent hover:underline">{org.org_name}</Link></div>}
+              <div className="bg-white rounded-lg border border-brand-border p-5">
+                <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Details</h2>
+                <div className="space-y-2 text-sm">
+                  {c.campaign_type && <div><span className="text-brand-muted">Type:</span> <span className="text-brand-text">{c.campaign_type}</span></div>}
+                  {c.participant_count && <div className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.participant_count} participants</span></div>}
+                  {c.start_date && <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.start_date}{c.end_date ? ` to ${c.end_date}` : ''}</span></div>}
+                  {org && <div className="pt-2 border-t border-brand-border mt-2"><span className="text-brand-muted">Led by </span><Link href={`/organizations/${org.org_id}`} className="text-brand-accent hover:underline">{org.org_name}</Link></div>}
+                </div>
+              </div>
             </div>
           </div>
+          <aside className="lg:w-80 shrink-0">
+            <DetailWayfinder data={wayfinderData} currentType="campaign" currentId={id} userRole={userProfile?.role} />
+          </aside>
         </div>
       </div>
     </div>

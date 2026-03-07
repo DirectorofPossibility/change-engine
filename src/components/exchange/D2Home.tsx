@@ -125,20 +125,20 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
 
               {/* Stats row */}
               <div className="flex items-center gap-6 mt-8">
-                <Link href="/services" className="group">
-                  <span className="block text-[32px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.resources || 0).toLocaleString()}</span>
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">resources</span>
-                </Link>
+                <div>
+                  <span className="block text-[32px] font-black leading-none" style={{ color: '#C75B2A' }}>90%</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">feel responsible to help</span>
+                </div>
                 <div className="w-px h-8 bg-brand-border" />
-                <Link href="/organizations" className="group">
-                  <span className="block text-[32px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(organizations || 0).toLocaleString()}</span>
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">organizations</span>
-                </Link>
+                <div>
+                  <span className="block text-[32px] font-black leading-none" style={{ color: '#c43c4c' }}>37%</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">don&apos;t know where to start</span>
+                </div>
                 <div className="w-px h-8 bg-brand-border" />
-                <Link href="/officials" className="group">
-                  <span className="block text-[32px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.officials || 0).toLocaleString()}</span>
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">officials</span>
-                </Link>
+                <div>
+                  <span className="block text-[32px] font-black leading-none" style={{ color: '#38a169' }}>28%</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">actually volunteer</span>
+                </div>
               </div>
             </div>
 
@@ -274,40 +274,6 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   </span>
                 </div>
               </Link>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* ── GAP STATS ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-4">
-        <div className="relative inline-block mb-3">
-          <InfoBubble id={TOOLTIPS.stats_bar.id} text={TOOLTIPS.stats_bar.text} position="bottom" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          {GAP_STATS.map(function (stat, i) {
-            const folImages = ['/images/fol/genesis.svg', '/images/fol/vesica-piscis.svg', '/images/fol/tripod-of-life.svg']
-            return (
-              <div
-                key={stat.label}
-                className="relative overflow-hidden border-2 border-brand-text rounded-xl p-5 text-center"
-                style={{ background: '#F8F9FC', boxShadow: '3px 3px 0 #D5D0C8' }}
-              >
-                <img
-                  src={folImages[i]}
-                  alt="" aria-hidden="true"
-                  className="absolute right-[-20px] top-[-20px] w-[80px] h-[80px] pointer-events-none opacity-[0.06]"
-                />
-                <span className="block font-hand text-[52px] font-bold leading-none mb-1.5" style={{ color: stat.color }}>
-                  {stat.pct}
-                </span>
-                <span className="block text-[15px] font-semibold text-brand-muted">
-                  {stat.label}
-                </span>
-                <span className="block mt-1.5 font-mono text-[9px] font-bold uppercase tracking-wider text-brand-muted-light">
-                  {stat.source}
-                </span>
-              </div>
             )
           })}
         </div>

@@ -1828,6 +1828,26 @@ export async function getWayfinderContext(
   } else if (entityType === 'opportunity') {
     const { data } = await (supabase as any).from('opportunity_focus_areas').select('focus_id').eq('opportunity_id', entityId)
     focusIds = (data ?? []).map((j: any) => j.focus_id)
+  } else if (entityType === 'learning_path') {
+    const { data } = await supabase.from('learning_paths').select('focus_area_ids').eq('path_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'campaign') {
+    const { data } = await supabase.from('campaigns').select('focus_area_ids').eq('campaign_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'benefit') {
+    const { data } = await supabase.from('benefit_programs').select('focus_area_ids').eq('benefit_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'agency') {
+    const { data } = await supabase.from('agencies').select('focus_area_ids').eq('agency_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+  } else if (entityType === 'event') {
+    const { data } = await supabase.from('events').select('focus_area_ids').eq('event_id', entityId).single()
+    const raw = (data as any)?.focus_area_ids
+    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
   } else if (entityType === 'foundation') {
     const { data } = await supabase.from('foundation_focus_areas').select('focus_id').eq('foundation_id', entityId)
     focusIds = (data ?? []).map((j: any) => j.focus_id)
