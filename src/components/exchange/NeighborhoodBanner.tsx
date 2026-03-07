@@ -3,28 +3,42 @@
 import { useState } from 'react'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { useTranslation } from '@/lib/use-translation'
-import { MapPin, X, Check, User } from 'lucide-react'
+import { MapPin, X, Check, User, ChevronDown, ChevronUp } from 'lucide-react'
 
 /**
  * Compact neighborhood indicator for the LeftNav sidebar.
- * Shows the user's resolved neighborhood + ZIP when available,
- * or a ZIP input prompt when not set.
+ * Supports both ZIP (quick) and address (precise) input modes.
  */
 export function NeighborhoodWidget() {
-  const { zip, neighborhood, councilDistrict, districtOfficials, lookupZip, clearZip, isLoading } = useNeighborhood()
+  const {
+    zip, address, neighborhood, councilDistrict, resolvedDistricts,
+    districtOfficials, lookupZip, lookupAddress, clearLocation, isLoading, locationMode,
+  } = useNeighborhood()
   const [editing, setEditing] = useState(false)
   const [input, setInput] = useState('')
+  const [useAddress, setUseAddress] = useState(false)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (input.length === 5) {
-      lookupZip(input)
-      setEditing(false)
-      setInput('')
+    const value = input.trim()
+    if (!value) return
+
+    if (useAddress) {
+      if (value.length >= 5) {
+        lookupAddress(value)
+        setEditing(false)
+        setInput('')
+      }
+    } else {
+      if (/^\d{5}$/.test(value)) {
+        lookupZip(value)
+        setEditing(false)
+        setInput('')
+      }
     }
   }
 
-  // ZIP is set — show resolved neighborhood
+  // Location is set — show resolved info
   if (zip && !editing) {
     return (
       <div className="px-3 py-3">
@@ -38,17 +52,31 @@ export function NeighborhoodWidget() {
           {councilDistrict && (
             <div className="text-xs text-brand-muted ml-[20px] mb-1">District {councilDistrict}</div>
           )}
+          {address && locationMode === 'address' && (
+            <div className="text-xs text-brand-muted ml-[20px] mb-1 truncate" title={address}>
+              {address}
+            </div>
+          )}
+          {resolvedDistricts && locationMode === 'address' && (
+            <div className="text-xs text-brand-muted ml-[20px] mb-1">
+              {[
+                resolvedDistricts.congressionalDistrict ? 'CD-' + resolvedDistricts.congressionalDistrict : null,
+                resolvedDistricts.stateHouseDistrict ? 'HD-' + resolvedDistricts.stateHouseDistrict : null,
+                resolvedDistricts.stateSenateDistrict ? 'SD-' + resolvedDistricts.stateSenateDistrict : null,
+              ].filter(Boolean).join(' / ')}
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <span className="text-xs text-brand-muted ml-[20px]">ZIP {zip}</span>
             <div className="flex gap-2">
               <button
-                onClick={function () { setEditing(true); setInput(zip) }}
+                onClick={function () { setEditing(true); setInput(zip); setUseAddress(locationMode === 'address') }}
                 className="text-xs text-brand-muted hover:text-brand-text transition-colors"
               >
                 Change
               </button>
               <button
-                onClick={clearZip}
+                onClick={clearLocation}
                 className="text-xs text-brand-muted hover:text-red-500 transition-colors"
               >
                 <X size={10} />
@@ -60,7 +88,7 @@ export function NeighborhoodWidget() {
     )
   }
 
-  // No ZIP or editing — show input
+  // No location or editing — show input
   return (
     <div className="px-3 py-3">
       <form onSubmit={handleSubmit} className="bg-white rounded-lg px-3 py-2.5 border border-brand-border shadow-sm">
@@ -72,14 +100,20 @@ export function NeighborhoodWidget() {
           <input
             type="text"
             value={input}
-            onChange={function (e) { setInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-            placeholder="ZIP code"
-            maxLength={5}
+            onChange={function (e) {
+              if (useAddress) {
+                setInput(e.target.value)
+              } else {
+                setInput(e.target.value.replace(/\D/g, '').slice(0, 5))
+              }
+            }}
+            placeholder={useAddress ? 'Street address, city' : 'ZIP code'}
+            maxLength={useAddress ? 200 : 5}
             className="flex-1 bg-brand-bg border border-brand-border rounded px-2 py-1.5 text-xs text-brand-text placeholder:text-brand-muted/50 focus:outline-none focus:border-brand-accent/50 w-0"
           />
           <button
             type="submit"
-            disabled={input.length !== 5}
+            disabled={useAddress ? input.trim().length < 5 : input.length !== 5}
             className="px-2 py-1.5 bg-brand-accent rounded text-xs font-bold text-white disabled:opacity-30 hover:bg-brand-accent-hover transition-colors"
           >
             <Check size={12} />
@@ -94,9 +128,13 @@ export function NeighborhoodWidget() {
             </button>
           )}
         </div>
-        <p className="text-xs text-brand-muted mt-1.5 leading-tight">
-          Personalizes officials, services, and polling places
-        </p>
+        <button
+          type="button"
+          onClick={function () { setUseAddress(!useAddress); setInput('') }}
+          className="text-xs text-brand-accent hover:underline mt-1.5 transition-colors"
+        >
+          {useAddress ? 'Use ZIP code instead' : 'Use street address for exact results'}
+        </button>
       </form>
     </div>
   )

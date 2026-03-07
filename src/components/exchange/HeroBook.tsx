@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Search, ArrowRight, MapPin, Check } from 'lucide-react'
+import { Search, ArrowRight, MapPin, Check, Navigation } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { THEMES } from '@/lib/constants'
@@ -11,16 +11,28 @@ import { THEMES } from '@/lib/constants'
 export function HeroBook() {
   const { t } = useTranslation()
   const router = useRouter()
-  const { zip, neighborhood, councilDistrict, districtOfficials, lookupZip, isLoading } = useNeighborhood()
+  const {
+    zip, address, neighborhood, councilDistrict, districtOfficials,
+    resolvedDistricts, lookupZip, lookupAddress, isLoading, locationMode,
+  } = useNeighborhood()
   const [zipInput, setZipInput] = useState('')
+  const [addressInput, setAddressInput] = useState('')
+  const [useAddressMode, setUseAddressMode] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showSearch, setShowSearch] = useState(false)
 
-  function handleZipSubmit(e: React.FormEvent) {
+  function handleLocationSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (zipInput.length === 5) {
-      lookupZip(zipInput)
-      setZipInput('')
+    if (useAddressMode) {
+      if (addressInput.trim().length >= 5) {
+        lookupAddress(addressInput.trim())
+        setAddressInput('')
+      }
+    } else {
+      if (zipInput.length === 5) {
+        lookupZip(zipInput)
+        setZipInput('')
+      }
     }
   }
 
@@ -55,37 +67,70 @@ export function HeroBook() {
             {t('home.subtitle')}
           </p>
 
-          {/* ── Primary action: ZIP or personalized welcome ── */}
+          {/* Primary action: location input or personalized welcome */}
           {!hasZip ? (
             <div className="mb-8">
-              <form onSubmit={handleZipSubmit} className="max-w-md">
+              <form onSubmit={handleLocationSubmit} className="max-w-md">
                 <label className="block text-sm font-semibold text-brand-text mb-2">
-                  {t('nav.zip_prompt')}
+                  {useAddressMode ? 'Enter your street address' : t('nav.zip_prompt')}
                 </label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted" />
-                    <input
-                      type="text"
-                      inputMode="numeric"
-                      value={zipInput}
-                      onChange={function (e) { setZipInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-                      placeholder="Enter your ZIP code"
-                      maxLength={5}
-                      className="w-full pl-10 pr-4 py-3.5 bg-white rounded-lg text-base text-brand-text placeholder:text-brand-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-accent/40 shadow-card-hover border border-brand-border"
-                    />
+                {useAddressMode ? (
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Navigation size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted" />
+                      <input
+                        type="text"
+                        value={addressInput}
+                        onChange={function (e) { setAddressInput(e.target.value) }}
+                        placeholder="123 Main St, Houston, TX"
+                        className="w-full pl-10 pr-4 py-3.5 bg-white rounded-lg text-base text-brand-text placeholder:text-brand-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-accent/40 shadow-card-hover border border-brand-border"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={addressInput.trim().length < 5}
+                      className="px-6 py-3.5 bg-brand-accent text-white font-semibold rounded-lg hover:bg-brand-accent-hover disabled:opacity-40 transition-colors shadow-sm"
+                    >
+                      Go
+                    </button>
                   </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted" />
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={zipInput}
+                        onChange={function (e) { setZipInput(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+                        placeholder="Enter your ZIP code"
+                        maxLength={5}
+                        className="w-full pl-10 pr-4 py-3.5 bg-white rounded-lg text-base text-brand-text placeholder:text-brand-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-accent/40 shadow-card-hover border border-brand-border"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={zipInput.length !== 5}
+                      className="px-6 py-3.5 bg-brand-accent text-white font-semibold rounded-lg hover:bg-brand-accent-hover disabled:opacity-40 transition-colors shadow-sm"
+                    >
+                      Go
+                    </button>
+                  </div>
+                )}
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-brand-muted">
+                    {useAddressMode
+                      ? 'Get exact district-level results for your address'
+                      : 'See your representatives, local services, and neighborhood resources'}
+                  </p>
                   <button
-                    type="submit"
-                    disabled={zipInput.length !== 5}
-                    className="px-6 py-3.5 bg-brand-accent text-white font-semibold rounded-lg hover:bg-brand-accent-hover disabled:opacity-40 transition-colors shadow-sm"
+                    type="button"
+                    onClick={function () { setUseAddressMode(!useAddressMode); setZipInput(''); setAddressInput('') }}
+                    className="text-xs text-brand-accent hover:underline whitespace-nowrap ml-3"
                   >
-                    Go
+                    {useAddressMode ? 'Use ZIP' : 'Use address'}
                   </button>
                 </div>
-                <p className="text-xs text-brand-muted mt-2">
-                  See your representatives, local services, and neighborhood resources
-                </p>
               </form>
             </div>
           ) : (
@@ -106,8 +151,20 @@ export function HeroBook() {
                         </span>
                       )}
                     </div>
+                    {address && locationMode === 'address' && (
+                      <p className="text-sm text-brand-muted mb-1 truncate" title={address}>{address}</p>
+                    )}
                     {councilDistrict && (
-                      <p className="text-sm text-brand-muted mb-2">Council District {councilDistrict}</p>
+                      <p className="text-sm text-brand-muted mb-1">Council District {councilDistrict}</p>
+                    )}
+                    {resolvedDistricts && locationMode === 'address' && (
+                      <p className="text-xs text-brand-muted mb-1">
+                        {[
+                          resolvedDistricts.congressionalDistrict ? 'Congressional ' + resolvedDistricts.congressionalDistrict : null,
+                          resolvedDistricts.stateHouseDistrict ? 'State House ' + resolvedDistricts.stateHouseDistrict : null,
+                          resolvedDistricts.stateSenateDistrict ? 'State Senate ' + resolvedDistricts.stateSenateDistrict : null,
+                        ].filter(Boolean).join(' / ')}
+                      </p>
                     )}
                     {districtOfficials.length > 0 && (
                       <p className="text-sm text-brand-muted">
@@ -116,8 +173,14 @@ export function HeroBook() {
                     )}
                     <div className="flex flex-wrap gap-2 mt-3">
                       <Link
-                        href="/officials"
+                        href="/my-area"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent text-white text-xs font-semibold rounded-lg hover:bg-brand-accent-hover transition-colors"
+                      >
+                        My Civic Profile <ArrowRight size={12} />
+                      </Link>
+                      <Link
+                        href="/officials"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-alt border border-brand-border text-xs font-semibold text-brand-text rounded-lg hover:bg-white transition-colors"
                       >
                         Your Representatives <ArrowRight size={12} />
                       </Link>
@@ -127,12 +190,6 @@ export function HeroBook() {
                       >
                         Nearby Services <ArrowRight size={12} />
                       </Link>
-                      <Link
-                        href="/geography"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-alt border border-brand-border text-xs font-semibold text-brand-text rounded-lg hover:bg-white transition-colors"
-                      >
-                        My Neighborhood <ArrowRight size={12} />
-                      </Link>
                     </div>
                   </div>
                 </div>
@@ -140,7 +197,7 @@ export function HeroBook() {
             </div>
           )}
 
-          {/* ── Secondary: search + quick links ── */}
+          {/* Secondary: search + quick links */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {showSearch ? (
               <form onSubmit={handleSearch} className="relative max-w-md flex-1">
