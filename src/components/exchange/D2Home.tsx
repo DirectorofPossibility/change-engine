@@ -160,22 +160,27 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               </div>
             </div>
 
-            {/* Right — image collage */}
-            <div className="hidden lg:block flex-1 min-w-0 max-w-[520px]">
-              <div className="grid grid-cols-6 grid-rows-4 gap-2.5 h-[420px]">
-                <div className="col-span-4 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+            {/* Right — image collage (scattered, organic) */}
+            <div className="hidden lg:block flex-1 min-w-0 max-w-[540px]">
+              <div className="relative h-[440px]">
+                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '300px', height: '220px', top: '0', left: '20px', transform: 'rotate(-2deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 2 }}>
                   <img src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover" />
                 </div>
-                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '200px', height: '170px', top: '10px', right: '0', transform: 'rotate(3deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 3 }}>
                   <img src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover" />
                 </div>
-                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '180px', height: '160px', bottom: '30px', left: '0', transform: 'rotate(2.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 4 }}>
                   <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
                 </div>
-                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '190px', height: '150px', bottom: '50px', left: '190px', transform: 'rotate(-1.5deg)', boxShadow: '4px 3px 0 #D5D0C8', zIndex: 3 }}>
                   <img src="/images/editorial/health-fair.jpg" alt="Health fair" className="w-full h-full object-cover" />
                 </div>
-                <div className="col-span-2 row-span-2 rounded-xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                  style={{ width: '170px', height: '140px', bottom: '0', right: '10px', transform: 'rotate(4deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 1 }}>
                   <img src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover" />
                 </div>
               </div>
