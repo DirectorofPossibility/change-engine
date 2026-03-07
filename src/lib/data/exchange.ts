@@ -3338,3 +3338,80 @@ export async function getCircleGraphData(): Promise<CircleGraphData> {
     },
   }
 }
+
+// ── TIRZ Zones ─────────────────────────────────────────────────────────
+
+export async function getTirzZones() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('tirz_zones')
+    .select('*')
+    .order('site_number')
+  return data ?? []
+}
+
+export async function getTirzZone(tirzId: string) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('tirz_zones')
+    .select('*')
+    .eq('tirz_id', tirzId)
+    .single()
+  return data ?? null
+}
+
+/** Find TIRZ zone by site number (used for GeoJSON → DB lookup). */
+export async function getTirzZoneBySiteNumber(siteNo: number) {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('tirz_zones')
+    .select('*')
+    .eq('site_number', siteNo)
+    .single()
+  return data ?? null
+}
+
+/** Get officials whose council districts overlap a TIRZ zone. */
+export async function getOfficialsForTirz(tirzId: string) {
+  const supabase = await createClient()
+  const { data: zone } = await supabase
+    .from('tirz_zones')
+    .select('council_districts')
+    .eq('tirz_id', tirzId)
+    .single()
+
+  if (!zone?.council_districts) {
+    // Fall back to all city-level officials
+    const { data: officials } = await supabase
+      .from('elected_officials')
+      .select('*')
+      .eq('level', 'City')
+      .order('official_name')
+    return officials ?? []
+  }
+
+  const districts = zone.council_districts.split(',').map(function (d: string) { return d.trim() })
+  const { data: officials } = await supabase
+    .from('elected_officials')
+    .select('*')
+    .or(
+      districts.map(function (d: string) { return 'district_id.eq.' + d }).join(',') +
+      ',district_id.is.null,district_id.like.AL%'
+    )
+    .eq('level', 'City')
+    .order('official_name')
+  return officials ?? []
+}
+
+/** Get policies that affect a TIRZ zone's geography. */
+export async function getPoliciesForTirz(tirzId: string) {
+  const supabase = await createClient()
+  // Get policies at city level that might affect TIRZ areas
+  const { data } = await supabase
+    .from('policies')
+    .select('*')
+    .in('level', ['City', 'County'])
+    .order('updated_at', { ascending: false })
+    .limit(12)
+  return data ?? []
+}

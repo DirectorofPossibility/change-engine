@@ -78,6 +78,8 @@ export interface ResolvedDistricts {
   stateSenateDistrict: string | null
   superNeighborhood: string | null
   superNeighborhoodName: string | null
+  tirzZone: string | null
+  tirzZoneName: string | null
 }
 
 /** Resolve a lat/lng point against all available boundary layers. */
@@ -98,6 +100,23 @@ export function resolveAllDistricts(lng: number, lat: number): ResolvedDistricts
     // ignore
   }
 
+  // TIRZ zones — also grab the name
+  let tirzZone: string | null = null
+  let tirzZoneName: string | null = null
+  try {
+    const tirzGeo = loadGeoJson('tirz-zones.geojson')
+    for (const feature of tirzGeo.features) {
+      if (pointInGeometry(lng, lat, feature.geometry)) {
+        const siteNo = feature.properties.SITENO
+        tirzZone = siteNo != null ? String(siteNo) : null
+        tirzZoneName = String(feature.properties.NAME ?? '')
+        break
+      }
+    }
+  } catch {
+    // ignore
+  }
+
   return {
     councilDistrict: findDistrict(lng, lat, 'council-districts.geojson', 'DISTRICT'),
     congressionalDistrict: findDistrict(lng, lat, 'congressional-districts.geojson', 'CD'),
@@ -105,5 +124,7 @@ export function resolveAllDistricts(lng: number, lat: number): ResolvedDistricts
     stateSenateDistrict: findDistrict(lng, lat, 'state-senate-districts.geojson', 'SD'),
     superNeighborhood,
     superNeighborhoodName,
+    tirzZone,
+    tirzZoneName,
   }
 }

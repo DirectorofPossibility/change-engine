@@ -172,6 +172,14 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     idProperty: 'GEOID',
     detailPath: null,
   },
+  tirzZones: {
+    id: 'tirzZones',
+    label: 'TIRZ Zones',
+    url: '/geo/tirz-zones.geojson',
+    color: '#C75B2A',
+    idProperty: 'SITENO',
+    detailPath: '/tirz/',
+  },
 } as const;
 
 // ── Shared color systems ─────────────────────────────────────────────
