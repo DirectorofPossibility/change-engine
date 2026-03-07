@@ -50,6 +50,12 @@ export interface RssFeed {
   last_item_count: number | null
   poll_interval_hours: number
   created_at: string | null
+  pathway_hint: string | null
+  category: string | null
+  error_count: number
+  last_error: string | null
+  total_items_ingested: number
+  notes: string | null
 }
 
 /**
