@@ -76,7 +76,7 @@ export function ServicesClient({ services, translations = {} }: ServicesClientPr
         />
         <span className="relative text-sm text-brand-muted self-center">
           {filtered.length} services — powered by 211
-          <InfoBubble id={TOOLTIPS.badge_211.id} text={TOOLTIPS.badge_211.text} position="right" />
+          <InfoBubble id={TOOLTIPS.badge_211.id} text={TOOLTIPS.badge_211.text} position="bottom" />
         </span>
 
         {/* View toggle */}

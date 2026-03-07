@@ -45,7 +45,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const firstOpenTier = understandCount > 0 ? 'understand' : involvedCount > 0 ? 'involved' : 'deeper'
 
   return (
-    <aside className="bg-white rounded-xl border border-brand-border overflow-hidden lg:sticky lg:top-24">
+    <aside className="bg-white rounded-xl border border-brand-border lg:sticky lg:top-24">
       {/* Header */}
       <div className="p-4 border-b border-brand-border relative">
         <h3 className="font-serif text-base font-semibold text-brand-text tracking-wide">

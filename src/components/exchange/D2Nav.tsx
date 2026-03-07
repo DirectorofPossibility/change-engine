@@ -173,7 +173,7 @@ export function D2Nav({ election }: D2NavProps) {
             </div>
             <div className="hidden md:block relative">
               <LanguageSwitcher />
-              <InfoBubble id={TOOLTIPS.language_switcher.id} text={TOOLTIPS.language_switcher.text} position="bottom" />
+              <InfoBubble id={TOOLTIPS.language_switcher.id} text={TOOLTIPS.language_switcher.text} position="bottom" align="end" />
             </div>
             <Link
               href="/me"

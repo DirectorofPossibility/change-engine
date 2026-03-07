@@ -23,11 +23,14 @@ function dismiss(id: string) {
 interface InfoBubbleProps {
   id: string
   text: string
+  /** Where the bubble appears relative to its positioned parent */
   position?: 'top' | 'bottom' | 'left' | 'right'
+  /** Horizontal alignment for top/bottom positions */
+  align?: 'center' | 'start' | 'end'
   accent?: string
 }
 
-export function InfoBubble({ id, text, position = 'bottom', accent = '#C75B2A' }: InfoBubbleProps) {
+export function InfoBubble({ id, text, position = 'bottom', align = 'start', accent = '#C75B2A' }: InfoBubbleProps) {
   const [visible, setVisible] = useState(false)
 
   useEffect(function () {
@@ -46,16 +49,28 @@ export function InfoBubble({ id, text, position = 'bottom', accent = '#C75B2A' }
     dismiss(id)
   }
 
+  const alignClass = align === 'center'
+    ? 'left-1/2 -translate-x-1/2'
+    : align === 'end'
+      ? 'right-0'
+      : 'left-0'
+
+  const caretAlignClass = align === 'center'
+    ? 'left-1/2 -translate-x-1/2'
+    : align === 'end'
+      ? 'right-6'
+      : 'left-6'
+
   const arrowMap: Record<string, string> = {
-    top: 'bottom-full mb-2 left-1/2 -translate-x-1/2',
-    bottom: 'top-full mt-2 left-1/2 -translate-x-1/2',
+    top: 'bottom-full mb-2 ' + alignClass,
+    bottom: 'top-full mt-2 ' + alignClass,
     left: 'right-full mr-2 top-1/2 -translate-y-1/2',
     right: 'left-full ml-2 top-1/2 -translate-y-1/2',
   }
 
   const caretMap: Record<string, string> = {
-    top: 'top-full left-1/2 -translate-x-1/2 -mt-1 border-l-transparent border-r-transparent border-b-transparent border-t-white',
-    bottom: 'bottom-full left-1/2 -translate-x-1/2 -mb-1 border-l-transparent border-r-transparent border-t-transparent border-b-white',
+    top: 'top-full ' + caretAlignClass + ' -mt-1 border-l-transparent border-r-transparent border-b-transparent border-t-white',
+    bottom: 'bottom-full ' + caretAlignClass + ' -mb-1 border-l-transparent border-r-transparent border-t-transparent border-b-white',
     left: 'left-full top-1/2 -translate-y-1/2 -ml-1 border-t-transparent border-b-transparent border-r-transparent border-l-white',
     right: 'right-full top-1/2 -translate-y-1/2 -mr-1 border-t-transparent border-b-transparent border-l-transparent border-r-white',
   }

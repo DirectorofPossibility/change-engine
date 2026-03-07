@@ -181,8 +181,10 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </section>
 
       {/* ── QUICK ACCESS GRID — 5 cards with unique FOL patterns ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-10 pb-6 relative">
-        <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
+      <div className="max-w-[1200px] mx-auto px-8 pt-10 pb-6">
+        <div className="relative inline-block mb-4">
+          <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {QUICK_ACCESS.map(function (item, idx) {
             if (item.cta) {
@@ -322,8 +324,10 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </div>
 
       {/* ── GAP STATS ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-10 relative">
-        <InfoBubble id={TOOLTIPS.stats_bar.id} text={TOOLTIPS.stats_bar.text} position="top" />
+      <div className="max-w-[1200px] mx-auto px-8 pt-4 pb-10">
+        <div className="relative inline-block mb-3">
+          <InfoBubble id={TOOLTIPS.stats_bar.id} text={TOOLTIPS.stats_bar.text} position="bottom" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {GAP_STATS.map(function (stat, i) {
             const folImages = ['/images/fol/genesis.svg', '/images/fol/vesica-piscis.svg', '/images/fol/tripod-of-life.svg']

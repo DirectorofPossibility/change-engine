@@ -140,7 +140,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
             {loading ? 'Searching...' : 'Find Polling Places'}
           </button>
         </form>
-        <InfoBubble id={TOOLTIPS.polling_finder.id} text={TOOLTIPS.polling_finder.text} position="bottom" />
+        <InfoBubble id={TOOLTIPS.polling_finder.id} text={TOOLTIPS.polling_finder.text} position="bottom" align="start" />
       </div>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}

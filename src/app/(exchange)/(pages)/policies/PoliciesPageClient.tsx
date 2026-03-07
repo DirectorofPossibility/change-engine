@@ -110,16 +110,17 @@ export function PoliciesPageClient({ policies, translations }: PoliciesPageClien
       )}
 
       {/* Grouped display when showing all levels */}
-      {grouped && levelOrder.map(function (level) {
+      {grouped && levelOrder.map(function (level, levelIdx) {
         const items = grouped[level]
         if (!items || items.length === 0) return null
         const color = LEVEL_COLORS[level] || DEFAULT_LEVEL_COLOR
         return (
           <section key={level} className="mb-10">
-            <h2 className="text-lg font-serif font-bold text-brand-text mb-4 flex items-center gap-2">
+            <h2 className="relative text-lg font-serif font-bold text-brand-text mb-4 flex items-center gap-2">
               <Scale size={18} style={{ color }} />
               <span style={{ color }}>{level}</span>
               <span className="text-xs text-brand-muted font-normal">({items.length})</span>
+              {levelIdx === 0 && <InfoBubble id={TOOLTIPS.status_badge.id} text={TOOLTIPS.status_badge.text} position="bottom" />}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {items.map(function (p) {
