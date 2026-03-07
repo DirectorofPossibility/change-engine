@@ -69,15 +69,7 @@ const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
   return { id, name: (t as any).name, color: (t as any).color, slug: (t as any).slug }
 })
 
-interface D2NavProps {
-  election?: {
-    election_name: string
-    election_date: string
-    find_polling_url: string | null
-  } | null
-}
-
-export function D2Nav({ election }: D2NavProps) {
+export function D2Nav() {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -99,18 +91,6 @@ export function D2Nav({ election }: D2NavProps) {
 
   return (
     <>
-      {/* Election banner */}
-      {election && (
-        <Link href="/elections" className="block text-center font-mono text-[11px] font-bold uppercase tracking-wider py-2 px-4 bg-brand-bg-alt text-brand-accent border-b border-brand-border hover:bg-brand-border/50 transition-colors">
-          {election.election_name} — {new Date(election.election_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-          {election.find_polling_url && (
-            <span className="ml-3 underline text-brand-text">
-              Find your polling place
-            </span>
-          )}
-        </Link>
-      )}
-
       {/* Spectrum bar */}
       <div className="spectrum-bar relative">
         <div style={{ background: '#e53e3e' }} />

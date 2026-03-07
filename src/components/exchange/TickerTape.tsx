@@ -8,6 +8,15 @@ interface TickerItem {
   text: string
   attribution?: string
   color: string
+  href?: string
+}
+
+interface TickerTapeProps {
+  election?: {
+    election_name: string
+    election_date: string
+    find_polling_url: string | null
+  } | null
 }
 
 const COLORS = ['#38a169', '#3182ce', '#805ad5', '#C75B2A', '#d69e2e', '#e53e3e', '#319795']
@@ -15,8 +24,9 @@ const COLORS = ['#38a169', '#3182ce', '#805ad5', '#C75B2A', '#d69e2e', '#e53e3e'
 /**
  * Continuously scrolling ticker tape that pulls random Good Things entries.
  * CSS-animated marquee — no JS animation frames needed.
+ * Optionally shows a pinned election countdown item.
  */
-export function TickerTape() {
+export function TickerTape({ election }: TickerTapeProps) {
   const [items, setItems] = useState<TickerItem[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -46,7 +56,23 @@ export function TickerTape() {
       .catch(function () {})
   }, [])
 
-  if (items.length === 0) return null
+  // Build election ticker item
+  const electionItem: TickerItem | null = election ? (function () {
+    const d = new Date(election.election_date)
+    const now = new Date()
+    const diff = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    if (diff < 0) return null
+    const dateStr = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    const daysLabel = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : diff + ' days away'
+    return {
+      text: election.election_name + ' — ' + dateStr + ' (' + daysLabel + ')',
+      attribution: election.find_polling_url ? 'Find your polling place' : undefined,
+      color: '#e53e3e',
+      href: '/elections',
+    }
+  })() : null
+
+  if (items.length === 0 && !electionItem) return null
 
   // Duplicate items for seamless loop
   const doubled = [...items, ...items]
@@ -62,22 +88,37 @@ export function TickerTape() {
           </Link>
         </div>
 
+        {/* Election pinned item */}
+        {electionItem && (
+          <Link
+            href={electionItem.href || '/elections'}
+            className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border hover:bg-brand-border/30 transition-colors"
+          >
+            <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
+            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent whitespace-nowrap">
+              {electionItem.text}
+            </span>
+          </Link>
+        )}
+
         {/* Scrolling ticker */}
-        <div className="overflow-hidden flex-1" ref={containerRef}>
-          <div className="ticker-scroll flex items-center gap-6 whitespace-nowrap py-2.5 pr-6">
-            {doubled.map(function (item, i) {
-              return (
-                <span key={i} className="inline-flex items-center gap-2 text-[13px]">
-                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                  <span className="text-brand-text italic">&ldquo;{item.text}&rdquo;</span>
-                  {item.attribution && (
-                    <span className="text-brand-muted-light text-[11px]">&mdash; {item.attribution}</span>
-                  )}
-                </span>
-              )
-            })}
+        {doubled.length > 0 && (
+          <div className="overflow-hidden flex-1" ref={containerRef}>
+            <div className="ticker-scroll flex items-center gap-6 whitespace-nowrap py-2.5 pr-6">
+              {doubled.map(function (item, i) {
+                return (
+                  <span key={i} className="inline-flex items-center gap-2 text-[13px]">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                    <span className="text-brand-text italic">&ldquo;{item.text}&rdquo;</span>
+                    {item.attribution && (
+                      <span className="text-brand-muted-light text-[11px]">&mdash; {item.attribution}</span>
+                    )}
+                  </span>
+                )
+              })}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

@@ -97,160 +97,183 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   ])
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <>
       <SpiralTracker action="view_service" />
-      <Breadcrumb items={[
-        { label: 'Services', href: '/services' },
-        { label: displayName }
-      ]} />
 
-      <h1 className="text-3xl font-bold text-brand-text mb-2">{displayName}</h1>
-      <div className="mb-2">
-        <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
-      </div>
-      {org && (
-        <p className="text-brand-muted mb-2">
-          Provided by <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline">{org.org_name}</Link>
-        </p>
-      )}
-      {service.airs_code && (
-        <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg text-brand-muted">AIRS: {service.airs_code}</span>
-      )}
+      {/* Hero */}
+      <div className="bg-brand-bg border-b border-brand-border">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <Breadcrumb items={[
+            { label: 'Services', href: '/services' },
+            { label: displayName }
+          ]} />
 
-      {/* Description */}
-      {displayDesc && (
-        <div className="mt-6 mb-8">
-          <p className="text-brand-text leading-relaxed">{displayDesc}</p>
+          <h1 className="font-serif text-3xl lg:text-4xl text-brand-text mt-4 mb-3">{displayName}</h1>
+
+          <div className="flex flex-wrap items-center gap-3 mb-2">
+            <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
+            {service.airs_code && (
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-white border border-brand-border text-brand-muted">AIRS: {service.airs_code}</span>
+            )}
+          </div>
+
+          {org && (
+            <p className="text-brand-muted">
+              Provided by{' '}
+              <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline">
+                {org.org_name}
+              </Link>
+            </p>
+          )}
         </div>
-      )}
-
-      {/* Contact & Access */}
-      <div className="bg-white rounded-xl border border-brand-border p-5 mb-8 space-y-3">
-        <h2 className="font-semibold text-brand-text mb-2">Contact &amp; Access</h2>
-        {service.phone && (
-          <a href={'tel:' + service.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Phone size={16} /> {service.phone}
-          </a>
-        )}
-        {service.website && (
-          <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Globe size={16} /> {service.website}
-          </a>
-        )}
-        {fullAddress && (
-          <p className="flex items-center gap-2 text-sm text-brand-muted">
-            <MapPin size={16} className="shrink-0" /> {fullAddress}
-          </p>
-        )}
-        {service.hours && (
-          <p className="flex items-center gap-2 text-sm text-brand-muted">
-            <Clock size={16} /> {service.hours}
-          </p>
-        )}
+        <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, transparent 60%)' }} />
       </div>
 
-      {/* Location Map */}
-      {(service as any).latitude != null && (service as any).longitude != null && (
-        <div className="mb-8">
-          <SingleLocationMap
-            marker={{
-              id: service.service_id,
-              lat: (service as any).latitude as number,
-              lng: (service as any).longitude as number,
-              title: service.service_name,
-              type: 'service',
-              address: fullAddress || null,
-              phone: service.phone,
-            }}
-          />
-        </div>
-      )}
+      {/* Two-column grid */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
 
-      {/* Details */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        {service.eligibility && (
-          <div className="bg-white rounded-xl border border-brand-border p-4">
-            <h3 className="text-sm font-semibold text-brand-muted mb-1">Eligibility</h3>
-            <p className="text-sm text-brand-text">{service.eligibility}</p>
-          </div>
-        )}
-        {service.fees && (
-          <div className="bg-white rounded-xl border border-brand-border p-4">
-            <h3 className="text-sm font-semibold text-brand-muted mb-1">Fees</h3>
-            <p className="text-sm text-brand-text">{service.fees}</p>
-          </div>
-        )}
-        {service.languages && (
-          <div className="bg-white rounded-xl border border-brand-border p-4">
-            <h3 className="text-sm font-semibold text-brand-muted mb-1">Languages</h3>
-            <p className="text-sm text-brand-text">{service.languages}</p>
-          </div>
-        )}
-      </div>
+          {/* Main column */}
+          <div className="min-w-0">
+            {/* Description */}
+            {displayDesc && (
+              <div className="mb-8">
+                <p className="text-brand-text leading-relaxed text-lg">{displayDesc}</p>
+              </div>
+            )}
 
-      {/* Parent Organization */}
-      {org && (
-        <section className="mb-10">
-          <h2 className="text-xl font-bold text-brand-text mb-4">Organization</h2>
-          <Link href={'/organizations/' + org.org_id} className="block bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow">
-            <h3 className="font-semibold text-brand-text mb-1">{org.org_name}</h3>
-            {org.description_5th_grade && <p className="text-sm text-brand-muted line-clamp-2">{org.description_5th_grade}</p>}
-          </Link>
-        </section>
-      )}
+            {/* Contact & Access */}
+            <div className="bg-white rounded-card border-2 border-brand-border p-5 mb-8 space-y-3" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Contact &amp; Access</p>
+              {service.phone && (
+                <a href={'tel:' + service.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
+                  <Phone size={16} /> {service.phone}
+                </a>
+              )}
+              {service.website && (
+                <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
+                  <Globe size={16} /> {service.website}
+                </a>
+              )}
+              {fullAddress && (
+                <p className="flex items-center gap-2 text-sm text-brand-muted">
+                  <MapPin size={16} className="shrink-0" /> {fullAddress}
+                </p>
+              )}
+              {service.hours && (
+                <p className="flex items-center gap-2 text-sm text-brand-muted">
+                  <Clock size={16} /> {service.hours}
+                </p>
+              )}
+            </div>
 
-      {/* Related services */}
-      {relatedServices.length > 0 && (
-        <section>
-          <h2 className="text-xl font-bold text-brand-text mb-4">Related Services</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {relatedServices.map(function (svc) {
-              return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id}>
-                  <ServiceCard
-                    name={svc.service_name}
-                    description={svc.description_5th_grade}
-                    phone={svc.phone}
-                    address={svc.address}
-                    city={svc.city}
-                    state={svc.state}
-                    zipCode={svc.zip_code}
-                    website={svc.website}
-                  />
+            {/* Location Map */}
+            {(service as any).latitude != null && (service as any).longitude != null && (
+              <div className="mb-8">
+                <SingleLocationMap
+                  marker={{
+                    id: service.service_id,
+                    lat: (service as any).latitude as number,
+                    lng: (service as any).longitude as number,
+                    title: service.service_name,
+                    type: 'service',
+                    address: fullAddress || null,
+                    phone: service.phone,
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Details */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              {service.eligibility && (
+                <div className="bg-white rounded-card border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Eligibility</p>
+                  <p className="text-sm text-brand-text">{service.eligibility}</p>
+                </div>
+              )}
+              {service.fees && (
+                <div className="bg-white rounded-card border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Fees</p>
+                  <p className="text-sm text-brand-text">{service.fees}</p>
+                </div>
+              )}
+              {service.languages && (
+                <div className="bg-white rounded-card border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Languages</p>
+                  <p className="text-sm text-brand-text">{service.languages}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Parent Organization */}
+            {org && (
+              <section className="mb-10">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Organization</p>
+                <Link href={'/organizations/' + org.org_id} className="block bg-white rounded-card border-2 border-brand-border p-5 hover:shadow-md transition-shadow" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <h3 className="font-semibold text-brand-text mb-1">{org.org_name}</h3>
+                  {org.description_5th_grade && <p className="text-sm text-brand-muted line-clamp-2">{org.description_5th_grade}</p>}
                 </Link>
-              )
-            })}
+              </section>
+            )}
+
+            {/* Related services */}
+            {relatedServices.length > 0 && (
+              <section className="mb-10">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Related Services</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {relatedServices.map(function (svc) {
+                    return (
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id}>
+                        <ServiceCard
+                          name={svc.service_name}
+                          description={svc.description_5th_grade}
+                          phone={svc.phone}
+                          address={svc.address}
+                          city={svc.city}
+                          state={svc.state}
+                          zipCode={svc.zip_code}
+                          website={svc.website}
+                        />
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* Library nuggets */}
+            {libraryNuggets.length > 0 && (
+              <section className="mb-10">
+                <LibraryNugget
+                  nuggets={libraryNuggets}
+                  variant="section"
+                  color="#d69e2e"
+                  labels={{ goDeeper: 'Understanding this resource' }}
+                />
+              </section>
+            )}
+
+            {/* Quote */}
+            {quote && (
+              <section className="mb-10">
+                <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
+              </section>
+            )}
           </div>
-        </section>
-      )}
 
-      {/* Library nuggets — understanding this resource */}
-      {libraryNuggets.length > 0 && (
-        <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <LibraryNugget
-            nuggets={libraryNuggets}
-            variant="section"
-            color="#d69e2e"
-            labels={{ goDeeper: 'Understanding this resource' }}
-          />
-        </section>
-      )}
+          {/* Sidebar column */}
+          <aside className="space-y-6">
+            <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
+            <div className="max-w-sm">
+              <FeedbackLoop entityType="services_211" entityId={service.service_id} entityName={service.service_name || ''} />
+            </div>
+          </aside>
 
-      {/* Quote */}
-      {quote && (
-        <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
-      )}
-
-      <div className="mt-10">
-        <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
-      </div>
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="max-w-sm">
-          <FeedbackLoop entityType="services_211" entityId={service.service_id} entityName={service.service_name || ''} />
         </div>
       </div>
 
+      {/* Admin panel outside grid */}
       <AdminEditPanel
         entityType="services_211"
         entityId={service.service_id}
@@ -270,6 +293,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           { key: 'service_area', label: 'Service Area', type: 'text', value: (service as any).service_area },
         ] as EditField[]}
       />
-    </div>
+    </>
   )
 }

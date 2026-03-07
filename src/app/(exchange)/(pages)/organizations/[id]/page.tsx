@@ -101,6 +101,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   return (
     <div>
       <SpiralTracker action="view_organization" />
+
       {/* Hero */}
       <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -110,7 +111,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           ]} />
           <div className="flex items-start gap-4 mt-4">
             {org.logo_url && (
-              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border" />
+              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border" />
             )}
             <div>
               <div className="flex items-center gap-2.5">
@@ -142,149 +143,159 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             </div>
           </div>
         </div>
+        <div className="h-1" style={{ background: 'linear-gradient(90deg, #805ad5, transparent 60%)' }} />
       </div>
 
+      {/* Two-column grid: main + sidebar */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
 
-      {/* Contact card */}
-      <div className="relative bg-white rounded-xl border border-brand-border p-5 mb-8 flex flex-wrap gap-4">
-        <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
-        {org.phone && (
-          <a href={'tel:' + org.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Phone size={16} /> {org.phone}
-          </a>
-        )}
-        {org.email && (
-          <a href={'mailto:' + org.email} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Mail size={16} /> {org.email}
-          </a>
-        )}
-        {org.website && (
-          <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <Globe size={16} /> Website
-          </a>
-        )}
-        {fullAddress && (
-          <span className="flex items-center gap-2 text-sm text-brand-muted">
-            <MapPin size={16} /> {fullAddress}
-          </span>
-        )}
-        {org.map_link && (
-          <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-            <MapPin size={16} /> Map
-          </a>
-        )}
-      </div>
+          {/* Main column */}
+          <div className="min-w-0">
 
-      {/* Hours */}
-      {hoursDisplay && (
-        <div className="bg-white rounded-xl border border-brand-border p-4 mb-8">
-          <h3 className="text-sm font-semibold text-brand-muted mb-2">Hours of Operation</h3>
-          <p className="text-sm text-brand-text">{hoursDisplay}</p>
-        </div>
-      )}
-
-      {/* Social media */}
-      {socialLinks.length > 0 && (
-        <div className="flex flex-wrap gap-3 mb-8">
-          {socialLinks.map(function (link) {
-            return (
-              <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg text-brand-accent hover:underline capitalize">
-                {link.platform}
-              </a>
-            )
-          })}
-        </div>
-      )}
-
-      {/* Stats */}
-      {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          {org.people_served && (
-            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-              <div className="text-lg font-bold text-brand-text">{org.people_served}</div>
-              <div className="text-xs text-brand-muted">People Served</div>
+            {/* Contact card */}
+            <div className="relative bg-white rounded-xl border-2 border-brand-border p-5 mb-8 flex flex-wrap gap-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
+              {org.phone && (
+                <a href={'tel:' + org.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
+                  <Phone size={16} /> {org.phone}
+                </a>
+              )}
+              {org.email && (
+                <a href={'mailto:' + org.email} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
+                  <Mail size={16} /> {org.email}
+                </a>
+              )}
+              {org.website && (
+                <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
+                  <Globe size={16} /> Website
+                </a>
+              )}
+              {fullAddress && (
+                <span className="flex items-center gap-2 text-sm text-brand-muted">
+                  <MapPin size={16} /> {fullAddress}
+                </span>
+              )}
+              {org.map_link && (
+                <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
+                  <MapPin size={16} /> Map
+                </a>
+              )}
             </div>
-          )}
-          {org.service_area && (
-            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-              <div className="text-sm font-bold text-brand-text">{org.service_area}</div>
-              <div className="text-xs text-brand-muted">Service Area</div>
-            </div>
-          )}
-          {org.partner_count != null && (
-            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-              <div className="text-lg font-bold text-brand-text">{org.partner_count}</div>
-              <div className="text-xs text-brand-muted">Partners</div>
-            </div>
-          )}
-          {org.annual_budget != null && (
-            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-              <div className="text-lg font-bold text-brand-text">${org.annual_budget.toLocaleString()}</div>
-              <div className="text-xs text-brand-muted">Annual Budget</div>
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* Description (if mission wasn't shown) */}
-      {org.mission_statement && displayOrgDesc && (
-        <section className="mb-8">
-          <h2 className="text-xl font-serif font-bold text-brand-text mb-3">About</h2>
-          <p className="text-brand-muted">{displayOrgDesc}</p>
-        </section>
-      )}
+            {/* Hours */}
+            {hoursDisplay && (
+              <div className="bg-white rounded-xl border-2 border-brand-border p-4 mb-8" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Hours of Operation</h3>
+                <p className="text-sm text-brand-text">{hoursDisplay}</p>
+              </div>
+            )}
 
-      {/* Tags */}
-      {org.tags && org.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-8">
-          {org.tags.map(function (tag) {
-            return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{tag}</span>
-          })}
-        </div>
-      )}
+            {/* Social media */}
+            {socialLinks.length > 0 && (
+              <div className="flex flex-wrap gap-3 mb-8">
+                {socialLinks.map(function (link) {
+                  return (
+                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg border border-brand-border text-brand-accent hover:underline capitalize">
+                      {link.platform}
+                    </a>
+                  )
+                })}
+              </div>
+            )}
 
-      {/* Services */}
-      {services && services.length > 0 && (
-        <section>
-          <h2 className="text-xl font-serif font-bold text-brand-text mb-4">Services ({services.length})</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services.map(function (svc) {
-              const st = serviceTranslations[svc.service_id]
-              return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id}>
-                  <ServiceCard
-                    name={svc.service_name}
-                    description={svc.description_5th_grade}
-                    phone={svc.phone}
-                    address={svc.address}
-                    city={svc.city}
-                    state={svc.state}
-                    zipCode={svc.zip_code}
-                    website={svc.website}
-                    translatedName={st?.title}
-                    translatedDescription={st?.summary}
-                  />
-                </Link>
-              )
-            })}
+            {/* Stats */}
+            {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                {org.people_served && (
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                    <div className="text-lg font-bold text-brand-text">{org.people_served}</div>
+                    <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">People Served</div>
+                  </div>
+                )}
+                {org.service_area && (
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                    <div className="text-sm font-bold text-brand-text">{org.service_area}</div>
+                    <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Service Area</div>
+                  </div>
+                )}
+                {org.partner_count != null && (
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                    <div className="text-lg font-bold text-brand-text">{org.partner_count}</div>
+                    <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Partners</div>
+                  </div>
+                )}
+                {org.annual_budget != null && (
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                    <div className="text-lg font-bold text-brand-text">${org.annual_budget.toLocaleString()}</div>
+                    <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Annual Budget</div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Description (if mission wasn't shown) */}
+            {org.mission_statement && displayOrgDesc && (
+              <section className="mb-8">
+                <h2 className="text-xl font-serif font-bold text-brand-text mb-3">About</h2>
+                <p className="text-brand-muted">{displayOrgDesc}</p>
+              </section>
+            )}
+
+            {/* Tags */}
+            {org.tags && org.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 mb-8">
+                {org.tags.map(function (tag) {
+                  return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg border border-brand-border text-brand-muted">{tag}</span>
+                })}
+              </div>
+            )}
+
+            {/* Services */}
+            {services && services.length > 0 && (
+              <section className="mb-8">
+                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">Services ({services.length})</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {services.map(function (svc) {
+                    const st = serviceTranslations[svc.service_id]
+                    return (
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id}>
+                        <ServiceCard
+                          name={svc.service_name}
+                          description={svc.description_5th_grade}
+                          phone={svc.phone}
+                          address={svc.address}
+                          city={svc.city}
+                          state={svc.state}
+                          zipCode={svc.zip_code}
+                          website={svc.website}
+                          translatedName={st?.title}
+                          translatedDescription={st?.summary}
+                        />
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* Quote */}
+            {quote && (
+              <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
+            )}
+
           </div>
-        </section>
-      )}
 
-      {/* Quote */}
-      {quote && (
-        <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
-      )}
+          {/* Sidebar column */}
+          <div className="space-y-6">
+            <div className="lg:sticky lg:top-24">
+              <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
+              <div className="mt-6">
+                <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
+              </div>
+            </div>
+          </div>
 
-      <div className="mt-10">
-        <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
-      </div>
-      </div>
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="max-w-sm">
-          <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
         </div>
       </div>
 
