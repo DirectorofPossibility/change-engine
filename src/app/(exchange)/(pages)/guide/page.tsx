@@ -24,8 +24,8 @@ import { PersonaSelector } from '@/components/exchange/PersonaSelector'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'The Community Exchange | Guide',
-  description: 'Your newspaper-style guide to everything happening in Houston — articles, services, officials, learning paths, and more.',
+  title: 'Your Guide to What\'s Going On — Community Exchange',
+  description: 'What\'s happening in Houston civic life. Written so anyone can understand it. Curated. Local. Updated daily.',
 }
 
 export default async function GuidePageServer() {
@@ -58,8 +58,10 @@ export default async function GuidePageServer() {
   return (
     <>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="font-serif text-xl font-bold tracking-tight mb-1">Not sure where to start?</h2>
-        <p className="text-sm text-brand-muted mb-4 font-serif italic">Find your path — pick the one that sounds like you.</p>
+        <p className="text-sm text-brand-muted mb-2 font-mono uppercase tracking-widest">What&apos;s happening in Houston civic life. Written so anyone can understand it.</p>
+        <h2 className="font-serif text-xl font-bold tracking-tight mb-1">Your guide to what&apos;s going on.</h2>
+        <p className="text-sm text-brand-muted mb-2 font-serif italic">Curated. Local. Updated daily.</p>
+        <p className="text-sm text-brand-muted mb-4 leading-relaxed max-w-[640px]">News. Analysis. Community stories. Explainers about how Houston works. Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you. Pick your perspective below.</p>
         <PersonaSelector />
       </div>
       <GuidePage

@@ -32,7 +32,7 @@ const en: Record<string, string> = {
   'nav.library': 'Library',
   'nav.knowledge_base': 'Knowledge Base',
   'nav.knowledge_galaxy': 'Knowledge Galaxy',
-  'nav.search_placeholder': 'Search...',
+  'nav.search_placeholder': 'What are you looking for?',
   'nav.zip_prompt': 'Start with your ZIP code',
 
   // Footer
@@ -189,9 +189,9 @@ const en: Record<string, string> = {
   'search.result': 'result',
   'search.results': 'results',
   'search.for': 'for',
-  'search.empty': 'Enter a search term to find content, services, officials, and more.',
-  'search.no_results': 'No results found for',
-  'search.try_different': 'Try different keywords or browse our categories:',
+  'search.empty': 'Nothing yet. Try a neighborhood name, an issue, or a person.',
+  'search.no_results': 'We didn\'t find that. Try fewer words, or search something nearby.',
+  'search.try_different': '',
   'search.tab_content': 'Content',
   'search.tab_services': 'Services',
   'search.tab_officials': 'Officials',
@@ -207,8 +207,11 @@ const en: Record<string, string> = {
   'search.intro': 'Explore everything the Community Exchange has gathered for Houston — from articles and services to elected officials and community organizations.',
 
   // Polling places page
-  'polling.title': 'Find Your Polling Place',
-  'polling.subtitle': 'Enter your address. Get your polling place, your hours, and everything you need to show up ready. No excuses. No surprises.',
+  'polling.hook': 'Voting is the one thing nobody can do for you.',
+  'polling.title': 'Find where to vote. Thirty seconds.',
+  'polling.subhead': 'Early voting. Election Day. Mail ballots. It\'s all here.',
+  'polling.subtitle': 'Enter your address. Get your polling place, your hours, and everything you need to show up ready.\n\nNo excuses. No surprises.',
+  'polling.cta': 'Find My Polling Place',
 
   // Card components
   'card.read_more': 'Read more',
@@ -592,7 +595,7 @@ const es: Record<string, string> = {
   'nav.library': 'Biblioteca',
   'nav.knowledge_base': 'Base de Conocimiento',
   'nav.knowledge_galaxy': 'Galaxia de Conocimiento',
-  'nav.search_placeholder': 'Buscar...',
+  'nav.search_placeholder': 'Que estas buscando?',
   'nav.zip_prompt': 'Comience con su código postal',
 
   // Footer
@@ -741,9 +744,9 @@ const es: Record<string, string> = {
   'search.result': 'resultado',
   'search.results': 'resultados',
   'search.for': 'para',
-  'search.empty': 'Ingrese un término de búsqueda para encontrar contenido, servicios, funcionarios y más.',
-  'search.no_results': 'No se encontraron resultados para',
-  'search.try_different': 'Pruebe con diferentes palabras clave o explore nuestras categorías:',
+  'search.empty': 'Nada aún. Pruebe con un vecindario, un tema o una persona.',
+  'search.no_results': 'No encontramos eso. Pruebe con menos palabras o busque algo cercano.',
+  'search.try_different': '',
   'search.tab_content': 'Contenido',
   'search.tab_services': 'Servicios',
   'search.tab_officials': 'Funcionarios',
@@ -759,8 +762,11 @@ const es: Record<string, string> = {
   'search.intro': 'Explore todo lo que el Community Exchange ha reunido para Houston — desde artículos y servicios hasta funcionarios electos y organizaciones comunitarias.',
 
   // Polling places page
-  'polling.title': 'Encuentre Su Lugar de Votación',
-  'polling.subtitle': 'Ingrese su código postal para encontrar lugares de votación cercanos.',
+  'polling.hook': 'Votar es lo único que nadie puede hacer por ti.',
+  'polling.title': 'Encuentra dónde votar. Treinta segundos.',
+  'polling.subhead': 'Votación anticipada. Día de elecciones. Boletas por correo. Todo está aquí.',
+  'polling.subtitle': 'Ingresa tu dirección. Obtén tu lugar de votación, tus horarios y todo lo que necesitas para llegar preparado.\n\nSin excusas. Sin sorpresas.',
+  'polling.cta': 'Encontrar Mi Lugar de Votación',
 
   // Card components
   'card.read_more': 'Leer más',
@@ -1144,7 +1150,7 @@ const vi: Record<string, string> = {
   'nav.library': 'Thư Viện',
   'nav.knowledge_base': 'Cơ Sở Kiến Thức',
   'nav.knowledge_galaxy': 'Thiên Hà Kiến Thức',
-  'nav.search_placeholder': 'Tìm kiếm...',
+  'nav.search_placeholder': 'Bạn đang tìm gì?',
   'nav.zip_prompt': 'Bắt đầu với mã bưu điện',
 
   // Footer
@@ -1293,9 +1299,9 @@ const vi: Record<string, string> = {
   'search.result': 'kết quả',
   'search.results': 'kết quả',
   'search.for': 'cho',
-  'search.empty': 'Nhập từ khóa để tìm nội dung, dịch vụ, quan chức và nhiều hơn nữa.',
-  'search.no_results': 'Không tìm thấy kết quả cho',
-  'search.try_different': 'Thử từ khóa khác hoặc duyệt danh mục:',
+  'search.empty': 'Chưa có gì. Thử tên khu phố, một vấn đề, hoặc một người.',
+  'search.no_results': 'Chúng tôi không tìm thấy. Thử ít từ hơn, hoặc tìm kiếm gần đó.',
+  'search.try_different': '',
   'search.tab_content': 'Nội Dung',
   'search.tab_services': 'Dịch Vụ',
   'search.tab_officials': 'Quan Chức',
@@ -1311,8 +1317,11 @@ const vi: Record<string, string> = {
   'search.intro': 'Khám phá mọi thứ Community Exchange đã thu thập cho Houston — từ bài viết và dịch vụ đến quan chức dân cử và tổ chức cộng đồng.',
 
   // Polling places page
-  'polling.title': 'Tìm Địa Điểm Bỏ Phiếu',
-  'polling.subtitle': 'Nhập mã bưu điện để tìm địa điểm bỏ phiếu gần bạn.',
+  'polling.hook': 'Bỏ phiếu là điều duy nhất không ai có thể làm thay bạn.',
+  'polling.title': 'Tìm nơi bỏ phiếu. Ba mươi giây.',
+  'polling.subhead': 'Bỏ phiếu sớm. Ngày bầu cử. Phiếu bầu qua thư. Tất cả ở đây.',
+  'polling.subtitle': 'Nhập địa chỉ của bạn. Nhận địa điểm bỏ phiếu, giờ mở cửa và mọi thứ bạn cần để sẵn sàng.\n\nKhông viện cớ. Không bất ngờ.',
+  'polling.cta': 'Tìm Địa Điểm Bỏ Phiếu',
 
   // Card components
   'card.read_more': 'Đọc thêm',

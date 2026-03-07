@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { PollingPlaceClient } from './PollingPlaceClient'
-import { PageHeader } from '@/components/exchange/PageHeader'
+import { PollingHero } from './PollingHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Find Your Polling Place',
-  description: 'Look up your polling place by ZIP code. Find early voting and Election Day locations in Houston.',
+  title: 'Find Where to Vote',
+  description: 'Find where to vote. Early voting, Election Day, and mail ballots — enter your address and get your polling place in thirty seconds.',
 }
 
 export default async function PollingPlacesPage() {
@@ -29,7 +29,7 @@ export default async function PollingPlacesPage() {
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: 'Polling Places' }]} />
-      <PageHeader titleKey="polling.title" subtitleKey="polling.subtitle" />
+      <PollingHero />
 
       {activeElection && (
         <div className="mb-10">

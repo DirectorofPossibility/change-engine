@@ -188,7 +188,7 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-12">
-      <h1 className="text-2xl font-bold text-brand-text mb-2">Settings</h1>
+      <h1 className="text-2xl font-bold text-brand-text mb-2">Your settings.</h1>
       <p className="text-sm text-brand-muted mb-8">Language, notifications, saved items, and account info — all in one place.</p>
 
       {message && (
@@ -236,6 +236,7 @@ export default function SettingsPage() {
         <h2 className="text-lg font-semibold text-brand-text">Profile</h2>
         <div>
           <label htmlFor="displayName" className="block text-sm font-medium text-brand-text mb-1">Display Name</label>
+
           <input
             id="displayName"
             type="text"
@@ -269,7 +270,8 @@ export default function SettingsPage() {
           />
         </div>
         <div>
-          <label htmlFor="language" className="block text-sm font-medium text-brand-text mb-1">Preferred Language</label>
+          <label htmlFor="language" className="block text-sm font-medium text-brand-text mb-1">Language</label>
+          <p className="text-xs text-brand-muted mb-2">English, Spanish, or Vietnamese. Switch any time.</p>
           <select
             id="language"
             value={language}
@@ -303,7 +305,8 @@ export default function SettingsPage() {
 
       {/* ── Password Change ── */}
       <form onSubmit={handleChangePassword} className="space-y-4">
-        <h2 className="text-lg font-semibold text-brand-text">Change Password</h2>
+        <h2 className="text-lg font-semibold text-brand-text">Account</h2>
+        <p className="text-xs text-brand-muted">Update your email or password.</p>
         <div>
           <label htmlFor="newPassword" className="block text-sm font-medium text-brand-text mb-1">New Password</label>
           <input

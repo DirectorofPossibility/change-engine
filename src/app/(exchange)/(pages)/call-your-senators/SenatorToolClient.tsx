@@ -327,12 +327,17 @@ export function SenatorToolClient() {
 
       {/* ── Hero ── */}
       <section className="max-w-[800px] mx-auto px-8 pt-16 pb-12 text-center border-b-2 border-brand-border">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Community Exchange</p>
+        <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Most people think their voice doesn&apos;t matter. Most people are wrong.</p>
         <h1 className="font-serif text-[clamp(2.5rem,5vw,3.5rem)] leading-[1.1] text-brand-text mb-5">
-          Call Your <span className="text-brand-accent">Senators</span>
+          Call your senators. <span className="text-brand-accent">It works.</span>
         </h1>
         <p className="text-lg leading-relaxed text-brand-muted max-w-[560px] mx-auto mb-8">
-          Congress is voting on issues that affect your daily life. A 2-minute call lets them know you&apos;re paying attention.
+          Two minutes. One call. Your senators have staff whose only job is to count opinions like yours.
+        </p>
+        <p className="text-base leading-relaxed text-brand-muted max-w-[560px] mx-auto mb-8">
+          You don&apos;t need a speech. You don&apos;t need to be an expert. You just need to say what you think and where you live.
+          <br /><br />
+          That&apos;s it. That&apos;s the whole thing.
         </p>
         <div className="flex justify-center flex-wrap gap-3">
           <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border-2 border-brand-border rounded-lg">
@@ -485,7 +490,7 @@ export function SenatorToolClient() {
                 <MapPin size={22} className="text-brand-text" />
               </div>
               <div>
-                <h3 className="font-serif text-lg text-brand-text">Find Your Senators</h3>
+                <h3 className="font-serif text-lg text-brand-text">Find My Senators</h3>
                 <p className="text-sm text-brand-muted">Enter your zip to get started</p>
               </div>
             </div>
@@ -670,6 +675,13 @@ export function SenatorToolClient() {
         </aside>
       </main>
 
+      {/* ── Closing ── */}
+      <section className="max-w-[800px] mx-auto px-8 py-12 text-center border-t-2 border-brand-border">
+        <p className="font-serif text-xl text-brand-muted italic">
+          Democracy doesn&apos;t run on autopilot. It runs on people like you picking up the phone.
+        </p>
+      </section>
+
       {/* ── Mobile CTA ── */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-brand-border p-4 lg:hidden z-50" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
         <a
@@ -684,7 +696,7 @@ export function SenatorToolClient() {
           className="flex items-center justify-center gap-3 w-full py-4 bg-brand-accent text-white text-base font-bold rounded-lg"
           style={{ boxShadow: '0 4px 12px rgba(199,91,42,0.3)' }}
         >
-          <Phone size={18} /> {senators.length > 0 ? 'Call ' + senators[0].n : 'Find Your Senators & Call'}
+          <Phone size={18} /> {senators.length > 0 ? 'Call ' + senators[0].n : 'Find My Senators'}
         </a>
       </div>
 

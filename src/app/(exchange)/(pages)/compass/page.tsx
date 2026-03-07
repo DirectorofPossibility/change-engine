@@ -8,8 +8,8 @@ import { THEMES } from '@/lib/constants'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'The Compass — Your Community Dashboard',
-  description: 'Your personalized community dashboard. Find services, officials, news, and opportunities near you.',
+  title: 'Civic Compass — Community Exchange',
+  description: 'Most people don\'t know who represents them. That\'s not their fault. It\'s a design problem. We fixed it.',
 }
 
 export default async function CompassPage() {

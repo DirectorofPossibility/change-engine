@@ -238,8 +238,11 @@ export function GoodThingsClient() {
             <FlowerOfLifeIcon size={18} color="#C75B2A" />
             <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-muted">A Community Practice</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">Three Good Things</h1>
-          <p className="text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base text-brand-muted mb-3 max-w-xl mx-auto">
+            The news can make you feel like everything is broken. It isn&apos;t.
+          </p>
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">Three good things. Every day.</h1>
+          <p className="text-lg text-brand-muted max-w-xl mx-auto leading-relaxed">
             Real stories. Local. Updated daily. Because the news isn&apos;t only bad.
           </p>
           {totalEntries > 0 && (
@@ -301,6 +304,21 @@ export function GoodThingsClient() {
       )}
 
       <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* Intro */}
+        <section className="mb-10">
+          <div className="prose prose-sm max-w-none text-brand-muted leading-relaxed space-y-4">
+            <p>
+              Every day in Houston, people are showing up. Nonprofits are solving hard problems. Neighbors are helping neighbors. Civic leaders are fighting for something.
+            </p>
+            <p>
+              Three Good Things is three of those stories — every day.
+            </p>
+            <p>
+              We&apos;re not ignoring the hard stuff. We&apos;re making sure the good stuff gets seen too.
+            </p>
+          </div>
+        </section>
+
         {!submitted ? (
           /* ── Form ── */
           <section ref={formRef} className="mb-12">
@@ -473,7 +491,7 @@ export function GoodThingsClient() {
             <div className="flex items-start gap-4">
               <FlowerOfLifeIcon size={36} className="flex-shrink-0 mt-1" />
               <div>
-                <h2 className="font-serif text-lg font-bold text-brand-text mb-2">Why Three Good Things?</h2>
+                <h2 className="font-serif text-lg font-bold text-brand-text mb-2">Why it matters</h2>
                 <p className="text-sm text-brand-muted leading-relaxed">
                   When people believe good things are possible, they&apos;re more likely to do something. Hope isn&apos;t soft. It&apos;s fuel.
                 </p>

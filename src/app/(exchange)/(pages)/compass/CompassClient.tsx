@@ -102,11 +102,11 @@ export function CompassClient({
                   <h1 className="text-3xl sm:text-4xl lg:text-display font-serif font-bold leading-tight">
                     The Compass
                   </h1>
-                  <p className="text-base text-brand-muted mt-2 font-serif italic">
-                    Where am I, and what&rsquo;s around me?
+                  <p className="text-base text-brand-muted mt-3 max-w-xl">
+                    Most people don&rsquo;t know who represents them. That&rsquo;s not their fault. It&rsquo;s a design problem. We fixed it.
                   </p>
-                  <p className="text-sm text-brand-muted-light mt-1">
-                    Enter your ZIP code to personalize your experience.
+                  <p className="text-sm text-brand-muted-light mt-2 max-w-xl leading-relaxed">
+                    Type in your Houston address. We&rsquo;ll show you every elected official who represents you — from City Council to Congress — with their contact info, committees, and recent activity. No account needed. No fine print. Just your address.
                   </p>
                 </>
               )}
@@ -116,9 +116,15 @@ export function CompassClient({
             <div className="lg:flex-shrink-0 lg:w-[300px]">
               <div className="bg-white rounded-xl border border-brand-border p-4 backdrop-blur-sm">
                 <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mb-2">
-                  {hasZip ? 'Change location' : 'Personalize'}
+                  {hasZip ? 'Change location' : 'Enter your address — street, city, zip'}
                 </p>
                 <ZipInput />
+                {!hasZip && (
+                  <p className="text-[11px] text-brand-muted mt-2">Enter your address above to find your representatives.</p>
+                )}
+                {hasZip && zipOfficials.length === 0 && nearbyServices.length === 0 && (
+                  <p className="text-[11px] text-red-600 mt-2">We couldn&rsquo;t find that address. Try adding your zip code.</p>
+                )}
               </div>
             </div>
           </div>

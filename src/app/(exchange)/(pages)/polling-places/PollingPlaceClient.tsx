@@ -137,7 +137,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
             disabled={loading || zip.length !== 5}
             className="px-6 py-3 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            {loading ? 'Searching...' : 'Find Polling Places'}
+            {loading ? 'Searching...' : 'Find My Polling Place'}
           </button>
         </form>
         <InfoBubble id={TOOLTIPS.polling_finder.id} text={TOOLTIPS.polling_finder.text} position="bottom" align="start" />

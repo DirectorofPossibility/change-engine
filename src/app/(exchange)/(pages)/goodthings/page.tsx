@@ -3,7 +3,7 @@ import { GoodThingsClient } from './GoodThingsClient'
 
 export const metadata: Metadata = {
   title: 'Three Good Things — Community Exchange',
-  description: 'Share three good things happening in your community. See positivity from across the map.',
+  description: 'Three good things. Every day. Real stories from Houston, updated daily. Because the news isn\'t only bad.',
 }
 
 export default function GoodThingsPage() {

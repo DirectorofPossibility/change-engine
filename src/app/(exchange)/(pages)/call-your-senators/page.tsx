@@ -4,7 +4,7 @@ import { SenatorToolClient } from './SenatorToolClient'
 
 export const metadata: Metadata = {
   title: 'Call Your Senators — Community Exchange',
-  description: 'Congress is voting on issues that affect your daily life. Find your senators, get a script, and make your voice heard in 2 minutes.',
+  description: 'Two minutes. One call. Your senators have staff whose only job is to count opinions like yours.',
 }
 
 export default function CallYourSenatorsPage() {

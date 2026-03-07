@@ -197,7 +197,7 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   time_commitment: {
     id: 'time_commitment',
     section: 'opportunities',
-    text: 'How much time this takes \u2014 one-time, weekly, monthly, or ongoing. No surprises.',
+    text: 'How much of your time this takes \u2014 one-time, weekly, monthly, or ongoing. No surprises.',
   },
   virtual_badge: {
     id: 'virtual_badge',
@@ -219,56 +219,56 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   population_income: {
     id: 'population_income',
     section: 'neighborhoods',
-    text: 'Data from the U.S. Census \u2014 used to understand what communities need and how resources get allocated.',
+    text: 'U.S. Census data \u2014 used to understand what communities need and how resources get distributed.',
   },
   geojson_boundaries: {
     id: 'geojson_boundaries',
     section: 'neighborhoods',
-    text: 'Map boundary data from the City of Houston Planning Department. Updated when official boundaries change.',
+    text: 'Map boundaries from the City of Houston Planning Department. Updated when official boundaries change.',
   },
 
   // ── XII. DETAIL PAGE WAYFINDER ──
   wayfinder_panel: {
     id: 'wayfinder_panel',
     section: 'detail',
-    text: 'See what\u2019s connected to what you\u2019re looking at \u2014 officials, services, organizations, policies, and news that share the same focus areas. Three hops out from any starting point.',
+    text: 'Everything connected to what you\u2019re looking at \u2014 officials, services, organizations, policies, and news that share the same focus areas. Three hops out from any starting point.',
   },
   focus_area_dots: {
     id: 'focus_area_dots',
     section: 'detail',
-    text: 'Focus areas are specific topics inside a pathway \u2014 like \u2018affordable housing\u2019 inside the Housing pathway. Tap any dot to explore everything tagged with it.',
+    text: 'Focus areas are specific topics inside a pathway. Tap any dot to explore everything tagged with it.',
   },
   engagement_tiers: {
     id: 'engagement_tiers',
     section: 'detail',
-    text: 'What\u2019s Happening: news and research. What You Can Do: services, events, and volunteer spots. Who\u2019s In Charge: your elected officials, policies, and the organizations behind them.',
+    text: 'Understand: learn what\u2019s happening.  Get Involved: take action.  Go Deeper: follow the systems that shape it.',
   },
   taxonomy_section: {
     id: 'taxonomy_section',
     section: 'detail',
-    text: 'How this item is classified \u2014 by pathway, focus area, UN Sustainable Development Goal, and federal taxonomy codes. Useful for researchers and partners.',
+    text: 'How this item is classified \u2014 pathway, focus area, UN goals, and federal codes. Useful for researchers and partners.',
   },
   suggest_edit: {
     id: 'suggest_edit',
     section: 'detail',
-    text: 'See something outdated or wrong? Let us know. Community members help keep this information accurate.',
+    text: 'See something wrong or outdated? Tell us. Community members help keep this accurate.',
   },
 
   // ── XIII. USER ACCOUNT ──
   impact_points: {
     id: 'impact_points',
     section: 'account',
-    text: 'Points you earn by completing learning modules, taking civic action, and engaging with community resources.',
+    text: 'Points earned by completing learning modules, taking civic action, and engaging with community resources.',
   },
   badges: {
     id: 'badges',
     section: 'account',
-    text: 'Earned by finishing learning paths, attending events, and showing up. Each badge marks something real you did.',
+    text: 'Earned by finishing learning paths, attending events, and showing up. Each one marks something real you did.',
   },
   role_badge: {
     id: 'role_badge',
     section: 'account',
-    text: 'Member: browse and learn. Neighbor: submit resources and track your activity. Partner: manage your organization, post events, and access analytics.',
+    text: 'Member: browse and learn.  Neighbor: submit resources and track activity.  Partner: manage your organization, post events, access analytics.',
   },
   gamification_toggle: {
     id: 'gamification_toggle',
@@ -285,7 +285,7 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   pathway_color_bar: {
     id: 'pathway_color_bar',
     section: 'cards',
-    text: 'The color shows which pathway this content belongs to. Hover to see the pathway name.',
+    text: 'The color shows which pathway this belongs to. Hover to see the name.',
   },
   content_type_badge: {
     id: 'content_type_badge',
@@ -295,11 +295,11 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   source_attribution_card: {
     id: 'source_attribution_card',
     section: 'cards',
-    text: 'The organization that originally created this content. We link to them \u2014 we don\u2019t replace them.',
+    text: 'The organization that created this. We link to them. We don\u2019t replace them.',
   },
   translation_indicator: {
     id: 'translation_indicator',
     section: 'cards',
-    text: 'This content is available in your selected language.',
+    text: 'This is available in your selected language.',
   },
 }

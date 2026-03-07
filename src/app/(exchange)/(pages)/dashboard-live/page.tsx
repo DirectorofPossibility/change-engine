@@ -9,7 +9,7 @@ export const revalidate = 900 // 15 minutes
 
 export const metadata: Metadata = {
   title: 'Houston Live Dashboard — Community Exchange',
-  description: 'Real-time air quality, weather alerts, and bayou water levels for Houston, TX.',
+  description: 'Houston civic life — right now. Real data. Updated every morning. No spin.',
 }
 
 export default async function LiveDashboardPage() {
@@ -26,10 +26,51 @@ export default async function LiveDashboardPage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
           <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-sm text-brand-muted">Live data</span>
+          <span className="text-sm text-brand-muted">You can&apos;t shape what you can&apos;t see.</span>
         </div>
-        <h1 className="text-3xl font-bold text-brand-text">Houston Civic Dashboard</h1>
-        <p className="text-brand-muted mt-1">Real-time conditions for Harris County</p>
+        <h1 className="text-3xl font-bold text-brand-text">Houston civic life — right now.</h1>
+        <p className="text-brand-muted mt-1">Real data. Updated every morning. No spin.</p>
+      </div>
+
+      {/* Intro */}
+      <div className="mb-10 space-y-4 text-sm text-brand-muted leading-relaxed max-w-3xl">
+        <p>
+          Not a snapshot from last year. Not a press release. Live data from the sources that matter — city, county, state, and federal — updated before you wake up.
+        </p>
+        <p>
+          City Council votes. County decisions. State bills moving through committees. Federal dollars coming into Houston.
+        </p>
+        <p>
+          All of it. Plain language. One place.
+        </p>
+      </div>
+
+      {/* What You're Looking At */}
+      <div className="mb-10">
+        <h2 className="text-lg font-semibold text-brand-text mb-3">What you&apos;re looking at</h2>
+        <ul className="space-y-2 text-sm text-brand-muted">
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 flex-shrink-0" />
+            <span><span className="font-medium text-brand-text">Legislative activity</span> — What&apos;s moving, what passed, what failed.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 flex-shrink-0" />
+            <span><span className="font-medium text-brand-text">Civic organizations</span> — Who&apos;s active and what they&apos;re working on.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 flex-shrink-0" />
+            <span><span className="font-medium text-brand-text">Community resources</span> — Services available right now, by neighborhood.</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 flex-shrink-0" />
+            <span><span className="font-medium text-brand-text">Ways to show up</span> — Meetings, hearings, volunteer shifts, events.</span>
+          </li>
+        </ul>
+      </div>
+
+      {/* Data sync note */}
+      <div className="mb-8 text-xs text-brand-muted-light bg-brand-bg rounded-lg px-4 py-3 border border-brand-border max-w-2xl">
+        Data syncs every morning between 7 and 10 AM Central. Check back after 10 if something looks off.
       </div>
 
       <CivicDashboardClient

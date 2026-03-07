@@ -29,8 +29,7 @@ export function SearchResultsHeader({ query, totalCount }: SearchResultsHeaderPr
 
       {totalCount === 0 && (
         <div className="text-center py-12">
-          <p className="text-brand-muted mb-4">{t('search.no_results')} &ldquo;{query}&rdquo;</p>
-          <p className="text-sm text-brand-muted mb-6">{t('search.try_different')}</p>
+          <p className="text-brand-muted mb-6">{t('search.no_results')}</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/help" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('nav.help')}</Link>
             <Link href="/services" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg">{t('search.find_services')}</Link>
