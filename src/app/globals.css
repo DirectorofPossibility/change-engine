@@ -144,3 +144,19 @@
 .ticker-scroll:hover {
   animation-play-state: paused;
 }
+
+/* Announcement scroll + 5% pulse */
+@keyframes announcement-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes announcement-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+.announcement-scroll {
+  animation: announcement-scroll 20s linear infinite, announcement-pulse 3s ease-in-out infinite;
+}
+.announcement-scroll:hover {
+  animation-play-state: paused;
+}

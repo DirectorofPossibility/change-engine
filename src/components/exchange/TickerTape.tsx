@@ -110,16 +110,24 @@ export function TickerTape({ election }: TickerTapeProps) {
           )}
         </div>
 
-        {/* Right side: announcement pinned at 50% */}
+        {/* Right side: scrolling announcement at 50% */}
         {electionItem && (
           <Link
             href={electionItem.href || '/elections'}
-            className="w-1/2 flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 border-l border-brand-border hover:bg-brand-border/30 transition-colors"
+            className="w-1/2 flex-shrink-0 overflow-hidden border-l border-brand-border hover:bg-brand-border/30 transition-colors"
           >
-            <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent whitespace-nowrap truncate">
-              {electionItem.text}
-            </span>
+            <div className="announcement-scroll flex items-center gap-8 whitespace-nowrap py-2.5 px-4">
+              {[0, 1].map(function (copy) {
+                return (
+                  <span key={copy} className="inline-flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
+                    <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent">
+                      {electionItem.text}
+                    </span>
+                  </span>
+                )
+              })}
+            </div>
           </Link>
         )}
       </div>
