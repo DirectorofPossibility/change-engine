@@ -101,16 +101,31 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
   const [currentDate, setCurrentDate] = useState(startOfDay(new Date()))
   const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set(['event', 'civic', 'opportunity', 'content']))
   const [activePathway, setActivePathway] = useState<string | null>(initialPathway || null)
+  const [activeEventType, setActiveEventType] = useState<string | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<CalendarItem | null>(null)
 
   // Filter items
+  // Unique event types for filter chips
+  const eventTypes = useMemo(function () {
+    const types = new Map<string, number>()
+    for (const item of items) {
+      const t = item.eventType || CATEGORY_CONFIG[item.category]?.label || 'Other'
+      types.set(t, (types.get(t) || 0) + 1)
+    }
+    return Array.from(types.entries()).sort(function (a, b) { return b[1] - a[1] })
+  }, [items])
+
   const filtered = useMemo(function () {
     return items.filter(function (item) {
       if (!activeCategories.has(item.category)) return false
       if (activePathway && item.pathway !== activePathway) return false
+      if (activeEventType) {
+        const t = item.eventType || CATEGORY_CONFIG[item.category]?.label || 'Other'
+        if (t !== activeEventType) return false
+      }
       return true
     })
-  }, [items, activeCategories, activePathway])
+  }, [items, activeCategories, activePathway, activeEventType])
 
   // Map items to dates for quick lookup
   const dateMap = useMemo(function () {
@@ -230,6 +245,33 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
           )
         })}
       </div>
+
+      {/* Event type filter */}
+      {eventTypes.length > 1 && (
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted self-center mr-1">Type</span>
+          <button
+            onClick={function () { setActiveEventType(null) }}
+            className={'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors border ' +
+              (!activeEventType ? 'bg-brand-text text-white border-brand-text' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
+          >
+            All
+          </button>
+          {eventTypes.map(function ([type, count]) {
+            const active = activeEventType === type
+            return (
+              <button
+                key={type}
+                onClick={function () { setActiveEventType(active ? null : type) }}
+                className={'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors border ' +
+                  (active ? 'bg-brand-accent text-white border-brand-accent' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
+              >
+                {type} ({count})
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {/* Pathway filter */}
       <div className="flex flex-wrap gap-2 mb-6">

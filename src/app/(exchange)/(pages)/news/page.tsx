@@ -120,6 +120,10 @@ export default async function NewsPage({
       <div className="border-b-2 border-brand-text">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
           <Breadcrumb items={[{ label: 'News Stand' }]} />
+          <Link href="/centers/learning" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#3182ce' }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#3182ce' }} />
+            Learning Center
+          </Link>
           <h1 className="font-serif text-5xl sm:text-6xl font-bold text-brand-text tracking-tight mt-2">
             The News Stand
           </h1>

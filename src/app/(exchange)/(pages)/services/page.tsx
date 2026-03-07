@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ServicesClient } from './ServicesClient'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
@@ -27,6 +28,12 @@ export default async function ServicesPage() {
 
   return (
     <div>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <Link href="/centers/resources" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#d69e2e' }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#d69e2e' }} />
+          Resource Center
+        </Link>
+      </div>
       <IndexPageHero
         color="#38a169"
         pattern="flower"

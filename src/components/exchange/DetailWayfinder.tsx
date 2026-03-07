@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { THEMES } from '@/lib/constants'
+import { THEMES, CENTERS, CENTER_COLORS } from '@/lib/constants'
 import { getUIStrings } from '@/lib/i18n'
 import { cookies } from 'next/headers'
 import {
@@ -277,6 +277,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               <BookOpen size={15} className="text-amber-600" />
               <span className="text-sm font-medium text-brand-text">{t('wayfinder.understand')}</span>
               <span className="text-xs bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded-full">{understandCount}</span>
+              <Link href="/centers/learning" className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: CENTER_COLORS.Learning }}>
+                Learning
+              </Link>
             </div>
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
@@ -327,6 +330,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               <Heart size={15} className="text-green-600" />
               <span className="text-sm font-medium text-brand-text">{t('wayfinder.get_involved')}</span>
               <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded-full">{involvedCount}</span>
+              <Link href="/centers/action" className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: CENTER_COLORS.Action }}>
+                Action
+              </Link>
             </div>
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>
@@ -398,6 +404,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               <Scale size={15} className="text-blue-600" />
               <span className="text-sm font-medium text-brand-text">{t('wayfinder.go_deeper')}</span>
               <span className="text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full">{deeperCount}</span>
+              <Link href="/centers/accountability" className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: CENTER_COLORS.Accountability }}>
+                Accountability
+              </Link>
             </div>
             <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
           </summary>

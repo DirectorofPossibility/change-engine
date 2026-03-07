@@ -52,7 +52,7 @@ async function geocodeZip(zip: string): Promise<{ lat: number; lng: number; city
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { thing_1, thing_2, thing_3, zip_code, email } = body
+    const { thing_1, thing_2, thing_3, zip_code, email, display_name } = body
 
     if (!thing_1?.trim() || !thing_2?.trim() || !thing_3?.trim()) {
       return NextResponse.json({ error: 'All three good things are required' }, { status: 400 })
@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
         thing_2: thing_2.trim(),
         thing_3: thing_3.trim(),
         zip_code: zip_code.trim(),
+        display_name: display_name?.trim() || null,
         email: email?.trim() || null,
         latitude: geo?.lat || null,
         longitude: geo?.lng || null,
@@ -97,7 +98,7 @@ export async function GET() {
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
     const res = await fetch(
-      url + '/rest/v1/good_things?select=id,thing_1,thing_2,thing_3,zip_code,city,state,latitude,longitude,created_at&order=created_at.desc&limit=500',
+      url + '/rest/v1/good_things?select=id,thing_1,thing_2,thing_3,zip_code,city,state,latitude,longitude,display_name,created_at&order=created_at.desc&limit=500',
       {
         headers: { apikey: key, Authorization: 'Bearer ' + key },
         next: { revalidate: 0 },

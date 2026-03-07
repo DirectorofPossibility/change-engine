@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -37,6 +38,12 @@ export default async function PoliciesPage() {
 
   return (
     <div>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#805ad5' }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#805ad5' }} />
+          Accountability Center
+        </Link>
+      </div>
       <IndexPageHero
         color="#3182ce"
         pattern="vesica"

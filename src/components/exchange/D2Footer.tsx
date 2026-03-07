@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
+import { TipsToggle } from './TipsToggle'
 
 const DISCOVER = [
   { label: 'Civic Compass', href: '/compass' },
@@ -155,6 +156,8 @@ export function D2Footer() {
               <Link href="/terms" className="hover:text-brand-accent transition-colors">Terms</Link>
               <Link href="/accessibility" className="hover:text-brand-accent transition-colors">Accessibility</Link>
               <Link href="/help" className="hover:text-brand-accent transition-colors">User Manual</Link>
+              <span className="text-brand-border">|</span>
+              <TipsToggle />
               <span className="text-brand-border">|</span>
               <span>English &middot; Espa&ntilde;ol &middot; Ti&#7871;ng Vi&#7879;t</span>
             </div>

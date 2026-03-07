@@ -4,6 +4,13 @@ import { useState, useEffect } from 'react'
 import { X, Info } from 'lucide-react'
 
 const STORAGE_KEY = 'ce-dismissed-tips'
+const TOGGLE_KEY = 'ce-tips-enabled'
+
+/** Check if tips are globally enabled (default: true) */
+function areTipsEnabled(): boolean {
+  if (typeof window === 'undefined') return false
+  return localStorage.getItem(TOGGLE_KEY) !== 'false'
+}
 
 function getDismissed(): string[] {
   if (typeof window === 'undefined') return []
@@ -35,12 +42,22 @@ export function InfoBubble({ id, text, position = 'bottom', align = 'start', acc
 
   useEffect(function () {
     const timer = setTimeout(function () {
-      if (!getDismissed().includes(id)) {
+      if (areTipsEnabled() && !getDismissed().includes(id)) {
         setVisible(true)
       }
     }, 300)
     return function () { clearTimeout(timer) }
   }, [id])
+
+  // Listen for global toggle-off
+  useEffect(function () {
+    function handleToggle(e: Event) {
+      const detail = (e as CustomEvent).detail
+      if (detail && !detail.enabled) setVisible(false)
+    }
+    window.addEventListener('ce-tips-toggle', handleToggle)
+    return function () { window.removeEventListener('ce-tips-toggle', handleToggle) }
+  }, [])
 
   if (!visible) return null
 
@@ -108,3 +125,4 @@ export function resetAllTips() {
     localStorage.removeItem(STORAGE_KEY)
   }
 }
+

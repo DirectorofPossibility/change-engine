@@ -30,6 +30,12 @@ export default async function OpportunitiesPage() {
 
   return (
     <div>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        <Link href="/centers/action" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#38a169' }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#38a169' }} />
+          Action Center
+        </Link>
+      </div>
       <IndexPageHero
         color="#38a169"
         pattern="tripod"

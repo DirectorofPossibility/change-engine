@@ -16,7 +16,7 @@
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { PAGE_INTROS } from '@/lib/constants'
+import { PAGE_INTROS, CENTER_COLORS } from '@/lib/constants'
 import { searchAll } from '@/lib/data/search'
 import { PageHero } from '@/components/exchange/PageHero'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
@@ -75,14 +75,14 @@ export default async function SearchPage({
 
   // ── Tab definitions ──
   const tabs = [
-    { key: 'content', labelKey: 'search.tab_content', count: results.content.length },
-    { key: 'services', labelKey: 'search.tab_services', count: results.services.length },
-    { key: 'officials', labelKey: 'search.tab_officials', count: results.officials.length },
-    { key: 'organizations', labelKey: 'search.tab_organizations', count: results.organizations.length },
-    { key: 'policies', labelKey: 'search.tab_policies', count: results.policies.length },
-    { key: 'situations', labelKey: 'search.tab_help', count: results.situations.length },
-    { key: 'resources', labelKey: 'search.tab_resources', count: results.resources.length },
-    { key: 'paths', labelKey: 'search.tab_learning', count: results.paths.length },
+    { key: 'content', labelKey: 'search.tab_content', count: results.content.length, center: 'Learning' },
+    { key: 'services', labelKey: 'search.tab_services', count: results.services.length, center: 'Resource' },
+    { key: 'officials', labelKey: 'search.tab_officials', count: results.officials.length, center: 'Accountability' },
+    { key: 'organizations', labelKey: 'search.tab_organizations', count: results.organizations.length, center: 'Resource' },
+    { key: 'policies', labelKey: 'search.tab_policies', count: results.policies.length, center: 'Accountability' },
+    { key: 'situations', labelKey: 'search.tab_help', count: results.situations.length, center: 'Action' },
+    { key: 'resources', labelKey: 'search.tab_resources', count: results.resources.length, center: 'Action' },
+    { key: 'paths', labelKey: 'search.tab_learning', count: results.paths.length, center: 'Learning' },
   ]
 
   // ── Per-tab result sections ──

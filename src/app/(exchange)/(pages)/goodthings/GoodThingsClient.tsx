@@ -21,6 +21,7 @@ interface GoodThingEntry {
   state: string | null
   latitude: number | null
   longitude: number | null
+  display_name: string | null
   created_at: string
 }
 
@@ -30,6 +31,7 @@ export function GoodThingsClient() {
   const [thing1, setThing1] = useState('')
   const [thing2, setThing2] = useState('')
   const [thing3, setThing3] = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [zip, setZip] = useState('')
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -67,6 +69,7 @@ export function GoodThingsClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           thing_1: thing1, thing_2: thing2, thing_3: thing3,
+          display_name: displayName.trim() || null,
           zip_code: zip, email: showEmail ? email : null,
         }),
       })
@@ -87,7 +90,7 @@ export function GoodThingsClient() {
 
   function resetForm() {
     setThing1(''); setThing2(''); setThing3('')
-    setZip(''); setEmail(''); setShowEmail(false)
+    setDisplayName(''); setZip(''); setEmail(''); setShowEmail(false)
     setSubmitted(false); setLastEntry(null)
     setTimeout(function () {
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -216,8 +219,9 @@ export function GoodThingsClient() {
   // Build ticker items from all entries
   const tickerItems = entries.slice(0, 50).flatMap(function (entry) {
     const loc = [entry.city, entry.state].filter(Boolean).join(', ') || entry.zip_code
+    const who = entry.display_name || loc
     return [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
-      return { text: thing, color: THING_COLORS[i], loc: loc }
+      return { text: thing, color: THING_COLORS[i], loc: who }
     })
   })
 
@@ -333,6 +337,20 @@ export function GoodThingsClient() {
 
                   <div>
                     <label className="flex items-center gap-2 text-sm font-semibold text-brand-text mb-2">
+                      Your Name
+                    </label>
+                    <input
+                      type="text" value={displayName}
+                      onChange={function (e) { setDisplayName(e.target.value) }}
+                      placeholder="First name, Last initial (e.g. Maria T.)"
+                      className="w-full max-w-sm px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all"
+                      maxLength={50}
+                    />
+                    <p className="text-[11px] text-brand-muted mt-1">Optional. Shown with your entry.</p>
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-2 text-sm font-semibold text-brand-text mb-2">
                       <MapPin size={16} className="text-brand-accent" /> Your ZIP Code
                     </label>
                     <input
@@ -435,6 +453,8 @@ export function GoodThingsClient() {
                         )
                       })}
                       <div className="flex items-center gap-2 mt-2 pt-2 border-t border-brand-border/60 text-[11px] text-brand-muted">
+                        {entry.display_name && <span className="font-medium text-brand-text">{entry.display_name}</span>}
+                        {entry.display_name && <span>&middot;</span>}
                         <MapPin size={10} />
                         <span>{[entry.city, entry.state].filter(Boolean).join(', ') || 'ZIP ' + entry.zip_code}</span>
                         <span className="ml-auto">{timeAgo}</span>

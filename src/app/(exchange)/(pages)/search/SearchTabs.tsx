@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import { useTranslation } from '@/lib/use-translation'
+import { CENTER_COLORS } from '@/lib/constants'
 
 interface TabDef {
   key: string
   labelKey: string
   count: number
+  center?: string
 }
 
 export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Record<string, React.ReactNode> }) {
@@ -31,6 +33,7 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
               onClick={function () { setActive(tab.key) }}
               className={'px-3 py-1.5 text-sm rounded-lg transition-colors ' + (active === tab.key ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-text hover:bg-brand-bg')}
             >
+              <span className="inline-block w-1.5 h-1.5 rounded-full mr-1.5 flex-shrink-0" style={{ backgroundColor: CENTER_COLORS[tab.center || ''] || '#6B6560' }} />
               {t(tab.labelKey)} ({tab.count})
             </button>
           )
@@ -43,7 +46,14 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
           return (
             <section key={tab.key}>
               {active === 'all' && (
-                <h2 className="text-xl font-bold text-brand-text mb-4">{t(tab.labelKey)} ({tab.count})</h2>
+                <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
+                  {tab.center && (
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded" style={{ color: CENTER_COLORS[tab.center] || '#6B6560', backgroundColor: (CENTER_COLORS[tab.center] || '#6B6560') + '15' }}>
+                      {tab.center}
+                    </span>
+                  )}
+                  {t(tab.labelKey)} ({tab.count})
+                </h2>
               )}
               {children[tab.key]}
             </section>
