@@ -9,6 +9,7 @@ import {
 } from '@/components/exchange/FlowerIcons'
 import { ContentShelf, type ShelfItem } from '@/components/exchange/ContentShelf'
 import { GoodThingsWidget } from '@/components/exchange/GoodThingsWidget'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 
 const ICONS: Record<string, typeof SeekerIcon> = {
   seeker: SeekerIcon,
@@ -258,6 +259,9 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                 })}
               </div>
             </div>
+
+            {/* Featured promotion */}
+            <FeaturedPromo variant="card" />
 
             {/* Good Things widget */}
             <GoodThingsWidget variant="card" />

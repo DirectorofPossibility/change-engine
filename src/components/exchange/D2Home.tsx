@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { FOLWatermark } from './FOLWatermark'
+import { FeaturedPromo } from './FeaturedPromo'
 
 const QUICK_ACCESS = [
   {
@@ -250,6 +251,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
             )
           })}
         </div>
+      </div>
+
+      {/* ── FEATURED PROMO ── */}
+      <div className="max-w-[1200px] mx-auto px-8">
+        <FeaturedPromo variant="banner" />
       </div>
 
       {/* ── GAP STATS ── */}
