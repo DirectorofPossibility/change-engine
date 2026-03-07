@@ -80,44 +80,47 @@ export function TickerTape({ election }: TickerTapeProps) {
   return (
     <div className="bg-brand-bg-alt border-y border-brand-border overflow-hidden relative">
       <div className="flex items-center">
-        {/* Fixed label */}
-        <div className="flex-shrink-0 bg-brand-bg-alt z-10 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border">
-          <FlowerOfLifeIcon size={14} color="#d69e2e" />
-          <Link href="/goodthings" className="font-serif font-bold text-xs text-brand-text hover:text-brand-accent transition-colors whitespace-nowrap">
-            Three Good Things
-          </Link>
+        {/* Left side: label + scrolling ticker (50% when announcement present, 100% otherwise) */}
+        <div className={electionItem ? 'flex items-center w-1/2 min-w-0' : 'flex items-center flex-1 min-w-0'}>
+          {/* Fixed label */}
+          <div className="flex-shrink-0 bg-brand-bg-alt z-10 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border">
+            <FlowerOfLifeIcon size={14} color="#d69e2e" />
+            <Link href="/goodthings" className="font-serif font-bold text-xs text-brand-text hover:text-brand-accent transition-colors whitespace-nowrap">
+              Three Good Things
+            </Link>
+          </div>
+
+          {/* Scrolling ticker */}
+          {doubled.length > 0 && (
+            <div className="overflow-hidden flex-1 min-w-0" ref={containerRef}>
+              <div className="ticker-scroll flex items-center gap-6 whitespace-nowrap py-2.5 pr-6">
+                {doubled.map(function (item, i) {
+                  return (
+                    <span key={i} className="inline-flex items-center gap-2 text-[13px]">
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                      <span className="text-brand-text italic">&ldquo;{item.text}&rdquo;</span>
+                      {item.attribution && (
+                        <span className="text-brand-muted-light text-[11px]">&mdash; {item.attribution}</span>
+                      )}
+                    </span>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Election pinned item */}
+        {/* Right side: announcement pinned at 50% */}
         {electionItem && (
           <Link
             href={electionItem.href || '/elections'}
-            className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border hover:bg-brand-border/30 transition-colors"
+            className="w-1/2 flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 border-l border-brand-border hover:bg-brand-border/30 transition-colors"
           >
             <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent whitespace-nowrap">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent whitespace-nowrap truncate">
               {electionItem.text}
             </span>
           </Link>
-        )}
-
-        {/* Scrolling ticker */}
-        {doubled.length > 0 && (
-          <div className="overflow-hidden flex-1" ref={containerRef}>
-            <div className="ticker-scroll flex items-center gap-6 whitespace-nowrap py-2.5 pr-6">
-              {doubled.map(function (item, i) {
-                return (
-                  <span key={i} className="inline-flex items-center gap-2 text-[13px]">
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                    <span className="text-brand-text italic">&ldquo;{item.text}&rdquo;</span>
-                    {item.attribution && (
-                      <span className="text-brand-muted-light text-[11px]">&mdash; {item.attribution}</span>
-                    )}
-                  </span>
-                )
-              })}
-            </div>
-          </div>
         )}
       </div>
     </div>
