@@ -78,104 +78,77 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
   return (
     <div>
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ background: '#F8F9FC' }}>
+      <section className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
+        {/* Noise texture */}
         <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: [
-            'radial-gradient(circle, rgba(44,44,44,0.04) 1px, transparent 1px)',
-            'radial-gradient(circle at 85% 15%, rgba(199,91,42,0.06) 0%, transparent 40%)',
-            'radial-gradient(circle at 10% 85%, rgba(128,90,213,0.04) 0%, transparent 40%)',
-          ].join(', '),
-          backgroundSize: '20px 20px, 100% 100%, 100% 100%',
+          backgroundImage: 'radial-gradient(circle, rgba(44,44,44,0.03) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
         }} />
 
-        {/* FOL watermark top-right */}
+        {/* MASSIVE FOL — the signature element */}
         <img
           src="/images/fol/flower-full.svg"
           alt="" aria-hidden="true"
-          className="absolute -top-[100px] -right-[100px] w-[500px] h-[500px] pointer-events-none opacity-[0.04] z-0"
+          className="absolute pointer-events-none z-0 animate-fol-pulse"
+          style={{ width: '800px', height: '800px', top: '-120px', right: '-160px', opacity: 0.07 }}
+        />
+        {/* Secondary FOL layer — offset, counter-rotate */}
+        <img
+          src="/images/fol/seed-of-life.svg"
+          alt="" aria-hidden="true"
+          className="absolute pointer-events-none z-0"
+          style={{ width: '400px', height: '400px', bottom: '-80px', left: '-80px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
         />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-16 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-10 items-center">
-          {/* Left: text */}
-          <div>
-            <h1 className="font-serif text-[clamp(2.8rem,5.5vw,4.2rem)] leading-[1.05] tracking-tight mb-5 text-brand-text">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-20 lg:py-24">
+          <div className="max-w-2xl">
+            <h1 className="font-serif text-[clamp(3rem,6vw,5rem)] leading-[1.0] tracking-tight mb-6 text-brand-text">
               You care.<br />
               Now{' '}
-              <span className="text-brand-accent">
-                <span className="font-hand text-[1.15em] font-bold">find</span>
-                <br />your place.
-              </span>
+              <span className="text-brand-accent">find<br />your place.</span>
             </h1>
-            <p className="text-lg leading-relaxed text-brand-muted mb-6 max-w-xl">
+            <p className="text-xl leading-relaxed text-brand-muted mb-8 max-w-lg">
               Most people want to be part of something.
               They just don&apos;t know where to start.{' '}
               <strong className="text-brand-text">That&apos;s not a motivation problem. It&apos;s a navigation problem.</strong>
             </p>
 
-            <div className="flex items-center gap-3 max-w-[480px] px-4 py-4 bg-white border-2 border-brand-text rounded-xl mb-4"
-              style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+            <div className="flex items-center gap-3 max-w-[520px] px-5 py-5 bg-white border-2 border-brand-text rounded-xl mb-6"
+              style={{ boxShadow: '4px 4px 0 #D5D0C8' }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-              <span className="text-sm text-brand-muted-light">Enter your zip code or address</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+              <span className="text-brand-muted">Enter your zip code or address</span>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-sm font-semibold">
-              <Link href="/compass" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
+            <div className="flex flex-wrap gap-3">
+              <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
                 Take the quiz
               </Link>
-              <Link href="/search" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
+              <Link href="/search" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
                 Search
               </Link>
-              <Link href="/calendar" className="px-3 py-1.5 rounded-lg border-[1.5px] border-brand-border bg-white hover:border-brand-accent hover:text-brand-accent transition-colors">
+              <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
                 What&apos;s happening
               </Link>
             </div>
-          </div>
 
-          {/* Right: Photo collage */}
-          <div className="relative h-[400px] hidden lg:block">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              <img
-                src="/images/fol/flower-full.svg"
-                alt="" aria-hidden="true"
-                className="w-[380px] h-[380px] opacity-[0.06]"
-              />
+            {/* Stats row */}
+            <div className="flex items-center gap-6 mt-10">
+              <Link href="/services" className="group">
+                <span className="block text-[36px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.resources || 0).toLocaleString()}</span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">resources</span>
+              </Link>
+              <div className="w-px h-10 bg-brand-border" />
+              <Link href="/organizations" className="group">
+                <span className="block text-[36px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(organizations || 0).toLocaleString()}</span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">organizations</span>
+              </Link>
+              <div className="w-px h-10 bg-brand-border" />
+              <Link href="/officials" className="group">
+                <span className="block text-[36px] font-black text-brand-accent leading-none group-hover:scale-105 transition-transform">{(stats.officials || 0).toLocaleString()}</span>
+                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">officials</span>
+              </Link>
             </div>
-
-            <div
-              className="absolute w-[280px] h-[200px] rounded-[10px] border-[3px] border-white overflow-hidden z-[2]"
-              style={{ top: 0, left: 30, transform: 'rotate(-3deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
-            >
-              <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/community-meeting.jpg" alt="Community meeting in Houston" className="w-full h-full object-cover" />
-            </div>
-            <div
-              className="absolute w-[190px] h-[140px] rounded-[10px] border-[3px] border-white overflow-hidden z-[1]"
-              style={{ top: 140, left: -10, transform: 'rotate(4deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
-            >
-              <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/volunteers.jpg" alt="Volunteers working together" className="w-full h-full object-cover" />
-            </div>
-            <div
-              className="absolute w-[250px] h-[180px] rounded-[10px] border-[3px] border-white overflow-hidden z-[3]"
-              style={{ top: 180, right: 0, transform: 'rotate(-1.5deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
-            >
-              <img src="https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial/town-hall.jpg" alt="Town hall civic engagement" className="w-full h-full object-cover" />
-            </div>
-
-            <div className="absolute w-[60px] h-[20px] rounded-sm z-[6]" style={{ top: 5, left: 140, transform: 'rotate(-3deg)', background: 'rgba(199,91,42,0.15)' }} />
-            <div className="absolute w-[60px] h-[20px] rounded-sm z-[6]" style={{ bottom: 170, right: 80, transform: 'rotate(6deg)', background: 'rgba(199,91,42,0.15)' }} />
-
-            <div className="absolute z-[6] font-hand text-sm font-bold text-white px-3 py-1.5 rounded-full" style={{ top: 30, right: 10, transform: 'rotate(8deg)', background: '#C75B2A', boxShadow: '2px 2px 0 rgba(0,0,0,0.15)' }}>
-              New
-            </div>
-
-            <Link href="/services" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ bottom: 20, left: 0, boxShadow: '3px 3px 0 #D5D0C8' }}>
-              <span className="block text-[28px] font-black text-brand-accent leading-none">{(stats.resources || 0).toLocaleString()}</span>
-              resources
-            </Link>
-            <Link href="/organizations" className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3.5 py-2 font-mono text-[10px] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200" style={{ top: 60, right: -20, boxShadow: '3px 3px 0 #D5D0C8' }}>
-              <span className="block text-[28px] font-black text-brand-accent leading-none">{(organizations || 0).toLocaleString()}</span>
-              organizations
-            </Link>
           </div>
         </div>
       </section>

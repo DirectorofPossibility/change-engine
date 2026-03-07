@@ -1,16 +1,6 @@
 import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 
-const PATHWAYS = [
-  { name: 'Our Health', href: '/pathways/our-health', color: '#e53e3e' },
-  { name: 'Our Families', href: '/pathways/our-families', color: '#dd6b20' },
-  { name: 'Our Neighborhood', href: '/pathways/our-neighborhood', color: '#d69e2e' },
-  { name: 'Our Voice', href: '/pathways/our-voice', color: '#38a169' },
-  { name: 'Our Money', href: '/pathways/our-money', color: '#3182ce' },
-  { name: 'Our Planet', href: '/pathways/our-planet', color: '#319795' },
-  { name: 'The Bigger We', href: '/pathways/the-bigger-we', color: '#805ad5' },
-]
-
 const DISCOVER = [
   { label: 'Civic Compass', href: '/compass' },
   { label: 'Pathways', href: '/pathways' },
@@ -37,6 +27,7 @@ const ACT = [
 
 const ABOUT = [
   { label: 'About The Change Lab', href: '/about' },
+  { label: 'User Manual', href: '/help' },
   { label: 'Contact', href: '/contact' },
   { label: 'Accessibility', href: '/accessibility' },
   { label: 'Privacy Policy', href: '/privacy' },
@@ -68,26 +59,27 @@ export function D2Footer() {
         <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
             {/* Brand */}
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-2.5 mb-3">
-                <FlowerOfLifeIcon size={32} color="#C75B2A" />
-                <span className="font-serif text-base text-brand-text">Community Exchange</span>
-              </div>
-              <p className="font-serif italic text-[15px] text-brand-muted mb-2">
-                Community life, organized.
-              </p>
-              <p className="text-[13px] leading-relaxed text-brand-muted">
-                Community Exchange is a community discovery platform built by The Change Lab, a Houston-based civic practice. We connect residents to the officials, services, organizations, and opportunities that already exist — in their language, at their level, in their neighborhood.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {PATHWAYS.map(function (pw) {
-                  return (
-                    <Link key={pw.href} href={pw.href} className="flex items-center gap-1.5 py-0.5 text-[12px] text-brand-muted hover:text-brand-accent transition-colors">
-                      <span className="w-[5px] h-[5px] rounded-sm flex-shrink-0" style={{ background: pw.color }} />
-                      {pw.name}
-                    </Link>
-                  )
-                })}
+            <div className="md:col-span-2 relative">
+              {/* Big FOL watermark behind brand section */}
+              <img
+                src="/images/fol/flower-full.svg"
+                alt="" aria-hidden="true"
+                className="absolute -top-[30px] -left-[40px] w-[280px] h-[280px] pointer-events-none opacity-[0.06]"
+              />
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-3">
+                  <FlowerOfLifeIcon size={44} color="#C75B2A" />
+                  <div>
+                    <span className="block font-serif text-xl font-bold text-brand-text leading-tight">Community Exchange</span>
+                    <span className="block font-mono text-[9px] font-bold uppercase tracking-widest text-brand-muted-light">Powered by The Change Lab</span>
+                  </div>
+                </div>
+                <p className="font-serif italic text-[15px] text-brand-muted mb-2">
+                  Community life, organized.
+                </p>
+                <p className="text-[13px] leading-relaxed text-brand-muted">
+                  A community discovery platform connecting Houston residents to the officials, services, organizations, and opportunities that already exist — in their language, at their level, in their neighborhood.
+                </p>
               </div>
             </div>
 
@@ -162,6 +154,7 @@ export function D2Footer() {
               <Link href="/privacy" className="hover:text-brand-accent transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-brand-accent transition-colors">Terms</Link>
               <Link href="/accessibility" className="hover:text-brand-accent transition-colors">Accessibility</Link>
+              <Link href="/help" className="hover:text-brand-accent transition-colors">User Manual</Link>
               <span className="text-brand-border">|</span>
               <span>English &middot; Espa&ntilde;ol &middot; Ti&#7871;ng Vi&#7879;t</span>
             </div>

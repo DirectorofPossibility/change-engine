@@ -50,6 +50,15 @@ const CENTERS = [
       { href: '/elections', label: 'Elections' },
     ],
   },
+  {
+    label: 'About',
+    color: '#6B6560',
+    items: [
+      { href: '/about', label: 'About Us' },
+      { href: '/help', label: 'User Manual' },
+      { href: '/contact', label: 'Contact' },
+    ],
+  },
 ]
 
 const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
@@ -117,9 +126,15 @@ export function D2Nav({ election }: D2NavProps) {
       <nav className="sticky top-0 z-50 border-b border-brand-border" style={{ background: 'rgba(237,232,224,0.95)', backdropFilter: 'blur(12px)' }}>
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-14">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <FlowerOfLifeIcon size={28} color="#C75B2A" />
-            <span className="font-serif text-[17px]">Community Exchange</span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <FlowerOfLifeIcon size={36} color="#C75B2A" className="group-hover:scale-110 transition-transform duration-300" />
+              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ boxShadow: '0 0 20px rgba(199,91,42,0.25)' }} />
+            </div>
+            <div className="leading-none">
+              <span className="block font-serif text-[18px] font-bold text-brand-text">Community Exchange</span>
+              <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.15em] text-brand-muted-light">The Change Lab</span>
+            </div>
           </Link>
 
           {/* Desktop center dropdowns */}
