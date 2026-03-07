@@ -161,7 +161,7 @@ export function MapEntityDrawer({ entity, onClose, onPathwayClick }: MapEntityDr
           {/* Pathway chips */}
           {displayPathways.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">Pathways</p>
+              <p className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">Topics</p>
               <div className="flex flex-wrap gap-2">
                 {displayPathways.map(function (themeId) {
                   const theme = (THEMES as Record<string, { name: string; color: string }>)[themeId]

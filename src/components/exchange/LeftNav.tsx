@@ -178,7 +178,7 @@ export function LeftNav() {
         <div className="mb-1">
           <button onClick={function () { toggleSection('Pathways') }} className={sectionHeaderClass} aria-expanded={!!expandedSections.Pathways}>
             {expandedSections.Pathways ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
-            <span>Pathways</span>
+            <span>Topics</span>
           </button>
           {expandedSections.Pathways && (
             <div className="pb-1">

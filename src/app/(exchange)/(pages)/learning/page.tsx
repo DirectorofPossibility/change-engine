@@ -31,7 +31,7 @@ const SECTIONS = [
   },
   {
     href: '/pathways',
-    label: 'Pathways',
+    label: 'Topics',
     description: 'Seven thematic journeys — health, families, neighborhoods, civic voice, economic mobility, environment, and belonging — each connecting you to related content, services, and people.',
     icon: Compass,
     color: '#805ad5',
@@ -71,7 +71,7 @@ export default async function LearningIndexPage() {
         stats={[
           { value: counts.library, label: 'Library Documents' },
           { value: counts.news, label: 'Articles & Reports' },
-          { value: 7, label: 'Pathways' },
+          { value: 7, label: 'Topics' },
         ]}
       />
 

@@ -150,7 +150,7 @@ export function CompassClient({
             )}
             <div className="text-center">
               <p className="text-2xl sm:text-3xl font-serif font-bold text-[#3182ce]">7</p>
-              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Pathways</p>
+              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Topics</p>
             </div>
           </div>
         </div>
@@ -432,7 +432,7 @@ export function CompassClient({
             {/* Pathways at a glance */}
             <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
               <div className="p-4 border-b border-brand-border">
-                <h3 className="font-serif text-base font-semibold text-brand-text">Pathways</h3>
+                <h3 className="font-serif text-base font-semibold text-brand-text">Topics</h3>
               </div>
               <div className="p-3 space-y-0.5">
                 {themeEntries.map(function ([id, theme]) {

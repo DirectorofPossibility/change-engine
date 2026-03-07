@@ -205,7 +205,7 @@ export default async function CentersIndexPage() {
         </div>
         <div className="hidden lg:block">
           <div className="sticky top-24 space-y-4">
-            <IndexWayfinder currentPage="centers" related={[{label:'Pathways',href:'/pathways'},{label:'Explore',href:'/explore'},{label:'Collections',href:'/collections'}]} color="#C75B2A" />
+            <IndexWayfinder currentPage="centers" related={[{label:'Topics',href:'/pathways'},{label:'Explore',href:'/explore'},{label:'Collections',href:'/collections'}]} color="#C75B2A" />
             <FeaturedPromo variant="card" />
           </div>
         </div>

@@ -217,7 +217,7 @@ function FoundationDrawer({ f, onClose, faIdMap }: { f: Foundation; onClose: () 
           <div>
             {f.pws.length > 0 && (
               <div style={{ marginBottom: 14 }}>
-                <div style={{ fontSize: 9, fontWeight: 700, color: C.t3, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 8 }}>Pathways</div>
+                <div style={{ fontSize: 9, fontWeight: 700, color: C.t3, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: 8 }}>Topics</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                   {f.pws.map(pid => {
                     const pw = PW[pid]

@@ -397,7 +397,7 @@ export default async function NewsPage({
                     related={[
                       { label: 'Library', href: '/library' },
                       { label: 'Events', href: '/calendar' },
-                      { label: 'Pathways', href: '/pathways' },
+                      { label: 'Topics', href: '/pathways' },
                     ]}
                   />
                   <FeaturedPromo variant="card" />

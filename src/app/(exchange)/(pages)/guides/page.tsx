@@ -83,7 +83,7 @@ export default async function GuidesPage() {
         </div>
         <div className="hidden lg:block">
           <div className="sticky top-24 space-y-4">
-            <IndexWayfinder currentPage="guides" related={[{label:'Library',href:'/library'},{label:'Learning Paths',href:'/learning-paths'},{label:'Pathways',href:'/pathways'}]} color="#C75B2A" />
+            <IndexWayfinder currentPage="guides" related={[{label:'Library',href:'/library'},{label:'Learning Paths',href:'/learning-paths'},{label:'Topics',href:'/pathways'}]} color="#C75B2A" />
             <FeaturedPromo variant="card" />
           </div>
         </div>

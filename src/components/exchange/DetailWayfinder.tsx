@@ -168,7 +168,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
       {/* Themes — linked to pathway pages */}
       {data.themes.length > 0 && (
         <div className="px-4 py-3 border-b border-brand-border">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Pathways</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Topics</div>
           <div className="flex flex-wrap gap-1.5">
             {data.themes.map(function (themeId) {
               const theme = THEMES[themeId as keyof typeof THEMES]

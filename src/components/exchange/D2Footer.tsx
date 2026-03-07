@@ -4,7 +4,7 @@ import { TipsToggle } from './TipsToggle'
 
 const DISCOVER = [
   { label: 'Civic Compass', href: '/compass' },
-  { label: 'Pathways', href: '/pathways' },
+  { label: 'Topics', href: '/pathways' },
   { label: 'News', href: '/news' },
   { label: 'Live Dashboard', href: '/dashboard-live' },
   { label: 'Three Good Things', href: '/goodthings' },

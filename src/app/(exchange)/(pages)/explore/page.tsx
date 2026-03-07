@@ -175,7 +175,7 @@ export default async function ExplorePage() {
           </div>
           <div className="hidden lg:block">
             <div className="sticky top-24 space-y-4">
-              <IndexWayfinder currentPage="explore" related={[{label:'Library',href:'/library'},{label:'Pathways',href:'/pathways'},{label:'Knowledge Galaxy',href:'/knowledge-graph'}]} color="#C75B2A" />
+              <IndexWayfinder currentPage="explore" related={[{label:'Library',href:'/library'},{label:'Topics',href:'/pathways'},{label:'Knowledge Galaxy',href:'/knowledge-graph'}]} color="#C75B2A" />
               <FeaturedPromo variant="card" />
             </div>
           </div>

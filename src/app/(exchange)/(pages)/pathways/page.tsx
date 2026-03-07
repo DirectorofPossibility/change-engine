@@ -77,7 +77,7 @@ export default async function PathwaysPage() {
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-4">
-          <Breadcrumb items={[{ label: 'Pathways' }]} />
+          <Breadcrumb items={[{ label: 'Topics' }]} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">

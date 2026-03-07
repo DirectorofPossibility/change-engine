@@ -451,7 +451,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
       </div>
 
       {/* Pathway list */}
-      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">7 Pathways</h4>
+      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">7 Topics</h4>
       <div className="space-y-0.5 mb-4">
         {data.pathways.map(function (pw) {
           const total = pw.entityCounts.content + pw.entityCounts.services + pw.entityCounts.officials + pw.entityCounts.organizations + pw.entityCounts.policies

@@ -29,7 +29,7 @@ const CENTERS = [
     items: [
       { href: '/library', label: 'Library' },
       { href: '/news', label: 'News' },
-      { href: '/pathways', label: 'Pathways' },
+      { href: '/pathways', label: 'Topics' },
       { href: '/chat', label: 'Ask Chance' },
     ],
   },
