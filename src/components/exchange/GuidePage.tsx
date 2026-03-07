@@ -446,7 +446,7 @@ export function GuidePage({
                   const theme = path.theme_id ? THEMES[path.theme_id as keyof typeof THEMES] : null
                   const num = String(i + 1).padStart(2, '0')
                   return (
-                    <Link key={path.path_id} href={'/learn/' + path.path_id} className="group flex items-start gap-4 hover:bg-white/60 p-3 rounded-lg transition-colors -mx-3">
+                    <Link key={path.path_id} href={'/learn/' + (path.slug || path.path_id)} className="group flex items-start gap-4 hover:bg-white/60 p-3 rounded-lg transition-colors -mx-3">
                       <span className="font-serif text-3xl font-bold text-brand-border leading-none">{num}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">

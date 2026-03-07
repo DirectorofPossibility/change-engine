@@ -70,7 +70,7 @@ export default async function LearnPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {group.map((path) => (
-                <Link key={path.path_id} href={'/learn/' + path.path_id}>
+                <Link key={path.path_id} href={'/learn/' + ((path as any).slug || path.path_id)}>
                   <LearningPathCard
                     name={path.path_name}
                     description={path.description_5th_grade}

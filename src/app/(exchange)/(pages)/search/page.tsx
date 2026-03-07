@@ -212,7 +212,7 @@ export default async function SearchPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.paths.map(function (p) {
           return (
-            <Link key={p.path_id} href={'/learn/' + p.path_id}>
+            <Link key={p.path_id} href={'/learn/' + ((p as any).slug || p.path_id)}>
               <LearningPathCard
                 name={p.path_name || ''}
                 description={p.description_5th_grade}

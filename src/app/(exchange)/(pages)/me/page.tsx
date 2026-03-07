@@ -56,15 +56,19 @@ export default async function MyDashboardPage() {
     .limit(10)
 
   const pathNames: Record<string, string> = {}
+  const pathSlugs: Record<string, string> = {}
   if (progress && progress.length > 0) {
     const pathIds = Array.from(new Set(progress.map(function (p) { return p.path_id }).filter(Boolean))) as string[]
     if (pathIds.length > 0) {
-      const { data: paths } = await supabase
+      const { data: paths } = await (supabase as any)
         .from('learning_paths')
-        .select('path_id, path_name')
+        .select('path_id, path_name, slug')
         .in('path_id', pathIds)
       if (paths) {
-        paths.forEach(function (p) { pathNames[p.path_id] = p.path_name })
+        paths.forEach(function (p: any) {
+          pathNames[p.path_id] = p.path_name
+          if (p.slug) pathSlugs[p.path_id] = p.slug
+        })
       }
     }
   }
@@ -82,6 +86,51 @@ export default async function MyDashboardPage() {
         pathProgress[p.path_id].lastActive = p.started_at
       }
     })
+  }
+
+  // Fetch representatives if user has a ZIP
+  let representatives: any[] = []
+  if (profile?.zip_code) {
+    const userZip = String(profile.zip_code)
+    const { data: zipData } = await supabase
+      .from('zip_codes')
+      .select('*')
+      .eq('zip_code', parseInt(userZip))
+      .single()
+
+    if (zipData) {
+      const districts = [
+        zipData.congressional_district,
+        zipData.state_senate_district,
+        zipData.state_house_district,
+        'TX',
+      ].filter(Boolean)
+
+      const { data: hoodRows } = await supabase
+        .from('neighborhoods')
+        .select('council_district')
+        .like('zip_codes', '%' + userZip + '%')
+        .not('council_district', 'is', null)
+        .limit(1)
+      const councilDistrict = hoodRows?.[0]?.council_district || null
+
+      let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+      if (councilDistrict) {
+        filterParts += ',district_id.eq.' + councilDistrict
+      }
+      filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
+      if (zipData.county_id) {
+        filterParts += ',counties_served.like.%' + zipData.county_id + '%'
+      }
+
+      const { data: matched } = await supabase
+        .from('elected_officials')
+        .select('official_id, official_name, title, party, level, photo_url')
+        .or(filterParts)
+        .order('official_name')
+
+      representatives = matched || []
+    }
   }
 
   const displayName = profile?.display_name || user.email?.split('@')[0] || 'User'
@@ -110,11 +159,17 @@ export default async function MyDashboardPage() {
                 {profile?.zip_code && <span>ZIP {profile.zip_code}</span>}
                 <span>Impact Points: <strong className="text-brand-accent">{totalPoints}</strong></span>
               </div>
-              <div className="flex items-center gap-4 mt-3">
-                <Link href="/me/settings" className="text-sm text-white/80 hover:text-white transition-colors">Edit settings</Link>
-                <Link href="/compass" className="text-sm text-brand-accent hover:text-white transition-colors">My Compass</Link>
+              <div className="flex flex-wrap items-center gap-3 mt-3">
+                <Link href="/me/settings" className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white hover:bg-white/20 transition-all">
+                  Edit Settings
+                </Link>
+                <Link href="/compass" className="inline-block px-4 py-2 bg-brand-accent rounded-xl text-sm text-white font-semibold hover:bg-brand-accent-hover transition-all">
+                  My Compass
+                </Link>
                 {['admin', 'partner', 'neighbor'].includes(currentRole) && (
-                  <Link href="/dashboard" className="text-sm text-white/80 hover:text-white transition-colors">Admin Dashboard</Link>
+                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-sm text-white hover:bg-white/20 transition-all">
+                    Go to Dashboard
+                  </Link>
                 )}
               </div>
             </div>
@@ -140,7 +195,7 @@ export default async function MyDashboardPage() {
                   {Object.entries(pathProgress).map(function ([pathId, prog]) {
                     const pct = prog.total > 0 ? Math.round((prog.completed / prog.total) * 100) : 0
                     return (
-                      <Link key={pathId} href={'/learn/' + pathId} className="block bg-white rounded-xl border-2 border-brand-border p-4 hover:border-brand-text transition-all" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block bg-white rounded-xl border-2 border-brand-border p-4 hover:border-brand-text transition-all" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-semibold text-brand-text text-sm">{pathNames[pathId] || pathId}</h3>
                           <span className="text-xs text-brand-muted">{prog.completed}/{prog.total} modules</span>
@@ -154,6 +209,50 @@ export default async function MyDashboardPage() {
                 </div>
               )}
             </section>
+
+            {/* Your Representatives */}
+            {representatives.length > 0 && (
+              <section>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-serif text-lg font-bold text-brand-text">Your Representatives</h2>
+                  <Link href="/officials" className="text-xs text-brand-accent hover:underline">View all &rarr;</Link>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {representatives.map(function (rep: any) {
+                    const levelColors: Record<string, string> = {
+                      Federal: '#805ad5', State: '#3182ce', County: '#38a169', City: '#dd6b20',
+                    }
+                    const color = levelColors[rep.level] || '#6B6560'
+                    return (
+                      <Link
+                        key={rep.official_id}
+                        href={'/officials/' + rep.official_id}
+                        className="group flex items-center gap-3 bg-white rounded-xl border-2 border-brand-border p-3 hover:border-brand-text transition-all"
+                        style={{ boxShadow: '2px 2px 0 #D1D5E0' }}
+                      >
+                        <div className="w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden bg-brand-bg">
+                          {rep.photo_url ? (
+                            <img src={rep.photo_url} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: color }}>
+                              {rep.official_name?.charAt(0) || '?'}
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-brand-text truncate">{rep.official_name}</p>
+                          <div className="flex items-center gap-2 text-[11px] text-brand-muted">
+                            <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                            <span className="truncate">{rep.title || rep.level}</span>
+                            {rep.party && <span>({rep.party})</span>}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
 
             {/* Recent Activity */}
             <section>
@@ -284,6 +383,11 @@ export default async function MyDashboardPage() {
                 <Link href="/officials" className="block bg-white rounded-xl border-2 border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
                   Find My Representatives
                 </Link>
+                {['neighbor', 'partner', 'admin'].includes(currentRole) && (
+                  <Link href="/dashboard/tools-guides" className="block bg-white rounded-xl border-2 border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                    Tools &amp; Guides
+                  </Link>
+                )}
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
                   <Link href="/me/submit" className="block bg-brand-accent/5 rounded-xl border-2 border-brand-accent/20 p-3 text-sm text-brand-accent hover:bg-brand-accent/10 transition-all">
                     Share a Resource

@@ -213,7 +213,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         <section className="mb-10">
           <h2 className="text-xl font-bold text-brand-text mb-4">Learning Path</h2>
           <div className="max-w-md">
-            <Link href={'/learn/' + relatedPath.path_id}>
+            <Link href={'/learn/' + ((relatedPath as any).slug || relatedPath.path_id)}>
               <LearningPathCard
                 name={relatedPath.path_name}
                 description={relatedPath.description_5th_grade}

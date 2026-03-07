@@ -17,10 +17,28 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 export const dynamic = 'force-dynamic'
 
+async function resolvePathByIdOrSlug(supabase: any, idOrSlug: string) {
+  // Try path_id first (exact match), then slug
+  const { data: byId } = await supabase.from('learning_paths').select('*').eq('path_id', idOrSlug).single()
+  if (byId) return byId
+  // Use REST API for slug since column may not be in generated types
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  const res = await fetch(
+    url + '/rest/v1/learning_paths?slug=eq.' + encodeURIComponent(idOrSlug) + '&limit=1',
+    { headers: { apikey: key, Authorization: 'Bearer ' + key } }
+  )
+  if (res.ok) {
+    const rows = await res.json()
+    if (rows.length > 0) return rows[0]
+  }
+  return null
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const supabase = await createClient()
-  const { data } = await supabase.from('learning_paths').select('path_name, description_5th_grade').eq('path_id', id).single()
+  const data: any = await resolvePathByIdOrSlug(supabase, id)
   if (!data) return { title: 'Not Found' }
   return {
     title: data.path_name + ' — Community Exchange',
@@ -32,13 +50,9 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: path } = await supabase
-    .from('learning_paths')
-    .select('*')
-    .eq('path_id', id)
-    .single()
-
+  const path = await resolvePathByIdOrSlug(supabase, id)
   if (!path) notFound()
+  const pathId = path.path_id
 
   // Parse focus_area_ids (stored as comma-separated string)
   const focusAreaIds = path.focus_area_ids
@@ -47,8 +61,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
   // Parallel fetch all related data
   const [modulesRes, badgeRes, focusAreas, opportunities, policies, sdgMap, sdohMap, adjacentRes] = await Promise.all([
-    supabase.from('learning_modules').select('*').eq('path_id', id).order('module_order', { ascending: true }),
-    supabase.from('badges').select('*').eq('path_id', id).limit(1),
+    supabase.from('learning_modules').select('*').eq('path_id', pathId).order('module_order', { ascending: true }),
+    supabase.from('badges').select('*').eq('path_id', pathId).limit(1),
     focusAreaIds.length > 0 ? getFocusAreasByIds(focusAreaIds) : Promise.resolve([]),
     focusAreaIds.length > 0 ? getRelatedOpportunities(focusAreaIds) : Promise.resolve([]),
     focusAreaIds.length > 0 ? getRelatedPolicies(focusAreaIds) : Promise.resolve([]),
@@ -62,8 +76,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   const badge = badgeRes.data && badgeRes.data.length > 0 ? badgeRes.data[0] : null
 
   // Build adjacent path navigation
-  const allPaths = adjacentRes.data || []
-  const currentIdx = allPaths.findIndex(p => p.path_id === id)
+  const allPaths = (adjacentRes.data || []) as any[]
+  const currentIdx = allPaths.findIndex(function (p: any) { return p.path_id === pathId })
   const prevPath = currentIdx > 0 ? allPaths[currentIdx - 1] : null
   const nextPath = currentIdx < allPaths.length - 1 ? allPaths[currentIdx + 1] : null
 
@@ -85,7 +99,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   }
 
   // Check for prerequisite
-  let prerequisitePath: { path_id: string; path_name: string } | null = null
+  let prerequisitePath: any = null
   if (path.prerequisite_path_id) {
     const { data: prereq } = await supabase
       .from('learning_paths')
@@ -103,21 +117,21 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
       .from('user_progress')
       .select('progress_id, module_id, status, started_at, completed_at')
       .eq('user_id', user.id)
-      .eq('path_id', id)
+      .eq('path_id', pathId)
     userProgress = progressData || []
   }
 
   // Translation support
   const langId = await getLangId()
   const pathTranslations = langId
-    ? await fetchTranslationsForTable('learning_paths', [id], langId)
+    ? await fetchTranslationsForTable('learning_paths', [pathId], langId)
     : {}
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
-  const pathName = pathTranslations[id]?.title || path.path_name
-  const pathDescription = pathTranslations[id]?.summary || path.description_5th_grade
+  const pathName = pathTranslations[pathId]?.title || path.path_name
+  const pathDescription = pathTranslations[pathId]?.summary || path.description_5th_grade
 
   // Build SDG/SDOH data from focus areas
   const sdgIds = Array.from(new Set(focusAreas.map(fa => fa.sdg_id).filter(Boolean)))
@@ -137,6 +151,17 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
       quizName: quiz?.quiz_name || null,
       questionCount: quiz?.question_count || null,
       passingScore: quiz?.passing_score || null,
+      videoUrl: (m as any).video_url || null,
+      videoTitle: (m as any).video_title || null,
+      videoUrl2: (m as any).video_url_2 || null,
+      videoTitle2: (m as any).video_title_2 || null,
+      articleUrl: (m as any).article_url || null,
+      articleTitle: (m as any).article_title || null,
+      musicUrl: (m as any).music_url || null,
+      musicTitle: (m as any).music_title || null,
+      musicArtist: (m as any).music_artist || null,
+      hookText: (m as any).hook_text || null,
+      hookAttribution: (m as any).hook_attribution || null,
     }
   })
 
@@ -189,7 +214,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
             <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
               <p className="text-sm text-yellow-700">
                 Before starting this path, complete:{' '}
-                <Link href={'/learn/' + prerequisitePath.path_id} className="font-semibold underline">{prerequisitePath.path_name}</Link>
+                <Link href={'/learn/' + ((prerequisitePath as any).slug || prerequisitePath.path_id)} className="font-semibold underline">{prerequisitePath.path_name}</Link>
               </p>
             </div>
           )}
@@ -211,7 +236,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
               {user ? (
                 <ModuleProgressTimeline
                   modules={timelineModules}
-                  pathId={id}
+                  pathId={pathId}
                   userId={user.id}
                   initialProgress={userProgress}
                   badgeId={badge?.badge_id || null}
@@ -242,7 +267,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           {/* Prev/Next Navigation */}
           <div className="flex justify-between mt-12 pt-8 border-t border-brand-border">
             {prevPath ? (
-              <Link href={'/learn/' + prevPath.path_id} className="group">
+              <Link href={'/learn/' + (prevPath.slug || prevPath.path_id)} className="group">
                 <span className="text-xs text-brand-muted block mb-1">{t('learn.previous_path')}</span>
                 <span className="font-serif font-medium text-brand-text group-hover:text-brand-accent transition-colors">
                   {prevPath.path_name}
@@ -250,7 +275,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
               </Link>
             ) : <div />}
             {nextPath ? (
-              <Link href={'/learn/' + nextPath.path_id} className="text-right group">
+              <Link href={'/learn/' + (nextPath.slug || nextPath.path_id)} className="text-right group">
                 <span className="text-xs text-brand-muted block mb-1">{t('learn.next_path')}</span>
                 <span className="font-serif font-medium text-brand-text group-hover:text-brand-accent transition-colors">
                   {nextPath.path_name}
@@ -369,8 +394,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <div className="bg-white rounded-xl border border-brand-border p-4">
             <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.more_paths')}</h3>
             <div className="space-y-2">
-              {allPaths.filter(p => p.path_id !== id).slice(0, 5).map(p => (
-                <Link key={p.path_id} href={'/learn/' + p.path_id} className="block text-sm text-brand-text hover:text-brand-accent transition-colors">
+              {allPaths.filter(p => p.path_id !== pathId).slice(0, 5).map(p => (
+                <Link key={p.path_id} href={'/learn/' + (p.slug || p.path_id)} className="block text-sm text-brand-text hover:text-brand-accent transition-colors">
                   {p.path_name}
                 </Link>
               ))}
