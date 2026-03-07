@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Search, X, Menu, ChevronDown } from 'lucide-react'
@@ -67,6 +67,17 @@ export function D2Nav({ election }: D2NavProps) {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [openDrop, setOpenDrop] = useState<string | null>(null)
 
+  const closeDrawer = useCallback(function () { setDrawerOpen(false) }, [])
+
+  useEffect(function () {
+    if (!drawerOpen) return
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeDrawer()
+    }
+    document.addEventListener('keydown', handleKey)
+    return function () { document.removeEventListener('keydown', handleKey) }
+  }, [drawerOpen, closeDrawer])
+
   return (
     <>
       {/* Election banner */}
@@ -112,19 +123,32 @@ export function D2Nav({ election }: D2NavProps) {
                   onMouseEnter={function () { setOpenDrop(center.label) }}
                   onMouseLeave={function () { setOpenDrop(null) }}
                 >
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold rounded-md transition-colors hover:bg-brand-bg">
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-semibold rounded-md transition-colors hover:bg-brand-bg"
+                    aria-haspopup="true"
+                    aria-expanded={openDrop === center.label}
+                    onKeyDown={function (e) {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        setOpenDrop(openDrop === center.label ? null : center.label)
+                      } else if (e.key === 'Escape') {
+                        setOpenDrop(null)
+                      }
+                    }}
+                  >
                     <span className="w-2 h-2 rounded-sm" style={{ background: center.color, opacity: isActive ? 1 : 0.4 }} />
                     <span style={{ color: isActive ? '#C75B2A' : '#2d2d2d' }}>{center.label}</span>
                     <ChevronDown size={12} className="opacity-40" />
                   </button>
                   {openDrop === center.label && (
-                    <div className="absolute top-full left-0 mt-1 bg-white border-2 border-brand-border rounded-lg shadow-drop py-1.5 min-w-[180px] z-50">
+                    <div role="menu" className="absolute top-full left-0 mt-1 bg-white border-2 border-brand-border rounded-lg shadow-drop py-1.5 min-w-[180px] z-50">
                       {center.items.map(function (item) {
                         const itemActive = pathname === item.href || pathname?.startsWith(item.href + '/')
                         return (
                           <Link
                             key={item.href}
                             href={item.href}
+                            role="menuitem"
                             className="block px-4 py-2 text-[13px] font-medium transition-colors hover:bg-brand-bg hover:text-brand-accent"
                             style={{ color: itemActive ? '#C75B2A' : '#2d2d2d' }}
                           >
@@ -169,7 +193,7 @@ export function D2Nav({ election }: D2NavProps) {
             className="fixed inset-0 bg-black/40 z-[200]"
             onClick={function () { setDrawerOpen(false) }}
           />
-          <div className="fixed top-0 left-0 bottom-0 w-[320px] z-[201] bg-brand-cream overflow-y-auto">
+          <div role="dialog" aria-modal="true" aria-label="Navigation menu" className="fixed top-0 left-0 bottom-0 w-[320px] z-[201] bg-brand-cream overflow-y-auto">
             {/* Drawer header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border">
               <div className="flex items-center gap-2">

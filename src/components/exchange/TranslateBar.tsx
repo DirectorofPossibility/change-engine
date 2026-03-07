@@ -45,20 +45,24 @@ export function TranslateBar({ contentType, contentId, isTranslated }: Translate
 }
 
 function TranslateNowButton({ contentType, contentId, lang }: { contentType: string; contentId: string; lang: string }) {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
 
   async function handleTranslate() {
     setStatus('loading')
     try {
-      await fetch('/api/translate-page', {
+      const res = await fetch('/api/translate-page', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contentType, contentId, lang }),
       })
+      if (!res.ok) {
+        setStatus('error')
+        return
+      }
       setStatus('done')
       window.location.reload()
     } catch {
-      setStatus('idle')
+      setStatus('error')
     }
   }
 
@@ -70,7 +74,7 @@ function TranslateNowButton({ contentType, contentId, lang }: { contentType: str
       disabled={status === 'loading'}
       className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white transition-colors disabled:opacity-50"
     >
-      {status === 'loading' ? 'Translating...' : 'Translate Now'}
+      {status === 'loading' ? 'Translating...' : status === 'error' ? 'Retry' : 'Translate Now'}
     </button>
   )
 }

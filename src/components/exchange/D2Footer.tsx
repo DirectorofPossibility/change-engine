@@ -65,7 +65,7 @@ export function D2Footer() {
                 <FlowerOfLifeIcon size={32} color="#C75B2A" />
                 <span className="font-serif text-base text-white">Community Exchange</span>
               </div>
-              <p className="text-[13px] leading-relaxed text-white/45">
+              <p className="text-[13px] leading-relaxed text-white/60">
                 Connecting Houston residents with the resources, services, and civic power that shape community life.
               </p>
               <p className="mt-3 text-[11px] italic text-white/25">
@@ -79,7 +79,7 @@ export function D2Footer() {
               <div className="space-y-1">
                 {PATHWAYS.map(function (pw) {
                   return (
-                    <Link key={pw.href} href={pw.href} className="flex items-center gap-2 py-0.5 text-[13px] text-white/45 hover:text-white transition-colors">
+                    <Link key={pw.href} href={pw.href} className="flex items-center gap-2 py-0.5 text-[13px] text-white/60 hover:text-white transition-colors">
                       <span className="w-[5px] h-[5px] rounded-sm flex-shrink-0" style={{ background: pw.color }} />
                       {pw.name}
                     </Link>
@@ -94,7 +94,7 @@ export function D2Footer() {
               <div className="space-y-1">
                 {NAVIGATE.map(function (item) {
                   return (
-                    <Link key={item.href} href={item.href} className="block py-0.5 text-[13px] text-white/45 hover:text-white transition-colors">
+                    <Link key={item.href} href={item.href} className="block py-0.5 text-[13px] text-white/60 hover:text-white transition-colors">
                       {item.label}
                     </Link>
                   )
@@ -108,7 +108,7 @@ export function D2Footer() {
               <div className="space-y-1">
                 {COMMUNITY.map(function (item) {
                   return (
-                    <Link key={item.href} href={item.href} className="block py-0.5 text-[13px] text-white/45 hover:text-white transition-colors">
+                    <Link key={item.href} href={item.href} className="block py-0.5 text-[13px] text-white/60 hover:text-white transition-colors">
                       {item.label}
                     </Link>
                   )
@@ -122,7 +122,7 @@ export function D2Footer() {
               <div className="space-y-1">
                 {CONNECT.map(function (item) {
                   return (
-                    <Link key={item.href} href={item.href} className="block py-0.5 text-[13px] text-white/45 hover:text-white transition-colors">
+                    <Link key={item.href} href={item.href} className="block py-0.5 text-[13px] text-white/60 hover:text-white transition-colors">
                       {item.label}
                     </Link>
                   )
