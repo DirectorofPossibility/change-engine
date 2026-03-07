@@ -51,7 +51,7 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
   return (
     <div>
       {/* ── Compact Hero ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
         <Breadcrumb items={[
           { label: 'Centers', href: '/centers' },
           { label: center.name }
@@ -67,7 +67,7 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
       </div>
 
       {/* ── Shelves by pathway ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="space-y-2">
           {Object.entries(THEMES).map(([themeId, theme]) => {
             const pathwayItems = byPathway[themeId]

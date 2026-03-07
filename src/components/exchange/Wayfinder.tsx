@@ -61,7 +61,7 @@ export function Wayfinder({
 
       {/* 2. Stats bar — quick proof of value */}
       <div className="bg-white border-b border-brand-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-5">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-5">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-6 sm:gap-10">
               <div>
@@ -92,7 +92,7 @@ export function Wayfinder({
         </div>
       </div>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-8">
+      <main className="max-w-[1200px] mx-auto px-4 sm:px-8">
         {/* 3. Seven Pathways — compact grid */}
         <section className="py-12">
           <div className="flex items-end justify-between mb-6">

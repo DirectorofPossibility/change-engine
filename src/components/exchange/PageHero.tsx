@@ -53,7 +53,7 @@ export function PageHero({
       <section className={`relative ${heightClass} w-full overflow-hidden flex items-end`}>
         <Image src={backgroundImage!} alt="" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
-        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
+        <div className="relative w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white drop-shadow-lg">
             {displayTitle}
           </h1>
@@ -72,7 +72,7 @@ export function PageHero({
     const gc = gradientColor || '#E8723A'
     return (
       <section className="relative w-full overflow-hidden bg-brand-bg-alt border-b border-brand-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: gc }} />
             <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: gc, opacity: 0.4 }} />
@@ -97,7 +97,7 @@ export function PageHero({
     const gc = gradientColor || '#E8723A'
     return (
       <section className="relative w-full overflow-hidden bg-brand-bg border-b border-brand-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
             <div className="flex-1 min-w-0">
               {children && <div className="flex items-center gap-2 mb-4">{children}</div>}
@@ -148,7 +148,7 @@ export function PageHero({
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <SacredGeometryBg pattern={sacredPattern} color={gc} />
         </div>
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: gc }} />
             <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: gc, opacity: 0.4 }} />
@@ -172,7 +172,7 @@ export function PageHero({
   // Editorial variant — the default for listing pages (light)
   return (
     <section className="relative w-full overflow-hidden bg-brand-bg-alt border-b border-brand-border">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="w-10 h-0.5 bg-brand-accent mb-5" />
         <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text leading-tight">
           {displayTitle}

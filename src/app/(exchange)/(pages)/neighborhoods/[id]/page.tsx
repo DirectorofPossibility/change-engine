@@ -68,7 +68,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   const t = getUIStrings(lang)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: 'Neighborhoods' }, { label: hood.neighborhood_name }]} />
       <h1 className="text-3xl font-bold text-brand-text mb-2">{hood.neighborhood_name}</h1>
       <div className="flex items-center gap-3 text-sm text-brand-muted mb-6">

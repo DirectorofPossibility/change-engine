@@ -27,7 +27,7 @@ export default async function PollingPlacesPage() {
   const activeElection = upcoming && upcoming.length > 0 ? upcoming[0] : null
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: 'Polling Places' }]} />
       <PageHeader titleKey="polling.title" subtitleKey="polling.subtitle" />
 

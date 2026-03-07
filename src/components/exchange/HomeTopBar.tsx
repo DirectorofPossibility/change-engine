@@ -37,7 +37,7 @@ export function HomeTopBar({ liveCount }: { liveCount?: number }) {
 
   return (
     <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-brand-border">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-3 flex items-center gap-4 flex-wrap sm:flex-nowrap">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-3 flex items-center gap-4 flex-wrap sm:flex-nowrap">
         {/* Left: Location anchor */}
         <Link href="/" className="shrink-0 group">
           <span className="font-serif text-sm tracking-[0.08em] text-brand-muted hover:text-brand-text transition-colors" style={{ fontVariant: 'small-caps' }}>

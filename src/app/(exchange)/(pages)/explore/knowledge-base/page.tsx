@@ -37,7 +37,7 @@ export default async function KnowledgeBasePage() {
         subtitle="Explore articles, reports, guides, videos, and tools — organized by pathway, topic, or A-Z."
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumb items={[
           { label: 'Explore', href: '/explore' },
           { label: 'Knowledge Base' },

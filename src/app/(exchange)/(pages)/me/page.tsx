@@ -93,7 +93,7 @@ export default async function MyDashboardPage() {
     + (actions || []).reduce(function (sum, a) { return sum + (a.impact_points || 0) }, 0)
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Welcome header */}
       <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
         <h1 className="text-2xl font-bold text-brand-text mb-1">Welcome back, {displayName}!</h1>

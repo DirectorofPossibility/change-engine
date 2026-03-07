@@ -32,7 +32,7 @@ export default async function LearningPathsPage() {
         title="Learning Paths"
         subtitle="Structured journeys to deepen your understanding of civic life"
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Learning Paths' }]} />
 
         {items.length > 0 ? (

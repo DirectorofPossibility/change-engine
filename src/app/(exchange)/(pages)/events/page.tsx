@@ -52,7 +52,7 @@ export default async function EventsPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#d69e2e" title="Community Events" subtitle="Town halls, workshops, volunteer days, and civic gatherings happening across Houston." />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Events' }]} />
         {upcoming.length > 0 && (
           <div className="mb-10">

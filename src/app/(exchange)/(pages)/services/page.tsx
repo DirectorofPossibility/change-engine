@@ -23,7 +23,7 @@ export default async function ServicesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="flower" gradientColor="#38a169" titleKey="services.title" subtitleKey="services.subtitle" intro={PAGE_INTROS.services} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Local Resources' }]} />
         <ServicesClient services={services} translations={translations} />
       </div>

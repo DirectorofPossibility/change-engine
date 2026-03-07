@@ -143,7 +143,7 @@ export function GuidePage({
 
   return (
     <div className="min-h-screen bg-brand-bg">
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 pb-20">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 pb-20">
 
         {/* ═══ A. MASTHEAD ═══ */}
         <header className="pt-8 pb-2">

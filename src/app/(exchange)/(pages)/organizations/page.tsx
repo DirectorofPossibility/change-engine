@@ -25,7 +25,7 @@ export default async function OrganizationsPage() {
         subtitleKey="organizations.subtitle"
         intro={PAGE_INTROS.organizations}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Organizations' }]} />
         <OrganizationsClient organizations={organizations} />
       </div>

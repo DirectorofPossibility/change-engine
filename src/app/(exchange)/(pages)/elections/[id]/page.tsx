@@ -64,7 +64,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
   const hasResults = candidates.some(function (c) { return (c as any).vote_pct != null })
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[
         { label: 'Elections', href: '/elections' },
         { label: election.election_name }

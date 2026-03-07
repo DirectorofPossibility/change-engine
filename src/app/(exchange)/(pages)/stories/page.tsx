@@ -21,7 +21,7 @@ export default async function StoriesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="flower" gradientColor="#805ad5" title="Community Stories" subtitle="Real stories of impact, resilience, and connection from Houston neighbors. Every journey matters." />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Stories' }]} />
         <div className="space-y-4 mt-4">
           {(stories || []).map(function (s: any) {

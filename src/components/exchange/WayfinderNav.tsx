@@ -46,7 +46,7 @@ export function WayfinderNav() {
 
   return (
     <header className="bg-white/95 backdrop-blur-sm border-b border-brand-border sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-14 gap-5">
           {/* Home link */}
           <Link

@@ -133,7 +133,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
   ])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[
         { label: 'Policies', href: '/policies' },
         { label: displayName }
@@ -308,7 +308,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
       {/* Quote */}
       {quote && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
         </div>
       )}

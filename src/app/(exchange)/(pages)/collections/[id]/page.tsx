@@ -15,13 +15,13 @@ export default async function CollectionDetailPage({ params }: { params: Promise
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'Collections', href: '/collections' }, { label: c.title || c.collection_name }]} />
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text mt-4">{c.title || c.collection_name}</h1>
           {(c.description || c.summary) && <p className="text-brand-muted mt-3 max-w-2xl">{c.description || c.summary}</p>}
         </div>
       </div>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <p className="text-brand-muted text-sm">Collection content will be displayed here as items are curated.</p>
       </div>
     </div>

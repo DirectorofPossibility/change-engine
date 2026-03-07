@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function FoundationsPage() {
   return (
     <div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Breadcrumb items={[
           { label: 'Foundations' }
         ]} />

@@ -30,7 +30,7 @@ export default async function GeographyPage({
         intro={PAGE_INTROS.geography}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumb items={[{ label: 'Map View' }]} />
 
         <Suspense fallback={<div className="text-brand-muted py-12 text-center">Loading map...</div>}>

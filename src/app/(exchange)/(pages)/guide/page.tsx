@@ -57,7 +57,7 @@ export default async function GuidePageServer() {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 className="font-serif text-xl font-bold tracking-tight mb-1">Not sure where to start?</h2>
         <p className="text-sm text-brand-muted mb-4 font-serif italic">Find your path — pick the one that sounds like you.</p>
         <PersonaSelector />

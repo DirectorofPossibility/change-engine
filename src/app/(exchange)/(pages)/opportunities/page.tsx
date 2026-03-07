@@ -25,7 +25,7 @@ export default async function OpportunitiesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#38a169" titleKey="opportunities.title" subtitleKey="opportunities.subtitle" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Opportunities' }]} />
 
         {(!opportunities || opportunities.length === 0) ? (

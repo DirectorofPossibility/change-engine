@@ -51,7 +51,7 @@ export default async function DocumentDetailPage(
   ]
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumb items={breadcrumbs} />
 
       {/* Pathway dots */}

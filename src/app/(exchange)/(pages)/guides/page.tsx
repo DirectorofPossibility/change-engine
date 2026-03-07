@@ -27,7 +27,7 @@ export default async function GuidesPage() {
   const t = getUIStrings(lang)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[{ label: 'Guides' }]} />
       <h1 className="text-3xl font-bold text-brand-text mb-2">{t('guides.title')}</h1>
       <p className="text-brand-muted mb-8">

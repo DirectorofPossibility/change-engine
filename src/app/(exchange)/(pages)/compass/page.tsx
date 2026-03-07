@@ -26,7 +26,7 @@ export default async function CompassPage() {
   const themeColors = Object.values(THEMES).map(t => t.color)
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Compact hero */}
       <header className="mb-8">
         {/* Spectrum color bar */}

@@ -93,7 +93,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   ])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[
         { label: 'Services', href: '/services' },
         { label: displayName }
@@ -221,7 +221,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
       {/* Library nuggets — understanding this resource */}
       {libraryNuggets.length > 0 && (
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <LibraryNugget
             nuggets={libraryNuggets}
             variant="section"

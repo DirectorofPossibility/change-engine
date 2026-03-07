@@ -39,7 +39,7 @@ export default async function OfficialsPage() {
         subtitleKey="officials.subtitle"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumb items={[{ label: 'Officials' }]} />
         <OfficialsPageClient officials={officials} levels={levels} translations={translations} linkedinProfiles={profiles} />
       </div>

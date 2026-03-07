@@ -45,7 +45,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'Foundations', href: '/foundations' }, { label: f.name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             {f.type && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{f.type}</span>}
@@ -60,7 +60,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
           )}
         </div>
       </div>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Financials & Details */}
           <div className="bg-white rounded-lg border border-brand-border p-5">

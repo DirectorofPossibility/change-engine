@@ -83,7 +83,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
     <div>
       {/* ── Hero ── */}
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <Breadcrumb items={[
             { label: t('nav.pathways'), href: '/pathways' },
             { label: theme.name }
@@ -128,7 +128,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
       {/* ── News Feed Link ── */}
       {newsCount > 0 && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
           <Link
             href={'/news?pathway=' + theme.id}
             className="inline-flex items-center gap-2 text-sm font-medium hover:underline transition-colors"
@@ -143,7 +143,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
       )}
 
       {/* ── Shelf Braid: 4 centers with mixed entity types ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <ShelfBraid
           content={content}
           contentTranslations={contentTranslations}
@@ -165,7 +165,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Focus Areas / Explore Topics ── */}
         {themeFocusAreas.length > 0 && (
           <section className="py-6">

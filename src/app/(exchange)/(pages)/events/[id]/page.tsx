@@ -34,7 +34,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'Events', href: '/events' }, { label: event.event_name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             <Calendar className="w-5 h-5 text-brand-accent" />
@@ -49,7 +49,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           )}
         </div>
       </div>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg border border-brand-border p-5">
             <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">When</h2>

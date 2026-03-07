@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-[1200px] mx-auto space-y-6">
         {/* Hero skeleton */}
         <div className="h-48 bg-white/60 rounded-xl animate-pulse" />
         {/* Card grid skeleton */}

@@ -50,7 +50,7 @@ export default async function SuperNeighborhoodsPage() {
         height="sm"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumb items={[{ label: 'Super Neighborhoods' }]} />
         <p className="text-brand-muted mb-8 max-w-2xl">
           {t('superNeighborhoods.intro')}

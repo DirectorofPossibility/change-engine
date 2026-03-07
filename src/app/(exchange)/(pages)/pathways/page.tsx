@@ -51,7 +51,7 @@ export default async function PathwaysPage() {
     <div>
       <PageHero variant="sacred" sacredPattern="flower" gradientColor="#E8723A" titleKey="pathways.title" subtitleKey="pathways.subtitle" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Pathways' }]} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {Object.entries(THEMES).map(([id, theme]) => (

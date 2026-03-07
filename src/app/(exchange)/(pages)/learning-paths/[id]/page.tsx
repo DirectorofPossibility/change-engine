@@ -60,7 +60,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         title={(path as any).path_name}
         subtitle={(path as any).description_5th_grade || undefined}
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[
           { label: 'Learning Paths', href: '/learning-paths' },
           { label: (path as any).path_name },

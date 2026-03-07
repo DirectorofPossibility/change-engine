@@ -22,7 +22,7 @@ export default async function CollectionsPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="vesica" gradientColor="#E8723A" title="Curated Collections" subtitle="Thoughtfully assembled collections of resources, guides, and content to help you navigate what matters most." />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Collections' }]} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           {(collections || []).map(function (c: any) {

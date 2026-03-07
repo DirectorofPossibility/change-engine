@@ -32,7 +32,7 @@ export async function EnvironmentBar() {
 
   return (
     <div className="bg-white border-b border-brand-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-brand-border">
           {/* Temperature */}
           <div className="py-2.5 px-3 text-center">

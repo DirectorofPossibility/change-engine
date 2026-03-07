@@ -23,7 +23,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'Benefits', href: '/benefits' }, { label: b.benefit_name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             <Heart className="w-5 h-5 text-theme-health" />
@@ -38,7 +38,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
           )}
         </div>
       </div>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Eligibility */}
           {b.eligibility_summary && (

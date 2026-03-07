@@ -38,7 +38,7 @@ export function CenterDoorways({ centerCounts }: CenterDoorwaysProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-[1200px] mx-auto">
         {Object.entries(CENTERS).map(function ([name, center]) {
           const count = centerCounts[name] ?? 0
           const imgSrc = CENTER_IMAGES[name]

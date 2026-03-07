@@ -30,7 +30,7 @@ export default async function NeighborhoodsPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="flower" gradientColor="#d69e2e" title="Houston Neighborhoods" subtitle="Explore every corner of Houston. Find resources, officials, and organizations serving your neighborhood." />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Neighborhoods' }]} />
         <div className="flex gap-4 mt-4 mb-6">
           <Link href="/super-neighborhoods" className="text-sm text-brand-accent hover:underline">View by Super Neighborhood</Link>

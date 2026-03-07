@@ -49,7 +49,7 @@ export function HeroBook() {
   return (
     <section className="relative overflow-hidden">
       <div className="bg-brand-bg-alt">
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-14 sm:py-20">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-14 sm:py-20">
 
           {/* Location label */}
           <p className="text-xs uppercase tracking-[0.3em] text-brand-muted font-semibold mb-6">
