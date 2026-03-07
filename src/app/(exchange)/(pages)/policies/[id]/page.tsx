@@ -420,18 +420,16 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
       <AdminEditPanel
         entityType="policies"
         entityId={policy.policy_id}
-        idKey="policy_id"
-        data={policy}
         userRole={userProfile?.role}
         fields={[
-          { name: 'policy_name', label: 'Policy Name', type: 'text' },
-          { name: 'title_6th_grade', label: 'Title (6th Grade)', type: 'text' },
-          { name: 'summary_6th_grade', label: 'Summary (6th Grade)', type: 'textarea' },
-          { name: 'policy_type', label: 'Policy Type', type: 'text' },
-          { name: 'status', label: 'Status', type: 'text' },
-          { name: 'government_level', label: 'Government Level', type: 'select', options: ['federal', 'state', 'county', 'city'] },
-          { name: 'source_url', label: 'Source URL', type: 'url' },
-          { name: 'sponsor', label: 'Sponsor', type: 'text' },
+          { key: 'policy_name', label: 'Policy Name', type: 'text', value: policy.policy_name },
+          { key: 'title_6th_grade', label: 'Title (6th Grade)', type: 'text', value: policy.title_6th_grade },
+          { key: 'summary_6th_grade', label: 'Summary (6th Grade)', type: 'textarea', value: policy.summary_6th_grade },
+          { key: 'policy_type', label: 'Policy Type', type: 'text', value: (policy as any).policy_type },
+          { key: 'status', label: 'Status', type: 'text', value: (policy as any).status },
+          { key: 'government_level', label: 'Government Level', type: 'select', value: (policy as any).government_level, options: ['federal', 'state', 'county', 'city'] },
+          { key: 'source_url', label: 'Source URL', type: 'url', value: policy.source_url },
+          { key: 'sponsor', label: 'Sponsor', type: 'text', value: (policy as any).sponsor },
         ] as EditField[]}
       />
     </div>

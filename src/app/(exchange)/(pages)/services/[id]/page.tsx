@@ -245,22 +245,21 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       <AdminEditPanel
         entityType="services_211"
         entityId={service.service_id}
-        currentData={service}
-        fields={[
-          { key: 'service_name', label: 'Service Name', type: 'text' },
-          { key: 'description_5th_grade', label: 'Description', type: 'textarea' },
-          { key: 'phone', label: 'Phone', type: 'text' },
-          { key: 'website', label: 'Website', type: 'url' },
-          { key: 'address', label: 'Address', type: 'text' },
-          { key: 'city', label: 'City', type: 'text' },
-          { key: 'state', label: 'State', type: 'text' },
-          { key: 'zip_code', label: 'ZIP Code', type: 'text' },
-          { key: 'eligibility', label: 'Eligibility', type: 'textarea' },
-          { key: 'fee_structure', label: 'Fee Structure', type: 'text' },
-          { key: 'hours_of_operation', label: 'Hours of Operation', type: 'text' },
-          { key: 'service_area', label: 'Service Area', type: 'text' },
-        ] as EditField[]}
         userRole={userProfile?.role}
+        fields={[
+          { key: 'service_name', label: 'Service Name', type: 'text', value: service.service_name },
+          { key: 'description_5th_grade', label: 'Description', type: 'textarea', value: service.description_5th_grade },
+          { key: 'phone', label: 'Phone', type: 'text', value: service.phone },
+          { key: 'website', label: 'Website', type: 'url', value: service.website },
+          { key: 'address', label: 'Address', type: 'text', value: service.address },
+          { key: 'city', label: 'City', type: 'text', value: service.city },
+          { key: 'state', label: 'State', type: 'text', value: service.state },
+          { key: 'zip_code', label: 'ZIP Code', type: 'text', value: service.zip_code },
+          { key: 'eligibility', label: 'Eligibility', type: 'textarea', value: (service as any).eligibility },
+          { key: 'fee_structure', label: 'Fee Structure', type: 'text', value: (service as any).fee_structure },
+          { key: 'hours_of_operation', label: 'Hours of Operation', type: 'text', value: (service as any).hours_of_operation },
+          { key: 'service_area', label: 'Service Area', type: 'text', value: (service as any).service_area },
+        ] as EditField[]}
       />
     </div>
   )
