@@ -11,6 +11,7 @@ import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 export const revalidate = 86400
 
@@ -136,7 +137,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
           <div className="flex items-start gap-5 mt-4">
             {org?.logo_url && (
-              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border flex-shrink-0" style={{ boxShadow: '2px 2px 0 #D5D0C8' }} />
+              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border flex-shrink-0" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}  width={48} height={64} />
             )}
             <div className="min-w-0">
               <h1 className="font-serif text-[clamp(1.8rem,4vw,2.5rem)] leading-tight text-brand-text mb-2">{displayName}</h1>

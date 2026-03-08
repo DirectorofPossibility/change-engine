@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { CENTER_COLORS, COMPASS_PROMPTS, CENTERS } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
 import { ArrowRight, BookOpen } from 'lucide-react'
+import Image from 'next/image'
 
 interface CompassEntryProps {
   centerCounts: Record<string, number>
@@ -73,7 +74,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
               }}
             >
               {/* FOL watermark */}
-              <img
+              <Image
                 src={folImage}
                 alt="" aria-hidden="true"
                 className="absolute right-[-20px] top-[-20px] w-[140px] h-[140px] pointer-events-none transition-all duration-500"
@@ -81,7 +82,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                   opacity: isHovered ? 0.12 : 0.06,
                   transform: isHovered ? 'rotate(15deg) scale(1.1)' : 'rotate(0deg)',
                 }}
-              />
+               width={200} height={200} />
 
               {/* Page corner fold */}
               <div className="absolute top-0 right-0 w-8 h-8 overflow-hidden">

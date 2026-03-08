@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getExchangeStats, getLatestContent, getPathwayCounts } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 export const revalidate = 600
 
@@ -231,7 +232,7 @@ export default async function Design2Home() {
               >
                 {featured.image_url ? (
                   <div className="h-[220px] overflow-hidden">
-                    <img src={featured.image_url} alt="" className="w-full h-full object-cover" />
+                    <Image src={featured.image_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                   </div>
                 ) : (
                   <div className="h-[220px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(199,91,42,0.08), rgba(199,91,42,0.16))' }}>
@@ -277,7 +278,7 @@ export default async function Design2Home() {
                     {/* Thumbnail */}
                     {item.image_url ? (
                       <div className="w-[110px] flex-shrink-0 overflow-hidden">
-                        <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                        <Image src={item.image_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                       </div>
                     ) : (
                       <div className="w-[110px] flex-shrink-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme?.color || '#C75B2A'}15, ${theme?.color || '#C75B2A'}30)` }}>

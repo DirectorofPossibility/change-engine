@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { TipsToggle } from './TipsToggle'
 import { useTranslation } from '@/lib/use-translation'
+import Image from 'next/image'
 
 export function D2Footer() {
   const { t } = useTranslation()
@@ -54,23 +55,23 @@ export function D2Footer() {
 
       <footer className="bg-brand-bg-alt relative overflow-hidden border-t border-brand-border">
         {/* FOL watermark */}
-        <img
+        <Image
           src="/images/fol/flower-full.svg"
           alt=""
           aria-hidden="true"
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none opacity-[0.04]"
-        />
+         width={200} height={200} />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
             {/* Brand */}
             <div className="md:col-span-2 relative">
               {/* Big FOL watermark behind brand section */}
-              <img
+              <Image
                 src="/images/fol/flower-full.svg"
                 alt="" aria-hidden="true"
                 className="absolute -top-[30px] -left-[40px] w-[280px] h-[280px] pointer-events-none opacity-[0.06]"
-              />
+               width={200} height={200} />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-3">
                   <FlowerOfLifeIcon size={44} color="#C75B2A" />

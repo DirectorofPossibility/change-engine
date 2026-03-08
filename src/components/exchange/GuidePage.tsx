@@ -12,6 +12,7 @@ import { useTranslation } from '@/lib/use-translation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import type { ExchangeStats, ServiceWithOrg } from '@/lib/types/exchange'
+import Image from 'next/image'
 
 // ── Types ──
 
@@ -170,11 +171,11 @@ export function GuidePage({
                 {/* Image */}
                 <div className="lg:col-span-3 relative h-64 lg:h-auto min-h-[240px]">
                   {featuredContent.image_url ? (
-                    <img
+                    <Image
                       src={featuredContent.image_url}
                       alt={featuredContent.title_6th_grade || ''}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+                     width={800} height={400} />
                   ) : (
                     <div
                       className="w-full h-full"
@@ -259,7 +260,7 @@ export function GuidePage({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow">
                           <div className="h-48 sm:h-auto relative overflow-hidden">
                             {item.image_url ? (
-                              <img src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                              <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
                             ) : (
                               <div className="w-full h-full" style={{ background: `linear-gradient(135deg, ${color}30, ${color}60)` }} />
                             )}
@@ -292,7 +293,7 @@ export function GuidePage({
                         <Link key={item.id} href={'/content/' + item.id} className="group block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow">
                           {item.image_url && (
                             <div className="h-32 overflow-hidden">
-                              <img src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                              <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
                             </div>
                           )}
                           <div className="p-4" style={{ borderLeft: `3px solid ${color}` }}>
@@ -479,7 +480,7 @@ export function GuidePage({
                         <Link key={guide.guide_id} href={'/guides/' + guide.slug} className="group block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow">
                           {guide.hero_image_url && (
                             <div className="h-28 overflow-hidden">
-                              <img src={guide.hero_image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                              <Image src={guide.hero_image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
                             </div>
                           )}
                           <div className="p-4">

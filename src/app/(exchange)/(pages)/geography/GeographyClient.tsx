@@ -16,6 +16,7 @@ import { MapEntityDrawer } from '@/components/maps/MapEntityDrawer'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { GeoLayerConfig } from '@/lib/constants'
 import type { GeoFeatureProperties } from '@/lib/types/exchange'
+import Image from 'next/image'
 
 const InteractiveMap = dynamic(
   () => import('@/components/maps/InteractiveMap').then(m => ({ default: m.InteractiveMap })),
@@ -400,7 +401,7 @@ export function GeographyClient({
                             className="flex items-center gap-3 p-2.5 rounded-lg border-2 border-brand-border hover:border-brand-accent/40 hover:bg-brand-bg/50 transition-all group"
                           >
                             {o.photo_url ? (
-                              <img src={o.photo_url} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-brand-border" />
+                              <Image src={o.photo_url} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-brand-border"  width={80} height={36} />
                             ) : (
                               <div className="w-9 h-9 rounded-full bg-brand-border/40 flex items-center justify-center">
                                 <Users size={14} className="text-brand-muted" />

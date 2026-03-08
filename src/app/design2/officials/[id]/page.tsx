@@ -6,6 +6,7 @@ import { Phone, Mail, Globe, MapPin } from 'lucide-react'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import Image from 'next/image'
 
 export const revalidate = 600
 
@@ -206,12 +207,12 @@ export default async function OfficialDetailPage({
               <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
                 {/* Photo */}
                 {photoUrl ? (
-                  <img
+                  <Image
                     src={photoUrl}
                     alt={official.official_name}
                     className="h-28 w-28 flex-shrink-0 rounded-full border-4 object-cover"
                     style={{ borderColor: '#E2DDD5' }}
-                  />
+                   width={112} height={80} />
                 ) : (
                   <div
                     className="flex h-28 w-28 flex-shrink-0 items-center justify-center rounded-full border-4 text-2xl font-bold text-white"

@@ -12,6 +12,7 @@ import { getNeighborhoodByZip } from '@/lib/data/exchange'
 import { CompactCircleGraph } from './CompactCircleGraph'
 import { WayfinderTooltipPos } from './WayfinderTooltips'
 import { WayfinderTracker } from './WayfinderTracker'
+import Image from 'next/image'
 
 interface DetailWayfinderProps {
   data: WayfinderData
@@ -129,7 +130,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               <div key={org.org_id} className="space-y-2">
                 <Link href={'/organizations/' + org.org_id} className="flex items-center gap-2 group">
                   {org.logo_url ? (
-                    <img src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0" />
+                    <Image src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0"  width={48} height={32} />
                   ) : (
                     <div className="w-8 h-8 rounded bg-brand-bg flex items-center justify-center flex-shrink-0">
                       <Users size={14} className="text-brand-muted" />
@@ -348,7 +349,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               return (
                 <Link key={c.id} href={'/content/' + c.id} className="flex gap-2 group/card">
                   {c.image_url ? (
-                    <img src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0" />
+                    <Image src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0"  width={200} height={36} />
                   ) : (
                     <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#6B6560') + '20' }} />
                   )}
@@ -485,7 +486,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               return (
                 <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-2 group/off">
                   {o.photo_url ? (
-                    <img src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-contain bg-brand-bg flex-shrink-0" />
+                    <Image src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-contain bg-brand-bg flex-shrink-0"  width={80} height={28} />
                   ) : (
                     <div className="w-7 h-7 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
                       <Users size={11} className="text-brand-muted" />

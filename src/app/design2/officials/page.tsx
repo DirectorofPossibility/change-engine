@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getOfficials } from '@/lib/data/exchange'
+import Image from 'next/image'
 
 export const revalidate = 600
 
@@ -132,7 +133,7 @@ export default async function OfficialsPage() {
                     {/* Photo or Initials Circle */}
                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                       {official.photo_url ? (
-                        <img
+                        <Image
                           src={official.photo_url}
                           alt={official.official_name}
                           style={{
@@ -142,7 +143,7 @@ export default async function OfficialsPage() {
                             objectFit: 'cover',
                             border: '2px solid #E2DDD5',
                           }}
-                        />
+                         width={80} height={80} />
                       ) : (
                         <div style={{
                           width: '80px',

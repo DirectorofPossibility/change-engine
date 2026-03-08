@@ -7,6 +7,7 @@ import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { User, Globe, Mail, Phone, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -35,7 +36,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
           <Breadcrumb items={[{ label: 'Candidates', href: '/candidates' }, { label: c.candidate_name }]} />
           <div className="flex items-start gap-6 mt-4">
             {c.photo_url ? (
-              <img src={c.photo_url} alt="" className="w-24 h-24 rounded-xl object-cover flex-shrink-0" />
+              <Image src={c.photo_url} alt="" className="w-24 h-24 rounded-xl object-cover flex-shrink-0"  width={800} height={96} />
             ) : (
               <div className="w-24 h-24 rounded-xl bg-brand-border flex items-center justify-center flex-shrink-0"><User className="w-10 h-10 text-brand-muted" /></div>
             )}

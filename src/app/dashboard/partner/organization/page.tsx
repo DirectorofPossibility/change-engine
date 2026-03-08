@@ -9,6 +9,7 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import Image from 'next/image'
 
 export default async function PartnerOrganizationPage() {
   const supabase = await createClient()
@@ -68,11 +69,11 @@ export default async function PartnerOrganizationPage() {
           {orgData.logo_url && (
             <div className="w-20 h-20 rounded-xl overflow-hidden border border-brand-border flex-shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={orgData.logo_url}
                 alt={`${orgData.org_name} logo`}
                 className="w-full h-full object-contain"
-              />
+               width={48} height={48} />
             </div>
           )}
           <div className="flex-1">

@@ -23,6 +23,7 @@ import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import Image from 'next/image'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -272,7 +273,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {item.image_url && (
               <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80">
                 <div className="rounded-lg overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D1D5E0' }}>
-                  <img src={item.image_url} alt={title || ''} className="w-full h-56 object-cover" />
+                  <Image src={item.image_url} alt={title || ''} className="w-full h-56 object-cover"  width={800} height={224} />
                 </div>
               </div>
             )}

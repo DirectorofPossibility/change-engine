@@ -6,6 +6,7 @@ import {
   Calendar, Clock, MapPin, Video, ExternalLink,
   ArrowLeft, Tag, RefreshCw, DollarSign
 } from 'lucide-react'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -200,12 +201,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}
             >
               {org.logo_url && (
-                <img
+                <Image
                   src={org.logo_url}
                   alt={org.org_name}
                   className="w-12 h-12 rounded-lg object-contain flex-shrink-0"
                   style={{ backgroundColor: '#FAF8F5', borderWidth: 1, borderColor: '#E2DDD5' }}
-                />
+                 width={48} height={48} />
               )}
               <div className="min-w-0">
                 <div className="font-serif font-bold truncate" style={{ color: '#1a1a1a' }}>

@@ -14,6 +14,7 @@ import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import Image from 'next/image'
 
 export const revalidate = 86400
 
@@ -160,11 +161,11 @@ export default async function GovernancePage() {
                               {/* Photo or color header */}
                               {o.photo_url ? (
                                 <div className="h-[100px] overflow-hidden">
-                                  <img
+                                  <Image
                                     src={o.photo_url.replace(/^http:\/\//, 'https://')}
                                     alt={o.official_name}
                                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                                  />
+                                   width={800} height={400} />
                                 </div>
                               ) : (
                                 <div className="h-[60px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, ' + level.color + ' 0%, ' + level.color + 'cc 100%)' }}>

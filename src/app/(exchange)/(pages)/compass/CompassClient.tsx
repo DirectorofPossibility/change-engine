@@ -24,6 +24,7 @@ import { ZipInput } from '@/components/exchange/ZipInput'
 import { THEMES } from '@/lib/constants'
 import type { CompassPreviewData } from '@/lib/types/exchange'
 import { SpiralProgress } from '@/components/exchange/SpiralProgress'
+import Image from 'next/image'
 
 interface CompassClientProps {
   zip?: string
@@ -191,7 +192,7 @@ export function CompassClient({
                     <div className="flex items-center gap-2.5 pl-2">
                       <div className="w-10 h-10 rounded-full flex-shrink-0 p-[2px]" style={{ backgroundColor: ringColor }}>
                         {o.photo_url ? (
-                          <img src={o.photo_url} alt="" className="w-full h-full rounded-full object-cover ring-2 ring-white" />
+                          <Image src={o.photo_url} alt="" className="w-full h-full rounded-full object-cover ring-2 ring-white"  width={80} height={80} />
                         ) : (
                           <div className="w-full h-full rounded-full bg-brand-bg flex items-center justify-center ring-2 ring-white">
                             <span className="text-sm font-bold text-brand-muted">{o.official_name?.charAt(0)}</span>
@@ -235,7 +236,7 @@ export function CompassClient({
                   >
                     {item.image_url && (
                       <div className="aspect-[16/9] overflow-hidden">
-                        <img src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"  width={800} height={400} />
                       </div>
                     )}
                     <div className="p-3">
@@ -377,7 +378,7 @@ export function CompassClient({
                         className="flex items-center gap-3 p-3 hover:bg-brand-bg/50 transition-colors group"
                       >
                         {org.logo_url ? (
-                          <img src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0" />
+                          <Image src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0"  width={48} height={32} />
                         ) : (
                           <div className="w-8 h-8 rounded bg-brand-bg flex items-center justify-center flex-shrink-0">
                             <Users size={14} className="text-brand-muted" />

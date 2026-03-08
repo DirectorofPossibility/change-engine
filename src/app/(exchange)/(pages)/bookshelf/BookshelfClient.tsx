@@ -6,6 +6,7 @@ import {
   X, ChevronRight, Tag
 } from 'lucide-react'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 interface BookshelfItem {
   id: string
@@ -221,7 +222,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
       {/* Cover or placeholder */}
       {book.cover_image_url ? (
         <div className="w-20 flex-shrink-0 bg-brand-bg">
-          <img src={book.cover_image_url} alt={book.title} className="w-full h-full object-cover" />
+          <Image src={book.cover_image_url} alt={book.title} className="w-full h-full object-cover"  width={800} height={400} />
         </div>
       ) : (
         <div className="w-16 flex-shrink-0 flex flex-col items-center justify-center py-4 bg-brand-bg border-r border-brand-border">

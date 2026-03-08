@@ -8,6 +8,7 @@ import {
   WatchdogIcon, PartnerIcon, ExplorerIcon,
 } from '@/components/exchange/FlowerIcons'
 import type { ArchetypeDashboardData } from '@/lib/data/exchange'
+import Image from 'next/image'
 
 const ICONS: Record<string, typeof SeekerIcon> = {
   seeker: SeekerIcon, learner: LearnerIcon, builder: BuilderIcon,
@@ -127,8 +128,8 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
     <div className="min-h-screen bg-brand-bg">
       {/* ── Hero: Tight identity + quick actions ── */}
       <section className="relative overflow-hidden border-b border-brand-border" style={{ background: config.color + '06' }}>
-        <img src={config.folImage} alt="" aria-hidden="true"
-          className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[300px] h-[300px] pointer-events-none opacity-[0.03]" />
+        <Image src={config.folImage} alt="" aria-hidden="true"
+          className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[300px] h-[300px] pointer-events-none opacity-[0.03]"  width={200} height={200} />
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <nav className="flex items-center gap-1.5 text-[11px] text-brand-muted mb-2">
             <Link href="/" className="hover:text-brand-accent transition-colors">Home</Link>
@@ -245,7 +246,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                       return (
                         <Link key={o.official_id} href={'/officials/' + o.official_id}
                           className="flex items-center gap-2 px-3 py-2 hover:bg-brand-bg-alt/50 transition-colors">
-                          {o.photo_url && <img src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />}
+                          {o.photo_url && <Image src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0"  width={80} height={28} />}
                           <span className="text-xs font-medium text-brand-text flex-1 min-w-0 truncate">{o.official_name}</span>
                           <span className="text-[10px] text-brand-muted flex-shrink-0">{o.title}</span>
                         </Link>
@@ -329,7 +330,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                   return (
                     <Link key={g.guide_id} href={'/guides/' + g.slug}
                       className="flex items-center gap-2 px-3 py-2 hover:bg-brand-bg-alt/50 transition-colors">
-                      {g.hero_image_url && <img src={g.hero_image_url} alt="" className="w-8 h-8 rounded object-cover flex-shrink-0" />}
+                      {g.hero_image_url && <Image src={g.hero_image_url} alt="" className="w-8 h-8 rounded object-cover flex-shrink-0"  width={800} height={32} />}
                       <span className="text-xs font-medium text-brand-text flex-1 min-w-0 line-clamp-2">{g.title}</span>
                     </Link>
                   )
@@ -448,7 +449,7 @@ function ContentTypeSection({ type, items, typeInfo, centerColor }: {
               <Link key={item.id} href={'/content/' + item.id}
                 className="flex items-start gap-2 px-3 py-2 hover:bg-brand-bg-alt/30 transition-colors">
                 {hasValidImage(item.image_url) && (
-                  <img src={item.image_url!} alt="" className="w-14 h-10 rounded object-cover flex-shrink-0 mt-0.5" />
+                  <Image src={item.image_url!} alt="" className="w-14 h-10 rounded object-cover flex-shrink-0 mt-0.5"  width={800} height={40} />
                 )}
                 <div className="flex-1 min-w-0">
                   <h4 className="text-xs font-medium text-brand-text leading-snug line-clamp-2">{item.title}</h4>

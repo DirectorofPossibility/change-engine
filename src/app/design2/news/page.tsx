@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getNewsFeed } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -67,11 +68,11 @@ export default async function NewsPage() {
                 {/* Image or color bar fallback */}
                 {item.image_url ? (
                   <div className="relative h-44 w-full overflow-hidden">
-                    <img
+                    <Image
                       src={item.image_url}
                       alt=""
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                     width={800} height={400} />
                   </div>
                 ) : (
                   <div

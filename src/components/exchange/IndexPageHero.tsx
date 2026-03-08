@@ -2,6 +2,7 @@
 
 import { FOLWatermark } from './FOLWatermark'
 import { useTranslation } from '@/lib/use-translation'
+import Image from 'next/image'
 
 interface StatItem {
   value: string | number
@@ -31,12 +32,12 @@ export function IndexPageHero({
   return (
     <section className="relative w-full overflow-hidden bg-brand-bg">
       {/* FOL watermark */}
-      <img
+      <Image
         src="/images/fol/flower-full.svg"
         alt=""
         aria-hidden="true"
         className="absolute right-[-80px] top-1/2 -translate-y-1/2 w-[420px] h-[420px] pointer-events-none opacity-[0.04]"
-      />
+       width={200} height={200} />
       <div className="absolute left-[-30px] bottom-[-20px] opacity-[0.04]">
         <FOLWatermark variant={pattern} size="md" color={color} />
       </div>

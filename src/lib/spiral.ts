@@ -122,6 +122,25 @@ export function completeOnboarding(persona: string, interests: string[]) {
 
   // Also set persona cookie for server-side use
   document.cookie = `persona=${persona};path=/;max-age=31536000;SameSite=Lax`
+
+  // Persist to database if user is logged in (fire-and-forget)
+  syncOnboardingToProfile(persona, interests)
+}
+
+/** Sync onboarding preferences to user_profiles (if authenticated) */
+async function syncOnboardingToProfile(persona: string, interests: string[]) {
+  try {
+    const { createClient } = await import('@/lib/supabase/client')
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('user_profiles').update({
+      archetype_id: persona,
+      focus_area_interests: interests,
+    }).eq('auth_id', user.id)
+  } catch {
+    // Non-critical — localStorage is the primary store
+  }
 }
 
 /** Get counts per tier */

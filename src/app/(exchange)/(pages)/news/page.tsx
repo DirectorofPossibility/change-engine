@@ -9,6 +9,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'The News Stand — Community Exchange',
@@ -224,11 +225,11 @@ export default async function NewsPage({
                 <Link href={'/content/' + hero.id} className="lg:col-span-7 group">
                   {hasValidImage(hero) && (
                     <div className="aspect-[16/9] rounded-lg overflow-hidden mb-4">
-                      <img
+                      <Image
                         src={hero.image_url!}
                         alt=""
                         className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                      />
+                       width={800} height={400} />
                     </div>
                   )}
                   <div className="flex items-center gap-2 mb-2">
@@ -265,11 +266,11 @@ export default async function NewsPage({
                   return (
                     <Link key={item.id} href={'/content/' + item.id} className={'group flex gap-4 ' + (idx === 0 ? 'pb-5' : 'py-5')}>
                       {hasValidImage(item) ? (
-                        <img
+                        <Image
                           src={item.image_url!}
                           alt=""
                           className="w-28 h-20 rounded-lg object-cover flex-shrink-0 group-hover:opacity-90 transition-opacity"
-                        />
+                         width={800} height={80} />
                       ) : (
                         <div
                           className="w-28 h-20 rounded-lg flex-shrink-0 flex items-center justify-center"
@@ -317,11 +318,11 @@ export default async function NewsPage({
                         <Link href={'/content/' + section.items[0].id} className="group block mb-5">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="aspect-[16/10] rounded-lg overflow-hidden">
-                              <img
+                              <Image
                                 src={section.items[0].image_url!}
                                 alt=""
                                 className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                              />
+                               width={800} height={400} />
                             </div>
                             <div>
                               {getTheme(section.items[0]) && (
@@ -357,7 +358,7 @@ export default async function NewsPage({
                               className="group flex items-start gap-4 py-3 hover:bg-white/50 -mx-3 px-3 rounded-lg transition-colors"
                             >
                               {hasValidImage(item) ? (
-                                <img src={item.image_url!} alt="" className="w-20 h-14 rounded object-cover flex-shrink-0" />
+                                <Image src={item.image_url!} alt="" className="w-20 h-14 rounded object-cover flex-shrink-0"  width={800} height={56} />
                               ) : (
                                 <div
                                   className="w-20 h-14 rounded flex-shrink-0 flex items-center justify-center"

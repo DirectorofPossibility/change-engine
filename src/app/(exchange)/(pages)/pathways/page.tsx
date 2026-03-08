@@ -15,6 +15,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { getUIStrings } from '@/lib/i18n'
+import Image from 'next/image'
 
 export const revalidate = 3600
 
@@ -136,11 +137,11 @@ export default async function PathwaysPage() {
                     >
                       {hero.image_url && (
                         <div className="aspect-[16/9] overflow-hidden">
-                          <img
+                          <Image
                             src={hero.image_url}
                             alt=""
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
+                           width={800} height={400} />
                         </div>
                       )}
                       <div className="p-4">
@@ -176,7 +177,7 @@ export default async function PathwaysPage() {
                           >
                             {item.image_url && (
                               <div className="aspect-[16/9] overflow-hidden">
-                                <img src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"  width={800} height={400} />
                               </div>
                             )}
                             <div className="p-3">

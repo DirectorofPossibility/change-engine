@@ -7,6 +7,7 @@ import {
   BookOpen, Video, Wrench, Calendar, GraduationCap, Map, Newspaper,
   Megaphone, HandHeart, LayoutGrid, List, FolderOpen
 } from 'lucide-react'
+import Image from 'next/image'
 
 // ── Types ──
 
@@ -462,7 +463,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                   >
                     {item.image_url && (
                       <div className="w-full h-28 rounded-lg overflow-hidden mb-3 bg-brand-bg">
-                        <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                        <Image src={item.image_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                       </div>
                     )}
                     <div className="flex items-start gap-2">

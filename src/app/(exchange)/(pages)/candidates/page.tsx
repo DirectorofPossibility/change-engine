@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
 import { User, ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -31,7 +32,7 @@ export default async function CandidatesPage() {
               <Link key={c.candidate_id} href={`/candidates/${c.candidate_id}`} className="block bg-white rounded-lg border-2 border-brand-border p-5 hover:shadow-md transition-shadow">
                 <div className="flex items-start gap-4">
                   {c.photo_url ? (
-                    <img src={c.photo_url} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0" />
+                    <Image src={c.photo_url} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0"  width={80} height={56} />
                   ) : (
                     <div className="w-14 h-14 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0"><User className="w-6 h-6 text-brand-muted" /></div>
                   )}

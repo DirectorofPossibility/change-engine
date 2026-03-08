@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Phone, Globe, MapPin, Clock } from 'lucide-react'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -277,11 +278,11 @@ export default async function ServiceDetailPage({
                   style={{ borderColor: '#E2DDD5' }}
                 >
                   {parentOrg.logo_url ? (
-                    <img
+                    <Image
                       src={parentOrg.logo_url}
                       alt={parentOrg.name || ''}
                       className="h-12 w-12 rounded-lg object-contain"
-                    />
+                     width={48} height={48} />
                   ) : (
                     <div
                       className="flex h-12 w-12 items-center justify-center rounded-lg text-lg font-bold text-white"

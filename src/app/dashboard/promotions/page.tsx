@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Calendar, Plus, ChevronLeft, ChevronRight, Eye, EyeOff, Pencil, Trash2 } from 'lucide-react'
+import Image from 'next/image'
 
 interface Promotion {
   promo_id: string
@@ -403,7 +404,7 @@ export default function PromotionsAdmin() {
               <div key={p.promo_id} className="p-4 bg-white border-2 border-brand-border rounded-xl flex gap-4">
                 <div className="w-1.5 rounded flex-shrink-0" style={{ background: p.is_active ? (p.color || tc.color) : '#D1D5E0' }} />
                 {p.image_url && (
-                  <img src={p.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                  <Image src={p.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0"  width={800} height={64} />
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -511,13 +512,13 @@ function PromoPreview({ title, subtitle, description, promoType, orgName, logoUr
     <div className="border-2 border-brand-border rounded-xl overflow-hidden" style={{ boxShadow: '3px 3px 0 ' + color + '30' }}>
       {imageUrl && (
         <div className="h-24 overflow-hidden">
-          <img src={imageUrl} alt="" className="w-full h-full object-cover" />
+          <Image src={imageUrl} alt="" className="w-full h-full object-cover"  width={800} height={400} />
         </div>
       )}
       <div className="h-1" style={{ backgroundColor: color }} />
       <div className="p-4">
         <div className="flex items-center gap-2 mb-2">
-          {logoUrl && <img src={logoUrl} alt="" className="w-6 h-6 rounded" />}
+          {logoUrl && <Image src={logoUrl} alt="" className="w-6 h-6 rounded"  width={48} height={24} />}
           <span className="text-[9px] font-mono font-bold uppercase tracking-wider" style={{ color: tc.color }}>{tc.label}</span>
         </div>
         <p className="text-sm font-bold text-brand-text">{title}</p>

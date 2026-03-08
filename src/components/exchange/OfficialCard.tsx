@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Mail, Phone, Globe, Linkedin } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
+import Image from 'next/image'
 
 interface OfficialCardProps {
   id: string
@@ -34,10 +35,12 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
         {/* Photo — larger, more prominent */}
         <div className="flex-shrink-0">
           {photoUrl ? (
-            <img
+            <Image
               src={photoUrl.replace(/^http:\/\//, 'https://')}
               alt={name}
               className="w-[72px] h-[72px] rounded-xl object-cover object-top border-2 border-brand-border group-hover:scale-105 transition-transform duration-300"
+              width={72}
+              height={72}
             />
           ) : (
             <div className="w-[72px] h-[72px] rounded-xl flex items-center justify-center border-2 border-brand-border" style={{ backgroundColor: levelColor + '10' }}>

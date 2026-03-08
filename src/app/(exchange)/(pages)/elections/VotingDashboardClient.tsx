@@ -15,6 +15,7 @@ import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { MapPin, ExternalLink, ChevronRight, BookOpen, ClipboardCheck, Mail, Users } from 'lucide-react'
 import { InfoBubble } from '@/components/exchange/InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
+import Image from 'next/image'
 
 interface VotingDashboardClientProps {
   pastElections: any[]
@@ -422,11 +423,11 @@ export function VotingDashboardClient({
                 >
                   {item.image_url && (
                     <div className="h-32 overflow-hidden">
-                      <img
+                      <Image
                         src={item.image_url}
                         alt=""
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                       width={800} height={400} />
                     </div>
                   )}
                   <div className="p-4">

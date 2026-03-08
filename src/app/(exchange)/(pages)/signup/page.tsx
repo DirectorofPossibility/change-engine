@@ -8,6 +8,25 @@ import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { InfoBubble } from '@/components/exchange/InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
 
+/** Validate password complexity: 8+ chars, 1 uppercase, 1 number */
+function validatePassword(pw: string): string | null {
+  if (pw.length < 8) return 'Password must be at least 8 characters.'
+  if (!/[A-Z]/.test(pw)) return 'Password must include at least one uppercase letter.'
+  if (!/[0-9]/.test(pw)) return 'Password must include at least one number.'
+  return null
+}
+
+/** Map Supabase auth errors to user-friendly messages */
+function friendlyError(msg: string): string {
+  if (msg.includes('already registered') || msg.includes('already been registered')) {
+    return 'An account with this email already exists. Try signing in instead.'
+  }
+  if (msg.includes('valid email')) return 'Please enter a valid email address.'
+  if (msg.includes('rate') || msg.includes('too many')) return 'Too many attempts. Please wait a minute and try again.'
+  if (msg.includes('weak password') || msg.includes('should be at least')) return 'Password is too weak. Use at least 8 characters with a number and uppercase letter.'
+  return msg
+}
+
 export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,10 +37,26 @@ export default function SignupPage() {
   const [agreedPrivacy, setAgreedPrivacy] = useState(false)
   const [agreedAccessibility, setAgreedAccessibility] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [passwordHint, setPasswordHint] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [resending, setResending] = useState(false)
+  const [resent, setResent] = useState(false)
+  const [lastSubmit, setLastSubmit] = useState(0)
 
   const allAgreed = agreedTerms && agreedPrivacy && agreedAccessibility
+
+  async function handleResendVerification() {
+    setResending(true)
+    const supabase = createClient()
+    const { error } = await supabase.auth.resend({ type: 'signup', email })
+    if (error) {
+      setError(friendlyError(error.message))
+    } else {
+      setResent(true)
+    }
+    setResending(false)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -29,8 +64,24 @@ export default function SignupPage() {
       setError('Please review and agree to all policies before creating your account.')
       return
     }
+
+    // Client-side password validation
+    const pwError = validatePassword(password)
+    if (pwError) {
+      setError(pwError)
+      return
+    }
+
+    // Rate limit: 10 second cooldown between attempts
+    const now = Date.now()
+    if (now - lastSubmit < 10000) {
+      setError('Please wait a moment before trying again.')
+      return
+    }
+
     setError(null)
     setLoading(true)
+    setLastSubmit(now)
 
     const supabase = createClient()
 
@@ -43,7 +94,15 @@ export default function SignupPage() {
     })
 
     if (authError) {
-      setError(authError.message)
+      setError(friendlyError(authError.message))
+      setLoading(false)
+      return
+    }
+
+    // Supabase returns a user with a fake session when email already exists (security measure).
+    // Detect this: if identities array is empty, the email is taken.
+    if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
+      setError('An account with this email already exists. Try signing in instead.')
       setLoading(false)
       return
     }
@@ -51,7 +110,6 @@ export default function SignupPage() {
     // Profile is auto-created by DB trigger; update with extra fields
     if (authData.user) {
       await supabase.from('user_profiles').update({
-        role: 'neighbor',
         zip_code: zipCode || null,
         preferred_language: language,
         gamification_enabled: true,
@@ -70,6 +128,23 @@ export default function SignupPage() {
         <p className="text-brand-muted mb-6">
           We sent a verification link to <strong>{email}</strong>. Click the link to activate your account and start exploring your community.
         </p>
+        <p className="text-brand-muted text-xs mb-4">
+          Check your spam folder if you don&apos;t see it in a few minutes.
+        </p>
+        {resent ? (
+          <p className="text-sm text-green-600 mb-4">Verification email resent!</p>
+        ) : (
+          <button
+            onClick={handleResendVerification}
+            disabled={resending}
+            className="text-sm text-brand-accent hover:underline disabled:opacity-50 mb-4 block mx-auto"
+          >
+            {resending ? 'Resending...' : 'Didn\u2019t get it? Resend verification email'}
+          </button>
+        )}
+        {error && (
+          <p className="text-sm text-red-600 mb-4">{error}</p>
+        )}
         <Link href="/login" className="text-brand-accent hover:underline text-sm">
           Back to sign in
         </Link>
@@ -104,6 +179,7 @@ export default function SignupPage() {
               type="text"
               required
               value={displayName}
+              maxLength={50}
               onChange={function (e) { setDisplayName(e.target.value) }}
               className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
               placeholder="Your name"
@@ -127,12 +203,18 @@ export default function SignupPage() {
               id="password"
               type="password"
               required
-              minLength={6}
+              minLength={8}
               value={password}
-              onChange={function (e) { setPassword(e.target.value) }}
+              onChange={function (e) {
+                setPassword(e.target.value)
+                setPasswordHint(validatePassword(e.target.value))
+              }}
               className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-              placeholder="At least 6 characters"
+              placeholder="8+ characters, uppercase + number"
             />
+            {password && passwordHint && (
+              <p className="text-xs text-amber-600 mt-1">{passwordHint}</p>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>

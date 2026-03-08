@@ -9,6 +9,7 @@ import {
 } from '@/components/exchange/FlowerIcons'
 import { ContentShelf, type ShelfItem } from '@/components/exchange/ContentShelf'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import Image from 'next/image'
 
 const ICONS: Record<string, typeof SeekerIcon> = {
   seeker: SeekerIcon,
@@ -72,11 +73,11 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
       {/* Hero */}
       <section className="relative overflow-hidden" style={{ background: config.color + '08' }}>
         {/* FOL watermark */}
-        <img
+        <Image
           src={config.folImage}
           alt="" aria-hidden="true"
           className="absolute right-[-60px] top-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none opacity-[0.06]"
-        />
+         width={200} height={200} />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Inline breadcrumb (Breadcrumb component is server-only) */}
@@ -211,11 +212,11 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             {/* Quote widget */}
             {quote && (
               <div className="relative overflow-hidden rounded-xl border-2 border-brand-border p-6 mt-6" style={{ background: centerColor + '06' }}>
-                <img
+                <Image
                   src={config.folImage}
                   alt="" aria-hidden="true"
                   className="absolute right-[-20px] top-[-20px] w-[100px] h-[100px] pointer-events-none opacity-[0.06]"
-                />
+                 width={200} height={200} />
                 <blockquote className="relative z-10">
                   <p className="font-serif text-lg italic text-brand-text leading-relaxed">
                     "{quote.quote_text}"
@@ -235,11 +236,11 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             {/* Pathways */}
             <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
               <div className="relative p-4 border-b border-brand-border overflow-hidden">
-                <img
+                <Image
                   src={config.folImage}
                   alt="" aria-hidden="true"
                   className="absolute right-[-10px] top-[-10px] w-[60px] h-[60px] pointer-events-none opacity-[0.06]"
-                />
+                 width={200} height={200} />
                 <h3 className="font-serif text-base font-semibold text-brand-text">Explore Pathways</h3>
                 <p className="text-[11px] text-brand-muted mt-0.5">Seven dimensions of community life</p>
               </div>

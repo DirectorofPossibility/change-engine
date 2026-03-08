@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 600
 
@@ -91,7 +92,7 @@ export default async function OrganizationsPage() {
                     }}>
                       {/* Logo or Initial */}
                       {org.logo_url ? (
-                        <img
+                        <Image
                           src={org.logo_url}
                           alt={`${org.org_name} logo`}
                           style={{
@@ -102,7 +103,7 @@ export default async function OrganizationsPage() {
                             flexShrink: 0,
                             border: '1px solid #E2DDD5',
                           }}
-                        />
+                         width={56} height={56} />
                       ) : (
                         <div style={{
                           width: '56px',

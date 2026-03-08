@@ -268,7 +268,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                           <Link key={org.org_id} href={'/design2/organizations/' + org.org_id} className="block group">
                             <div className="flex items-start gap-2">
                               {org.logo_url && (
-                                <img src={org.logo_url} alt="" width={28} height={28} className="rounded object-contain flex-shrink-0 mt-0.5" />
+                                <Image src={org.logo_url} alt="" width={28} height={28} className="rounded object-contain flex-shrink-0 mt-0.5"  />
                               )}
                               <div className="min-w-0">
                                 <span className="text-[13px] font-medium line-clamp-1" style={{ color: '#1a1a1a' }}>{org.org_name}</span>
@@ -349,7 +349,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                           <Link key={item.id} href={'/design2/content/' + item.id} className="block group">
                             <div className="flex gap-2">
                               {item.image_url && (
-                                <img src={item.image_url} alt="" width={48} height={36} className="rounded object-cover flex-shrink-0" />
+                                <Image src={item.image_url} alt="" width={48} height={36} className="rounded object-cover flex-shrink-0"  />
                               )}
                               <div className="min-w-0">
                                 <span className="text-[13px] font-medium line-clamp-2" style={{ color: '#1a1a1a' }}>{itemTitle}</span>

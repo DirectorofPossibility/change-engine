@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
+import Image from 'next/image'
 
 interface ImageLightboxProps {
   src: string
@@ -24,12 +25,12 @@ export function ImageLightbox({ src, alt, className }: ImageLightboxProps) {
 
   return (
     <>
-      <img
+      <Image
         src={src}
         alt={alt}
         className={(className || '') + ' cursor-zoom-in'}
         onClick={function (e) { e.preventDefault(); e.stopPropagation(); setOpen(true) }}
-      />
+       width={200} height={200} />
       {open && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
@@ -42,12 +43,12 @@ export function ImageLightbox({ src, alt, className }: ImageLightboxProps) {
           >
             &times;
           </button>
-          <img
+          <Image
             src={src}
             alt={alt}
             className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
             onClick={function (e) { e.stopPropagation() }}
-          />
+           width={200} height={200} />
         </div>
       )}
     </>

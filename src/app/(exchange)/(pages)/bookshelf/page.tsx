@@ -3,6 +3,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { getBookshelfItems } from '@/lib/data/library'
 import { BookshelfClient } from './BookshelfClient'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -98,11 +99,11 @@ export default async function BookshelfPage() {
                 className="absolute w-[220px] h-[160px] rounded-[10px] border-[3px] border-white overflow-hidden z-[2]"
                 style={{ top: 80, right: 0, transform: 'rotate(2deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
               >
-                <img
+                <Image
                   src={BUCKET + '/reading.jpg'}
                   alt="Books and reading materials"
                   className="w-full h-full object-cover"
-                />
+                 width={800} height={400} />
               </div>
 
               {/* Floating stat */}

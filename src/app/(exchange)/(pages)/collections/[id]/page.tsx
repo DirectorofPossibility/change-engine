@@ -9,6 +9,7 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { THEMES } from '@/lib/constants'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { ExternalLink } from 'lucide-react'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -109,7 +110,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                     >
                       {image ? (
                         <div className="h-36 overflow-hidden">
-                          <img src={image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          <Image src={image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"  width={800} height={400} />
                         </div>
                       ) : (
                         <div className="h-3" style={{ backgroundColor: themeColor }} />

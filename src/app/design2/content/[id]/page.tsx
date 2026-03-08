@@ -3,6 +3,7 @@ import { getWayfinderContext } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -107,7 +108,7 @@ export default async function ContentDetailPage({
             {(content as any).image_url ? (
               <div className="w-full lg:w-[280px] flex-shrink-0">
                 <div className="rounded-lg overflow-hidden" style={{ boxShadow: '0 8px 30px rgba(0,0,0,0.2)', height: '180px' }}>
-                  <img src={(content as any).image_url} alt="" className="w-full h-full object-cover" />
+                  <Image src={(content as any).image_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
               </div>
             ) : (
@@ -198,11 +199,11 @@ export default async function ContentDetailPage({
                         style={{ borderColor: '#E2DDD5' }}
                       >
                         {official.photo_url ? (
-                          <img
+                          <Image
                             src={official.photo_url}
                             alt={official.official_name}
                             className="h-8 w-8 rounded-full object-cover"
-                          />
+                           width={32} height={80} />
                         ) : (
                           <div
                             className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white"

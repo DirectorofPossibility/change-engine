@@ -5,6 +5,7 @@ import { Building2, MapPin, Scale, ExternalLink } from 'lucide-react'
 import { getTirzZone, getOfficialsForTirz, getPoliciesForTirz } from '@/lib/data/exchange'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TirzDetailMap } from './TirzDetailMap'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -146,11 +147,11 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                       className="flex items-center gap-3 bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
                     >
                       {official.photo_url ? (
-                        <img
+                        <Image
                           src={official.photo_url}
                           alt={official.official_name}
                           className="w-12 h-12 rounded-full object-cover border-2 border-brand-border"
-                        />
+                         width={80} height={48} />
                       ) : (
                         <div className="w-12 h-12 rounded-full bg-brand-bg-alt flex items-center justify-center text-brand-muted text-sm font-bold">
                           {(official.official_name || '').split(' ').map(function (n: string) { return n[0] }).join('').slice(0, 2)}

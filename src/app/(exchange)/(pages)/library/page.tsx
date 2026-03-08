@@ -5,6 +5,7 @@ import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { LibraryClient } from './LibraryClient'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -72,11 +73,11 @@ export default async function LibraryPage() {
                 className="absolute w-[260px] h-[180px] rounded-[10px] border-[3px] border-white overflow-hidden z-[2]"
                 style={{ top: 10, left: 20, transform: 'rotate(-2deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
               >
-                <img
+                <Image
                   src={BUCKET + '/person-reading.jpg'}
                   alt="Person reading at a library"
                   className="w-full h-full object-cover"
-                />
+                 width={800} height={400} />
               </div>
 
               {/* Second image — books/bookshelf */}
@@ -84,11 +85,11 @@ export default async function LibraryPage() {
                 className="absolute w-[180px] h-[130px] rounded-[10px] border-[3px] border-white overflow-hidden z-[1]"
                 style={{ top: 150, left: -5, transform: 'rotate(3deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
               >
-                <img
+                <Image
                   src={BUCKET + '/reading.jpg'}
                   alt="Books and reading materials"
                   className="w-full h-full object-cover"
-                />
+                 width={800} height={400} />
               </div>
 
               {/* Third image — person studying */}
@@ -96,11 +97,11 @@ export default async function LibraryPage() {
                 className="absolute w-[220px] h-[160px] rounded-[10px] border-[3px] border-white overflow-hidden z-[3]"
                 style={{ top: 140, right: 0, transform: 'rotate(-1deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
               >
-                <img
+                <Image
                   src={BUCKET + '/person-reading2.jpg'}
                   alt="Studying and research"
                   className="w-full h-full object-cover"
-                />
+                 width={800} height={400} />
               </div>
 
               {/* Tape decorations */}

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -84,7 +85,7 @@ export default async function PathwayDetailPage({ params }: { params: Promise<{ 
                   style={{ borderColor: '#E2DDD5' }}
                 >
                   {item.image_url ? (
-                    <img src={item.image_url} alt="" className="w-full h-[140px] object-cover" />
+                    <Image src={item.image_url} alt="" className="w-full h-[140px] object-cover"  width={800} height={400} />
                   ) : (
                     <div className="h-[5px] rounded-t-xl" style={{ background: theme.color }} />
                   )}

@@ -15,6 +15,7 @@ import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import Image from 'next/image'
 
 export const revalidate = 86400
 
@@ -111,7 +112,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           ]} />
           <div className="flex items-start gap-4 mt-4">
             {org.logo_url && (
-              <img src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border" />
+              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border"  width={48} height={64} />
             )}
             <div>
               <div className="flex items-center gap-2.5">

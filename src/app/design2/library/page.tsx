@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 export const revalidate = 300
 export const metadata: Metadata = { title: 'Library — Community Exchange' }
@@ -58,7 +59,7 @@ export default async function LibraryPage() {
                 return (
                   <Link key={g.guide_id} href={'/design2/guides/' + g.slug} className="bg-white rounded-xl border overflow-hidden transition-all hover:shadow-md hover:translate-y-[-2px]" style={{ borderColor: '#E2DDD5' }}>
                     {g.hero_image_url ? (
-                      <img src={g.hero_image_url} alt="" className="w-full h-[120px] object-cover" />
+                      <Image src={g.hero_image_url} alt="" className="w-full h-[120px] object-cover"  width={800} height={400} />
                     ) : (
                       <div className="h-2 rounded-t-xl" style={{ background: theme?.color || '#C75B2A' }} />
                     )}
@@ -100,7 +101,7 @@ export default async function LibraryPage() {
               return (
                 <Link key={item.id} href={'/design2/content/' + item.id} className="bg-white rounded-xl border overflow-hidden transition-all hover:shadow-md hover:translate-y-[-2px]" style={{ borderColor: '#E2DDD5' }}>
                   {item.image_url ? (
-                    <img src={item.image_url} alt="" className="w-full h-[130px] object-cover" />
+                    <Image src={item.image_url} alt="" className="w-full h-[130px] object-cover"  width={800} height={400} />
                   ) : (
                     <div className="h-[5px] rounded-t-xl" style={{ background: theme?.color || '#C75B2A' }} />
                   )}

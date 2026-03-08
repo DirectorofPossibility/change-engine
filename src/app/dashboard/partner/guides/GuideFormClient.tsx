@@ -13,6 +13,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { createGuide, updateGuide, deleteGuide } from './actions'
+import Image from 'next/image'
 
 const THEMES: Record<string, { name: string; color: string }> = {
   THEME_01: { name: 'Our Health', color: '#e53e3e' },
@@ -272,10 +273,12 @@ export default function GuideFormClient({ guide, focusAreas }: GuideFormClientPr
         {heroImageUrl && (
           <div className="mt-2 rounded-lg overflow-hidden border border-brand-border w-48 h-32">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={heroImageUrl}
               alt="Hero preview"
               className="w-full h-full object-cover"
+              width={800}
+              height={400}
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
             />
           </div>

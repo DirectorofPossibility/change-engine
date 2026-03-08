@@ -7,6 +7,7 @@ import { Calendar, Clock, MapPin, Globe, Video, ExternalLink, Users, Building2, 
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import Image from 'next/image'
 
 export const revalidate = 300
 
@@ -195,7 +196,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Hosted By</h2>
                 <div className="flex items-start gap-4">
                   {(org as any).logo_url ? (
-                    <img src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 rounded-lg object-contain bg-brand-bg border border-brand-border" />
+                    <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 rounded-lg object-contain bg-brand-bg border border-brand-border"  width={48} height={48} />
                   ) : (
                     <div className="w-12 h-12 rounded-lg bg-brand-bg-alt border border-brand-border flex items-center justify-center">
                       <Building2 className="w-6 h-6 text-brand-muted" />

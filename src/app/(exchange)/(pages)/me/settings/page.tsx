@@ -23,6 +23,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { InfoBubble } from '@/components/exchange/InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
+import Image from 'next/image'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null)
@@ -208,7 +209,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-brand-bg-alt border-2 border-brand-border overflow-hidden flex items-center justify-center flex-shrink-0">
             {avatarUrl ? (
-              <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
+              <Image src={avatarUrl} alt="Profile" className="w-full h-full object-cover"  width={800} height={400} />
             ) : (
               <span className="text-xl font-bold text-brand-accent">
                 {displayName ? displayName.charAt(0).toUpperCase() : '?'}

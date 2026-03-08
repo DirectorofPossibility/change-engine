@@ -16,6 +16,7 @@ import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
+import Image from 'next/image'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -189,11 +190,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           <div className="mt-4 flex flex-col sm:flex-row gap-6">
             {photoUrl && (
               <div className="flex-shrink-0">
-                <img
+                <Image
                   src={photoUrl}
                   alt={official.official_name}
                   className="w-28 h-28 rounded-xl object-cover border-2 border-brand-border"
-                />
+                 width={800} height={112} />
               </div>
             )}
             <div className="flex-1">

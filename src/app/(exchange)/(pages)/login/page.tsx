@@ -27,7 +27,16 @@ export default function LoginPage() {
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
     if (authError) {
-      setError(authError.message)
+      const msg = authError.message
+      if (msg.includes('Invalid login') || msg.includes('invalid_credentials')) {
+        setError('Incorrect email or password. Double-check and try again.')
+      } else if (msg.includes('Email not confirmed')) {
+        setError('Please check your email and click the verification link before signing in.')
+      } else if (msg.includes('rate') || msg.includes('too many')) {
+        setError('Too many login attempts. Please wait a minute and try again.')
+      } else {
+        setError(msg)
+      }
       setLoading(false)
       return
     }

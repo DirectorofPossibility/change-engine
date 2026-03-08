@@ -9,6 +9,7 @@ import {
 import { BookOpen, Heart, Gift, Scale } from 'lucide-react'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Layers of Engagement | Community Exchange',
@@ -194,7 +195,7 @@ export default async function CentersIndexPage() {
                     {/* Preview image */}
                     {image && (
                       <div className="hidden md:block w-36 flex-shrink-0">
-                        <img src={image} alt="" className="w-full h-full object-cover" />
+                        <Image src={image} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                       </div>
                     )}
                   </div>

@@ -6,6 +6,7 @@ import { TOOLTIPS } from '@/lib/tooltips'
 import { HeroZipInput } from './HeroZipInput'
 import { HeroSearchInput } from './HeroSearchInput'
 import { CENTERS, CENTER_COLORS } from '@/lib/constants'
+import Image from 'next/image'
 
 const QUICK_ACCESS = [
   {
@@ -80,19 +81,19 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         }} />
 
         {/* MASSIVE FOL — the signature element */}
-        <img
+        <Image
           src="/images/fol/flower-full.svg"
           alt="" aria-hidden="true"
           className="absolute pointer-events-none z-0 animate-fol-pulse"
           style={{ width: '800px', height: '800px', top: '-120px', right: '-160px', opacity: 0.07 }}
-        />
+         width={800} height={800} />
         {/* Secondary FOL layer — offset, counter-rotate */}
-        <img
+        <Image
           src="/images/fol/seed-of-life.svg"
           alt="" aria-hidden="true"
           className="absolute pointer-events-none z-0"
           style={{ width: '400px', height: '400px', bottom: '-80px', left: '-80px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
-        />
+         width={400} height={400} />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-12 lg:py-14">
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
@@ -152,27 +153,27 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 {/* 1 — back of the pile, peeking top-right */}
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
                   style={{ width: '280px', height: '200px', top: '0', right: '0', transform: 'rotate(3deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 1 }}>
-                  <img src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover" />
+                  <Image src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 2 — peeking bottom-right */}
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
                   style={{ width: '240px', height: '170px', bottom: '0', right: '20px', transform: 'rotate(-2deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 2 }}>
-                  <img src="/images/editorial/cleanup.jpg" alt="Community cleanup" className="w-full h-full object-cover" />
+                  <Image src="/images/editorial/cleanup.jpg" alt="Community cleanup" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 3 — large, anchors the pile center-left */}
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
                   style={{ width: '300px', height: '220px', top: '20px', left: '0', transform: 'rotate(-1.5deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 3 }}>
-                  <img src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover" />
+                  <Image src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 4 — overlaps center, tilted right */}
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
                   style={{ width: '260px', height: '190px', top: '80px', right: '10px', transform: 'rotate(2deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 4 }}>
-                  <img src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover" />
+                  <Image src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 5 — top of the pile, bottom-left */}
                 <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
                   style={{ width: '250px', height: '180px', bottom: '0', left: '10px', transform: 'rotate(1.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
-                  <img src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover" />
+                  <Image src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
 
               </div>
@@ -201,11 +202,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                   </div>
                 )}
                 {/* Background image */}
-                <img
+                <Image
                   src={item.image}
                   alt={item.label}
                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+                 width={800} height={400} />
                 {/* Gradient overlay */}
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, ' + item.color + ' 0%, ' + item.color + '99 35%, transparent 70%)' }} />
                 {/* Text */}
@@ -241,11 +242,11 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               >
                 {/* Color header with icon */}
                 <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, ' + c.color + ' 0%, ' + c.color + 'dd 100%)' }}>
-                  <img
+                  <Image
                     src={'/images/centers/' + key.toLowerCase() + '.svg'}
                     alt="" aria-hidden="true"
                     className="absolute w-[100px] h-[100px] opacity-[0.15] pointer-events-none"
-                  />
+                   width={200} height={200} />
                   <span className="relative z-[1] font-serif text-xl font-bold text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{key}</span>
                 </div>
                 {/* Body */}

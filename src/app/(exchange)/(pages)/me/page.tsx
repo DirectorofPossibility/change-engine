@@ -9,6 +9,7 @@ import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { SpiralProgress } from '@/components/exchange/SpiralProgress'
+import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 
@@ -239,7 +240,7 @@ export default async function MyDashboardPage() {
                       >
                         <div className="w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden bg-brand-bg">
                           {rep.photo_url ? (
-                            <img src={rep.photo_url} alt="" className="w-full h-full object-cover" />
+                            <Image src={rep.photo_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: color }}>
                               {rep.official_name?.charAt(0) || '?'}

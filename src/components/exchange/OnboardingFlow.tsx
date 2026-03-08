@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { isOnboarded, completeOnboarding } from '@/lib/spiral'
 import { THEMES } from '@/lib/constants'
+import Image from 'next/image'
 
 const PERSONAS = [
   { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', color: '#d69e2e', fol: '/images/fol/seed-of-life.svg' },
@@ -119,18 +120,18 @@ export function OnboardingFlow() {
         {/* ── Branded header ── */}
         <div className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
           {/* FOL watermarks */}
-          <img
+          <Image
             src="/images/fol/flower-full.svg"
             alt="" aria-hidden="true"
             className="absolute pointer-events-none animate-fol-pulse"
             style={{ width: '300px', height: '300px', top: '-80px', right: '-60px', opacity: 0.06 }}
-          />
-          <img
+           width={300} height={300} />
+          <Image
             src="/images/fol/seed-of-life.svg"
             alt="" aria-hidden="true"
             className="absolute pointer-events-none"
             style={{ width: '150px', height: '150px', bottom: '-40px', left: '-30px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
-          />
+           width={150} height={150} />
 
           {/* Spectrum bar at top */}
           <div className="flex h-1">
@@ -145,7 +146,7 @@ export function OnboardingFlow() {
 
           <div className="relative z-10 px-6 pt-5 pb-4">
             <div className="flex items-center gap-3 mb-1">
-              <img src="/images/fol/flower-full.svg" alt="" className="w-8 h-8" style={{ filter: 'hue-rotate(-10deg) saturate(0.6)' }} />
+              <Image src="/images/fol/flower-full.svg" alt="" className="w-8 h-8" style={{ filter: 'hue-rotate(-10deg) saturate(0.6)' }}  width={200} height={32} />
               <div>
                 <span className="block font-serif text-lg font-bold text-brand-text leading-tight">Community Exchange</span>
                 <span className="block font-mono text-[8px] font-bold uppercase tracking-widest text-brand-muted-light">Powered by The Change Lab</span>
@@ -189,12 +190,12 @@ export function OnboardingFlow() {
           {step === 'welcome' && (
             <div className="text-center">
               <div className="relative w-20 h-20 mx-auto mb-4">
-                <img
+                <Image
                   src="/images/fol/flower-full.svg"
                   alt="" aria-hidden="true"
                   className="w-full h-full animate-fol-pulse"
                   style={{ opacity: 0.15 }}
-                />
+                 width={200} height={200} />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="1.5">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
@@ -294,12 +295,12 @@ export function OnboardingFlow() {
                       style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
                     >
                       {/* FOL watermark per card */}
-                      <img
+                      <Image
                         src={p.fol}
                         alt="" aria-hidden="true"
                         className="absolute pointer-events-none opacity-[0.06] group-hover:opacity-[0.12] transition-opacity"
                         style={{ width: '60px', height: '60px', top: '-8px', right: '-8px' }}
-                      />
+                       width={60} height={60} />
                       <div className="w-2 h-2 rounded-full mb-2" style={{ backgroundColor: p.color }} />
                       <span className="block text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                         {p.label}

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, MapPin } from 'lucide-react'
+import Image from 'next/image'
 
 type Org = {
   org_id: string
@@ -114,11 +115,11 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
               <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: color }} />
 
               {org.logo_url ? (
-                <img
+                <Image
                   src={org.logo_url}
                   alt=""
                   className="w-10 h-10 rounded-md object-contain bg-brand-bg border-2 border-brand-border flex-shrink-0 ml-1"
-                />
+                 width={48} height={40} />
               ) : (
                 <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0 ml-1" style={{ background: color + '12' }}>
                   <span className="font-serif font-bold text-lg" style={{ color }}>

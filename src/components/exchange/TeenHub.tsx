@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Zap, Target, Flame, ArrowRight, ChevronRight, ExternalLink, Globe, Heart, Users, BookOpen, Shield, Sparkles, Clock, MapPin, Volume2 } from 'lucide-react'
+import Image from 'next/image'
 
 // ── Types ──
 
@@ -355,11 +356,11 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               <div className="relative rounded-3xl overflow-hidden border-2 border-white/5 hover:border-white/15 transition-all duration-500">
                 {content[0].imageUrl ? (
                   <div className="aspect-[21/9] bg-white/5 overflow-hidden">
-                    <img
+                    <Image
                       src={content[0].imageUrl}
                       alt={content[0].title}
                       className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700"
-                    />
+                     width={800} height={400} />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent" />
                   </div>
                 ) : (
@@ -389,11 +390,11 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               >
                 {item.imageUrl && (
                   <div className="aspect-[16/9] overflow-hidden">
-                    <img
+                    <Image
                       src={item.imageUrl}
                       alt={item.title}
                       className="w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-500"
-                    />
+                     width={800} height={400} />
                   </div>
                 )}
                 <div className="p-5">
@@ -447,7 +448,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               >
                 <div className="flex items-start gap-4">
                   {org.logoUrl ? (
-                    <img src={org.logoUrl} alt={org.name + ' logo'} className="w-10 h-10 rounded-xl object-contain bg-white/10 p-1 flex-shrink-0" />
+                    <Image src={org.logoUrl} alt={org.name + ' logo'} className="w-10 h-10 rounded-xl object-contain bg-white/10 p-1 flex-shrink-0"  width={48} height={40} />
                   ) : (
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-black text-white/40">{org.name.charAt(0)}</span>

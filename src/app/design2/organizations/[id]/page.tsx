@@ -11,6 +11,7 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import Image from 'next/image'
 
 export const revalidate = 600
 
@@ -103,12 +104,12 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         <div className="rounded-xl p-6 sm:p-8" style={{ backgroundColor: '#fff', borderWidth: 1, borderColor: '#E2DDD5' }}>
           <div className="flex items-start gap-5">
             {org.logo_url && (
-              <img
+              <Image
                 src={org.logo_url}
                 alt={org.org_name}
                 className="w-20 h-20 rounded-xl object-contain flex-shrink-0"
                 style={{ backgroundColor: '#FAF8F5', borderWidth: 1, borderColor: '#E2DDD5' }}
-              />
+               width={48} height={80} />
             )}
             <div className="min-w-0 flex-1">
               <h1 className="text-3xl sm:text-4xl font-serif font-bold" style={{ color: '#1a1a1a' }}>
