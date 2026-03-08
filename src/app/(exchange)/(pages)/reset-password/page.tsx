@@ -1,27 +1,40 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
 import { createClient } from '@/lib/supabase/client'
+
+const TURNSTILE_SITE_KEY = '0x4AAAAAACoEdhXaaokqdNyl'
 
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const turnstileRef = useRef<TurnstileInstance>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!captchaToken) {
+      setError('Please complete the verification check.')
+      return
+    }
+
     setError(null)
     setLoading(true)
 
     const supabase = createClient()
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: window.location.origin + '/auth/callback?next=/me/settings',
+      captchaToken,
     })
 
     if (resetError) {
       setError(resetError.message)
+      setCaptchaToken(null)
+      turnstileRef.current?.reset()
       setLoading(false)
       return
     }
@@ -68,9 +81,18 @@ export default function ResetPasswordPage() {
             placeholder="you@example.com"
           />
         </div>
+        <div className="flex justify-center">
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={TURNSTILE_SITE_KEY}
+            onSuccess={setCaptchaToken}
+            onExpire={function () { setCaptchaToken(null) }}
+            options={{ theme: 'light', size: 'normal' }}
+          />
+        </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !captchaToken}
           className="w-full py-2.5 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {loading ? 'Sending...' : 'Send Reset Link'}

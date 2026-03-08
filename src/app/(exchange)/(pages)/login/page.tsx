@@ -1,15 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
 import { createClient } from '@/lib/supabase/client'
+
+const TURNSTILE_SITE_KEY = '0x4AAAAAACoEdhXaaokqdNyl'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const turnstileRef = useRef<TurnstileInstance>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   // Prevent open redirect: only allow relative paths, block protocol-relative URLs
@@ -23,8 +28,18 @@ export default function LoginPage() {
     setError(null)
     setLoading(true)
 
+    if (!captchaToken) {
+      setError('Please complete the verification check.')
+      setLoading(false)
+      return
+    }
+
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: { captchaToken },
+    })
 
     if (authError) {
       const msg = authError.message
@@ -37,6 +52,8 @@ export default function LoginPage() {
       } else {
         setError(msg)
       }
+      setCaptchaToken(null)
+      turnstileRef.current?.reset()
       setLoading(false)
       return
     }
@@ -98,9 +115,18 @@ export default function LoginPage() {
             placeholder="Your password"
           />
         </div>
+        <div className="flex justify-center">
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={TURNSTILE_SITE_KEY}
+            onSuccess={setCaptchaToken}
+            onExpire={function () { setCaptchaToken(null) }}
+            options={{ theme: 'light', size: 'normal' }}
+          />
+        </div>
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || !captchaToken}
           className="w-full py-2.5 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {loading ? 'Signing in...' : 'Sign In'}
