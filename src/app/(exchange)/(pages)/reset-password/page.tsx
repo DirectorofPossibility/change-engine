@@ -92,7 +92,7 @@ export default function ResetPasswordPage() {
         </div>
         <button
           type="submit"
-          disabled={loading || !captchaToken}
+          disabled={loading}
           className="w-full py-2.5 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {loading ? 'Sending...' : 'Send Reset Link'}
