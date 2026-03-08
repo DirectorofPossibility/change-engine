@@ -92,7 +92,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setVisibleSections(prev => new Set([...prev, entry.target.id]))
+            setVisibleSections(prev => { const next = new Set(prev); next.add(entry.target.id); return next })
           }
         })
       },
