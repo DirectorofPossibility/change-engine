@@ -1,15 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile'
 import { createClient } from '@/lib/supabase/client'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
-import { TOOLTIPS } from '@/lib/tooltips'
-
-const TURNSTILE_SITE_KEY = '0x4AAAAAACoEdhXaaokqdNyl'
 
 /** Validate password complexity: 8+ chars, 1 uppercase, 1 number */
 function validatePassword(pw: string): string | null {
@@ -46,9 +41,6 @@ export default function SignupPage() {
   const [resending, setResending] = useState(false)
   const [resent, setResent] = useState(false)
   const [lastSubmit, setLastSubmit] = useState(0)
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
-  const turnstileRef = useRef<TurnstileInstance>(null)
-
   const allAgreed = agreedTerms && agreedPrivacy && agreedAccessibility
 
   async function handleResendVerification() {
@@ -90,25 +82,16 @@ export default function SignupPage() {
 
     const supabase = createClient()
 
-    if (!captchaToken) {
-      setError('Please complete the verification check.')
-      setLoading(false)
-      return
-    }
-
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { display_name: displayName },
-        captchaToken,
       },
     })
 
     if (authError) {
       setError(friendlyError(authError.message))
-      setCaptchaToken(null)
-      turnstileRef.current?.reset()
       setLoading(false)
       return
     }
@@ -300,16 +283,6 @@ export default function SignupPage() {
                 <Link href="/terms" target="_blank" className="text-brand-accent hover:underline font-medium">Terms of Service</Link>
               </span>
             </label>
-          </div>
-
-          <div className="flex justify-center">
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={TURNSTILE_SITE_KEY}
-              onSuccess={setCaptchaToken}
-              onExpire={function () { setCaptchaToken(null) }}
-              options={{ theme: 'light', size: 'normal' }}
-            />
           </div>
 
           <button
