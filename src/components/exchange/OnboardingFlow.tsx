@@ -32,6 +32,10 @@ export function OnboardingFlow() {
   const [lookupAttempted, setLookupAttempted] = useState(false)
 
   useEffect(function () {
+    // Don't show on auth pages (signup, login, reset-password)
+    const path = window.location.pathname
+    if (path === '/signup' || path === '/login' || path === '/reset-password') return
+
     // Show if not onboarded — regardless of ZIP
     if (!isOnboarded()) {
       const timer = setTimeout(function () { setShow(true) }, 1200)
