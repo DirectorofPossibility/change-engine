@@ -154,7 +154,7 @@ export default function SignupPage() {
       <div className="w-full max-w-lg mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8 relative">
-          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-[0.04]">
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-[0.04] pointer-events-none">
             <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
           </div>
           <FlowerOfLifeIcon size={40} className="mx-auto mb-3" />
