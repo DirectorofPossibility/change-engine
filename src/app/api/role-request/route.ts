@@ -25,23 +25,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Account is not active' }, { status: 403 })
     }
 
-    // Only users and neighbors can request upgrades
+    // Only neighbors can request partner upgrade
     if (p.role === 'admin' || p.role === 'partner') {
       return NextResponse.json({ error: 'You already have elevated access' }, { status: 400 })
     }
 
     const body = await req.json()
-    const { requested_role, reason, org_name } = body
+    const { reason, org_name } = body
+    const requested_role = 'partner'
 
-    if (!requested_role || !['neighbor', 'partner'].includes(requested_role)) {
-      return NextResponse.json({ error: 'Invalid requested role' }, { status: 400 })
-    }
-
-    if (requested_role === 'neighbor' && p.role === 'neighbor') {
-      return NextResponse.json({ error: 'You are already a neighbor' }, { status: 400 })
-    }
-
-    if (requested_role === 'partner' && !org_name?.trim()) {
+    if (!org_name?.trim()) {
       return NextResponse.json({ error: 'Organization name is required for partner requests' }, { status: 400 })
     }
 

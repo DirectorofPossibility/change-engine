@@ -16,7 +16,6 @@ interface RoleRequest {
 export function RoleRequestCard({ currentRole }: { currentRole: string }) {
   const [requests, setRequests] = useState<RoleRequest[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [requestedRole, setRequestedRole] = useState<'neighbor' | 'partner'>('neighbor')
   const [reason, setReason] = useState('')
   const [orgName, setOrgName] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -33,12 +32,9 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
   }, [])
 
   const hasPending = requests.some(function (r) { return r.status === 'pending' })
-  const canRequestNeighbor = currentRole === 'user'
-  const canRequestPartner = currentRole === 'user' || currentRole === 'neighbor'
-  const canRequest = (canRequestNeighbor || canRequestPartner) && !hasPending
 
-  // Already elevated
-  if (currentRole === 'admin' || currentRole === 'partner') return null
+  // Only neighbors can request partner upgrade
+  if (currentRole !== 'neighbor') return null
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -51,9 +47,9 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          requested_role: requestedRole,
+          requested_role: 'partner',
           reason: reason.trim() || undefined,
-          org_name: requestedRole === 'partner' ? orgName.trim() : undefined,
+          org_name: orgName.trim(),
         }),
       })
       const data = await res.json()
@@ -83,11 +79,11 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
       {/* Pending request */}
       {hasPending && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-3">
-          <p className="text-sm text-yellow-800 font-medium">Your role request is under review</p>
+          <p className="text-sm text-yellow-800 font-medium">Your partner request is under review</p>
           {requests.filter(function (r) { return r.status === 'pending' }).map(function (r) {
             return (
               <p key={r.id} className="text-xs text-yellow-700 mt-1">
-                Requested: <span className="capitalize font-medium">{r.requested_role}</span>
+                Requested: <span className="capitalize font-medium">Community Partner</span>
                 {r.org_name && <span> for {r.org_name}</span>}
                 {' '}on {new Date(r.created_at).toLocaleDateString()}
               </p>
@@ -107,7 +103,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
                   : 'bg-red-50 border-red-200 text-red-800'
               }`}>
                 <div className="flex items-center justify-between">
-                  <span className="capitalize font-medium">{r.requested_role}</span>
+                  <span className="font-medium">Community Partner</span>
                   <span className="text-xs capitalize">{r.status}</span>
                 </div>
                 {r.review_note && <p className="text-xs mt-1 opacity-80">Note: {r.review_note}</p>}
@@ -119,49 +115,34 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
       )}
 
       {/* Request CTA */}
-      {canRequest && !showForm && (
-        <div className="space-y-2">
-          {canRequestNeighbor && (
-            <button
-              onClick={function () { setRequestedRole('neighbor'); setShowForm(true) }}
-              className="block w-full bg-blue-50 rounded-lg border border-blue-200 p-3 text-sm text-blue-700 hover:bg-blue-100 text-left"
-            >
-              <span className="font-medium">Become a Neighbor</span>
-              <span className="block text-xs text-blue-600 mt-0.5">Share resources with the Houston community</span>
-            </button>
-          )}
-          {canRequestPartner && (
-            <button
-              onClick={function () { setRequestedRole('partner'); setShowForm(true) }}
-              className="block w-full bg-green-50 rounded-lg border border-green-200 p-3 text-sm text-green-700 hover:bg-green-100 text-left"
-            >
-              <span className="font-medium">Partner with us</span>
-              <span className="block text-xs text-green-600 mt-0.5">Represent your organization on the Community Exchange</span>
-            </button>
-          )}
-        </div>
+      {!hasPending && !showForm && (
+        <button
+          onClick={function () { setShowForm(true) }}
+          className="block w-full bg-green-50 rounded-lg border border-green-200 p-3 text-sm text-green-700 hover:bg-green-100 text-left"
+        >
+          <span className="font-medium">Partner with us</span>
+          <span className="block text-xs text-green-600 mt-0.5">Represent your organization on the Community Exchange</span>
+        </button>
       )}
 
       {/* Request form */}
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white rounded-xl border-2 border-brand-border p-4 space-y-3">
-          <h3 className="text-sm font-semibold text-brand-text capitalize">
-            Request {requestedRole} access
+          <h3 className="text-sm font-semibold text-brand-text">
+            Request Community Partner access
           </h3>
 
-          {requestedRole === 'partner' && (
-            <div>
-              <label className="block text-xs font-medium text-brand-text mb-1">Organization name</label>
-              <input
-                type="text"
-                required
-                value={orgName}
-                onChange={function (e) { setOrgName(e.target.value) }}
-                className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
-                placeholder="Your organization"
-              />
-            </div>
-          )}
+          <div>
+            <label className="block text-xs font-medium text-brand-text mb-1">Organization name</label>
+            <input
+              type="text"
+              required
+              value={orgName}
+              onChange={function (e) { setOrgName(e.target.value) }}
+              className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+              placeholder="Your organization"
+            />
+          </div>
 
           <div>
             <label className="block text-xs font-medium text-brand-text mb-1">
@@ -172,7 +153,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
               onChange={function (e) { setReason(e.target.value) }}
               rows={2}
               className="w-full border-2 border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
-              placeholder="Tell us a bit about how you'd like to contribute"
+              placeholder="Tell us about your organization and how you'd like to contribute"
             />
           </div>
 

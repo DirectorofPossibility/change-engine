@@ -83,8 +83,8 @@ export async function middleware(request: NextRequest) {
 
     // Enforce role-based access for /dashboard routes
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
-      const role = (profile as any)?.role || 'user'
-      if (role !== 'admin' && role !== 'partner') {
+      const role = (profile as any)?.role || 'neighbor'
+      if (role !== 'admin' && role !== 'partner' && role !== 'neighbor') {
         const meUrl = request.nextUrl.clone()
         meUrl.pathname = '/me'
         meUrl.search = ''

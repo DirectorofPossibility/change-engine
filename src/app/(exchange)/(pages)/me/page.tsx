@@ -139,8 +139,8 @@ export default async function MyDashboardPage() {
   const totalPoints = (userBadges || []).reduce(function (sum, b) { return sum + (b.points_at_earning || 0) }, 0)
     + (actions || []).reduce(function (sum, a) { return sum + (a.impact_points || 0) }, 0)
 
-  const currentRole = profile?.role || 'user'
-  const roleLabel = currentRole === 'admin' ? 'Administrator' : currentRole === 'partner' ? 'Community Partner' : currentRole === 'neighbor' ? 'Neighbor' : 'Member'
+  const currentRole = profile?.role || 'neighbor'
+  const roleLabel = currentRole === 'admin' ? 'Administrator' : currentRole === 'partner' ? 'Community Partner' : 'Neighbor'
 
   return (
     <div>
@@ -335,37 +335,22 @@ export default async function MyDashboardPage() {
             </section>
 
             {/* Account upgrades */}
-            {(currentRole === 'user' || currentRole === 'neighbor') && (
+            {currentRole === 'neighbor' && (
               <section>
                 <h2 className="relative font-serif text-lg font-bold text-brand-text mb-4">Upgrade Your Account
                   <WayfinderTooltipPos tipKey="neighbor_vs_partner" position="bottom" />
                 </h2>
-                <div className="space-y-3">
-                  {currentRole === 'user' && (
-                    <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-4 relative overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#38a169]" />
-                      <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#38a169] mb-1 pl-2">Neighbor Account</p>
-                      <p className="text-lg font-serif font-bold text-brand-text pl-2">Free</p>
-                      <ul className="mt-2 pl-2 space-y-1 text-[12px] text-brand-muted">
-                        <li>Share resources with the community</li>
-                        <li>Submit content for review</li>
-                        <li>Track your civic activity</li>
-                        <li>Earn impact points and badges</li>
-                      </ul>
-                    </div>
-                  )}
-                  <div className="bg-white rounded-xl border-2 border-brand-accent/30 p-4 relative overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
-                    <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mb-1 pl-2">Community Partner</p>
-                    <p className="text-lg font-serif font-bold text-brand-text pl-2">$100<span className="text-sm font-normal text-brand-muted"> - $5,000/yr</span></p>
-                    <ul className="mt-2 pl-2 space-y-1 text-[12px] text-brand-muted">
-                      <li>Verified organizational profile</li>
-                      <li>Post events and guides</li>
-                      <li>Partner dashboard and analytics</li>
-                      <li>Community partner badge</li>
-                      <li>Priority content placement</li>
-                    </ul>
-                  </div>
+                <div className="bg-white rounded-xl border-2 border-brand-accent/30 p-4 relative overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
+                  <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mb-1 pl-2">Community Partner</p>
+                  <p className="text-lg font-serif font-bold text-brand-text pl-2">$100<span className="text-sm font-normal text-brand-muted"> - $5,000/yr</span></p>
+                  <ul className="mt-2 pl-2 space-y-1 text-[12px] text-brand-muted">
+                    <li>Verified organizational profile</li>
+                    <li>Post events and guides</li>
+                    <li>Partner dashboard and analytics</li>
+                    <li>Community partner badge</li>
+                    <li>Priority content placement</li>
+                  </ul>
                 </div>
               </section>
             )}

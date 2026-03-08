@@ -51,6 +51,7 @@ export default function SignupPage() {
     // Profile is auto-created by DB trigger; update with extra fields
     if (authData.user) {
       await supabase.from('user_profiles').update({
+        role: 'neighbor',
         zip_code: zipCode || null,
         preferred_language: language,
         gamification_enabled: true,
@@ -219,22 +220,16 @@ export default function SignupPage() {
           <Link href="/login" className="text-brand-accent hover:underline font-medium">Sign in</Link>
         </p>
 
-        {/* Account tiers info */}
-        <div className="relative mt-8 grid grid-cols-2 gap-3">
-          <InfoBubble id={TOOLTIPS.neighbor_vs_partner.id} text={TOOLTIPS.neighbor_vs_partner.text} position="bottom" />
+        {/* Account info */}
+        <div className="relative mt-8">
           <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-theme-voice mb-1">Neighbor</p>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-theme-voice mb-1">Neighbor Account</p>
             <p className="text-xl font-serif font-bold text-brand-text">Free</p>
-            <p className="text-[11px] text-brand-muted mt-1">Share resources, submit content, and track your civic activity.</p>
-          </div>
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mb-1">Community Partner</p>
-            <p className="text-xl font-serif font-bold text-brand-text">$100<span className="text-sm font-normal text-brand-muted">/yr</span></p>
-            <p className="text-[11px] text-brand-muted mt-1">Organizational profile, events, guides, and partner dashboard.</p>
+            <p className="text-[11px] text-brand-muted mt-1">Share resources, submit content, track your civic activity, and earn impact points.</p>
           </div>
         </div>
         <p className="text-center text-[11px] text-brand-muted mt-2">
-          Upgrade anytime from your account dashboard. Partner tiers from $100 to $5,000/year.
+          Organizations can upgrade to Community Partner from the account dashboard.
         </p>
       </div>
     </div>
