@@ -1,5 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'xesojwzcnjqtpuossmuv.supabase.co' },
+      { protocol: 'https', hostname: '**.supabase.co' },
+      { protocol: 'https', hostname: 'bioguide.congress.gov' },
+      { protocol: 'https', hostname: '**.googleapis.com' },
+      { protocol: 'https', hostname: '**.googleusercontent.com' },
+      { protocol: 'https', hostname: '**.wikimedia.org' },
+      { protocol: 'https', hostname: '**.wikipedia.org' },
+      { protocol: 'https', hostname: '**.usaspending.gov' },
+      { protocol: 'https', hostname: '**.legistar.com' },
+      { protocol: 'http', hostname: '**' },
+    ],
+  },
   async redirects() {
     return [
       {

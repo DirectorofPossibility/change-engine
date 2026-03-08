@@ -1,7 +1,11 @@
 /**
  * @fileoverview Deno-compatible unified classifier for Supabase edge functions.
  *
- * Mirrors src/lib/classification/index.ts but uses Deno APIs.
+ * ⚠️  KEEP IN SYNC with src/lib/classification/index.ts (Node.js version).
+ *     Types, taxonomy fetching, prompt building, and validation logic must match.
+ *     When changing classification logic, update BOTH files.
+ *
+ * Mirrors src/lib/classification/index.ts but uses Deno APIs (fetch-based Supabase).
  * Used by: backfill-v2, sync-officials, sync-city-houston, sync-state-texas
  */
 
