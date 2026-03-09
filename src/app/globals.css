@@ -124,6 +124,15 @@
 }
 .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
 
+/* Hero FOL color cycle — shifts hue through the full spectrum */
+@keyframes fol-color-cycle {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+.animate-fol-color-cycle {
+  animation: fol-color-cycle 20s linear infinite;
+}
+
 /* Fade-in for page transitions */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(12px); }
