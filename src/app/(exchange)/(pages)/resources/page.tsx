@@ -44,7 +44,7 @@ export default async function ResourcesIndexPage() {
 
   const [services, opportunities, situations] = await Promise.all([
     supabase.from('services_211').select('service_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
-    supabase.from('opportunities').select('opportunity_id', { count: 'exact', head: true }).eq('is_active', 'true' as any),
+    supabase.from('opportunities').select('opportunity_id', { count: 'exact', head: true }).eq('is_active', 'Yes' as any),
     supabase.from('life_situations').select('situation_id', { count: 'exact', head: true }),
   ])
 

@@ -54,7 +54,7 @@ export default async function CommunityIndexPage() {
     supabase.from('neighborhoods').select('neighborhood_id', { count: 'exact', head: true }),
     supabase.from('organizations').select('org_id', { count: 'exact', head: true }),
     supabase.from('organizations').select('org_id', { count: 'exact', head: true }).in('org_type', ['Foundation/Grantmaker']),
-    supabase.from('community_events' as any).select('event_id', { count: 'exact', head: true }).eq('is_active', true),
+    supabase.from('events' as any).select('event_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
   ])
 
   const counts: Record<string, number> = {

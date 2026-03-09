@@ -43,9 +43,9 @@ export default async function ActionIndexPage() {
   const supabase = await createClient()
 
   const [officials, policies, elections] = await Promise.all([
-    supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }).eq('is_active', true),
-    supabase.from('policies').select('policy_id', { count: 'exact', head: true }),
-    supabase.from('elections').select('election_id', { count: 'exact', head: true }).eq('is_active', 'true' as any),
+    supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }),
+    supabase.from('policies').select('policy_id', { count: 'exact', head: true }).eq('is_published', true),
+    supabase.from('elections').select('election_id', { count: 'exact', head: true }).eq('is_active', 'Yes' as any),
   ])
 
   const counts: Record<string, number> = {
