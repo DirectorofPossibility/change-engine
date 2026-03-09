@@ -157,16 +157,19 @@ export default function SplashPage() {
 
           <div className="h-px bg-brand-border mx-4" />
 
-          {/* Can you imagine */}
-          <div className="px-5 py-3">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mb-2">Can you imagine&hellip;</p>
-            <ul className="space-y-1.5 text-xs text-brand-muted leading-relaxed">
-              <li>Knowing who represents you — and how to reach them</li>
-              <li>Finding every resource in your ZIP code — in one place</li>
-              <li>Understanding the policies passed in your name</li>
-              <li>Neighbors sharing what they know — everyone gets stronger</li>
-            </ul>
-          </div>
+          {/* Can you imagine — collapsible */}
+          <details className="px-5 py-3 group">
+            <summary className="flex items-center justify-between cursor-pointer list-none text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent">
+              Can you imagine&hellip;
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                className="transition-transform group-open:rotate-180">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </summary>
+            <p className="text-xs text-brand-muted leading-relaxed mt-2">
+              Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
+            </p>
+          </details>
 
           <div className="h-px bg-brand-border mx-4" />
 
