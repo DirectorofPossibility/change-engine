@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { MapPin, Send, Mail } from 'lucide-react'
+import { MapPin, Send } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 
 const GoodThingsMap = dynamic(
@@ -28,9 +28,7 @@ interface GoodThingEntry {
 const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
 function GradientFOL({ size, className = '' }: { size?: number; className?: string }) {
-  const r = 18
-  const cx = 100, cy = 100
-  const outerR = r * 1.732
+  const r = 18, cx = 100, cy = 100, outerR = r * 1.732
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true"
       style={{ animation: 'fol-spin 90s linear infinite' }}>
@@ -110,7 +108,6 @@ export default function SplashPage() {
     setBetaSent(true)
   }
 
-  // Ticker
   const tickerItems = entries.slice(0, 40).flatMap(function (entry) {
     const who = entry.display_name || [entry.city, entry.state].filter(Boolean).join(', ') || entry.zip_code
     return [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
@@ -121,7 +118,7 @@ export default function SplashPage() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-brand-bg relative">
 
-      {/* ── Giant FOL background — 2/3 page width, gradient ── */}
+      {/* ── Giant FOL background ── */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.04]" aria-hidden="true"
         style={{ width: '66vw', height: '66vw' }}>
         <GradientFOL className="w-full h-full" />
@@ -138,81 +135,72 @@ export default function SplashPage() {
         <div style={{ background: '#805ad5' }} />
       </div>
 
-      {/* ── Main layout: left sidebar + content ── */}
+      {/* ── Main layout ── */}
       <div className="flex-1 flex min-h-0 relative z-10">
 
         {/* ── LEFT COLUMN ── */}
-        <aside className="w-72 lg:w-80 shrink-0 bg-brand-dark text-white flex flex-col overflow-y-auto">
-          {/* Brand + large gradient FOL */}
-          <div className="px-5 pt-5 pb-4 border-b border-white/10">
-            <div className="flex items-center gap-3 mb-2">
-              <GradientFOL size={56} />
-              <div>
-                <h1 className="font-serif text-xl font-bold leading-tight">Change Engine</h1>
-                <p className="text-[11px] text-white/40 font-mono uppercase tracking-widest">Coming Soon</p>
-              </div>
+        <aside className="w-64 lg:w-72 shrink-0 bg-brand-bg border-r border-brand-border flex flex-col overflow-y-auto">
+
+          {/* Logo */}
+          <div className="px-5 pt-5 pb-4">
+            <div className="flex items-center gap-3">
+              <GradientFOL size={38} />
+              <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">
+                Change<br />Engine
+              </h1>
             </div>
-            <p className="text-white/50 text-xs mt-1 leading-relaxed">
-              A civic platform connecting Houston neighbors.
+            <p className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-3">Coming Soon</p>
+            <p className="text-sm text-brand-muted mt-1 leading-relaxed font-serif">
+              Connecting Houston Neighbors
             </p>
           </div>
 
-          {/* Nav options */}
-          <nav className="flex-1 px-3 py-3 space-y-1">
+          <div className="h-px bg-brand-border mx-4" />
+
+          {/* Buttons */}
+          <div className="flex-1 px-4 py-4 space-y-2">
             <button
               onClick={function () { setPanel('goodthings') }}
-              className={'w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ' + (panel === 'goodthings' ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5')}
+              className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
+                (panel === 'goodthings'
+                  ? 'border-brand-accent bg-brand-accent/5 text-brand-accent'
+                  : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
             >
-              <span className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-[#38a169]" />
-                Three Good Things
-              </span>
+              Three Good Things
             </button>
 
             <button
               onClick={function () { setPanel('beta') }}
-              className={'w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ' + (panel === 'beta' ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5')}
+              className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
+                (panel === 'beta'
+                  ? 'border-brand-accent bg-brand-accent/5 text-brand-accent'
+                  : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
             >
-              <span className="flex items-center gap-2.5">
-                <span className="w-2 h-2 rounded-full bg-brand-accent" />
-                Beta Tester Signup
-              </span>
+              Sign Up to Be a Beta Tester
             </button>
 
-            <div className="h-px bg-white/10 my-3" />
-
-            <p className="px-3 text-[10px] font-mono font-bold uppercase tracking-widest text-white/30 mb-2">What&apos;s coming</p>
-
-            <div className="px-3 py-2 text-sm text-white/40">
-              <span className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 rounded-full bg-[#C75B2A]" /> Find Services</span>
-            </div>
-            <div className="px-3 py-2 text-sm text-white/40">
-              <span className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 rounded-full bg-[#3182ce]" /> Know Your Reps</span>
-            </div>
-            <div className="px-3 py-2 text-sm text-white/40">
-              <span className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 rounded-full bg-[#805ad5]" /> Track Policy</span>
-            </div>
-            <div className="px-3 py-2 text-sm text-white/40">
-              <span className="flex items-center gap-2.5"><span className="w-1.5 h-1.5 rounded-full bg-[#38a169]" /> Connect Locally</span>
-            </div>
-          </nav>
-
-          {/* Bottom links */}
-          <div className="px-5 py-4 border-t border-white/10 space-y-2">
             <Link
               href="/login"
-              className="flex items-center justify-center w-full py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-lg hover:bg-brand-accent-hover transition-colors"
+              className="block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
             >
-              Sign In
+              Beta Tester Login
             </Link>
+
             <a
               href="https://thechangelab.substack.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-full py-2 text-xs text-white/40 hover:text-brand-accent transition-colors"
+              className="block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
             >
-              Read our Substack
+              Read Our Substack
             </a>
+          </div>
+
+          {/* Footer */}
+          <div className="px-5 py-4 border-t border-brand-border">
+            <p className="text-[10px] text-brand-muted-light font-mono">
+              A project of The Change Lab
+            </p>
           </div>
         </aside>
 
@@ -221,11 +209,11 @@ export default function SplashPage() {
 
           {panel === 'goodthings' && (
             <>
-              {/* Map — fills available space */}
+              {/* Map */}
               <div className="flex-1 min-h-0 relative">
                 <GoodThingsMap entries={entries} focusEntry={lastEntry} />
 
-                {/* Form overlay — bottom-right of map */}
+                {/* Form overlay */}
                 <div className="absolute bottom-4 right-4 z-[20] w-80 lg:w-96">
                   {!submitted ? (
                     <div className="bg-white rounded-xl border-2 border-brand-border p-4 shadow-drop">
@@ -305,7 +293,7 @@ export default function SplashPage() {
                   <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-8 text-center shadow-offset">
                     <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
                     <p className="font-serif text-xl font-bold text-brand-text mb-2">Request sent!</p>
-                    <p className="text-sm text-brand-muted">Complete the email that just opened to finish your request.</p>
+                    <p className="text-sm text-brand-muted">Complete the email that just opened.</p>
                   </div>
                 ) : (
                   <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-offset-lg">
