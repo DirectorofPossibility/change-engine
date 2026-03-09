@@ -139,26 +139,39 @@ export default function SplashPage() {
       <div className="flex-1 flex min-h-0 relative z-10">
 
         {/* ── LEFT COLUMN ── */}
-        <aside className="w-64 lg:w-72 shrink-0 bg-brand-bg border-r border-brand-border flex flex-col overflow-y-auto">
+        <aside className="w-64 lg:w-72 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
 
-          {/* Logo */}
-          <div className="px-5 pt-5 pb-4">
-            <div className="flex items-center gap-3">
-              <GradientFOL size={38} />
-              <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">
-                Change<br />Engine
-              </h1>
+          {/* Logo + FOL */}
+          <div className="px-5 pt-4 pb-3 text-center">
+            <div className="flex justify-center mb-2">
+              <GradientFOL size={120} />
             </div>
-            <p className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-3">Coming Soon</p>
-            <p className="text-sm text-brand-muted mt-1 leading-relaxed font-serif">
+            <h1 className="font-serif text-2xl font-bold text-brand-text leading-tight">
+              Change<br />Engine
+            </h1>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-2">Coming Soon</p>
+            <p className="text-sm text-brand-muted mt-1 font-serif">
               Connecting Houston Neighbors
             </p>
           </div>
 
           <div className="h-px bg-brand-border mx-4" />
 
+          {/* Can you imagine */}
+          <div className="px-5 py-3">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mb-2">Can you imagine&hellip;</p>
+            <ul className="space-y-1.5 text-xs text-brand-muted leading-relaxed">
+              <li>Knowing who represents you — and how to reach them</li>
+              <li>Finding every resource in your ZIP code — in one place</li>
+              <li>Understanding the policies passed in your name</li>
+              <li>Neighbors sharing what they know — everyone gets stronger</li>
+            </ul>
+          </div>
+
+          <div className="h-px bg-brand-border mx-4" />
+
           {/* Buttons */}
-          <div className="flex-1 px-4 py-4 space-y-2">
+          <div className="flex-1 px-4 py-3 space-y-2">
             <button
               onClick={function () { setPanel('goodthings') }}
               className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
