@@ -24,12 +24,32 @@ interface Props {
 
 const MARKER_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
+function folSvg(color: string, size: number) {
+  const r = 4, cx = 12, cy = 12
+  const circles = [0, 60, 120, 180, 240, 300].map(function (deg) {
+    const rad = (deg * Math.PI) / 180
+    return '<circle cx="' + (cx + r * Math.cos(rad)) + '" cy="' + (cy + r * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="1.2" fill="none"/>'
+  }).join('')
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;">' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="' + color + '" stroke-width="1.5" fill="none"/>' +
+    circles + '</svg>'
+}
+
 function createMarkerIcon(isActive: boolean) {
   const size = isActive ? 42 : 24
   const color = isActive ? '#C75B2A' : '#38a169'
-  const glow = isActive ? 'box-shadow:0 0 12px rgba(199,91,42,0.6);' : ''
+  const glow = isActive ? 'filter:drop-shadow(0 0 6px rgba(199,91,42,0.6));' : ''
+  const r = size * 0.18, cx = size / 2, cy = size / 2
+  const circles = [0, 60, 120, 180, 240, 300].map(function (deg) {
+    const rad = (deg * Math.PI) / 180
+    return '<circle cx="' + (cx + r * Math.cos(rad)) + '" cy="' + (cy + r * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (isActive ? 1.8 : 1.2) + '" fill="none"/>'
+  }).join('')
+  const svg = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" fill="none" style="' + glow + '">' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r * 2.2) + '" stroke="' + color + '" stroke-width="0.8" fill="white" fill-opacity="0.7"/>' +
+    '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (isActive ? 2 : 1.5) + '" fill="none"/>' +
+    circles + '</svg>'
   return L.divIcon({
-    html: '<div style="width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color + ';border:2px solid white;' + glow + '"></div>',
+    html: svg,
     className: '',
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
@@ -46,7 +66,7 @@ function buildPopupHtml(entry: Entry) {
       '<div style="font-size:11px;color:#5A6178;margin-bottom:6px;">' + loc + ' &middot; ' + date + '</div>' +
       [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
         return '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:flex-start;">' +
-          '<span style="width:16px;height:16px;border-radius:50%;background:' + MARKER_COLORS[i] + ';color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">' + (i + 1) + '</span>' +
+          folSvg(MARKER_COLORS[i], 16) +
           '<span style="font-size:13px;color:#1A1A1A;line-height:1.4;">' + thing + '</span>' +
         '</div>'
       }).join('') +

@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback, useRef, useId } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { Send, Mail, Download, X, Menu } from 'lucide-react'
+import { Send, Mail, Download, X, Menu, Info, BookOpen, LogIn, UserPlus, Building2, Handshake, Heart, ExternalLink } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
+import { useTranslation } from '@/lib/use-translation'
+import { LanguageSwitcher } from '@/components/exchange/LanguageSwitcher'
 
 const GoodThingsMap = dynamic(
   function () { return import('../(exchange)/(pages)/goodthings/GoodThingsMap').then(function (m) { return m.GoodThingsMap }) },
@@ -64,6 +66,7 @@ function GradientFOL({ className = '' }: { className?: string }) {
 }
 
 export default function SplashPage() {
+  const { t } = useTranslation()
   const [entries, setEntries] = useState<GoodThingEntry[]>([])
   const [focusEntry, setFocusEntry] = useState<GoodThingEntry | null>(null)
   const [thing1, setThing1] = useState('')
@@ -81,6 +84,7 @@ export default function SplashPage() {
   const [showImagine, setShowImagine] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showInfo, setShowInfo] = useState(false)
   const lastSubmittedRef = useRef<GoodThingEntry | null>(null)
   const firstInputRef = useRef<HTMLInputElement>(null)
 
@@ -118,8 +122,8 @@ export default function SplashPage() {
 
   async function handleGoodThings(e: React.FormEvent) {
     e.preventDefault()
-    if (!thing1.trim() || !thing2.trim() || !thing3.trim()) { setError('All three required.'); return }
-    if (!/^\d{5}$/.test(zip)) { setError('Valid 5-digit ZIP required.'); return }
+    if (!thing1.trim() || !thing2.trim() || !thing3.trim()) { setError(t('splash.all_three_required')); return }
+    if (!/^\d{5}$/.test(zip)) { setError(t('splash.valid_zip')); return }
     setError(''); setSubmitting(true)
     try {
       const res = await fetch('/api/good-things', {
@@ -134,7 +138,7 @@ export default function SplashPage() {
       setEntries(function (prev) { return [entry, ...prev] })
       setSubmitted(true)
       setPanel('goodthings')
-    } catch { setError('Network error.') } finally { setSubmitting(false) }
+    } catch { setError(t('splash.network_error')) } finally { setSubmitting(false) }
   }
 
   function handleEmailCopy() {
@@ -204,11 +208,11 @@ export default function SplashPage() {
 
         {/* Title underneath */}
         <div className="relative z-10 px-4 pb-3 text-center">
-          <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">Change Engine</h1>
-          <p className="text-xs text-brand-muted font-serif mt-1">Connecting Houston Neighbors</p>
+          <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">{t('splash.title')}</h1>
+          <p className="text-xs text-brand-muted font-serif mt-1">{t('splash.subtitle')}</p>
           <div className="mt-2 flex items-center gap-2">
             <span className="h-px flex-1 bg-brand-accent/30" />
-            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">Coming Soon</span>
+            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">{t('splash.coming_soon')}</span>
             <span className="h-px flex-1 bg-brand-accent/30" />
           </div>
         </div>
@@ -218,22 +222,24 @@ export default function SplashPage() {
       <div className="flex-1 px-4 py-1 space-y-1.5">
         <button
           onClick={function () { setPanel('goodthings'); setMobileMenuOpen(false) }}
-          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
+          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all flex items-center gap-2.5 ' +
             (panel === 'goodthings'
               ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
               : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
         >
-          Three Good Things
+          <FlowerOfLifeIcon size={16} color={panel === 'goodthings' ? '#C75B2A' : '#38a169'} />
+          {t('splash.three_good_things')}
         </button>
 
         <button
           onClick={function () { setShowImagine(!showImagine) }}
           className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
-          <span className="flex items-center justify-between">
-            Coming Soon
+          <span className="flex items-center gap-2.5">
+            <Info size={16} className="text-brand-muted shrink-0" />
+            <span className="flex-1">{t('splash.coming_soon')}</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-              className={'transition-transform ' + (showImagine ? 'rotate-180' : '')}>
+              className={'transition-transform shrink-0 ' + (showImagine ? 'rotate-180' : '')}>
               <path d="M6 9l6 6 6-6" />
             </svg>
           </span>
@@ -241,32 +247,24 @@ export default function SplashPage() {
         {showImagine && (
           <div className="px-3 py-2 space-y-3">
             <p className="text-xs font-serif text-brand-text italic leading-relaxed">
-              Every community has what it needs to thrive.
+              {t('splash.coming_soon_vision')}
             </p>
             <p className="text-xs text-brand-muted leading-relaxed">
-              We&apos;re building a civic platform that connects Houston residents with the resources, services, and opportunities already around them.
+              {t('splash.coming_soon_desc')}
             </p>
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mt-2">What to expect</p>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mt-2">{t('splash.what_to_expect')}</p>
             <ul className="space-y-2 text-xs text-brand-text leading-relaxed">
-              <li className="flex gap-2">
-                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>Know exactly who represents you at every level of government — and how to reach them</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>Find every service, benefit, and resource available in your ZIP code — in one place</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>Understand the policies being passed in your name — written so anyone can follow along</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>A community where neighbors share what they know — and everyone gets stronger</span>
-              </li>
+              {[t('splash.expect_1'), t('splash.expect_2'), t('splash.expect_3'), t('splash.expect_4')].map(function (text, i) {
+                return (
+                  <li key={i} className="flex gap-2">
+                    <FlowerOfLifeIcon size={12} color="#C75B2A" className="shrink-0 mt-0.5" />
+                    <span>{text}</span>
+                  </li>
+                )
+              })}
             </ul>
             <p className="text-xs text-brand-muted italic">
-              That&apos;s what we&apos;re building. We&apos;d love for you to be part of it.
+              {t('splash.expect_closing')}
             </p>
           </div>
         )}
@@ -275,26 +273,32 @@ export default function SplashPage() {
           href="https://thechangelab.substack.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
-          Read Our Substack
+          <BookOpen size={16} className="text-brand-muted shrink-0" />
+          {t('splash.read_substack')}
+          <ExternalLink size={12} className="text-brand-muted ml-auto shrink-0" />
         </a>
+
+        <div className="h-px bg-brand-border my-1" />
 
         <Link
           href="/login"
-          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
-          Beta Tester Login
+          <LogIn size={16} className="text-brand-muted shrink-0" />
+          {t('splash.beta_login')}
         </Link>
 
         <button
           onClick={function () { setPanel('beta'); setMobileMenuOpen(false) }}
-          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
+          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all flex items-center gap-2.5 ' +
             (panel === 'beta'
               ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
               : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
         >
-          Sign Up to Be a Beta Tester
+          <UserPlus size={16} className={'shrink-0 ' + (panel === 'beta' ? 'text-brand-accent' : 'text-brand-muted')} />
+          {t('splash.beta_signup')}
         </button>
 
         <div className="h-px bg-brand-border my-1" />
@@ -303,32 +307,39 @@ export default function SplashPage() {
           href="https://www.thechangelab.net/about2"
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
-          Learn About The Change Lab
+          <Building2 size={16} className="text-brand-muted shrink-0" />
+          {t('splash.learn_about')}
+          <ExternalLink size={12} className="text-brand-muted ml-auto shrink-0" />
         </a>
 
         <a
           href="mailto:david@thechangelab.net?subject=Explore%20Partnership"
-          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
-          Explore Partnership
+          <Handshake size={16} className="text-brand-muted shrink-0" />
+          {t('splash.explore_partnership')}
         </a>
 
         <a
           href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-accent bg-brand-accent/5 text-brand-accent hover:bg-brand-accent/10 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-accent bg-brand-accent/5 text-brand-accent hover:bg-brand-accent/10 transition-all"
         >
-          Support Our Work
+          <Heart size={16} className="shrink-0" />
+          {t('splash.support_work')}
         </a>
       </div>
 
-      {/* Footer */}
-      <div className="px-5 py-2 mt-auto">
+      {/* Language switcher + Footer */}
+      <div className="px-5 py-2 mt-auto space-y-2">
+        <div className="flex justify-center">
+          <LanguageSwitcher />
+        </div>
         <p className="text-[10px] text-brand-muted-light font-mono text-center">
-          A project of{' '}
+          {t('splash.project_of')}{' '}
           <a href="https://www.thechangelab.net/about2" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors underline">
             The Change Lab
           </a>
@@ -360,8 +371,8 @@ export default function SplashPage() {
         <div className="relative z-10 flex items-center gap-2.5">
           <GradientFOL className="w-9 h-9" />
           <div>
-            <span className="font-serif text-base font-bold text-brand-text leading-none block">Change Engine</span>
-            <span className="text-[9px] font-mono text-brand-accent uppercase tracking-widest">Coming Soon</span>
+            <span className="font-serif text-base font-bold text-brand-text leading-none block">{t('splash.title')}</span>
+            <span className="text-[9px] font-mono text-brand-accent uppercase tracking-widest">{t('splash.coming_soon')}</span>
           </div>
         </div>
         <button onClick={function () { setMobileMenuOpen(!mobileMenuOpen) }} className="text-brand-text p-1">
@@ -375,7 +386,7 @@ export default function SplashPage() {
           <div className="fixed inset-0 bg-black/30 z-30 md:hidden" onClick={function () { setMobileMenuOpen(false) }} />
           <div className="fixed top-0 left-0 w-80 max-w-[85vw] h-full bg-brand-bg-alt z-40 shadow-xl overflow-y-auto flex flex-col md:hidden animate-slide-in">
             <div className="flex items-center justify-between p-4 border-b border-brand-border">
-              <span className="font-serif text-lg font-bold text-brand-text">Menu</span>
+              <span className="font-serif text-lg font-bold text-brand-text">{t('splash.menu')}</span>
               <button onClick={function () { setMobileMenuOpen(false) }} className="text-brand-muted hover:text-brand-text">
                 <X size={18} />
               </button>
@@ -400,16 +411,35 @@ export default function SplashPage() {
           <div className={'flex-1 min-h-0 relative ' + (panel !== 'goodthings' ? 'opacity-30' : '')}>
             <GoodThingsMap entries={entries} focusEntry={focusEntry} />
             {/* Program banner */}
-            <div className="absolute top-0 left-0 right-0 z-[2] pointer-events-none">
-              <div className="bg-white/95 backdrop-blur-sm border-b border-brand-border px-5 py-2.5 flex items-center justify-between animate-map-pulse">
+            <div className="absolute top-0 left-0 right-0 z-[2]">
+              <div className="bg-white/95 backdrop-blur-sm border-b border-brand-border px-5 py-3.5 flex items-center justify-between animate-map-pulse">
                 <div className="flex items-center gap-3">
-                  <FlowerOfLifeIcon size={20} color="#38a169" />
+                  <FlowerOfLifeIcon size={26} color="#38a169" />
                   <div>
-                    <p className="font-serif text-base font-bold text-brand-text leading-tight">Three Good Things</p>
-                    <p className="text-[10px] text-brand-muted font-mono uppercase tracking-wider">A Change Engine Program</p>
+                    <p className="font-serif text-lg font-bold text-brand-text leading-tight">{t('splash.three_good_things')}</p>
+                    <p className="text-[11px] text-brand-muted font-mono uppercase tracking-wider">{t('splash.program_label')}</p>
                   </div>
                 </div>
-                <p className="text-xs text-brand-muted font-mono">{entries.length} shared by neighbors</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-xs text-brand-muted font-mono">{entries.length} {t('splash.shared_by_neighbors')}</p>
+                  <div className="relative">
+                    <button
+                      onClick={function () { setShowInfo(!showInfo) }}
+                      className="text-brand-muted hover:text-brand-accent transition-colors pointer-events-auto"
+                      aria-label="Info"
+                    >
+                      <Info size={18} />
+                    </button>
+                    {showInfo && (
+                      <>
+                        <div className="fixed inset-0 z-[5]" onClick={function () { setShowInfo(false) }} />
+                        <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl border border-brand-border shadow-lg p-4 z-[6] pointer-events-auto">
+                          <p className="text-sm text-brand-text leading-relaxed">{t('splash.info_text')}</p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -421,10 +451,10 @@ export default function SplashPage() {
                 {betaSent ? (
                   <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-8 text-center shadow-xl">
                     <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
-                    <p className="font-serif text-xl font-bold text-brand-text mb-2">Request sent!</p>
-                    <p className="text-sm text-brand-muted">Complete the email that just opened.</p>
+                    <p className="font-serif text-xl font-bold text-brand-text mb-2">{t('splash.request_sent')}</p>
+                    <p className="text-sm text-brand-muted">{t('splash.complete_email')}</p>
                     <button onClick={function () { setPanel('goodthings') }}
-                      className="mt-4 text-sm text-brand-accent font-semibold hover:underline">Back to map</button>
+                      className="mt-4 text-sm text-brand-accent font-semibold hover:underline">{t('splash.back_to_map')}</button>
                   </div>
                 ) : (
                   <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-xl">
@@ -434,18 +464,18 @@ export default function SplashPage() {
                       </button>
                     </div>
                     <FlowerOfLifeIcon size={32} color="#C75B2A" className="mx-auto mb-4" />
-                    <h2 className="font-serif text-2xl font-bold text-brand-text text-center mb-2">Join the Beta</h2>
-                    <p className="text-sm text-brand-muted text-center mb-6">Get early access to the full Change Engine Community Exchange.</p>
+                    <h2 className="font-serif text-2xl font-bold text-brand-text text-center mb-2">{t('splash.join_beta')}</h2>
+                    <p className="text-sm text-brand-muted text-center mb-6">{t('splash.beta_desc')}</p>
                     <form onSubmit={handleBeta} className="space-y-4">
                       <input type="text" required value={betaName} onChange={function (e) { setBetaName(e.target.value) }}
-                        placeholder="Your name"
+                        placeholder={t('splash.your_name')}
                         className="w-full px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
                       <input type="email" required value={betaEmail} onChange={function (e) { setBetaEmail(e.target.value) }}
-                        placeholder="your@email.com"
+                        placeholder={t('splash.your_email')}
                         className="w-full px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
                       <button type="submit"
                         className="w-full py-3 bg-brand-accent text-white rounded-xl font-semibold hover:bg-brand-accent-hover transition-colors">
-                        Request Beta Access
+                        {t('splash.request_beta')}
                       </button>
                     </form>
                   </div>
@@ -487,7 +517,7 @@ export default function SplashPage() {
               className="absolute top-1/2 right-0 -translate-y-1/2 z-20 bg-brand-accent text-white font-semibold text-sm px-2 py-6 rounded-l-xl shadow-lg hover:bg-brand-accent-hover transition-colors animate-tab-nudge"
               style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
             >
-              Share the Good
+              {t('splash.share_the_good')}
             </button>
           )}
 
@@ -501,7 +531,7 @@ export default function SplashPage() {
             <div className="h-full w-80 bg-brand-bg-alt border-l border-brand-border shadow-xl overflow-y-auto">
               <div className="p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <p className="font-serif text-lg font-bold text-brand-text">Share the Good</p>
+                  <p className="font-serif text-lg font-bold text-brand-text">{t('splash.share_the_good')}</p>
                   <button onClick={function () { setShareOpen(false) }} className="text-brand-muted hover:text-brand-text transition-colors">
                     <X size={18} />
                   </button>
@@ -509,15 +539,15 @@ export default function SplashPage() {
 
                 {!submitted ? (
                   <form onSubmit={handleGoodThings} className="space-y-3">
-                    <p className="text-xs text-brand-muted mb-1">What three good things happened today?</p>
+                    <p className="text-xs text-brand-muted mb-1">{t('splash.share_prompt')}</p>
                     {[
-                      { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: 'Made you smile...' },
-                      { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: 'Positive change...' },
-                      { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: 'Grateful for...' },
+                      { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: t('splash.placeholder_1') },
+                      { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: t('splash.placeholder_2') },
+                      { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: t('splash.placeholder_3') },
                     ].map(function (f) {
                       return (
                         <div key={f.n} className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full text-white flex items-center justify-center font-bold shrink-0 text-[11px]" style={{ backgroundColor: f.color }}>{f.n}</span>
+                          <FlowerOfLifeIcon size={20} color={f.color} className="shrink-0" />
                           <input ref={f.n === 1 ? firstInputRef : undefined} type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
                             placeholder={f.ph} maxLength={280}
                             className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:border-brand-accent transition-colors" />
@@ -526,7 +556,7 @@ export default function SplashPage() {
                     })}
                     <div className="flex gap-2">
                       <input type="text" value={displayName} onChange={function (e) { setDisplayName(e.target.value) }}
-                        placeholder="Name (optional)" maxLength={50}
+                        placeholder={t('splash.name_optional')} maxLength={50}
                         className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:border-brand-accent transition-colors" />
                       <input type="text" value={zip} onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
                         placeholder="ZIP" maxLength={5}
@@ -536,30 +566,30 @@ export default function SplashPage() {
                     <button type="submit" disabled={submitting}
                       className="w-full flex items-center justify-center gap-2 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-bold hover:bg-brand-accent-hover transition-colors disabled:opacity-50">
                       <Send size={14} />
-                      {submitting ? 'Sharing...' : 'Share'}
+                      {submitting ? t('splash.sharing') : t('splash.share_button')}
                     </button>
                   </form>
                 ) : (
                   <div className="text-center space-y-4">
                     <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto" />
-                    <p className="font-serif text-lg font-bold text-brand-text">On the map!</p>
-                    <p className="text-sm text-brand-muted">Your three good things are now part of the neighborhood.</p>
+                    <p className="font-serif text-lg font-bold text-brand-text">{t('splash.on_the_map')}</p>
+                    <p className="text-sm text-brand-muted">{t('splash.on_the_map_desc')}</p>
 
                     <div className="space-y-2 pt-2">
                       <button onClick={handleEmailCopy}
                         className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
                         <Mail size={14} />
-                        Email Yourself a Copy
+                        {t('splash.email_copy')}
                       </button>
                       <button onClick={handleDownload}
                         className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
                         <Download size={14} />
-                        Download
+                        {t('splash.download')}
                       </button>
                     </div>
 
                     <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setFocusEntry(null) }}
-                      className="text-sm text-brand-accent font-semibold hover:underline mt-2">Share more</button>
+                      className="text-sm text-brand-accent font-semibold hover:underline mt-2">{t('splash.share_more')}</button>
                   </div>
                 )}
               </div>
@@ -571,6 +601,9 @@ export default function SplashPage() {
 
       {/* Animations */}
       <style jsx global>{`
+        .leaflet-top.leaflet-right {
+          top: 70px !important;
+        }
         @keyframes map-pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.9; }
