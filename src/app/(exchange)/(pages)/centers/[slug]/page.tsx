@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { THEMES, CENTERS, CENTER_COLORS } from '@/lib/constants'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { ContentShelf, type ShelfItem } from '@/components/exchange/ContentShelf'
@@ -16,6 +17,16 @@ function resolveCenter(slug: string) {
 }
 
 export const revalidate = 3600
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const center = resolveCenter(slug)
+  if (!center) return { title: 'Center Not Found' }
+  return {
+    title: center.name,
+    description: `Explore resources, content, and community information for the ${center.name} in Houston.`,
+  }
+}
 
 export default async function CenterPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

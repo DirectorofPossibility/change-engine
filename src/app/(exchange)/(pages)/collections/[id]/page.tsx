@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
@@ -12,6 +13,18 @@ import { ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 
 export const revalidate = 300
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+  const { data: collection } = await supabase.from('featured_collections').select('*').or(`collection_id.eq.${id},id.eq.${id}`).single()
+  if (!collection) return { title: 'Collection Not Found' }
+  const c = collection as any
+  return {
+    title: c.title || c.collection_name || 'Collection',
+    description: c.description || `A curated collection of community resources in Houston.`,
+  }
+}
 
 export default async function CollectionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     images: ['/images/og-image.png'],
   },
   alternates: {
-    canonical: './',
+    canonical: 'https://www.changeengine.us',
   },
   robots: {
     index: true,

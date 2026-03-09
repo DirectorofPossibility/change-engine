@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
@@ -8,6 +9,18 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { Landmark, Globe, Phone, MapPin } from 'lucide-react'
 
 export const revalidate = 300
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+  const { data: service } = await supabase.from('municipal_services').select('*').eq('service_id', id).single()
+  if (!service) return { title: 'Service Not Found' }
+  const s = service as any
+  return {
+    title: s.service_name || 'City Service',
+    description: s.description || `${s.service_name} — a City of Houston municipal service${s.department ? ' from ' + s.department : ''}.`,
+  }
+}
 
 export default async function MunicipalServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

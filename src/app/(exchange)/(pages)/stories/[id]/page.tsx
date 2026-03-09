@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
@@ -6,6 +7,18 @@ import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const supabase = await createClient()
+  const { data: story } = await supabase.from('success_stories').select('*').or(`story_id.eq.${id},id.eq.${id}`).single()
+  if (!story) return { title: 'Story Not Found' }
+  const s = story as any
+  return {
+    title: s.title || s.story_title || 'Community Story',
+    description: s.summary || s.excerpt || `Read ${s.person_name ? s.person_name + "'s" : 'a'} community story from Houston.`,
+  }
+}
 
 export default async function StoryDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
