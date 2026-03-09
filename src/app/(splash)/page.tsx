@@ -141,15 +141,15 @@ export default function SplashPage() {
         {/* ── LEFT COLUMN ── */}
         <aside className="w-72 lg:w-80 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
 
-          {/* FOL — fills sidebar width */}
-          <div className="px-8 pt-5">
+          {/* FOL — full column width, no padding */}
+          <div className="pt-3">
             <GradientFOL className="w-full" />
           </div>
 
-          {/* Title */}
-          <div className="px-5 pb-2 text-center">
-            <h1 className="font-serif text-3xl font-bold text-brand-text leading-tight">
-              Change<br />Engine
+          {/* Title — one line under the flower */}
+          <div className="px-5 pb-2 text-center -mt-2">
+            <h1 className="font-serif text-3xl font-bold text-brand-text leading-none">
+              Change Engine
             </h1>
             <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-2">Coming Soon</p>
             <p className="text-sm text-brand-muted mt-1 font-serif">
