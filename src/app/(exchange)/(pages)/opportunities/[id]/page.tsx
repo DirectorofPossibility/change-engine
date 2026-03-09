@@ -129,7 +129,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
       {/* ── HERO ── */}
       <section className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[
             { label: 'Opportunities', href: '/opportunities' },
             { label: displayName }
@@ -137,7 +137,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
           <div className="flex items-start gap-5 mt-4">
             {org?.logo_url && (
-              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border flex-shrink-0" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}  width={48} height={64} />
+              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border flex-shrink-0"  width={48} height={64} />
             )}
             <div className="min-w-0">
               <h1 className="font-serif text-[clamp(1.8rem,4vw,2.5rem)] leading-tight text-brand-text mb-2">{displayName}</h1>
@@ -170,13 +170,13 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       </section>
 
       {/* ── MAIN + SIDEBAR ── */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
           {/* ── Main column ── */}
-          <div className="space-y-8">
+          <div className="space-y-5">
             {/* Quick details card */}
-            <div className="bg-white rounded-xl border-2 border-brand-border p-5 flex flex-wrap gap-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+            <div className="bg-white rounded-xl border border-brand-border p-5 flex flex-wrap gap-4">
               {timeCommitmentName && (
                 <span className="flex items-center gap-2 text-sm text-brand-muted">
                   <Clock size={16} style={{ color: themeColor }} /> {timeCommitmentName}
@@ -188,7 +188,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
                 </span>
               )}
               {opportunity.registration_url && (
-                <a href={opportunity.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-semibold text-white px-4 py-2 rounded-lg transition-colors" style={{ backgroundColor: themeColor }}>
+                <a href={opportunity.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-semibold text-white px-3.5 py-1.5 rounded transition-colors" style={{ backgroundColor: themeColor }}>
                   <ExternalLink size={14} /> Register
                 </a>
               )}
@@ -267,9 +267,8 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             {org && (
               <Link
                 href={'/organizations/' + org.org_id}
-                className="block border-2 border-brand-border rounded-xl overflow-hidden hover:shadow-lg transition-all"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
-              >
+                className="block border border-brand-border rounded-xl overflow-hidden hover:shadow-lg transition-all"
+                             >
                 <div className="flex">
                   <div className="w-2 flex-shrink-0" style={{ backgroundColor: themeColor }} />
                   <div className="p-4">

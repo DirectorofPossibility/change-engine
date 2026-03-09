@@ -1,0 +1,333 @@
+THE CHANGE ENGINE — REBUILD ACTION PLAN v2
+==================================================
+Created: 2026-03-08
+Updated: 2026-03-08
+Status: PLANNING
+Approach: LEVERAGE BACKEND + BRAID LAYER + NEW FRONTEND
+
+WHAT WE KEEP (the 90% that works)
+----------------------------------
+✓ Supabase backend (Postgres, Auth, Edge Functions, Storage)
+✓ 16-dimension AI classification pipeline
+✓ Unified intake pipeline (POST /api/intake)
+✓ 11 cron sync jobs (Congress, Legistar, Open States, RSS, translations)
+✓ 17 split data modules (officials, services, policies, content, etc.)
+✓ Edge functions (classify, translate, sync, publish)
+✓ GeoJSON boundary layers (9 layers)
+✓ i18n pipeline (EN, ES, VI — nightly batch)
+✓ Auth flow + middleware session refresh
+✓ Dashboard (admin, review queue, analytics)
+✓ wayfinder.ts data layer (3-hop graph traversal, braided feeds)
+
+WHAT WE BUILD NEW
+------------------
+→ Unified braid query layer on top of existing data modules
+→ Complete new frontend (5 templates, 1 card, 1 wayfinder)
+→ Middleware-powered personalization
+→ Image-first, magazine-style editorial design
+→ Content braided by pathway, focus area, and geography
+
+
+================================================================================
+PHASE 1: BACKEND HARDENING (Week 1)
+================================================================================
+Goal: Make the existing backend faster, cleaner, and ready for the braid layer.
+No frontend changes. Everything still works as-is during this phase.
+
+1.1 — Data Layer Cleanup
+  [ ] Replace SELECT * with explicit column lists in all 17 data modules
+  [ ] Add proper pagination to all list queries (limit/offset)
+  [ ] Add revalidate cache hints per entity type
+  [ ] Move dashboard aggregations to Supabase RPC/views
+  [ ] Audit and fix any N+1 query patterns
+
+1.2 — Supabase Optimization
+  [ ] Create database views for common cross-entity queries
+  [ ] Create RPC function: get_entities_by_focus_area(focus_area_id, limit)
+  [ ] Create RPC function: get_entities_by_pathway(theme_id, zip?, limit)
+  [ ] Create RPC function: get_braided_feed(theme_id?, zip?, center?, limit)
+  [ ] Create RPC function: get_entity_connections(entity_type, entity_id)
+  [ ] Add composite indexes on junction tables for braid queries
+  [ ] Benchmark query performance, target < 100ms per braid query
+
+1.3 — Image Pipeline
+  [ ] Audit all entity types for image coverage
+  [ ] Ensure every entity has an image source or fallback rule
+  [ ] Create image_url computed column or view per entity type
+  [ ] Standardize photo URLs (http→https, consistent sizing)
+  [ ] Set up fallback image generation rules:
+      Officials:     photo → initials + level color gradient
+      Organizations: logo → first letter + pathway color
+      Services:      category icon → pathway color card
+      Content:       og_image → pathway color + title typography
+      Policies:      gov seal icon → level color + bill number
+      Events:        venue photo → calendar date block
+
+1.4 — Kill Dead Code (backend only)
+  [ ] Remove unused API routes
+  [ ] Remove duplicate edge functions if any
+  [ ] Clean up unused database tables/columns
+  [ ] Archive design1/design2 to branch
+
+
+================================================================================
+PHASE 2: BRAID QUERY LAYER (Week 1-2)
+================================================================================
+Goal: Build the unified query interface the new frontend needs.
+Sits on top of existing 17 modules — does not replace them.
+
+2.1 — Entity Config System
+  [ ] Define EntityTypeConfig schema:
+      {
+        type: string
+        table: string
+        displayName: string
+        pluralName: string
+        fields: { title, subtitle, description, image, contacts }
+        cardConfig: { variant, showImage, showBadge, showContact }
+        detailConfig: { sections, actions, relatedTypes }
+        route: string
+        color: string
+        icon: string
+      }
+  [ ] Create config entries for all entity types:
+      officials, services, policies, content, organizations,
+      events, opportunities, agencies, benefits, foundations,
+      candidates, learning-paths, guides, neighborhoods
+  [ ] Export typed config map: ENTITY_TYPES: Record<string, EntityTypeConfig>
+
+2.2 — Braid Data Functions
+  [ ] buildBraidedFeed(options):
+      - Input: { pathway?, focusArea?, zip?, center?, entityTypes?, limit }
+      - Output: mixed array of typed entities, sorted by relevance
+      - Uses RPC functions from Phase 1.2
+  [ ] getEntityProfile(type, id):
+      - Input: entity type + id
+      - Output: full entity + connections + related entities + actions
+      - Wraps getWayfinderContext() + entity-specific data
+  [ ] getStreamData(pathway, zip?):
+      - Input: pathway (or "all") + optional zip
+      - Output: grouped sections for the Stream template
+      - Groups: "What's New", focus area clusters, journey steps, officials
+  [ ] getMapData(bounds?, layers?, zip?):
+      - Input: map bounds + active layers + zip
+      - Output: GeoJSON + entity counts per area + braided feed for selection
+  [ ] searchAcrossTypes(query, filters?):
+      - Input: search term + optional type/pathway/center/geo filters
+      - Output: mixed results with type labels and relevance scores
+
+2.3 — Type Safety
+  [ ] Define BraidedEntity union type (discriminated by entityType field)
+  [ ] Define StreamSection type (hero, focus-group, journey, officials)
+  [ ] Define EntityProfile type (entity + connections + related + actions)
+  [ ] Zod schemas for runtime validation at system boundaries
+
+
+================================================================================
+PHASE 3: NEW FRONTEND (Week 2-3)
+================================================================================
+Goal: Build the complete new UI. 5 templates, 1 card, 1 wayfinder.
+Developed alongside old frontend — no routes replaced yet.
+
+3.1 — Design Tokens + CSS Foundation
+  [ ] Define CSS custom properties:
+      --pathway-{slug}: color per pathway
+      --center-{slug}: color per center
+      --level-{slug}: color per gov level
+      --brand-*: all brand tokens
+  [ ] Tailwind config: extend with CSS variable references
+  [ ] Zero inline styles — everything via Tailwind + CSS variables
+  [ ] Typography scale: DM Serif Display headings, DM Sans body
+  [ ] Responsive breakpoints: mobile-first, 3 breakpoints
+
+3.2 — EntityCard (the one card)
+  [ ] Build EntityCard component:
+      - Props: entity (BraidedEntity), variant (compact|standard|featured)
+      - Image-first: photo/logo/fallback always visible
+      - Type badge (pill with entity type color)
+      - Pathway dot (small colored indicator)
+      - Title, subtitle, description (truncated per variant)
+      - Contact actions (email, phone, web — per type config)
+      - Click → detail page (Link) or callback (onSelect)
+  [ ] Server component by default, 'use client' only for onSelect variant
+  [ ] Test with all entity types, verify image fallbacks
+
+3.3 — Wayfinder (the one wayfinder)
+  [ ] Build unified Wayfinder component with 3 modes:
+      mode="orient":  Homepage/landing — ZIP, pathway dots, what's new, search
+      mode="connect":  Detail pages — connections, related, actions
+      mode="move":     Listing pages — cross-nav, filters, nearby
+  [ ] Server component, reads context from props (no client state for initial render)
+  [ ] Client interactivity only for: ZIP input, search, filter toggles
+  [ ] PathwayDots sub-component: 7 CSS dots, active state, ~40 lines
+  [ ] Replace all 10 existing wayfinder components
+
+3.4 — The Stream (homepage + pathway pages)
+  [ ] Build Stream template:
+      - Full-bleed hero image + pathway name (or homepage hero)
+      - Personalized to ZIP (via middleware headers)
+      - Braided feed: mixed EntityCards grouped by focus area
+      - Journey sections: ordered steps across entity types
+      - Officials section: your reps on this pathway
+      - "What's New" carousel
+  [ ] Server component, data from getStreamData()
+  [ ] Responsive: single column mobile, 2-3 column desktop
+
+3.5 — The Profile (all detail pages)
+  [ ] Build Profile template:
+      - Hero image (full width, entity photo/image)
+      - Entity info bar (title, subtitle, badges, level)
+      - Body content (markdown/description/summary)
+      - "Connected Through" section (shared focus areas)
+      - "Along This Pathway" braided cards
+      - "In Your Area" geo-matched cards
+      - "Take Action" section (contact, volunteer, donate, vote)
+      - Wayfinder mode="connect" sidebar
+  [ ] Server component, data from getEntityProfile()
+  [ ] Config-driven: EntityTypeConfig controls which sections show
+
+3.6 — The Explorer (all listing pages)
+  [ ] Build Explorer template:
+      - Hero with entity type name + description
+      - Filter bar: pathway dots + center tabs + search
+      - Braided grid of EntityCards
+      - Wayfinder mode="move" sidebar
+      - Pagination / infinite scroll
+  [ ] Server component, data from buildBraidedFeed()
+  [ ] Config-driven: one route handles all entity types
+
+3.7 — The Map
+  [ ] Build Map template:
+      - Full-height map (Leaflet, existing GeoJSON layers)
+      - Layer toggles
+      - Click area → slide-up panel with braided feed for that area
+      - ZIP search → fly to + personalize
+  [ ] Keep Leaflet client component, everything else server
+  [ ] Data from getMapData()
+
+3.8 — The Compass
+  [ ] Build Compass template:
+      - "What brings you here today?" → 4 center cards
+      - Selection → pathway narrowing → braided results
+      - Journey builder: life situation → steps → resources
+  [ ] Progressive disclosure, minimal client JS
+
+
+================================================================================
+PHASE 4: MIDDLEWARE + ROUTING (Week 3-4)
+================================================================================
+Goal: Wire personalization, switch routes, progressive rollout.
+
+4.1 — Middleware Personalization
+  [ ] Read zip, lang, archetype cookies at the edge
+  [ ] Resolve ZIP → neighborhood + district (cached edge lookup)
+  [ ] Set request headers: x-neighborhood, x-district, x-lang, x-archetype
+  [ ] Server components read headers via headers() — no client context needed
+  [ ] NeighborhoodContext becomes optional (only for interactive ZIP changes)
+
+4.2 — Route Structure
+  [ ] New route map:
+      /                          → Stream (homepage)
+      /pathway/[slug]            → Stream (pathway-filtered)
+      /explore/[entityType]      → Explorer (any entity listing)
+      /[entityType]/[id]         → Profile (any entity detail)
+      /map                       → Map
+      /compass                   → Compass
+      /search                    → Explorer with search active
+      /my-area                   → Stream personalized to ZIP
+      /elections                 → Custom (keep standalone)
+      /dashboard/*               → Keep as-is
+      /about, /privacy, /terms   → Static pages (keep)
+  [ ] Total: ~15 routes (down from 99)
+  [ ] Set up redirects from all old routes to new
+
+4.3 — Caching Strategy
+  [ ] Static pages (about, privacy, terms) → full SSG
+  [ ] Semi-static (entity listings, pathway streams) → ISR 10min revalidate
+  [ ] Dynamic (detail pages, search, my-area) → per-request SSR with stale-while-revalidate
+  [ ] Middleware sets Cache-Control by route pattern
+
+4.4 — Progressive Rollout
+  [ ] Middleware A/B flag: new-frontend cookie or header
+  [ ] Route % of traffic to new templates
+  [ ] Monitor Core Web Vitals (LCP, CLS, INP)
+  [ ] Roll forward route by route
+  [ ] Kill old routes + components once stable
+
+
+================================================================================
+PHASE 5: POLISH + LAUNCH (Week 4-5)
+================================================================================
+Goal: Production-ready quality.
+
+5.1 — Performance
+  [ ] Target: < 40KB First Load JS (down from 88KB)
+  [ ] Virtual scrolling on lists > 50 items
+  [ ] Image optimization: next/image everywhere, proper sizes, lazy loading
+  [ ] Bundle analysis: verify no unnecessary client code
+  [ ] Lighthouse audit: target 90+ on all metrics
+
+5.2 — Accessibility
+  [ ] WCAG 2.1 AA compliance audit
+  [ ] Skip navigation links
+  [ ] Focus management on route changes
+  [ ] Screen reader testing (VoiceOver)
+  [ ] Keyboard navigation for all interactive elements
+  [ ] Color contrast verification for all pathway/level colors
+
+5.3 — SEO + Meta
+  [ ] Dynamic OG images per entity type
+  [ ] Structured data (JSON-LD) on all detail pages
+  [ ] Sitemap generation for all entity detail pages
+  [ ] Meta descriptions from entity summaries
+
+5.4 — i18n Verification
+  [ ] All new UI strings added to translation keys
+  [ ] ES + VI translations generated for new strings
+  [ ] RTL-safe layout (future-proofing)
+  [ ] Language switcher works on all new templates
+
+5.5 — Launch
+  [ ] Full rollout (disable A/B, new frontend only)
+  [ ] Delete old frontend components (~126 files)
+  [ ] Delete old routes (~80 page.tsx files)
+  [ ] Delete design1/ and design2/
+  [ ] Update CLAUDE.md with new architecture
+  [ ] Update sitemap
+  [ ] Monitor error rates for 48 hours
+
+
+================================================================================
+EXPECTED OUTCOME
+================================================================================
+
+Metric                  Before              After
+------                  ------              -----
+Exchange routes         99                  ~15
+Frontend components     147                 ~20
+Wayfinder components    10 (2,600 lines)    1 (400 lines)
+Card components         16                  1
+Page templates          8 ad-hoc            5 configured
+Total .tsx lines        68,648              ~12,000
+First Load JS           88KB                < 40KB
+Client components       226 files           ~20 files
+Inline styles           2,231               0
+Data query patterns     50+ functions       5 braid functions + RPC
+Personalization         Client (flicker)    Edge (instant)
+Design systems          2 (v1 + design2)    1
+Content presentation    Siloed by type      Braided by dimension
+Image coverage          Inconsistent        100% (source or fallback)
+Time to first paint     Variable            Consistent (SSR)
+
+
+================================================================================
+TIMELINE (with Claude Code)
+================================================================================
+
+Week 1:     Phase 1 (backend hardening) + Phase 2 start (entity config)
+Week 2:     Phase 2 (braid layer) + Phase 3 start (card, wayfinder, tokens)
+Week 3:     Phase 3 (5 templates built and wired)
+Week 4:     Phase 4 (middleware, routing, rollout)
+Week 5:     Phase 5 (polish, a11y, launch)
+
+Buffer:     +1 week for design iteration and edge cases

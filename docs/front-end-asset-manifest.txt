@@ -1,0 +1,463 @@
+THE CHANGE ENGINE — FRONT-END ASSET MANIFEST
+==============================================
+Generated: 2026-03-08
+
+TABLE OF CONTENTS
+-----------------
+1.  Brand Identity
+2.  Seven Pathways (Theme Colors)
+3.  Four Centers (User Intent)
+4.  Six Archetypes (Personas)
+5.  Flower of Life Icon System
+6.  Image Assets
+7.  GeoJSON Map Layers
+8.  Page Templates Needed (8 Patterns)
+9.  Component Library (147 total)
+10. i18n (3 Languages)
+11. CSS Utility Classes
+12. Assets Still Needed
+
+
+================================================================================
+1. BRAND IDENTITY
+================================================================================
+
+Token               Value       Usage
+---                 ---         ---
+Primary Accent      #C75B2A     Brand mark, CTAs, focus outlines, hover states
+Background          #FAF8F5     Page background
+Alt Background      #EDE8E0     Footer, alternate sections
+Card Background     #FFFFFF     Cards, panels
+Text                #1A1A1A     Body copy
+Muted               #6B6560     Secondary text
+Muted Light         #9B9590     Tertiary text, timestamps
+Border              #E2DDD5     Card borders, dividers
+Sand                #D5D0C8     Offset shadows
+Success             #2D8659     Positive indicators
+Warning             #C47D1A     Caution indicators
+Danger              #c43c4c     Error indicators
+Dark                #3A3A3A     Sidebar background
+Offset Shadow       3px 3px 0 #D5D0C8   Chunky editorial card style
+
+TYPOGRAPHY (Google Fonts)
+  - DM Sans          — body text (all weights)
+  - DM Serif Display — headings (400 only)
+  - Caveat           — handwritten accents
+  - Space Mono       — labels, metadata, mono UI
+
+FONT CSS VARIABLES
+  --font-sans   DM Sans
+  --font-serif  DM Serif Display
+  --font-hand   Caveat
+  --font-mono   Space Mono
+
+CUSTOM FONT SIZES (Tailwind)
+  display:  3.5rem  (line-height: 1.1, letter-spacing: -0.02em)
+  headline: 2.25rem (line-height: 1.15, letter-spacing: -0.01em)
+  title:    1.5rem  (line-height: 1.25)
+
+BOX SHADOWS (Tailwind)
+  card:       0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)
+  card-hover: 0 8px 28px rgba(0,0,0,0.12)
+  offset:     3px 3px 0 #D5D0C8
+  offset-lg:  4px 4px 0 #D5D0C8
+  header:     0 1px 0 rgba(0,0,0,0.05)
+  drop:       0 8px 24px rgba(0,0,0,0.1)
+
+ANIMATIONS (Tailwind keyframes)
+  fol-spin:      60s rotation (Flower of Life slow spin)
+  zip-glow:      2s glow pulse on ZIP input
+  fol-pulse:     10s subtle scale/opacity pulse
+  fol-pulse-cta: 8s scale + rotate pulse variant
+  lens-drift:    12s opacity + translation drift
+
+
+================================================================================
+2. SEVEN PATHWAYS (Theme Colors)
+================================================================================
+
+ID         Name               Color      SVG Icon                          Slug
+---        ---                ---        ---                               ---
+THEME_01   Our Health         #e53e3e    /images/pathways/health.svg       health
+THEME_02   Our Families       #dd6b20    /images/pathways/families.svg     families
+THEME_03   Our Neighborhood   #d69e2e    /images/pathways/neighborhood.svg neighborhood
+THEME_04   Our Voice          #38a169    /images/pathways/voice.svg        voice
+THEME_05   Our Money          #3182ce    /images/pathways/money.svg        money
+THEME_06   Our Planet         #319795    /images/pathways/planet.svg       planet
+THEME_07   The Bigger We      #805ad5    /images/pathways/bigger-we.svg    bigger-we
+
+PATHWAY GRADIENT PAIRS (for card placeholders when no image)
+  THEME_01: #e53e3e -> #c53030
+  THEME_02: #dd6b20 -> #c05621
+  THEME_03: #d69e2e -> #b7791f
+  THEME_04: #38a169 -> #2f855a
+  THEME_05: #3182ce -> #2b6cb0
+  THEME_06: #319795 -> #2c7a7b
+  THEME_07: #805ad5 -> #6b46c1
+
+
+================================================================================
+3. FOUR CENTERS (User Intent)
+================================================================================
+
+Center           Color      Question                      SVG Icon                          FOL Pattern
+---              ---        ---                           ---                               ---
+Learning         #3182ce    "How can I understand?"        /images/centers/learning.svg       vesica-piscis
+Action           #38a169    "How can I help?"              /images/centers/action.svg         tripod-of-life
+Resource         #d69e2e    "What's available to me?"      /images/centers/resource.svg       seed-of-life
+Accountability   #805ad5    "Who makes decisions?"         /images/centers/accountability.svg metatrons-cube
+
+
+================================================================================
+4. SIX ARCHETYPES (Personas)
+================================================================================
+
+ID         Name            Description                Center           Icon Component
+---        ---             ---                        ---              ---
+seeker     The Seeker      Find resources & services   Resource         SeekerIcon
+learner    The Learner     Understand & explore        Learning         LearnerIcon
+builder    The Builder     Volunteer & create          Action           BuilderIcon
+watchdog   The Watchdog    Track accountability        Accountability   WatchdogIcon
+partner    The Partner     Connect & collaborate       (none)           PartnerIcon
+explorer   The Explorer    Browse & discover           (none)           ExplorerIcon
+
+
+================================================================================
+5. FLOWER OF LIFE ICON SYSTEM
+================================================================================
+
+SACRED GEOMETRY SVGs (/images/fol/)
+
+  File                    Usage                                Status
+  ---                     ---                                  ---
+  flower-full.svg         Brand watermark, hero bgs, footer    Active
+  seed-of-life.svg        Resource center, hero accents        Active
+  vesica-piscis.svg       Learning center                      Active
+  tripod-of-life.svg      Action center                        Active
+  metatrons-cube.svg      Accountability center                Active
+  flower-white.svg        Light-on-dark variant                Active
+  fruit-of-life.svg       (available)                          Unused
+  tree-of-life.svg        (available)                          Unused
+  genesis.svg             (available)                          Unused
+
+REACT ICON COMPONENTS (FlowerIcons.tsx)
+
+  FlowerOfLifeIcon   Full 13-circle brand mark (default #C75B2A, size 48)
+  UnderstandIcon     Genesis tier, 1-2 circles (default #92400e, size 16)
+  InvolveIcon        Convergence tier, 3 circles (default #065f46, size 16)
+  DeeperIcon         Full pattern tier, 7 circles (default #1e40af, size 16)
+  SeekerIcon         Seed of Life pattern (default #d69e2e, size 20)
+  LearnerIcon        Vesica Piscis pattern (default #3182ce, size 20)
+  BuilderIcon        Tripod of Life pattern (default #38a169, size 20)
+  WatchdogIcon       Metatron's Cube pattern (default #805ad5, size 20)
+  PartnerIcon        Borromean Rings pattern (default #dd6b20, size 20)
+  ExplorerIcon       Full Flower of Life pattern (default #E8723A, size 20)
+
+
+================================================================================
+6. IMAGE ASSETS
+================================================================================
+
+EDITORIAL PHOTOGRAPHY (/images/editorial/ — 16 files)
+
+  File                     Actively Used
+  ---                      ---
+  organizing.jpg           Yes (D2Home)
+  cleanup.jpg              Yes (D2Home)
+  community-meeting.jpg    Yes (D2Home)
+  volunteers.jpg           Yes (D2Home)
+  neighbors-talking.jpg    Yes (D2Home)
+  person-reading.jpg       Yes (Library)
+  person-reading2.jpg      Yes (Library)
+  reading.jpg              Yes (Library/Bookshelf)
+  civic-building.jpg       Available
+  health-checkup.jpg       Available
+  health-fair.jpg          Available
+  health-worker.jpg        Available
+  neighborhood.jpg         Available
+  polling-place.jpg        Available
+  town-hall.jpg            Available
+  two-people-talking.jpg   Available
+
+HERO ILLUSTRATIONS (/images/hero/ — 4 SVGs)
+
+  File                     Status
+  ---                      ---
+  neighborhood-map.svg     Used (super-neighborhoods page)
+  civic-engagement.svg     Available but unused
+  community-gathering.svg  Available but unused
+  houston-skyline.svg      Available but unused
+
+PARTNER LOGOS (/images/logos/ — 4 files)
+
+  211-texas.png            Unused
+  bakerripley.svg          Unused
+  harris-center.png        Unused
+  legacy-health.png        Unused
+
+HEADSHOTS (/images/headshots/ — 4 files)
+
+  evans-shabazz.jpg        Unused
+  jackson.jpg              Unused
+  morales.jpg              Unused
+  thomas.jpg               Unused
+
+META / PLACEHOLDER
+
+  /images/og-image.png                   OpenGraph share image (active)
+  /images/placeholder.svg                Unused
+  /images/flower-of-life-placeholder.svg Unused
+
+
+================================================================================
+7. GEOJSON MAP LAYERS (/geo/ — 9 files)
+================================================================================
+
+Layer                    File                            Color      ID Property
+---                      ---                             ---        ---
+Super Neighborhoods      super-neighborhoods.geojson     #805ad5    SN_ID
+Council Districts        council-districts.geojson       #38a169    DISTRICT
+Congressional Districts  congressional-districts.geojson #3182ce    CD
+State Senate             state-senate-districts.geojson  #e53e3e    SD
+State House              state-house-districts.geojson   #dd6b20    HD
+School Districts         school-districts.geojson        #d69e2e    SD_ID
+ZIP Codes                zip-codes.geojson               #319795    ZCTA5CE20
+Census Tracts            census-tracts.geojson           #718096    GEOID
+TIRZ Zones               tirz-zones.geojson              #C75B2A    SITENO
+
+
+================================================================================
+8. PAGE TEMPLATES NEEDED (8 Patterns)
+================================================================================
+
+PATTERN 1: INDEX / LISTING PAGE
+  Used by: services, officials, organizations, policies, pathways,
+           opportunities, events, foundations, neighborhoods, benefits,
+           agencies, learn, guides, collections, stories
+  Structure:
+    IndexPageHero -> Breadcrumb -> Card grid (2-3 col) + Sticky sidebar
+    Sidebar contains: IndexWayfinder + FeaturedPromo
+  Key assets: Hero FOL watermark, pathway/center icons, card offset shadows
+
+PATTERN 2: DETAIL PAGE
+  Used by: content/[id], officials/[id], services/[id], policies/[id],
+           events/[id], organizations/[id], opportunities/[id],
+           guides/[slug], agencies/[id], benefits/[id]
+  Structure:
+    Breadcrumb -> PageHero (content variant) -> PathwayContextBar ->
+    Main content + DetailWayfinder sidebar
+  Key assets: Entity images, pathway color bars, taxonomy badges
+
+PATTERN 3: MAGAZINE / FEED PAGE
+  Used by: guide, explore, library, news, bookshelf
+  Structure:
+    IndexPageHero -> Featured item (large) + side grid (3-col) +
+    filter controls
+  Key assets: Editorial photography, FOL watermarks, spectrum bar
+
+PATTERN 4: MAP PAGE
+  Used by: geography, polling-places, my-area, goodthings
+  Structure:
+    Search bar -> HoustonMap + LayerControl + entity drawer/list
+  Key assets: All 9 GeoJSON layers, map markers, CARTO tile layer
+
+PATTERN 5: KNOWLEDGE GRAPH / VISUALIZATION
+  Used by: knowledge-graph, dashboard/circles, foundations (galaxy view)
+  Structure:
+    Full-width CircleKnowledgeGraph or EntityMesh + optional sidebar
+  Key assets: Pathway colors, connection lines, FOL geometry
+
+PATTERN 6: DASHBOARD / PROFILE
+  Used by: me, me/settings, my-area, dashboard-live, for/[slug]
+  Structure:
+    User-personalized hero -> stats cards + content sections
+  Key assets: Archetype icons, ZIP-based personalization, stats circles
+
+PATTERN 7: AUTH PAGES
+  Used by: login, signup, reset-password, account-locked
+  Structure:
+    Centered card/form with brand accent
+  Key assets: FlowerOfLifeIcon brand mark, form inputs
+
+PATTERN 8: CIVIC HUB / TOOL PAGES
+  Used by: elections, ballot, call-your-senators, officials/lookup, compass
+  Structure:
+    Hero -> Interactive tool/widget + contextual info
+  Key assets: Election countdown, voting location markers, official photos
+
+
+================================================================================
+9. COMPONENT LIBRARY (147 total)
+================================================================================
+
+CARDS (16 types)
+  ContentCard, ServiceCard, OfficialCard, PolicyCard, OpportunityCard,
+  LibraryCard, CandidateCard, BallotItemCard, VotingLocationCard,
+  BadgeCard, CommunityImpactCard, LifeSituationCard, LearningPathCard,
+  QuoteCard, FeedCard, RoleRequestCard
+
+NAVIGATION (12)
+  D2Nav, D2Breadcrumb, Breadcrumb, WayfinderSidebar (+ 5 sub-components:
+  ZipPersonalization, SidebarSearch, DiscoverSection, PathwaysGrid,
+  TopicsSection), IndexWayfinder, DetailWayfinder, GuideNavigation,
+  MobileBottomNav
+
+HEROES / BANNERS (8)
+  IndexPageHero, PageHero, D2Hero, HomepageHero, HeroBook,
+  ElectionBanner, NeighborhoodBanner, TranslateBar
+
+BADGES / PILLS (7)
+  ThemePill, CenterBadge, SDGBadge, SDOHBadge, ConfidenceBadge,
+  StatusBadge, TierBadge
+
+SHELVES / FEEDS (4)
+  ContentShelf, ShelfBraid, BraidedFeed, TickerTape
+
+MAPS (11)
+  HoustonMap, InteractiveMap, ClusteredMap, GeoJsonLayer, LayerControl,
+  MapMarker, MapLegend, MapEntityDrawer, SingleLocationMap,
+  VotingLocationsMap, NeighborhoodMap
+
+VISUALIZATIONS (8)
+  CircleKnowledgeGraph, CompactCircleGraph, GuideMiniGraph, EntityMesh,
+  SpiralProgress, PathwayRibbons, StatsCircle, TurnoutGauge
+
+INTERACTIVE WIDGETS (8)
+  CompassEntry, PersonaSelector, ArchetypeSelector, ChanceChatWidget,
+  LibraryChat, FeedbackLoop, OnboardingFlow, ImageLightbox
+
+UTILITY / LAYOUT (7)
+  Modal, SlidePanel, ActionBar, ShareButtons, SearchBar,
+  LanguageSwitcher, InfoBubble
+
+SPECIAL / BRANDING (6)
+  FlowerIcons (10 icon components), FOLWatermark (6 pattern variants),
+  InfoBubble, TipsToggle, AuthButton, EnvironmentBar
+
+
+================================================================================
+10. i18n (3 Languages, ~300 keys)
+================================================================================
+
+Languages:
+  English (EN)      — complete (source of truth)
+  Spanish (ES)      — translated nightly via batch-translate (langId: LANG-ES)
+  Vietnamese (VI)   — translated nightly via batch-translate (langId: LANG-VI)
+
+Key string groups:
+  nav.*             Navigation labels (~30 keys)
+  footer.*          Footer links (~15 keys)
+  home.*            Homepage sections (~30 keys)
+  help.*            Help/docs page
+  services.*        Services page
+  officials.*       Officials page
+  elections.*       Elections/civic hub (~30 keys)
+  wayfinder.*       Wayfinder sidebar (~50 keys)
+  guide.*           Guide/magazine page
+  card.*            Card action labels (read_more, website, email, call)
+  action.*          CTA buttons (donate, volunteer, sign_up)
+  chat.*            AI chat widget
+  library.*         Research library
+  voting.*          Voting dashboard
+  life.*            Life situations (6 keys)
+  theme.*           Pathway names (7 keys)
+  center.*          Center names (4 keys)
+  sidebar.*         Sidebar labels (~20 keys)
+  brand.*           Brand identity strings
+
+Total: ~2,004 lines in src/lib/i18n.ts
+
+
+================================================================================
+11. CSS UTILITY CLASSES (globals.css)
+================================================================================
+
+Class                Purpose
+---                  ---
+.scrollbar-hide      Hide scrollbars cross-browser
+.section-rule        Gradient divider line (brand-border -> transparent)
+.card-lift           Hover: translateY(-3px) + offset shadow
+.card-chunky         Thick-border card (border-2) with offset shadow on hover
+.card-stat           Stat card with cream bg + permanent offset shadow
+.meta-label          Mono uppercase 10px label (tracking-widest)
+.meta-source         Mono 9px source attribution (tracking-wider)
+.effort-tag          Inline badge pill (mono, 10px, px-2 py-0.5)
+.texture             SVG noise overlay (turbulence filter, 0.03-0.5 opacity)
+.spectrum-bar        7-color pathway gradient bar (flex h-1)
+.animate-bounce-slow Bounce animation (2s ease-in-out)
+.animate-fade-up     Fade-in entrance (0.4s, 12px translateY)
+.ticker-scroll       Horizontal scroll animation (60s linear loop)
+.announcement-scroll Scroll + pulse combo (20s scroll, 3s pulse)
+.color-bar-left      Left color accent bar on cards (1px -> 1.5px hover)
+
+GOVERNMENT LEVEL COLORS
+  Federal:         #3182ce
+  State:           #805ad5
+  County:          #d69e2e
+  City:            #38a169
+  School District: #dd6b20
+  Default:         #8B7E74
+
+URGENCY COLORS
+  Critical:  bg-red-50, border-red-300, text-red-700    (gradient: #e53e3e -> #c53030)
+  High:      bg-orange-50, border-orange-300             (gradient: #dd6b20 -> #c05621)
+  Medium:    bg-yellow-50, border-yellow-300              (gradient: #d69e2e -> #b7791f)
+  Low:       bg-green-50, border-green-300                (gradient: #38a169 -> #2f855a)
+
+ENGAGEMENT LEVEL COLORS
+  On the Couch:         bg-green-100 text-green-800
+  Off the Couch:        bg-blue-100 text-blue-800
+  Use Your Superpower:  bg-purple-100 text-purple-800
+
+
+================================================================================
+12. ASSETS STILL NEEDED
+================================================================================
+
+Asset                                  Where It's Missing
+---                                    ---
+Real Houston community photography     Most pages use gradient placeholders or stock
+Partner/org logos                       About page, partner pages (4 logos exist unused)
+Official headshots at scale            Only 4 in /headshots/, rest from external APIs
+Hero illustrations for unused SVGs     3 of 4 hero SVGs unused
+OG images per page type                Only 1 global og-image.png exists
+Favicon / app icons                    Not found in public/
+Loading/empty state illustrations      Skeletons use animate-pulse divs, no artwork
+Error page illustration                Error boundaries use text only, no artwork
+Onboarding step illustrations          OnboardingFlow uses FOL patterns, no custom art
+Print stylesheet                       None exists
+
+
+================================================================================
+EXISTING HTML MOCKUPS (public/templates/ — 15 files)
+================================================================================
+
+  change-engine-prototype.html
+  community-exchange-mockup.html
+  concentric-2026-03.html
+  engagement-ordering-2026-03.html
+  flower-of-life-icons-2026-03.html
+  full-site-flower-2026-03.html
+  journey-2026-03.html
+  journey-mockup-2026-03.html
+  journey-v2-2026-03.html
+  journey-v3-2026-03.html
+  page-mockups-2026-03.html
+  site-mockup-2026-03.html
+  unified-template-2026-03.html
+  wayfinder-mockups.html
+  wayfinder-template-2026-03.html
+
+
+================================================================================
+KEY FILE PATHS
+================================================================================
+
+  tailwind.config.ts                          All Tailwind color/font extensions
+  src/lib/constants.ts                        Theme/center definitions, geo layers
+  src/app/globals.css                         Custom utility classes, animations
+  src/app/layout.tsx                          Font imports, root metadata
+  src/components/exchange/FlowerIcons.tsx      Icon system (10 icons + brand mark)
+  src/lib/i18n.ts                             2,004 lines of UI strings (EN/ES/VI)
+  next.config.js                              Image remote patterns, redirects
+  CLAUDE.md                                   Full technical reference

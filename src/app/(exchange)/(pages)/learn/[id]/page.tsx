@@ -181,14 +181,14 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <Breadcrumb items={[
         { label: t('learn.title'), href: '/learn' },
         { label: pathName }
       ]} />
 
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-5">
         <div className="flex items-center gap-3 flex-wrap mb-3">
           {path.theme_id && <ThemePill themeId={path.theme_id} size="sm" />}
           {path.difficulty_level && (
@@ -217,7 +217,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2">
           {/* Prerequisite */}
@@ -242,7 +242,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Module Timeline */}
           {timelineModules.length > 0 && (
-            <section className="mb-10">
+            <section className="mb-6">
               <h2 className="relative text-xl font-bold text-brand-text font-serif mb-6">{t('learn.modules_heading')}
                 <InfoBubble id={TOOLTIPS.quiz_indicator.id} text={TOOLTIPS.quiz_indicator.text} position="bottom" />
               </h2>
@@ -263,7 +263,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Badge */}
           {badge && (
-            <section className="mb-10">
+            <section className="mb-6">
               <h2 className="text-xl font-bold text-brand-text font-serif mb-4">{t('learn.badge_earned')}</h2>
               <div className="max-w-md">
                 <BadgeCard
@@ -303,7 +303,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <DetailWayfinder data={wayfinderData} currentType="learning_path" currentId={pathId} userRole={userProfile?.role} />
           {/* Focus Areas */}
           {focusAreas.length > 0 && (
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+            <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_focus')}</h3>
               <FocusAreaPills focusAreas={focusAreas} />
             </div>
@@ -311,7 +311,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* SDG Badges */}
           {sdgIds.length > 0 && (
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+            <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.sdg')}</h3>
               <div className="flex flex-wrap gap-2">
                 {sdgIds.map(sid => {
@@ -332,7 +332,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* SDOH Badges */}
           {sdohCodes.length > 0 && (
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+            <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.sdoh')}</h3>
               <div className="flex flex-wrap gap-2">
                 {sdohCodes.map(code => {
@@ -353,7 +353,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Related Opportunities */}
           {opportunities.length > 0 && (
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+            <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_opportunities')}</h3>
               <div className="space-y-2">
                 {opportunities.slice(0, 4).map(o => (
@@ -378,7 +378,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Related Policies */}
           {policies.length > 0 && (
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+            <div className="bg-white rounded-xl border border-brand-border p-4">
               <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_policies')}</h3>
               <div className="space-y-2">
                 {policies.slice(0, 4).map(p => (
@@ -395,7 +395,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           )}
 
           {/* Related Guides */}
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+          <div className="bg-white rounded-xl border border-brand-border p-4">
             <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_guides')}</h3>
             <Link href="/guides" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
               <BookOpen size={14} />
@@ -405,7 +405,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           </div>
 
           {/* All Learning Paths */}
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+          <div className="bg-white rounded-xl border border-brand-border p-4">
             <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.more_paths')}</h3>
             <div className="space-y-2">
               {allPaths.filter(p => p.path_id !== pathId).slice(0, 5).map(p => (

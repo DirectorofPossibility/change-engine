@@ -109,18 +109,18 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
       {/* Hero */}
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[
             { label: 'Organizations', href: '/organizations' },
             { label: displayOrgName }
           ]} />
           <div className="flex items-start gap-4 mt-4">
             {org.logo_url && (
-              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border-2 border-brand-border"  width={48} height={64} />
+              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border"  width={48} height={64} />
             )}
             <div>
               <div className="flex items-center gap-2.5">
-                <h1 className="text-3xl font-serif font-bold text-brand-text">{displayOrgName}</h1>
+                <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{displayOrgName}</h1>
                 {(org as any).is_verified === 'Yes' && (
                   <svg className="w-6 h-6 flex-shrink-0" viewBox="0 0 20 20" fill="none" aria-label="Verified">
                     <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#805ad5" />
@@ -140,7 +140,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                   <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-accent/10 text-brand-accent border border-brand-accent/20">{org.org_type}</span>
                 ) : null}
                 {org.year_founded && <span>Founded {org.year_founded}</span>}
-                {org.ntee_code && <span className="relative text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border-2 border-brand-border">NTEE: {org.ntee_code}<WayfinderTooltipPos tipKey="ntee_code" position="bottom" /></span>}
+                {org.ntee_code && <span className="relative text-xs px-2 py-0.5 rounded-lg bg-brand-bg-alt border border-brand-border">NTEE: {org.ntee_code}<WayfinderTooltipPos tipKey="ntee_code" position="bottom" /></span>}
               </div>
               <div className="mt-2">
                 <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
@@ -152,14 +152,14 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       </div>
 
       {/* Two-column grid: main + sidebar */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
           {/* Main column */}
           <div className="min-w-0">
 
             {/* Contact card */}
-            <div className="relative bg-white rounded-xl border-2 border-brand-border p-5 mb-8 flex flex-wrap gap-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+            <div className="relative bg-white rounded-xl border border-brand-border p-5 mb-5 flex flex-wrap gap-4">
               <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
               {org.phone && (
                 <a href={'tel:' + org.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
@@ -190,7 +190,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
             {/* Hours */}
             {hoursDisplay && (
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4 mb-8" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-xl border border-brand-border p-4 mb-5">
                 <h3 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Hours of Operation</h3>
                 <p className="text-sm text-brand-text">{hoursDisplay}</p>
               </div>
@@ -198,10 +198,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
             {/* Social media */}
             {socialLinks.length > 0 && (
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex flex-wrap gap-3 mb-5">
                 {socialLinks.map(function (link) {
                   return (
-                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg border-2 border-brand-border text-brand-accent hover:underline capitalize">
+                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 bg-brand-bg rounded-lg border border-brand-border text-brand-accent hover:underline capitalize">
                       {link.platform}
                     </a>
                   )
@@ -211,27 +211,27 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
             {/* Stats */}
             {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
                 {org.people_served && (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                     <div className="text-lg font-bold text-brand-text">{org.people_served}</div>
                     <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">People Served</div>
                   </div>
                 )}
                 {org.service_area && (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                     <div className="text-sm font-bold text-brand-text">{org.service_area}</div>
                     <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Service Area</div>
                   </div>
                 )}
                 {org.partner_count != null && (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                     <div className="text-lg font-bold text-brand-text">{org.partner_count}</div>
                     <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Partners</div>
                   </div>
                 )}
                 {org.annual_budget != null && (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                  <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                     <div className="text-lg font-bold text-brand-text">${org.annual_budget.toLocaleString()}</div>
                     <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Annual Budget</div>
                   </div>
@@ -241,7 +241,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
             {/* Description (if mission wasn't shown) */}
             {org.mission_statement && displayOrgDesc && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="text-xl font-serif font-bold text-brand-text mb-3">About</h2>
                 <p className="text-brand-muted">{displayOrgDesc}</p>
               </section>
@@ -249,16 +249,16 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
             {/* Tags */}
             {org.tags && org.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-8">
+              <div className="flex flex-wrap gap-1 mb-5">
                 {org.tags.map(function (tag) {
-                  return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg border-2 border-brand-border text-brand-muted">{tag}</span>
+                  return <span key={tag} className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg border border-brand-border text-brand-muted">{tag}</span>
                 })}
               </div>
             )}
 
             {/* Services */}
             {services && services.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">Services ({services.length})</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {services.map(function (svc) {

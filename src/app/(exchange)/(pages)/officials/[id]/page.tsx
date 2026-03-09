@@ -185,7 +185,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {/* Level color bar */}
         <div className="h-1.5" style={{ backgroundColor: barColor }} />
 
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Breadcrumb items={[
             { label: 'Civic Leaders', href: '/officials' },
             { label: official.official_name }
@@ -197,7 +197,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 <Image
                   src={photoUrl}
                   alt={official.official_name}
-                  className="w-28 h-28 rounded-xl object-cover border-2 border-brand-border"
+                  className="w-28 h-28 rounded-xl object-cover border border-brand-border"
                  width={800} height={112} />
               </div>
             )}
@@ -210,7 +210,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                   <span className="text-xs px-3 py-1 rounded-lg font-medium bg-gray-100 text-gray-700">{official.party}</span>
                 )}
               </div>
-              <h1 className="font-serif text-3xl font-bold text-brand-text mb-1">{official.official_name}</h1>
+              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-text mb-1">{official.official_name}</h1>
               {displayTitle && <p className="text-lg text-brand-muted mb-2">{displayTitle}</p>}
               <div className="flex items-center gap-2 text-sm text-brand-muted">
                 {official.jurisdiction && <span>{official.jurisdiction}</span>}
@@ -229,22 +229,22 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       </div>
 
       {/* Two-column layout: Main + Sidebar */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
           {/* ===== MAIN COLUMN ===== */}
           <div className="min-w-0">
 
             {/* About */}
             {bio && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="font-serif text-xl font-bold text-brand-text mb-3">About</h2>
                 <p className="text-brand-muted leading-relaxed">{bio}</p>
               </section>
             )}
 
             {/* Contact info card */}
-            <div className="bg-white rounded-xl border-2 border-brand-border p-6 mb-8" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+            <div className="bg-white rounded-xl border border-brand-border p-6 mb-5">
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {(profile?.phone_office || official.office_phone) && (
@@ -324,14 +324,14 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
             {/* District Map */}
             {(official.district_type || official.district_id) && (
-              <div className="mb-8">
+              <div className="mb-5">
                 <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
               </div>
             )}
 
             {/* Focus Areas — dot + text links */}
             {focusAreas.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="font-serif text-xl font-bold text-brand-text mb-3">Focus Areas</h2>
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
                   {focusAreas.map(function (fa, i) {
@@ -353,7 +353,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
             {/* Counties Served */}
             {counties.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="font-serif text-xl font-bold text-brand-text mb-3 flex items-center gap-2">
                   <Users size={20} /> Counties Served
                 </h2>
@@ -371,14 +371,14 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
             {/* Committee Assignments */}
             {committeeList.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="font-serif text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
                   <Building2 size={20} /> Committee Assignments
                 </h2>
                 <div className="space-y-3">
                   {committeeList.map(function (c, i) {
                     return (
-                      <div key={i} className="bg-white rounded-xl border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                      <div key={i} className="bg-white rounded-xl border border-brand-border p-4">
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <p className="font-medium text-brand-text">{c.committee_name}</p>
@@ -412,11 +412,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
             {/* Vote Records */}
             {voteList.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="font-serif text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
                   <Vote size={20} /> Recent Votes
                 </h2>
-                <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
                   <div className="divide-y divide-brand-border">
                     {voteList.map(function (v, i) {
                       const voteColor = v.vote === 'Yea' ? 'bg-green-100 text-green-700'
@@ -453,7 +453,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
             {/* Policies */}
             {policies && policies.length > 0 && (
-              <section className="mb-10">
+              <section className="mb-6">
                 <h2 className="font-serif text-xl font-bold text-brand-text mb-4">Policies &amp; Legislation</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {policies.map(function (p) {
@@ -480,7 +480,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
             {/* Related Content */}
             {related.length > 0 && (
-              <div className="mb-10">
+              <div className="mb-6">
                 <RelatedContent title="Related Content" items={related} />
               </div>
             )}

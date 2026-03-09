@@ -38,13 +38,13 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[{ label: 'Agencies', href: '/agencies' }, { label: agency.agency_name }]} />
           <div className="flex items-center gap-3 mt-4 mb-2">
             <Building2 className="w-6 h-6 text-brand-accent" />
             {agency.jurisdiction && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{agency.jurisdiction}</span>}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">
             {agency.agency_name}
             {agency.agency_acronym && <span className="ml-3 text-xl text-brand-muted font-normal">({agency.agency_acronym})</span>}
           </h1>
@@ -52,12 +52,12 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
         </div>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, transparent 60%)' }} />
       </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Contact card */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-3 text-sm">
                   {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
@@ -67,7 +67,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               </div>
               {/* Services */}
               {services && services.length > 0 && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-lg border border-brand-border p-5">
                   <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Services Provided</h2>
                   <div className="space-y-2">
                     {services.map(function (s: any) {

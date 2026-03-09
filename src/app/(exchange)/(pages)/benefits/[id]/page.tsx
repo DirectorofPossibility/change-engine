@@ -29,29 +29,29 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[{ label: 'Benefits', href: '/benefits' }, { label: b.benefit_name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             <Heart className="w-5 h-5 text-theme-health" />
             {b.benefit_type && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{b.benefit_type}</span>}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">{b.benefit_name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{b.benefit_name}</h1>
           {b.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{b.description_5th_grade}</p>}
           {b.application_url && (
-            <a href={b.application_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
+            <a href={b.application_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-5 px-3.5 py-1.5 rounded text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
               Apply Now <ExternalLink className="w-4 h-4" />
             </a>
           )}
         </div>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, #e53e3e, transparent 60%)' }} />
       </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Eligibility */}
               {b.eligibility_summary && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-lg border border-brand-border p-5">
                   <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
                   {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
@@ -59,7 +59,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
               {/* Benefit details */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
                 <div className="space-y-2 text-sm">
                   {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
@@ -70,7 +70,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
               </div>
               {/* Documentation */}
               {b.documentation_needed && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5 md:col-span-2">
+                <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
                   <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
                 </div>

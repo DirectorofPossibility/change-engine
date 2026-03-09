@@ -106,18 +106,18 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
       {/* Hero */}
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[
             { label: 'Services', href: '/services' },
             { label: displayName }
           ]} />
 
-          <h1 className="font-serif text-3xl lg:text-4xl text-brand-text mt-4 mb-3">{displayName}</h1>
+          <h1 className="font-serif text-2xl lg:text-3xl text-brand-text mt-4 mb-3">{displayName}</h1>
 
           <div className="flex flex-wrap items-center gap-3 mb-2">
             <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
             {service.airs_code && (
-              <span className="text-xs px-2 py-0.5 rounded-lg bg-white border-2 border-brand-border text-brand-muted">AIRS: {service.airs_code}</span>
+              <span className="text-xs px-2 py-0.5 rounded-lg bg-white border border-brand-border text-brand-muted">AIRS: {service.airs_code}</span>
             )}
           </div>
 
@@ -134,20 +134,20 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* Two-column grid */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
           {/* Main column */}
           <div className="min-w-0">
             {/* Description */}
             {displayDesc && (
-              <div className="mb-8">
+              <div className="mb-5">
                 <p className="text-brand-text leading-relaxed text-lg">{displayDesc}</p>
               </div>
             )}
 
             {/* Contact & Access */}
-            <div className="bg-white rounded-card border-2 border-brand-border p-5 mb-8 space-y-3" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+            <div className="bg-white rounded-card border border-brand-border p-5 mb-5 space-y-3">
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Contact &amp; Access</p>
               {service.phone && (
                 <a href={'tel:' + service.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
@@ -173,7 +173,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             {/* Location Map */}
             {(service as any).latitude != null && (service as any).longitude != null && (
-              <div className="mb-8">
+              <div className="mb-5">
                 <SingleLocationMap
                   marker={{
                     id: service.service_id,
@@ -189,21 +189,21 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             )}
 
             {/* Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
               {service.eligibility && (
-                <div className="bg-white rounded-card border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-card border border-brand-border p-4">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Eligibility</p>
                   <p className="text-sm text-brand-text">{service.eligibility}</p>
                 </div>
               )}
               {service.fees && (
-                <div className="bg-white rounded-card border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-card border border-brand-border p-4">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Fees</p>
                   <p className="text-sm text-brand-text">{service.fees}</p>
                 </div>
               )}
               {service.languages && (
-                <div className="bg-white rounded-card border-2 border-brand-border p-4" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-card border border-brand-border p-4">
                   <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Languages</p>
                   <p className="text-sm text-brand-text">{service.languages}</p>
                 </div>
@@ -212,9 +212,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             {/* Parent Organization */}
             {org && (
-              <section className="mb-10">
+              <section className="mb-6">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Organization</p>
-                <Link href={'/organizations/' + org.org_id} className="block bg-white rounded-card border-2 border-brand-border p-5 hover:shadow-md transition-shadow" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <Link href={'/organizations/' + org.org_id} className="block bg-white rounded-card border border-brand-border p-5 hover:shadow-md transition-shadow">
                   <h3 className="font-semibold text-brand-text mb-1">{org.org_name}</h3>
                   {org.description_5th_grade && <p className="text-sm text-brand-muted line-clamp-2">{org.description_5th_grade}</p>}
                 </Link>
@@ -223,7 +223,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             {/* Related services */}
             {relatedServices.length > 0 && (
-              <section className="mb-10">
+              <section className="mb-6">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Related Services</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {relatedServices.map(function (svc) {
@@ -248,7 +248,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             {/* Library nuggets */}
             {libraryNuggets.length > 0 && (
-              <section className="mb-10">
+              <section className="mb-6">
                 <LibraryNugget
                   nuggets={libraryNuggets}
                   variant="section"
@@ -260,7 +260,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             {/* Quote */}
             {quote && (
-              <section className="mb-10">
+              <section className="mb-6">
                 <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
               </section>
             )}

@@ -51,29 +51,29 @@ export default async function FoundationDetailPage({ params }: { params: Promise
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[{ label: 'Foundations', href: '/foundations' }, { label: f.name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             {f.type && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{f.type}</span>}
             {f.geo_level && <span className="text-xs text-brand-muted">/ {f.geo_level}</span>}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">{f.name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{f.name}</h1>
           {f.mission && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{f.mission}</p>}
           {f.website_url && (
-            <a href={f.website_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
+            <a href={f.website_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium text-brand-accent hover:underline">
               Visit Website <Globe className="w-4 h-4" />
             </a>
           )}
         </div>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, transparent 60%)' }} />
       </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           {/* Main content */}
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Financials & Details */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Details</h2>
                 <div className="space-y-2 text-sm">
                   {f.assets && <div className="flex items-center gap-2"><DollarSign className="w-4 h-4 text-brand-muted" /><span className="text-brand-muted">Assets:</span> <span className="font-medium text-brand-text">{f.assets}</span></div>}
@@ -82,7 +82,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
                 </div>
               </div>
               {/* Contact */}
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-2 text-sm">
                   {f.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${f.phone}`} className="text-brand-accent hover:underline">{f.phone}</a></div>}
@@ -92,7 +92,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               </div>
               {/* Focus Areas */}
               {focusAreas.length > 0 && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-lg border border-brand-border p-5">
                   <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Focus Areas</h2>
                   <div className="flex flex-wrap gap-2">
                     {focusAreas.map(function (fa) {
@@ -103,7 +103,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               )}
               {/* People */}
               {people && people.length > 0 && (
-                <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-lg border border-brand-border p-5">
                   <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><Users className="w-4 h-4" />People</h2>
                   <div className="space-y-2">
                     {people.map(function (p: any, i: number) {

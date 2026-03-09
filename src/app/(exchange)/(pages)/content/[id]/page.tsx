@@ -213,11 +213,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
       {/* ── HERO ── */}
       <section className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-8 py-10">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
+        <div className="max-w-[1200px] mx-auto px-8 py-5">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-6">
             <div className="flex-1 min-w-0">
               {/* Meta row */}
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-2">
                 <ThemePill themeId={item.pathway_primary} size="sm" />
                 {(item.source_org_name || item.source_domain) && (
                   <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">
@@ -240,18 +240,18 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
 
-              <h1 className="font-serif text-[clamp(1.8rem,4vw,2.8rem)] leading-tight text-brand-text mb-4">
+              <h1 className="font-serif text-[clamp(1.6rem,3.5vw,2.4rem)] leading-tight text-brand-text mb-2">
                 {title}
               </h1>
 
               {summary && (
-                <div className="relative mb-6">
-                  <div className="flex items-center gap-1.5 mb-1.5">
-                    <Sparkles size={12} className="text-brand-accent" />
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">AI Summary</span>
+                <div className="relative mb-4 pl-3 border-l-2" style={{ borderColor: themeColor + '40' }}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <Sparkles size={11} style={{ color: themeColor }} />
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">Summary</span>
                     <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
                   </div>
-                  <p className="text-lg leading-relaxed text-brand-muted max-w-2xl">
+                  <p className="text-[15px] leading-relaxed text-brand-muted max-w-2xl">
                     {summary}
                   </p>
                 </div>
@@ -263,11 +263,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   href={item.source_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-brand-text rounded-lg text-sm font-semibold text-brand-text hover:bg-brand-text hover:text-white transition-colors"
-                  style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
                 >
-                  <ExternalLink size={15} />
-                  Visit source
+                  <ExternalLink size={13} />
+                  Read at source
                 </a>
                 <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
               </div>
@@ -276,7 +275,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* Image */}
             {item.image_url && (
               <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80">
-                <div className="rounded-lg overflow-hidden border-2 border-brand-border" style={{ boxShadow: '3px 3px 0 #D1D5E0' }}>
+                <div className="rounded-lg overflow-hidden border border-brand-border">
                   <Image src={item.image_url} alt={title || ''} className="w-full h-56 object-cover"  width={800} height={224} />
                 </div>
               </div>
@@ -289,7 +288,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       {/* Quote banner */}
       {heroQuote && (
         <div className="bg-brand-bg-alt border-b border-brand-border">
-          <div className="max-w-[1200px] mx-auto px-8 py-8">
+          <div className="max-w-[1200px] mx-auto px-8 py-4">
             <div className="flex gap-4">
               <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
               <blockquote className="text-lg font-serif italic text-brand-text leading-relaxed">
@@ -301,8 +300,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       )}
 
       {/* ── MAIN + SIDEBAR ── */}
-      <div className="max-w-[1200px] mx-auto px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      <div className="max-w-[1200px] mx-auto px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           {/* Main content */}
           <div>
             {/* Video embed */}
@@ -311,8 +310,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               const videoId = match ? match[1] : null
               if (!videoId) return null
               return (
-                <div className="mb-8">
-                  <div className="relative w-full overflow-hidden rounded-lg border-2 border-brand-border" style={{ paddingBottom: '56.25%', boxShadow: '3px 3px 0 #D1D5E0' }}>
+                <div className="mb-5">
+                  <div className="relative w-full overflow-hidden rounded-lg border border-brand-border" style={{ paddingBottom: '56.25%' }}>
                     <iframe
                       className="absolute inset-0 w-full h-full"
                       src={'https://www.youtube-nocookie.com/embed/' + videoId}
@@ -327,27 +326,27 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Body */}
             {bodyBlocks.length > 0 && (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {bodyBlocks.map(function (block, i) {
                   if (!block) return null
                   if (block.startsWith('## ')) {
                     sectionNumber++
                     return (
-                      <div key={i} className="flex items-center gap-3 mt-8 first:mt-0">
-                        <div
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                          style={{ backgroundColor: themeColor }}
+                      <div key={i} className="flex items-baseline gap-2.5 mt-6 first:mt-0 border-b border-brand-border pb-1.5">
+                        <span
+                          className="font-mono text-xs font-bold flex-shrink-0"
+                          style={{ color: themeColor }}
                         >
-                          {sectionNumber}
-                        </div>
-                        <h2 className="text-xl font-serif text-brand-text">{block.replace(/^## /, '')}</h2>
+                          {String(sectionNumber).padStart(2, '0')}
+                        </span>
+                        <h2 className="text-lg font-serif font-semibold text-brand-text">{block.replace(/^## /, '')}</h2>
                       </div>
                     )
                   }
                   if (block.match(/^[-\u2022*] /m)) {
                     const items = block.split(/\n/).filter(function (l) { return l.trim() })
                     return (
-                      <ul key={i} className="list-disc list-inside space-y-1.5 text-brand-text leading-relaxed pl-10">
+                      <ul key={i} className="list-disc list-outside space-y-1 text-brand-text leading-relaxed ml-5">
                         {items.map(function (li, j) {
                           return <li key={j}>{li.replace(/^[-\u2022*]\s*/, '').trim()}</li>
                         })}
@@ -357,7 +356,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   if (block.match(/\*\*[^*]+\*\*/)) {
                     const parts = block.split(/(\*\*[^*]+\*\*)/)
                     return (
-                      <p key={i} className="text-brand-text leading-relaxed pl-10">
+                      <p key={i} className="text-brand-text leading-relaxed">
                         {parts.map(function (part, j) {
                           if (part.startsWith('**') && part.endsWith('**')) {
                             return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
@@ -367,7 +366,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                       </p>
                     )
                   }
-                  return <p key={i} className="text-brand-text leading-relaxed pl-10">{block}</p>
+                  return <p key={i} className="text-brand-text leading-relaxed">{block}</p>
                 })}
               </div>
             )}
@@ -377,12 +376,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Programs */}
             {programs.length > 0 && (
-              <div className="mt-8">
+              <div className="mt-5">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Programs</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {programs.map(function (prog, i) {
                     return (
-                      <div key={i} className="border-2 border-brand-border rounded-lg p-4 flex gap-3" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                      <div key={i} className="border border-brand-border rounded-lg p-4 flex gap-3">
                         <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
                         <div>
                           <p className="text-sm font-semibold text-brand-text">{prog.name}</p>
@@ -402,7 +401,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
 
             {/* At a Glance */}
-            <div className="border-2 border-brand-border rounded-lg p-4" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+            <div className="border border-brand-border rounded-lg p-4">
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">At a Glance</p>
               <div className="space-y-2">
                 {orgInfo && (
@@ -428,7 +427,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Take Action */}
             {(opportunities.length > 0 || policies.length > 0) && (
-              <div className="border-2 border-brand-border rounded-lg p-4" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+              <div className="border border-brand-border rounded-lg p-4">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Take Action</p>
                 <div className="space-y-2">
                   {opportunities.slice(0, 3).map(function (o: any) {
@@ -475,7 +474,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
       {/* Related */}
       {related && related.length > 0 && (
-        <div className="max-w-[1200px] mx-auto px-8 pb-12">
+        <div className="max-w-[1200px] mx-auto px-8 pb-6">
           <RelatedContent items={related} />
         </div>
       )}

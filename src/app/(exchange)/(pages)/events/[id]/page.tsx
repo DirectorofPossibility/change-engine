@@ -76,7 +76,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Hero */}
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[{ label: 'Events', href: '/events' }, { label: event.event_name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             <Calendar className="w-5 h-5 text-brand-accent" />
@@ -84,7 +84,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             {event.is_free === 'true' && <span className="text-xs font-medium text-theme-money bg-theme-money/10 px-2 py-0.5 rounded">Free</span>}
             {event.is_virtual === 'true' && <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded flex items-center gap-1"><Video className="w-3 h-3" /> Virtual</span>}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">{event.event_name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{event.event_name}</h1>
 
           {/* Quick date + time summary */}
           {startDate && (
@@ -100,17 +100,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3 mt-5">
             {event.registration_url && (
-              <a href={event.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
+              <a href={event.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
                 Register <ExternalLink className="w-4 h-4" />
               </a>
             )}
             {calendarUrl && (
-              <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-brand-text border-2 border-brand-border hover:bg-white transition-colors">
+              <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline">
                 <CalendarPlus className="w-4 h-4" /> Add to Calendar
               </a>
             )}
             {mapUrl && event.is_virtual !== 'true' && (
-              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-brand-text border-2 border-brand-border hover:bg-white transition-colors">
+              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline">
                 <Navigation className="w-4 h-4" /> Get Directions
               </a>
             )}
@@ -120,12 +120,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* Body */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           <div className="space-y-6">
             {/* Description */}
             {event.description_5th_grade && (
-              <div className="bg-white rounded-lg border-2 border-brand-border p-6" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-6">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">About This Event</h2>
                 <p className="text-brand-text leading-relaxed">{event.description_5th_grade}</p>
               </div>
@@ -133,7 +133,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
             {/* When & Where cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">When</h2>
                 <div className="space-y-2 text-sm">
                   {startDate && (
@@ -163,7 +163,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Where</h2>
                 <div className="space-y-2 text-sm">
                   {event.is_virtual === 'true' ? (
@@ -197,7 +197,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
             {/* Host Organization */}
             {org && (
-              <div className="bg-white rounded-lg border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-lg border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Hosted By</h2>
                 <div className="flex items-start gap-4">
                   {(org as any).logo_url ? (

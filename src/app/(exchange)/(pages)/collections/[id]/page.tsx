@@ -91,10 +91,10 @@ export default async function CollectionDetailPage({ params }: { params: Promise
         stats={items.length > 0 ? [{ value: items.length, label: 'Resources' }] : undefined}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Collections', href: '/collections' }, { label: c.collection_name }]} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           <div className="lg:col-span-2">
             {items.length === 0 ? (
               <div className="text-center py-16">
@@ -118,8 +118,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                     <Link
                       key={itemId}
                       href={href}
-                      className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                      style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                      className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
                     >
                       {image ? (
                         <div className="h-36 overflow-hidden">

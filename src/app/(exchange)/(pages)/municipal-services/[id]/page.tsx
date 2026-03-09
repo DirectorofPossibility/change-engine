@@ -36,20 +36,20 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[{ label: 'City Services', href: '/municipal-services' }, { label: s.service_name }]} />
           <div className="flex items-center gap-2 mt-4 mb-2">
             <Landmark className="w-5 h-5 text-theme-voice" />
             {s.department && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{s.department}</span>}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">{s.service_name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{s.service_name}</h1>
           {s.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{s.description_5th_grade}</p>}
         </div>
       </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg border-2 border-brand-border p-5 max-w-md">
+            <div className="bg-white rounded-lg border border-brand-border p-5 max-w-md">
               <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Contact</h2>
               <div className="space-y-2 text-sm">
                 {s.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${s.phone}`} className="text-brand-accent hover:underline">{s.phone}</a></div>}

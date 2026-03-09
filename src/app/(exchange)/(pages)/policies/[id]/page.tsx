@@ -147,7 +147,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
       <SpiralTracker action="view_policy" />
       {/* Hero header */}
       <div className="bg-brand-bg-alt border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Breadcrumb items={[
             { label: 'Policies', href: '/policies' },
             { label: displayName }
@@ -174,7 +174,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             {themePrimary && <ThemePill themeId={themePrimary} size="sm" />}
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text mb-3 max-w-3xl leading-tight">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text mb-3 max-w-3xl leading-tight">
             {displayName}
           </h1>
 
@@ -199,19 +199,19 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Main content */}
           <div className="flex-1 min-w-0">
 
             {/* What this does — the main summary */}
             {displaySummary && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="text-xl font-serif font-bold text-brand-text mb-3 flex items-center gap-2">
                   <FileText size={18} className="text-brand-accent" />
                   What This Does
                 </h2>
-                <div className="bg-white rounded-xl border-2 border-brand-border p-6" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                <div className="bg-white rounded-xl border border-brand-border p-6">
                   <p className="text-brand-text leading-relaxed text-[15px]">{displaySummary}</p>
                 </div>
               </section>
@@ -226,12 +226,12 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             <BreakItDown title={displayName} summary={displaySummary} type="policy" />
 
             {/* Timeline */}
-            <section className="mb-8">
+            <section className="mb-5">
               <h2 className="text-xl font-serif font-bold text-brand-text mb-3 flex items-center gap-2">
                 <Calendar size={18} className="text-brand-accent" />
                 Timeline
               </h2>
-              <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
                 <div className="divide-y divide-brand-border">
                   {policy.introduced_date && (
                     <div className="flex items-start gap-4 px-5 py-4">
@@ -273,7 +273,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
             {/* Connected Officials */}
             {officials.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="text-xl font-serif font-bold text-brand-text mb-4 flex items-center gap-2">
                   <Users size={18} className="text-brand-accent" />
                   Decision Makers
@@ -304,7 +304,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
             {/* Related Policies */}
             {related && related.length > 0 && (
-              <section className="mb-8">
+              <section className="mb-5">
                 <h2 className="text-xl font-serif font-bold text-brand-text mb-4">Related Policies</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {related.map(function (p) {
@@ -335,7 +335,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           <div className="lg:w-80 shrink-0 space-y-6">
             {/* Focus areas */}
             {focusAreas.length > 0 && (
-              <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-xl border border-brand-border p-5">
                 <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">Topics</h3>
                 <FocusAreaPills focusAreas={focusAreas} />
               </div>
@@ -343,7 +343,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
             {/* Geographic impact */}
             {geography.length > 0 && (
-              <div className="bg-white rounded-xl border-2 border-brand-border p-5" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div className="bg-white rounded-xl border border-brand-border p-5">
                 <h3 className="text-sm font-serif font-semibold text-brand-text mb-3 flex items-center gap-1.5">
                   <MapPin size={14} className="text-brand-muted" />
                   Where This Applies
@@ -356,7 +356,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                         <div className="flex flex-wrap gap-1.5 mt-1">
                           {ids.map(function (gid) {
                             return (
-                              <span key={gid} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg text-brand-text border-2 border-brand-border">
+                              <span key={gid} className="text-xs bg-brand-bg px-2 py-0.5 rounded-lg text-brand-text border border-brand-border">
                                 {gid}
                               </span>
                             )
@@ -370,7 +370,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             )}
 
             {/* Quick facts card */}
-            <div className="bg-white rounded-xl border-2 border-brand-border p-5">
+            <div className="bg-white rounded-xl border border-brand-border p-5">
               <h3 className="text-sm font-serif font-semibold text-brand-text mb-3">Quick Facts</h3>
               <div className="space-y-2.5 text-sm">
                 {policy.level && (
@@ -421,7 +421,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
         {/* Quote */}
         {quote && (
-          <div className="mt-10">
+          <div className="mt-6">
             <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
           </div>
         )}

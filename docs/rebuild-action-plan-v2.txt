@@ -1,0 +1,802 @@
+THE CHANGE ENGINE — CIVIC OPERATING SYSTEM REBUILD PLAN
+===========================================================
+Created: 2026-03-08
+Updated: 2026-03-08
+Status: PLANNING
+Approach: CONTENT ENGINE + CIVIC OS ON-RAMP
+
+The Community Exchange is a civic operating system for Houston.
+The frontend is the on-ramp — it helps every resident, regardless of
+where they are in their civic journey, find their way into the system.
+
+The content engine ingests civic data, classifies it across 16 dimensions,
+braids it along pathways, focus areas, journeys, and geography — and
+renders it through templates driven by configuration, not code.
+
+Data in → Classification → Braid → Render.
+One pipeline. One engine. Every page is an output.
+
+
+THE BRAID
+---------
+The braid is 10,000+ living items woven together:
+
+  Organizations        Nonprofits, mutual aid, government agencies, foundations
+  211 Services         Social services — food banks, clinics, shelters, legal aid
+  Officials            Every elected official: federal, state, county, city, school board
+  Policies             Bills, ordinances, legislation at every level
+  News & Content       Articles, reports, videos, research, announcements
+  Events               Community events, civic hearings, workshops, elections
+  Opportunities        Volunteer, jobs, civic engagement, board seats
+  Learning Paths       Courses, curricula, educational journeys
+  Guides               Long-form editorial guides by pathway
+  Books & Resources    Library documents, toolkits, reading lists
+  Civic Tools          "Call Your Senator", "Find Your Polling Place", etc.
+  Campaigns            Organized civic campaigns with calls to action
+  Candidates           Election candidates with positions, endorsements
+  Benefits             Government benefit programs (SNAP, Medicaid, etc.)
+  Life Situations      "I need food", "I lost my job" — entry points to resources
+  Neighborhoods        Geographic communities with their own civic profile
+
+Organizations are parents — their services, events, opportunities, and
+campaigns are children. An organization profile shows everything it offers.
+A service profile links back to its parent org and out to related policies,
+officials, and content through the braid.
+
+EVERY ITEM gets a full Profile page with wayfinder.
+A 211 food bank listing → shows the org that runs it, the council member
+for that district, the SNAP policy that funds it, the news article about
+food insecurity in that neighborhood, and the "Our Health" pathway it
+belongs to. Nothing is a dead end. Everything connects.
+
+Custom tools (like "Call Your Senator") are entities in the braid — they
+get classified into pathways and show up in the Stream alongside services,
+news, and officials. They are not buttons on a page. They are braided
+civic actions.
+
+
+THE ON-RAMP: 6 JOURNEY ARCHETYPES
+-----------------------------------
+Every person arrives differently. The archetypes are entry points into
+the civic OS, each mapped to a sacred geometry pattern (Flower of Life):
+
+  The Seeker    (Seed of Life)       → "I need something" → Services, benefits
+  The Learner   (Vesica Piscis)      → "I want to understand" → Library, guides, Chance
+  The Builder   (Tripod of Life)     → "I want to help" → Opportunities, campaigns
+  The Watchdog  (Metatron's Cube)    → "Who's in charge?" → Officials, policies, votes
+  The Partner   (Borromean Rings)    → "Who's doing this work?" → Organizations, foundations
+  The Explorer  (Full Flower)        → "Show me everything" → Pathways, map, calendar
+
+The archetype selection personalizes the entire experience:
+  - Stream sections reorder based on archetype priority
+  - Wayfinder highlights relevant entity types first
+  - Compass journey adapts starting questions
+  - Search results weight archetype-relevant types higher
+
+A Seeker sees services and benefits first.
+A Watchdog sees officials and policies first.
+Same braid, different entry point. Everyone on-ramps their way.
+
+
+THE 7 PATHWAYS
+--------------
+Thematic lenses through which all content is organized:
+
+  Our Health          Wellness, clinics, mental health, insurance
+  Our Families        Schools, childcare, youth, safety
+  Our Neighborhood    Housing, parks, libraries, neighborhood initiatives
+  Our Voice           Voting, advocacy, town halls, organizing
+  Our Money           Jobs, benefits, credit, small business
+  Our Planet          Climate, flooding, energy, sustainability
+  The Bigger We       Bridging, dialogue, inclusion, trust
+
+Every entity in the braid belongs to at least one pathway.
+Pathways are the browsing experience — the magazine-style Streams.
+
+
+THE 4 CENTERS
+-------------
+User-intent modes that cut across all pathways:
+
+  Learning          "How can I understand?"
+  Action            "How can I help?"
+  Resource          "What's available to me?"
+  Accountability    "Who makes decisions?"
+
+Centers filter within a pathway. "Our Health" × "Resource" = clinics,
+food banks, insurance programs. "Our Health" × "Accountability" =
+health committee members, Medicaid policy, hospital board officials.
+
+
+FOCUS AREAS
+-----------
+Granular topics that connect entities across pathways:
+  Mental Health, Youth Development, Affordable Housing, Voter Registration,
+  Food Access, Climate Resilience, Job Training, Criminal Justice, etc.
+
+Focus areas are the braid threads — they're how a service connects to
+a policy connects to an official connects to an article. The 3-hop
+graph traversal in wayfinder.ts walks these threads.
+
+
+THE LIBRARY + CHANCE (AI Assistant)
+------------------------------------
+Already built. The knowledge base with RAG-powered chat:
+
+  kb_documents     Documents, toolkits, reports, research
+  kb_chunks        Chunked + embedded for semantic search
+  Chance chatbot   Streams answers from Claude, cites 5 source types
+  Bookshelf        Curated reading lists by pathway
+  Library nuggets  Excerpt cards that appear in Streams and Profiles
+
+Chance searches across ALL entity types — documents, services, orgs,
+content, officials — and answers in 6th-grade reading level with
+asset-based language. Chance is the conversational on-ramp.
+
+In the rebuild: Chance becomes a persistent presence, not just a
+floating button. The library integrates into the braid — documents
+show up as EntityCards alongside services and news in Streams.
+
+
+THE CALENDAR
+------------
+Already built. Unified event calendar merging 4 sources:
+
+  Community events      From partner organizations
+  Civic calendar        Government meetings, hearings, deadlines
+  Opportunities         Volunteer dates, registration deadlines
+  Content events        Events surfaced from published content
+
+Month/week/3-day/day views. Filterable by category, pathway, type.
+Google Calendar integration, .ics subscribe, registration links.
+
+In the rebuild: The calendar becomes a first-class template (not just
+a page) — events appear in Streams, in Profiles (org's upcoming events),
+and in the Map (events near you). The calendar view is one lens on
+the same braided data.
+
+
+WHAT WE KEEP (the 90% that works)
+----------------------------------
+✓ Supabase backend (Postgres, Auth, Edge Functions, Storage)
+✓ 16-dimension AI classification pipeline
+✓ Unified intake pipeline (POST /api/intake)
+✓ 11 cron sync jobs (Congress, Legistar, Open States, RSS, translations)
+✓ 17 split data modules (officials, services, policies, content, etc.)
+✓ Edge functions (classify, translate, sync, publish)
+✓ GeoJSON boundary layers (9 layers)
+✓ i18n pipeline (EN, ES, VI — nightly batch)
+✓ Auth flow + middleware session refresh
+✓ Dashboard (admin, review queue, analytics)
+✓ wayfinder.ts data layer (3-hop graph traversal, braided feeds)
+✓ Library + Chance chatbot (kb_documents, RAG search, streaming chat)
+✓ Calendar data (4 sources merged into unified CalendarItem)
+✓ 6 journey archetypes with FOL sacred geometry
+✓ Archetype cookie persistence + content reordering
+
+
+WHAT WE BUILD NEW
+------------------
+→ Content Engine: config-driven rendering system
+→ Braid Query Layer: unified cross-entity queries
+→ 7 Render Templates: Stream, Profile, Explorer, Map, Compass, Calendar, Library
+→ 1 EntityCard: image-first, type-aware, config-driven
+→ 1 Wayfinder: orient / connect / move modes
+→ Archetype-aware personalization across all templates
+→ Middleware personalization: ZIP + archetype + lang → headers → SSR
+→ Image pipeline: every entity gets a visual
+→ Chance integration: persistent AI assistant across all pages
+→ Calendar integration: events braided into Streams and Profiles
+
+
+================================================================================
+THE CONTENT ENGINE MODEL
+================================================================================
+
+    ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
+    │   INGEST    │────▶│   CLASSIFY   │────▶│    STORE     │
+    │ APIs, RSS,  │     │ 16 dimensions│     │  Supabase    │
+    │ manual URLs │     │ AI pipeline  │     │  + junctions │
+    └─────────────┘     └──────────────┘     └──────┬───────┘
+                                                     │
+                            ┌────────────────────────┘
+                            ▼
+                     ┌─────────────┐
+                     │   BRAID     │
+                     │ Query by:   │
+                     │ • pathway   │
+                     │ • focus area│
+                     │ • geography │
+                     │ • center    │
+                     │ • journey   │
+                     └──────┬──────┘
+                            │
+              ┌─────────────┼─────────────┐
+              ▼             ▼             ▼
+        ┌──────────┐  ┌──────────┐  ┌──────────┐
+        │ TEMPLATE │  │ TEMPLATE │  │ TEMPLATE │
+        │ Stream   │  │ Profile  │  │ Explorer │
+        └──────────┘  └──────────┘  └──────────┘
+
+    The engine decides WHAT to show based on:
+    • Entity type config (what fields, what card variant, what sections)
+    • User context (ZIP, language, archetype)
+    • Route context (pathway, focus area, entity type)
+    • Braid connections (what's related across types)
+
+    The templates decide HOW to show it.
+    The content engine decides WHAT and WHY.
+
+
+================================================================================
+PHASE 1: BACKEND HARDENING (Week 1)
+================================================================================
+Goal: Make the existing backend faster, cleaner, and ready for the braid layer.
+No frontend changes. Everything still works as-is during this phase.
+
+1.1 — Data Layer Cleanup
+  [ ] Replace SELECT * with explicit column lists in all 17 data modules
+  [ ] Add proper pagination to all list queries (limit/offset)
+  [ ] Add revalidate cache hints per entity type
+  [ ] Move dashboard aggregations to Supabase RPC/views
+  [ ] Audit and fix any N+1 query patterns
+
+1.2 — Supabase Optimization
+  [ ] Create database views for common cross-entity queries
+  [ ] Create RPC function: get_entities_by_focus_area(focus_area_id, limit)
+  [ ] Create RPC function: get_entities_by_pathway(theme_id, zip?, limit)
+  [ ] Create RPC function: get_braided_feed(theme_id?, zip?, center?, limit)
+  [ ] Create RPC function: get_entity_connections(entity_type, entity_id)
+  [ ] Add composite indexes on junction tables for braid queries
+  [ ] Benchmark query performance, target < 100ms per braid query
+
+1.3 — Image Pipeline
+  [ ] Audit all entity types for image coverage
+  [ ] Ensure every entity has an image source or fallback rule
+  [ ] Create image_url computed column or view per entity type
+  [ ] Standardize photo URLs (http→https, consistent sizing)
+  [ ] Set up fallback image generation rules:
+      Officials:     photo → initials + level color gradient
+      Organizations: logo → first letter + pathway color
+      Services:      category icon → pathway color card
+      Content:       og_image → pathway color + title typography
+      Policies:      gov seal icon → level color + bill number
+      Events:        venue photo → calendar date block
+
+1.4 — Kill Dead Code (backend only)
+  [ ] Remove unused API routes
+  [ ] Remove duplicate edge functions if any
+  [ ] Clean up unused database tables/columns
+  [ ] Archive design1/design2 to branch
+
+
+================================================================================
+PHASE 2: CONTENT ENGINE CORE (Week 1-2)
+================================================================================
+Goal: Build the engine that drives the entire frontend from config.
+This is the brain — every page, card, and connection flows from this.
+
+2.1 — Entity Type Registry
+  [ ] Define EntityTypeConfig schema:
+      {
+        type: string                    // 'official' | 'service' | 'policy' | ...
+        table: string                   // Supabase table name
+        displayName: string             // 'Elected Official'
+        pluralName: string              // 'Elected Officials'
+        slug: string                    // URL segment: 'officials'
+        icon: string                    // lucide icon name
+        color: string                   // default accent color
+
+        // Field mapping — tells the engine where to find data
+        fields: {
+          id: string                    // column name for primary key
+          title: string                 // column for display title
+          subtitle: string | null       // column for subtitle (title, org_name, etc.)
+          description: string           // column for body text
+          image: string | null          // column for image URL
+          date: string | null           // column for date (published_at, event_date)
+          status: string | null         // column for status (active, enacted, etc.)
+          url: string | null            // column for external URL
+        }
+
+        // Contact fields — what actions are available
+        contacts: {
+          email: string | null
+          phone: string | null
+          website: string | null
+          address: string | null
+          social: string | null         // linkedin, twitter column
+        }
+
+        // Card rendering config
+        card: {
+          variant: 'compact' | 'standard' | 'featured'
+          showImage: boolean
+          showBadge: boolean            // type pill
+          showPathway: boolean          // pathway dot
+          showContact: boolean          // action buttons
+          showLevel: boolean            // government level indicator
+          showStatus: boolean           // status badge
+          imageAspect: 'square' | 'wide' | 'portrait'
+        }
+
+        // Detail page config
+        detail: {
+          sections: string[]            // ordered list of section keys to show
+          actions: string[]             // 'email' | 'call' | 'visit' | 'donate' | 'volunteer'
+          relatedTypes: string[]        // which entity types to show as related
+          showTaxonomy: boolean         // show SDG, SDOH, NTEE badges
+          showTimeline: boolean         // show date/status timeline
+          showMap: boolean              // show location map
+        }
+
+        // Parent-child relationships
+        children: {
+          types: string[]               // child entity types: ['service', 'event', 'opportunity']
+          foreignKey: string            // column on child table: 'org_id'
+        } | null
+
+        parent: {
+          type: string                  // parent entity type: 'organization'
+          foreignKey: string            // column on this table: 'org_id'
+        } | null
+
+        // Braid config — how this entity type participates in braiding
+        braid: {
+          junctionTable: string         // e.g. 'official_focus_areas'
+          junctionEntityKey: string     // e.g. 'official_id'
+          junctionFocusKey: string      // e.g. 'focus_area_id'
+          pathwayJunction: string       // e.g. 'official_pathways'
+          geoField: string | null       // 'zip_code' | 'jurisdiction' | null
+        }
+      }
+
+  [ ] Create config entries for all 16 entity types:
+      officials, services, policies, content, organizations,
+      events, opportunities, agencies, benefits, foundations,
+      candidates, learning-paths, guides, neighborhoods,
+      civic-tools, campaigns
+
+  [ ] Define parent-child relationships in registry:
+      Organization → children: [services, events, opportunities, campaigns]
+      Service      → parent: organization
+      Event        → parent: organization
+      Opportunity  → parent: organization
+      Campaign     → parent: organization
+      Guide        → parent: pathway (theme)
+      Candidate    → parent: election
+
+  [ ] Export: ENTITY_REGISTRY: Record<string, EntityTypeConfig>
+  [ ] Export: getEntityConfig(type: string): EntityTypeConfig
+  [ ] Export: getEntityField(type, entity, fieldName): any
+
+2.2 — Braid Engine
+  [ ] buildBraidedFeed(options):
+      Input:  { pathway?, focusArea?, zip?, center?, types?, limit, sort }
+      Output: BraidedEntity[] (mixed, typed, sorted)
+      Logic:  Uses entity registry to query correct tables + junctions
+              Merges results, normalizes to BraidedEntity shape
+              Scores by relevance (recency + connection density + geo proximity)
+
+  [ ] getEntityProfile(type, id):
+      Input:  entity type + id
+      Output: { entity, connections, related, actions, taxonomy, geo, children, parent }
+      Logic:  Reads entity config → fetches correct table
+              Wraps getWayfinderContext() for connections
+              If config.children → fetch child entities grouped by type
+              If config.parent → fetch parent entity for breadcrumb/link
+              Applies detail.sections config to determine response shape
+
+  [ ] getStreamSections(pathway?, zip?, archetype?):
+      Input:  pathway slug (or null for homepage) + optional zip + archetype
+      Output: StreamSection[] (ordered sections for the Stream template)
+      Logic:  "What's New" → latest across all types
+              Focus area clusters → group by shared focus area
+              Journey steps → life situations with ordered resources
+              Your reps → officials filtered by zip
+              Upcoming events → next 5 from unified calendar
+              Library picks → relevant documents/nuggets
+              Archetype reorders sections:
+                Seeker    → services, benefits, life situations first
+                Learner   → library, guides, learning paths first
+                Builder   → opportunities, campaigns, events first
+                Watchdog  → officials, policies, votes first
+                Partner   → organizations, foundations first
+                Explorer  → everything evenly weighted
+              Each section is a { type, title, entities: BraidedEntity[] }
+
+  [ ] getExplorerData(entityType, filters?):
+      Input:  entity type slug + { pathway?, center?, search?, zip?, page }
+      Output: { entities: BraidedEntity[], total, filters, facets }
+      Logic:  Reads entity config → builds query with filters
+              Returns facet counts for filter UI
+
+  [ ] getMapContext(zip?, bounds?, layers?):
+      Input:  zip or map bounds + active layer IDs
+      Output: { markers, areaCounts, selectedFeed: BraidedEntity[] }
+
+2.3 — BraidedEntity Type
+  [ ] Define normalized entity shape:
+      {
+        entityType: string              // discriminant
+        id: string
+        title: string
+        subtitle: string | null
+        description: string
+        imageUrl: string | null
+        imageFallback: { type, color, letter }
+        date: string | null
+        status: string | null
+        pathway: { id, name, color } | null
+        level: { name, color } | null
+        contacts: { email?, phone?, website?, address? }
+        focusAreas: { id, name }[]
+        url: string                     // internal route
+        externalUrl: string | null
+        geo: { zip?, neighborhood?, district? } | null
+        parentId: string | null         // org_id, election_id, etc.
+        parentType: string | null       // 'organization', 'election', etc.
+        childCount: number | null       // number of children (services, events, etc.)
+      }
+
+  [ ] Build normalizeEntity(type, rawRow): BraidedEntity
+      Uses entity registry fields config to map columns to normalized shape
+      Handles image fallback generation
+
+  [ ] Define StreamSection type:
+      { sectionType, title, subtitle?, entities: BraidedEntity[], layout }
+
+  [ ] Zod schemas for BraidedEntity and StreamSection
+
+
+================================================================================
+PHASE 3: NEW FRONTEND (Week 2-3)
+================================================================================
+Goal: Build the rendering layer. Templates consume engine output.
+Developed alongside old frontend — no routes replaced yet.
+
+3.1 — Design Tokens + CSS Foundation
+  [ ] Define CSS custom properties:
+      --pathway-{slug}: color per pathway (7 colors)
+      --center-{slug}: color per center (4 colors)
+      --level-{slug}: color per gov level (5 colors)
+      --brand-*: all brand tokens
+  [ ] Tailwind config: extend with CSS variable references
+  [ ] Zero inline styles — everything via Tailwind + CSS variables
+  [ ] Typography scale: DM Serif Display headings, DM Sans body
+  [ ] Responsive breakpoints: mobile-first, 3 breakpoints
+  [ ] Sacred geometry accents: FOL as CSS background patterns
+
+3.2 — EntityCard (the one card)
+  [ ] Build EntityCard component:
+      Props: entity (BraidedEntity), variant? (override config default)
+      Reads card config from ENTITY_REGISTRY[entity.entityType]
+      Image-first: imageUrl or generated fallback (always visual)
+      Type badge pill with entity type color
+      Pathway dot (small colored indicator)
+      Title, subtitle, description (truncated per variant)
+      Contact actions (conditional on config.card.showContact)
+      Level indicator (conditional on config.card.showLevel)
+      Click → Link to entity.url
+  [ ] Server component by default
+  [ ] 'use client' wrapper only when onSelect callback needed
+  [ ] Verify rendering with all 14 entity types from sample data
+
+3.3 — Wayfinder (the one wayfinder)
+  [ ] Build unified Wayfinder component with 3 modes:
+      mode="orient":   Homepage/landing — ZIP, pathway dots, what's new, search
+      mode="connect":  Detail pages — focus areas, related entities, actions
+      mode="move":     Listing pages — cross-nav, pathway/focus filters
+  [ ] Server component with client islands for interactivity
+  [ ] PathwayDots: 7 CSS circles, active highlight, link or filter callback
+  [ ] Responsive: sidebar on desktop, bottom sheet on mobile
+  [ ] Replace all 10 existing wayfinder components + 5 sub-components
+
+3.4 — The Stream (homepage + pathway landing)
+  [ ] Template receives: StreamSection[] from getStreamSections()
+  [ ] Renders sections in order, each with its own layout:
+      hero:          Full-bleed image + title + personalization
+      whats-new:     Horizontal scroll of mixed EntityCards
+      focus-group:   Vertical group titled by focus area, 3-6 cards
+      journey:       Numbered steps with mixed entity types
+      officials:     Photo row of reps (from ZIP)
+      call-to-action: Featured card with prominent action button
+  [ ] Server component, personalized via middleware headers
+  [ ] Responsive: single column mobile, magazine layout desktop
+
+3.5 — The Profile (all detail pages)
+  [ ] Template receives: EntityProfile from getEntityProfile()
+  [ ] Renders sections based on entity config detail.sections:
+      hero:          Full-width image + entity info bar
+      body:          Description / summary / markdown content
+      children:      Child entities (services, events, opportunities under an org)
+      parent:        Link to parent entity ("Part of [Organization Name]")
+      connections:   "Connected Through" focus area pills
+      pathway:       "Along This Pathway" braided EntityCards
+      geo:           "In Your Area" geo-matched EntityCards
+      actions:       Contact buttons, volunteer, donate, vote links
+      taxonomy:      SDG, SDOH, gov level badges (if showTaxonomy)
+      timeline:      Date/status progression (if showTimeline)
+      map:           Location map (if showMap and has address)
+  [ ] Organization Profile shows children grouped by type:
+      ┌─────────────────────────────────────────────┐
+      │  AVENUE CDC                                 │
+      │  [logo] Community development in Third Ward │
+      │                                             │
+      │  ── 12 Services ───────────────────────     │
+      │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐      │
+      │  │ svc  │ │ svc  │ │ svc  │ │ svc  │      │
+      │  └──────┘ └──────┘ └──────┘ └──────┘      │
+      │                                             │
+      │  ── 3 Upcoming Events ──────────────────    │
+      │  ┌──────┐ ┌──────┐ ┌──────┐               │
+      │  │ evt  │ │ evt  │ │ evt  │               │
+      │  └──────┘ └──────┘ └──────┘               │
+      │                                             │
+      │  ── 2 Opportunities ────────────────────    │
+      │  ┌──────┐ ┌──────┐                         │
+      │  │ vol  │ │ job  │                         │
+      │  └──────┘ └──────┘                         │
+      │                                             │
+      │  ── Connected Through ──────────────────    │
+      │  ● Housing  ● Youth Development  ● Equity  │
+      │                                             │
+      │  ── Along "Our Neighborhood" Pathway ───    │
+      │  [braided cards: policies, officials, news] │
+      │                                             │
+      │  ── Take Action ───────────────────────     │
+      │  📞 Call  🌐 Website  💰 Donate  🤝 Vol   │
+      └─────────────────────────────────────────────┘
+  [ ] Service/Event/Opportunity Profile shows parent org link:
+      "Part of Avenue CDC → [link to org profile]"
+  [ ] Wayfinder mode="connect" in sidebar
+  [ ] Server component, data from getEntityProfile()
+  [ ] One route: /[entityType]/[id] — config determines rendering
+
+3.6 — The Explorer (all listing pages)
+  [ ] Template receives: ExplorerData from getExplorerData()
+  [ ] Filter bar: pathway dots + center tabs + search + type facets
+  [ ] Grid of EntityCards (config determines card variant per type)
+  [ ] Wayfinder mode="move" in sidebar
+  [ ] Pagination (server-side, URL params)
+  [ ] One route: /explore/[entityType] — config determines columns, filters
+
+3.7 — The Map
+  [ ] Template receives: MapContext from getMapContext()
+  [ ] Full-height Leaflet map with boundary layer toggles
+  [ ] Click area → slide-up panel with braided EntityCards for that area
+  [ ] ZIP search → fly to location + set personalization
+  [ ] Markers clustered by entity type, colored by pathway
+  [ ] Keep Leaflet as client component, panel content server-rendered
+
+3.8 — The Compass (civic on-ramp)
+  [ ] "What brings you here today?" → 6 archetype cards with FOL icons
+      The Seeker:   "I need something" → services, benefits
+      The Learner:  "I want to understand" → library, guides
+      The Builder:  "I want to help" → opportunities, campaigns
+      The Watchdog: "Who's in charge?" → officials, policies
+      The Partner:  "Who's doing this?" → organizations, foundations
+      The Explorer: "Show me everything" → pathways, map
+  [ ] Archetype selection → sets cookie → personalizes entire experience
+  [ ] After archetype: pathway narrowing → center selection → braided results
+  [ ] Journey builder: life situation → step-by-step resources across types
+  [ ] Minimal client JS, progressive disclosure
+  [ ] First-time visitors guided through Compass as on-ramp
+
+3.9 — The Calendar
+  [ ] Template receives: CalendarItem[] from getCalendarItems()
+  [ ] Month/week/3-day/day view toggle
+  [ ] Filters: category (community/civic/opportunity/content), pathway, type
+  [ ] Event cards as EntityCards (not custom calendar-only cards)
+  [ ] Click event → Profile template (not modal — events are full entities)
+  [ ] "Add to Google Calendar" + .ics subscribe
+  [ ] Upcoming events section reusable in Stream and Profile templates
+  [ ] Server component for initial render, client for view switching
+
+3.10 — The Library
+  [ ] Template receives: documents, search results, bookshelf
+  [ ] Browse by pathway, search by keyword, filter by type
+  [ ] Library documents render as EntityCards in the braid
+  [ ] Document detail → Profile template with full text + chunks
+  [ ] Library nuggets (excerpt cards) appear in Streams and Profiles
+  [ ] Bookshelf section: curated reading lists by pathway
+  [ ] All content at 6th-grade reading level
+  [ ] Server component, hybrid search (semantic + FTS)
+
+3.11 — Chance (AI Civic Concierge)
+  [ ] Persistent chat presence on every page (not just floating button)
+  [ ] Contextual: Chance knows what page you're on
+      On an official's page: "Ask about this representative"
+      On a service page: "Ask about eligibility"
+      On a pathway: "Explore this topic with Chance"
+  [ ] Searches all 5 source types (docs, services, orgs, content, officials)
+  [ ] Responds at 6th-grade reading level, asset-based language
+  [ ] Cites sources as clickable EntityCards
+  [ ] Mobile: full-screen chat; Desktop: right panel overlay
+  [ ] Session continuity for logged-in users
+
+3.12 — Layout Shell
+  [ ] Persistent header: logo, search, ZIP, language, archetype indicator, auth
+  [ ] Wayfinder sidebar (mode set by route)
+  [ ] Chance access point in header or persistent corner
+  [ ] Footer with FOL branding, emergency numbers (211/311/988)
+  [ ] Mobile: hamburger + bottom nav + bottom sheet wayfinder
+
+
+================================================================================
+PHASE 4: MIDDLEWARE + ROUTING (Week 3-4)
+================================================================================
+Goal: Wire personalization, switch routes, progressive rollout.
+
+4.1 — Middleware Personalization
+  [ ] Read zip, lang, archetype cookies at the edge
+  [ ] Resolve ZIP → neighborhood + district (cached edge lookup)
+  [ ] Set request headers: x-neighborhood, x-district, x-lang, x-archetype
+  [ ] Server components read headers via headers()
+  [ ] NeighborhoodContext becomes optional (interactive ZIP changes only)
+  [ ] LanguageContext stays for dynamic translation switching
+
+4.2 — Route Structure
+  [ ] New route map:
+      /                          → Stream (homepage)
+      /pathway/[slug]            → Stream (pathway-filtered)
+      /explore/[entityType]      → Explorer (listing for any type)
+      /[entityType]/[id]         → Profile (detail for any type)
+      /map                       → Map
+      /compass                   → Compass
+      /search?q=                 → Explorer with search active
+      /my-area                   → Stream personalized to ZIP
+      /elections                 → Keep standalone
+      /knowledge-graph           → Keep standalone
+      /dashboard/*               → Keep as-is
+      /about, /privacy, /terms   → Static pages (keep)
+      /help                      → Life situations (keep)
+  [ ] Total: ~15 dynamic routes (down from 99)
+  [ ] Redirect map: all old routes → new equivalents
+  [ ] 404 fallback with search suggestion
+
+4.3 — Caching Strategy
+  [ ] Static pages (about, privacy, terms) → full SSG
+  [ ] Semi-static (explorer, pathway streams) → ISR 10min revalidate
+  [ ] Dynamic (profiles, search, my-area) → per-request SSR + stale-while-revalidate
+  [ ] Middleware sets Cache-Control by route pattern
+  [ ] API routes: Cache-Control headers on braid queries
+
+4.4 — Progressive Rollout
+  [ ] Middleware A/B flag: x-frontend-version cookie
+  [ ] Route traffic % to new templates (start 10%, ramp up)
+  [ ] Monitor Core Web Vitals (LCP < 2.5s, CLS < 0.1, INP < 200ms)
+  [ ] Roll forward route by route
+  [ ] Kill old routes once new ones verified stable
+
+
+================================================================================
+PHASE 5: POLISH + LAUNCH (Week 4-5)
+================================================================================
+Goal: Production-ready. Ship it.
+
+5.1 — Performance
+  [ ] Target: < 40KB First Load JS (down from 88KB)
+  [ ] Virtual scrolling on Explorer lists > 50 items
+  [ ] Image optimization: next/image everywhere, srcset, lazy loading
+  [ ] Bundle analysis: verify minimal client code
+  [ ] Lighthouse audit: target 90+ Performance, 90+ Accessibility
+
+5.2 — Accessibility
+  [ ] WCAG 2.1 AA compliance on all 7 templates
+  [ ] Skip navigation links on every page
+  [ ] Focus management on route transitions
+  [ ] Screen reader testing (VoiceOver)
+  [ ] Keyboard navigation: all cards, wayfinder, filters, map
+  [ ] Color contrast verification for all pathway/level/center colors
+
+5.3 — SEO + Meta
+  [ ] generateMetadata() on every route using entity config
+  [ ] Dynamic OG images per entity type (entity title + pathway color)
+  [ ] Structured data (JSON-LD) on Profile pages
+  [ ] Sitemap includes all entity detail pages
+  [ ] Meta descriptions from entity summaries
+
+5.4 — i18n Verification
+  [ ] All new UI strings added to i18n translation keys
+  [ ] ES + VI translations generated for new UI strings
+  [ ] Language switcher works on all templates
+  [ ] RTL-safe layout (future-proofing)
+
+5.5 — Launch
+  [ ] Full rollout: disable A/B, new frontend only
+  [ ] Delete old frontend components (~126 files)
+  [ ] Delete old page routes (~80 page.tsx files)
+  [ ] Delete design1/ and design2/ directories
+  [ ] Delete old wayfinder components (10 files)
+  [ ] Delete old card components (16 files)
+  [ ] Update CLAUDE.md with content engine architecture
+  [ ] Update sitemap.ts for new route structure
+  [ ] Monitor error rates for 48 hours post-launch
+  [ ] Celebrate
+
+
+================================================================================
+EXPECTED OUTCOME
+================================================================================
+
+Metric                  Before              After
+------                  ------              -----
+Architecture            Page-driven         Civic operating system
+Exchange routes         99                  ~15
+Frontend components     147                 ~25
+Wayfinder components    10 (2,600 lines)    1 (400 lines)
+Card components         16                  1 (config-driven)
+Page templates          8 ad-hoc            7 (engine-rendered)
+Total .tsx lines        68,648              ~12,000
+First Load JS           88KB                < 40KB
+Client components       226 files           ~20 files
+Inline styles           2,231               0
+Data query patterns     95+ functions       5 engine functions + RPC
+Entity type setup       Custom per type     Config entry (add type in minutes)
+Content presentation    Siloed by type      Braided by dimension
+Image coverage          Inconsistent        100% (source or generated fallback)
+Personalization         Client (flicker)    Edge (instant, archetype-aware)
+Design systems          2 (v1 + design2)    1
+Time to first paint     Variable            Consistent (SSR)
+Adding a new entity     New route + card    Add config entry, done
+On-ramp experience      None                6 archetype journeys
+AI assistant            Floating button     Contextual concierge on every page
+Calendar                Standalone page     Integrated into Streams + Profiles
+Library                 Separate section    Braided into all content
+Reading level           Mixed               6th grade throughout
+
+
+================================================================================
+TIMELINE (with Claude Code)
+================================================================================
+
+Week 1:     Phase 1 (backend hardening) + Phase 2 start (entity registry)
+Week 2:     Phase 2 (braid engine) + Phase 3 start (tokens, card, wayfinder)
+Week 3:     Phase 3 (7 templates built and wired to engine)
+Week 4:     Phase 4 (middleware, routing, progressive rollout)
+Week 5:     Phase 5 (polish, a11y, SEO, launch)
+
+Buffer:     +1 week for design iteration and edge cases
+
+
+================================================================================
+THE CIVIC OPERATING SYSTEM
+================================================================================
+
+This is not a website. It is a concierge for civic life.
+
+The Russian doll:
+  Pathways      → the big themes (health, families, money, voice...)
+  Centers       → the intent (learn, act, find resources, hold accountable)
+  Focus Areas   → the threads that connect everything
+  Organizations → the hubs, with their children (services, events, opportunities)
+  Every item    → a full page, braided to everything related
+
+The on-ramp:
+  6 archetypes meet people where they are
+  Chance (AI) answers questions in plain language
+  Everything written at 6th-grade level
+  3 languages (EN, ES, VI)
+  ZIP code personalizes from first visit
+
+The engine:
+  Data in → AI classifies across 16 dimensions → Braid connects everything →
+  Templates render based on config → Middleware personalizes at the edge
+
+The old frontend asks: "What page am I on?"
+The civic OS asks: "Who are you, what do you need, and what's connected to it?"
+
+Policy gets rewritten so people can understand it.
+Services get connected to the officials who fund them.
+Organizations show everything they offer.
+Events show up everywhere they're relevant.
+The library surfaces knowledge alongside action.
+Chance explains anything you don't understand.
+
+Every resident can on-ramp into their civic life,
+through whichever door makes sense to them.
+
+That's the Community Exchange.
+That's the Content Engine.
+That's the civic operating system for Houston.
