@@ -191,23 +191,26 @@ export default function SplashPage() {
   const sidebarContent = (
     <>
       {/* Brand identity block */}
-      <div className="relative px-5 pt-5 pb-4">
-        {/* FOL as background watermark */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.08]">
-          <GradientFOL className="w-[140%] max-w-none" />
+      <div className="relative overflow-hidden">
+        {/* FOL background watermark — fills sidebar width, bleeds off edges */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.06]" style={{ width: '100%', aspectRatio: '1' }}>
+          <GradientFOL className="w-full h-full" />
         </div>
-        {/* Foreground content */}
-        <div className="relative z-10 flex items-start gap-3">
-          <GradientFOL className="w-12 h-12 shrink-0 mt-0.5" />
-          <div>
-            <h1 className="font-serif text-xl font-bold text-brand-text leading-tight tracking-tight">Change<br />Engine</h1>
-            <p className="text-brand-muted text-xs font-serif leading-snug mt-1">Connecting<br />Houston Neighbors</p>
+
+        {/* Large FOL — full column width */}
+        <div className="relative z-10 px-4 pt-3">
+          <GradientFOL className="w-full" />
+        </div>
+
+        {/* Title underneath */}
+        <div className="relative z-10 px-4 pb-3 text-center">
+          <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">Change Engine</h1>
+          <p className="text-xs text-brand-muted font-serif mt-1">Connecting Houston Neighbors</p>
+          <div className="mt-2 flex items-center gap-2">
+            <span className="h-px flex-1 bg-brand-accent/30" />
+            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">Coming Soon</span>
+            <span className="h-px flex-1 bg-brand-accent/30" />
           </div>
-        </div>
-        <div className="relative z-10 mt-3 flex items-center gap-2">
-          <span className="h-px flex-1 bg-brand-accent/30" />
-          <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">Coming Soon</span>
-          <span className="h-px flex-1 bg-brand-accent/30" />
         </div>
       </div>
 
@@ -237,22 +240,25 @@ export default function SplashPage() {
         </button>
         {showImagine && (
           <div className="px-3 py-2 space-y-3">
+            <p className="text-xs font-serif text-brand-text italic leading-relaxed">
+              Every community has what it needs to thrive.
+            </p>
             <p className="text-xs text-brand-muted leading-relaxed">
               We&apos;re building a civic platform that connects Houston residents with the resources, services, and opportunities already around them.
             </p>
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent">Can you imagine&hellip;</p>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mt-2">What to expect</p>
             <ul className="space-y-2 text-xs text-brand-text leading-relaxed">
               <li className="flex gap-2">
                 <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>Knowing exactly who represents you at every level of government — and how to reach them</span>
+                <span>Know exactly who represents you at every level of government — and how to reach them</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>Finding every service, benefit, and resource available in your ZIP code — in one place</span>
+                <span>Find every service, benefit, and resource available in your ZIP code — in one place</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
-                <span>Understanding the policies being passed in your name — written so anyone can follow along</span>
+                <span>Understand the policies being passed in your name — written so anyone can follow along</span>
               </li>
               <li className="flex gap-2">
                 <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
@@ -290,6 +296,33 @@ export default function SplashPage() {
         >
           Sign Up to Be a Beta Tester
         </button>
+
+        <div className="h-px bg-brand-border my-1" />
+
+        <a
+          href="https://www.thechangelab.net/about2"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+        >
+          Learn About The Change Lab
+        </a>
+
+        <a
+          href="mailto:david@thechangelab.net?subject=Explore%20Partnership"
+          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+        >
+          Explore Partnership
+        </a>
+
+        <a
+          href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-accent bg-brand-accent/5 text-brand-accent hover:bg-brand-accent/10 transition-all"
+        >
+          Support Our Work
+        </a>
       </div>
 
       {/* Footer */}
@@ -319,8 +352,12 @@ export default function SplashPage() {
       </div>
 
       {/* ── Mobile header ── */}
-      <div className="md:hidden shrink-0 bg-brand-bg-alt border-b border-brand-border px-4 py-2.5 flex items-center justify-between relative z-30">
-        <div className="flex items-center gap-2.5">
+      <div className="md:hidden shrink-0 bg-brand-bg-alt border-b border-brand-border px-4 py-2.5 flex items-center justify-between relative z-30 overflow-hidden">
+        {/* Mobile watermark FOL */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05]" style={{ width: '200%', aspectRatio: '1' }}>
+          <GradientFOL className="w-full h-full" />
+        </div>
+        <div className="relative z-10 flex items-center gap-2.5">
           <GradientFOL className="w-9 h-9" />
           <div>
             <span className="font-serif text-base font-bold text-brand-text leading-none block">Change Engine</span>
