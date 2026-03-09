@@ -49,6 +49,12 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://www.changeengine.us',
+    languages: {
+      'en': 'https://www.changeengine.us',
+      'es': 'https://www.changeengine.us',
+      'vi': 'https://www.changeengine.us',
+      'x-default': 'https://www.changeengine.us',
+    },
   },
   robots: {
     index: true,
