@@ -228,7 +228,7 @@ export default function SplashPage() {
           className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
           <span className="flex items-center justify-between">
-            Can You Imagine&hellip;
+            Coming Soon
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
               className={'transition-transform ' + (showImagine ? 'rotate-180' : '')}>
               <path d="M6 9l6 6 6-6" />
@@ -236,9 +236,33 @@ export default function SplashPage() {
           </span>
         </button>
         {showImagine && (
-          <p className="text-xs text-brand-muted leading-relaxed px-4 pb-1">
-            Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
-          </p>
+          <div className="px-3 py-2 space-y-3">
+            <p className="text-xs text-brand-muted leading-relaxed">
+              We&apos;re building a civic platform that connects Houston residents with the resources, services, and opportunities already around them.
+            </p>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent">Can you imagine&hellip;</p>
+            <ul className="space-y-2 text-xs text-brand-text leading-relaxed">
+              <li className="flex gap-2">
+                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
+                <span>Knowing exactly who represents you at every level of government — and how to reach them</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
+                <span>Finding every service, benefit, and resource available in your ZIP code — in one place</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
+                <span>Understanding the policies being passed in your name — written so anyone can follow along</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-brand-accent font-serif leading-none mt-0.5">&bull;</span>
+                <span>A community where neighbors share what they know — and everyone gets stronger</span>
+              </li>
+            </ul>
+            <p className="text-xs text-brand-muted italic">
+              That&apos;s what we&apos;re building. We&apos;d love for you to be part of it.
+            </p>
+          </div>
         )}
 
         <a
