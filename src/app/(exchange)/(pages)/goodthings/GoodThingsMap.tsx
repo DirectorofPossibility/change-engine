@@ -54,7 +54,7 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
       zoom = 10
     } else if (geoEntries.length > 0) {
       center = [geoEntries[0].latitude!, geoEntries[0].longitude!]
-      zoom = geoEntries.length === 1 ? 10 : 4
+      zoom = 10
     }
 
     const map = L.map(containerRef.current, {
