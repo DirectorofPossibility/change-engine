@@ -7,6 +7,7 @@ import { Search, Heart, ChevronDown, ChevronRight } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { NeighborhoodWidget } from './NeighborhoodBanner'
+import { useTranslation } from '@/lib/use-translation'
 
 const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({
   id,
@@ -15,59 +16,65 @@ const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({
   slug: t.slug,
 }))
 
-// 5 intent-based navigation groups — every href resolves to an existing page.tsx
-const NAV_SECTIONS = [
-  {
-    label: 'My Area',
-    items: [
-      { href: '/my-area', label: 'Civic Profile' },
-      { href: '/officials', label: 'My Representatives' },
-      { href: '/geography', label: 'My Neighborhood' },
-      { href: '/polling-places', label: 'My Polling Place' },
-    ],
-  },
-  {
-    label: 'Get Informed',
-    items: [
-      { href: '/news', label: 'News' },
-      { href: '/policies', label: 'Policies' },
-      { href: '/elections', label: 'Elections' },
-      { href: '/library', label: 'Library' },
-      { href: '/explore/knowledge-base', label: 'Knowledge Base' },
-    ],
-  },
-  {
-    label: 'Find Help',
-    items: [
-      { href: '/help', label: 'Available Resources' },
-      { href: '/services', label: 'Services' },
-      { href: '/organizations', label: 'Organizations' },
-      { href: '/guides', label: 'Guides' },
-    ],
-  },
-  {
-    label: 'What You Can Do',
-    items: [
-      { href: '/opportunities', label: 'Opportunities' },
-      { href: '/calendar', label: 'Events' },
-      { href: '/foundations', label: 'Foundations' },
-      { href: '/super-neighborhoods', label: 'Neighborhoods' },
-    ],
-  },
-  {
-    label: 'Explore',
-    items: [
-      { href: '/compass', label: 'Compass' },
-      { href: '/search', label: 'Search' },
-      { href: '/learn', label: 'Learning Paths' },
-      { href: '/chat', label: 'Ask Chance' },
-      { href: '/about', label: 'About' },
-    ],
-  },
-]
-
 export function LeftNav() {
   const pathname = usePathname()
+  const { t } = useTranslation()
+
+  const NAV_SECTIONS = [
+    {
+      label: t('nav.my_area'),
+      key: 'My Area',
+      items: [
+        { href: '/my-area', label: t('nav.civic_profile') },
+        { href: '/officials', label: t('nav.my_reps') },
+        { href: '/geography', label: t('nav.my_neighborhood') },
+        { href: '/polling-places', label: t('nav.my_polling') },
+      ],
+    },
+    {
+      label: t('nav.get_informed'),
+      key: 'Get Informed',
+      items: [
+        { href: '/news', label: t('nav.news') },
+        { href: '/policies', label: t('nav.policies') },
+        { href: '/elections', label: t('nav.elections') },
+        { href: '/library', label: t('nav.library') },
+        { href: '/explore/knowledge-base', label: t('nav.knowledge_base') },
+      ],
+    },
+    {
+      label: t('nav.find_help'),
+      key: 'Find Help',
+      items: [
+        { href: '/help', label: t('nav.help') },
+        { href: '/services', label: t('nav.services') },
+        { href: '/organizations', label: t('nav.organizations') },
+        { href: '/guides', label: t('nav.guides') },
+      ],
+    },
+    {
+      label: t('nav.what_you_can_do'),
+      key: 'What You Can Do',
+      items: [
+        { href: '/opportunities', label: t('nav.opportunities') },
+        { href: '/calendar', label: t('nav.events') },
+        { href: '/foundations', label: t('nav.foundations') },
+        { href: '/super-neighborhoods', label: t('nav.neighborhoods') },
+      ],
+    },
+    {
+      label: t('nav.explore'),
+      key: 'Explore',
+      items: [
+        { href: '/compass', label: t('nav.compass') },
+        { href: '/search', label: t('nav.search_placeholder').split(' ')[0] },
+        { href: '/learn', label: t('nav.learning_paths') },
+        { href: '/chat', label: t('nav.ask_chance') },
+        { href: '/about', label: t('nav.about') },
+      ],
+    },
+  ]
+
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     'My Area': true,
     'Get Informed': true,
@@ -79,8 +86,8 @@ export function LeftNav() {
       for (const item of section.items) {
         if (pathname === item.href || pathname?.startsWith(item.href + '/')) {
           setExpandedSections(function (prev) {
-            if (prev[section.label]) return prev
-            return { ...prev, [section.label]: true }
+            if (prev[section.key]) return prev
+            return { ...prev, [section.key]: true }
           })
           return
         }
@@ -95,9 +102,9 @@ export function LeftNav() {
     }
   }, [pathname])
 
-  function toggleSection(label: string) {
+  function toggleSection(key: string) {
     setExpandedSections(function (prev) {
-      return { ...prev, [label]: !prev[label] }
+      return { ...prev, [key]: !prev[key] }
     })
   }
 
@@ -124,7 +131,7 @@ export function LeftNav() {
           className="flex items-center gap-2 px-3 py-2 bg-white/60 border-2 border-brand-border rounded-lg text-xs text-brand-muted hover:bg-white hover:text-brand-text transition-colors"
         >
           <Search size={13} />
-          Search...
+          {t('nav.search_placeholder')}
         </Link>
       </div>
 
@@ -136,14 +143,14 @@ export function LeftNav() {
 
         {/* Intent-based navigation groups */}
         {NAV_SECTIONS.map(function (section) {
-          const isExpanded = expandedSections[section.label] ?? false
+          const isExpanded = expandedSections[section.key] ?? false
           const hasActiveItem = section.items.some(
             function (item) { return pathname === item.href || pathname?.startsWith(item.href + '/') }
           )
           return (
-            <div key={section.label} className="mb-1">
+            <div key={section.key} className="mb-1">
               <button
-                onClick={function () { toggleSection(section.label) }}
+                onClick={function () { toggleSection(section.key) }}
                 className={sectionHeaderClass}
                 aria-expanded={isExpanded}
               >
@@ -178,16 +185,16 @@ export function LeftNav() {
         <div className="mb-1">
           <button onClick={function () { toggleSection('Pathways') }} className={sectionHeaderClass} aria-expanded={!!expandedSections.Pathways}>
             {expandedSections.Pathways ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
-            <span>Topics</span>
+            <span>{t('nav.topics')}</span>
           </button>
           {expandedSections.Pathways && (
             <div className="pb-1">
-              {THEME_LIST.map(function (t) {
-                const href = `/pathways/${t.slug}`
+              {THEME_LIST.map(function (th) {
+                const href = `/pathways/${th.slug}`
                 const isActive = pathname === href || pathname?.startsWith(href + '/')
                 return (
                   <Link
-                    key={t.id}
+                    key={th.id}
                     href={href}
                     className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors mb-0.5 ${
                       isActive ? 'bg-white shadow-sm' : 'hover:bg-white/60'
@@ -195,10 +202,10 @@ export function LeftNav() {
                   >
                     <span
                       className="w-2 h-5 rounded-sm flex-shrink-0"
-                      style={{ backgroundColor: t.color, opacity: isActive ? 1 : 0.6 }}
+                      style={{ backgroundColor: th.color, opacity: isActive ? 1 : 0.6 }}
                     />
                     <span className={`text-xs font-medium ${isActive ? 'text-brand-text font-semibold' : 'text-brand-text/70'}`}>
-                      {t.name}
+                      {th.name}
                     </span>
                   </Link>
                 )
@@ -217,7 +224,7 @@ export function LeftNav() {
           className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-accent hover:bg-white/60 transition-colors"
         >
           <Heart size={14} className="fill-brand-accent" />
-          Support Our Work
+          {t('support.button')}
         </a>
         <div className="px-3 pt-1 text-xs text-brand-muted italic leading-relaxed">
           {BRAND.origin || 'Built in Houston, made for everyone'}

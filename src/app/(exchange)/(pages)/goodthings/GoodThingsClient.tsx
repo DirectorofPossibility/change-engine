@@ -6,6 +6,7 @@ import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import dynamic from 'next/dynamic'
 import { logSpiralAction } from '@/lib/spiral'
+import { useTranslation } from '@/lib/use-translation'
 
 const GoodThingsMap = dynamic(function () { return import('./GoodThingsMap').then(function (m) { return m.GoodThingsMap }) }, {
   ssr: false,
@@ -29,6 +30,7 @@ interface GoodThingEntry {
 const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
 export function GoodThingsClient() {
+  const { t } = useTranslation()
   const [thing1, setThing1] = useState('')
   const [thing2, setThing2] = useState('')
   const [thing3, setThing3] = useState('')
@@ -54,11 +56,11 @@ export function GoodThingsClient() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!thing1.trim() || !thing2.trim() || !thing3.trim()) {
-      setError('Please share all three good things.')
+      setError(t('gt.error_all_three'))
       return
     }
     if (!/^\d{5}$/.test(zip)) {
-      setError('Please enter a valid 5-digit ZIP code.')
+      setError(t('gt.error_zip'))
       return
     }
     setError('')
@@ -75,7 +77,7 @@ export function GoodThingsClient() {
         }),
       })
       const data = await res.json()
-      if (!res.ok) { setError(data.error || 'Something went wrong.'); setSubmitting(false); return }
+      if (!res.ok) { setError(data.error || t('gt.error_generic')); setSubmitting(false); return }
 
       const newEntry = data.entry as GoodThingEntry
       logSpiralAction('share_good_thing')
@@ -84,7 +86,7 @@ export function GoodThingsClient() {
       setSubmitted(true)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch {
-      setError('Network error. Please try again.')
+      setError(t('gt.error_network'))
     } finally {
       setSubmitting(false)
     }
@@ -238,30 +240,30 @@ export function GoodThingsClient() {
         <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <div className="inline-flex items-center gap-2 mb-5">
             <FlowerOfLifeIcon size={18} color="#C75B2A" />
-            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-muted">A Community Practice</span>
+            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-muted">{t('gt.community_practice')}</span>
           </div>
           <p className="text-base text-brand-muted mb-3 max-w-xl mx-auto">
-            The news can make you feel like everything is broken. It isn&apos;t.
+            {t('gt.hero_sub')}
           </p>
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">Three good things. Every day.</h1>
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-4">{t('gt.hero_title')}</h1>
           <p className="text-lg text-brand-muted max-w-xl mx-auto leading-relaxed">
-            Real stories. Local. Updated daily. Because the news isn&apos;t only bad.
+            {t('gt.hero_desc')}
           </p>
           {totalEntries > 0 && (
             <div className="flex items-center justify-center gap-8 mt-7 text-sm">
               <div>
                 <span className="block text-2xl font-serif font-bold text-white">{totalEntries}</span>
-                <span className="text-white/40 text-xs">Entries</span>
+                <span className="text-white/40 text-xs">{t('gt.entries')}</span>
               </div>
               <div className="w-px h-8 bg-white/10" />
               <div>
                 <span className="block text-2xl font-serif font-bold text-white">{uniqueZips}</span>
-                <span className="text-white/40 text-xs">Communities</span>
+                <span className="text-white/40 text-xs">{t('gt.communities')}</span>
               </div>
               <div className="w-px h-8 bg-white/10" />
               <div>
                 <span className="block text-2xl font-serif font-bold text-white">{totalEntries * 3}</span>
-                <span className="text-white/40 text-xs">Reasons to Smile</span>
+                <span className="text-white/40 text-xs">{t('gt.reasons_to_smile')}</span>
               </div>
             </div>
           )}
@@ -309,15 +311,9 @@ export function GoodThingsClient() {
         {/* Intro */}
         <section className="mb-10">
           <div className="prose prose-sm max-w-none text-brand-muted leading-relaxed space-y-4">
-            <p>
-              Every day in Houston, people are showing up. Nonprofits are solving hard problems. Neighbors are helping neighbors. Civic leaders are fighting for something.
-            </p>
-            <p>
-              Three Good Things is three of those stories — every day.
-            </p>
-            <p>
-              We&apos;re not ignoring the hard stuff. We&apos;re making sure the good stuff gets seen too.
-            </p>
+            <p>{t('gt.intro_1')}</p>
+            <p>{t('gt.intro_2')}</p>
+            <p>{t('gt.intro_3')}</p>
           </div>
         </section>
 
@@ -327,15 +323,15 @@ export function GoodThingsClient() {
             <div className="bg-white rounded-2xl border-2 border-brand-border p-6 sm:p-8 relative overflow-hidden" style={{ boxShadow: '4px 4px 0 #D1D5E0' }}>
               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5]" />
               <div className="pl-4">
-                <h2 className="font-serif text-2xl font-bold text-brand-text mb-1">Share Your Three Good Things</h2>
+                <h2 className="font-serif text-2xl font-bold text-brand-text mb-1">{t('gt.form_title')}</h2>
                 <p className="text-sm text-brand-muted mb-6">
-                  Take a moment to reflect. What are three good things happening in your life, your neighborhood, or your community right now?
+                  {t('gt.form_desc')}
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {[
-                    { n: 1, color: '#38a169', val: thing1, set: setThing1, label: 'First good thing', ph: 'Something that made you smile today...' },
-                    { n: 2, color: '#3182ce', val: thing2, set: setThing2, label: 'Second good thing', ph: 'A positive change you\'ve noticed...' },
-                    { n: 3, color: '#805ad5', val: thing3, set: setThing3, label: 'Third good thing', ph: 'Something you\'re grateful for...' },
+                    { n: 1, color: '#38a169', val: thing1, set: setThing1, label: t('gt.thing_1_label'), ph: t('gt.thing_1_ph') },
+                    { n: 2, color: '#3182ce', val: thing2, set: setThing2, label: t('gt.thing_2_label'), ph: t('gt.thing_2_ph') },
+                    { n: 3, color: '#805ad5', val: thing3, set: setThing3, label: t('gt.thing_3_label'), ph: t('gt.thing_3_ph') },
                   ].map(function (f) {
                     return (
                       <div key={f.n}>
@@ -357,21 +353,21 @@ export function GoodThingsClient() {
 
                   <div>
                     <label className="flex items-center gap-2 text-sm font-semibold text-brand-text mb-2">
-                      Your Name
+                      {t('gt.your_name')}
                     </label>
                     <input
                       type="text" value={displayName}
                       onChange={function (e) { setDisplayName(e.target.value) }}
-                      placeholder="First name, Last initial (e.g. Maria T.)"
+                      placeholder={t('gt.name_ph')}
                       className="w-full max-w-sm px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all"
                       maxLength={50}
                     />
-                    <p className="text-[11px] text-brand-muted mt-1">Optional. Shown with your entry.</p>
+                    <p className="text-[11px] text-brand-muted mt-1">{t('gt.name_hint')}</p>
                   </div>
 
                   <div>
                     <label className="flex items-center gap-2 text-sm font-semibold text-brand-text mb-2">
-                      <MapPin size={16} className="text-brand-accent" /> Your ZIP Code
+                      <MapPin size={16} className="text-brand-accent" /> {t('gt.your_zip')}
                     </label>
                     <input
                       type="text" value={zip}
@@ -386,7 +382,7 @@ export function GoodThingsClient() {
                     <button type="button" onClick={function () { setShowEmail(!showEmail) }}
                       className="flex items-center gap-2 text-sm text-brand-muted hover:text-brand-text transition-colors">
                       <Mail size={14} />
-                      <span>{showEmail ? 'Hide email field' : 'Want a copy? Add your email (optional)'}</span>
+                      <span>{showEmail ? t('gt.email_hide') : t('gt.email_show')}</span>
                     </button>
                     {showEmail && (
                       <input type="email" value={email}
@@ -401,7 +397,7 @@ export function GoodThingsClient() {
                   <button type="submit" disabled={submitting}
                     className="flex items-center gap-2 px-8 py-3 bg-brand-accent text-white rounded-xl text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50">
                     <Send size={16} />
-                    {submitting ? 'Sharing...' : 'Share Your Good Things'}
+                    {submitting ? t('gt.sharing') : t('gt.share_button')}
                   </button>
                 </form>
               </div>
@@ -413,9 +409,9 @@ export function GoodThingsClient() {
             <div className="bg-white rounded-2xl border-2 border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden" style={{ boxShadow: '4px 4px 0 #D1D5E0' }}>
               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#38a169]" />
               <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">Your good things are on the map!</h2>
+              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">{t('gt.success_title')}</h2>
               <p className="text-sm text-brand-muted mb-6 max-w-md mx-auto">
-                Thank you for sharing positivity with the community. Your entry is now part of the story.
+                {t('gt.success_desc')}
               </p>
 
               {lastEntry && (
@@ -439,11 +435,11 @@ export function GoodThingsClient() {
               <div className="flex items-center justify-center gap-3 flex-wrap">
                 <button onClick={downloadPng}
                   className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-xl text-sm font-semibold hover:bg-brand-accent-hover transition-colors">
-                  <Download size={16} /> Download as Image
+                  <Download size={16} /> {t('gt.download_image')}
                 </button>
                 <button onClick={resetForm}
                   className="flex items-center gap-2 px-5 py-2.5 border-2 border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
-                  Share More Good Things
+                  {t('gt.share_more')}
                 </button>
               </div>
             </div>
@@ -453,10 +449,10 @@ export function GoodThingsClient() {
         {/* ── Recent entries ── */}
         {entries.length > 0 && (
           <section className="mb-12">
-            <h2 className="font-serif text-xl font-bold text-brand-text mb-4">Recent Entries</h2>
+            <h2 className="font-serif text-xl font-bold text-brand-text mb-4">{t('gt.recent_entries')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {entries.slice(0, 12).map(function (entry) {
-                const timeAgo = getTimeAgo(entry.created_at)
+                const timeAgo = getTimeAgo(entry.created_at, { just_now: t('gt.just_now'), minutes: t('gt.minutes_ago'), hours: t('gt.hours_ago'), days: t('gt.days_ago') })
                 return (
                   <div key={entry.id}
                     className="bg-white rounded-xl border-2 border-brand-border p-4 relative overflow-hidden group hover:border-brand-text transition-all"
@@ -493,9 +489,9 @@ export function GoodThingsClient() {
             <div className="flex items-start gap-4">
               <FlowerOfLifeIcon size={36} className="flex-shrink-0 mt-1" />
               <div>
-                <h2 className="font-serif text-lg font-bold text-brand-text mb-2">Why it matters</h2>
+                <h2 className="font-serif text-lg font-bold text-brand-text mb-2">{t('gt.why_title')}</h2>
                 <p className="text-sm text-brand-muted leading-relaxed">
-                  When people believe good things are possible, they&apos;re more likely to do something. Hope isn&apos;t soft. It&apos;s fuel.
+                  {t('gt.why_desc')}
                 </p>
               </div>
             </div>
@@ -508,16 +504,16 @@ export function GoodThingsClient() {
   )
 }
 
-function getTimeAgo(dateStr: string): string {
+function getTimeAgo(dateStr: string, labels: { just_now: string; minutes: string; hours: string; days: string }): string {
   const now = Date.now()
   const then = new Date(dateStr).getTime()
   const diff = now - then
   const minutes = Math.floor(diff / 60000)
-  if (minutes < 1) return 'just now'
-  if (minutes < 60) return minutes + 'm ago'
+  if (minutes < 1) return labels.just_now
+  if (minutes < 60) return minutes + labels.minutes
   const hours = Math.floor(minutes / 60)
-  if (hours < 24) return hours + 'h ago'
+  if (hours < 24) return hours + labels.hours
   const days = Math.floor(hours / 24)
-  if (days < 30) return days + 'd ago'
+  if (days < 30) return days + labels.days
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }

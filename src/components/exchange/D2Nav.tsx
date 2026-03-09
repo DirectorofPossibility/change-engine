@@ -55,7 +55,7 @@ function useCenters(t: (key: string) => string) {
         { href: '/officials', label: t('d2nav.officials') },
         { href: '/policies', label: t('d2nav.policies') },
         { href: '/elections', label: t('d2nav.elections') },
-        { href: '/tirz', label: 'TIRZ Zones' },
+        { href: '/tirz', label: t('d2nav.tirz_zones') },
       ],
     },
     {
@@ -76,7 +76,7 @@ function useDiscoverLinks(t: (key: string) => string) {
     { href: '/dashboard-live', label: t('d2nav.live_dashboard') },
     { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
     { href: '/goodthings', label: t('d2nav.three_good_things') },
-    { href: '/teens', label: 'Teen Hub' },
+    { href: '/teens', label: t('d2nav.teen_hub') },
     { href: '/call-your-senators', label: t('d2nav.call_senators') },
     { href: '/polling-places', label: t('d2nav.polling_places') },
   ]

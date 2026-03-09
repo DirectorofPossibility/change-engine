@@ -1,36 +1,42 @@
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { BRAND, LANGUAGES, THEMES } from '@/lib/constants'
 import { FlowerOfLifeIcon } from './FlowerIcons'
+import { getUIStrings } from '@/lib/i18n'
 
 const pathways = Object.values(THEMES).map(function (t) {
   return { href: '/pathways/' + t.slug, label: t.name, color: t.color }
 })
 
-const navigate = [
-  { href: '/compass', label: 'Compass' },
-  { href: '/services', label: 'Services' },
-  { href: '/officials', label: 'Officials' },
-  { href: '/policies', label: 'Policies' },
-  { href: '/elections', label: 'Elections' },
-  { href: '/library', label: 'Library' },
-  { href: '/help', label: 'Available Resources' },
-  { href: '/search', label: 'Search' },
-]
+export async function Footer() {
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
 
-const connect = [
-  { href: '/about', label: 'About' },
-  { href: '/me', label: 'My Account' },
-  { href: '/me/submit', label: 'Share a Resource' },
-  { href: '/login', label: 'Sign In' },
-]
+  const navigate = [
+    { href: '/compass', label: t('footer.compass') },
+    { href: '/services', label: t('nav.services') },
+    { href: '/officials', label: t('nav.officials') },
+    { href: '/policies', label: t('nav.policies') },
+    { href: '/elections', label: t('nav.elections') },
+    { href: '/library', label: t('nav.library') },
+    { href: '/help', label: t('nav.help') },
+    { href: '/search', label: t('nav.search_placeholder').split(' ')[0] },
+  ]
 
-const legal = [
-  { href: '/privacy', label: 'Privacy' },
-  { href: '/terms', label: 'Terms' },
-  { href: '/accessibility', label: 'Accessibility' },
-]
+  const connect = [
+    { href: '/about', label: t('nav.about') },
+    { href: '/me', label: t('footer.my_account') },
+    { href: '/me/submit', label: t('footer.share_resource') },
+    { href: '/login', label: t('footer.sign_in') },
+  ]
 
-export function Footer() {
+  const legal = [
+    { href: '/privacy', label: t('footer.privacy') },
+    { href: '/terms', label: t('footer.terms') },
+    { href: '/accessibility', label: t('footer.accessibility') },
+  ]
+
   return (
     <footer className="bg-brand-bg-alt border-t border-brand-border">
       {/* Pathway spectrum bar */}
@@ -47,12 +53,11 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <FlowerOfLifeIcon size={28} color="#C75B2A" />
               <h3 className="font-serif text-lg text-brand-text font-semibold">
-                Community Exchange
+                {t('footer.community_exchange')}
               </h3>
             </div>
             <p className="text-sm text-brand-muted leading-relaxed">
-              A civic platform connecting Houston residents with the resources,
-              knowledge, and opportunities that strengthen communities.
+              {t('footer.description')}
             </p>
             <p className="text-xs text-brand-muted-light mt-4 italic">
               {BRAND.origin}
@@ -62,7 +67,7 @@ export function Footer() {
           {/* Pathways */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
-              Pathways
+              {t('footer.pathways')}
             </h4>
             <ul className="space-y-2">
               {pathways.map(function (p) {
@@ -81,7 +86,7 @@ export function Footer() {
           {/* Navigate */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
-              Navigate
+              {t('footer.navigate')}
             </h4>
             <ul className="space-y-2">
               {navigate.map(function (link) {
@@ -99,7 +104,7 @@ export function Footer() {
           {/* Connect */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
-              Connect
+              {t('footer.connect')}
             </h4>
             <ul className="space-y-2">
               {connect.map(function (link) {

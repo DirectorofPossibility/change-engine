@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
+import { useTranslation } from '@/lib/use-translation'
 
 interface TickerTapeProps {
   election?: {
@@ -17,6 +18,8 @@ interface TickerTapeProps {
  * Good Things content has been moved to the GoodThingsWidget.
  */
 export function TickerTape({ election }: TickerTapeProps) {
+  const { t } = useTranslation()
+
   // Build election ticker item
   const electionItem = election ? (function () {
     const d = new Date(election.election_date)
@@ -24,7 +27,7 @@ export function TickerTape({ election }: TickerTapeProps) {
     const diff = Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     if (diff < 0) return null
     const dateStr = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-    const daysLabel = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : diff + ' days away'
+    const daysLabel = diff === 0 ? t('ticker.today') : diff === 1 ? t('ticker.tomorrow') : diff + ' ' + t('ticker.days_away')
     return {
       text: election.election_name + ' — ' + dateStr + ' (' + daysLabel + ')',
       href: '/elections',
@@ -40,7 +43,7 @@ export function TickerTape({ election }: TickerTapeProps) {
         {/* Label */}
         <div className="flex-shrink-0 bg-brand-bg-alt z-10 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border">
           <FlowerOfLifeIcon size={14} color="#C75B2A" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Announcements</span>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('ticker.announcements')}</span>
         </div>
 
         {/* Scrolling announcement */}

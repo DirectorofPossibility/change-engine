@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useLanguage } from '@/lib/contexts/LanguageContext'
 import { LANGUAGES } from '@/lib/constants'
+import { useTranslation } from '@/lib/use-translation'
 
 interface TranslateBarProps {
   contentType?: string
@@ -12,6 +13,7 @@ interface TranslateBarProps {
 
 export function TranslateBar({ contentType, contentId, isTranslated }: TranslateBarProps) {
   const { language, setLanguage } = useLanguage()
+  const { t } = useTranslation()
 
   if (language === 'en') return null
 
@@ -22,14 +24,14 @@ export function TranslateBar({ contentType, contentId, isTranslated }: Translate
       <div className="max-w-[1200px] mx-auto px-8 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">
-            Viewing in {langName}
+            {t('translate.viewing_in')} {langName}
           </span>
           {contentType && contentId && !isTranslated && (
-            <TranslateNowButton contentType={contentType} contentId={contentId} lang={language} />
+            <TranslateNowButton contentType={contentType} contentId={contentId} lang={language} t={t} />
           )}
           {isTranslated && (
             <span className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-success/10 text-brand-success">
-              Translated
+              {t('translate.translated')}
             </span>
           )}
         </div>
@@ -37,14 +39,14 @@ export function TranslateBar({ contentType, contentId, isTranslated }: Translate
           onClick={function () { setLanguage('en') }}
           className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted hover:text-brand-accent transition-colors"
         >
-          Back to English
+          {t('translate.back_to_english')}
         </button>
       </div>
     </div>
   )
 }
 
-function TranslateNowButton({ contentType, contentId, lang }: { contentType: string; contentId: string; lang: string }) {
+function TranslateNowButton({ contentType, contentId, lang, t }: { contentType: string; contentId: string; lang: string; t: (key: string) => string }) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
 
   async function handleTranslate() {
@@ -74,7 +76,7 @@ function TranslateNowButton({ contentType, contentId, lang }: { contentType: str
       disabled={status === 'loading'}
       className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white transition-colors disabled:opacity-50"
     >
-      {status === 'loading' ? 'Translating...' : status === 'error' ? 'Retry' : 'Translate Now'}
+      {status === 'loading' ? t('translate.translating') : status === 'error' ? t('translate.retry') : t('translate.translate_now')}
     </button>
   )
 }
