@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Send } from 'lucide-react'
@@ -62,7 +62,7 @@ function GradientFOL({ className = '' }: { className?: string }) {
 
 export default function SplashPage() {
   const [entries, setEntries] = useState<GoodThingEntry[]>([])
-  const [lastEntry, setLastEntry] = useState<GoodThingEntry | null>(null)
+  const [focusEntry, setFocusEntry] = useState<GoodThingEntry | null>(null)
   const [thing1, setThing1] = useState('')
   const [thing2, setThing2] = useState('')
   const [thing3, setThing3] = useState('')
@@ -84,6 +84,11 @@ export default function SplashPage() {
       .catch(function () {})
   }, [])
 
+  const handleTickerClick = useCallback(function (entry: GoodThingEntry) {
+    setPanel('goodthings')
+    setFocusEntry(entry)
+  }, [])
+
   async function handleGoodThings(e: React.FormEvent) {
     e.preventDefault()
     if (!thing1.trim() || !thing2.trim() || !thing3.trim()) { setError('All three required.'); return }
@@ -96,7 +101,7 @@ export default function SplashPage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
-      setLastEntry(data.entry as GoodThingEntry)
+      setFocusEntry(data.entry as GoodThingEntry)
       setEntries(function (prev) { return [data.entry, ...prev] })
       setSubmitted(true)
     } catch { setError('Network error.') } finally { setSubmitting(false) }
@@ -112,7 +117,7 @@ export default function SplashPage() {
   const tickerItems = entries.slice(0, 40).flatMap(function (entry) {
     const who = entry.display_name || [entry.city, entry.state].filter(Boolean).join(', ') || entry.zip_code
     return [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
-      return { text: thing, color: THING_COLORS[i], loc: who }
+      return { text: thing, color: THING_COLORS[i], loc: who, entry: entry }
     })
   })
 
@@ -129,28 +134,6 @@ export default function SplashPage() {
         <div style={{ background: '#319795' }} />
         <div style={{ background: '#805ad5' }} />
       </div>
-
-      {/* ── Ticker ── */}
-      {tickerItems.length > 0 && (
-        <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-b border-brand-border relative z-10">
-          <div className="ticker-track flex items-center gap-8 py-2 whitespace-nowrap">
-            {tickerItems.concat(tickerItems).map(function (item, i) {
-              return (
-                <span key={i} className="inline-flex items-center gap-2 text-xs text-brand-muted flex-shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                  <span>{item.text}</span>
-                  <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
-                </span>
-              )
-            })}
-          </div>
-          <style jsx>{`
-            .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
-            @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-            .ticker-track:hover { animation-play-state: paused; }
-          `}</style>
-        </div>
-      )}
 
       {/* ── Main layout ── */}
       <div className="flex-1 flex min-h-0 relative z-10">
@@ -211,14 +194,14 @@ export default function SplashPage() {
             <div className="px-4 py-3 text-center">
               <FlowerOfLifeIcon size={24} color="#38a169" className="mx-auto mb-1" />
               <p className="font-serif text-sm font-bold text-brand-text">On the map!</p>
-              <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setLastEntry(null) }}
+              <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setFocusEntry(null) }}
                 className="text-xs text-brand-accent font-semibold hover:underline mt-1">Share more</button>
             </div>
           )}
 
           <div className="h-px bg-brand-border mx-4 my-1" />
 
-          {/* Buttons */}
+          {/* Buttons — ordered: Three Good Things, Can You Imagine, Substack, Beta Login, Beta Sign Up */}
           <div className="flex-1 px-4 py-1 space-y-1.5">
             <button
               onClick={function () { setPanel('goodthings') }}
@@ -230,33 +213,7 @@ export default function SplashPage() {
               Three Good Things
             </button>
 
-            <button
-              onClick={function () { setPanel('beta') }}
-              className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
-                (panel === 'beta'
-                  ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
-                  : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
-            >
-              Sign Up to Be a Beta Tester
-            </button>
-
-            <Link
-              href="/login"
-              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
-            >
-              Beta Tester Login
-            </Link>
-
-            <a
-              href="https://thechangelab.substack.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
-            >
-              Read Our Substack
-            </a>
-
-            {/* Can you imagine — button style */}
+            {/* Can you imagine */}
             <button
               onClick={function () { setShowImagine(!showImagine) }}
               className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
@@ -274,12 +231,41 @@ export default function SplashPage() {
                 Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
               </p>
             )}
+
+            <a
+              href="https://thechangelab.substack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+            >
+              Read Our Substack
+            </a>
+
+            <Link
+              href="/login"
+              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+            >
+              Beta Tester Login
+            </Link>
+
+            <button
+              onClick={function () { setPanel('beta') }}
+              className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
+                (panel === 'beta'
+                  ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
+                  : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
+            >
+              Sign Up to Be a Beta Tester
+            </button>
           </div>
 
           {/* Footer */}
           <div className="px-5 py-2 mt-auto">
             <p className="text-[10px] text-brand-muted-light font-mono text-center">
-              A project of The Change Lab
+              A project of{' '}
+              <a href="https://www.thechangelab.net/about2" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors underline">
+                The Change Lab
+              </a>
             </p>
           </div>
         </aside>
@@ -295,7 +281,7 @@ export default function SplashPage() {
 
           {panel === 'goodthings' && (
             <div className="flex-1 min-h-0 relative">
-              <GoodThingsMap entries={entries} focusEntry={lastEntry} />
+              <GoodThingsMap entries={entries} focusEntry={focusEntry} />
             </div>
           )}
 
@@ -333,6 +319,32 @@ export default function SplashPage() {
 
         </main>
       </div>
+
+      {/* ── Ticker — bottom of page ── */}
+      {tickerItems.length > 0 && (
+        <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border relative z-10">
+          <div className="ticker-track flex items-center gap-10 py-3 whitespace-nowrap">
+            {tickerItems.concat(tickerItems).map(function (item, i) {
+              return (
+                <button
+                  key={i}
+                  onClick={function () { handleTickerClick(item.entry) }}
+                  className="inline-flex items-center gap-2 text-sm text-brand-muted flex-shrink-0 hover:text-brand-text transition-colors cursor-pointer"
+                >
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                  <span>{item.text}</span>
+                  <span className="text-brand-muted-light text-xs">{item.loc}</span>
+                </button>
+              )
+            })}
+          </div>
+          <style jsx>{`
+            .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
+            @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+            .ticker-track:hover { animation-duration: 180s; }
+          `}</style>
+        </div>
+      )}
     </div>
   )
 }
