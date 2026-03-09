@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { MapPin, Send } from 'lucide-react'
+import { Send } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 
 const GoodThingsMap = dynamic(
@@ -27,10 +27,10 @@ interface GoodThingEntry {
 
 const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
-function GradientFOL({ size, className = '' }: { size?: number; className?: string }) {
+function GradientFOL({ className = '' }: { className?: string }) {
   const r = 18, cx = 100, cy = 100, outerR = r * 1.732
   return (
-    <svg width={size} height={size} viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true"
+    <svg viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true"
       style={{ animation: 'fol-spin 90s linear infinite' }}>
       <defs>
         <linearGradient id="fol-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -139,14 +139,16 @@ export default function SplashPage() {
       <div className="flex-1 flex min-h-0 relative z-10">
 
         {/* ── LEFT COLUMN ── */}
-        <aside className="w-64 lg:w-72 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
+        <aside className="w-72 lg:w-80 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
 
-          {/* Logo + FOL */}
-          <div className="px-5 pt-4 pb-3 text-center">
-            <div className="flex justify-center mb-2">
-              <GradientFOL size={120} />
-            </div>
-            <h1 className="font-serif text-2xl font-bold text-brand-text leading-tight">
+          {/* FOL — fills sidebar width */}
+          <div className="px-8 pt-5">
+            <GradientFOL className="w-full" />
+          </div>
+
+          {/* Title */}
+          <div className="px-5 pb-2 text-center">
+            <h1 className="font-serif text-3xl font-bold text-brand-text leading-tight">
               Change<br />Engine
             </h1>
             <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-2">Coming Soon</p>
@@ -155,31 +157,29 @@ export default function SplashPage() {
             </p>
           </div>
 
-          <div className="h-px bg-brand-border mx-4" />
-
           {/* Can you imagine — collapsible */}
-          <details className="px-5 py-3 group">
-            <summary className="flex items-center justify-between cursor-pointer list-none text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent">
+          <details className="mx-4 mb-2 group">
+            <summary className="flex items-center justify-between cursor-pointer list-none px-3 py-2 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent hover:bg-brand-bg transition-colors">
               Can you imagine&hellip;
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
                 className="transition-transform group-open:rotate-180">
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </summary>
-            <p className="text-xs text-brand-muted leading-relaxed mt-2">
+            <p className="text-xs text-brand-muted leading-relaxed px-3 pb-2 mt-1">
               Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
             </p>
           </details>
 
-          <div className="h-px bg-brand-border mx-4" />
+          <div className="h-px bg-brand-border mx-4 mb-2" />
 
           {/* Buttons */}
-          <div className="flex-1 px-4 py-3 space-y-2">
+          <div className="flex-1 px-4 space-y-2">
             <button
               onClick={function () { setPanel('goodthings') }}
               className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
                 (panel === 'goodthings'
-                  ? 'border-brand-accent bg-brand-accent/5 text-brand-accent'
+                  ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
                   : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
             >
               Three Good Things
@@ -189,7 +189,7 @@ export default function SplashPage() {
               onClick={function () { setPanel('beta') }}
               className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
                 (panel === 'beta'
-                  ? 'border-brand-accent bg-brand-accent/5 text-brand-accent'
+                  ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
                   : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
             >
               Sign Up to Be a Beta Tester
@@ -213,8 +213,8 @@ export default function SplashPage() {
           </div>
 
           {/* Footer */}
-          <div className="px-5 py-4 border-t border-brand-border">
-            <p className="text-[10px] text-brand-muted-light font-mono">
+          <div className="px-5 py-3 mt-auto">
+            <p className="text-[10px] text-brand-muted-light font-mono text-center">
               A project of The Change Lab
             </p>
           </div>
