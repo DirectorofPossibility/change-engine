@@ -60,12 +60,12 @@ const CONTENT_TYPE_META: Record<string, { label: string; effort: string }> = {
 }
 
 const THEMES: Record<string, { name: string; color: string }> = {
-  THEME_01: { name: 'Our Health', color: '#e53e3e' },
-  THEME_02: { name: 'Our Families', color: '#dd6b20' },
-  THEME_03: { name: 'Our Neighborhood', color: '#d69e2e' },
-  THEME_04: { name: 'Our Voice', color: '#38a169' },
-  THEME_05: { name: 'Our Money', color: '#3182ce' },
-  THEME_06: { name: 'Our Planet', color: '#319795' },
+  THEME_01: { name: 'Health', color: '#e53e3e' },
+  THEME_02: { name: 'Families', color: '#dd6b20' },
+  THEME_03: { name: 'Neighborhood', color: '#d69e2e' },
+  THEME_04: { name: 'Voice', color: '#38a169' },
+  THEME_05: { name: 'Money', color: '#3182ce' },
+  THEME_06: { name: 'Planet', color: '#319795' },
   THEME_07: { name: 'The Bigger We', color: '#805ad5' },
 }
 

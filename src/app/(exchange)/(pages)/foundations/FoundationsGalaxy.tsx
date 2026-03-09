@@ -16,12 +16,12 @@ const C = {
 
 /* ── Pathway definitions ── */
 const PW: Record<string, { name: string; color: string; short: string; slug: string }> = {
-  health:       { name: "Our Health",        color: "#e53e3e", short: "Health",       slug: "our-health" },
-  families:     { name: "Our Families",      color: "#dd6b20", short: "Families",     slug: "our-families" },
-  neighborhood: { name: "Our Neighborhood",  color: "#d69e2e", short: "Neighborhood", slug: "our-neighborhood" },
-  voice:        { name: "Our Voice",         color: "#38a169", short: "Voice",        slug: "our-voice" },
-  money:        { name: "Our Money",         color: "#3182ce", short: "Money",        slug: "our-money" },
-  planet:       { name: "Our Planet",        color: "#319795", short: "Planet",       slug: "our-planet" },
+  health:       { name: "Health",        color: "#e53e3e", short: "Health",       slug: "health" },
+  families:     { name: "Families",      color: "#dd6b20", short: "Families",     slug: "families" },
+  neighborhood: { name: "Neighborhood",  color: "#d69e2e", short: "Neighborhood", slug: "neighborhood" },
+  voice:        { name: "Voice",         color: "#38a169", short: "Voice",        slug: "voice" },
+  money:        { name: "Money",         color: "#3182ce", short: "Money",        slug: "money" },
+  planet:       { name: "Planet",        color: "#319795", short: "Planet",       slug: "planet" },
   bigger_we:    { name: "The Bigger We",     color: "#805ad5", short: "Bigger We",    slug: "the-bigger-we" },
 }
 const PW_KEYS = Object.keys(PW)

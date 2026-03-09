@@ -14,12 +14,12 @@ import { useRouter } from 'next/navigation'
 import { createEvent, updateEvent, deleteEvent } from './actions'
 
 const THEMES: Record<string, { name: string }> = {
-  THEME_01: { name: 'Our Health' },
-  THEME_02: { name: 'Our Families' },
-  THEME_03: { name: 'Our Neighborhood' },
-  THEME_04: { name: 'Our Voice' },
-  THEME_05: { name: 'Our Money' },
-  THEME_06: { name: 'Our Planet' },
+  THEME_01: { name: 'Health' },
+  THEME_02: { name: 'Families' },
+  THEME_03: { name: 'Neighborhood' },
+  THEME_04: { name: 'Voice' },
+  THEME_05: { name: 'Money' },
+  THEME_06: { name: 'Planet' },
   THEME_07: { name: 'The Bigger We' },
 }
 

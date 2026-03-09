@@ -55,12 +55,12 @@ const THEMES: Record<string, {
   rings: { resources: number; guides: number; services: number; officials: number; policies: number };
   orgs: string[];
 }> = {
-  THEME_01: { name: "Our Health", color: "#e53e3e", emoji: "❤️", content: 25, focus: 45, sdoh: ["HC", "SC"], sdgs: [3, 2], audiences: ["hard-worker", "looking-for-answers"], rings: { resources: 18, guides: 3, services: 15, officials: 8, policies: 4 }, orgs: ["Legacy Health", "Houston Food Bank"] },
-  THEME_02: { name: "Our Families", color: "#dd6b20", emoji: "👨‍👩‍👧‍👦", content: 48, focus: 44, sdoh: ["SC", "ED"], sdgs: [4, 5, 10], audiences: ["starter", "hard-worker"], rings: { resources: 26, guides: 5, services: 20, officials: 10, policies: 6 }, orgs: ["YMCA Houston", "BakerRipley"] },
-  THEME_03: { name: "Our Neighborhood", color: "#d69e2e", emoji: "🏘️", content: 44, focus: 45, sdoh: ["NB", "SC"], sdgs: [11, 2], audiences: ["scout", "bridge-builder"], rings: { resources: 17, guides: 4, services: 18, officials: 12, policies: 8 }, orgs: ["Houston Habitat", "houstontx.gov"] },
-  THEME_04: { name: "Our Voice", color: "#38a169", emoji: "🗳️", content: 44, focus: 45, sdoh: ["SC"], sdgs: [16, 10], audiences: ["spark-plug", "register"], rings: { resources: 8, guides: 2, services: 5, officials: 20, policies: 12 }, orgs: ["houstontx.gov"] },
-  THEME_05: { name: "Our Money", color: "#3182ce", emoji: "💰", content: 16, focus: 44, sdoh: ["EA"], sdgs: [1, 8], audiences: ["hard-worker", "next-steps"], rings: { resources: 4, guides: 2, services: 12, officials: 6, policies: 5 }, orgs: ["BakerRipley", "YMCA Houston"] },
-  THEME_06: { name: "Our Planet", color: "#319795", emoji: "🌍", content: 10, focus: 45, sdoh: ["NB"], sdgs: [13, 15, 11], audiences: ["scout", "spark-plug"], rings: { resources: 3, guides: 1, services: 4, officials: 4, policies: 3 }, orgs: ["houstontx.gov"] },
+  THEME_01: { name: "Health", color: "#e53e3e", emoji: "❤️", content: 25, focus: 45, sdoh: ["HC", "SC"], sdgs: [3, 2], audiences: ["hard-worker", "looking-for-answers"], rings: { resources: 18, guides: 3, services: 15, officials: 8, policies: 4 }, orgs: ["Legacy Health", "Houston Food Bank"] },
+  THEME_02: { name: "Families", color: "#dd6b20", emoji: "👨‍👩‍👧‍👦", content: 48, focus: 44, sdoh: ["SC", "ED"], sdgs: [4, 5, 10], audiences: ["starter", "hard-worker"], rings: { resources: 26, guides: 5, services: 20, officials: 10, policies: 6 }, orgs: ["YMCA Houston", "BakerRipley"] },
+  THEME_03: { name: "Neighborhood", color: "#d69e2e", emoji: "🏘️", content: 44, focus: 45, sdoh: ["NB", "SC"], sdgs: [11, 2], audiences: ["scout", "bridge-builder"], rings: { resources: 17, guides: 4, services: 18, officials: 12, policies: 8 }, orgs: ["Houston Habitat", "houstontx.gov"] },
+  THEME_04: { name: "Voice", color: "#38a169", emoji: "🗳️", content: 44, focus: 45, sdoh: ["SC"], sdgs: [16, 10], audiences: ["spark-plug", "register"], rings: { resources: 8, guides: 2, services: 5, officials: 20, policies: 12 }, orgs: ["houstontx.gov"] },
+  THEME_05: { name: "Money", color: "#3182ce", emoji: "💰", content: 16, focus: 44, sdoh: ["EA"], sdgs: [1, 8], audiences: ["hard-worker", "next-steps"], rings: { resources: 4, guides: 2, services: 12, officials: 6, policies: 5 }, orgs: ["BakerRipley", "YMCA Houston"] },
+  THEME_06: { name: "Planet", color: "#319795", emoji: "🌍", content: 10, focus: 45, sdoh: ["NB"], sdgs: [13, 15, 11], audiences: ["scout", "spark-plug"], rings: { resources: 3, guides: 1, services: 4, officials: 4, policies: 3 }, orgs: ["houstontx.gov"] },
   THEME_07: { name: "The Bigger We", color: "#805ad5", emoji: "🤝", content: 8, focus: 44, sdoh: ["SC"], sdgs: [16, 17, 10], audiences: ["bridge-builder", "spark-plug"], rings: { resources: 2, guides: 1, services: 3, officials: 6, policies: 2 }, orgs: ["BakerRipley"] },
 };
 
@@ -1193,7 +1193,7 @@ export default function KnowledgeGraphClient() {
                 {selectedNode.type === "crosswalk" && <>{selectedNode.full}: {selectedNode.count} codes in the Rosetta Stone.</>}
               </div>
               {selectedNode.type === "pathway" && (() => {
-                const slugMap: Record<string, string> = { THEME_01: "our-health", THEME_02: "our-families", THEME_03: "our-neighborhood", THEME_04: "our-voice", THEME_05: "our-money", THEME_06: "our-planet", THEME_07: "the-bigger-we" };
+                const slugMap: Record<string, string> = { THEME_01: "health", THEME_02: "families", THEME_03: "neighborhood", THEME_04: "voice", THEME_05: "money", THEME_06: "planet", THEME_07: "the-bigger-we" };
                 const slug = slugMap[selectedNode.id as string];
                 return slug ? <a href={"/pathways/" + slug} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600, background: selectedNode.color + "15", color: selectedNode.color, border: "1px solid " + selectedNode.color + "30", textDecoration: "none", marginBottom: 14 }}>View {selectedNode.name} pathway {"\u2192"}</a> : null;
               })()}

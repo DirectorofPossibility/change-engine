@@ -33,12 +33,12 @@ interface Props {
 
 /* ── Pathway lookup ── */
 const PW: Record<string, { name: string; color: string; slug: string }> = {
-  health:       { name: 'Our Health',       color: '#e53e3e', slug: 'our-health' },
-  families:     { name: 'Our Families',     color: '#dd6b20', slug: 'our-families' },
-  neighborhood: { name: 'Our Neighborhood', color: '#d69e2e', slug: 'our-neighborhood' },
-  voice:        { name: 'Our Voice',        color: '#38a169', slug: 'our-voice' },
-  money:        { name: 'Our Money',        color: '#3182ce', slug: 'our-money' },
-  planet:       { name: 'Our Planet',       color: '#319795', slug: 'our-planet' },
+  health:       { name: 'Health',       color: '#e53e3e', slug: 'health' },
+  families:     { name: 'Families',     color: '#dd6b20', slug: 'families' },
+  neighborhood: { name: 'Neighborhood', color: '#d69e2e', slug: 'neighborhood' },
+  voice:        { name: 'Voice',        color: '#38a169', slug: 'voice' },
+  money:        { name: 'Money',        color: '#3182ce', slug: 'money' },
+  planet:       { name: 'Planet',       color: '#319795', slug: 'planet' },
   bigger_we:    { name: 'The Bigger We',    color: '#805ad5', slug: 'the-bigger-we' },
 }
 

@@ -14,6 +14,7 @@ export async function getRelatedPolicies(focusAreaIds: string[]) {
     .from('policies')
     .select('*')
     .in('policy_id', policyIds)
+    .eq('is_published', true)
     .limit(10)
   return data ?? []
 }

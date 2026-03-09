@@ -25,7 +25,7 @@ const PATHWAY_IMAGES: Record<string, string> = {
 interface PathwayCircleProps {
   /** Pathway theme ID (e.g., 'THEME_01'). */
   id: string
-  /** Display name for the pathway (e.g., 'Our Health'). */
+  /** Display name for the pathway (e.g., 'Health'). */
   name: string
   /** Theme color hex value used for the circle background fallback. */
   color: string

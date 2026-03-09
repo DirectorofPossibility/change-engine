@@ -17,12 +17,12 @@
  * Colors are used for pills, charts, and pathway cards across the UI.
  */
 export const THEMES = {
-  THEME_01: { name: 'Our Health', color: '#e53e3e', slug: 'our-health', emoji: '', description: 'Wellness, healing, and care for every Houstonian. Explore clinics, mental health support, nutrition programs, and insurance options that keep our communities strong.' },
-  THEME_02: { name: 'Our Families', color: '#dd6b20', slug: 'our-families', emoji: '', description: 'Strong foundations for every family. Find schools, childcare, youth programs, and safety resources that help Houston families grow and thrive.' },
-  THEME_03: { name: 'Our Neighborhood', color: '#d69e2e', slug: 'our-neighborhood', emoji: '', description: 'The places we share and call home. Discover housing resources, parks, libraries, and neighborhood initiatives that make Houston a better place to live.' },
-  THEME_04: { name: 'Our Voice', color: '#38a169', slug: 'our-voice', emoji: '', description: 'Your civic power, amplified. Get informed about voting, advocacy, town halls, and organizing opportunities that put your community in charge.' },
-  THEME_05: { name: 'Our Money', color: '#3182ce', slug: 'our-money', emoji: '', description: 'Financial opportunity for everyone. Explore jobs, benefits, credit-building, and small business resources that strengthen economic well-being.' },
-  THEME_06: { name: 'Our Planet', color: '#319795', slug: 'our-planet', emoji: '', description: 'Climate, environment, and sustainability in our region. Learn about air quality, flooding, energy programs, and green initiatives shaping Houston\'s future.' },
+  THEME_01: { name: 'Health', color: '#e53e3e', slug: 'health', emoji: '', description: 'Wellness, healing, and care for every Houstonian. Explore clinics, mental health support, nutrition programs, and insurance options that keep our communities strong.' },
+  THEME_02: { name: 'Families', color: '#dd6b20', slug: 'families', emoji: '', description: 'Strong foundations for every family. Find schools, childcare, youth programs, and safety resources that help Houston families grow and thrive.' },
+  THEME_03: { name: 'Neighborhood', color: '#d69e2e', slug: 'neighborhood', emoji: '', description: 'The places we share and call home. Discover housing resources, parks, libraries, and neighborhood initiatives that make Houston a better place to live.' },
+  THEME_04: { name: 'Voice', color: '#38a169', slug: 'voice', emoji: '', description: 'Your civic power, amplified. Get informed about voting, advocacy, town halls, and organizing opportunities that put your community in charge.' },
+  THEME_05: { name: 'Money', color: '#3182ce', slug: 'money', emoji: '', description: 'Financial opportunity for everyone. Explore jobs, benefits, credit-building, and small business resources that strengthen economic well-being.' },
+  THEME_06: { name: 'Planet', color: '#319795', slug: 'planet', emoji: '', description: 'Climate, environment, and sustainability in our region. Learn about air quality, flooding, energy programs, and green initiatives shaping Houston\'s future.' },
   THEME_07: { name: 'The Bigger We', color: '#805ad5', slug: 'the-bigger-we', emoji: '', description: 'Building across difference, together. Explore resources for bridging, dialogue, inclusion, and trust that connect all of Houston\'s communities.' },
 } as const;
 

@@ -618,12 +618,12 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
             {[
-              { slug: 'our-health', name: 'Our Health', desc: 'Mental health, wellness, clinics, nutrition', color: '#e53e3e' },
-              { slug: 'our-families', name: 'Our Families', desc: 'Schools, youth programs, childcare, safety', color: '#dd6b20' },
-              { slug: 'our-neighborhood', name: 'Our Neighborhood', desc: 'Housing, parks, libraries, your block', color: '#d69e2e' },
-              { slug: 'our-voice', name: 'Our Voice', desc: 'Voting, advocacy, town halls, power', color: '#38a169' },
-              { slug: 'our-money', name: 'Our Money', desc: 'Jobs, internships, scholarships, business', color: '#3182ce' },
-              { slug: 'our-planet', name: 'Our Planet', desc: 'Climate, environment, energy, water', color: '#319795' },
+              { slug: 'health', name: 'Health', desc: 'Mental health, wellness, clinics, nutrition', color: '#e53e3e' },
+              { slug: 'families', name: 'Families', desc: 'Schools, youth programs, childcare, safety', color: '#dd6b20' },
+              { slug: 'neighborhood', name: 'Neighborhood', desc: 'Housing, parks, libraries, your block', color: '#d69e2e' },
+              { slug: 'voice', name: 'Voice', desc: 'Voting, advocacy, town halls, power', color: '#38a169' },
+              { slug: 'money', name: 'Money', desc: 'Jobs, internships, scholarships, business', color: '#3182ce' },
+              { slug: 'planet', name: 'Planet', desc: 'Climate, environment, energy, water', color: '#319795' },
               { slug: 'the-bigger-we', name: 'The Bigger We', desc: 'Bridging, dialogue, inclusion, trust', color: '#805ad5' },
             ].map(p => (
               <Link

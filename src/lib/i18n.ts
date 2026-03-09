@@ -378,12 +378,12 @@ const en: Record<string, string> = {
   'card.untitled': 'Untitled',
 
   // Theme names
-  'theme.our_health': 'Our Health',
-  'theme.our_families': 'Our Families',
-  'theme.our_neighborhood': 'Our Neighborhood',
-  'theme.our_voice': 'Our Voice',
-  'theme.our_money': 'Our Money',
-  'theme.our_planet': 'Our Planet',
+  'theme.our_health': 'Health',
+  'theme.our_families': 'Families',
+  'theme.our_neighborhood': 'Neighborhood',
+  'theme.our_voice': 'Voice',
+  'theme.our_money': 'Money',
+  'theme.our_planet': 'Planet',
   'theme.the_bigger_we': 'The Bigger We',
 
   // Center names
@@ -1172,12 +1172,12 @@ const es: Record<string, string> = {
   'card.untitled': 'Sin título',
 
   // Theme names
-  'theme.our_health': 'Nuestra Salud',
-  'theme.our_families': 'Nuestras Familias',
-  'theme.our_neighborhood': 'Nuestro Vecindario',
-  'theme.our_voice': 'Nuestra Voz',
-  'theme.our_money': 'Nuestro Dinero',
-  'theme.our_planet': 'Nuestro Planeta',
+  'theme.our_health': 'Salud',
+  'theme.our_families': 'Familias',
+  'theme.our_neighborhood': 'Vecindario',
+  'theme.our_voice': 'Voz',
+  'theme.our_money': 'Dinero',
+  'theme.our_planet': 'Planeta',
   'theme.the_bigger_we': 'El Nosotros Mayor',
 
   // Center names

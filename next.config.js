@@ -41,6 +41,36 @@ const nextConfig = {
         destination: '/library/doc/:id',
         permanent: true,
       },
+      {
+        source: '/pathways/our-health',
+        destination: '/pathways/health',
+        permanent: true,
+      },
+      {
+        source: '/pathways/our-families',
+        destination: '/pathways/families',
+        permanent: true,
+      },
+      {
+        source: '/pathways/our-neighborhood',
+        destination: '/pathways/neighborhood',
+        permanent: true,
+      },
+      {
+        source: '/pathways/our-voice',
+        destination: '/pathways/voice',
+        permanent: true,
+      },
+      {
+        source: '/pathways/our-money',
+        destination: '/pathways/money',
+        permanent: true,
+      },
+      {
+        source: '/pathways/our-planet',
+        destination: '/pathways/planet',
+        permanent: true,
+      },
     ]
   },
 }
