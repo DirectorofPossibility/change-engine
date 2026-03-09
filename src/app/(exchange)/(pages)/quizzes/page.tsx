@@ -5,6 +5,8 @@ import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { Landmark, Clock3, Vote, Compass, BookOpen, Search } from 'lucide-react'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Civic Quizzes — Community Exchange',
   description: 'How well do you know your city? Short quizzes on government, history, voting, and civic engagement. Free. Actually interesting.',

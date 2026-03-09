@@ -1,5 +1,6 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
-export async function getLearningPaths({ limit = 100 }: { limit?: number } = {}) {
+export const getLearningPaths = cache(async function getLearningPaths({ limit = 100 }: { limit?: number } = {}) {
   const supabase = await createClient()
   const { data } = await supabase
     .from('learning_paths')
@@ -8,7 +9,7 @@ export async function getLearningPaths({ limit = 100 }: { limit?: number } = {})
     .order('display_order', { ascending: true })
     .limit(limit)
   return data ?? []
-}
+})
 
 // ── Pathway + center content ───────────────────────────────────────────
 
@@ -17,11 +18,11 @@ export async function getLearningPaths({ limit = 100 }: { limit?: number } = {})
  * Returns news items (articles, videos, research, reports, courses) — not community resources.
  */
 
-export async function getGuides() {
+export const getGuides = cache(async function getGuides() {
   const supabase = await createClient()
   const { data } = await supabase.from('guides').select('*').eq('is_active', true).order('display_order')
   return data ?? []
-}
+})
 
 
 export async function getGuideBySlug(slug: string) {

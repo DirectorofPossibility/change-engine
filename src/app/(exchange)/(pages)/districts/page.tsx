@@ -5,6 +5,8 @@ import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
 import { MapPin, Building2, Landmark, Scale, GraduationCap, Users, Flag, TrendingUp } from 'lucide-react'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Districts — Community Exchange',
   description: 'Every district. Every representative. Mapped. City council, county precinct, state house and senate, Congress — they all overlap where you live.',

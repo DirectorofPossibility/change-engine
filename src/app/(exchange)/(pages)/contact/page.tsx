@@ -3,6 +3,8 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
 import { Mail, MapPin, Globe } from 'lucide-react'
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: 'Contact Us — Community Exchange',
   description: 'Get in touch with The Change Lab team.',

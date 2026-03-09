@@ -5,6 +5,8 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { BookOpen, Users, Globe, MapPin, Shield, Mail } from 'lucide-react'
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: 'About — Community Exchange',
   description: 'Learn about the Community Exchange, a civic platform connecting Houston residents with resources, services, and civic participation opportunities.',

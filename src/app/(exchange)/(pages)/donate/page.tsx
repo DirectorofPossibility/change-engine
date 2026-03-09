@@ -3,6 +3,8 @@ import { PageHero } from '@/components/exchange/PageHero'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: 'Donate — Community Exchange',
   description: 'Help us keep Community Exchange free for everyone. Your donation keeps civic infrastructure running.',

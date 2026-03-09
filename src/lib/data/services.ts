@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/supabase/database.types'
 import type { ServiceWithOrg, MapMarkerData } from '@/lib/types/exchange'
@@ -26,7 +27,7 @@ const SERVICE_TYPE_TO_MARKER: Record<string, string> = {
 }
 
 /** All active 211 services, enriched with parent org names. */
-export async function getServices(): Promise<ServiceWithOrg[]> {
+export const getServices = cache(async function getServices(): Promise<ServiceWithOrg[]> {
   const supabase = await createClient()
   const { data: services } = await supabase
     .from('services_211')
@@ -46,7 +47,7 @@ export async function getServices(): Promise<ServiceWithOrg[]> {
 
   const orgMap = new Map(orgs?.map(o => [o.org_id, o.org_name]) ?? [])
   return services.map(s => ({ ...s, org_name: orgMap.get(s.org_id!) ?? undefined }))
-}
+})
 
 
 /** Fetch services sharing any of the given focus areas via junction table. */

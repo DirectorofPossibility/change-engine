@@ -32,6 +32,8 @@ import {
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { MyAreaClient } from './MyAreaClient'
 
+export const revalidate = 600
+
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {

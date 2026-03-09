@@ -19,6 +19,8 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { InfoBubble } from '@/components/exchange/InfoBubble'
 import { TOOLTIPS } from '@/lib/tooltips'
 
+export const revalidate = 3600
+
 export const dynamic = 'force-dynamic'
 
 async function resolvePathByIdOrSlug(supabase: any, idOrSlug: string) {

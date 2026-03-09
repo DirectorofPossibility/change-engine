@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 /**
  * Events feed — items classified as content_type = 'event'.
@@ -23,7 +24,7 @@ export async function getEventsFeed(limit = 20) {
  * Calendar data: merges content events + events table + civic_calendar + opportunities.
  * Returns a unified list sorted by date, optionally filtered by pathway.
  */
-export async function getCalendarItems(pathway?: string) {
+export const getCalendarItems = cache(async function getCalendarItems(pathway?: string) {
   const supabase = await createClient()
 
   // Content items tagged as events
@@ -203,7 +204,7 @@ export async function getCalendarItems(pathway?: string) {
   })
 
   return items
-}
+})
 
 /**
  * News feed — articles, reports, announcements. Excludes events, guides, courses, tools.

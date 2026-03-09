@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/exchange/PageHero'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'User Manual — Community Exchange',
   description: 'How Community Exchange works. Start anywhere. The platform will show you what connects.',

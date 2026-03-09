@@ -1,7 +1,8 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import type { FocusArea } from '@/lib/types/exchange'
 /** All elected officials with their government levels and LinkedIn profiles. */
-export async function getOfficials({ limit = 200, offset = 0 }: { limit?: number; offset?: number } = {}) {
+export const getOfficials = cache(async function getOfficials({ limit = 200, offset = 0 }: { limit?: number; offset?: number } = {}) {
   const supabase = await createClient()
   const [{ data: officials }, { data: levels }, { data: profileRows }] = await Promise.all([
     supabase.from('elected_officials').select('*').order('official_name').range(offset, offset + limit - 1),
@@ -14,7 +15,7 @@ export async function getOfficials({ limit = 200, offset = 0 }: { limit?: number
       return acc
     }, {})
   return { officials: officials ?? [], levels: levels ?? [], profiles }
-}
+})
 
 /** Officials matching a ZIP code — looks up districts from zip_codes table, then finds matching officials. */
 

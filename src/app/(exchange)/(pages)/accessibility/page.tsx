@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: 'Accessibility | Community Exchange',
   description: 'Our commitment to making civic participation accessible to everyone.',

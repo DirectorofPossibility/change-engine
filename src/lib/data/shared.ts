@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { LANGUAGES } from '@/lib/constants'
@@ -6,12 +7,12 @@ import type { TranslationMap } from '@/lib/types/exchange'
  * Read language preference from cookie and return the LANG-XX id.
  * Returns null for English (no translations needed).
  */
-export async function getLangId(): Promise<string | null> {
+export const getLangId = cache(async function getLangId(): Promise<string | null> {
   const cookieStore = await cookies()
   const langCode = cookieStore.get('lang')?.value || 'en'
   const langConfig = LANGUAGES.find(function (l) { return l.code === langCode })
   return langConfig?.langId ?? null
-}
+})
 
 // ── Election banner ───────────────────────────────────────────────────
 

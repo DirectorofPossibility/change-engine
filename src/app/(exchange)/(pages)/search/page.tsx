@@ -32,6 +32,8 @@ import { SearchTabs } from './SearchTabs'
 import { SearchResultsHeader } from './SearchResultsHeader'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
+export const revalidate = 300
+
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {

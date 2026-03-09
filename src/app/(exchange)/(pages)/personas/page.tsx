@@ -8,6 +8,8 @@ import {
   WatchdogIcon, PartnerIcon, ExplorerIcon,
 } from '@/components/exchange/FlowerIcons'
 
+export const revalidate = 3600
+
 export const metadata: Metadata = {
   title: 'Your Journey | Community Exchange',
   description: 'Find the path that matches how you want to engage with your community.',

@@ -7,6 +7,8 @@
 import type { Metadata } from 'next'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Privacy policy for The Change Lab, The Change Engine, and the Community Exchange.',

@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
 import type { ExchangeStats, FocusArea, CompassPreviewData, ContentPreview } from '@/lib/types/exchange'
@@ -7,7 +8,7 @@ import { getPathwayBridges } from './wayfinder'
  * Note: `newsItems` counts newsfeed articles (content_published), NOT resources.
  * Resources are services + organizations + benefit programs.
  */
-export async function getExchangeStats(): Promise<ExchangeStats> {
+export const getExchangeStats = cache(async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
   const [newsItems, services, officials, paths, orgs, policies] = await Promise.all([
     supabase.from('content_published').select('id', { count: 'exact', head: true }).eq('is_active', true),
@@ -25,7 +26,7 @@ export async function getExchangeStats(): Promise<ExchangeStats> {
     organizations: orgs.count ?? 0,
     policies: policies.count ?? 0,
   }
-}
+})
 
 /**
  * Count newsfeed items per engagement level (Learning/Action/Resource/Accountability).
@@ -36,7 +37,7 @@ export async function getExchangeStats(): Promise<ExchangeStats> {
  * Count newsfeed items per engagement level (Learning/Action/Resource/Accountability).
  * These are NEWS counts — articles, videos, reports — not community resource counts.
  */
-export async function getCenterCounts(): Promise<Record<string, number>> {
+export const getCenterCounts = cache(async function getCenterCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('content_published')
@@ -49,7 +50,7 @@ export async function getCenterCounts(): Promise<Record<string, number>> {
     }
   })
   return counts
-}
+})
 
 /**
  * Most recently published newsfeed items.
@@ -57,7 +58,7 @@ export async function getCenterCounts(): Promise<Record<string, number>> {
  */
 
 /** Count newsfeed items per pathway (THEME_01..THEME_07) for homepage pills. */
-export async function getPathwayCounts(): Promise<Record<string, number>> {
+export const getPathwayCounts = cache(async function getPathwayCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('content_published')
@@ -70,10 +71,10 @@ export async function getPathwayCounts(): Promise<Record<string, number>> {
     }
   })
   return counts
-}
+})
 
 
-export async function getCenterContentForPathway(themeId: string): Promise<Record<string, number>> {
+export const getCenterContentForPathway = cache(async function getCenterContentForPathway(themeId: string): Promise<Record<string, number>> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('content_published')
@@ -87,7 +88,7 @@ export async function getCenterContentForPathway(themeId: string): Promise<Recor
     }
   })
   return counts
-}
+})
 
 // ── Taxonomy lookups ───────────────────────────────────────────────────
 
@@ -97,7 +98,7 @@ export async function getCenterContentForPathway(themeId: string): Promise<Recor
  * Fetch content previews for the Compass grid: up to 3 items per pathway×center cell.
  * Returns a nested record keyed by pathway_primary → center → ContentPreview[].
  */
-export async function getCompassPreview(): Promise<CompassPreviewData> {
+export const getCompassPreview = cache(async function getCompassPreview(): Promise<CompassPreviewData> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('content_published')
@@ -134,7 +135,7 @@ export async function getCompassPreview(): Promise<CompassPreviewData> {
   }
 
   return result
-}
+})
 
 /** Get geography rows for a policy. */
 
@@ -185,7 +186,7 @@ export interface PathwayHubItem {
 }
 
 
-export async function getPathwaysHubData(): Promise<Record<string, PathwayHubItem>> {
+export const getPathwaysHubData = cache(async function getPathwaysHubData(): Promise<Record<string, PathwayHubItem>> {
   const { THEMES } = await import('@/lib/constants')
   const supabase = await createClient()
   const themeIds = Object.keys(THEMES)
@@ -338,7 +339,7 @@ export async function getPathwaysHubData(): Promise<Record<string, PathwayHubIte
   }
 
   return result
-}
+})
 
 // ── Archetype Dashboard ─────────────────────────────────────────────────
 
@@ -361,7 +362,7 @@ export interface ArchetypeDashboardData {
 }
 
 
-export async function getArchetypeDashboardData(): Promise<ArchetypeDashboardData> {
+export const getArchetypeDashboardData = cache(async function getArchetypeDashboardData(): Promise<ArchetypeDashboardData> {
   const supabase = await createClient()
 
   const [
@@ -470,6 +471,4 @@ export async function getArchetypeDashboardData(): Promise<ArchetypeDashboardDat
       library: (libraryDocs ?? []).length,
     },
   }
-}
-
-
+})

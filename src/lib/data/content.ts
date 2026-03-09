@@ -1,10 +1,11 @@
+import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import type { FocusArea } from '@/lib/types/exchange'
 /**
  * Most recently published newsfeed items.
  * These are NEWS articles/videos/reports, not community resources.
  */
-export async function getLatestContent(limit = 6) {
+export const getLatestContent = cache(async function getLatestContent(limit = 6) {
   const supabase = await createClient()
   const { data } = await supabase
     .from('content_published')
@@ -14,7 +15,7 @@ export async function getLatestContent(limit = 6) {
     .order('published_at', { ascending: false })
     .limit(limit)
   return data ?? []
-}
+})
 
 /**
  * Events feed — items classified as content_type = 'event'.
@@ -23,7 +24,7 @@ export async function getLatestContent(limit = 6) {
 /**
  * News feed — articles, reports, announcements. Excludes events, guides, courses, tools.
  */
-export async function getNewsFeed(pathway?: string, limit = 30, contentType?: string) {
+export const getNewsFeed = cache(async function getNewsFeed(pathway?: string, limit = 30, contentType?: string) {
   const supabase = await createClient()
   let q = supabase
     .from('content_published')
@@ -37,11 +38,7 @@ export async function getNewsFeed(pathway?: string, limit = 30, contentType?: st
   if (pathway) q = q.eq('pathway_primary', pathway)
   const { data } = await q
   return data ?? []
-}
-
-/**
- * News count for a pathway — used to show "X news articles" link.
- */
+})
 
 /**
  * News count for a pathway — used to show "X news articles" link.
@@ -87,7 +84,7 @@ export async function getResourceFeed(limit = 20) {
  * Featured content for the guide page hero.
  * Tries is_featured=true first, falls back to most recent.
  */
-export async function getFeaturedContent() {
+export const getFeaturedContent = cache(async function getFeaturedContent() {
   const supabase = await createClient()
   const { data: featured } = await supabase
     .from('content_published')
@@ -104,7 +101,7 @@ export async function getFeaturedContent() {
     .order('published_at', { ascending: false })
     .limit(1)
   return latest?.[0] ?? null
-}
+})
 
 // ── Life situations ("Available Resources") ───────────────────────────
 
