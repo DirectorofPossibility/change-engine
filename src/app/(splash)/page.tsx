@@ -29,8 +29,6 @@ const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
 function GradientFOL({ className = '' }: { className?: string }) {
   const r = 18, cx = 100, cy = 100, outerR = r * 1.732
-  // Tight viewBox: center is 100, outermost circle edge is at 100 + outerR + r = ~149
-  // So content spans ~51 to ~149. Add 2px bleed.
   return (
     <svg viewBox="49 49 102 102" fill="none" className={className} aria-hidden="true"
       style={{ animation: 'fol-spin 90s linear infinite' }}>
@@ -77,6 +75,7 @@ export default function SplashPage() {
   const [betaName, setBetaName] = useState('')
   const [betaSent, setBetaSent] = useState(false)
   const [panel, setPanel] = useState<'goodthings' | 'beta'>('goodthings')
+  const [showImagine, setShowImagine] = useState(false)
 
   useEffect(function () {
     fetch('/api/good-things')
@@ -120,12 +119,6 @@ export default function SplashPage() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-brand-bg relative">
 
-      {/* ── Giant FOL background ── */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-[0.04]" aria-hidden="true"
-        style={{ width: '66vw', height: '66vw' }}>
-        <GradientFOL className="w-full h-full" />
-      </div>
-
       {/* ── Spectrum bar ── */}
       <div className="spectrum-bar relative z-10 shrink-0">
         <div style={{ background: '#e53e3e' }} />
@@ -137,43 +130,99 @@ export default function SplashPage() {
         <div style={{ background: '#805ad5' }} />
       </div>
 
+      {/* ── Ticker ── */}
+      {tickerItems.length > 0 && (
+        <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-b border-brand-border relative z-10">
+          <div className="ticker-track flex items-center gap-8 py-2 whitespace-nowrap">
+            {tickerItems.concat(tickerItems).map(function (item, i) {
+              return (
+                <span key={i} className="inline-flex items-center gap-2 text-xs text-brand-muted flex-shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                  <span>{item.text}</span>
+                  <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
+                </span>
+              )
+            })}
+          </div>
+          <style jsx>{`
+            .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
+            @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+            .ticker-track:hover { animation-play-state: paused; }
+          `}</style>
+        </div>
+      )}
+
       {/* ── Main layout ── */}
       <div className="flex-1 flex min-h-0 relative z-10">
 
         {/* ── LEFT COLUMN ── */}
         <aside className="w-72 lg:w-80 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
 
-          {/* FOL — true full width, zero spacing */}
+          {/* FOL full width */}
           <GradientFOL className="w-full" />
 
-          {/* Title — tight under flower */}
+          {/* Title */}
           <div className="px-4 pb-1 text-center">
             <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">Change Engine</h1>
             <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-1.5">Coming Soon</p>
             <p className="text-xs text-brand-muted mt-0.5 font-serif">Connecting Houston Neighbors</p>
           </div>
 
-          {/* Can you imagine — collapsible */}
-          <details className="mx-4 mb-2 group">
-            <summary className="flex items-center justify-between cursor-pointer list-none px-3 py-2 rounded-lg text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent hover:bg-brand-bg transition-colors">
-              Can you imagine&hellip;
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                className="transition-transform group-open:rotate-180">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </summary>
-            <p className="text-xs text-brand-muted leading-relaxed px-3 pb-2 mt-1">
-              Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
-            </p>
-          </details>
+          <div className="h-px bg-brand-border mx-4 my-1" />
 
-          <div className="h-px bg-brand-border mx-4 mb-2" />
+          {/* Share form — in sidebar when goodthings panel active */}
+          {panel === 'goodthings' && !submitted && (
+            <div className="px-4 py-2">
+              <p className="font-serif text-sm font-bold text-brand-text mb-2">Share your three good things</p>
+              <form onSubmit={handleGoodThings} className="space-y-2">
+                {[
+                  { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: 'Made you smile...' },
+                  { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: 'Positive change...' },
+                  { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: 'Grateful for...' },
+                ].map(function (f) {
+                  return (
+                    <div key={f.n} className="flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-full text-white flex items-center justify-center font-bold shrink-0" style={{ backgroundColor: f.color, fontSize: '10px' }}>{f.n}</span>
+                      <input type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
+                        placeholder={f.ph} maxLength={280}
+                        className="flex-1 px-2.5 py-1.5 border border-brand-border rounded-lg text-xs bg-white focus:outline-none focus:border-brand-accent transition-colors" />
+                    </div>
+                  )
+                })}
+                <div className="flex gap-1.5">
+                  <input type="text" value={displayName} onChange={function (e) { setDisplayName(e.target.value) }}
+                    placeholder="Name" maxLength={50}
+                    className="flex-1 px-2.5 py-1.5 border border-brand-border rounded-lg text-xs bg-white focus:outline-none focus:border-brand-accent transition-colors" />
+                  <input type="text" value={zip} onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+                    placeholder="ZIP" maxLength={5}
+                    className="w-16 px-2.5 py-1.5 border border-brand-border rounded-lg text-xs bg-white focus:outline-none focus:border-brand-accent transition-colors" />
+                </div>
+                {error && <p className="text-red-600 text-[11px]">{error}</p>}
+                <button type="submit" disabled={submitting}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 bg-brand-accent text-white rounded-lg text-xs font-bold hover:bg-brand-accent-hover transition-colors disabled:opacity-50">
+                  <Send size={12} />
+                  {submitting ? 'Sharing...' : 'Share'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {panel === 'goodthings' && submitted && (
+            <div className="px-4 py-3 text-center">
+              <FlowerOfLifeIcon size={24} color="#38a169" className="mx-auto mb-1" />
+              <p className="font-serif text-sm font-bold text-brand-text">On the map!</p>
+              <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setLastEntry(null) }}
+                className="text-xs text-brand-accent font-semibold hover:underline mt-1">Share more</button>
+            </div>
+          )}
+
+          <div className="h-px bg-brand-border mx-4 my-1" />
 
           {/* Buttons */}
-          <div className="flex-1 px-4 space-y-2">
+          <div className="flex-1 px-4 py-1 space-y-1.5">
             <button
               onClick={function () { setPanel('goodthings') }}
-              className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
+              className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
                 (panel === 'goodthings'
                   ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
                   : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
@@ -183,7 +232,7 @@ export default function SplashPage() {
 
             <button
               onClick={function () { setPanel('beta') }}
-              className={'w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 transition-all ' +
+              className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
                 (panel === 'beta'
                   ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
                   : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
@@ -193,7 +242,7 @@ export default function SplashPage() {
 
             <Link
               href="/login"
-              className="block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
             >
               Beta Tester Login
             </Link>
@@ -202,14 +251,33 @@ export default function SplashPage() {
               href="https://thechangelab.substack.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
             >
               Read Our Substack
             </a>
+
+            {/* Can you imagine — button style */}
+            <button
+              onClick={function () { setShowImagine(!showImagine) }}
+              className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+            >
+              <span className="flex items-center justify-between">
+                Can You Imagine&hellip;
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                  className={'transition-transform ' + (showImagine ? 'rotate-180' : '')}>
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
+            {showImagine && (
+              <p className="text-xs text-brand-muted leading-relaxed px-4 pb-1">
+                Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
+              </p>
+            )}
           </div>
 
           {/* Footer */}
-          <div className="px-5 py-3 mt-auto">
+          <div className="px-5 py-2 mt-auto">
             <p className="text-[10px] text-brand-muted-light font-mono text-center">
               A project of The Change Lab
             </p>
@@ -217,86 +285,18 @@ export default function SplashPage() {
         </aside>
 
         {/* ── CONTENT AREA ── */}
-        <main className="flex-1 flex flex-col min-h-0 min-w-0">
+        <main className="flex-1 flex flex-col min-h-0 min-w-0 relative">
+
+          {/* Rotating FOL — right side over map */}
+          <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-[15%] pointer-events-none opacity-[0.06] z-[1]" aria-hidden="true"
+            style={{ width: '55vh', height: '55vh' }}>
+            <GradientFOL className="w-full h-full" />
+          </div>
 
           {panel === 'goodthings' && (
-            <>
-              {/* Ticker — top */}
-              {tickerItems.length > 0 && (
-                <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-b border-brand-border">
-                  <div className="ticker-track flex items-center gap-8 py-2 whitespace-nowrap">
-                    {tickerItems.concat(tickerItems).map(function (item, i) {
-                      return (
-                        <span key={i} className="inline-flex items-center gap-2 text-xs text-brand-muted flex-shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                          <span>{item.text}</span>
-                          <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
-                        </span>
-                      )
-                    })}
-                  </div>
-                  <style jsx>{`
-                    .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
-                    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-                    .ticker-track:hover { animation-play-state: paused; }
-                  `}</style>
-                </div>
-              )}
-
-              {/* Map */}
-              <div className="flex-1 min-h-0 relative">
-                <GoodThingsMap entries={entries} focusEntry={lastEntry} />
-
-                {/* Form overlay */}
-                <div className="absolute bottom-4 right-4 z-[20] w-80 lg:w-96">
-                  {!submitted ? (
-                    <div className="bg-white rounded-xl border-2 border-brand-border p-4 shadow-drop">
-                      <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5]" />
-                      <p className="font-serif text-sm font-bold text-brand-text mb-3 pl-2">Share your three good things</p>
-                      <form onSubmit={handleGoodThings} className="pl-2 space-y-2.5">
-                        {[
-                          { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: 'Something that made you smile...' },
-                          { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: 'A positive change you noticed...' },
-                          { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: 'Something you\'re grateful for...' },
-                        ].map(function (f) {
-                          return (
-                            <div key={f.n} className="flex items-center gap-2">
-                              <span className="w-5 h-5 rounded-full text-white flex items-center justify-center font-bold shrink-0" style={{ backgroundColor: f.color, fontSize: '10px' }}>{f.n}</span>
-                              <input type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
-                                placeholder={f.ph} maxLength={280}
-                                className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-xs bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
-                            </div>
-                          )
-                        })}
-                        <div className="flex gap-2">
-                          <input type="text" value={displayName} onChange={function (e) { setDisplayName(e.target.value) }}
-                            placeholder="Name (optional)" maxLength={50}
-                            className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-xs bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
-                          <input type="text" value={zip} onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-                            placeholder="ZIP" maxLength={5}
-                            className="w-20 px-3 py-2 border border-brand-border rounded-lg text-xs bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
-                        </div>
-                        {error && <p className="text-red-600 text-[11px]">{error}</p>}
-                        <button type="submit" disabled={submitting}
-                          className="w-full flex items-center justify-center gap-1.5 py-2 bg-brand-accent text-white rounded-lg text-xs font-bold hover:bg-brand-accent-hover transition-colors disabled:opacity-50">
-                          <Send size={12} />
-                          {submitting ? 'Sharing...' : 'Share'}
-                        </button>
-                      </form>
-                    </div>
-                  ) : (
-                    <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-4 shadow-drop text-center">
-                      <FlowerOfLifeIcon size={24} color="#38a169" className="mx-auto mb-2" />
-                      <p className="font-serif text-sm font-bold text-brand-text mb-1">On the map!</p>
-                      <p className="text-[11px] text-brand-muted mb-3">Your good things are live.</p>
-                      <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setLastEntry(null) }}
-                        className="text-xs text-brand-accent font-semibold hover:underline">Share more</button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-            </>
+            <div className="flex-1 min-h-0 relative">
+              <GoodThingsMap entries={entries} focusEntry={lastEntry} />
+            </div>
           )}
 
           {panel === 'beta' && (
@@ -309,7 +309,7 @@ export default function SplashPage() {
                     <p className="text-sm text-brand-muted">Complete the email that just opened.</p>
                   </div>
                 ) : (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-offset-lg">
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-offset-lg relative z-10">
                     <FlowerOfLifeIcon size={32} color="#C75B2A" className="mx-auto mb-4" />
                     <h2 className="font-serif text-2xl font-bold text-brand-text text-center mb-2">Join the Beta</h2>
                     <p className="text-sm text-brand-muted text-center mb-6">Get early access to the full Change Engine Community Exchange.</p>

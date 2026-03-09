@@ -115,6 +115,6 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
   }, [entries, focusEntry])
 
   return (
-    <div ref={containerRef} className="w-full h-[500px]" />
+    <div ref={containerRef} className="w-full h-full min-h-[300px]" />
   )
 }
