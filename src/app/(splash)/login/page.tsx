@@ -13,9 +13,9 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   // Prevent open redirect: only allow relative paths, block protocol-relative URLs
-  let redirect = searchParams.get('redirect') || '/me'
+  let redirect = searchParams.get('redirect') || '/compass'
   if (!redirect.startsWith('/') || redirect.startsWith('//')) {
-    redirect = '/me'
+    redirect = '/compass'
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -42,7 +42,7 @@ export default function LoginPage() {
     }
 
     // If no explicit redirect was set, check role and send admin/partner/neighbor to dashboard
-    if (redirect === '/me') {
+    if (redirect === '/compass') {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const { data: profile } = await supabase

@@ -50,24 +50,45 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+  const pathname = request.nextUrl.pathname
+
+  // Logged-in users hitting splash → send to exchange
+  if (pathname === '/' && user) {
+    const exchangeUrl = request.nextUrl.clone()
+    exchangeUrl.pathname = '/compass'
+    return NextResponse.redirect(exchangeUrl)
+  }
+
+  // Non-logged-in users hitting exchange pages → send to splash
+  // Allow: /, /login, /signup, /reset-password, /goodthings, /api/*, /auth/*, static assets
+  const publicPaths = ['/', '/login', '/signup', '/reset-password', '/goodthings', '/account-locked', '/accessibility', '/privacy', '/terms', '/about']
+  const isPublicPath = publicPaths.some(function (p) { return pathname === p })
+  const isPublicPrefix = pathname.startsWith('/api/') || pathname.startsWith('/auth/') || pathname.startsWith('/_next/') || pathname.startsWith('/goodthings/')
+  if (!user && !isPublicPath && !isPublicPrefix && !pathname.startsWith('/dashboard') && !pathname.startsWith('/me')) {
+    const splashUrl = request.nextUrl.clone()
+    splashUrl.pathname = '/'
+    splashUrl.search = ''
+    return NextResponse.redirect(splashUrl)
+  }
+
   // Protect dashboard routes
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
+  if (pathname.startsWith('/dashboard') && !user) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
-    loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+    loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
   }
 
   // Protect user profile routes
-  if (request.nextUrl.pathname.startsWith('/me') && !user) {
+  if (pathname.startsWith('/me') && !user) {
     const meLoginUrl = request.nextUrl.clone()
     meLoginUrl.pathname = '/login'
-    meLoginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+    meLoginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(meLoginUrl)
   }
 
   // Check account status and role for authenticated users
-  if (user && !request.nextUrl.pathname.startsWith('/account-locked')) {
+  if (user && !pathname.startsWith('/account-locked')) {
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('account_status, role')
@@ -82,7 +103,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // Enforce role-based access for /dashboard routes
-    if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    if (pathname.startsWith('/dashboard')) {
       const role = (profile as any)?.role || 'neighbor'
       if (role !== 'admin' && role !== 'partner' && role !== 'neighbor') {
         const meUrl = request.nextUrl.clone()
@@ -103,5 +124,14 @@ export async function middleware(request: NextRequest) {
  * these patterns will invoke the {@link middleware} function.
  */
 export const config = {
-  matcher: ['/dashboard/:path*', '/me/:path*', '/account-locked'],
+  matcher: [
+    /*
+     * Match all routes except:
+     * - _next/static, _next/image (Next.js internals)
+     * - favicon.ico, sitemap.xml, robots.txt
+     * - /api/* (API routes handle their own auth)
+     * - Static assets (images, geo, etc.)
+     */
+    '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt|api/|images/|geo/).*)',
+  ],
 }
