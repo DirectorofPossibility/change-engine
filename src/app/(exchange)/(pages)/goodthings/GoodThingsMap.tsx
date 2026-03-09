@@ -25,7 +25,7 @@ interface Props {
 const MARKER_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
 function createMarkerIcon(isActive: boolean) {
-  const size = isActive ? 14 : 8
+  const size = isActive ? 42 : 24
   const color = isActive ? '#C75B2A' : '#38a169'
   const glow = isActive ? 'box-shadow:0 0 12px rgba(199,91,42,0.6);' : ''
   return L.divIcon({

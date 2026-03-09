@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { Send } from 'lucide-react'
+import { Send, Mail, Download, X } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 
 const GoodThingsMap = dynamic(
@@ -76,6 +76,8 @@ export default function SplashPage() {
   const [betaSent, setBetaSent] = useState(false)
   const [panel, setPanel] = useState<'goodthings' | 'beta'>('goodthings')
   const [showImagine, setShowImagine] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
+  const lastSubmittedRef = useRef<GoodThingEntry | null>(null)
 
   useEffect(function () {
     fetch('/api/good-things')
@@ -101,10 +103,49 @@ export default function SplashPage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
-      setFocusEntry(data.entry as GoodThingEntry)
-      setEntries(function (prev) { return [data.entry, ...prev] })
+      const entry = data.entry as GoodThingEntry
+      lastSubmittedRef.current = entry
+      setFocusEntry(entry)
+      setEntries(function (prev) { return [entry, ...prev] })
       setSubmitted(true)
+      setPanel('goodthings')
     } catch { setError('Network error.') } finally { setSubmitting(false) }
+  }
+
+  function handleEmailCopy() {
+    const e = lastSubmittedRef.current
+    if (!e) return
+    const subject = encodeURIComponent('My Three Good Things')
+    const body = encodeURIComponent(
+      'My Three Good Things\n\n' +
+      '1. ' + e.thing_1 + '\n' +
+      '2. ' + e.thing_2 + '\n' +
+      '3. ' + e.thing_3 + '\n\n' +
+      (e.display_name ? 'Shared by ' + e.display_name + '\n' : '') +
+      'Shared on Change Engine — changeengine.us'
+    )
+    window.open('mailto:?subject=' + subject + '&body=' + body, '_self')
+  }
+
+  function handleDownload() {
+    const e = lastSubmittedRef.current
+    if (!e) return
+    const date = new Date(e.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    const text =
+      'My Three Good Things\n' +
+      date + '\n\n' +
+      '1. ' + e.thing_1 + '\n' +
+      '2. ' + e.thing_2 + '\n' +
+      '3. ' + e.thing_3 + '\n\n' +
+      (e.display_name ? 'Shared by ' + e.display_name + '\n' : '') +
+      '\nShared on Change Engine — changeengine.us'
+    const blob = new Blob([text], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'three-good-things.txt'
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   function handleBeta(e: React.FormEvent) {
@@ -153,55 +194,7 @@ export default function SplashPage() {
 
           <div className="h-px bg-brand-border mx-4 my-1" />
 
-          {/* Share form — in sidebar when goodthings panel active */}
-          {panel === 'goodthings' && !submitted && (
-            <div className="px-4 py-2">
-              <p className="font-serif text-sm font-bold text-brand-text mb-2">Share your three good things</p>
-              <form onSubmit={handleGoodThings} className="space-y-2">
-                {[
-                  { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: 'Made you smile...' },
-                  { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: 'Positive change...' },
-                  { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: 'Grateful for...' },
-                ].map(function (f) {
-                  return (
-                    <div key={f.n} className="flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-full text-white flex items-center justify-center font-bold shrink-0" style={{ backgroundColor: f.color, fontSize: '10px' }}>{f.n}</span>
-                      <input type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
-                        placeholder={f.ph} maxLength={280}
-                        className="flex-1 px-2.5 py-1.5 border border-brand-border rounded-lg text-xs bg-white focus:outline-none focus:border-brand-accent transition-colors" />
-                    </div>
-                  )
-                })}
-                <div className="flex gap-1.5">
-                  <input type="text" value={displayName} onChange={function (e) { setDisplayName(e.target.value) }}
-                    placeholder="Name" maxLength={50}
-                    className="flex-1 px-2.5 py-1.5 border border-brand-border rounded-lg text-xs bg-white focus:outline-none focus:border-brand-accent transition-colors" />
-                  <input type="text" value={zip} onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-                    placeholder="ZIP" maxLength={5}
-                    className="w-16 px-2.5 py-1.5 border border-brand-border rounded-lg text-xs bg-white focus:outline-none focus:border-brand-accent transition-colors" />
-                </div>
-                {error && <p className="text-red-600 text-[11px]">{error}</p>}
-                <button type="submit" disabled={submitting}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 bg-brand-accent text-white rounded-lg text-xs font-bold hover:bg-brand-accent-hover transition-colors disabled:opacity-50">
-                  <Send size={12} />
-                  {submitting ? 'Sharing...' : 'Share'}
-                </button>
-              </form>
-            </div>
-          )}
-
-          {panel === 'goodthings' && submitted && (
-            <div className="px-4 py-3 text-center">
-              <FlowerOfLifeIcon size={24} color="#38a169" className="mx-auto mb-1" />
-              <p className="font-serif text-sm font-bold text-brand-text">On the map!</p>
-              <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setFocusEntry(null) }}
-                className="text-xs text-brand-accent font-semibold hover:underline mt-1">Share more</button>
-            </div>
-          )}
-
-          <div className="h-px bg-brand-border mx-4 my-1" />
-
-          {/* Buttons — ordered: Three Good Things, Can You Imagine, Substack, Beta Login, Beta Sign Up */}
+          {/* Buttons */}
           <div className="flex-1 px-4 py-1 space-y-1.5">
             <button
               onClick={function () { setPanel('goodthings') }}
@@ -273,18 +266,12 @@ export default function SplashPage() {
         {/* ── CONTENT AREA ── */}
         <main className="flex-1 flex flex-col min-h-0 min-w-0 relative">
 
-          {/* Rotating FOL — right side over map */}
-          <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-[15%] pointer-events-none z-[1]" aria-hidden="true"
-            style={{ width: '55vh', height: '55vh' }}>
-            <GradientFOL className="w-full h-full" />
-          </div>
-
           {panel === 'goodthings' && (
             <div className="flex-1 min-h-0 relative">
               <GoodThingsMap entries={entries} focusEntry={focusEntry} />
-              {/* Map label */}
+              {/* Map label — pulsing */}
               <div className="absolute top-4 left-4 z-[2] pointer-events-none">
-                <div className="bg-white/90 backdrop-blur-sm border border-brand-border rounded-lg px-3 py-1.5 shadow-sm">
+                <div className="bg-white/90 backdrop-blur-sm border border-brand-border rounded-lg px-3 py-1.5 shadow-sm animate-map-pulse">
                   <p className="font-serif text-sm font-bold text-brand-text">Three Good Things</p>
                   <p className="text-[10px] text-brand-muted font-mono">{entries.length} shared by neighbors</p>
                 </div>
@@ -324,20 +311,20 @@ export default function SplashPage() {
             </div>
           )}
 
-          {/* ── Ticker — bottom of content area, width of map ── */}
+          {/* ── Ticker — bottom of content area ── */}
           {tickerItems.length > 0 && (
             <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border">
-              <div className="ticker-track flex items-center gap-10 py-3 whitespace-nowrap">
+              <div className="ticker-track flex items-center gap-12 py-3 whitespace-nowrap">
                 {tickerItems.concat(tickerItems).map(function (item, i) {
                   return (
                     <button
                       key={i}
                       onClick={function () { handleTickerClick(item.entry) }}
-                      className="inline-flex items-center gap-2 text-sm text-brand-muted flex-shrink-0 hover:text-brand-text transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-2 text-base font-bold text-brand-text flex-shrink-0 hover:text-brand-accent transition-colors cursor-pointer"
                     >
-                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                      <FlowerOfLifeIcon size={14} color={item.color} className="flex-shrink-0" />
                       <span>{item.text}</span>
-                      <span className="text-brand-muted-light text-xs">{item.loc}</span>
+                      <span className="text-brand-muted font-normal text-sm">{item.loc}</span>
                     </button>
                   )
                 })}
@@ -350,8 +337,98 @@ export default function SplashPage() {
             </div>
           )}
 
+          {/* ── "Share the Good" tab on right edge ── */}
+          {!shareOpen && (
+            <button
+              onClick={function () { setShareOpen(true) }}
+              className="absolute top-1/2 right-0 -translate-y-1/2 z-20 bg-brand-accent text-white font-semibold text-sm px-2 py-6 rounded-l-xl shadow-lg hover:bg-brand-accent-hover transition-colors"
+              style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+            >
+              Share the Good
+            </button>
+          )}
+
+          {/* ── Slide-out share drawer ── */}
+          <div className={'absolute top-0 right-0 h-full z-20 transition-transform duration-300 ease-in-out ' + (shareOpen ? 'translate-x-0' : 'translate-x-full')}>
+            <div className="h-full w-80 bg-brand-bg-alt border-l border-brand-border shadow-xl overflow-y-auto">
+              <div className="p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="font-serif text-lg font-bold text-brand-text">Share the Good</p>
+                  <button onClick={function () { setShareOpen(false) }} className="text-brand-muted hover:text-brand-text transition-colors">
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {!submitted ? (
+                  <form onSubmit={handleGoodThings} className="space-y-3">
+                    <p className="text-xs text-brand-muted mb-1">What three good things happened today?</p>
+                    {[
+                      { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: 'Made you smile...' },
+                      { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: 'Positive change...' },
+                      { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: 'Grateful for...' },
+                    ].map(function (f) {
+                      return (
+                        <div key={f.n} className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full text-white flex items-center justify-center font-bold shrink-0 text-[11px]" style={{ backgroundColor: f.color }}>{f.n}</span>
+                          <input type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
+                            placeholder={f.ph} maxLength={280}
+                            className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:border-brand-accent transition-colors" />
+                        </div>
+                      )
+                    })}
+                    <div className="flex gap-2">
+                      <input type="text" value={displayName} onChange={function (e) { setDisplayName(e.target.value) }}
+                        placeholder="Name (optional)" maxLength={50}
+                        className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:border-brand-accent transition-colors" />
+                      <input type="text" value={zip} onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+                        placeholder="ZIP" maxLength={5}
+                        className="w-20 px-3 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:border-brand-accent transition-colors" />
+                    </div>
+                    {error && <p className="text-red-600 text-xs">{error}</p>}
+                    <button type="submit" disabled={submitting}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-bold hover:bg-brand-accent-hover transition-colors disabled:opacity-50">
+                      <Send size={14} />
+                      {submitting ? 'Sharing...' : 'Share'}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="text-center space-y-4">
+                    <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto" />
+                    <p className="font-serif text-lg font-bold text-brand-text">On the map!</p>
+                    <p className="text-sm text-brand-muted">Your three good things are now part of the neighborhood.</p>
+
+                    <div className="space-y-2 pt-2">
+                      <button onClick={handleEmailCopy}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
+                        <Mail size={14} />
+                        Email Yourself a Copy
+                      </button>
+                      <button onClick={handleDownload}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
+                        <Download size={14} />
+                        Download
+                      </button>
+                    </div>
+
+                    <button onClick={function () { setSubmitted(false); setThing1(''); setThing2(''); setThing3(''); setDisplayName(''); setZip(''); setFocusEntry(null) }}
+                      className="text-sm text-brand-accent font-semibold hover:underline mt-2">Share more</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
         </main>
       </div>
+
+      {/* Pulse animation for map label */}
+      <style jsx global>{`
+        @keyframes map-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.9; }
+        }
+        .animate-map-pulse { animation: map-pulse 3s ease-in-out infinite; }
+      `}</style>
     </div>
   )
 }
