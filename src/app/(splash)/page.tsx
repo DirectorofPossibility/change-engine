@@ -274,7 +274,7 @@ export default function SplashPage() {
         <main className="flex-1 flex flex-col min-h-0 min-w-0 relative">
 
           {/* Rotating FOL — right side over map */}
-          <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-[15%] pointer-events-none opacity-[0.06] z-[1]" aria-hidden="true"
+          <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-[15%] pointer-events-none z-[1]" aria-hidden="true"
             style={{ width: '55vh', height: '55vh' }}>
             <GradientFOL className="w-full h-full" />
           </div>
@@ -282,6 +282,13 @@ export default function SplashPage() {
           {panel === 'goodthings' && (
             <div className="flex-1 min-h-0 relative">
               <GoodThingsMap entries={entries} focusEntry={focusEntry} />
+              {/* Map label */}
+              <div className="absolute top-4 left-4 z-[2] pointer-events-none">
+                <div className="bg-white/90 backdrop-blur-sm border border-brand-border rounded-lg px-3 py-1.5 shadow-sm">
+                  <p className="font-serif text-sm font-bold text-brand-text">Three Good Things</p>
+                  <p className="text-[10px] text-brand-muted font-mono">{entries.length} shared by neighbors</p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -317,34 +324,34 @@ export default function SplashPage() {
             </div>
           )}
 
+          {/* ── Ticker — bottom of content area, width of map ── */}
+          {tickerItems.length > 0 && (
+            <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border">
+              <div className="ticker-track flex items-center gap-10 py-3 whitespace-nowrap">
+                {tickerItems.concat(tickerItems).map(function (item, i) {
+                  return (
+                    <button
+                      key={i}
+                      onClick={function () { handleTickerClick(item.entry) }}
+                      className="inline-flex items-center gap-2 text-sm text-brand-muted flex-shrink-0 hover:text-brand-text transition-colors cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                      <span>{item.text}</span>
+                      <span className="text-brand-muted-light text-xs">{item.loc}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              <style jsx>{`
+                .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
+                @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+                .ticker-track:hover { animation-duration: 180s; }
+              `}</style>
+            </div>
+          )}
+
         </main>
       </div>
-
-      {/* ── Ticker — bottom of page ── */}
-      {tickerItems.length > 0 && (
-        <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border relative z-10">
-          <div className="ticker-track flex items-center gap-10 py-3 whitespace-nowrap">
-            {tickerItems.concat(tickerItems).map(function (item, i) {
-              return (
-                <button
-                  key={i}
-                  onClick={function () { handleTickerClick(item.entry) }}
-                  className="inline-flex items-center gap-2 text-sm text-brand-muted flex-shrink-0 hover:text-brand-text transition-colors cursor-pointer"
-                >
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                  <span>{item.text}</span>
-                  <span className="text-brand-muted-light text-xs">{item.loc}</span>
-                </button>
-              )
-            })}
-          </div>
-          <style jsx>{`
-            .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
-            @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-            .ticker-track:hover { animation-duration: 180s; }
-          `}</style>
-        </div>
-      )}
     </div>
   )
 }
