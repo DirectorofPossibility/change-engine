@@ -29,8 +29,10 @@ const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
 function GradientFOL({ className = '' }: { className?: string }) {
   const r = 18, cx = 100, cy = 100, outerR = r * 1.732
+  // Tight viewBox: center is 100, outermost circle edge is at 100 + outerR + r = ~149
+  // So content spans ~51 to ~149. Add 2px bleed.
   return (
-    <svg viewBox="0 0 200 200" fill="none" className={className} aria-hidden="true"
+    <svg viewBox="49 49 102 102" fill="none" className={className} aria-hidden="true"
       style={{ animation: 'fol-spin 90s linear infinite' }}>
       <defs>
         <linearGradient id="fol-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -141,20 +143,14 @@ export default function SplashPage() {
         {/* ── LEFT COLUMN ── */}
         <aside className="w-72 lg:w-80 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
 
-          {/* FOL — full column width, no padding */}
-          <div className="pt-3">
-            <GradientFOL className="w-full" />
-          </div>
+          {/* FOL — true full width, zero spacing */}
+          <GradientFOL className="w-full" />
 
-          {/* Title — one line under the flower */}
-          <div className="px-5 pb-2 text-center -mt-2">
-            <h1 className="font-serif text-3xl font-bold text-brand-text leading-none">
-              Change Engine
-            </h1>
-            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-2">Coming Soon</p>
-            <p className="text-sm text-brand-muted mt-1 font-serif">
-              Connecting Houston Neighbors
-            </p>
+          {/* Title — tight under flower */}
+          <div className="px-4 pb-1 text-center">
+            <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">Change Engine</h1>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-1.5">Coming Soon</p>
+            <p className="text-xs text-brand-muted mt-0.5 font-serif">Connecting Houston Neighbors</p>
           </div>
 
           {/* Can you imagine — collapsible */}
@@ -225,6 +221,28 @@ export default function SplashPage() {
 
           {panel === 'goodthings' && (
             <>
+              {/* Ticker — top */}
+              {tickerItems.length > 0 && (
+                <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-b border-brand-border">
+                  <div className="ticker-track flex items-center gap-8 py-2 whitespace-nowrap">
+                    {tickerItems.concat(tickerItems).map(function (item, i) {
+                      return (
+                        <span key={i} className="inline-flex items-center gap-2 text-xs text-brand-muted flex-shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
+                          <span>{item.text}</span>
+                          <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
+                        </span>
+                      )
+                    })}
+                  </div>
+                  <style jsx>{`
+                    .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
+                    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+                    .ticker-track:hover { animation-play-state: paused; }
+                  `}</style>
+                </div>
+              )}
+
               {/* Map */}
               <div className="flex-1 min-h-0 relative">
                 <GoodThingsMap entries={entries} focusEntry={lastEntry} />
@@ -278,27 +296,6 @@ export default function SplashPage() {
                 </div>
               </div>
 
-              {/* Ticker */}
-              {tickerItems.length > 0 && (
-                <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border">
-                  <div className="ticker-track flex items-center gap-8 py-2 whitespace-nowrap">
-                    {tickerItems.concat(tickerItems).map(function (item, i) {
-                      return (
-                        <span key={i} className="inline-flex items-center gap-2 text-xs text-brand-muted flex-shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-                          <span>{item.text}</span>
-                          <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
-                        </span>
-                      )
-                    })}
-                  </div>
-                  <style jsx>{`
-                    .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
-                    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-                    .ticker-track:hover { animation-play-state: paused; }
-                  `}</style>
-                </div>
-              )}
             </>
           )}
 
