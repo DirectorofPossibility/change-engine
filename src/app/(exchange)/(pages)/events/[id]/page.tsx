@@ -8,6 +8,7 @@ import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import Image from 'next/image'
+import { eventJsonLd } from '@/lib/jsonld'
 
 export const revalidate = 300
 
@@ -67,8 +68,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const mapUrl = address ? buildMapUrl(event.address || '', event.city || '', event.state || '', event.zip_code || '') : null
   const calendarUrl = buildAddToCalendarUrl(event as any)
 
+  const orgName = orgResult?.data?.org_name || null
+  const jsonLd = eventJsonLd(event as any, orgName)
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Hero */}
       <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">

@@ -24,6 +24,7 @@ import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import Image from 'next/image'
+import { articleJsonLd } from '@/lib/jsonld'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -196,8 +197,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const bodyBlocks = bodyText.split(/\n\n+/).map(function (b) { return b.trim() }).filter(Boolean)
   let sectionNumber = 0
 
+  const jsonLd = articleJsonLd(item as any)
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="read_article" pathway={item.pathway_primary || undefined} />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <Breadcrumb items={[

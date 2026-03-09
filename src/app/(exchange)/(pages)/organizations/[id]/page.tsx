@@ -16,6 +16,7 @@ import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import Image from 'next/image'
+import { organizationJsonLd } from '@/lib/jsonld'
 
 export const revalidate = 86400
 
@@ -99,8 +100,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
     getRandomQuote(),
   ])
 
+  const jsonLd = organizationJsonLd(org as any)
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_organization" />
 
       {/* Hero */}

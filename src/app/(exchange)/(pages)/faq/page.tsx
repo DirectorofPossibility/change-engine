@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
+import { faqJsonLd } from '@/lib/jsonld'
 
 export const revalidate = 300
 
@@ -26,8 +27,11 @@ export default async function FAQPage() {
     grouped[cat].push(f)
   }
 
+  const jsonLd = faqJsonLd((faqs || []).filter(function (f) { return f.answer }).map(function (f) { return { question: f.question, answer: f.answer! } }))
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <PageHero variant="sacred" sacredPattern="seed" gradientColor="#d69e2e" title="Frequently Asked Questions" subtitle="Quick answers to the most common questions about civic participation, services, and how to use the Community Exchange." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'FAQ' }]} />

@@ -17,6 +17,7 @@ import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
+import { serviceJsonLd } from '@/lib/jsonld'
 
 export const revalidate = 300
 
@@ -96,8 +97,11 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     getRandomQuote(),
   ])
 
+  const jsonLd = serviceJsonLd(service as any, org?.org_name)
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_service" />
 
       {/* Hero */}

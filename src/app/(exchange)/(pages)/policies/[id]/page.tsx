@@ -21,6 +21,7 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
+import { policyJsonLd } from '@/lib/jsonld'
 
 function statusColor(status: string | null): { bg: string; text: string; dot: string } {
   if (!status) return { bg: 'bg-gray-50', text: 'text-gray-600', dot: 'bg-gray-400' }
@@ -138,8 +139,11 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
     getRandomQuote(),
   ])
 
+  const jsonLd = policyJsonLd(policy as any)
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_policy" />
       {/* Hero header */}
       <div className="bg-brand-bg-alt border-b border-brand-border">

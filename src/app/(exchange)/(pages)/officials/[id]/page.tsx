@@ -17,6 +17,7 @@ import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import Image from 'next/image'
+import { personJsonLd } from '@/lib/jsonld'
 
 function levelColor(level: string | null): string {
   if (level === 'Federal') return 'bg-blue-100 text-blue-700'
@@ -172,8 +173,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   const barColor = levelBarColor(official.level)
 
+  const jsonLd = personJsonLd({ ...official, photo_url: profile?.photo_url || null, bio_short: profile?.bio_short || null } as any)
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_official" />
 
       {/* Hero Section */}
