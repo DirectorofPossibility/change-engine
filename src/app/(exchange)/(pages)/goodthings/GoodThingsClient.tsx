@@ -101,6 +101,28 @@ export function GoodThingsClient() {
     }, 100)
   }
 
+  function drawFOL(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, color: string, lineWidth: number) {
+    ctx.strokeStyle = color; ctx.lineWidth = lineWidth
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke()
+    for (let i = 0; i < 6; i++) {
+      const a = (i * Math.PI) / 3
+      ctx.beginPath(); ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), r, 0, Math.PI * 2); ctx.stroke()
+    }
+  }
+
+  function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lineH: number): number {
+    const words = text.split(' ')
+    let line = ''; let curY = y
+    words.forEach(function (word) {
+      const test = line + (line ? ' ' : '') + word
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, x, curY); line = word; curY += lineH
+      } else { line = test }
+    })
+    if (line) ctx.fillText(line, x, curY)
+    return curY
+  }
+
   const downloadPng = useCallback(function () {
     if (!lastEntry) return
     const canvas = canvasRef.current
@@ -108,113 +130,154 @@ export function GoodThingsClient() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const w = 800; const h = 600
-    canvas.width = w; canvas.height = h
+    // Instagram-optimized square format
+    const s = 1080
+    canvas.width = s; canvas.height = s
 
-    // Background — warm cream with subtle noise texture
-    ctx.fillStyle = '#FAF8F5'
-    ctx.fillRect(0, 0, w, h)
+    // ── Background gradient — warm cream to soft peach ──
+    const bgGrad = ctx.createLinearGradient(0, 0, s, s)
+    bgGrad.addColorStop(0, '#FAF8F5')
+    bgGrad.addColorStop(0.5, '#FDF6F0')
+    bgGrad.addColorStop(1, '#F8F0E8')
+    ctx.fillStyle = bgGrad
+    ctx.fillRect(0, 0, s, s)
 
-    // Noise texture overlay
-    ctx.globalAlpha = 0.03
-    for (let x = 0; x < w; x += 3) {
-      for (let y = 0; y < h; y += 3) {
-        const v = Math.random() * 80
+    // ── Subtle paper texture ──
+    ctx.globalAlpha = 0.015
+    for (let x = 0; x < s; x += 4) {
+      for (let y = 0; y < s; y += 4) {
+        const v = Math.random() * 100
         ctx.fillStyle = 'rgb(' + v + ',' + v + ',' + v + ')'
-        ctx.fillRect(x, y, 3, 3)
+        ctx.fillRect(x, y, 4, 4)
       }
     }
     ctx.globalAlpha = 1
 
-    // Large FOL watermark — center-right, faded
-    ctx.globalAlpha = 0.04; ctx.strokeStyle = '#C75B2A'; ctx.lineWidth = 1.5
-    const folCx = w - 180; const folCy = h / 2; const folR = 140
-    ctx.beginPath(); ctx.arc(folCx, folCy, folR, 0, Math.PI * 2); ctx.stroke()
+    // ── Large FOL watermark — centered background ──
+    ctx.globalAlpha = 0.035
+    drawFOL(ctx, s / 2, s / 2, 320, '#C75B2A', 1.5)
+    // Outer ring
     for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3
-      ctx.beginPath(); ctx.arc(folCx + folR * Math.cos(angle), folCy + folR * Math.sin(angle), folR, 0, Math.PI * 2); ctx.stroke()
-    }
-    // Inner ring
-    const folR2 = folR * 0.577
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3 + Math.PI / 6
-      ctx.beginPath(); ctx.arc(folCx + folR2 * Math.cos(angle), folCy + folR2 * Math.sin(angle), folR2, 0, Math.PI * 2); ctx.stroke()
+      const a = (i * Math.PI) / 3 + Math.PI / 6
+      drawFOL(ctx, s / 2 + 320 * 0.577 * Math.cos(a), s / 2 + 320 * 0.577 * Math.sin(a), 320 * 0.577, '#C75B2A', 1)
     }
     ctx.globalAlpha = 1
 
-    // Spectrum bar — top
+    // ── Spectrum bar — top ──
     const spectrum = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#319795', '#3182ce', '#805ad5']
-    const barW = w / spectrum.length
-    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, 0, barW + 1, 5) })
+    const barW = s / spectrum.length
+    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, 0, barW + 1, 8) })
 
-    // Brand header
-    ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 14px sans-serif'
-    ctx.fillText('COMMUNITY EXCHANGE', 48, 40)
-    ctx.fillStyle = '#9B9590'; ctx.font = '11px sans-serif'
-    ctx.fillText('Powered by The Change Lab', 48, 58)
+    const pad = 80
 
-    // Accent line under header
-    ctx.fillStyle = '#C75B2A'; ctx.fillRect(48, 68, 60, 3)
+    // ── Brand header ──
+    ctx.fillStyle = '#C75B2A'; ctx.font = 'bold 13px sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText('CHANGE ENGINE', pad, 52)
 
-    // Title
-    ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 28px serif'
-    ctx.fillText('Three Good Things', 48, 105)
+    // Small FOL next to brand
+    ctx.globalAlpha = 0.3
+    drawFOL(ctx, pad - 20, 47, 8, '#C75B2A', 0.8)
+    ctx.globalAlpha = 1
 
-    // Location + date
-    ctx.font = '13px sans-serif'; ctx.fillStyle = '#6B6560'
-    const loc = [lastEntry.city, lastEntry.state, lastEntry.zip_code].filter(Boolean).join(', ')
-    ctx.fillText(loc || 'ZIP ' + lastEntry.zip_code, 48, 130)
-    ctx.fillText(new Date(lastEntry.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), 48, 150)
+    // ── Title — large serif ──
+    ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 52px serif'
+    ctx.fillText('Three Good Things', pad, 120)
 
-    // Thin separator
-    ctx.fillStyle = '#E2DDD5'; ctx.fillRect(48, 168, w - 96, 1)
+    // ── Accent underline ──
+    const accentGrad = ctx.createLinearGradient(pad, 0, pad + 200, 0)
+    accentGrad.addColorStop(0, '#C75B2A')
+    accentGrad.addColorStop(1, '#C75B2A00')
+    ctx.fillStyle = accentGrad
+    ctx.fillRect(pad, 135, 200, 4)
 
-    // Three things
+    // ── Date + location ──
+    const loc = [lastEntry.city, lastEntry.state].filter(Boolean).join(', ') || 'ZIP ' + lastEntry.zip_code
+    const dateStr = new Date(lastEntry.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    ctx.font = '18px sans-serif'; ctx.fillStyle = '#9B9590'
+    ctx.fillText(loc + '  \u00b7  ' + dateStr, pad, 172)
+
+    // ── Display name ──
+    if (lastEntry.display_name) {
+      ctx.font = 'italic 18px sans-serif'; ctx.fillStyle = '#6B6560'
+      ctx.fillText('Shared by ' + lastEntry.display_name, pad, 200)
+    }
+
+    // ── Three things — the main content ──
     const things = [lastEntry.thing_1, lastEntry.thing_2, lastEntry.thing_3]
-    let y = 200
+    let y = lastEntry.display_name ? 260 : 240
+    const contentW = s - pad * 2 - 80
+
     things.forEach(function (thing, i) {
-      // Left color bar
-      ctx.fillStyle = THING_COLORS[i]; ctx.fillRect(48, y - 8, 4, 50)
+      // Colored accent circle with number
+      const circleX = pad + 24; const circleY = y + 4
+      ctx.beginPath(); ctx.arc(circleX, circleY, 22, 0, Math.PI * 2)
+      ctx.fillStyle = THING_COLORS[i]; ctx.fill()
+      ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 18px serif'
+      ctx.textAlign = 'center'
+      ctx.fillText(String(i + 1), circleX, circleY + 6)
+      ctx.textAlign = 'left'
 
-      // Number
-      ctx.fillStyle = THING_COLORS[i]; ctx.font = 'bold 24px serif'
-      ctx.fillText(String(i + 1), 68, y + 16)
+      // Colored left bar
+      ctx.fillStyle = THING_COLORS[i]
+      ctx.globalAlpha = 0.15
+      ctx.fillRect(pad + 56, y - 16, 3, 80)
+      ctx.globalAlpha = 1
 
-      // Text — word wrap
-      ctx.font = '18px sans-serif'; ctx.fillStyle = '#1A1A1A'
-      const maxW = w - 200; const words = thing.split(' ')
-      let line = ''; let lineY = y
-      words.forEach(function (word) {
-        const test = line + (line ? ' ' : '') + word
-        if (ctx.measureText(test).width > maxW && line) {
-          ctx.fillText(line, 100, lineY + 14); line = word; lineY += 26
-        } else { line = test }
-      })
-      if (line) ctx.fillText(line, 100, lineY + 14)
-      y = lineY + 65
+      // Text — larger, more readable
+      ctx.font = '24px sans-serif'; ctx.fillStyle = '#2C2C2C'
+      const endY = wrapText(ctx, thing, pad + 72, y + 10, contentW, 34)
+      y = endY + 60
     })
 
-    // Footer
-    ctx.fillStyle = '#E2DDD5'; ctx.fillRect(48, h - 55, w - 96, 1)
-    ctx.fillStyle = '#9B9590'; ctx.font = 'bold 11px sans-serif'
-    ctx.fillText('changeengine.us/goodthings', 48, h - 30)
-
-    // Small FOL icon bottom-right
-    ctx.globalAlpha = 0.08; ctx.strokeStyle = '#C75B2A'; ctx.lineWidth = 1
-    const smR = 18; const smCx = w - 70; const smCy = h - 35
-    ctx.beginPath(); ctx.arc(smCx, smCy, smR, 0, Math.PI * 2); ctx.stroke()
-    for (let i = 0; i < 6; i++) {
-      const angle = (i * Math.PI) / 3
-      ctx.beginPath(); ctx.arc(smCx + smR * Math.cos(angle), smCy + smR * Math.sin(angle), smR, 0, Math.PI * 2); ctx.stroke()
-    }
+    // ── Decorative corner FOLs ──
+    ctx.globalAlpha = 0.06
+    drawFOL(ctx, s - 60, 60, 30, '#805ad5', 1)
+    drawFOL(ctx, 60, s - 60, 30, '#38a169', 1)
     ctx.globalAlpha = 1
 
-    // Spectrum bar — bottom
-    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, h - 5, barW + 1, 5) })
+    // ── Bottom section — branded footer ──
+    // Separator
+    const sepGrad = ctx.createLinearGradient(pad, 0, s - pad, 0)
+    sepGrad.addColorStop(0, '#E2DDD500')
+    sepGrad.addColorStop(0.2, '#E2DDD5')
+    sepGrad.addColorStop(0.8, '#E2DDD5')
+    sepGrad.addColorStop(1, '#E2DDD500')
+    ctx.fillStyle = sepGrad
+    ctx.fillRect(pad, s - 120, s - pad * 2, 1)
+
+    // "Made with thoughtfulness" + The Change Lab
+    ctx.font = 'italic 16px sans-serif'; ctx.fillStyle = '#9B9590'
+    ctx.textAlign = 'center'
+    ctx.fillText('Made with thoughtfulness by The Change Lab', s / 2, s - 80)
+
+    // URL
+    ctx.font = 'bold 16px sans-serif'; ctx.fillStyle = '#C75B2A'
+    ctx.fillText('changeengine.us/goodthings', s / 2, s - 52)
+    ctx.textAlign = 'left'
+
+    // ── Spectrum bar — bottom ──
+    spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, s - 8, barW + 1, 8) })
 
     const link = document.createElement('a')
     link.download = 'three-good-things-' + lastEntry.zip_code + '.png'
     link.href = canvas.toDataURL('image/png'); link.click()
+  }, [lastEntry])
+
+  const emailCopy = useCallback(function () {
+    if (!lastEntry) return
+    const subject = encodeURIComponent('My Three Good Things')
+    const body = encodeURIComponent(
+      'My Three Good Things\n\n' +
+      '1. ' + lastEntry.thing_1 + '\n' +
+      '2. ' + lastEntry.thing_2 + '\n' +
+      '3. ' + lastEntry.thing_3 + '\n\n' +
+      (lastEntry.display_name ? 'Shared by ' + lastEntry.display_name + '\n' : '') +
+      ([lastEntry.city, lastEntry.state].filter(Boolean).join(', ') || 'ZIP ' + lastEntry.zip_code) + '\n' +
+      new Date(lastEntry.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + '\n\n' +
+      'Shared on Change Engine — changeengine.us/goodthings'
+    )
+    window.open('mailto:?subject=' + subject + '&body=' + body, '_self')
   }, [lastEntry])
 
   const totalEntries = entries.length
@@ -436,6 +499,10 @@ export function GoodThingsClient() {
                 <button onClick={downloadPng}
                   className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-xl text-sm font-semibold hover:bg-brand-accent-hover transition-colors">
                   <Download size={16} /> {t('gt.download_image')}
+                </button>
+                <button onClick={emailCopy}
+                  className="flex items-center gap-2 px-5 py-2.5 border-2 border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
+                  <Mail size={16} /> {t('gt.email_copy')}
                 </button>
                 <button onClick={resetForm}
                   className="flex items-center gap-2 px-5 py-2.5 border-2 border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
