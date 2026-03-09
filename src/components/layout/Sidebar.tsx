@@ -258,6 +258,7 @@ function NavGroupSection({ group, isActive, pendingRequestCount }: {
     <div>
       <button
         onClick={function () { setOpen(!open) }}
+        aria-expanded={open}
         className="flex items-center justify-between w-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white/60 transition-colors"
       >
         {group.label}

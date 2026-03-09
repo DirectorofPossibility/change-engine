@@ -78,6 +78,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
           <input
             type="text"
             placeholder="Search by name, city, or ZIP..."
+            aria-label="Search organizations"
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-8 pr-3 py-2 rounded-lg border-2 border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"

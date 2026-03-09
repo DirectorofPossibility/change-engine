@@ -49,7 +49,7 @@ export default function ResetPasswordPage() {
       <p className="text-brand-muted mb-8">Enter your email. We&apos;ll send you a link. Check your spam if it doesn&apos;t show up in a few minutes.</p>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
+        <div role="alert" className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
           {error}
         </div>
       )}

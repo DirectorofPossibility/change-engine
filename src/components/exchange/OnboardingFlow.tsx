@@ -255,7 +255,7 @@ export function OnboardingFlow() {
                   />
                 </div>
                 {error && (
-                  <p className="text-xs text-[#C53030] mb-2">{error}</p>
+                  <p role="alert" className="text-xs text-[#C53030] mb-2">{error}</p>
                 )}
                 <button
                   type="submit"

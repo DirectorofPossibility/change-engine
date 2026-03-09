@@ -66,6 +66,7 @@ export function ChanceChatWidget() {
       <div className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-50">
         <button
           onClick={function () { setIsMinimized(false) }}
+          aria-label="Open chat with Chance"
           className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
         >
           <MessageCircle size={16} />

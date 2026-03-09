@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { DM_Sans, DM_Serif_Display, Caveat, Space_Mono } from 'next/font/google'
+import { cookies } from 'next/headers'
 import './globals.css'
 
 const sans = DM_Sans({
@@ -62,13 +63,18 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+const LANG_MAP: Record<string, string> = { en: 'en', es: 'es', vi: 'vi' }
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const cookieStore = await cookies()
+  const lang = LANG_MAP[cookieStore.get('lang')?.value ?? ''] ?? 'en'
+
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} ${hand.variable} ${mono.variable}`}>
+    <html lang={lang} className={`${sans.variable} ${serif.variable} ${hand.variable} ${mono.variable}`}>
       <body>{children}</body>
     </html>
   )

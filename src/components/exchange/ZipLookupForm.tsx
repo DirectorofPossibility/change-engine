@@ -72,6 +72,7 @@ export function ZipLookupForm() {
             value={input}
             onChange={function (e) { setInput(e.target.value) }}
             placeholder={t('lookup.address_or_zip')}
+            aria-label="ZIP code or address"
             className="w-full pl-9 pr-4 py-3 border-2 border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
           />
         </div>
@@ -84,7 +85,7 @@ export function ZipLookupForm() {
         </button>
       </form>
 
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+      {error && <p role="alert" className="text-red-600 text-sm mb-4">{error}</p>}
 
       {results && (
         <p className="text-sm text-brand-muted mb-6">{t('lookup.showing_results')} <span className="font-semibold text-brand-text">{results.zip}</span></p>

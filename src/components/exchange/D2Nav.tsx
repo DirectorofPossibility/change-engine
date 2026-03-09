@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { X, Menu, Search } from 'lucide-react'
@@ -96,12 +96,30 @@ export function D2Nav() {
 
   const closeDrawer = useCallback(function () { setDrawerOpen(false) }, [])
 
+  const drawerRef = useRef<HTMLDivElement>(null)
+
   useEffect(function () {
     if (!drawerOpen) return
     function handleKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') closeDrawer()
+      if (e.key === 'Escape') { closeDrawer(); return }
+      if (e.key === 'Tab' && drawerRef.current) {
+        const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus()
+        }
+      }
     }
     document.addEventListener('keydown', handleKey)
+    // Focus the close button on open
+    const closeBtn = drawerRef.current?.querySelector<HTMLElement>('button[aria-label="Close menu"]')
+    closeBtn?.focus()
     return function () { document.removeEventListener('keydown', handleKey) }
   }, [drawerOpen, closeDrawer])
 
@@ -176,7 +194,7 @@ export function D2Nav() {
             className="fixed inset-0 bg-black/40 z-[200]"
             onClick={function () { setDrawerOpen(false) }}
           />
-          <div role="dialog" aria-modal="true" aria-label="Navigation menu" className="fixed top-0 right-0 bottom-0 w-[340px] max-w-[90vw] z-[201] bg-brand-cream overflow-y-auto shadow-2xl">
+          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="Navigation menu" className="fixed top-0 right-0 bottom-0 w-[340px] max-w-[90vw] z-[201] bg-brand-cream overflow-y-auto shadow-2xl">
             {/* Drawer header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border">
               <div className="flex items-center gap-2">
