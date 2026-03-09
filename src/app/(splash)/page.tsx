@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useId } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Send, Mail, Download, X, Menu } from 'lucide-react'
@@ -28,12 +28,15 @@ interface GoodThingEntry {
 const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
 function GradientFOL({ className = '' }: { className?: string }) {
+  const id = useId()
+  const gradId = 'fol-grad-' + id.replace(/:/g, '')
+  const gradUrl = 'url(#' + gradId + ')'
   const r = 18, cx = 100, cy = 100, outerR = r * 1.732
   return (
     <svg viewBox="49 49 102 102" fill="none" className={className} aria-hidden="true"
       style={{ animation: 'fol-spin 90s linear infinite' }}>
       <defs>
-        <linearGradient id="fol-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#C75B2A">
             <animate attributeName="stop-color" values="#C75B2A;#805ad5;#3182ce;#38a169;#d69e2e;#C75B2A" dur="12s" repeatCount="indefinite" />
           </stop>
@@ -45,17 +48,17 @@ function GradientFOL({ className = '' }: { className?: string }) {
           </stop>
         </linearGradient>
       </defs>
-      <circle cx={cx} cy={cy} r={r * 2.2} stroke="url(#fol-grad)" strokeWidth="1.2" opacity="0.3" />
+      <circle cx={cx} cy={cy} r={r * 2.2} stroke={gradUrl} strokeWidth="1.2" opacity="0.3" />
       {[30, 90, 150, 210, 270, 330].map(function (deg, i) {
         const rad = (deg * Math.PI) / 180
-        return <circle key={'o' + i} cx={cx + outerR * Math.cos(rad)} cy={cy + outerR * Math.sin(rad)} r={r} stroke="url(#fol-grad)" strokeWidth="1.5" opacity="0.5" />
+        return <circle key={'o' + i} cx={cx + outerR * Math.cos(rad)} cy={cy + outerR * Math.sin(rad)} r={r} stroke={gradUrl} strokeWidth="1.5" opacity="0.5" />
       })}
       {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
         const rad = (deg * Math.PI) / 180
-        return <circle key={'i' + i} cx={cx + r * Math.cos(rad)} cy={cy + r * Math.sin(rad)} r={r} stroke="url(#fol-grad)" strokeWidth="2" opacity="0.85" />
+        return <circle key={'i' + i} cx={cx + r * Math.cos(rad)} cy={cy + r * Math.sin(rad)} r={r} stroke={gradUrl} strokeWidth="2" opacity="0.85" />
       })}
-      <circle cx={cx} cy={cy} r={r} stroke="url(#fol-grad)" strokeWidth="2.5" opacity="1" />
-      <circle cx={cx} cy={cy} r="3" fill="url(#fol-grad)" opacity="0.6" />
+      <circle cx={cx} cy={cy} r={r} stroke={gradUrl} strokeWidth="2.5" opacity="1" />
+      <circle cx={cx} cy={cy} r="3" fill={gradUrl} opacity="0.6" />
     </svg>
   )
 }
@@ -79,6 +82,7 @@ export default function SplashPage() {
   const [shareOpen, setShareOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const lastSubmittedRef = useRef<GoodThingEntry | null>(null)
+  const firstInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(function () {
     fetch('/api/good-things')
@@ -86,6 +90,13 @@ export default function SplashPage() {
       .then(function (d) { if (d.entries) setEntries(d.entries) })
       .catch(function () {})
   }, [])
+
+  // Autofocus first input when share drawer opens
+  useEffect(function () {
+    if (shareOpen && firstInputRef.current) {
+      setTimeout(function () { firstInputRef.current?.focus() }, 350)
+    }
+  }, [shareOpen])
 
   // Escape key closes drawers
   useEffect(function () {
@@ -385,7 +396,7 @@ export default function SplashPage() {
           {/* ── Ticker — bottom of content area ── */}
           {tickerItems.length > 0 && (
             <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border relative z-[4]">
-              <div className="ticker-track flex items-center gap-12 py-3 whitespace-nowrap">
+              <div className="splash-ticker flex items-center gap-12 py-3 whitespace-nowrap">
                 {tickerItems.concat(tickerItems).map(function (item, i) {
                   return (
                     <button
@@ -400,11 +411,11 @@ export default function SplashPage() {
                   )
                 })}
               </div>
-              <style jsx>{`
-                .ticker-track { animation: ticker-scroll 60s linear infinite; width: max-content; }
-                @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-                .ticker-track:hover { animation-duration: 180s; }
-              `}</style>
+              <style dangerouslySetInnerHTML={{ __html:
+                '.splash-ticker { animation: splash-ticker-scroll 60s linear infinite; width: max-content; }' +
+                '@keyframes splash-ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }' +
+                '.splash-ticker:hover { animation-duration: 180s; }'
+              }} />
             </div>
           )}
 
@@ -446,7 +457,7 @@ export default function SplashPage() {
                       return (
                         <div key={f.n} className="flex items-center gap-2">
                           <span className="w-6 h-6 rounded-full text-white flex items-center justify-center font-bold shrink-0 text-[11px]" style={{ backgroundColor: f.color }}>{f.n}</span>
-                          <input type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
+                          <input ref={f.n === 1 ? firstInputRef : undefined} type="text" value={f.val} onChange={function (e) { f.set(e.target.value) }}
                             placeholder={f.ph} maxLength={280}
                             className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:border-brand-accent transition-colors" />
                         </div>

@@ -36,30 +36,36 @@ function createMarkerIcon(isActive: boolean) {
   })
 }
 
+function buildPopupHtml(entry: Entry) {
+  const loc = [entry.city, entry.state].filter(Boolean).join(', ') || 'ZIP ' + entry.zip_code
+  const date = new Date(entry.created_at).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+  })
+  return (
+    '<div style="font-family:DM Sans,sans-serif;max-width:260px;padding:4px 0;">' +
+      '<div style="font-size:11px;color:#5A6178;margin-bottom:6px;">' + loc + ' &middot; ' + date + '</div>' +
+      [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
+        return '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:flex-start;">' +
+          '<span style="width:16px;height:16px;border-radius:50%;background:' + MARKER_COLORS[i] + ';color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">' + (i + 1) + '</span>' +
+          '<span style="font-size:13px;color:#1A1A1A;line-height:1.4;">' + thing + '</span>' +
+        '</div>'
+      }).join('') +
+    '</div>'
+  )
+}
+
 export function GoodThingsMap({ entries, focusEntry }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
+  const markersRef = useRef<Map<string, L.Marker>>(new Map())
 
+  // Init map once
   useEffect(function () {
     if (!containerRef.current || mapRef.current) return
 
-    const geoEntries = entries.filter(function (e) { return e.latitude != null && e.longitude != null })
-
-    // Default center: Houston, or the focus entry, or first entry
-    let center: [number, number] = [29.76, -95.37]
-    let zoom = 4
-
-    if (focusEntry?.latitude && focusEntry?.longitude) {
-      center = [focusEntry.latitude, focusEntry.longitude]
-      zoom = 10
-    } else if (geoEntries.length > 0) {
-      center = [geoEntries[0].latitude!, geoEntries[0].longitude!]
-      zoom = 10
-    }
-
     const map = L.map(containerRef.current, {
-      center: center,
-      zoom: zoom,
+      center: [29.76, -95.37],
+      zoom: 4,
       scrollWheelZoom: false,
       zoomControl: false,
     })
@@ -71,7 +77,26 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
       maxZoom: 19,
     }).addTo(map)
 
-    // Add markers
+    mapRef.current = map
+
+    return function () {
+      map.remove()
+      mapRef.current = null
+      markersRef.current.clear()
+    }
+  }, [])
+
+  // Update markers when entries change
+  useEffect(function () {
+    const map = mapRef.current
+    if (!map) return
+
+    // Clear existing markers
+    markersRef.current.forEach(function (marker) { marker.remove() })
+    markersRef.current.clear()
+
+    const geoEntries = entries.filter(function (e) { return e.latitude != null && e.longitude != null })
+
     geoEntries.forEach(function (entry) {
       const isActive = focusEntry?.id === entry.id
       const marker = L.marker(
@@ -79,27 +104,13 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
         { icon: createMarkerIcon(isActive) }
       ).addTo(map)
 
-      const loc = [entry.city, entry.state].filter(Boolean).join(', ') || 'ZIP ' + entry.zip_code
-      const date = new Date(entry.created_at).toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', year: 'numeric',
-      })
-
-      marker.bindPopup(
-        '<div style="font-family:DM Sans,sans-serif;max-width:260px;padding:4px 0;">' +
-          '<div style="font-size:11px;color:#5A6178;margin-bottom:6px;">' + loc + ' &middot; ' + date + '</div>' +
-          [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
-            return '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:flex-start;">' +
-              '<span style="width:16px;height:16px;border-radius:50%;background:' + MARKER_COLORS[i] + ';color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">' + (i + 1) + '</span>' +
-              '<span style="font-size:13px;color:#1A1A1A;line-height:1.4;">' + thing + '</span>' +
-            '</div>'
-          }).join('') +
-        '</div>',
-        { closeButton: false, maxWidth: 280 }
-      )
+      marker.bindPopup(buildPopupHtml(entry), { closeButton: false, maxWidth: 280 })
 
       if (isActive) {
         marker.openPopup()
       }
+
+      markersRef.current.set(entry.id, marker)
     })
 
     // Fit bounds if multiple entries and no focus
@@ -107,14 +118,23 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
       const bounds = L.latLngBounds(geoEntries.map(function (e) { return [e.latitude!, e.longitude!] as [number, number] }))
       map.fitBounds(bounds, { padding: [40, 40] })
     }
-
-    mapRef.current = map
-
-    return function () {
-      map.remove()
-      mapRef.current = null
-    }
   }, [entries, focusEntry])
+
+  // Pan to focus entry without rebuilding map
+  useEffect(function () {
+    const map = mapRef.current
+    if (!map || !focusEntry?.latitude || !focusEntry?.longitude) return
+
+    map.flyTo([focusEntry.latitude, focusEntry.longitude], 10, { duration: 0.8 })
+
+    // Update marker icons — highlight focused, reset others
+    markersRef.current.forEach(function (marker, id) {
+      marker.setIcon(createMarkerIcon(id === focusEntry.id))
+      if (id === focusEntry.id) {
+        marker.openPopup()
+      }
+    })
+  }, [focusEntry])
 
   return (
     <div ref={containerRef} className="w-full h-full min-h-[300px]" />
