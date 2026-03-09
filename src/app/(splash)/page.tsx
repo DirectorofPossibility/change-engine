@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { Send, Mail, Download, X } from 'lucide-react'
+import { Send, Mail, Download, X, Menu } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 
 const GoodThingsMap = dynamic(
@@ -77,6 +77,7 @@ export default function SplashPage() {
   const [panel, setPanel] = useState<'goodthings' | 'beta'>('goodthings')
   const [showImagine, setShowImagine] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const lastSubmittedRef = useRef<GoodThingEntry | null>(null)
 
   useEffect(function () {
@@ -86,9 +87,22 @@ export default function SplashPage() {
       .catch(function () {})
   }, [])
 
+  // Escape key closes drawers
+  useEffect(function () {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        if (shareOpen) setShareOpen(false)
+        if (mobileMenuOpen) setMobileMenuOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return function () { window.removeEventListener('keydown', handleKeyDown) }
+  }, [shareOpen, mobileMenuOpen])
+
   const handleTickerClick = useCallback(function (entry: GoodThingEntry) {
     setPanel('goodthings')
     setFocusEntry(entry)
+    setMobileMenuOpen(false)
   }, [])
 
   async function handleGoodThings(e: React.FormEvent) {
@@ -162,6 +176,99 @@ export default function SplashPage() {
     })
   })
 
+  /* Sidebar content — shared between desktop aside and mobile drawer */
+  const sidebarContent = (
+    <>
+      {/* Brand identity block */}
+      <div className="relative px-5 pt-5 pb-4">
+        {/* FOL as background watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.08]">
+          <GradientFOL className="w-[140%] max-w-none" />
+        </div>
+        {/* Foreground content */}
+        <div className="relative z-10 flex items-start gap-3">
+          <GradientFOL className="w-12 h-12 shrink-0 mt-0.5" />
+          <div>
+            <h1 className="font-serif text-xl font-bold text-brand-text leading-tight tracking-tight">Change<br />Engine</h1>
+            <p className="text-brand-muted text-xs font-serif leading-snug mt-1">Connecting<br />Houston Neighbors</p>
+          </div>
+        </div>
+        <div className="relative z-10 mt-3 flex items-center gap-2">
+          <span className="h-px flex-1 bg-brand-accent/30" />
+          <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">Coming Soon</span>
+          <span className="h-px flex-1 bg-brand-accent/30" />
+        </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex-1 px-4 py-1 space-y-1.5">
+        <button
+          onClick={function () { setPanel('goodthings'); setMobileMenuOpen(false) }}
+          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
+            (panel === 'goodthings'
+              ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
+              : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
+        >
+          Three Good Things
+        </button>
+
+        <button
+          onClick={function () { setShowImagine(!showImagine) }}
+          className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+        >
+          <span className="flex items-center justify-between">
+            Can You Imagine&hellip;
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+              className={'transition-transform ' + (showImagine ? 'rotate-180' : '')}>
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </span>
+        </button>
+        {showImagine && (
+          <p className="text-xs text-brand-muted leading-relaxed px-4 pb-1">
+            Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
+          </p>
+        )}
+
+        <a
+          href="https://thechangelab.substack.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+        >
+          Read Our Substack
+        </a>
+
+        <Link
+          href="/login"
+          className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+        >
+          Beta Tester Login
+        </Link>
+
+        <button
+          onClick={function () { setPanel('beta'); setMobileMenuOpen(false) }}
+          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
+            (panel === 'beta'
+              ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
+              : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
+        >
+          Sign Up to Be a Beta Tester
+        </button>
+      </div>
+
+      {/* Footer */}
+      <div className="px-5 py-2 mt-auto">
+        <p className="text-[10px] text-brand-muted-light font-mono text-center">
+          A project of{' '}
+          <a href="https://www.thechangelab.net/about2" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors underline">
+            The Change Lab
+          </a>
+        </p>
+      </div>
+    </>
+  )
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-brand-bg relative">
 
@@ -176,120 +283,84 @@ export default function SplashPage() {
         <div style={{ background: '#805ad5' }} />
       </div>
 
+      {/* ── Mobile header ── */}
+      <div className="md:hidden shrink-0 bg-brand-bg-alt border-b border-brand-border px-4 py-2.5 flex items-center justify-between relative z-30">
+        <div className="flex items-center gap-2.5">
+          <GradientFOL className="w-9 h-9" />
+          <div>
+            <span className="font-serif text-base font-bold text-brand-text leading-none block">Change Engine</span>
+            <span className="text-[9px] font-mono text-brand-accent uppercase tracking-widest">Coming Soon</span>
+          </div>
+        </div>
+        <button onClick={function () { setMobileMenuOpen(!mobileMenuOpen) }} className="text-brand-text p-1">
+          <Menu size={22} />
+        </button>
+      </div>
+
+      {/* ── Mobile menu overlay ── */}
+      {mobileMenuOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/30 z-30 md:hidden" onClick={function () { setMobileMenuOpen(false) }} />
+          <div className="fixed top-0 left-0 w-80 max-w-[85vw] h-full bg-brand-bg-alt z-40 shadow-xl overflow-y-auto flex flex-col md:hidden animate-slide-in">
+            <div className="flex items-center justify-between p-4 border-b border-brand-border">
+              <span className="font-serif text-lg font-bold text-brand-text">Menu</span>
+              <button onClick={function () { setMobileMenuOpen(false) }} className="text-brand-muted hover:text-brand-text">
+                <X size={18} />
+              </button>
+            </div>
+            {sidebarContent}
+          </div>
+        </>
+      )}
+
       {/* ── Main layout ── */}
       <div className="flex-1 flex min-h-0 relative z-10">
 
-        {/* ── LEFT COLUMN ── */}
-        <aside className="w-72 lg:w-80 shrink-0 bg-brand-bg-alt border-r border-brand-border flex flex-col overflow-y-auto">
-
-          {/* FOL full width */}
-          <GradientFOL className="w-full" />
-
-          {/* Title */}
-          <div className="px-4 pb-1 text-center">
-            <h1 className="font-serif text-2xl font-bold text-brand-text leading-none">Change Engine</h1>
-            <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-accent mt-1.5">Coming Soon</p>
-            <p className="text-xs text-brand-muted mt-0.5 font-serif">Connecting Houston Neighbors</p>
-          </div>
-
-          <div className="h-px bg-brand-border mx-4 my-1" />
-
-          {/* Buttons */}
-          <div className="flex-1 px-4 py-1 space-y-1.5">
-            <button
-              onClick={function () { setPanel('goodthings') }}
-              className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
-                (panel === 'goodthings'
-                  ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
-                  : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
-            >
-              Three Good Things
-            </button>
-
-            {/* Can you imagine */}
-            <button
-              onClick={function () { setShowImagine(!showImagine) }}
-              className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
-            >
-              <span className="flex items-center justify-between">
-                Can You Imagine&hellip;
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                  className={'transition-transform ' + (showImagine ? 'rotate-180' : '')}>
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </span>
-            </button>
-            {showImagine && (
-              <p className="text-xs text-brand-muted leading-relaxed px-4 pb-1">
-                Knowing who represents you — and how to reach them. Finding every resource in your ZIP code — in one place. Understanding the policies passed in your name. Neighbors sharing what they know — everyone gets stronger.
-              </p>
-            )}
-
-            <a
-              href="https://thechangelab.substack.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
-            >
-              Read Our Substack
-            </a>
-
-            <Link
-              href="/login"
-              className="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
-            >
-              Beta Tester Login
-            </Link>
-
-            <button
-              onClick={function () { setPanel('beta') }}
-              className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ' +
-                (panel === 'beta'
-                  ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
-                  : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
-            >
-              Sign Up to Be a Beta Tester
-            </button>
-          </div>
-
-          {/* Footer */}
-          <div className="px-5 py-2 mt-auto">
-            <p className="text-[10px] text-brand-muted-light font-mono text-center">
-              A project of{' '}
-              <a href="https://www.thechangelab.net/about2" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors underline">
-                The Change Lab
-              </a>
-            </p>
-          </div>
+        {/* ── LEFT COLUMN — desktop only ── */}
+        <aside className="hidden md:flex w-72 lg:w-80 shrink-0 bg-brand-bg-alt border-r border-brand-border flex-col overflow-y-auto">
+          {sidebarContent}
         </aside>
 
         {/* ── CONTENT AREA ── */}
         <main className="flex-1 flex flex-col min-h-0 min-w-0 relative">
 
-          {panel === 'goodthings' && (
-            <div className="flex-1 min-h-0 relative">
-              <GoodThingsMap entries={entries} focusEntry={focusEntry} />
-              {/* Map label — pulsing */}
-              <div className="absolute top-4 left-4 z-[2] pointer-events-none">
-                <div className="bg-white/90 backdrop-blur-sm border border-brand-border rounded-lg px-3 py-1.5 shadow-sm animate-map-pulse">
-                  <p className="font-serif text-sm font-bold text-brand-text">Three Good Things</p>
-                  <p className="text-[10px] text-brand-muted font-mono">{entries.length} shared by neighbors</p>
+          {/* Map — always visible as background when beta panel is open */}
+          <div className={'flex-1 min-h-0 relative ' + (panel !== 'goodthings' ? 'opacity-30' : '')}>
+            <GoodThingsMap entries={entries} focusEntry={focusEntry} />
+            {/* Program banner */}
+            <div className="absolute top-0 left-0 right-0 z-[2] pointer-events-none">
+              <div className="bg-white/95 backdrop-blur-sm border-b border-brand-border px-5 py-2.5 flex items-center justify-between animate-map-pulse">
+                <div className="flex items-center gap-3">
+                  <FlowerOfLifeIcon size={20} color="#38a169" />
+                  <div>
+                    <p className="font-serif text-base font-bold text-brand-text leading-tight">Three Good Things</p>
+                    <p className="text-[10px] text-brand-muted font-mono uppercase tracking-wider">A Change Engine Program</p>
+                  </div>
                 </div>
+                <p className="text-xs text-brand-muted font-mono">{entries.length} shared by neighbors</p>
               </div>
             </div>
-          )}
+          </div>
 
+          {/* Beta overlay — floats over dimmed map */}
           {panel === 'beta' && (
-            <div className="flex-1 flex items-center justify-center p-8">
+            <div className="absolute inset-0 flex items-center justify-center p-8 z-[3]">
               <div className="w-full max-w-md">
                 {betaSent ? (
-                  <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-8 text-center shadow-offset">
+                  <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-8 text-center shadow-xl">
                     <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
                     <p className="font-serif text-xl font-bold text-brand-text mb-2">Request sent!</p>
                     <p className="text-sm text-brand-muted">Complete the email that just opened.</p>
+                    <button onClick={function () { setPanel('goodthings') }}
+                      className="mt-4 text-sm text-brand-accent font-semibold hover:underline">Back to map</button>
                   </div>
                 ) : (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-offset-lg relative z-10">
+                  <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-xl">
+                    <div className="flex justify-end mb-2">
+                      <button onClick={function () { setPanel('goodthings') }} className="text-brand-muted hover:text-brand-text transition-colors">
+                        <X size={18} />
+                      </button>
+                    </div>
                     <FlowerOfLifeIcon size={32} color="#C75B2A" className="mx-auto mb-4" />
                     <h2 className="font-serif text-2xl font-bold text-brand-text text-center mb-2">Join the Beta</h2>
                     <p className="text-sm text-brand-muted text-center mb-6">Get early access to the full Change Engine Community Exchange.</p>
@@ -313,7 +384,7 @@ export default function SplashPage() {
 
           {/* ── Ticker — bottom of content area ── */}
           {tickerItems.length > 0 && (
-            <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border">
+            <div className="shrink-0 bg-brand-bg-alt overflow-hidden border-t border-brand-border relative z-[4]">
               <div className="ticker-track flex items-center gap-12 py-3 whitespace-nowrap">
                 {tickerItems.concat(tickerItems).map(function (item, i) {
                   return (
@@ -337,15 +408,20 @@ export default function SplashPage() {
             </div>
           )}
 
-          {/* ── "Share the Good" tab on right edge ── */}
+          {/* ── "Share the Good" tab on right edge — gentle bounce on load ── */}
           {!shareOpen && (
             <button
               onClick={function () { setShareOpen(true) }}
-              className="absolute top-1/2 right-0 -translate-y-1/2 z-20 bg-brand-accent text-white font-semibold text-sm px-2 py-6 rounded-l-xl shadow-lg hover:bg-brand-accent-hover transition-colors"
+              className="absolute top-1/2 right-0 -translate-y-1/2 z-20 bg-brand-accent text-white font-semibold text-sm px-2 py-6 rounded-l-xl shadow-lg hover:bg-brand-accent-hover transition-colors animate-tab-nudge"
               style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
             >
               Share the Good
             </button>
+          )}
+
+          {/* ── Share drawer backdrop ── */}
+          {shareOpen && (
+            <div className="absolute inset-0 bg-black/20 z-[19]" onClick={function () { setShareOpen(false) }} />
           )}
 
           {/* ── Slide-out share drawer ── */}
@@ -421,13 +497,28 @@ export default function SplashPage() {
         </main>
       </div>
 
-      {/* Pulse animation for map label */}
+      {/* Animations */}
       <style jsx global>{`
         @keyframes map-pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.9; }
         }
         .animate-map-pulse { animation: map-pulse 3s ease-in-out infinite; }
+
+        @keyframes tab-nudge {
+          0%, 100% { transform: translateY(-50%) translateX(0); }
+          15% { transform: translateY(-50%) translateX(-6px); }
+          30% { transform: translateY(-50%) translateX(0); }
+          45% { transform: translateY(-50%) translateX(-4px); }
+          60% { transform: translateY(-50%) translateX(0); }
+        }
+        .animate-tab-nudge { animation: tab-nudge 3s ease-in-out 1s 1; }
+
+        @keyframes slide-in {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
+        .animate-slide-in { animation: slide-in 0.25s ease-out; }
       `}</style>
     </div>
   )
