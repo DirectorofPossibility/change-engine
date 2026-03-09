@@ -1,10 +1,10 @@
 /**
- * @fileoverview Homepage for The Change Engine.
+ * @fileoverview Homepage for The Change Engine Community Exchange.
  *
  * @datasource Supabase tables: content_published, services_211, elected_officials,
  *   organizations, policies, focus_areas
  * @caching ISR with `revalidate = 600` (10 minutes)
- * @route GET /
+ * @route GET /exchange
  */
 
 import type { Metadata } from 'next'
@@ -23,11 +23,11 @@ import { D2Home } from '@/components/exchange/D2Home'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Community Exchange — Powered by The Change Lab',
+  title: 'Community Exchange — Powered by The Change Engine',
   description: 'Your wayfinder to services, civic engagement, and community resources in Houston, Texas.',
 }
 
-export default async function HomePage() {
+export default async function ExchangeHomePage() {
   const cookieStore = await cookies()
   const designV1 = cookieStore.get('design')?.value === 'v1'
 
