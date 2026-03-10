@@ -15,6 +15,7 @@ import { useTranslation } from '@/lib/use-translation'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { AuthButton } from './AuthButton'
+import { isRouteEnabled } from '@/lib/feature-flags'
 
 const PATHWAY_ICONS: Record<string, typeof Heart> = {
   THEME_01: Heart,
@@ -232,7 +233,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
         </button>
         {discoverOpen && (
           <div className="space-y-0.5">
-            {DISCOVER_LINKS.map(function (item) {
+            {DISCOVER_LINKS.filter(function (item) { return isRouteEnabled(item.href) }).map(function (item) {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
               return (
                 <Link

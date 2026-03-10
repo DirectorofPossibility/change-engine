@@ -16,6 +16,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { isRouteEnabled } from '@/lib/feature-flags'
 
 // ── Middleware ──
 
@@ -51,6 +52,14 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
+
+  // Feature flag gate — redirect disabled routes to /coming-soon
+  if (!isRouteEnabled(pathname) && pathname !== '/coming-soon') {
+    const comingSoonUrl = request.nextUrl.clone()
+    comingSoonUrl.pathname = '/coming-soon'
+    comingSoonUrl.search = ''
+    return NextResponse.redirect(comingSoonUrl)
+  }
 
   // Logged-in users hitting splash → send to exchange
   if (pathname === '/' && user) {

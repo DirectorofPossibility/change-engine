@@ -8,6 +8,7 @@ import { THEMES, BRAND } from '@/lib/constants'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { NeighborhoodWidget } from './NeighborhoodBanner'
 import { useTranslation } from '@/lib/use-translation'
+import { filterNavItems, isSectionVisible } from '@/lib/feature-flags'
 
 const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({
   id,
@@ -141,8 +142,12 @@ export function LeftNav() {
       {/* Navigation sections */}
       <div className="flex-1 overflow-y-auto px-3 pt-2">
 
-        {/* Intent-based navigation groups */}
+        {/* Intent-based navigation groups — filtered by launch phase */}
         {NAV_SECTIONS.map(function (section) {
+          return { ...section, items: filterNavItems(section.items) }
+        }).filter(function (section) {
+          return isSectionVisible(section.items)
+        }).map(function (section) {
           const isExpanded = expandedSections[section.key] ?? false
           const hasActiveItem = section.items.some(
             function (item) { return pathname === item.href || pathname?.startsWith(item.href + '/') }

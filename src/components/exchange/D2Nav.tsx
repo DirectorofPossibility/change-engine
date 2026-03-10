@@ -11,6 +11,7 @@ import { ZipInput } from './ZipInput'
 import { SpiralProgress } from './SpiralProgress'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
+import { filterNavItems, isSectionVisible } from '@/lib/feature-flags'
 
 function useCenters(t: (key: string) => string) {
   return [
@@ -92,8 +93,14 @@ export function D2Nav() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { t } = useTranslation()
 
-  const centers = useCenters(t)
-  const discoverLinks = useDiscoverLinks(t)
+  const rawCenters = useCenters(t)
+  const rawDiscoverLinks = useDiscoverLinks(t)
+
+  // Filter nav items based on launch phase
+  const centers = rawCenters
+    .map(c => ({ ...c, items: filterNavItems(c.items) }))
+    .filter(c => isSectionVisible(c.items))
+  const discoverLinks = filterNavItems(rawDiscoverLinks)
 
   const closeDrawer = useCallback(function () { setDrawerOpen(false) }, [])
 
