@@ -22,6 +22,7 @@ export type LaunchPhase = 'mvp' | 'update1' | 'update2' | 'update3' | 'update4' 
 const PHASE_ROUTES: Record<LaunchPhase, string[]> = {
   mvp: [
     // Core experience — the Compass links to all of these
+    '/exchange',
     '/compass',
     '/search',
     '/officials',

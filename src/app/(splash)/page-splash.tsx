@@ -179,7 +179,7 @@ export default function SplashPage() {
           <p className="text-xs text-brand-muted font-serif mt-1">{t('splash.subtitle')}</p>
           <div className="mt-2 flex items-center gap-2">
             <span className="h-px flex-1 bg-brand-accent/30" />
-            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">{t('splash.coming_soon')}</span>
+            <span className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-brand-accent">Beta</span>
             <span className="h-px flex-1 bg-brand-accent/30" />
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function SplashPage() {
         >
           <span className="flex items-center gap-2.5">
             <Info size={16} className="text-brand-muted shrink-0" />
-            <span className="flex-1">{t('splash.coming_soon')}</span>
+            <span className="flex-1">Beta</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
               className={'transition-transform shrink-0 ' + (showImagine ? 'rotate-180' : '')}>
               <path d="M6 9l6 6 6-6" />
@@ -339,7 +339,7 @@ export default function SplashPage() {
           <GradientFOL className="w-9 h-9" />
           <div>
             <span className="font-serif text-base font-bold text-brand-text leading-none block">{t('splash.title')}</span>
-            <span className="text-[9px] font-mono text-brand-accent uppercase tracking-widest">{t('splash.coming_soon')}</span>
+            <span className="text-[9px] font-mono text-brand-accent uppercase tracking-widest">Beta</span>
           </div>
         </div>
         <button onClick={function () { setMobileMenuOpen(!mobileMenuOpen) }} className="text-brand-text p-1">

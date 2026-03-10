@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation'
+import SplashPage from './page-splash'
 
-export default function SplashRedirect() {
-  redirect('/exchange')
+export default function SplashRoute() {
+  return <SplashPage />
 }

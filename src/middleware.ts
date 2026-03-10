@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(comingSoonUrl)
   }
 
-  // Logged-in users hitting splash → send to exchange
+  // Logged-in users hitting splash → send to compass
   if (pathname === '/' && user) {
     const exchangeUrl = request.nextUrl.clone()
     exchangeUrl.pathname = '/compass'
@@ -69,7 +69,6 @@ export async function middleware(request: NextRequest) {
   }
 
   // Non-logged-in users hitting exchange pages → send to splash
-  // Allow: /, /login, /signup, /reset-password, /goodthings, /api/*, /auth/*, static assets
   const publicPaths = ['/', '/login', '/signup', '/reset-password', '/goodthings', '/account-locked', '/accessibility', '/privacy', '/terms', '/about', '/coming-soon']
   const isPublicPath = publicPaths.some(function (p) { return pathname === p })
   const isPublicPrefix = pathname.startsWith('/api/') || pathname.startsWith('/auth/') || pathname.startsWith('/_next/') || pathname.startsWith('/goodthings/')

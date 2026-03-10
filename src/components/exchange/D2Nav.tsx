@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { X, Menu, Search } from 'lucide-react'
+import { HeaderSearch } from './HeaderSearch'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { ArchetypeSelector } from './ArchetypeSelector'
 import { LanguageSwitcher } from './LanguageSwitcher'
@@ -167,9 +168,7 @@ export function D2Nav() {
           {/* Right side */}
           <div className="flex items-center gap-2.5">
             <div className="hidden md:block">
-              <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors" aria-label={t('nav.search_placeholder')}>
-                <Search size={18} className="text-brand-muted" />
-              </Link>
+              <HeaderSearch />
             </div>
             <div className="hidden md:block">
               <LanguageSwitcher />
