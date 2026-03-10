@@ -44,10 +44,6 @@ export default function SplashPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
-  const [betaEmail, setBetaEmail] = useState('')
-  const [betaName, setBetaName] = useState('')
-  const [betaSent, setBetaSent] = useState(false)
-  const [panel, setPanel] = useState<'goodthings' | 'beta'>('goodthings')
   const [showImagine, setShowImagine] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -82,7 +78,6 @@ export default function SplashPage() {
   }, [shareOpen, mobileMenuOpen])
 
   const handleTickerClick = useCallback(function (entry: GoodThingEntry) {
-    setPanel('goodthings')
     setFocusEntry(entry)
     setMobileMenuOpen(false)
   }, [])
@@ -104,7 +99,6 @@ export default function SplashPage() {
       setFocusEntry(entry)
       setEntries(function (prev) { return [entry, ...prev] })
       setSubmitted(true)
-      setPanel('goodthings')
     } catch { setError(t('splash.network_error')) } finally { setSubmitting(false) }
   }
 
@@ -144,13 +138,6 @@ export default function SplashPage() {
     URL.revokeObjectURL(url)
   }
 
-  function handleBeta(e: React.FormEvent) {
-    e.preventDefault()
-    const body = encodeURIComponent(`Name: ${betaName}\nEmail: ${betaEmail}\n\nI'd like to beta test Change Engine.`)
-    window.location.href = `mailto:hello@thechangelab.net?subject=${encodeURIComponent('Beta Tester Request')}&body=${body}`
-    setBetaSent(true)
-  }
-
   const tickerItems = entries.slice(0, 40).flatMap(function (entry) {
     const who = entry.display_name || [entry.city, entry.state].filter(Boolean).join(', ') || entry.zip_code
     return [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
@@ -188,13 +175,10 @@ export default function SplashPage() {
       {/* Buttons */}
       <div className="flex-1 px-4 py-1 space-y-1.5">
         <button
-          onClick={function () { setPanel('goodthings'); setMobileMenuOpen(false) }}
-          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all flex items-center gap-2.5 ' +
-            (panel === 'goodthings'
-              ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
-              : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
+          onClick={function () { setShareOpen(true); setMobileMenuOpen(false) }}
+          className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all flex items-center gap-2.5"
         >
-          <FlowerOfLifeIcon size={16} color={panel === 'goodthings' ? '#C75B2A' : '#38a169'} />
+          <FlowerOfLifeIcon size={16} color="#38a169" />
           {t('splash.three_good_things')}
         </button>
 
@@ -257,16 +241,13 @@ export default function SplashPage() {
           {t('splash.beta_login')}
         </Link>
 
-        <button
-          onClick={function () { setPanel('beta'); setMobileMenuOpen(false) }}
-          className={'w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all flex items-center gap-2.5 ' +
-            (panel === 'beta'
-              ? 'border-brand-accent bg-white text-brand-accent shadow-offset'
-              : 'border-brand-border bg-white text-brand-text hover:border-brand-accent/40')}
+        <Link
+          href="/signup"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
-          <UserPlus size={16} className={'shrink-0 ' + (panel === 'beta' ? 'text-brand-accent' : 'text-brand-muted')} />
+          <UserPlus size={16} className="text-brand-muted shrink-0" />
           {t('splash.beta_signup')}
-        </button>
+        </Link>
 
         <div className="h-px bg-brand-border my-1" />
 
@@ -375,7 +356,7 @@ export default function SplashPage() {
         <main className="flex-1 flex flex-col min-h-0 min-w-0 relative">
 
           {/* Map — always visible as background when beta panel is open */}
-          <div className={'flex-1 min-h-0 relative ' + (panel !== 'goodthings' ? 'opacity-30' : '')}>
+          <div className="flex-1 min-h-0 relative">
             <GoodThingsMap entries={entries} focusEntry={focusEntry} />
             {/* Program banner */}
             <div className="absolute top-0 left-0 right-0 z-[2]">
@@ -410,46 +391,6 @@ export default function SplashPage() {
               </div>
             </div>
           </div>
-
-          {/* Beta overlay — floats over dimmed map */}
-          {panel === 'beta' && (
-            <div className="absolute inset-0 flex items-center justify-center p-8 z-[3]">
-              <div className="w-full max-w-md">
-                {betaSent ? (
-                  <div className="bg-white rounded-xl border-2 border-[#38a169]/30 p-8 text-center shadow-xl">
-                    <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
-                    <p className="font-serif text-xl font-bold text-brand-text mb-2">{t('splash.request_sent')}</p>
-                    <p className="text-sm text-brand-muted">{t('splash.complete_email')}</p>
-                    <button onClick={function () { setPanel('goodthings') }}
-                      className="mt-4 text-sm text-brand-accent font-semibold hover:underline">{t('splash.back_to_map')}</button>
-                  </div>
-                ) : (
-                  <div className="bg-white rounded-xl border border-brand-border p-8 shadow-xl">
-                    <div className="flex justify-end mb-2">
-                      <button onClick={function () { setPanel('goodthings') }} className="text-brand-muted hover:text-brand-text transition-colors">
-                        <X size={18} />
-                      </button>
-                    </div>
-                    <FlowerOfLifeIcon size={32} color="#C75B2A" className="mx-auto mb-4" />
-                    <h2 className="font-serif text-2xl font-bold text-brand-text text-center mb-2">{t('splash.join_beta')}</h2>
-                    <p className="text-sm text-brand-muted text-center mb-6">{t('splash.beta_desc')}</p>
-                    <form onSubmit={handleBeta} className="space-y-4">
-                      <input type="text" required value={betaName} onChange={function (e) { setBetaName(e.target.value) }}
-                        placeholder={t('splash.your_name')}
-                        className="w-full px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
-                      <input type="email" required value={betaEmail} onChange={function (e) { setBetaEmail(e.target.value) }}
-                        placeholder={t('splash.your_email')}
-                        className="w-full px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
-                      <button type="submit"
-                        className="w-full py-3 bg-brand-accent text-white rounded-xl font-semibold hover:bg-brand-accent-hover transition-colors">
-                        {t('splash.request_beta')}
-                      </button>
-                    </form>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* ── Ticker — bottom of content area ── */}
           {tickerItems.length > 0 && (
