@@ -11,6 +11,10 @@ import { CivicTimeline } from '@/components/exchange/CivicTimeline'
 import { CommunityImpactCard } from '@/components/exchange/CommunityImpactCard'
 import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
+import { ElectionTimeline } from '@/components/exchange/ElectionTimeline'
+import { MyBallot } from '@/components/exchange/MyBallot'
+import CivicScorecard from '@/components/exchange/CivicScorecard'
+import ElectionReminderSignup from '@/components/exchange/ElectionReminderSignup'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { MapPin, ExternalLink, ChevronRight, BookOpen, ClipboardCheck, Mail, Users } from 'lucide-react'
 import { InfoBubble } from '@/components/exchange/InfoBubble'
@@ -216,8 +220,30 @@ export function VotingDashboardClient({
               <InfoBubble id={TOOLTIPS.election_countdown.id} text={TOOLTIPS.election_countdown.text} position="bottom" />
             </div>
 
+            {/* Visual deadline timeline */}
+            <ElectionTimeline
+              electionName={nextElection.election_name}
+              electionDate={nextElection.election_date}
+              registrationDeadline={nextElection.registration_deadline}
+              earlyVotingStart={nextElection.early_voting_start}
+              earlyVotingEnd={nextElection.early_voting_end}
+              pollsOpen={nextElection.polls_open}
+              pollsClose={nextElection.polls_close}
+              registerUrl={nextElection.register_url || 'https://www.votetexas.gov/register-to-vote/'}
+              findPollingUrl={nextElection.find_polling_url || 'https://www.harrisvotes.com/Polling-Locations'}
+            />
+
             {nextElection.community_impact_summary && (
               <CommunityImpactCard summary={nextElection.community_impact_summary} />
+            )}
+
+            {/* What's on Your Ballot — personalized */}
+            {upcomingCandidates.length > 0 && (
+              <MyBallot
+                candidates={upcomingCandidates}
+                electionName={nextElection.election_name}
+                electionDate={nextElection.election_date}
+              />
             )}
 
             {/* Upcoming ballot items */}
@@ -444,6 +470,17 @@ export function VotingDashboardClient({
           </div>
         </section>
       )}
+
+      {/* ═══════════════════════════════════════════════════
+          SECTION 5: Your Civic Journey + Get Reminders
+          ═══════════════════════════════════════════════════ */}
+      <section>
+        <SectionHeading title="Your Civic Journey" color="#38a169" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <CivicScorecard />
+          <ElectionReminderSignup />
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════════════
           Quick Action Links (replaces the old emoji cards)

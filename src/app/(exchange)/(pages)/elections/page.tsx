@@ -67,6 +67,7 @@ export default async function ElectionsPage({
                 currentPage="elections"
                 color="#e53e3e"
                 related={[
+                  { label: 'My Neighborhood', href: '/my-neighborhood', color: '#38a169' },
                   { label: 'Call Your Senators', href: '/call-your-senators', color: '#e53e3e' },
                   { label: 'Officials', href: '/officials', color: '#805ad5' },
                   { label: 'Policies', href: '/policies', color: '#3182ce' },

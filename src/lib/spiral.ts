@@ -55,6 +55,9 @@ const ACTION_TIERS: Record<string, SpiralTier> = {
   share_good_thing: 'involved',
   call_senator: 'involved',
   find_polling: 'involved',
+  register_vote: 'involved',
+  contact_rep: 'involved',
+  attend_event: 'involved',
   share_content: 'involved',
   save_item: 'involved',
   // Go Deeper
@@ -197,4 +200,89 @@ export function resetSpiral() {
   if (typeof window !== 'undefined') {
     localStorage.removeItem(STORAGE_KEY)
   }
+}
+
+// ── Civic Scorecard ──
+
+export interface CivicChecklistItem {
+  action: string
+  label: string
+  completed: boolean
+  completedAt?: string
+  href: string
+}
+
+/** Build a civic engagement checklist from logged spiral actions */
+export function getCivicChecklist(): CivicChecklistItem[] {
+  const state = getSpiralState()
+  const actions = state.actions
+
+  function findAction(actionName: string, pathway?: string): SpiralAction | undefined {
+    return actions.find(a => a.action === actionName && (!pathway || a.pathway === pathway))
+  }
+
+  function countActions(...actionNames: string[]): number {
+    return actions.filter(a => actionNames.includes(a.action)).length
+  }
+
+  const registerAction = findAction('register_vote')
+  const lookupAction = findAction('view_official') || findAction('call_senator')
+  const electionGuideAction = actions.find(a => a.action === 'read_article' && a.pathway === 'THEME_04')
+  const pollingAction = findAction('find_polling')
+  const resourceCount = countActions('search', 'read_article')
+  const resourceAction = resourceCount >= 5 ? actions.filter(a => a.action === 'search' || a.action === 'read_article')[4] : undefined
+  const eventAction = findAction('attend_event') || findAction('view_event')
+  const contactAction = findAction('contact_rep') || findAction('call_senator')
+
+  return [
+    {
+      action: 'register_vote',
+      label: 'Registered to vote',
+      completed: !!registerAction,
+      completedAt: registerAction?.ts,
+      href: '/elections',
+    },
+    {
+      action: 'lookup_reps',
+      label: 'Looked up representatives',
+      completed: !!lookupAction,
+      completedAt: lookupAction?.ts,
+      href: '/officials/lookup',
+    },
+    {
+      action: 'read_election_guide',
+      label: 'Read election guide',
+      completed: !!electionGuideAction,
+      completedAt: electionGuideAction?.ts,
+      href: '/elections',
+    },
+    {
+      action: 'find_polling',
+      label: 'Found polling place',
+      completed: !!pollingAction,
+      completedAt: pollingAction?.ts,
+      href: '/polling-places',
+    },
+    {
+      action: 'explore_resources',
+      label: 'Explored community resources',
+      completed: !!resourceAction,
+      completedAt: resourceAction?.ts,
+      href: '/services',
+    },
+    {
+      action: 'attend_event',
+      label: 'Attended or RSVP\'d to an event',
+      completed: !!eventAction,
+      completedAt: eventAction?.ts,
+      href: '/events',
+    },
+    {
+      action: 'contact_rep',
+      label: 'Contacted a representative',
+      completed: !!contactAction,
+      completedAt: contactAction?.ts,
+      href: '/call-your-senators',
+    },
+  ]
 }
