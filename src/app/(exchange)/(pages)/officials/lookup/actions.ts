@@ -113,11 +113,12 @@ export async function lookupCivicProfile(input: string): Promise<{ data?: CivicP
   if (!zipData) return { error: 'zip_not_found' }
 
   // Step 2: Find matching officials
+  // District IDs are normalized: TX-18 (federal), SD-13/HD-147 (state), A-K (city council)
   const districts = [
-    zipData.congressional_district,
-    zipData.state_senate_district,
-    zipData.state_house_district,
-    'TX',
+    zipData.congressional_district,    // e.g. "TX-18"
+    zipData.state_senate_district,     // e.g. "SD-13"
+    zipData.state_house_district,      // e.g. "HD-147"
+    'TX-SEN',                          // Both US Senators
   ].filter(Boolean)
 
   // Look up council district from neighborhoods
@@ -133,7 +134,9 @@ export async function lookupCivicProfile(input: string): Promise<{ data?: CivicP
   if (councilDistrict) {
     filterParts += ',district_id.eq.' + councilDistrict
   }
+  // At-Large council members + Mayor (null district = citywide)
   filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
+  // County officials + Governor via counties_served
   if (zipData.county_id) {
     filterParts += ',counties_served.like.%' + zipData.county_id + '%'
   }

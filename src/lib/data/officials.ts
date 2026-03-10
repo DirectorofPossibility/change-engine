@@ -31,11 +31,12 @@ export async function getOfficialsByZip(zip: string) {
 
   if (!zipData) return null
 
+  // District IDs are normalized: TX-18 (federal), SD-13/HD-147 (state), A-K (city council)
   const districts = [
-    zipData.congressional_district,
-    zipData.state_senate_district,
-    zipData.state_house_district,
-    'TX',
+    zipData.congressional_district,    // e.g. "TX-18"
+    zipData.state_senate_district,     // e.g. "SD-13"
+    zipData.state_house_district,      // e.g. "HD-147"
+    'TX-SEN',                          // Both US Senators
   ].filter(Boolean)
 
   // Look up city council district from neighborhoods table
@@ -49,12 +50,12 @@ export async function getOfficialsByZip(zip: string) {
   const councilDistrict = hoodRows?.[0]?.council_district || null
 
   let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-  // City officials: Mayor (null district) + At-Large + specific council district
   if (councilDistrict) {
     filterParts += ',district_id.eq.' + councilDistrict
   }
-  // Always include At-Large and Mayor (city-wide officials)
+  // At-Large council members + Mayor (null district = citywide)
   filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
+  // County officials + Governor via counties_served
   if (zipData.county_id) {
     filterParts += ',counties_served.like.%' + zipData.county_id + '%'
   }

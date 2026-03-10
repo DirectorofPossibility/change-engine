@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 import { getServices, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { ServicesClient } from './ServicesClient'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
@@ -16,13 +17,29 @@ export const metadata: Metadata = {
 
 export default async function ServicesPage({ searchParams }: { searchParams: Promise<{ zip?: string }> }) {
   const { zip: urlZip } = await searchParams
-  const services = await getServices()
+  const supabase = await createClient()
+
+  const [services, { data: categories }] = await Promise.all([
+    getServices(),
+    supabase.from('service_categories').select('*').order('service_cat_name'),
+  ])
 
   const langId = await getLangId()
   const serviceIds = services.map(function (s) { return s.service_id })
   const translations = langId ? await fetchTranslationsForTable('services_211', serviceIds, langId) : {}
 
-  // Stats for social proof
+  // Build category map for the client
+  const categoryMap = (categories ?? []).reduce<Record<string, { name: string; description: string; examples: string }>>(
+    function (acc, c) {
+      acc[c.service_cat_id] = {
+        name: c.service_cat_name,
+        description: c.description_5th_grade ?? '',
+        examples: c.example_services ?? '',
+      }
+      return acc
+    }, {}
+  )
+
   const withLocation = services.filter(function (s) { return s.latitude != null }).length
   const uniqueOrgs = new Set(services.map(function (s) { return s.org_id }).filter(Boolean)).size
 
@@ -39,11 +56,11 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
         pattern="flower"
         titleKey="services.title"
         subtitleKey="services.subtitle"
-        intro="Houston has a deep network of services dedicated to your well-being. Search by name, filter by ZIP, or switch to map view to find what is near you."
+        intro="Houston has a deep network of services dedicated to your well-being. Browse by category, search by name, or switch to map view."
         stats={[
           { value: services.length, label: 'Services' },
           { value: uniqueOrgs, label: 'Organizations' },
-          { value: withLocation, label: 'Mapped Locations' },
+          { value: Object.keys(categoryMap).length, label: 'Categories' },
         ]}
       />
 
@@ -52,7 +69,12 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
 
         <div className="flex flex-col lg:flex-row gap-6 mt-4">
           <div className="flex-1 min-w-0">
-            <ServicesClient services={services} translations={translations} initialZip={urlZip} />
+            <ServicesClient
+              services={services}
+              translations={translations}
+              categories={categoryMap}
+              initialZip={urlZip}
+            />
           </div>
 
           <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
