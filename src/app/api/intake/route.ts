@@ -304,6 +304,21 @@ export async function POST(req: NextRequest) {
         break
       }
 
+      case 'org_crawl': {
+        if (!body.url) {
+          return NextResponse.json({ error: 'No URL provided. Use { "type": "org_crawl", "url": "https://example.org" }' }, { status: 400 })
+        }
+        result = await callInternalApi('/api/ingest-org', {
+          url: body.url,
+          org_name: body.org_name || '',
+          max_pages: body.max_pages || 30,
+        }, req)
+        await log('intake_org_crawl', body.url, 'success',
+          `Org crawl: ${body.url} → ${(result as any).entities_created || 0} entities`,
+          (result as any).entities_created || 0)
+        break
+      }
+
       case 'classify': {
         const table = body.table || 'elected_officials'
         const limit = Math.min(body.limit || 10, 50)
@@ -314,7 +329,7 @@ export async function POST(req: NextRequest) {
       default:
         return NextResponse.json({
           error: `Unknown intake type: ${intakeType}`,
-          supported: ['content', 'officials', 'policies', 'services', 'organizations', 'opportunities', 'agencies', 'campaigns', 'benefit_programs', 'rss_feed', 'sync', 'classify'],
+          supported: ['content', 'officials', 'policies', 'services', 'organizations', 'opportunities', 'agencies', 'campaigns', 'benefit_programs', 'rss_feed', 'sync', 'classify', 'org_crawl'],
         }, { status: 400 })
     }
 
@@ -336,6 +351,7 @@ export async function GET() {
       'rss_feed — Add RSS feed and trigger immediate poll',
       'sync — Trigger data sync (google_civic, legistar, texas, rss, all)',
       'classify — Sweep unclassified entities in any table',
+      'org_crawl — Deep-crawl an org website and extract all resources as separate entities',
     ],
   })
 }
