@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { FeaturedPromo } from './FeaturedPromo'
 import { GoodThingsWidget } from './GoodThingsWidget'
-import { InfoBubble } from './InfoBubble'
+import { TranslatedTooltip } from './TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { HeroZipInput } from './HeroZipInput'
 import { HeroSearchInput } from './HeroSearchInput'
 import { CENTERS, CENTER_COLORS } from '@/lib/constants'
 import Image from 'next/image'
+import { HeroFOLBackground } from './HeroFOLBackground'
 
 const QUICK_ACCESS = [
   {
@@ -80,20 +81,8 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
           backgroundSize: '24px 24px',
         }} />
 
-        {/* MASSIVE FOL — the signature element */}
-        <Image
-          src="/images/fol/flower-full.svg"
-          alt="" aria-hidden="true"
-          className="absolute pointer-events-none z-0 animate-fol-pulse"
-          style={{ width: '800px', height: '800px', top: '-120px', right: '-160px', opacity: 0.07 }}
-         width={800} height={800} />
-        {/* Secondary FOL layer — offset, counter-rotate */}
-        <Image
-          src="/images/fol/seed-of-life.svg"
-          alt="" aria-hidden="true"
-          className="absolute pointer-events-none z-0"
-          style={{ width: '400px', height: '400px', bottom: '-80px', left: '-80px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
-         width={400} height={400} />
+        {/* Animated gradient FOL — the signature element */}
+        <HeroFOLBackground />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-12 lg:py-14">
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
@@ -185,7 +174,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       {/* ── QUICK ACCESS GRID — 5 image-backed cards ── */}
       <div className="max-w-[1200px] mx-auto px-8 pt-3 pb-4">
         <div className="relative inline-block mb-4">
-          <InfoBubble id={TOOLTIPS.pathway_cards.id} text={TOOLTIPS.pathway_cards.text} position="bottom" />
+          <TranslatedTooltip tip={TOOLTIPS.pathway_cards} position="bottom" />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {QUICK_ACCESS.map(function (item) {
@@ -198,7 +187,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               >
                 {item.cta && (
                   <div className="relative inline-block" style={{ position: 'absolute', top: 4, left: 4, zIndex: 5 }}>
-                    <InfoBubble id={TOOLTIPS.persona_cards.id} text={TOOLTIPS.persona_cards.text} position="bottom" />
+                    <TranslatedTooltip tip={TOOLTIPS.persona_cards} position="bottom" />
                   </div>
                 )}
                 {/* Background image */}

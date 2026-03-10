@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, Filter, Scale } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { useTranslation } from '@/lib/use-translation'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
@@ -95,7 +95,7 @@ export function PoliciesPageClient({ policies, translations, initialLevel }: Pol
             >
               {LEVELS.map(function (l) { return <option key={l} value={l}>{l === 'All' ? 'All Levels' : l}</option> })}
             </select>
-            <InfoBubble id={TOOLTIPS.gov_level_filter.id} text={TOOLTIPS.gov_level_filter.text} position="bottom" />
+            <TranslatedTooltip tip={TOOLTIPS.gov_level_filter} position="bottom" />
           </div>
           <select
             value={statusFilter}
@@ -125,7 +125,7 @@ export function PoliciesPageClient({ policies, translations, initialLevel }: Pol
               <Scale size={18} style={{ color }} />
               <span style={{ color }}>{level}</span>
               <span className="text-xs text-brand-muted font-normal">({items.length})</span>
-              {levelIdx === 0 && <InfoBubble id={TOOLTIPS.status_badge.id} text={TOOLTIPS.status_badge.text} position="bottom" />}
+              {levelIdx === 0 && <TranslatedTooltip tip={TOOLTIPS.status_badge} position="bottom" />}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {items.map(function (p) {

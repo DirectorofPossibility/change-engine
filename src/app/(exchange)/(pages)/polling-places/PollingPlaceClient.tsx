@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { MapPin, ExternalLink } from 'lucide-react'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
@@ -140,7 +140,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
             {loading ? 'Searching...' : 'Find My Polling Place'}
           </button>
         </form>
-        <InfoBubble id={TOOLTIPS.polling_finder.id} text={TOOLTIPS.polling_finder.text} position="bottom" align="start" />
+        <TranslatedTooltip tip={TOOLTIPS.polling_finder} position="bottom" align="start" />
       </div>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { MapPin, Search, Landmark, Star, Home, Building2, type LucideIcon } from 'lucide-react'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { createClient } from '@/lib/supabase/client'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
@@ -140,7 +140,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
               className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
               maxLength={5}
             />
-            <InfoBubble id={TOOLTIPS.zip_lookup.id} text={TOOLTIPS.zip_lookup.text} position="bottom" />
+            <TranslatedTooltip tip={TOOLTIPS.zip_lookup} position="bottom" />
           </div>
           <button
             type="submit"
@@ -208,7 +208,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
 
       {/* Full Officials Listing */}
       <h2 className="relative font-serif text-2xl font-bold text-brand-text mb-6">All Civic Leaders
-        <InfoBubble id={TOOLTIPS.party_label.id} text={TOOLTIPS.party_label.text} position="bottom" />
+        <TranslatedTooltip tip={TOOLTIPS.party_label} position="bottom" />
       </h2>
       <OfficialsClient officials={officials} levels={levels} translations={translations} linkedinProfiles={linkedinProfiles} />
     </div>

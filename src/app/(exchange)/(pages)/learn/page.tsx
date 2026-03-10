@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 import { getLearningPaths, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { getUIStrings } from '@/lib/i18n'
 
@@ -67,7 +67,7 @@ export default async function LearnPage() {
             <div className="flex items-center gap-3 mb-4">
               <span className={`relative text-xs px-2.5 py-1 rounded-full font-medium ${colors.bg} ${colors.text} ${colors.border} border`}>
                 {level}
-                {showDiffTooltip && <InfoBubble id={TOOLTIPS.difficulty_badge.id} text={TOOLTIPS.difficulty_badge.text} position="bottom" />}
+                {showDiffTooltip && <TranslatedTooltip tip={TOOLTIPS.difficulty_badge} position="bottom" />}
               </span>
               <span className="text-sm text-brand-muted">{group.length} path{group.length !== 1 ? 's' : ''}</span>
               <div className="flex-1 h-px bg-brand-border" />

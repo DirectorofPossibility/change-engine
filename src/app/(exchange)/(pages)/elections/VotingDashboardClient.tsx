@@ -17,7 +17,7 @@ import CivicScorecard from '@/components/exchange/CivicScorecard'
 import ElectionReminderSignup from '@/components/exchange/ElectionReminderSignup'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { MapPin, ExternalLink, ChevronRight, BookOpen, ClipboardCheck, Mail, Users } from 'lucide-react'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import Image from 'next/image'
 
@@ -217,7 +217,7 @@ export function VotingDashboardClient({
                   electionType={nextElection.election_type}
                 />
               </Link>
-              <InfoBubble id={TOOLTIPS.election_countdown.id} text={TOOLTIPS.election_countdown.text} position="bottom" />
+              <TranslatedTooltip tip={TOOLTIPS.election_countdown} position="bottom" />
             </div>
 
             {/* Visual deadline timeline */}
@@ -298,7 +298,7 @@ export function VotingDashboardClient({
             {/* Registration + vote-by-mail CTAs — inline, no emojis */}
             {nextElection.registration_deadline && (
               <div className="relative bg-brand-accent/5 border border-brand-accent/20 rounded-card p-5">
-                <InfoBubble id={TOOLTIPS.registration_deadline.id} text={TOOLTIPS.registration_deadline.text} position="bottom" />
+                <TranslatedTooltip tip={TOOLTIPS.registration_deadline} position="bottom" />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
                     <p className="text-sm font-medium text-brand-text">

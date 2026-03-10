@@ -8,6 +8,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { PAGE_INTROS } from '@/lib/constants'
 import { VotingDashboardClient } from './VotingDashboardClient'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { FOLLoading } from '@/components/exchange/FOLLoading'
 
 export const revalidate = 3600
 
@@ -45,7 +46,7 @@ export default async function ElectionsPage({
 
         <div className="flex flex-col lg:flex-row gap-6 mt-4">
           <div className="flex-1 min-w-0">
-            <Suspense fallback={<div className="text-brand-muted py-12 text-center">Loading your voting dashboard...</div>}>
+            <Suspense fallback={<FOLLoading message="Loading your voting dashboard..." />}>
               <VotingDashboardClient
                 pastElections={data.pastElections}
                 upcomingElections={data.upcomingElections}

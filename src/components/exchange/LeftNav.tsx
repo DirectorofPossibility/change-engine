@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Search, Heart, ChevronDown, ChevronRight } from 'lucide-react'
 import { THEMES, BRAND } from '@/lib/constants'
 import { FlowerOfLifeIcon } from './FlowerIcons'
+import { GradientFOL } from './GradientFOL'
 import { NeighborhoodWidget } from './NeighborhoodBanner'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems, isSectionVisible } from '@/lib/feature-flags'
@@ -117,7 +118,7 @@ export function LeftNav() {
       {/* Brand mark */}
       <div className="px-4 pt-5 pb-4">
         <Link href="/" className="flex items-center gap-3">
-          <FlowerOfLifeIcon size={32} color="#E8723A" />
+          <div className="w-8 h-8 flex-shrink-0"><GradientFOL variant="full" spinDur={60} colorDur={12} /></div>
           <div>
             <div className="text-sm font-bold text-brand-text leading-tight">{BRAND.name}</div>
             <div className="text-xs text-brand-muted italic">{BRAND.tagline}</div>

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { SearchBar } from '@/components/exchange/SearchBar'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import type { ElectedOfficial, GovernmentLevel, TranslationMap } from '@/lib/types/exchange'
@@ -55,7 +55,7 @@ export function OfficialsClient({ officials, levels, translations = {}, linkedin
               </button>
             )
           })}
-          <InfoBubble id={TOOLTIPS.level_badges.id} text={TOOLTIPS.level_badges.text} position="bottom" />
+          <TranslatedTooltip tip={TOOLTIPS.level_badges} position="bottom" />
         </div>
       </div>
 

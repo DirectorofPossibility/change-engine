@@ -21,7 +21,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 import Image from 'next/image'
 
@@ -293,7 +293,7 @@ export default function SettingsPage() {
             className="rounded border-brand-border"
           />
           <label htmlFor="gamification" className="text-sm text-brand-text">Enable badges and points</label>
-          <InfoBubble id={TOOLTIPS.gamification_toggle.id} text={TOOLTIPS.gamification_toggle.text} position="bottom" />
+          <TranslatedTooltip tip={TOOLTIPS.gamification_toggle} position="bottom" />
         </div>
         <button
           type="submit"

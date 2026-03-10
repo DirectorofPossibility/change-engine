@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslation } from '@/lib/use-translation'
+import { GradientFOL } from './GradientFOL'
 
 interface StatItem {
   value: string | number
@@ -29,6 +30,11 @@ export function IndexPageHero({
 
   return (
     <section className="relative w-full overflow-hidden bg-brand-bg">
+      {/* Animated gradient FOL background */}
+      <div className="absolute -top-16 -right-16 w-[320px] h-[320px] opacity-[0.07]">
+        <GradientFOL variant={pattern === 'seed' || pattern === 'vesica' ? 'seed' : 'full'} spinDur={120} colorDur={16} />
+      </div>
+
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <div className="flex-1 min-w-0">

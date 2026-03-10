@@ -5,6 +5,7 @@ import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { Send, Mail, Download, X, Menu, Info, BookOpen, LogIn, UserPlus, Building2, Handshake, Heart, ExternalLink } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
+import { GradientFOL } from '@/components/exchange/GradientFOL'
 import { useTranslation } from '@/lib/use-translation'
 import { LanguageSwitcher } from '@/components/exchange/LanguageSwitcher'
 
@@ -29,41 +30,7 @@ interface GoodThingEntry {
 
 const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
 
-function GradientFOL({ className = '' }: { className?: string }) {
-  const id = useId()
-  const gradId = 'fol-grad-' + id.replace(/:/g, '')
-  const gradUrl = 'url(#' + gradId + ')'
-  const r = 18, cx = 100, cy = 100, outerR = r * 1.732
-  return (
-    <svg viewBox="49 49 102 102" fill="none" className={className} aria-hidden="true"
-      style={{ animation: 'fol-spin 90s linear infinite' }}>
-      <defs>
-        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C75B2A">
-            <animate attributeName="stop-color" values="#C75B2A;#805ad5;#3182ce;#38a169;#d69e2e;#C75B2A" dur="12s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="50%" stopColor="#805ad5">
-            <animate attributeName="stop-color" values="#805ad5;#3182ce;#38a169;#d69e2e;#C75B2A;#805ad5" dur="12s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="100%" stopColor="#3182ce">
-            <animate attributeName="stop-color" values="#3182ce;#38a169;#d69e2e;#C75B2A;#805ad5;#3182ce" dur="12s" repeatCount="indefinite" />
-          </stop>
-        </linearGradient>
-      </defs>
-      <circle cx={cx} cy={cy} r={r * 2.2} stroke={gradUrl} strokeWidth="1.2" opacity="0.3" />
-      {[30, 90, 150, 210, 270, 330].map(function (deg, i) {
-        const rad = (deg * Math.PI) / 180
-        return <circle key={'o' + i} cx={cx + outerR * Math.cos(rad)} cy={cy + outerR * Math.sin(rad)} r={r} stroke={gradUrl} strokeWidth="1.5" opacity="0.5" />
-      })}
-      {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
-        const rad = (deg * Math.PI) / 180
-        return <circle key={'i' + i} cx={cx + r * Math.cos(rad)} cy={cy + r * Math.sin(rad)} r={r} stroke={gradUrl} strokeWidth="2" opacity="0.85" />
-      })}
-      <circle cx={cx} cy={cy} r={r} stroke={gradUrl} strokeWidth="2.5" opacity="1" />
-      <circle cx={cx} cy={cy} r="3" fill={gradUrl} opacity="0.6" />
-    </svg>
-  )
-}
+// GradientFOL is now imported from @/components/exchange/GradientFOL
 
 export default function SplashPage() {
   const { t } = useTranslation()

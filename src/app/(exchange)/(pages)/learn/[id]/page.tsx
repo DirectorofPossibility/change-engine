@@ -16,7 +16,7 @@ import { ModuleTimeline } from '@/components/exchange/ModuleTimeline'
 import { ModuleProgressTimeline } from '@/components/exchange/ModuleProgressTimeline'
 import { BadgeCard } from '@/components/exchange/BadgeCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 
 export const revalidate = 3600
@@ -205,7 +205,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         <div className="flex items-center gap-5 text-sm text-brand-muted">
           {path.estimated_minutes != null && (
             <span className="relative flex items-center gap-1.5"><Clock size={15} /> {path.estimated_minutes} min
-              <InfoBubble id={TOOLTIPS.estimated_minutes.id} text={TOOLTIPS.estimated_minutes.text} position="bottom" />
+              <TranslatedTooltip tip={TOOLTIPS.estimated_minutes} position="bottom" />
             </span>
           )}
           {path.module_count != null && (
@@ -244,7 +244,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           {timelineModules.length > 0 && (
             <section className="mb-6">
               <h2 className="relative text-xl font-bold text-brand-text font-serif mb-6">{t('learn.modules_heading')}
-                <InfoBubble id={TOOLTIPS.quiz_indicator.id} text={TOOLTIPS.quiz_indicator.text} position="bottom" />
+                <TranslatedTooltip tip={TOOLTIPS.quiz_indicator} position="bottom" />
               </h2>
               {user ? (
                 <ModuleProgressTimeline

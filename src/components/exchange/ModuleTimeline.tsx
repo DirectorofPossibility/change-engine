@@ -1,5 +1,5 @@
 import { Clock, FileText, Video, BookOpen, HelpCircle, ExternalLink, Music, Quote } from 'lucide-react'
-import { InfoBubble } from '@/components/exchange/InfoBubble'
+import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
 import { TOOLTIPS } from '@/lib/tooltips'
 
 interface Module {
@@ -104,7 +104,7 @@ export function ModuleTimeline({ modules }: ModuleTimelineProps) {
               {/* Resource links row */}
               {hasMedia && (
                 <div className="relative flex flex-wrap gap-2 mb-3">
-                  {showMediaTooltip && <InfoBubble id={TOOLTIPS.module_media_pills.id} text={TOOLTIPS.module_media_pills.text} position="bottom" />}
+                  {showMediaTooltip && <TranslatedTooltip tip={TOOLTIPS.module_media_pills} position="bottom" />}
                   {mod.videoUrl && !embedId && (
                     <a href={mod.videoUrl} target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors">

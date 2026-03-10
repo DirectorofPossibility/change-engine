@@ -6,6 +6,7 @@ import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { isOnboarded, completeOnboarding } from '@/lib/spiral'
 import { THEMES } from '@/lib/constants'
 import Image from 'next/image'
+import { GradientFOL } from './GradientFOL'
 
 const PERSONAS = [
   { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', color: '#d69e2e', fol: '/images/fol/seed-of-life.svg' },
@@ -123,19 +124,13 @@ export function OnboardingFlow() {
       >
         {/* ── Branded header ── */}
         <div className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
-          {/* FOL watermarks */}
-          <Image
-            src="/images/fol/flower-full.svg"
-            alt="" aria-hidden="true"
-            className="absolute pointer-events-none animate-fol-pulse"
-            style={{ width: '300px', height: '300px', top: '-80px', right: '-60px', opacity: 0.06 }}
-           width={300} height={300} />
-          <Image
-            src="/images/fol/seed-of-life.svg"
-            alt="" aria-hidden="true"
-            className="absolute pointer-events-none"
-            style={{ width: '150px', height: '150px', bottom: '-40px', left: '-30px', opacity: 0.04, animation: 'fol-pulse 8s ease-in-out infinite reverse' }}
-           width={150} height={150} />
+          {/* Animated gradient FOL watermarks */}
+          <div className="absolute pointer-events-none" style={{ width: '300px', height: '300px', top: '-80px', right: '-60px', opacity: 0.08 }}>
+            <GradientFOL variant="full" spinDur={90} colorDur={12} />
+          </div>
+          <div className="absolute pointer-events-none" style={{ width: '150px', height: '150px', bottom: '-40px', left: '-30px', opacity: 0.05 }}>
+            <GradientFOL variant="seed" spinDur={120} colorDur={16} />
+          </div>
 
           {/* Spectrum bar at top */}
           <div className="flex h-1">
@@ -194,12 +189,9 @@ export function OnboardingFlow() {
           {step === 'welcome' && (
             <div className="text-center">
               <div className="relative w-20 h-20 mx-auto mb-4">
-                <Image
-                  src="/images/fol/flower-full.svg"
-                  alt="" aria-hidden="true"
-                  className="w-full h-full animate-fol-pulse"
-                  style={{ opacity: 0.15 }}
-                 width={200} height={200} />
+                <div className="w-full h-full" style={{ opacity: 0.2 }}>
+                  <GradientFOL variant="full" spinDur={30} colorDur={8} />
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="1.5">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
