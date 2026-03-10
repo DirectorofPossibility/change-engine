@@ -78,6 +78,8 @@ async function supaUpsert(table: string, body: Record<string, unknown>, conflict
   return text ? JSON.parse(text) : null
 }
 
+const _junctionErrors: Array<{ table: string; error: string }> = []
+
 async function supaJunctionInsert(table: string, rows: Record<string, unknown>[]) {
   if (!rows.length) return
   try {
@@ -93,10 +95,14 @@ async function supaJunctionInsert(table: string, rows: Record<string, unknown>[]
     })
     if (!res.ok) {
       const errText = await res.text()
-      console.error(`Junction insert ${table} failed: ${res.status} ${errText}`)
+      const msg = `${table}: ${res.status} ${errText.substring(0, 200)}`
+      _junctionErrors.push({ table, error: msg })
+      console.error(`Junction insert failed — ${msg}`)
     }
   } catch (e) {
-    console.error(`Junction insert ${table} error:`, (e as Error).message)
+    const msg = (e as Error).message
+    _junctionErrors.push({ table, error: msg })
+    console.error(`Junction insert ${table} error:`, msg)
   }
 }
 
@@ -293,9 +299,13 @@ async function scrapeUrl(url: string): Promise<{
 }> {
   validateUrl(url)
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'ChangeEngine/1.0 (+https://changeengine.us)' },
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; ChangeEngine/1.0; +https://changeengine.us)',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5',
+    },
     redirect: 'follow',
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(25000),
   })
 
   if (!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText}`)
@@ -896,8 +906,13 @@ Return JSON:
     const rawResponse = await callClaude(systemPrompt, userPrompt, 3000)
     classification = parseClaudeJson(rawResponse)
   } catch (e) {
-    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: 'flagged' })
-    return { success: false, stage: 'classify', error: `Classification failed: ${(e as Error).message}`, inbox_id: inboxId }
+    const errMsg = (e as Error).message
+    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, {
+      status: 'flagged',
+      last_error: `Classification failed: ${errMsg}`.substring(0, 500),
+      retry_count: 0,
+    })
+    return { success: false, stage: 'classify', error: `Classification failed: ${errMsg}`, inbox_id: inboxId }
   }
 
   // Step 4b: Multi-item extraction — split listing pages into individual items
@@ -1110,13 +1125,26 @@ Return JSON:
     await supaRest('PATCH', `content_review_queue?inbox_id=eq.${inboxId}`, { org_id: resolvedOrgId }).catch(() => {})
   }
 
-  // Step 10: Log
+  // Step 10: Log (include junction errors if any)
+  const junctionIssues = _junctionErrors.length > 0
+    ? ` | junction_errors: ${_junctionErrors.map(e => e.table).join(', ')}`
+    : ''
+  // Clear junction errors for next item in batch
+  _junctionErrors.length = 0
+
+  const translationIssues = Object.entries(translations)
+    .filter(([, v]: [string, any]) => v.error)
+    .map(([lang]) => lang)
+  const translationNote = translationIssues.length > 0
+    ? ` | translation_failed: ${translationIssues.join(', ')}`
+    : ''
+
   await supaRest('POST', 'ingestion_log', {
     event_type: 'unified_ingest',
     source: meta.domain,
     source_url: url,
-    status: 'success',
-    message: `Full pipeline: ${validFocusAreaIds.length}FA ${allSdgIds.length}SDG | conf:${confidence} | ${Object.keys(translations).length} translations | ${orgsCreated.length} orgs`,
+    status: junctionIssues || translationNote ? 'partial' : 'success',
+    message: `Full pipeline: ${validFocusAreaIds.length}FA ${allSdgIds.length}SDG | conf:${confidence} | ${Object.keys(translations).length} translations | ${orgsCreated.length} orgs${junctionIssues}${translationNote}`,
     item_count: 1,
   })
 
@@ -1239,8 +1267,13 @@ Return JSON:
     const rawResponse = await callClaude(systemPrompt, userPrompt, 3000)
     classification = parseClaudeJson(rawResponse)
   } catch (e) {
-    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: 'flagged' })
-    return { success: false, stage: 'classify', error: `Classification failed: ${(e as Error).message}`, inbox_id: inboxId }
+    const errMsg2 = (e as Error).message
+    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, {
+      status: 'flagged',
+      last_error: `Classification failed: ${errMsg2}`.substring(0, 500),
+      retry_count: 0,
+    })
+    return { success: false, stage: 'classify', error: `Classification failed: ${errMsg2}`, inbox_id: inboxId }
   }
 
   // Validate focus areas + inherit taxonomy
