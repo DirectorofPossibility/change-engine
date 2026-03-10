@@ -61,22 +61,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(comingSoonUrl)
   }
 
-  // Logged-in users hitting splash → send to compass
+  // Logged-in users hitting splash → send to exchange editorial home
   if (pathname === '/' && user) {
     const exchangeUrl = request.nextUrl.clone()
-    exchangeUrl.pathname = '/compass'
+    exchangeUrl.pathname = '/exchange'
     return NextResponse.redirect(exchangeUrl)
-  }
-
-  // Non-logged-in users hitting exchange pages → send to splash
-  const publicPaths = ['/', '/login', '/signup', '/reset-password', '/goodthings', '/account-locked', '/accessibility', '/privacy', '/terms', '/about', '/coming-soon']
-  const isPublicPath = publicPaths.some(function (p) { return pathname === p })
-  const isPublicPrefix = pathname.startsWith('/api/') || pathname.startsWith('/auth/') || pathname.startsWith('/_next/') || pathname.startsWith('/goodthings/')
-  if (!user && !isPublicPath && !isPublicPrefix && !pathname.startsWith('/dashboard') && !pathname.startsWith('/me')) {
-    const splashUrl = request.nextUrl.clone()
-    splashUrl.pathname = '/'
-    splashUrl.search = ''
-    return NextResponse.redirect(splashUrl)
   }
 
   // Protect dashboard routes
