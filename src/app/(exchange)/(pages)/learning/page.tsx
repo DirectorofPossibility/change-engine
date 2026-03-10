@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
-import { BookOpen, Newspaper, Compass, MessageCircle } from 'lucide-react'
+import { BookOpen, Newspaper, Compass, MessageCircle, Map } from 'lucide-react'
 
 export const revalidate = 3600
 
@@ -38,6 +38,14 @@ const SECTIONS = [
     countKey: 'pathways',
   },
   {
+    href: '/adventures',
+    label: 'Community Adventures',
+    description: 'Interactive stories where your choices shape the outcome. Navigate a town hall, discover hidden neighborhood assets, or prepare for hurricane season.',
+    icon: Map,
+    color: '#805ad5',
+    countKey: 'adventures',
+  },
+  {
     href: '/chat',
     label: 'Ask Chance',
     description: 'Have a question about Houston? Ask Chance, your AI civic guide, and get answers grounded in local data.',
@@ -59,6 +67,7 @@ export default async function LearningIndexPage() {
     library: library.count || 0,
     news: news.count || 0,
     pathways: 7,
+    adventures: 3,
   }
 
   return (
