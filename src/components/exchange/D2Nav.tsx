@@ -75,6 +75,7 @@ function useDiscoverLinks(t: (key: string) => string) {
     { href: '/compass', label: t('d2nav.civic_compass') },
     { href: '/dashboard-live', label: t('d2nav.live_dashboard') },
     { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
+    { href: '/adventures', label: 'Community Adventures' },
     { href: '/goodthings', label: t('d2nav.three_good_things') },
     { href: '/teens', label: t('d2nav.teen_hub') },
     { href: '/call-your-senators', label: t('d2nav.call_senators') },
