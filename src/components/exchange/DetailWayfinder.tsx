@@ -230,11 +230,12 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
       {userZip && <GeoContext zip={userZip} nearLabel={t('wayfinder.near')} />}
 
       {!designV1 && data.themes.length > 0 && (
-        <div className="border-b border-brand-border">
+        <div className="border-b border-brand-border relative">
           <CompactCircleGraph
             activePathways={data.themes}
             accentColor={data.themes.length > 0 ? (THEMES as any)[data.themes[0]]?.color : undefined}
           />
+          <WayfinderTooltipPos tipKey="fol_key" position="left" />
         </div>
       )}
 

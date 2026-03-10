@@ -61,6 +61,8 @@ export const TOOLTIPS: Record<string, TooltipDef> = {
   org_action_buttons: { id: 'org_action_buttons', section: 'organizations', i18nKey: 'tip.org_action_buttons' },
   foundation_galaxy: { id: 'foundation_galaxy', section: 'foundations', i18nKey: 'tip.foundation_galaxy' },
   ntee_code: { id: 'ntee_code', section: 'organizations', i18nKey: 'tip.ntee_code' },
+  year_founded: { id: 'year_founded', section: 'organizations', i18nKey: 'tip.year_founded' },
+  fol_key: { id: 'fol_key', section: 'detail', i18nKey: 'tip.fol_key' },
 
   // ── X. OPPORTUNITIES & EVENTS ──
   time_commitment: { id: 'time_commitment', section: 'opportunities', i18nKey: 'tip.time_commitment' },
