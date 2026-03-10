@@ -168,7 +168,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               )}
               {org.email && (
                 <a href={'mailto:' + org.email} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-                  <Mail size={16} /> {org.email}
+                  <Mail size={16} /> Email
                 </a>
               )}
               {org.website && (

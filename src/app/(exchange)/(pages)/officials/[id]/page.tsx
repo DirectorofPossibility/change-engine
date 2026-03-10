@@ -254,7 +254,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 )}
                 {official.email && (
                   <a href={'mailto:' + official.email} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-                    <Mail size={18} className="flex-shrink-0" /> <span className="truncate">{official.email}</span>
+                    <Mail size={18} className="flex-shrink-0" /> Email
                   </a>
                 )}
                 {official.website && (

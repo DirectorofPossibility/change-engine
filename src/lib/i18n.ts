@@ -20,6 +20,7 @@ import type { SupportedLanguage } from '@/lib/types/exchange'
 
 const en: Record<string, string> = {
   // Navigation
+  'nav.home': 'Home',
   'nav.pathways': 'Pathways',
   'nav.explore': 'Explore',
   'nav.help': 'Available Resources',
@@ -30,6 +31,7 @@ const en: Record<string, string> = {
   'nav.calendar': 'Calendar',
   'nav.news': 'News',
   'nav.library': 'Library',
+  'nav.search': 'Search',
   'nav.knowledge_base': 'Knowledge Base',
   'nav.knowledge_galaxy': 'Knowledge Galaxy',
   'nav.search_placeholder': 'What are you looking for?',
@@ -107,6 +109,27 @@ const en: Record<string, string> = {
   // Organizations page
   'organizations.title': 'Organizations',
   'organizations.subtitle': 'Nonprofits, foundations, and community groups serving Houston.',
+
+  // Opportunities page
+  'opportunities.title': 'Opportunities',
+
+  // Events page
+  'events.title': 'Events',
+
+  // Foundations page
+  'foundations.title': 'Foundations',
+
+  // Neighborhoods page
+  'neighborhoods.title': 'Neighborhoods',
+
+  // Districts page
+  'districts.title': 'Districts',
+
+  // FAQ page
+  'faq.title': 'FAQ',
+
+  // Contact page
+  'contact.title': 'Contact',
 
   // Policies page
   'policies.title': 'Policies & Legislation',
@@ -1000,6 +1023,7 @@ const en: Record<string, string> = {
   'ui.share': 'Share',
   'ui.copy': 'Copy',
   'ui.copied': 'Copied',
+  'ui.copy_link': 'Copy link',
   'ui.sign_in': 'Sign In',
   'ui.sign_out': 'Sign Out',
   'ui.my_dashboard': 'My Dashboard',
@@ -1018,6 +1042,7 @@ const en: Record<string, string> = {
 
 const es: Record<string, string> = {
   // Navigation
+  'nav.home': 'Inicio',
   'nav.pathways': 'Caminos',
   'nav.explore': 'Explorar',
   'nav.help': 'Recursos Disponibles',
@@ -1028,6 +1053,7 @@ const es: Record<string, string> = {
   'nav.calendar': 'Calendario',
   'nav.news': 'Noticias',
   'nav.library': 'Biblioteca',
+  'nav.search': 'Buscar',
   'nav.knowledge_base': 'Base de Conocimiento',
   'nav.knowledge_galaxy': 'Galaxia de Conocimiento',
   'nav.search_placeholder': 'Que estas buscando?',
@@ -1105,6 +1131,27 @@ const es: Record<string, string> = {
   // Organizations page
   'organizations.title': 'Organizaciones',
   'organizations.subtitle': 'Organizaciones sin fines de lucro, fundaciones y grupos comunitarios que sirven a Houston.',
+
+  // Opportunities page
+  'opportunities.title': 'Oportunidades',
+
+  // Events page
+  'events.title': 'Eventos',
+
+  // Foundations page
+  'foundations.title': 'Fundaciones',
+
+  // Neighborhoods page
+  'neighborhoods.title': 'Vecindarios',
+
+  // Districts page
+  'districts.title': 'Distritos',
+
+  // FAQ page
+  'faq.title': 'Preguntas Frecuentes',
+
+  // Contact page
+  'contact.title': 'Contacto',
 
   // Policies page
   'policies.title': 'Políticas y Legislación',
@@ -1998,6 +2045,7 @@ const es: Record<string, string> = {
   'ui.share': 'Compartir',
   'ui.copy': 'Copiar',
   'ui.copied': 'Copiado',
+  'ui.copy_link': 'Copiar enlace',
   'ui.sign_in': 'Iniciar Sesión',
   'ui.sign_out': 'Cerrar Sesión',
   'ui.my_dashboard': 'Mi Panel',
@@ -2016,6 +2064,7 @@ const es: Record<string, string> = {
 
 const vi: Record<string, string> = {
   // Navigation
+  'nav.home': 'Trang Chủ',
   'nav.pathways': 'Lộ Trình',
   'nav.explore': 'Khám Phá',
   'nav.help': 'Tài Nguyên Có Sẵn',
@@ -2026,6 +2075,7 @@ const vi: Record<string, string> = {
   'nav.calendar': 'Lịch',
   'nav.news': 'Tin Tức',
   'nav.library': 'Thư Viện',
+  'nav.search': 'Tìm Kiếm',
   'nav.knowledge_base': 'Cơ Sở Kiến Thức',
   'nav.knowledge_galaxy': 'Thiên Hà Kiến Thức',
   'nav.search_placeholder': 'Bạn đang tìm gì?',
@@ -2103,6 +2153,27 @@ const vi: Record<string, string> = {
   // Organizations page
   'organizations.title': 'Tổ Chức',
   'organizations.subtitle': 'Tổ chức phi lợi nhuận, quỹ và nhóm cộng đồng phục vụ Houston.',
+
+  // Opportunities page
+  'opportunities.title': 'Cơ Hội',
+
+  // Events page
+  'events.title': 'Sự Kiện',
+
+  // Foundations page
+  'foundations.title': 'Quỹ',
+
+  // Neighborhoods page
+  'neighborhoods.title': 'Khu Phố',
+
+  // Districts page
+  'districts.title': 'Quận',
+
+  // FAQ page
+  'faq.title': 'Câu Hỏi Thường Gặp',
+
+  // Contact page
+  'contact.title': 'Liên Hệ',
 
   // Policies page
   'policies.title': 'Chính Sách & Luật Pháp',
@@ -2996,6 +3067,7 @@ const vi: Record<string, string> = {
   'ui.share': 'Chia sẻ',
   'ui.copy': 'Sao chép',
   'ui.copied': 'Đã sao chép',
+  'ui.copy_link': 'Sao chép liên kết',
   'ui.sign_in': 'Đăng Nhập',
   'ui.sign_out': 'Đăng Xuất',
   'ui.my_dashboard': 'Bảng Điều Khiển',
