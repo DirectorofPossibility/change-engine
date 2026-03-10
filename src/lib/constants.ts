@@ -99,9 +99,12 @@ export interface GeoLayerConfig {
 }
 
 /**
- * Available geographic boundary layers for Houston-area maps.
+ * Available geographic boundary layers for maps.
  * GeoJSON files live in /public/geo/ and are loaded client-side by GeoJsonLayer.
  * Layers can be toggled on/off via LayerControl in the InteractiveMap component.
+ *
+ * Houston layers: /public/geo/*.geojson
+ * San Francisco layers: /public/geo/sf/*.geojson
  *
  * idProperty — which GeoJSON feature property uniquely identifies a polygon
  *              (used for highlighting and linking to detail pages)
@@ -180,6 +183,70 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     idProperty: 'SITENO',
     detailPath: '/tirz/',
   },
+} as const;
+
+/**
+ * San Francisco geographic boundary layers.
+ * Separate from Houston GEO_LAYERS so they can be used independently.
+ * GeoJSON files live in /public/geo/sf/ — run scripts/prepare-sf-geo.sh to download.
+ */
+export const SF_GEO_LAYERS: Record<string, GeoLayerConfig> = {
+  sfSupervisorDistricts: {
+    id: 'sfSupervisorDistricts',
+    label: 'Supervisor Districts',
+    url: '/geo/sf/supervisor-districts.geojson',
+    color: '#38a169',
+    idProperty: 'DISTRICT',
+    detailPath: null,
+  },
+  sfNeighborhoods: {
+    id: 'sfNeighborhoods',
+    label: 'Neighborhoods',
+    url: '/geo/sf/neighborhoods.geojson',
+    color: '#805ad5',
+    idProperty: 'nhood',
+    detailPath: null,
+  },
+  sfZipCodes: {
+    id: 'sfZipCodes',
+    label: 'ZIP Codes',
+    url: '/geo/sf/zip-codes.geojson',
+    color: '#319795',
+    idProperty: 'zip_code',
+    detailPath: null,
+  },
+  sfPoliceDistricts: {
+    id: 'sfPoliceDistricts',
+    label: 'Police Districts',
+    url: '/geo/sf/police-districts.geojson',
+    color: '#e53e3e',
+    idProperty: 'DISTRICT',
+    detailPath: null,
+  },
+  sfCensusTracts: {
+    id: 'sfCensusTracts',
+    label: 'Census Tracts',
+    url: '/geo/sf/census-tracts.geojson',
+    color: '#718096',
+    idProperty: 'GEOID',
+    detailPath: null,
+  },
+  sfParks: {
+    id: 'sfParks',
+    label: 'Parks & Open Space',
+    url: '/geo/sf/parks.geojson',
+    color: '#2D8659',
+    idProperty: 'MAP_LABEL',
+    detailPath: null,
+  },
+} as const;
+
+/**
+ * Map center coordinates by city.
+ */
+export const MAP_CENTERS = {
+  houston: { lat: 29.76, lng: -95.37, zoom: 10 },
+  sanFrancisco: { lat: 37.7749, lng: -122.4194, zoom: 12 },
 } as const;
 
 // ── Shared color systems ─────────────────────────────────────────────

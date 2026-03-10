@@ -94,7 +94,9 @@ export async function POST(req: NextRequest) {
   const systemPrompt = buildPromptForEntity(taxonomy, config.entityType)
 
   // Get entities to enrich
-  const selectCols = [config.idCol, config.nameCol, config.descCol, 'classification_v2', 'focus_area_ids', ...config.contextCols].join(',')
+  const baseCols = [config.idCol, config.nameCol, config.descCol, 'focus_area_ids', ...config.contextCols]
+  if (config.hasClassificationV2 !== false) baseCols.push('classification_v2')
+  const selectCols = baseCols.join(',')
   let rows: any[]
 
   if (entityIds && entityIds.length > 0) {
@@ -143,8 +145,10 @@ export async function POST(req: NextRequest) {
 
       // Update the entity row
       const updateData: Record<string, unknown> = {
-        classification_v2: enriched,
         focus_area_ids: enriched.focus_area_ids.join(','),
+      }
+      if (config.hasClassificationV2 !== false) {
+        updateData.classification_v2 = enriched
       }
       // theme_id column only exists on organizations and campaigns
       if (enriched.theme_primary && ['organization', 'campaign'].includes(config.entityType)) {

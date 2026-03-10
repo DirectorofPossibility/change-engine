@@ -13,6 +13,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Sidebar } from '@/components/layout/Sidebar'
+import { DashboardHeader } from '@/components/layout/DashboardHeader'
 import { getPipelineStats } from '@/lib/data/dashboard'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -27,11 +28,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
   // ── Fetch user role & org ──
   const { data: profile } = await supabase
     .from('user_profiles')
-    .select('role, org_id')
+    .select('role, org_id, display_name')
     .eq('auth_id', user.id)
     .single()
 
   const role = profile?.role || 'user'
+  const displayName = (profile as any)?.display_name || user.email?.split('@')[0] || 'User'
 
   // Restrict dashboard to admins, partners, and neighbors
   if (role !== 'admin' && role !== 'partner' && role !== 'neighbor') {
@@ -64,9 +66,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div className="min-h-screen bg-brand-bg">
       <Sidebar pipelineStats={stats} role={role} orgName={orgName} pendingRequestCount={pendingRequestCount} />
-      <main className="ml-60 min-h-screen p-8">
-        {children}
-      </main>
+      <div className="ml-60 min-h-screen flex flex-col">
+        <DashboardHeader
+          displayName={displayName}
+          role={role}
+          orgName={orgName}
+          reviewCount={stats.needsReview}
+        />
+        <main className="flex-1 p-8">
+          {children}
+        </main>
+      </div>
     </div>
   )
 }

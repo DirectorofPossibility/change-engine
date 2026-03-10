@@ -2,17 +2,16 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import type { PipelineStats } from '@/lib/types/dashboard'
-import { createClient } from '@/lib/supabase/client'
 import {
   LayoutDashboard, Search, FileText, Zap, BarChart3,
   Languages, Wrench, Users, BookOpen, HelpCircle,
   Briefcase, CalendarDays, Building2, Globe,
-  LogOut, Compass, BookMarked, Quote, Library,
+  Compass, BookMarked, Quote, Library,
   ChevronDown, Rss, Scale, Megaphone, Key,
   Tag, Network, Linkedin, CircleDot, Map,
-  Settings, Layers, Activity,
+  Settings, Layers, Activity, SlidersHorizontal,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -75,6 +74,7 @@ const ADMIN_GROUPS: NavGroup[] = [
   {
     label: 'Settings',
     items: [
+      { href: '/dashboard/preferences', label: 'Content Preferences', icon: SlidersHorizontal },
       { href: '/dashboard/api-keys', label: 'API Keys', icon: Key },
       { href: '/dashboard/utilities', label: 'Utilities', icon: Wrench },
       { href: '/dashboard/pipeline', label: 'Pipeline Status', icon: Settings },
@@ -109,6 +109,12 @@ const PARTNER_GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: 'Settings',
+    items: [
+      { href: '/dashboard/preferences', label: 'Content Preferences', icon: SlidersHorizontal },
+    ],
+  },
+  {
     label: 'Help',
     items: [
       { href: '/dashboard/tools-guides', label: 'Tools & Guides', icon: BookMarked },
@@ -125,6 +131,7 @@ const NEIGHBOR_GROUPS: NavGroup[] = [
       { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
       { href: '/dashboard/submit', label: 'Submit Content', icon: FileText },
       { href: '/dashboard/library', label: 'Knowledge Base', icon: BookOpen },
+      { href: '/dashboard/preferences', label: 'Content Preferences', icon: SlidersHorizontal },
     ],
   },
   {
@@ -145,7 +152,6 @@ interface SidebarProps {
 
 export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequestCount = 0 }: SidebarProps) {
   const pathname = usePathname()
-  const router = useRouter()
 
   const groups = role === 'partner'
     ? PARTNER_GROUPS
@@ -158,14 +164,6 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
     : role === 'neighbor'
       ? 'Neighbor Portal'
       : 'Pipeline Admin'
-
-  function handleSignOut() {
-    const supabase = createClient()
-    supabase.auth.signOut().then(function () {
-      router.push('/login')
-      router.refresh()
-    })
-  }
 
   const isActive = (href: string) => {
     if (href === '/dashboard' || href === '/dashboard/partner') return pathname === href
@@ -204,8 +202,8 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
         })}
       </nav>
 
-      {/* Sign Out + Exchange Link */}
-      <div className="px-3 py-3 border-t border-white/10 space-y-1">
+      {/* Sidebar footer */}
+      <div className="px-3 py-3 border-t border-white/10">
         <Link
           href="/"
           className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/70 hover:bg-sidebar-hover hover:text-white"
@@ -213,13 +211,6 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
           <Globe size={16} className="flex-shrink-0" />
           <span>View Site</span>
         </Link>
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm text-white/70 hover:bg-red-600/20 hover:text-red-300"
-        >
-          <LogOut size={16} className="flex-shrink-0" />
-          <span>Sign Out</span>
-        </button>
       </div>
 
       {/* Pipeline Mini Status (admin only) */}

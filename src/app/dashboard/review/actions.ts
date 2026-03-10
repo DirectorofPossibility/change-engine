@@ -137,6 +137,7 @@ async function approveItemCore(
     gov_level_id: classification.gov_level_id || null,
     confidence: classification.confidence,
     classification_reasoning: classification.reasoning || '',
+    org_id: inbox.org_id || null,
     image_url: inbox.image_url || null,
     is_featured: false,
     is_active: true,
@@ -194,6 +195,25 @@ async function approveItemCore(
   }
 
   await Promise.allSettled(junctionInserts)
+
+  // Step 6: Bridge research content to kb_documents (library)
+  const LIBRARY_TYPES = ['report', 'guide', 'tool']
+  if (LIBRARY_TYPES.includes(contentType)) {
+    const keyPoints = (classification as any).key_points || []
+    await svc.from('kb_documents').insert({
+      title: classification.title_6th_grade || inbox.title || 'Untitled',
+      summary: classification.summary_6th_grade || inbox.description || '',
+      key_points: keyPoints.length > 0 ? keyPoints : null,
+      content_type: contentType === 'report' ? 'research_report' : contentType === 'guide' ? 'guide' : 'toolkit',
+      status: 'published',
+      org_id: (inbox as any).org_id || null,
+      theme_id: classification.theme_primary || null,
+      focus_area_ids: classification.focus_area_ids || [],
+      focus_area_ids_v2: classification.focus_area_ids || [],
+      tags: classification.keywords || [],
+      classification_v2: classification as any,
+    }).then(() => {})
+  }
 
   return { success: true }
 }

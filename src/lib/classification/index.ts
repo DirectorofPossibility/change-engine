@@ -647,6 +647,7 @@ export const TABLE_CONFIGS: Record<string, {
   descCol: string
   contextCols: string[]
   entityType: EntityType
+  hasClassificationV2?: boolean
 }> = {
   elected_officials: {
     tableName: 'elected_officials',
@@ -685,7 +686,7 @@ export const TABLE_CONFIGS: Record<string, {
     idCol: 'opportunity_id',
     nameCol: 'opportunity_name',
     descCol: 'description_5th_grade',
-    contextCols: ['org_id', 'source_url', 'content_format'],
+    contextCols: ['org_id', 'address', 'city', 'state', 'zip_code', 'registration_url'],
     entityType: 'opportunity',
   },
   agencies: {
@@ -693,16 +694,18 @@ export const TABLE_CONFIGS: Record<string, {
     idCol: 'agency_id',
     nameCol: 'agency_name',
     descCol: 'description_5th_grade',
-    contextCols: ['website', 'level', 'jurisdiction'],
+    contextCols: ['website', 'jurisdiction'],
     entityType: 'agency',
+    hasClassificationV2: false,
   },
   benefit_programs: {
     tableName: 'benefit_programs',
     idCol: 'benefit_id',
     nameCol: 'benefit_name',
     descCol: 'description_5th_grade',
-    contextCols: ['eligibility', 'application_url', 'agency_id'],
+    contextCols: ['eligibility_summary', 'application_url', 'agency_id'],
     entityType: 'benefit_program',
+    hasClassificationV2: false,
   },
   campaigns: {
     tableName: 'campaigns',
@@ -711,6 +714,7 @@ export const TABLE_CONFIGS: Record<string, {
     descCol: 'description_5th_grade',
     contextCols: ['org_id', 'start_date', 'end_date'],
     entityType: 'campaign',
+    hasClassificationV2: false,
   },
   ballot_items: {
     tableName: 'ballot_items',
