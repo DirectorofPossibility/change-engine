@@ -155,7 +155,7 @@ export default async function GovernancePage() {
                             <Link
                               key={o.official_id}
                               href={'/officials/' + o.official_id}
-                              className="group flex-shrink-0 w-[160px] bg-white rounded-xl border-2 border-brand-border hover:-translate-y-1 transition-all duration-200 overflow-hidden"
+                              className="group flex-shrink-0 w-[160px] bg-white rounded-xl border border-brand-border hover:-translate-y-1 transition-all duration-200 overflow-hidden"
                               style={{ boxShadow: '3px 3px 0 ' + level.color + '20' }}
                             >
                               {/* Photo or color header */}
@@ -190,7 +190,7 @@ export default async function GovernancePage() {
                   {lvlPolicies.length > 0 && (
                     <div>
                       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-3">What they're working on</p>
-                      <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+                      <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
                         <div className="divide-y divide-brand-border">
                           {lvlPolicies.map(function (p) {
                             const displayTitle = p.title_6th_grade || p.policy_name

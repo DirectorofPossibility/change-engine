@@ -141,7 +141,7 @@ export default async function CentersIndexPage() {
                 <Link
                   key={name}
                   href={'/centers/' + config.slug}
-                  className="block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
+                  className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
                 >
                   <div className="flex flex-col sm:flex-row">
                     {/* Color accent + icon */}

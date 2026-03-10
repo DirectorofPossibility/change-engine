@@ -194,7 +194,7 @@ export default function PromotionsAdmin() {
         <div className="flex items-center gap-2">
           <button
             onClick={function () { setView(view === 'list' ? 'calendar' : 'list') }}
-            className="flex items-center gap-1.5 px-3 py-2 border-2 border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 border border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
           >
             <Calendar size={14} />
             {view === 'list' ? 'Calendar' : 'List'}
@@ -211,7 +211,7 @@ export default function PromotionsAdmin() {
 
       {/* Add/Edit form */}
       {(adding || editing) && (
-        <div className="mb-6 p-5 bg-white border-2 border-brand-border rounded-xl">
+        <div className="mb-6 p-5 bg-white border border-brand-border rounded-xl">
           <h2 className="text-lg font-semibold mb-4">{editing ? 'Edit Promotion' : 'New Promotion'}</h2>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -220,7 +220,7 @@ export default function PromotionsAdmin() {
                 <input
                   value={form.title}
                   onChange={function (e) { setForm({ ...form, title: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="Houston Food Bank Drive"
                 />
               </div>
@@ -229,7 +229,7 @@ export default function PromotionsAdmin() {
                 <input
                   value={form.subtitle}
                   onChange={function (e) { setForm({ ...form, subtitle: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="Feeding families across Harris County"
                 />
               </div>
@@ -241,7 +241,7 @@ export default function PromotionsAdmin() {
                 value={form.description}
                 onChange={function (e) { setForm({ ...form, description: e.target.value }) }}
                 rows={2}
-                className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
               />
             </div>
 
@@ -251,7 +251,7 @@ export default function PromotionsAdmin() {
                 <select
                   value={form.promo_type}
                   onChange={function (e) { setForm({ ...form, promo_type: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
                 >
                   {PROMO_TYPES.map(function (t) {
                     return <option key={t.value} value={t.value}>{t.label}</option>
@@ -263,7 +263,7 @@ export default function PromotionsAdmin() {
                 <select
                   value={form.org_id}
                   onChange={function (e) { setForm({ ...form, org_id: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
                 >
                   <option value="">None</option>
                   {orgs.map(function (o) {
@@ -283,7 +283,7 @@ export default function PromotionsAdmin() {
                   <input
                     value={form.color}
                     onChange={function (e) { setForm({ ...form, color: e.target.value }) }}
-                    className="flex-1 px-3 py-2 border-2 border-brand-border rounded-lg text-sm font-mono focus:border-brand-accent focus:outline-none"
+                    className="flex-1 px-3 py-2 border border-brand-border rounded-lg text-sm font-mono focus:border-brand-accent focus:outline-none"
                   />
                 </div>
               </div>
@@ -296,7 +296,7 @@ export default function PromotionsAdmin() {
                   type="date"
                   value={form.start_date}
                   onChange={function (e) { setForm({ ...form, start_date: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div>
@@ -305,7 +305,7 @@ export default function PromotionsAdmin() {
                   type="date"
                   value={form.end_date}
                   onChange={function (e) { setForm({ ...form, end_date: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div>
@@ -313,7 +313,7 @@ export default function PromotionsAdmin() {
                 <input
                   value={form.cta_text}
                   onChange={function (e) { setForm({ ...form, cta_text: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="Learn More"
                 />
               </div>
@@ -322,7 +322,7 @@ export default function PromotionsAdmin() {
                 <input
                   value={form.cta_href}
                   onChange={function (e) { setForm({ ...form, cta_href: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="/organizations/ORG_123"
                 />
               </div>
@@ -334,7 +334,7 @@ export default function PromotionsAdmin() {
                 <input
                   value={form.image_url}
                   onChange={function (e) { setForm({ ...form, image_url: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="https://..."
                 />
               </div>
@@ -344,7 +344,7 @@ export default function PromotionsAdmin() {
                   type="number"
                   value={form.display_order}
                   onChange={function (e) { setForm({ ...form, display_order: parseInt(e.target.value) || 0 }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div className="flex items-end pb-2">
@@ -385,7 +385,7 @@ export default function PromotionsAdmin() {
               </button>
               <button
                 onClick={function () { setEditing(null); setAdding(false) }}
-                className="px-4 py-2 border-2 border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
+                className="px-4 py-2 border border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
               >
                 Cancel
               </button>
@@ -401,7 +401,7 @@ export default function PromotionsAdmin() {
             const tc = typeConfig(p.promo_type)
             const org = p.org_id ? orgs.find(function (o) { return o.org_id === p.org_id }) : null
             return (
-              <div key={p.promo_id} className="p-4 bg-white border-2 border-brand-border rounded-xl flex gap-4">
+              <div key={p.promo_id} className="p-4 bg-white border border-brand-border rounded-xl flex gap-4">
                 <div className="w-1.5 rounded flex-shrink-0" style={{ background: p.is_active ? (p.color || tc.color) : '#D1D5E0' }} />
                 {p.image_url && (
                   <Image src={p.image_url} alt="" className="w-16 h-16 rounded-lg object-cover flex-shrink-0"  width={800} height={64} />
@@ -445,7 +445,7 @@ export default function PromotionsAdmin() {
 
       {/* Calendar view */}
       {view === 'calendar' && (
-        <div className="bg-white border-2 border-brand-border rounded-xl p-5">
+        <div className="bg-white border border-brand-border rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <button onClick={prevMonth} className="p-1.5 rounded hover:bg-brand-bg transition-colors"><ChevronLeft size={18} /></button>
             <h2 className="font-serif text-lg font-bold">
@@ -509,7 +509,7 @@ function PromoPreview({ title, subtitle, description, promoType, orgName, logoUr
 }) {
   const tc = PROMO_TYPES.find(function (t) { return t.value === promoType }) || PROMO_TYPES[0]
   return (
-    <div className="border-2 border-brand-border rounded-xl overflow-hidden" style={{ boxShadow: '3px 3px 0 ' + color + '30' }}>
+    <div className="border border-brand-border rounded-xl overflow-hidden" style={{ boxShadow: '3px 3px 0 ' + color + '30' }}>
       {imageUrl && (
         <div className="h-24 overflow-hidden">
           <Image src={imageUrl} alt="" className="w-full h-full object-cover"  width={800} height={400} />

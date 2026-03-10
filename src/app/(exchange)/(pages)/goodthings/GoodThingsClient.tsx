@@ -383,7 +383,7 @@ export function GoodThingsClient() {
         {!submitted ? (
           /* ── Form ── */
           <section ref={formRef} className="mb-12">
-            <div className="bg-white rounded-2xl border-2 border-brand-border p-6 sm:p-8 relative overflow-hidden" style={{ boxShadow: '4px 4px 0 #D1D5E0' }}>
+            <div className="bg-white rounded-2xl border border-brand-border p-6 sm:p-8 relative overflow-hidden">
               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5]" />
               <div className="pl-4">
                 <h2 className="font-serif text-2xl font-bold text-brand-text mb-1">{t('gt.form_title')}</h2>
@@ -406,7 +406,7 @@ export function GoodThingsClient() {
                           type="text" value={f.val}
                           onChange={function (e) { f.set(e.target.value) }}
                           placeholder={f.ph}
-                          className="w-full px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
                           style={{ '--tw-ring-color': f.color + '40' } as any}
                           maxLength={280}
                         />
@@ -422,7 +422,7 @@ export function GoodThingsClient() {
                       type="text" value={displayName}
                       onChange={function (e) { setDisplayName(e.target.value) }}
                       placeholder={t('gt.name_ph')}
-                      className="w-full max-w-sm px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all"
+                      className="w-full max-w-sm px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all"
                       maxLength={50}
                     />
                     <p className="text-[11px] text-brand-muted mt-1">{t('gt.name_hint')}</p>
@@ -436,7 +436,7 @@ export function GoodThingsClient() {
                       type="text" value={zip}
                       onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
                       placeholder="77001"
-                      className="w-full max-w-[200px] px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all"
+                      className="w-full max-w-[200px] px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all"
                       maxLength={5}
                     />
                   </div>
@@ -451,7 +451,7 @@ export function GoodThingsClient() {
                       <input type="email" value={email}
                         onChange={function (e) { setEmail(e.target.value) }}
                         placeholder="your@email.com"
-                        className="mt-2 w-full max-w-sm px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all" />
+                        className="mt-2 w-full max-w-sm px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all" />
                     )}
                   </div>
 
@@ -469,7 +469,7 @@ export function GoodThingsClient() {
         ) : (
           /* ── Success ── */
           <section className="mb-12">
-            <div className="bg-white rounded-2xl border-2 border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden" style={{ boxShadow: '4px 4px 0 #D1D5E0' }}>
+            <div className="bg-white rounded-2xl border-2 border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden">
               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#38a169]" />
               <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
               <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">{t('gt.success_title')}</h2>
@@ -501,11 +501,11 @@ export function GoodThingsClient() {
                   <Download size={16} /> {t('gt.download_image')}
                 </button>
                 <button onClick={emailCopy}
-                  className="flex items-center gap-2 px-5 py-2.5 border-2 border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
+                  className="flex items-center gap-2 px-5 py-2.5 border border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
                   <Mail size={16} /> {t('gt.email_copy')}
                 </button>
                 <button onClick={resetForm}
-                  className="flex items-center gap-2 px-5 py-2.5 border-2 border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
+                  className="flex items-center gap-2 px-5 py-2.5 border border-brand-border rounded-xl text-sm font-semibold text-brand-text hover:bg-brand-bg transition-all">
                   {t('gt.share_more')}
                 </button>
               </div>
@@ -522,8 +522,8 @@ export function GoodThingsClient() {
                 const timeAgo = getTimeAgo(entry.created_at, { just_now: t('gt.just_now'), minutes: t('gt.minutes_ago'), hours: t('gt.hours_ago'), days: t('gt.days_ago') })
                 return (
                   <div key={entry.id}
-                    className="bg-white rounded-xl border-2 border-brand-border p-4 relative overflow-hidden group hover:border-brand-text transition-all"
-                    style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                    className="bg-white rounded-xl border border-brand-border p-4 relative overflow-hidden group hover:border-brand-text transition-all"
+                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5] transition-all" />
                     <div className="pl-3">
                       {[entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
@@ -552,7 +552,7 @@ export function GoodThingsClient() {
 
         {/* About */}
         <section className="mb-12">
-          <div className="bg-brand-bg rounded-2xl border-2 border-brand-border p-6 sm:p-8" style={{ boxShadow: '3px 3px 0 #D1D5E0' }}>
+          <div className="bg-brand-bg rounded-2xl border border-brand-border p-6 sm:p-8">
             <div className="flex items-start gap-4">
               <FlowerOfLifeIcon size={36} className="flex-shrink-0 mt-1" />
               <div>

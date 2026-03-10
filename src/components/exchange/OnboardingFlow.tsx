@@ -118,8 +118,8 @@ export function OnboardingFlow() {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
       <div
-        className="relative w-full max-w-lg mx-4 overflow-hidden rounded-2xl border-2 border-brand-border animate-fade-up"
-        style={{ boxShadow: '6px 6px 0 #D5D0C8' }}
+        className="relative w-full max-w-lg mx-4 overflow-hidden rounded-2xl border border-brand-border animate-fade-up"
+       
       >
         {/* ── Branded header ── */}
         <div className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
@@ -240,7 +240,7 @@ export function OnboardingFlow() {
                   className="flex items-center gap-2 border-2 rounded-xl px-4 py-3 bg-white mb-2 transition-colors"
                   style={{
                     borderColor: error ? '#C53030' : '#1A1A1A',
-                    boxShadow: '3px 3px 0 #D5D0C8',
+                    
                   }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
@@ -261,7 +261,7 @@ export function OnboardingFlow() {
                   type="submit"
                   disabled={input.trim().length < 3 || isLoading}
                   className="w-full py-3 bg-brand-text text-white font-semibold text-sm rounded-xl disabled:opacity-30 hover:bg-brand-accent transition-colors"
-                  style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                 
                 >
                   {isLoading ? 'Looking up...' : 'Find my community'}
                 </button>
@@ -295,8 +295,8 @@ export function OnboardingFlow() {
                     <button
                       key={p.slug}
                       onClick={function () { handlePersonaSelect(p.slug) }}
-                      className="relative text-left border-2 border-brand-border rounded-xl p-4 overflow-hidden hover:border-brand-accent hover:-translate-y-0.5 transition-all group"
-                      style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                      className="relative text-left border border-brand-border rounded-xl p-4 overflow-hidden hover:border-brand-accent hover:-translate-y-0.5 transition-all group"
+                     
                     >
                       {/* FOL watermark per card */}
                       <Image

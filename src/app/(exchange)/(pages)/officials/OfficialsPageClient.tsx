@@ -126,7 +126,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
   return (
     <div>
       {/* ZIP Search Bar */}
-      <div className="bg-white rounded-xl border-2 border-brand-border p-6 mb-8">
+      <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
         <h2 className="font-serif text-xl font-bold text-brand-text mb-2">Find Your Representatives</h2>
         <p className="text-sm text-brand-muted mb-4">Enter your ZIP code to see who represents you at every level of government.</p>
         <form onSubmit={handleZipSearch} className="flex gap-3">
@@ -137,7 +137,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
               value={zip}
               onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
               placeholder="Enter ZIP code"
-              className="w-full pl-9 pr-4 py-3 border-2 border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+              className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
               maxLength={5}
             />
             <InfoBubble id={TOOLTIPS.zip_lookup.id} text={TOOLTIPS.zip_lookup.text} position="bottom" />

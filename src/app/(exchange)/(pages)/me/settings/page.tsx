@@ -207,7 +207,7 @@ export default function SettingsPage() {
       <div className="mb-8">
         <h2 className="text-lg font-semibold text-brand-text mb-3">Profile Picture</h2>
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-brand-bg-alt border-2 border-brand-border overflow-hidden flex items-center justify-center flex-shrink-0">
+          <div className="w-16 h-16 rounded-full bg-brand-bg-alt border border-brand-border overflow-hidden flex items-center justify-center flex-shrink-0">
             {avatarUrl ? (
               <Image src={avatarUrl} alt="Profile" className="w-full h-full object-cover"  width={800} height={400} />
             ) : (
@@ -217,7 +217,7 @@ export default function SettingsPage() {
             )}
           </div>
           <div>
-            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-brand-border rounded-lg text-sm font-medium text-brand-text hover:border-brand-accent transition-colors cursor-pointer">
+            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border rounded-lg text-sm font-medium text-brand-text hover:border-brand-accent transition-colors cursor-pointer">
               {uploadingAvatar ? 'Uploading...' : 'Change Picture'}
               <input
                 type="file"
@@ -243,7 +243,7 @@ export default function SettingsPage() {
             type="text"
             value={displayName}
             onChange={function (e) { setDisplayName(e.target.value) }}
-            className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
           />
         </div>
         <div>
@@ -253,7 +253,7 @@ export default function SettingsPage() {
             type="text"
             value={address}
             onChange={function (e) { setAddress(e.target.value) }}
-            className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
             placeholder="123 Main St, Houston, TX 77001"
           />
           <p className="text-xs text-brand-muted mt-1">Used to find your elected officials and local resources</p>
@@ -266,7 +266,7 @@ export default function SettingsPage() {
             maxLength={5}
             value={zipCode}
             onChange={function (e) { setZipCode(e.target.value) }}
-            className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
             placeholder="Auto-filled from address"
           />
         </div>
@@ -277,7 +277,7 @@ export default function SettingsPage() {
             id="language"
             value={language}
             onChange={function (e) { setLanguage(e.target.value) }}
-            className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent bg-white"
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent bg-white"
           >
             <option value="en">English</option>
             <option value="es">Español</option>
@@ -316,7 +316,7 @@ export default function SettingsPage() {
             minLength={6}
             value={newPassword}
             onChange={function (e) { setNewPassword(e.target.value) }}
-            className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
             placeholder="At least 6 characters"
           />
         </div>

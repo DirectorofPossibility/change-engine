@@ -55,7 +55,7 @@ function EntityCard({ item }: { item: ShelfItem }) {
   return (
     <Link
       href={href}
-      className="group flex-shrink-0 w-[260px] sm:w-[280px] bg-white rounded-xl border-2 border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+      className="group flex-shrink-0 w-[260px] sm:w-[280px] bg-white rounded-xl border border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
     >
       {/* Color top bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: item.color || '#8B7E74' }} />

@@ -53,8 +53,8 @@ export default async function TirzPage() {
                   <Link
                     key={zone.tirz_id}
                     href={'/tirz/' + zone.tirz_id}
-                    className="group border-2 border-brand-border rounded-[0.75rem] overflow-hidden bg-white hover:translate-y-[-2px] transition-all duration-200"
-                    style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                    className="group border border-brand-border rounded-[0.75rem] overflow-hidden bg-white hover:translate-y-[-2px] transition-all duration-200"
+                   
                   >
                     <div className="flex">
                       <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: '#C75B2A' }} />
@@ -104,19 +104,19 @@ export default async function TirzPage() {
                 new sidewalks, drainage, affordable housing, parks, and economic development programs.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="border-2 border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
+                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
                   <p className="font-serif font-bold text-brand-text text-sm mb-1">Created by Council</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     City Council designates TIRZ zones to attract investment in areas that need it most.
                   </p>
                 </div>
-                <div className="border-2 border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
+                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
                   <p className="font-serif font-bold text-brand-text text-sm mb-1">Tax Increment Captured</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     Growth in property tax revenue stays in the zone instead of going to the general fund.
                   </p>
                 </div>
-                <div className="border-2 border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
+                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
                   <p className="font-serif font-bold text-brand-text text-sm mb-1">Reinvested Locally</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     Funds go toward infrastructure, housing, parks, and development within the zone.

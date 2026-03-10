@@ -82,7 +82,7 @@ export default async function OpportunitiesPage() {
             </div>
 
             {all.length === 0 ? (
-              <div className="relative text-center py-16 bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+              <div className="relative text-center py-16 bg-white rounded-xl border border-brand-border overflow-hidden">
                 <div className="absolute right-4 top-4 opacity-[0.06]">
                   <FOLWatermark variant="tripod" size="md" color="#38a169" />
                 </div>
@@ -100,7 +100,7 @@ export default async function OpportunitiesPage() {
                     <Link
                       key={opp.opportunity_id}
                       href={'/opportunities/' + opp.opportunity_id}
-                      className="bg-white rounded-xl border-2 border-brand-border p-5 hover:shadow-md transition-shadow group relative overflow-hidden"
+                      className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow group relative overflow-hidden"
                     >
                       {/* Color bar */}
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-theme-voice group-hover:w-1.5 transition-all" />

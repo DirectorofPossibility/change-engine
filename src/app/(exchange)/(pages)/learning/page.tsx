@@ -84,8 +84,8 @@ export default async function LearningIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+               
               >
                 <div className="flex">
                   <div

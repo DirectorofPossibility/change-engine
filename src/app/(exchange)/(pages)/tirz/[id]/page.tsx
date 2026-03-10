@@ -54,25 +54,25 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 mb-8">
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
               <Building2 size={20} className="mx-auto mb-1" style={{ color: '#C75B2A' }} />
               <div className="text-lg font-bold text-brand-text">TIRZ-{zone.site_number}</div>
               <div className="text-xs text-brand-muted">Zone Number</div>
             </div>
             {zone.status && (
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+              <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                 <div className="text-lg font-bold text-brand-text capitalize">{zone.status}</div>
                 <div className="text-xs text-brand-muted">Status</div>
               </div>
             )}
             {zone.year_established && (
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+              <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                 <div className="text-lg font-bold text-brand-text">{zone.year_established}</div>
                 <div className="text-xs text-brand-muted">Established</div>
               </div>
             )}
             {zone.managing_entity && (
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+              <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
                 <div className="text-sm font-bold text-brand-text truncate">{zone.managing_entity}</div>
                 <div className="text-xs text-brand-muted">Managed By</div>
               </div>
@@ -109,7 +109,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
           {/* Council Districts */}
           {zone.council_districts && (
-            <div className="bg-brand-accent/5 rounded-xl border-2 border-brand-border p-4 mb-8">
+            <div className="bg-brand-accent/5 rounded-xl border border-brand-border p-4 mb-8">
               <p className="text-sm text-brand-text">
                 Overlapping Council Districts: <strong>{zone.council_districts}</strong> &mdash;{' '}
                 <Link href="/officials" className="text-brand-accent hover:underline font-medium">
@@ -121,7 +121,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
           {/* ZIP Codes */}
           {zone.zip_codes && (
-            <div className="bg-brand-bg rounded-xl border-2 border-brand-border p-4 mb-8">
+            <div className="bg-brand-bg rounded-xl border border-brand-border p-4 mb-8">
               <p className="text-sm text-brand-text">
                 ZIP Codes: <strong>{zone.zip_codes}</strong> &mdash;{' '}
                 <Link href="/officials/lookup" className="text-brand-accent hover:underline font-medium">
@@ -144,13 +144,13 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     <Link
                       key={official.official_id}
                       href={'/officials/' + official.official_id}
-                      className="flex items-center gap-3 bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="flex items-center gap-3 bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
                     >
                       {official.photo_url ? (
                         <Image
                           src={official.photo_url}
                           alt={official.official_name}
-                          className="w-12 h-12 rounded-full object-cover border-2 border-brand-border"
+                          className="w-12 h-12 rounded-full object-cover border border-brand-border"
                          width={80} height={48} />
                       ) : (
                         <div className="w-12 h-12 rounded-full bg-brand-bg-alt flex items-center justify-center text-brand-muted text-sm font-bold">
@@ -184,7 +184,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     <Link
                       key={p.policy_id}
                       href={'/policies/' + p.policy_id}
-                      className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {p.level && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{p.level}</span>}
@@ -204,7 +204,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
         <div>
           <div className="sticky top-24 space-y-4">
             {/* Quick facts card */}
-            <div className="border-2 border-brand-border rounded-[0.75rem] bg-white overflow-hidden" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+            <div className="border border-brand-border rounded-[0.75rem] bg-white overflow-hidden">
               <div className="h-1.5" style={{ backgroundColor: '#C75B2A' }} />
               <div className="p-5">
                 <h3 className="font-serif text-sm font-bold text-brand-text mb-3">About TIRZ Zones</h3>

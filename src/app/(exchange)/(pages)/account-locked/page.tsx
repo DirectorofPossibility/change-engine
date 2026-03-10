@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function AccountLockedPage() {
   return (
     <div className="max-w-lg mx-auto px-4 py-24 text-center">
-      <div className="bg-white rounded-xl border-2 border-brand-border p-8">
+      <div className="bg-white rounded-xl border border-brand-border p-8">
         <h1 className="text-2xl font-bold text-brand-text mb-4 font-serif">Account Paused</h1>
         <p className="text-brand-muted mb-6">
           Your account has been paused. If you believe this is an error, please

@@ -172,7 +172,7 @@ git push origin master
 | 1 AM | `batch-translate` | Translate untranslated content → ES, VI |
 | 3 AM | `poll-rss` | Poll all active RSS feeds → classify new items |
 | 5 AM Mon | `sync-federal-spending` | USAspending → federal grants/contracts/loans in Harris County |
-| 5:30 AM Mon | `sync-elections` | Google Civic → elections, candidates, ballot items for Houston + Claude enrichment |
+| 5:30 AM Mon | `sync-elections` | TX SOS + FEC + Google Civic → elections, candidates, ballot items for Houston + Claude enrichment |
 | 6 AM | `sync-polling-places` | Refresh voter locations |
 | 7 AM | `sync-city-houston` | Legistar API → Houston officials + ordinances + classify + geo bind |
 | 8 AM | `sync-county-harris` | Legistar API → Harris County officials + legislation + classify + geo bind |
@@ -198,6 +198,8 @@ git push origin master
 
 - **RSS feeds** → `rss_feeds` table → `rss-proxy` edge function → content pipeline
 - **Google Civic API** → `sync-officials` → ZIP→district mapping (Divisions endpoint)
+- **TX Secretary of State** → `sync-elections` → election dates, deadlines (scraped from sos.state.tx.us)
+- **FEC API** (api.open.fec.gov) → `sync-elections` → federal TX candidates (House + Senate, Houston-area districts)
 - **Manual URLs** → `/api/ingest` or `/api/intake` → content pipeline
 - **External APIs** → `/api/intake` with entity items → upsert + classify
 

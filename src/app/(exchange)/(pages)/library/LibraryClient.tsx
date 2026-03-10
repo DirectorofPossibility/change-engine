@@ -107,7 +107,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
           onChange={function (e) { setQuery(e.target.value) }}
           placeholder="Search the collection..."
           className="w-full pl-12 pr-10 py-3.5 border-2 border-brand-text rounded-xl bg-white text-sm text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
-          style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+         
         />
         {query && (
           <button onClick={function () { setQuery('') }} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-brand-muted hover:text-brand-text">
@@ -143,8 +143,8 @@ export function LibraryClient({ documents }: LibraryClientProps) {
           {/* ── Ask Chance ── */}
           <Link
             href="/library/chat"
-            className="group flex items-center gap-5 my-10 p-6 border-2 border-brand-border rounded-xl bg-brand-bg-alt text-brand-text hover:-translate-y-1 transition-all"
-            style={{ boxShadow: '4px 4px 0 #E2DDD5' }}
+            className="group flex items-center gap-5 my-10 p-6 border border-brand-border rounded-xl bg-brand-bg-alt text-brand-text hover:-translate-y-1 transition-all"
+           
           >
             <div className="w-12 h-12 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
               <MessageCircle size={24} className="text-brand-accent" />
@@ -173,7 +173,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {collections.map(function (col) {
                   return (
-                    <div key={col.theme.id} className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                    <div key={col.theme.id} className="border border-brand-border rounded-lg overflow-hidden">
                       <div className="h-1.5" style={{ backgroundColor: col.theme.color }} />
                       <div className="p-4">
                         <p className="font-serif text-sm font-bold text-brand-text mb-2">{col.theme.name}</p>
@@ -214,7 +214,7 @@ function FeaturedBook({ doc }: { doc: LibraryDoc }) {
 
   return (
     <Link href={'/library/doc/' + doc.id} className="group block mb-8">
-      <article className="border-2 border-brand-text rounded-xl overflow-hidden hover:-translate-y-1 transition-all" style={{ boxShadow: '4px 4px 0 #D5D0C8' }}>
+      <article className="border-2 border-brand-text rounded-xl overflow-hidden hover:-translate-y-1 transition-all">
         {/* Spine color */}
         <div className="flex">
           <div className="w-2 flex-shrink-0" style={{ background: primary?.color || '#3182ce' }} />
@@ -254,7 +254,7 @@ function FeaturedBook({ doc }: { doc: LibraryDoc }) {
 
             {/* Key takeaways */}
             {doc.key_points.length > 0 && (
-              <div className="bg-brand-bg rounded-lg p-5 mb-5 border-2 border-brand-border">
+              <div className="bg-brand-bg rounded-lg p-5 mb-5 border border-brand-border">
                 <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Key Takeaways</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {doc.key_points.slice(0, 4).map(function (point, i) {
@@ -297,7 +297,7 @@ function BookCard({ doc }: { doc: LibraryDoc }) {
 
   return (
     <Link href={'/library/doc/' + doc.id} className="group block">
-      <article className="flex border-2 border-brand-border rounded-lg overflow-hidden hover:-translate-y-0.5 hover:border-brand-text hover:shadow-md transition-all" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+      <article className="flex border border-brand-border rounded-lg overflow-hidden hover:-translate-y-0.5 hover:border-brand-text hover:shadow-md transition-all">
         {/* Book spine */}
         <div className="w-1.5 flex-shrink-0" style={{ background: primary?.color || '#3182ce' }} />
 

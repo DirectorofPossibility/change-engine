@@ -90,15 +90,15 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
 
   if (variant === 'banner') {
     return (
-      <div className="relative overflow-hidden rounded-xl border-2 border-brand-border" style={{ background: 'linear-gradient(135deg, #FAF8F5 0%, #EDE8E0 100%)', boxShadow: '3px 3px 0 #D5D0C8' }}>
+      <div className="relative overflow-hidden rounded-xl border border-brand-border" style={{ background: 'linear-gradient(135deg, #FAF8F5 0%, #EDE8E0 100%)' }}>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, #D5D0C8, #C75B2A)' }} />
         <div className="flex items-center gap-5 p-5">
           {promo.image_url ? (
-            <Image src={promo.image_url} alt="" className="w-20 h-20 rounded-lg object-cover flex-shrink-0 border-2 border-brand-border"  width={800} height={80} />
+            <Image src={promo.image_url} alt="" className="w-20 h-20 rounded-lg object-cover flex-shrink-0 border border-brand-border"  width={800} height={80} />
           ) : promo.logo_url ? (
-            <Image src={promo.logo_url} alt="" className="w-16 h-16 rounded-lg object-contain flex-shrink-0 bg-white p-1 border-2 border-brand-border"  width={48} height={64} />
+            <Image src={promo.logo_url} alt="" className="w-16 h-16 rounded-lg object-contain flex-shrink-0 bg-white p-1 border border-brand-border"  width={48} height={64} />
           ) : (
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0 bg-brand-bg-alt border-2 border-brand-border">
+            <div className="w-16 h-16 rounded-lg flex items-center justify-center flex-shrink-0 bg-brand-bg-alt border border-brand-border">
               <Megaphone size={24} className="text-brand-accent" />
             </div>
           )}
@@ -135,7 +135,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
         <div className="p-6" style={{ background: promo.image_url ? undefined : color + '08' }}>
           <div className="flex items-center gap-3 mb-3">
             {promo.logo_url && (
-              <Image src={promo.logo_url} alt="" className="w-10 h-10 rounded-lg object-contain bg-white p-0.5 border-2 border-brand-border"  width={48} height={40} />
+              <Image src={promo.logo_url} alt="" className="w-10 h-10 rounded-lg object-contain bg-white p-0.5 border border-brand-border"  width={48} height={40} />
             )}
             <span className="text-[10px] font-mono font-bold uppercase tracking-widest" style={{ color }}>{typeLabel}</span>
           </div>
@@ -160,7 +160,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
 
   // Default: card variant (sidebar)
   return (
-    <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+    <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
       <div className="h-1" style={{ backgroundColor: color }} />
       {promo.image_url && (
         <div className="h-28 overflow-hidden">

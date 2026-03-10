@@ -96,8 +96,8 @@ export default function DistrictsPage() {
           <div className="flex-1 min-w-0">
             {/* Find Your Districts CTA */}
             <div
-              className="border-2 border-brand-border rounded-[0.75rem] bg-white overflow-hidden mb-8"
-              style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+              className="border border-brand-border rounded-[0.75rem] bg-white overflow-hidden mb-8"
+             
             >
               <div className="h-1.5" style={{ backgroundColor: '#805ad5' }} />
               <div className="p-6 sm:p-8">
@@ -142,8 +142,8 @@ export default function DistrictsPage() {
                   <Link
                     key={district.title}
                     href={district.href}
-                    className="group border-2 border-brand-border rounded-[0.75rem] overflow-hidden bg-white hover:translate-y-[-2px] transition-all duration-200"
-                    style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                    className="group border border-brand-border rounded-[0.75rem] overflow-hidden bg-white hover:translate-y-[-2px] transition-all duration-200"
+                   
                   >
                     <div className="flex">
                       <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: district.color }} />
@@ -185,19 +185,19 @@ export default function DistrictsPage() {
                 District lines are redrawn every ten years after the census.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="border-2 border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
+                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
                   <p className="font-serif font-bold text-brand-text text-sm mb-1">Local</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     City council and county commissioners handle roads, parks, public safety, and local budgets.
                   </p>
                 </div>
-                <div className="border-2 border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
+                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
                   <p className="font-serif font-bold text-brand-text text-sm mb-1">State</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     State house and senate members shape education, healthcare, criminal justice, and state taxes.
                   </p>
                 </div>
-                <div className="border-2 border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
+                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
                   <p className="font-serif font-bold text-brand-text text-sm mb-1">Federal</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     Congressional representatives and senators set national policy, defense, immigration, and federal funding.

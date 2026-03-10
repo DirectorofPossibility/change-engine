@@ -77,8 +77,8 @@ export default async function ActionIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+               
               >
                 <div className="flex">
                   <div
@@ -121,8 +121,8 @@ export default async function ActionIndexPage() {
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             href="/officials/lookup"
-            className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-brand-border hover:border-brand-accent transition-colors"
-            style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-brand-border hover:border-brand-accent transition-colors"
+           
           >
             <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
               <Users size={16} className="text-blue-600" />
@@ -134,8 +134,8 @@ export default async function ActionIndexPage() {
           </Link>
           <Link
             href="/call-your-senators"
-            className="flex items-center gap-3 p-4 bg-white rounded-xl border-2 border-brand-border hover:border-brand-accent transition-colors"
-            style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-brand-border hover:border-brand-accent transition-colors"
+           
           >
             <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
               <span className="text-green-600 text-sm">&#9742;</span>

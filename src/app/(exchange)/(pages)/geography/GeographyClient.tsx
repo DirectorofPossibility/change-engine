@@ -201,7 +201,7 @@ export function GeographyClient({
   const totalCount = entityCounts.organizations + entityCounts.services + entityCounts.voting + entityCounts.officials
 
   return (
-    <div className="relative flex gap-0 rounded-2xl overflow-hidden border-2 border-brand-border" style={{ boxShadow: '4px 4px 0 #D5D0C8' }}>
+    <div className="relative flex gap-0 rounded-2xl overflow-hidden border border-brand-border">
 
       {/* ═══════════ CONTROL PANEL (left sidebar) ═══════════ */}
       {panelOpen && (
@@ -226,7 +226,7 @@ export function GeographyClient({
                   onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
                   placeholder="ZIP code"
                   maxLength={5}
-                  className="w-full pl-8 pr-2 py-2 text-sm border-2 border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/40 placeholder:text-brand-muted/50"
+                  className="w-full pl-8 pr-2 py-2 text-sm border border-brand-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-accent/40 placeholder:text-brand-muted/50"
                 />
               </div>
               <button
@@ -242,7 +242,7 @@ export function GeographyClient({
               <select
                 value={selectedSN}
                 onChange={handleSNChange}
-                className="w-full appearance-none px-3 py-2 pr-8 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 text-brand-text"
+                className="w-full appearance-none px-3 py-2 pr-8 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 text-brand-text"
               >
                 <option value="">Browse neighborhoods...</option>
                 {superNeighborhoods.map(function (sn) {
@@ -373,7 +373,7 @@ export function GeographyClient({
                       if (count === 0) return null
                       const Icon = et.icon
                       return (
-                        <div key={et.key} className="flex items-center gap-2 px-3 py-2 rounded-lg border-2 border-brand-border">
+                        <div key={et.key} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-brand-border">
                           <Icon size={14} style={{ color: et.color }} />
                           <div>
                             <span className="block text-sm font-bold text-brand-text leading-none">{count}</span>
@@ -398,10 +398,10 @@ export function GeographyClient({
                           <Link
                             key={o.official_id}
                             href={'/officials/' + o.official_id}
-                            className="flex items-center gap-3 p-2.5 rounded-lg border-2 border-brand-border hover:border-brand-accent/40 hover:bg-brand-bg/50 transition-all group"
+                            className="flex items-center gap-3 p-2.5 rounded-lg border border-brand-border hover:border-brand-accent/40 hover:bg-brand-bg/50 transition-all group"
                           >
                             {o.photo_url ? (
-                              <Image src={o.photo_url} alt="" className="w-9 h-9 rounded-full object-cover border-2 border-brand-border"  width={80} height={36} />
+                              <Image src={o.photo_url} alt="" className="w-9 h-9 rounded-full object-cover border border-brand-border"  width={80} height={36} />
                             ) : (
                               <div className="w-9 h-9 rounded-full bg-brand-border/40 flex items-center justify-center">
                                 <Users size={14} className="text-brand-muted" />
@@ -438,8 +438,8 @@ export function GeographyClient({
         {!panelOpen && (
           <button
             onClick={function () { setPanelOpen(true) }}
-            className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl border-2 border-brand-border text-xs font-bold text-brand-text hover:bg-brand-bg transition-colors"
-            style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+            className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl border border-brand-border text-xs font-bold text-brand-text hover:bg-brand-bg transition-colors"
+           
           >
             <PanelLeftOpen size={14} />
             Explorer
@@ -459,7 +459,7 @@ export function GeographyClient({
         {/* Welcome prompt */}
         {!selectedRegion && !loading && (
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10">
-            <div className="bg-white/95 backdrop-blur-sm rounded-xl px-5 py-3 border-2 border-brand-border text-center" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+            <div className="bg-white/95 backdrop-blur-sm rounded-xl px-5 py-3 border border-brand-border text-center">
               <p className="text-sm font-medium text-brand-text">Click any neighborhood to explore</p>
               <p className="text-xs text-brand-muted mt-0.5">or use the panel to search</p>
             </div>
@@ -469,7 +469,7 @@ export function GeographyClient({
         {/* Loading overlay */}
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white/30 backdrop-blur-[1px] z-10">
-            <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-3 border-2 border-brand-border" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+            <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-3 border border-brand-border">
               <Loader2 size={16} className="animate-spin text-brand-accent" />
               <span className="text-sm text-brand-muted">Loading...</span>
             </div>

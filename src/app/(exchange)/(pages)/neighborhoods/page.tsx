@@ -60,8 +60,8 @@ export default async function NeighborhoodsPage() {
                   <Link
                     key={n.neighborhood_id}
                     href={'/neighborhoods/' + n.neighborhood_id}
-                    className="bg-white rounded-xl border-2 border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
-                    style={{ boxShadow: '2px 2px 0 #D1D5E0' }}
+                    className="bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
+                   
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#d69e2e] group-hover:w-1.5 transition-all" />
                     <div className="flex items-start gap-2 pl-2">

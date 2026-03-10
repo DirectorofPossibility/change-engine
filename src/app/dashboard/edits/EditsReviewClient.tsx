@@ -265,8 +265,8 @@ export function EditsReviewClient({ edits: initialEdits, counts }: EditsReviewCl
             return (
               <div
                 key={edit.edit_id}
-                className="bg-white rounded-lg border-2 border-brand-border overflow-hidden"
-                style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                className="bg-white rounded-lg border border-brand-border overflow-hidden"
+               
               >
                 {/* Row header */}
                 <button

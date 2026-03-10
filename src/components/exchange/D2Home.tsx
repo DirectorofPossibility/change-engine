@@ -117,13 +117,13 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   Find my way in
                 </Link>
-                <Link href="/neighborhoods" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                <Link href="/neighborhoods" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   In my neighborhood
                 </Link>
-                <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all" style={{ boxShadow: '2px 2px 0 #D5D0C8' }}>
+                <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   What&apos;s happening now
                 </Link>
               </div>
@@ -151,27 +151,27 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
             <div className="hidden lg:block flex-1 min-w-0 max-w-[480px]">
               <div className="relative h-[400px]">
                 {/* 1 — back of the pile, peeking top-right */}
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
                   style={{ width: '280px', height: '200px', top: '0', right: '0', transform: 'rotate(3deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 1 }}>
                   <Image src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 2 — peeking bottom-right */}
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
                   style={{ width: '240px', height: '170px', bottom: '0', right: '20px', transform: 'rotate(-2deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 2 }}>
                   <Image src="/images/editorial/cleanup.jpg" alt="Community cleanup" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 3 — large, anchors the pile center-left */}
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
                   style={{ width: '300px', height: '220px', top: '20px', left: '0', transform: 'rotate(-1.5deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 3 }}>
                   <Image src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 4 — overlaps center, tilted right */}
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
                   style={{ width: '260px', height: '190px', top: '80px', right: '10px', transform: 'rotate(2deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 4 }}>
                   <Image src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 5 — top of the pile, bottom-left */}
-                <div className="absolute rounded-xl overflow-hidden border-2 border-brand-border"
+                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
                   style={{ width: '250px', height: '180px', bottom: '0', left: '10px', transform: 'rotate(1.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
                   <Image src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>

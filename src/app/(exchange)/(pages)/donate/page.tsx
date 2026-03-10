@@ -85,8 +85,8 @@ export default function DonatePage() {
               return (
                 <div
                   key={tier.label}
-                  className="bg-white rounded-card border-2 border-brand-border p-5 relative overflow-hidden"
-                  style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                  className="bg-white rounded-card border border-brand-border p-5 relative overflow-hidden"
+                 
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
                   <div className="pl-3">
@@ -100,8 +100,8 @@ export default function DonatePage() {
             })}
             {/* Custom amount */}
             <div
-              className="bg-brand-bg rounded-card border-2 border-brand-border p-5 relative overflow-hidden"
-              style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+              className="bg-brand-bg rounded-card border border-brand-border p-5 relative overflow-hidden"
+             
             >
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
               <div className="pl-3">
@@ -137,7 +137,7 @@ export default function DonatePage() {
         </section>
 
         {/* Closing */}
-        <section className="relative bg-white rounded-card border-2 border-brand-border p-8 text-center overflow-hidden">
+        <section className="relative bg-white rounded-card border border-brand-border p-8 text-center overflow-hidden">
           <div className="absolute right-[-20px] bottom-[-20px] opacity-[0.04]">
             <FOLWatermark variant="flower" size="md" color="#C75B2A" />
           </div>

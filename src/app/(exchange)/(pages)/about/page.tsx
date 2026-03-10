@@ -93,7 +93,7 @@ export default async function AboutPage() {
             { n: stats.officials || 0, label: 'Elected Officials' },
           ].map(function (stat) {
             return (
-              <div key={stat.label} className="bg-white rounded-xl border-2 border-brand-border p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+              <div key={stat.label} className="bg-white rounded-xl border border-brand-border p-4 text-center">
                 <p className="font-serif font-bold text-2xl text-brand-accent">{stat.n.toLocaleString()}</p>
                 <p className="text-[11px] font-mono uppercase tracking-wider text-brand-muted mt-1">{stat.label}</p>
               </div>
@@ -108,8 +108,8 @@ export default async function AboutPage() {
             return (
               <div
                 key={section.title}
-                className="bg-white rounded-xl border-2 border-brand-border p-6"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                className="bg-white rounded-xl border border-brand-border p-6"
+               
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-9 h-9 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
@@ -131,8 +131,8 @@ export default async function AboutPage() {
             return (
               <div
                 key={item.title}
-                className="bg-white rounded-xl border-2 border-brand-border p-6"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                className="bg-white rounded-xl border border-brand-border p-6"
+               
               >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-9 h-9 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
@@ -148,8 +148,8 @@ export default async function AboutPage() {
 
         {/* Our Approach */}
         <div
-          className="bg-white rounded-xl border-2 border-brand-border p-6 mt-6"
-          style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+          className="bg-white rounded-xl border border-brand-border p-6 mt-6"
+         
         >
           <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 rounded-lg bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
@@ -179,8 +179,8 @@ export default async function AboutPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group bg-white rounded-xl border-2 border-brand-border p-5 hover:shadow-lg transition-all"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                className="group bg-white rounded-xl border border-brand-border p-5 hover:shadow-lg transition-all"
+               
               >
                 <h3 className="font-serif font-bold text-brand-text text-sm group-hover:text-brand-accent transition-colors">
                   {item.label}

@@ -17,7 +17,6 @@ import Link from 'next/link'
 import { MapPin, ChevronRight, Phone, Globe, Users, FileText, Calendar, Heart, Building2, ArrowRight } from 'lucide-react'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
-import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 import { CompassEntry } from '@/components/exchange/CompassEntry'
 import { CompassView } from '@/components/exchange/CompassView'
 import { ZipInput } from '@/components/exchange/ZipInput'
@@ -69,15 +68,7 @@ export function CompassClient({
     <div>
       {/* ─── HERO ─── */}
       <section className="relative bg-brand-bg overflow-hidden">
-        {/* FOL watermarks */}
-        <div className="absolute right-[-80px] top-[-40px] opacity-[0.04]">
-          <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
-        </div>
-        <div className="absolute left-[-40px] bottom-[-30px] opacity-[0.03]">
-          <FOLWatermark variant="seed" size="md" color="#C75B2A" />
-        </div>
-
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div className="flex-1">
               {/* Spectrum bar */}
@@ -90,7 +81,7 @@ export function CompassClient({
               {neighborhoodName ? (
                 <>
                   <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">Your Community Dashboard</p>
-                  <h1 className="text-3xl sm:text-4xl lg:text-display font-serif font-bold leading-tight">
+                  <h1 className="text-xl sm:text-2xl font-serif font-bold leading-tight">
                     Welcome to{' '}
                     <span className="text-brand-accent">{neighborhoodName}</span>
                   </h1>
@@ -101,14 +92,11 @@ export function CompassClient({
               ) : (
                 <>
                   <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">Community Exchange</p>
-                  <h1 className="text-3xl sm:text-4xl lg:text-display font-serif font-bold leading-tight">
+                  <h1 className="text-xl sm:text-2xl font-serif font-bold leading-tight">
                     The Compass
                   </h1>
-                  <p className="text-base text-brand-muted mt-3 max-w-xl">
-                    Most people don&rsquo;t know who represents them. That&rsquo;s not their fault. It&rsquo;s a design problem. We fixed it.
-                  </p>
-                  <p className="text-sm text-brand-muted-light mt-2 max-w-xl leading-relaxed">
-                    Type in your Houston address. We&rsquo;ll show you every elected official who represents you — from City Council to Congress — with their contact info, committees, and recent activity. No account needed. No fine print. Just your address.
+                  <p className="text-sm text-brand-muted mt-2 max-w-xl leading-relaxed">
+                    Most people don&rsquo;t know who represents them. That&rsquo;s not their fault. It&rsquo;s a design problem. Enter your address to see every elected official — from City Council to Congress.
                   </p>
                 </>
               )}
@@ -116,7 +104,7 @@ export function CompassClient({
 
             {/* ZIP input — always visible */}
             <div className="lg:flex-shrink-0 lg:w-[300px]">
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4 backdrop-blur-sm">
+              <div className="bg-white rounded-xl border border-brand-border p-4 backdrop-blur-sm">
                 <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mb-2">
                   {hasZip ? 'Change location' : 'Enter your address — street, city, zip'}
                 </p>
@@ -132,25 +120,25 @@ export function CompassClient({
           </div>
 
           {/* Stats bar */}
-          <div className="mt-8 pt-5 border-t border-brand-border flex flex-wrap items-center gap-6 sm:gap-10">
+          <div className="mt-5 pt-4 border-t border-brand-border flex flex-wrap items-center gap-6 sm:gap-10">
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-serif font-bold text-brand-accent">{totalItems}</p>
+              <p className="text-xl sm:text-2xl font-serif font-bold text-brand-accent">{totalItems}</p>
               <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Resources</p>
             </div>
             {hasZip && zipOfficials.length > 0 && (
               <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-[#805ad5]">{zipOfficials.length}</p>
+                <p className="text-xl sm:text-2xl font-serif font-bold text-[#805ad5]">{zipOfficials.length}</p>
                 <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Your Officials</p>
               </div>
             )}
             {hasZip && nearbyServices.length > 0 && (
               <div className="text-center">
-                <p className="text-2xl sm:text-3xl font-serif font-bold text-[#38a169]">{nearbyServices.length}</p>
+                <p className="text-xl sm:text-2xl font-serif font-bold text-[#38a169]">{nearbyServices.length}</p>
                 <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Nearby Services</p>
               </div>
             )}
             <div className="text-center">
-              <p className="text-2xl sm:text-3xl font-serif font-bold text-[#3182ce]">7</p>
+              <p className="text-xl sm:text-2xl font-serif font-bold text-[#3182ce]">7</p>
               <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">Topics</p>
             </div>
           </div>
@@ -167,7 +155,7 @@ export function CompassClient({
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* ─── YOUR REPRESENTATIVES ─── */}
         {hasZip && zipOfficials.length > 0 && (
-          <section className="mb-10">
+          <section className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-serif text-xl font-bold text-brand-text flex items-center gap-2">
                 <Building2 size={20} className="text-[#805ad5]" />
@@ -185,8 +173,7 @@ export function CompassClient({
                   <Link
                     key={o.official_id}
                     href={'/officials/' + o.official_id}
-                    className="bg-white rounded-xl border-2 border-brand-border p-3 hover:border-brand-text transition-all group relative overflow-hidden"
-                    style={{ boxShadow: '2px 2px 0 #D1D5E0' }}
+                    className="bg-white rounded-xl border border-brand-border p-3 hover:border-brand-text transition-all group relative overflow-hidden"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: ringColor }} />
                     <div className="flex items-center gap-2.5 pl-2">
@@ -214,7 +201,7 @@ export function CompassClient({
 
         {/* ─── COMMUNITY NEWS ─── */}
         {recentNews.length > 0 && (
-          <section className="mb-10">
+          <section className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-serif text-xl font-bold text-brand-text flex items-center gap-2">
                 <FileText size={20} className="text-[#319795]" />
@@ -231,8 +218,7 @@ export function CompassClient({
                   <Link
                     key={item.id}
                     href={'/content/' + item.id}
-                    className="bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:border-brand-text transition-all group"
-                    style={{ boxShadow: '2px 2px 0 #D1D5E0' }}
+                    className="bg-white rounded-xl border border-brand-border overflow-hidden hover:border-brand-text transition-all group"
                   >
                     {item.image_url && (
                       <div className="aspect-[16/9] overflow-hidden">
@@ -258,7 +244,7 @@ export function CompassClient({
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* ─── MAIN COLUMN ─── */}
-          <div className="flex-1 min-w-0 space-y-10">
+          <div className="flex-1 min-w-0 space-y-6">
             {/* Nearby Services */}
             {hasZip && nearbyServices.length > 0 && (
               <section>
@@ -277,9 +263,8 @@ export function CompassClient({
                       <Link
                         key={s.service_id}
                         href={'/services/' + s.service_id}
-                        className="bg-white rounded-xl border-2 border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
-                        style={{ boxShadow: '2px 2px 0 #D1D5E0' }}
-                      >
+                        className="bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
+                          >
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#38a169] group-hover:w-1.5 transition-all" />
                         <div className="pl-3">
                           <h3 className="font-semibold text-sm text-brand-text group-hover:text-brand-accent transition-colors">{s.service_name}</h3>
@@ -340,9 +325,8 @@ export function CompassClient({
                       <Link
                         key={opp.opportunity_id}
                         href={'/opportunities/' + opp.opportunity_id}
-                        className="bg-white rounded-xl border-2 border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
-                        style={{ boxShadow: '2px 2px 0 #D1D5E0' }}
-                      >
+                        className="bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
+                          >
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#3182ce] group-hover:w-1.5 transition-all" />
                         <div className="pl-3">
                           <h3 className="font-semibold text-sm text-brand-text group-hover:text-brand-accent transition-colors">{opp.opportunity_name}</h3>
@@ -362,7 +346,7 @@ export function CompassClient({
           <div className="lg:w-[300px] flex-shrink-0 space-y-6">
             {/* Organizations near you */}
             {hasZip && nearbyOrgs.length > 0 && (
-              <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+              <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
                 <div className="p-4 border-b border-brand-border">
                   <h3 className="font-serif text-base font-semibold text-brand-text flex items-center gap-2">
                     <Users size={16} className="text-[#dd6b20]" />
@@ -398,11 +382,8 @@ export function CompassClient({
             )}
 
             {/* Quick actions */}
-            <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
-              <div className="relative p-4 border-b border-brand-border overflow-hidden">
-                <div className="absolute right-[-10px] top-[-10px] opacity-[0.05]">
-                  <FOLWatermark variant="seed" size="sm" color="#C75B2A" />
-                </div>
+            <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+              <div className="p-4 border-b border-brand-border">
                 <h3 className="font-serif text-base font-semibold text-brand-text">Quick Actions</h3>
               </div>
               <div className="p-3 space-y-1.5">
@@ -431,7 +412,7 @@ export function CompassClient({
             <SpiralProgress variant="full" />
 
             {/* Pathways at a glance */}
-            <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+            <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
               <div className="p-4 border-b border-brand-border">
                 <h3 className="font-serif text-base font-semibold text-brand-text">Topics</h3>
               </div>
@@ -458,7 +439,7 @@ export function CompassClient({
             </div>
 
             {/* Support */}
-            <div className="bg-brand-bg/50 rounded-xl border-2 border-brand-border p-4">
+            <div className="bg-brand-bg/50 rounded-xl border border-brand-border p-4">
               <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-2">Need Help Now?</p>
               <div className="space-y-1 font-mono text-[12px] text-brand-muted">
                 <p>Mental Health Crisis: <strong className="text-brand-text">988</strong></p>
@@ -469,11 +450,8 @@ export function CompassClient({
             </div>
 
             {/* Donate */}
-            <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center relative overflow-hidden">
-              <div className="absolute right-[-10px] bottom-[-10px] opacity-[0.05]">
-                <FOLWatermark variant="flower" size="sm" color="#C75B2A" />
-              </div>
-              <FlowerOfLifeIcon size={32} className="mx-auto mb-2" />
+            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+              <FlowerOfLifeIcon size={24} className="mx-auto mb-2" />
               <p className="font-serif text-sm font-bold text-brand-text mb-1">Support the Exchange</p>
               <p className="text-[11px] text-brand-muted mb-3">Help us keep Houston connected. Every dollar strengthens civic infrastructure.</p>
               <Link

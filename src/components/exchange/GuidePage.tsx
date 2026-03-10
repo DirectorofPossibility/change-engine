@@ -167,7 +167,7 @@ export function GuidePage({
         {featuredContent && (
           <section className="my-8">
             <Link href={'/content/' + featuredContent.id} className="block group">
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-shadow">
                 {/* Image */}
                 <div className="lg:col-span-3 relative h-64 lg:h-auto min-h-[240px]">
                   {featuredContent.image_url ? (
@@ -257,7 +257,7 @@ export function GuidePage({
                     const color = themeKey ? THEMES[themeKey]?.color : BRAND.muted
                     return (
                       <Link href={'/content/' + item.id} className="group block">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
                           <div className="h-48 sm:h-auto relative overflow-hidden">
                             {item.image_url ? (
                               <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
@@ -290,7 +290,7 @@ export function GuidePage({
                       const themeKey = item.pathway_primary as keyof typeof THEMES | null
                       const color = themeKey ? THEMES[themeKey]?.color : BRAND.muted
                       return (
-                        <Link key={item.id} href={'/content/' + item.id} className="group block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+                        <Link key={item.id} href={'/content/' + item.id} className="group block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
                           {item.image_url && (
                             <div className="h-32 overflow-hidden">
                               <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
@@ -325,7 +325,7 @@ export function GuidePage({
               <div className="space-y-4">
                 {/* Election countdown */}
                 {upcomingElection && daysUntilElection > 0 && (
-                  <Link href="/elections" className="block bg-white rounded-xl border-2 border-brand-border p-5 hover:shadow-md transition-shadow" style={{ borderLeft: `4px solid ${BRAND.accent}` }}>
+                  <Link href="/elections" className="block bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow" style={{ borderLeft: `4px solid ${BRAND.accent}` }}>
                     <div className="flex items-center gap-4">
                       <Vote size={28} style={{ color: BRAND.accent }} />
                       <div>
@@ -345,7 +345,7 @@ export function GuidePage({
                       Federal: '#3182ce', State: '#805ad5', County: '#d69e2e', City: '#38a169',
                     } as Record<string, string>)[official.level] || BRAND.muted
                     return (
-                      <Link key={official.official_id} href={'/officials/' + official.official_id} className="flex items-center gap-3 bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow">
+                      <Link key={official.official_id} href={'/officials/' + official.official_id} className="flex items-center gap-3 bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
                         <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: levelColor + '15' }}>
                           <span className="text-lg font-bold" style={{ color: levelColor }}>{official.official_name?.charAt(0)}</span>
                         </div>
@@ -373,7 +373,7 @@ export function GuidePage({
                     return BRAND.muted
                   })()
                   return (
-                    <div key={policy.policy_id} className="bg-white rounded-xl border-2 border-brand-border p-4" style={{ borderLeft: `3px solid ${statusColor}` }}>
+                    <div key={policy.policy_id} className="bg-white rounded-xl border border-brand-border p-4" style={{ borderLeft: `3px solid ${statusColor}` }}>
                       <div className="flex items-center gap-2 mb-1">
                         {policy.bill_number && <span className="text-xs font-mono text-brand-muted">{policy.bill_number}</span>}
                         {policy.status && (
@@ -396,7 +396,7 @@ export function GuidePage({
               <p className="text-sm text-brand-muted italic mb-4">{t('guide.neighborhood_subtitle')}</p>
 
               {!zip ? (
-                <div className="bg-white rounded-xl border-2 border-brand-border p-6 text-center">
+                <div className="bg-white rounded-xl border border-brand-border p-6 text-center">
                   <p className="text-brand-muted mb-3">{t('guide.neighborhood_prompt')}</p>
                   <form onSubmit={handleZipSubmit} className="flex items-center justify-center gap-2 max-w-xs mx-auto">
                     <input
@@ -406,7 +406,7 @@ export function GuidePage({
                       placeholder={t('zip.enter')}
                       maxLength={5}
                       disabled={isLoading}
-                      className="flex-1 text-sm px-3 py-2 border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40"
+                      className="flex-1 text-sm px-3 py-2 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40"
                     />
                     <button type="submit" disabled={zipInput.length !== 5 || isLoading} className="text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-lg bg-brand-accent text-white disabled:opacity-40">
                       Go
@@ -423,7 +423,7 @@ export function GuidePage({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {nearbyServices.map(function (service) {
                       return (
-                        <Link key={service.service_id} href={'/services/' + service.service_id} className="block bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow" style={{ borderTop: `3px solid ${BRAND.accent}` }}>
+                        <Link key={service.service_id} href={'/services/' + service.service_id} className="block bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow" style={{ borderTop: `3px solid ${BRAND.accent}` }}>
                           <p className="font-semibold text-brand-text text-sm line-clamp-2">{service.service_name}</p>
                           {service.org_name && (
                             <p className="text-xs text-brand-muted mt-1 italic">{service.org_name}</p>
@@ -477,7 +477,7 @@ export function GuidePage({
                     {guides.slice(0, 3).map(function (guide: any) {
                       const theme = guide.theme_id ? THEMES[guide.theme_id as keyof typeof THEMES] : null
                       return (
-                        <Link key={guide.guide_id} href={'/guides/' + guide.slug} className="group block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+                        <Link key={guide.guide_id} href={'/guides/' + guide.slug} className="group block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
                           {guide.hero_image_url && (
                             <div className="h-28 overflow-hidden">
                               <Image src={guide.hero_image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
@@ -511,7 +511,7 @@ export function GuidePage({
                   }
                   const color = urgencyColors[sit.urgency_level] || BRAND.muted
                   return (
-                    <Link key={sit.situation_id} href={'/help/' + sit.situation_slug} className="group block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow" style={{ borderTop: `3px solid ${color}` }}>
+                    <Link key={sit.situation_id} href={'/help/' + sit.situation_slug} className="group block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow" style={{ borderTop: `3px solid ${color}` }}>
                       <div className="p-4">
                         <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: color + '15' }}>
                           <span className="text-lg" style={{ color }}>{sit.icon_name ? '●' : '○'}</span>
@@ -604,7 +604,7 @@ export function GuidePage({
             <div className="lg:sticky lg:top-4 space-y-6">
 
               {/* Search */}
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+              <div className="bg-white rounded-xl border border-brand-border p-4">
                 <form onSubmit={function (e) { e.preventDefault(); if (searchQuery.trim()) window.location.href = '/search?q=' + encodeURIComponent(searchQuery.trim()) }}>
                   <div className="relative">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
@@ -613,20 +613,20 @@ export function GuidePage({
                       value={searchQuery}
                       onChange={function (e) { setSearchQuery(e.target.value) }}
                       placeholder={t('guide.search_placeholder')}
-                      className="w-full pl-9 pr-3 py-2 text-sm border-2 border-brand-border rounded-lg bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/40"
+                      className="w-full pl-9 pr-3 py-2 text-sm border border-brand-border rounded-lg bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/40"
                     />
                   </div>
                 </form>
               </div>
 
               {/* Language */}
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4 flex items-center justify-between">
+              <div className="bg-white rounded-xl border border-brand-border p-4 flex items-center justify-between">
                 <span className="text-xs text-brand-muted uppercase tracking-wide font-semibold">Language</span>
                 <LanguageSwitcher />
               </div>
 
               {/* Quick links */}
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+              <div className="bg-white rounded-xl border border-brand-border p-4">
                 <h3 className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-3 font-serif">
                   {t('guide.quick_links')}
                 </h3>
@@ -643,7 +643,7 @@ export function GuidePage({
               </div>
 
               {/* Pathway mini-nav */}
-              <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+              <div className="bg-white rounded-xl border border-brand-border p-4">
                 <h3 className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-3 font-serif">
                   {t('guide.all_pathways')}
                 </h3>

@@ -81,13 +81,13 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
             aria-label="Search organizations"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-lg border-2 border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+            className="w-full pl-8 pr-3 py-2 rounded-lg border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
           />
         </div>
         <select
           value={typeFilter || ''}
           onChange={e => setTypeFilter(e.target.value || null)}
-          className="px-2.5 py-2 rounded-lg border-2 border-brand-border bg-white text-xs font-semibold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+          className="px-2.5 py-2 rounded-lg border border-brand-border bg-white text-xs font-semibold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
         >
           <option value="">All ({organizations.length})</option>
           {ORG_TYPES.filter(t => typeCounts[t.label]).map(t => (
@@ -109,8 +109,8 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
             <Link
               key={org.org_id}
               href={`/organizations/${org.org_id}`}
-              className="group relative bg-white rounded-lg border-2 border-brand-border overflow-hidden flex items-start gap-3 p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150"
-              style={{ boxShadow: '2px 2px 0 #E2DDD5' }}
+              className="group relative bg-white rounded-lg border border-brand-border overflow-hidden flex items-start gap-3 p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150"
+             
             >
               {/* Left color bar */}
               <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: color }} />
@@ -119,7 +119,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                 <Image
                   src={org.logo_url}
                   alt=""
-                  className="w-10 h-10 rounded-md object-contain bg-brand-bg border-2 border-brand-border flex-shrink-0 ml-1"
+                  className="w-10 h-10 rounded-md object-contain bg-brand-bg border border-brand-border flex-shrink-0 ml-1"
                  width={48} height={40} />
               ) : (
                 <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0 ml-1" style={{ background: color + '12' }}>

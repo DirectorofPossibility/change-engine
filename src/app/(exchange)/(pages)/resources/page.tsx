@@ -77,8 +77,8 @@ export default async function ResourcesIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+               
               >
                 <div className="flex">
                   <div
@@ -118,7 +118,7 @@ export default async function ResourcesIndexPage() {
         </div>
 
         {/* Crisis quick-access */}
-        <div className="mt-8 p-5 bg-brand-bg rounded-xl border-2 border-brand-border">
+        <div className="mt-8 p-5 bg-brand-bg rounded-xl border border-brand-border">
           <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Immediate Support</p>
           <div className="flex flex-wrap gap-6 font-mono text-sm text-brand-muted">
             <span>Crisis Line: <strong className="text-brand-text">988</strong></span>

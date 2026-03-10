@@ -89,7 +89,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
 
   if (variant === 'grid') {
     return (
-      <div className="group bg-white rounded-card border-2 border-brand-border overflow-hidden card-lift">
+      <div className="group bg-white rounded-card border border-brand-border overflow-hidden card-lift">
         {/* Image area */}
         <div className="relative h-44 overflow-hidden">
           {item.imageUrl ? (
@@ -158,7 +158,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
 
   // List variant
   return (
-    <div className="group flex bg-white rounded-xl border-2 border-brand-border overflow-hidden card-lift">
+    <div className="group flex bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
       {item.imageUrl && (
         <div className="w-28 sm:w-36 flex-shrink-0 overflow-hidden">
           <ImageLightbox
@@ -195,7 +195,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
 function OfficialCard({ item, t }: { item: FeedItem; t: (key: string) => string }) {
   const initials = getInitials(item.title)
   return (
-    <div className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden card-lift">
+    <div className="group bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
       <div className="p-4 flex items-center gap-4">
         <div className="w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: TEAL + '18' }}>
           <span className="text-lg font-bold" style={{ color: TEAL }}>{initials}</span>
@@ -216,7 +216,7 @@ function OfficialCard({ item, t }: { item: FeedItem; t: (key: string) => string 
 function PolicyCard({ item, t }: { item: FeedItem; t: (key: string) => string }) {
   const accent = policyAccentColor(item.status)
   return (
-    <div className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden card-lift">
+    <div className="group bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
       <div className="p-4" style={{ borderLeft: `4px solid ${accent}` }}>
         <div className="flex items-center gap-2 mb-2">
           <Scale size={14} style={{ color: accent }} />

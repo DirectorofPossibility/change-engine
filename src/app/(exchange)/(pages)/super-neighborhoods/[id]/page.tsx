@@ -124,10 +124,10 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <Breadcrumb items={[{ label: t('superNeighborhoods.breadcrumb'), href: '/super-neighborhoods' }, { label: snName }]} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2">
 
       <div className="flex items-center gap-3 mb-2">
@@ -143,28 +143,28 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
       {/* ── Demographics ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 mb-8">
         {sn.population != null && (
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <Users size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">{sn.population.toLocaleString()}</div>
             <div className="text-xs text-brand-muted">{t('superNeighborhoods.population')}</div>
           </div>
         )}
         {sn.median_income != null && (
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <DollarSign size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">${sn.median_income.toLocaleString()}</div>
             <div className="text-xs text-brand-muted">{t('superNeighborhoods.median_income')}</div>
           </div>
         )}
         {neighborhoods.length > 0 && (
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <MapPin size={20} className="mx-auto text-brand-accent mb-1" />
             <div className="text-xl font-bold text-brand-text">{neighborhoods.length}</div>
             <div className="text-xs text-brand-muted">{t('superNeighborhoods.neighborhoods')}</div>
           </div>
         )}
         {mapData.services.length > 0 && (
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <div className="text-xl font-bold text-brand-text">{mapData.services.length}</div>
             <div className="text-xs text-brand-muted">{t('superNeighborhoods.services')}</div>
           </div>
@@ -186,7 +186,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
 
       {/* ── ZIP Codes ── */}
       {zips.length > 0 && (
-        <div className="bg-brand-accent/5 rounded-xl border-2 border-brand-border p-4 mb-8">
+        <div className="bg-brand-accent/5 rounded-xl border border-brand-border p-4 mb-8">
           <p className="text-sm text-brand-text">
             ZIP codes: {zips.join(', ')} &mdash;{' '}
             <Link href="/officials/lookup" className="text-brand-accent hover:underline font-medium">
@@ -205,7 +205,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
               <Link
                 key={hood.neighborhood_id}
                 href={'/neighborhoods/' + hood.neighborhood_id}
-                className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
+                className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
               >
                 <h3 className="font-semibold text-brand-text text-sm">{hood.neighborhood_name}</h3>
                 <div className="flex items-center gap-3 mt-1 text-xs text-brand-muted">
@@ -236,7 +236,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
                 <Link
                   key={p.policy_id}
                   href={'/policies/' + p.policy_id}
-                  className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     {p.level && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{p.level}</span>}

@@ -97,7 +97,7 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
             style={{
               borderColor: isActive ? '#C75B2A' : '#E2DDD5',
               backgroundColor: isActive ? '#C75B2A08' : '#FFFFFF',
-              boxShadow: isActive ? '3px 3px 0 #D5D0C8' : 'none',
+              
             }}
           >
             <div className="flex items-center gap-2 mb-1.5">

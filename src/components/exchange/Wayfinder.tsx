@@ -112,7 +112,7 @@ export function Wayfinder({
                 <Link
                   key={id}
                   href={'/pathways/' + theme.slug}
-                  className="group relative bg-white rounded-card border-2 border-brand-border overflow-hidden card-lift"
+                  className="group relative bg-white rounded-card border border-brand-border overflow-hidden card-lift"
                 >
                   {/* Color top bar */}
                   <div className="h-1.5" style={{ backgroundColor: theme.color }} />

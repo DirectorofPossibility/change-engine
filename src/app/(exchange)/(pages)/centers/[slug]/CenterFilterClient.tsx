@@ -25,7 +25,7 @@ export function CenterFilterClient({ items, pathwayCounts, translations = {} }: 
         <button
           onClick={() => setActivePathway(null)}
           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !activePathway ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text'
+            !activePathway ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
           }`}
         >
           All ({items.length})

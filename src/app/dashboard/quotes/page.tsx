@@ -103,7 +103,7 @@ export default function QuotesAdmin() {
 
       {/* Add/Edit form */}
       {(adding || editing) && (
-        <div className="mb-6 p-5 bg-white border-2 border-brand-border rounded-xl">
+        <div className="mb-6 p-5 bg-white border border-brand-border rounded-xl">
           <h2 className="text-lg font-semibold mb-4">{editing ? 'Edit Quote' : 'New Quote'}</h2>
           <div className="space-y-3">
             <div>
@@ -112,7 +112,7 @@ export default function QuotesAdmin() {
                 value={form.quote_text}
                 onChange={function (e) { setForm({ ...form, quote_text: e.target.value }) }}
                 rows={3}
-                className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -121,7 +121,7 @@ export default function QuotesAdmin() {
                 <input
                   value={form.attribution}
                   onChange={function (e) { setForm({ ...form, attribution: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="e.g. The Change Lab"
                 />
               </div>
@@ -130,7 +130,7 @@ export default function QuotesAdmin() {
                 <input
                   value={form.source_url}
                   onChange={function (e) { setForm({ ...form, source_url: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="https://..."
                 />
               </div>
@@ -141,7 +141,7 @@ export default function QuotesAdmin() {
                 <select
                   value={form.pathway_id}
                   onChange={function (e) { setForm({ ...form, pathway_id: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
                 >
                   <option value="">All pathways (general)</option>
                   {PATHWAY_OPTIONS.map(function (pw) {
@@ -155,7 +155,7 @@ export default function QuotesAdmin() {
                   type="number"
                   value={form.display_order}
                   onChange={function (e) { setForm({ ...form, display_order: parseInt(e.target.value) || 0 }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div className="flex items-end pb-2">
@@ -175,7 +175,7 @@ export default function QuotesAdmin() {
               </button>
               <button
                 onClick={function () { setEditing(null); setAdding(false) }}
-                className="px-4 py-2 border-2 border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
+                className="px-4 py-2 border border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
               >
                 Cancel
               </button>
@@ -188,7 +188,7 @@ export default function QuotesAdmin() {
       <div className="space-y-3">
         {quotes.map(function (q) {
           return (
-            <div key={q.quote_id} className="p-4 bg-white border-2 border-brand-border rounded-xl flex gap-4">
+            <div key={q.quote_id} className="p-4 bg-white border border-brand-border rounded-xl flex gap-4">
               <div className="w-1 rounded flex-shrink-0" style={{ background: q.is_active ? '#C75B2A' : '#D1D5E0' }} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm italic leading-relaxed text-brand-text">

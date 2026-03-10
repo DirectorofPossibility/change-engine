@@ -59,8 +59,8 @@ function FoundationCard({ f }: { f: Foundation }) {
   return (
     <Link
       href={`/foundations/${f.id}`}
-      className="group bg-white rounded-lg border-2 border-brand-border hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden block"
-      style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+      className="group bg-white rounded-lg border border-brand-border hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden block"
+     
     >
       {/* Left color bar */}
       <div className="flex">
@@ -135,7 +135,7 @@ function SpotlightCard({ f }: { f: Foundation }) {
     <Link
       href={`/foundations/${f.id}`}
       className="group flex-shrink-0 w-[340px] bg-white rounded-lg border-2 border-brand-accent/20 hover:border-brand-accent hover:-translate-y-px transition-all duration-150 overflow-hidden block"
-      style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+     
     >
       {/* Accent top bar */}
       <div className="h-1.5 w-full" style={{ backgroundColor: geo.color }} />

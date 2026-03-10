@@ -46,7 +46,7 @@ export function CenterCard({ name, emoji, question, slug, count }: CenterCardPro
   return (
     <Link
       href={'/centers/' + slug}
-      className="flex flex-col items-center p-6 bg-white rounded-xl border-2 border-brand-border
+      className="flex flex-col items-center p-6 bg-white rounded-xl border border-brand-border
                  hover:shadow-lg hover:scale-[1.02] transition-all duration-200 text-center group"
     >
       {/* Circular image area */}

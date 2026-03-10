@@ -24,7 +24,7 @@ interface TirzDetailMapProps {
 
 export function TirzDetailMap({ siteNumber, markers }: TirzDetailMapProps) {
   return (
-    <div className="rounded-xl overflow-hidden border-2 border-brand-border" style={{ height: 280 }}>
+    <div className="rounded-xl overflow-hidden border border-brand-border" style={{ height: 280 }}>
       <InteractiveMap
         layers={[GEO_LAYERS.tirzZones, GEO_LAYERS.councilDistricts]}
         defaultVisibleLayers={['tirzZones']}

@@ -138,7 +138,7 @@ function MiniCard({
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left bg-white border-2 border-brand-border rounded-md px-3 py-2.5 hover:shadow transition-shadow cursor-pointer group"
+      className="w-full text-left bg-white border border-brand-border rounded-md px-3 py-2.5 hover:shadow transition-shadow cursor-pointer group"
     >
       {children}
       <span className="block text-xs text-[#319795] font-medium mt-1 group-hover:underline">

@@ -31,7 +31,7 @@ export function OpportunityCard({
 
   return (
     <div
-      className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow"
+      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
       {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, style: { cursor: 'pointer' } } : {})}
     >
       <h4 className="font-semibold text-brand-text text-sm mb-2 line-clamp-2">{displayName}</h4>

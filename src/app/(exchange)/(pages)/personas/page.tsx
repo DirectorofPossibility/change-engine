@@ -98,7 +98,7 @@ export default function PersonasPage() {
             <Link
               key={p.id}
               href={'/for/' + p.id}
-              className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
               style={{ borderColor: undefined }}
             >
               {/* Color top bar */}

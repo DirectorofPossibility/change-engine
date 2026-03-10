@@ -63,7 +63,7 @@ export function IndexWayfinder({
   const [exploreOpen, setExploreOpen] = useState(true)
 
   return (
-    <aside className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+    <aside className="bg-white rounded-xl border border-brand-border overflow-hidden">
       {/* Header with FOL */}
       <div className="relative p-4 border-b border-brand-border overflow-hidden">
         <div className="absolute right-[-10px] top-[-10px] opacity-[0.06]">

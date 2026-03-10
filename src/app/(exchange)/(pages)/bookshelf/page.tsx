@@ -109,7 +109,7 @@ export default async function BookshelfPage() {
               {/* Floating stat */}
               <div
                 className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3 py-2 font-mono text-[10px]"
-                style={{ bottom: 10, left: 10, boxShadow: '3px 3px 0 #D5D0C8' }}
+                style={{ bottom: 10, left: 10 }}
               >
                 <span className="block text-[24px] font-black text-[#805ad5] leading-none">{books.length}</span>
                 books

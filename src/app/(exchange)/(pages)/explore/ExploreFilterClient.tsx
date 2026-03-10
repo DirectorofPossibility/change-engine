@@ -60,7 +60,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
           <button
             onClick={function () { setActiveSDG(null) }}
             className={'px-3 py-1.5 rounded-full text-xs font-medium transition-colors ' +
-              (!activeSDG ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text')}
+              (!activeSDG ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
           >
             All
           </button>
@@ -88,7 +88,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
           <button
             onClick={function () { setActiveSDOH(null) }}
             className={'px-3 py-1.5 rounded-full text-xs font-medium transition-colors ' +
-              (!activeSDOH ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text')}
+              (!activeSDOH ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
           >
             All
           </button>
@@ -127,7 +127,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
                   if (fa.is_bridging) {
                     baseClass += ' border border-dashed'
                   } else {
-                    baseClass += ' border-2 border-brand-border'
+                    baseClass += ' border border-brand-border'
                   }
                   return (
                     <Link
@@ -159,7 +159,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
                     <Link
                       key={fa.focus_id}
                       href={'/explore/focus/' + fa.focus_id}
-                      className="text-xs px-3 py-1.5 rounded-full bg-white border-2 border-brand-border text-brand-text hover:shadow-md transition-shadow"
+                      className="text-xs px-3 py-1.5 rounded-full bg-white border border-brand-border text-brand-text hover:shadow-md transition-shadow"
                     >
                       {fa.focus_area_name}
                     </Link>

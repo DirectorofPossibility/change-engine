@@ -92,7 +92,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
             onChange={function (e) { setQuery(e.target.value) }}
             placeholder="Search by title, author, or topic..."
             className="w-full pl-12 pr-10 py-3.5 border-2 border-brand-text rounded-xl bg-white text-sm text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
-            style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+           
           />
           {query && (
             <button onClick={function () { setQuery('') }} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-brand-muted hover:text-brand-text">
@@ -175,7 +175,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {themeGroups.map(function (g) {
                   return (
-                    <div key={g.theme.id} className="border-2 border-brand-border rounded-lg overflow-hidden" style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+                    <div key={g.theme.id} className="border border-brand-border rounded-lg overflow-hidden">
                       <div className="h-1.5" style={{ backgroundColor: g.theme.color }} />
                       <div className="p-5">
                         <p className="font-serif text-sm font-bold text-brand-text mb-3">{g.theme.name}</p>
@@ -214,7 +214,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
   return (
     <article
       className={'flex border-2 rounded-lg overflow-hidden hover:-translate-y-0.5 transition-all ' + (featured ? 'border-brand-text' : 'border-brand-border hover:border-brand-text')}
-      style={{ boxShadow: featured ? '4px 4px 0 #D5D0C8' : '2px 2px 0 #D1D5E0' }}
+      style={{ boxShadow: 'none' }}
     >
       {/* Book spine */}
       <div className="w-2 flex-shrink-0" style={{ background: theme?.color || '#805ad5' }} />
@@ -275,7 +275,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
           <div className="flex flex-wrap gap-1.5 mb-3">
             {book.tags.slice(0, 3).map(function (tag) {
               return (
-                <span key={tag} className="inline-flex items-center gap-1 text-[9px] font-medium text-brand-muted bg-brand-bg px-2 py-0.5 rounded border-2 border-brand-border">
+                <span key={tag} className="inline-flex items-center gap-1 text-[9px] font-medium text-brand-muted bg-brand-bg px-2 py-0.5 rounded border border-brand-border">
                   <Tag size={8} /> {tag}
                 </span>
               )

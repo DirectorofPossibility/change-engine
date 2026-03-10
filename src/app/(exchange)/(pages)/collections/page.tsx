@@ -54,8 +54,8 @@ export default async function CollectionsPage() {
                     <Link
                       key={c.collection_id || c.id}
                       href={'/collections/' + (c.collection_id || c.id)}
-                      className="group bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                      style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                      className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                     
                     >
                       <div className="h-2" style={{ backgroundColor: color }} />
                       <div className="p-5">

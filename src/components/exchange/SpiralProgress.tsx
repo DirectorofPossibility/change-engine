@@ -66,7 +66,7 @@ export function SpiralProgress({ variant = 'compact' }: SpiralProgressProps) {
   const maxCount = Math.max(counts.understand, counts.involved, counts.deeper, 1)
 
   return (
-    <div className="border-2 border-brand-border rounded-xl p-5 bg-white" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+    <div className="border border-brand-border rounded-xl p-5 bg-white">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-serif text-base font-bold text-brand-text">Your Spiral</h3>
         {cycles > 0 && (

@@ -83,8 +83,8 @@ export default function QuizzesPage() {
                 return (
                   <div
                     key={quiz.title}
-                    className="relative border-2 border-brand-border rounded-[0.75rem] overflow-hidden bg-white"
-                    style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                    className="relative border border-brand-border rounded-[0.75rem] overflow-hidden bg-white"
+                   
                   >
                     <div className="flex">
                       <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: quiz.color }} />
@@ -97,7 +97,7 @@ export default function QuizzesPage() {
                           >
                             <Icon size={20} style={{ color: quiz.color }} />
                           </div>
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border-2 border-brand-border rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted bg-brand-bg">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 border border-brand-border rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted bg-brand-bg">
                             <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse" />
                             Coming Soon
                           </span>
@@ -124,7 +124,7 @@ export default function QuizzesPage() {
             </div>
 
             {/* Status note */}
-            <div className="mt-8 border-2 border-brand-border rounded-[0.75rem] bg-brand-bg p-5">
+            <div className="mt-8 border border-brand-border rounded-[0.75rem] bg-brand-bg p-5">
               <p className="text-sm leading-relaxed text-brand-muted">
                 Quizzes are being developed with input from civic educators, local historians,
                 and community partners. Each quiz will include sources and further reading so
@@ -145,8 +145,8 @@ export default function QuizzesPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Link
                   href="/knowledge-graph"
-                  className="group border-2 border-brand-border rounded-[0.75rem] bg-white p-5 hover:translate-y-[-2px] transition-all duration-200"
-                  style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                  className="group border border-brand-border rounded-[0.75rem] bg-white p-5 hover:translate-y-[-2px] transition-all duration-200"
+                 
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-brand-bg">
@@ -163,8 +163,8 @@ export default function QuizzesPage() {
 
                 <Link
                   href="/library"
-                  className="group border-2 border-brand-border rounded-[0.75rem] bg-white p-5 hover:translate-y-[-2px] transition-all duration-200"
-                  style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+                  className="group border border-brand-border rounded-[0.75rem] bg-white p-5 hover:translate-y-[-2px] transition-all duration-200"
+                 
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-brand-bg">

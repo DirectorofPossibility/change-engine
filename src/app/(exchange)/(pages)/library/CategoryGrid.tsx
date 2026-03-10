@@ -22,7 +22,7 @@ export function CategoryGrid({ counts }: CategoryGridProps) {
             href={'/library/category/' + theme.slug}
             className="group block"
           >
-            <article className="bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex">
+            <article className="bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex">
               {/* Left color bar */}
               <div
                 className="w-1.5 group-hover:w-2 transition-all duration-200 flex-shrink-0"

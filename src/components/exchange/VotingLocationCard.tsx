@@ -21,7 +21,7 @@ export function VotingLocationCard({
   const fullAddress = [address, city].filter(Boolean).join(', ')
 
   return (
-    <div className="bg-white rounded-xl border-2 border-brand-border p-4">
+    <div className="bg-white rounded-xl border border-brand-border p-4">
       <div className="flex items-center gap-2 mb-2">
         <h4 className="font-semibold text-brand-text text-sm">{name}</h4>
         {locationType && (

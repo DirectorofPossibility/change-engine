@@ -31,7 +31,7 @@ export function SidebarSearch({ onSearch }: SidebarSearchProps) {
           onChange={function (e) { setSearchQuery(e.target.value) }}
           placeholder={t('nav.search_placeholder')}
           aria-label="Search"
-          className="w-full pl-9 pr-3 py-1.5 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+          className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
         />
       </form>
     </div>

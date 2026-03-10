@@ -168,7 +168,7 @@ export default function SignupPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border-2 border-brand-border p-6 space-y-4" style={{ boxShadow: '3px 3px 0 #D1D5E0' }}>
+        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-brand-border p-6 space-y-4">
           <div>
             <label htmlFor="displayName" className="block text-sm font-medium text-brand-text mb-1">Display Name</label>
             <input
@@ -178,7 +178,7 @@ export default function SignupPage() {
               value={displayName}
               maxLength={50}
               onChange={function (e) { setDisplayName(e.target.value) }}
-              className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+              className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
               placeholder="Your name"
             />
           </div>
@@ -190,7 +190,7 @@ export default function SignupPage() {
               required
               value={email}
               onChange={function (e) { setEmail(e.target.value) }}
-              className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+              className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
               placeholder="you@example.com"
             />
           </div>
@@ -206,7 +206,7 @@ export default function SignupPage() {
                 setPassword(e.target.value)
                 setPasswordHint(validatePassword(e.target.value))
               }}
-              className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+              className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
               placeholder="8+ characters, uppercase + number"
             />
             {password && passwordHint && (
@@ -222,7 +222,7 @@ export default function SignupPage() {
                 maxLength={5}
                 value={zipCode}
                 onChange={function (e) { setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-                className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+                className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
                 placeholder="77001"
               />
             </div>
@@ -232,7 +232,7 @@ export default function SignupPage() {
                 id="language"
                 value={language}
                 onChange={function (e) { setLanguage(e.target.value) }}
-                className="w-full px-3 py-2.5 border-2 border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent bg-white"
+                className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent bg-white"
               >
                 <option value="en">English</option>
                 <option value="es">Espanol</option>
@@ -250,7 +250,7 @@ export default function SignupPage() {
                 type="checkbox"
                 checked={agreedPrivacy}
                 onChange={function () { setAgreedPrivacy(!agreedPrivacy) }}
-                className="mt-0.5 w-4 h-4 rounded border-2 border-brand-border text-brand-accent focus:ring-brand-accent"
+                className="mt-0.5 w-4 h-4 rounded border border-brand-border text-brand-accent focus:ring-brand-accent"
               />
               <span className="text-sm text-brand-text">
                 I have read and agree to the{' '}
@@ -263,7 +263,7 @@ export default function SignupPage() {
                 type="checkbox"
                 checked={agreedAccessibility}
                 onChange={function () { setAgreedAccessibility(!agreedAccessibility) }}
-                className="mt-0.5 w-4 h-4 rounded border-2 border-brand-border text-brand-accent focus:ring-brand-accent"
+                className="mt-0.5 w-4 h-4 rounded border border-brand-border text-brand-accent focus:ring-brand-accent"
               />
               <span className="text-sm text-brand-text">
                 I have read the{' '}
@@ -276,7 +276,7 @@ export default function SignupPage() {
                 type="checkbox"
                 checked={agreedTerms}
                 onChange={function () { setAgreedTerms(!agreedTerms) }}
-                className="mt-0.5 w-4 h-4 rounded border-2 border-brand-border text-brand-accent focus:ring-brand-accent"
+                className="mt-0.5 w-4 h-4 rounded border border-brand-border text-brand-accent focus:ring-brand-accent"
               />
               <span className="text-sm text-brand-text">
                 I agree to the{' '}
@@ -301,7 +301,7 @@ export default function SignupPage() {
 
         {/* Account info */}
         <div className="relative mt-8">
-          <div className="bg-white rounded-xl border-2 border-brand-border p-4 text-center">
+          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
             <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-theme-voice mb-1">Neighbor Account</p>
             <p className="text-xl font-serif font-bold text-brand-text">Free</p>
             <p className="text-[11px] text-brand-muted mt-1">Share resources, submit content, track your civic activity, and earn impact points.</p>

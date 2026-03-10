@@ -311,7 +311,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
 
       {/* ── Month View ── */}
       {view === 'month' && (
-        <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+        <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
           {/* Day headers */}
           <div className="grid grid-cols-7 border-b border-brand-border">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(function (d) {
@@ -373,7 +373,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
 
       {/* ── Week / 3-Day View ── */}
       {(view === 'week' || view === '3day') && (
-        <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+        <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
           <div className={'grid ' + (view === 'week' ? 'grid-cols-7' : 'grid-cols-3')}>
             {visibleDays.map(function (day, i) {
               const isToday = isSameDay(day, today)
@@ -428,7 +428,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
 
       {/* ── Day View ── */}
       {view === 'day' && (
-        <div className="bg-white rounded-xl border-2 border-brand-border overflow-hidden">
+        <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
           <div className={'text-center py-3 border-b border-brand-border ' + (isSameDay(currentDate, today) ? 'bg-brand-accent/10' : 'bg-brand-bg/50')}>
             <div className="text-sm text-brand-muted">
               {currentDate.toLocaleDateString('en-US', { weekday: 'long' })}
@@ -501,7 +501,7 @@ function renderEventCard(item: CalendarItem, themes: ThemeInfo[], onClick: () =>
   return (
     <div
       key={item.id}
-      className="flex gap-4 bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-sm transition-shadow cursor-pointer"
+      className="flex gap-4 bg-white rounded-xl border border-brand-border p-4 hover:shadow-sm transition-shadow cursor-pointer"
       onClick={onClick}
     >
       {dateInfo && (
@@ -705,7 +705,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
           {event.detailHref && (
             <Link
               href={event.detailHref}
-              className="flex-1 text-center py-2.5 rounded-lg border-2 border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
+              className="flex-1 text-center py-2.5 rounded-lg border border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
               onClick={function (e) { e.stopPropagation() }}
             >
               Full Details
@@ -716,7 +716,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
               href={event.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 text-center py-2.5 rounded-lg border-2 border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
+              className="flex-1 text-center py-2.5 rounded-lg border border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
             >
               View Source
             </a>

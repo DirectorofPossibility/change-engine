@@ -100,7 +100,7 @@ export default async function PathwaysPage() {
                 className="rounded-xl overflow-hidden mb-6"
                 style={{ borderLeft: `5px solid ${theme.color}` }}
               >
-                <div className="bg-white border-2 border-brand-border border-l-0 rounded-r-xl px-6 py-5">
+                <div className="bg-white border border-brand-border border-l-0 rounded-r-xl px-6 py-5">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div>
                       <Link
@@ -116,7 +116,7 @@ export default async function PathwaysPage() {
                     </div>
                     <Link
                       href={'/pathways/' + theme.slug}
-                      className="text-sm font-medium px-4 py-2 rounded-lg border-2 border-brand-border hover:shadow-sm transition-shadow flex-shrink-0"
+                      className="text-sm font-medium px-4 py-2 rounded-lg border border-brand-border hover:shadow-sm transition-shadow flex-shrink-0"
                       style={{ color: theme.color }}
                     >
                       Explore {theme.name} &rarr;
@@ -133,7 +133,7 @@ export default async function PathwaysPage() {
                   {hero && (
                     <Link
                       href={'/content/' + hero.id}
-                      className="group block bg-white rounded-xl border-2 border-brand-border overflow-hidden card-lift mb-4"
+                      className="group block bg-white rounded-xl border border-brand-border overflow-hidden card-lift mb-4"
                     >
                       {hero.image_url && (
                         <div className="aspect-[16/9] overflow-hidden">
@@ -173,7 +173,7 @@ export default async function PathwaysPage() {
                           <Link
                             key={item.id}
                             href={'/content/' + item.id}
-                            className="group bg-white rounded-lg border-2 border-brand-border overflow-hidden card-lift"
+                            className="group bg-white rounded-lg border border-brand-border overflow-hidden card-lift"
                           >
                             {item.image_url && (
                               <div className="aspect-[16/9] overflow-hidden">
@@ -198,7 +198,7 @@ export default async function PathwaysPage() {
                 {/* ── Right: Integrated data sidebar ── */}
                 <div className={`lg:w-[380px] flex-shrink-0 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                   {/* Entity counts grid */}
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-4 mb-3">
+                  <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
                       <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">What You Will Find</span>
@@ -242,7 +242,7 @@ export default async function PathwaysPage() {
 
                   {/* Focus area topics */}
                   {topFocusAreas.length > 0 && (
-                    <div className="bg-white rounded-xl border-2 border-brand-border p-4 mb-3">
+                    <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
                         <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Topics</span>
@@ -254,7 +254,7 @@ export default async function PathwaysPage() {
                             <Link
                               key={fa.focus_id}
                               href={'/explore/focus/' + fa.focus_id}
-                              className="group inline-flex items-center gap-1.5 text-xs border-2 border-brand-border rounded-lg px-2.5 py-1.5 hover:border-transparent hover:shadow-sm transition-all"
+                              className="group inline-flex items-center gap-1.5 text-xs border border-brand-border rounded-lg px-2.5 py-1.5 hover:border-transparent hover:shadow-sm transition-all"
                             >
                               <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                               <span className="text-brand-text group-hover:underline">{fa.focus_area_name}</span>
@@ -276,7 +276,7 @@ export default async function PathwaysPage() {
 
                   {/* Learning paths + guides */}
                   {(data.learningPaths.length > 0 || data.guides.length > 0) && (
-                    <div className="bg-white rounded-xl border-2 border-brand-border p-4 mb-3">
+                    <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
                         <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Keep Learning</span>
@@ -379,7 +379,7 @@ export default async function PathwaysPage() {
                 return (
                   <div
                     key={b[0] + '|' + b[1]}
-                    className="flex items-center gap-3 bg-white rounded-xl border-2 border-brand-border p-3"
+                    className="flex items-center gap-3 bg-white rounded-xl border border-brand-border p-3"
                   >
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: themeA.color }} />

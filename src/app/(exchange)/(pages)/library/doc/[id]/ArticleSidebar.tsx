@@ -27,7 +27,7 @@ export function ArticleSidebar({
   const { t } = useTranslation()
 
   return (
-    <nav className="bg-white rounded-xl border-2 border-brand-border p-5 lg:sticky lg:top-24">
+    <nav className="bg-white rounded-xl border border-brand-border p-5 lg:sticky lg:top-24">
       <Link
         href={'/library/category/' + themeSlug}
         className="flex items-center gap-1.5 text-sm font-semibold text-brand-accent hover:underline mb-4"

@@ -82,7 +82,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
 
   if (variant === 'inline') {
     return (
-      <div className={'bg-brand-bg rounded-xl border-2 border-brand-border p-4 transition-all duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
+      <div className={'bg-brand-bg rounded-xl border border-brand-border p-4 transition-all duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
         <div className="flex items-center gap-2 mb-3">
           <FlowerOfLifeIcon size={16} color="#d69e2e" />
           <span className="font-serif font-bold text-sm text-brand-text">Three Good Things</span>
@@ -115,7 +115,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
 
   // card variant (for sidebar / homepage)
   return (
-    <div className={'bg-white rounded-xl border-2 border-brand-border p-4 relative overflow-hidden transition-opacity duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')} style={{ boxShadow: '2px 2px 0 #D1D5E0' }}>
+    <div className={'bg-white rounded-xl border border-brand-border p-4 relative overflow-hidden transition-opacity duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5]" />
       <div className="pl-3">
         <div className="flex items-center gap-2 mb-3">

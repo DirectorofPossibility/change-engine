@@ -10,7 +10,7 @@ const InteractiveMap = dynamic(
 
 export function TirzMap() {
   return (
-    <div className="rounded-xl overflow-hidden border-2 border-brand-border mb-8" style={{ height: 400 }}>
+    <div className="rounded-xl overflow-hidden border border-brand-border mb-8" style={{ height: 400 }}>
       <InteractiveMap
         layers={[GEO_LAYERS.tirzZones, GEO_LAYERS.councilDistricts]}
         defaultVisibleLayers={['tirzZones']}

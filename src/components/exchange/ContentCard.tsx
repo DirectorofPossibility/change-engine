@@ -77,8 +77,8 @@ export function ContentCard({
   const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-shadow cursor-pointer' }
-    : { href: href || '/content/' + id, className: 'block bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-lg transition-shadow' }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-shadow cursor-pointer' }
+    : { href: href || '/content/' + id, className: 'block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-shadow' }
   return (
     <Wrapper {...wrapperProps as any}>
       {/* TODO: Replace with real Houston photography */}

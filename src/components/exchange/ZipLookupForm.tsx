@@ -73,7 +73,7 @@ export function ZipLookupForm() {
             onChange={function (e) { setInput(e.target.value) }}
             placeholder={t('lookup.address_or_zip')}
             aria-label="ZIP code or address"
-            className="w-full pl-9 pr-4 py-3 border-2 border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+            className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
           />
         </div>
         <button
@@ -95,7 +95,7 @@ export function ZipLookupForm() {
         <div className="space-y-10">
           {/* Neighborhood info */}
           {results.neighborhood && (
-            <div className="bg-brand-accent/5 rounded-xl p-4 border-2 border-brand-border">
+            <div className="bg-brand-accent/5 rounded-xl p-4 border border-brand-border">
               <div className="flex items-center gap-2 mb-2">
                 <MapPin size={16} className="text-brand-accent" />
                 <span className="font-semibold text-brand-text">{results.neighborhood.neighborhood_name}</span>
@@ -110,7 +110,7 @@ export function ZipLookupForm() {
 
           {/* TIRZ Zones */}
           {results.tirzZones && results.tirzZones.length > 0 && (
-            <div className="bg-brand-accent/5 rounded-xl p-4 border-2 border-brand-border">
+            <div className="bg-brand-accent/5 rounded-xl p-4 border border-brand-border">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp size={16} style={{ color: '#C75B2A' }} />
                 <span className="font-semibold text-brand-text">TIRZ Zone{results.tirzZones.length > 1 ? 's' : ''}</span>
@@ -223,7 +223,7 @@ export function ZipLookupForm() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {results.votingLocations.map(function (loc) {
                   return (
-                    <div key={loc.location_id} className="bg-white rounded-xl border-2 border-brand-border p-4">
+                    <div key={loc.location_id} className="bg-white rounded-xl border border-brand-border p-4">
                       <h4 className="font-semibold text-brand-text text-sm mb-1">{loc.location_name}</h4>
                       {loc.address && <p className="text-xs text-brand-muted flex items-center gap-1"><MapPin size={12} /> {loc.address}{loc.city ? ', ' + loc.city : ''}</p>}
                       {loc.hours_early_voting && <p className="text-xs text-brand-muted mt-1">Early voting: {loc.hours_early_voting}</p>}
@@ -255,7 +255,7 @@ function renderPolicyGroup(title: string, policies: NonNullable<CivicProfileResu
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {policies.slice(0, 6).map(function (p) {
           return (
-            <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow">
+            <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
               <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{p.title_6th_grade || p.policy_name}</h4>
               {p.bill_number && <p className="text-xs font-mono text-brand-muted mb-1">{p.bill_number}</p>}
               <div className="flex items-center gap-2">
@@ -283,7 +283,7 @@ function renderGroup(title: string, officials: CivicProfileResult['federal']) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {officials.map(function (o) {
           return (
-            <div key={o.official_id} className="bg-white rounded-xl border-2 border-brand-border p-4">
+            <div key={o.official_id} className="bg-white rounded-xl border border-brand-border p-4">
               <div className="mb-2">
                 <Link href={'/officials/' + o.official_id} className="font-semibold text-brand-text hover:text-brand-accent">{o.official_name}</Link>
                 {o.title && <p className="text-xs text-brand-muted">{o.title}</p>}

@@ -46,7 +46,7 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
             <Link
               key={name}
               href={'/centers/' + center.slug}
-              className="group flex flex-col items-center text-center gap-4 p-7 rounded-2xl bg-white border-2 border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              className="group flex flex-col items-center text-center gap-4 p-7 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
               {imgSrc && (
                 <Image

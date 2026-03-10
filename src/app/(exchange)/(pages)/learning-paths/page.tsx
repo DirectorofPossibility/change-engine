@@ -48,7 +48,7 @@ export default async function LearningPathsPage() {
                     <Link
                       key={path.path_id}
                       href={'/learning-paths/' + path.path_id}
-                      className="bg-white rounded-lg border-2 border-brand-border p-5 card-chunky flex hover:shadow-md transition-shadow"
+                      className="bg-white rounded-lg border border-brand-border p-5 card-chunky flex hover:shadow-md transition-shadow"
                     >
                       {/* Theme color bar */}
                       <div

@@ -143,8 +143,8 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                 <Link
                   key={fa.focus_id}
                   href={'/explore/focus/' + fa.focus_id}
-                  className="group relative bg-white rounded-lg border-2 border-brand-border p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden"
-                  style={{ boxShadow: '2px 2px 0 #D5D0C8' }}
+                  className="group relative bg-white rounded-lg border border-brand-border p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden"
+                 
                 >
                   <div
                     className="absolute left-0 top-0 bottom-0 w-1 transition-all duration-200 group-hover:w-1.5"

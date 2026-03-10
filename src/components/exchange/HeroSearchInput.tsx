@@ -18,7 +18,7 @@ export function HeroSearchInput() {
   return (
     <form onSubmit={handleSubmit}
       className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text rounded-xl"
-      style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+     
     >
       <Search size={18} className="text-brand-accent flex-shrink-0" />
       <input

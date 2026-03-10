@@ -36,7 +36,7 @@ export default async function AgenciesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="metatron" gradientColor="#3182ce" title="Government Agencies" subtitle="Federal, state, and local agencies serving Houston and Harris County." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Agencies' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
           <div>
@@ -49,7 +49,7 @@ export default async function AgenciesPage() {
                   <div className="space-y-3">
                     {items.map(function (a) {
                       return (
-                        <Link key={a.agency_id} href={`/agencies/${a.agency_id}`} className="block bg-white rounded-lg border-2 border-brand-border p-4 hover:shadow-md transition-shadow">
+                        <Link key={a.agency_id} href={`/agencies/${a.agency_id}`} className="block bg-white rounded-lg border border-brand-border p-4 hover:shadow-md transition-shadow">
                           <div className="flex items-start gap-3">
                             <Building2 className="w-5 h-5 text-brand-accent mt-0.5 flex-shrink-0" />
                             <div className="flex-1 min-w-0">

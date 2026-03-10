@@ -36,7 +36,7 @@ export function OfficialsClient({ officials, levels, translations = {}, linkedin
           <button
             onClick={() => setActiveLevel(null)}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-              !activeLevel ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text'
+              !activeLevel ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
             }`}
           >
             All ({officials.length})
@@ -48,7 +48,7 @@ export function OfficialsClient({ officials, levels, translations = {}, linkedin
                 key={level.gov_level_id}
                 onClick={() => setActiveLevel(level.gov_level_id)}
                 className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-                  activeLevel === level.gov_level_id ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text'
+                  activeLevel === level.gov_level_id ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
                 }`}
               >
                 {level.gov_level_name} ({count})

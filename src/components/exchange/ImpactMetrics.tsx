@@ -72,7 +72,7 @@ function MetricCard({ target, icon: Icon, label, href }: { target: number; icon:
 
   return (
     <div ref={ref}>
-      <Link href={href} className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border-2 border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer h-full">
+      <Link href={href} className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer h-full">
         <Icon size={24} style={{ color: BRAND.accent }} strokeWidth={1.5} />
         <span className="font-serif text-5xl font-bold tracking-tight" style={{ color: BRAND.text }}>
           {value.toLocaleString()}

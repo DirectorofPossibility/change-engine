@@ -1,19 +1,21 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 /**
- * sync-elections — Fetch real election data from Google Civic API.
+ * sync-elections — Multi-source election data sync.
  *
- * 1. Discovers active elections via /elections endpoint
- * 2. For each election, queries /voterinfo by Houston-area ZIPs
- *    to get contests (races + candidates) and referendums (ballot items)
- * 3. Upserts to elections, candidates, and ballot_items tables
- * 4. Optionally enriches with Claude for plain-language summaries
+ * Sources:
+ *   1. TX Secretary of State — election dates + deadlines (scraped)
+ *   2. FEC API — federal candidates for TX (House + Senate)
+ *   3. Google Civic API — contests, ballot items, additional candidates
+ *   4. Claude — plain-language enrichment
  */
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SUPABASE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const GOOGLE_CIVIC_API_KEY = Deno.env.get('GOOGLE_CIVIC_API_KEY')!;
+const FEC_API_KEY = Deno.env.get('DATA_GOV_API_KEY') || Deno.env.get('FEC_API_KEY') || '';
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY') || '';
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -22,7 +24,10 @@ const CORS = {
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-// ─── Supabase REST helper ────────────────────────────────────────────────────
+// Harris County congressional districts
+const HOUSTON_DISTRICTS = ['02', '07', '08', '09', '10', '18', '22', '29', '36', '38'];
+
+// ─── DB helper ───────────────────────────────────────────────────────────────
 
 async function db(path: string, method = 'GET', body?: unknown) {
   const url = `${SUPABASE_URL}/rest/v1/${path}`;
@@ -53,77 +58,221 @@ async function sha256(input: string): Promise<string> {
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// ─── Google Civic API ────────────────────────────────────────────────────────
-
-interface GoogleElection {
-  id: string;
-  name: string;
-  electionDay: string; // YYYY-MM-DD
-  ocdDivisionId?: string;
-}
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface GoogleContest {
   type: string;
   office?: string;
   district?: { name?: string; scope?: string };
-  candidates?: GoogleCandidate[];
+  candidates?: { name: string; party?: string; candidateUrl?: string; email?: string; phone?: string; photoUrl?: string; channels?: { type: string; id: string }[] }[];
   referendumTitle?: string;
   referendumSubtitle?: string;
   referendumText?: string;
   referendumProStatement?: string;
   referendumConStatement?: string;
-  referendumPassageThreshold?: string;
-  roles?: string[];
   level?: string[];
+  roles?: string[];
 }
 
-interface GoogleCandidate {
+interface FECCandidate {
+  candidate_id: string;
   name: string;
-  party?: string;
-  candidateUrl?: string;
-  email?: string;
-  phone?: string;
-  photoUrl?: string;
-  channels?: { type: string; id: string }[];
+  party: string;
+  party_full: string;
+  office: string;
+  office_full: string;
+  state: string;
+  district: string;
+  district_number: number;
+  incumbent_challenge: string;
+  incumbent_challenge_full: string;
+  candidate_status: string;
+  candidate_inactive: boolean;
+  has_raised_funds: boolean;
+  cycles: number[];
+  election_years: number[];
 }
 
-/** Discover active elections from Google Civic. */
-async function fetchGoogleElections(): Promise<GoogleElection[]> {
+interface TXSOSElection {
+  name: string;
+  date: string;
+  type: string;
+  deadlines: Record<string, string>;
+}
+
+// ─── Source 1: TX Secretary of State ─────────────────────────────────────────
+
+async function fetchTXSOSElections(): Promise<TXSOSElection[]> {
+  const elections: TXSOSElection[] = [];
   try {
-    const url = `https://www.googleapis.com/civicinfo/v2/elections?key=${GOOGLE_CIVIC_API_KEY}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    const url = 'https://www.sos.state.tx.us/elections/voter/important-election-dates.shtml';
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ChangeEngine/1.0)' },
+      signal: AbortSignal.timeout(15000),
+    });
     if (!res.ok) {
-      console.error(`Google elections API: ${res.status}`);
-      return [];
+      console.error(`TX SOS fetch failed: ${res.status}`);
+      return elections;
     }
-    const data = await res.json();
-    return (data.elections || []).filter((e: GoogleElection) => e.id !== '2000'); // Exclude test election
+    const html = await res.text();
+    const currentYear = new Date().getFullYear();
+
+    const tableRegex = /<table[^>]*summary="([^"]*)"[^>]*>([\s\S]*?)<\/table>/gi;
+    let match;
+    while ((match = tableRegex.exec(html)) !== null) {
+      const tableHtml = match[2];
+
+      const thMatch = tableHtml.match(/<th[^>]*>([\s\S]*?)<\/th>/i);
+      const headerText = thMatch
+        ? thMatch[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+        : match[1].replace(/\s+/g, ' ').trim();
+
+      const dateMatch = headerText.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(\d{4})/i);
+      if (!dateMatch) continue;
+
+      const electionYear = parseInt(dateMatch[3]);
+      if (electionYear < currentYear) continue;
+
+      const electionDate = parseDate(dateMatch[0]);
+      if (!electionDate) continue;
+
+      const lower = headerText.toLowerCase();
+      let electionType = 'General';
+      if (lower.includes('primary')) electionType = 'Primary';
+      else if (lower.includes('runoff')) electionType = 'Runoff';
+      else if (lower.includes('uniform')) electionType = 'General';
+      else if (lower.includes('special')) electionType = 'Special';
+
+      const cleanName = lower.includes('primary')
+        ? `Texas ${electionYear} Primary Election`
+        : lower.includes('runoff')
+          ? `Texas ${electionYear} Primary Runoff`
+          : lower.includes('uniform')
+            ? `Texas ${electionYear} General Election`
+            : `Texas ${electionYear} Election`;
+
+      const deadlines: Record<string, string> = {};
+      const rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+      let rowMatch;
+      while ((rowMatch = rowRegex.exec(tableHtml)) !== null) {
+        const cells = rowMatch[1].match(/<td[^>]*>([\s\S]*?)<\/td>/gi);
+        if (!cells || cells.length < 2) continue;
+        const label = cells[0].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        const dateVal = cells[1].replace(/<[^>]+>/g, '').replace(/&[a-z]+;/gi, '').replace(/\s+/g, ' ').trim();
+        if (label && dateVal) {
+          const parsedDate = parseDate(dateVal);
+          if (parsedDate) {
+            deadlines[normalizeDeadlineLabel(label)] = parsedDate;
+          }
+        }
+      }
+
+      elections.push({ name: cleanName, date: electionDate, type: electionType, deadlines });
+    }
   } catch (err) {
-    console.error('Failed to fetch Google elections:', (err as Error).message);
-    return [];
+    console.error('TX SOS scrape error:', (err as Error).message);
   }
+  return elections;
 }
 
-/** Fetch voter info (contests, referendums) for a given election + address. */
-async function fetchVoterInfo(electionId: string, address: string): Promise<{
-  election?: { name: string; electionDay: string };
-  contests: GoogleContest[];
-}> {
+function parseDate(text: string): string | null {
+  const months: Record<string, number> = {
+    january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
+    july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+  };
+  const match = text.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(\d{4})/i);
+  if (!match) return null;
+  const month = months[match[1].toLowerCase()];
+  const day = parseInt(match[2]);
+  const year = parseInt(match[3]);
+  if (month === undefined || isNaN(day) || isNaN(year)) return null;
+  return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function normalizeDeadlineLabel(label: string): string {
+  const lower = label.toLowerCase();
+  if (lower.includes('last day to register')) return 'registration_deadline';
+  if (lower.includes('first day of early voting')) return 'early_voting_start';
+  if (lower.includes('last day of early voting')) return 'early_voting_end';
+  if (lower.includes('last day to apply for ballot by mail')) return 'mail_ballot_deadline';
+  if (lower.includes('last day to receive ballot by mail')) return 'mail_ballot_received';
+  if (lower.includes('filing deadline')) return 'filing_deadline';
+  return label.substring(0, 50);
+}
+
+// ─── Source 2: FEC API ───────────────────────────────────────────────────────
+
+async function fetchFECCandidates(electionYear: number): Promise<FECCandidate[]> {
+  if (!FEC_API_KEY) return [];
+  const allCandidates: FECCandidate[] = [];
   try {
-    const url = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodeURIComponent(address)}&electionId=${electionId}&key=${GOOGLE_CIVIC_API_KEY}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-    if (!res.ok) return { contests: [] };
-    const data = await res.json();
-    return {
-      election: data.election,
-      contests: data.contests || [],
-    };
-  } catch {
-    return { contests: [] };
+    let page = 1;
+    let totalPages = 1;
+    while (page <= totalPages && page <= 20) {
+      const url = `https://api.open.fec.gov/v1/candidates/?state=TX&election_year=${electionYear}&sort=name&per_page=100&page=${page}&api_key=${FEC_API_KEY}`;
+      const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+      if (!res.ok) { console.error(`FEC API page ${page}: ${res.status}`); break; }
+      const data = await res.json();
+      totalPages = data.pagination?.pages || 1;
+      allCandidates.push(...(data.results || []));
+      page++;
+      if (page <= totalPages) await sleep(200);
+    }
+  } catch (err) {
+    console.error('FEC API error:', (err as Error).message);
   }
+  return allCandidates;
 }
 
-// ─── Claude enrichment (optional) ────────────────────────────────────────────
+function isHoustonDistrict(district: string): boolean {
+  return HOUSTON_DISTRICTS.includes(district.padStart(2, '0'));
+}
+
+function formatCandidateName(fecName: string): string {
+  const parts = fecName.split(',').map(s => s.trim());
+  if (parts.length < 2) return fecName;
+  const last = parts[0];
+  const first = parts[1].split(' ')[0];
+  const tc = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  return `${tc(first)} ${tc(last)}`;
+}
+
+function getFederalElectionDate(year: number): string {
+  const nov1 = new Date(year, 10, 1);
+  const dayOfWeek = nov1.getDay();
+  const firstMonday = dayOfWeek <= 1 ? 1 + (1 - dayOfWeek) : 1 + (8 - dayOfWeek);
+  const electionDay = firstMonday + 1;
+  return `${year}-11-${String(electionDay).padStart(2, '0')}`;
+}
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function inferElectionType(name: string): string {
+  const lower = name.toLowerCase();
+  if (lower.includes('runoff')) return 'Runoff';
+  if (lower.includes('primary')) return 'Primary';
+  if (lower.includes('general')) return 'General';
+  if (lower.includes('special')) return 'Special';
+  return 'General';
+}
+
+function inferJurisdiction(name: string): string {
+  const lower = name.toLowerCase();
+  if (lower.includes('houston')) return 'City of Houston';
+  if (lower.includes('harris')) return 'Harris County';
+  if (lower.includes('texas') || lower.includes('tx')) return 'State of Texas';
+  return 'Harris County';
+}
+
+function inferOfficeLevel(contest: GoogleContest): string {
+  const levels = contest.level || [];
+  const scope = contest.district?.scope || '';
+  if (levels.includes('country') || scope === 'national') return 'Federal';
+  if (levels.includes('administrativeArea1') || scope === 'statewide') return 'State';
+  if (levels.includes('administrativeArea2') || scope === 'countywide') return 'County';
+  if (levels.includes('locality') || scope === 'citywide') return 'City';
+  return 'Other';
+}
 
 async function enrichWithClaude(prompt: string): Promise<string | null> {
   if (!ANTHROPIC_API_KEY) return null;
@@ -150,142 +299,7 @@ async function enrichWithClaude(prompt: string): Promise<string | null> {
   }
 }
 
-// ─── Election type inference ─────────────────────────────────────────────────
-
-function inferElectionType(name: string): string {
-  const lower = name.toLowerCase();
-  if (lower.includes('runoff')) return 'Runoff';
-  if (lower.includes('primary')) return 'Primary';
-  if (lower.includes('general')) return 'General';
-  if (lower.includes('special')) return 'Special';
-  if (lower.includes('constitutional')) return 'Constitutional Amendment';
-  if (lower.includes('bond')) return 'Bond';
-  return 'General';
-}
-
-/** Infer jurisdiction from election name or contest data */
-function inferJurisdiction(name: string): string {
-  const lower = name.toLowerCase();
-  if (lower.includes('houston') || lower.includes('city of houston')) return 'City of Houston';
-  if (lower.includes('harris') || lower.includes('harris county')) return 'Harris County';
-  if (lower.includes('texas') || lower.includes('tx')) return 'State of Texas';
-  if (lower.includes('us ') || lower.includes('united states') || lower.includes('federal')) return 'Federal';
-  return 'Harris County'; // default for Houston-area elections
-}
-
-/** Infer office level from contest data */
-function inferOfficeLevel(contest: GoogleContest): string {
-  const levels = contest.level || [];
-  const roles = contest.roles || [];
-  const scope = contest.district?.scope || '';
-  if (levels.includes('country') || scope === 'national') return 'Federal';
-  if (levels.includes('administrativeArea1') || scope === 'statewide' || roles.includes('legislatorUpperBody') || roles.includes('legislatorLowerBody')) return 'State';
-  if (levels.includes('administrativeArea2') || scope === 'countywide') return 'County';
-  if (levels.includes('locality') || scope === 'citywide') return 'City';
-  return 'Other';
-}
-
-// ─── Build DB rows ───────────────────────────────────────────────────────────
-
-function buildElectionRow(googleElection: GoogleElection): Record<string, unknown> {
-  const electionId = `ELEC_GC_${googleElection.id}`;
-
-  // Texas registration deadline: 30 days before election day
-  const electionDate = new Date(googleElection.electionDay + 'T00:00:00');
-  const regDeadline = new Date(electionDate.getTime() - 30 * 24 * 60 * 60 * 1000);
-  const regDeadlineISO = regDeadline.toISOString().split('T')[0];
-
-  // Early voting in Texas: typically starts 17 days before, ends 4 days before
-  const evStart = new Date(electionDate.getTime() - 17 * 24 * 60 * 60 * 1000);
-  const evEnd = new Date(electionDate.getTime() - 4 * 24 * 60 * 60 * 1000);
-
-  return {
-    election_id: electionId,
-    election_name: googleElection.name,
-    election_date: googleElection.electionDay,
-    election_type: inferElectionType(googleElection.name),
-    jurisdiction: inferJurisdiction(googleElection.name),
-    is_active: 'Yes',
-    registration_deadline: regDeadlineISO,
-    early_voting_start: evStart.toISOString().split('T')[0],
-    early_voting_end: evEnd.toISOString().split('T')[0],
-    polls_open: '7:00 AM',   // Texas standard
-    polls_close: '7:00 PM',  // Texas standard
-    find_polling_url: 'https://www.harrisvotes.com/Polling-Locations',
-    register_url: 'https://www.votetexas.gov/register-to-vote/',
-    data_source: 'google_civic',
-    last_updated: new Date().toISOString(),
-  };
-}
-
-async function buildCandidateRow(
-  candidate: GoogleCandidate,
-  contest: GoogleContest,
-  electionId: string,
-): Promise<Record<string, unknown>> {
-  const hash = await sha256(`${electionId}|${contest.office || ''}|${candidate.name}`);
-  const candidateId = `CAND_GC_${hash.substring(0, 12)}`;
-
-  const row: Record<string, unknown> = {
-    candidate_id: candidateId,
-    candidate_name: candidate.name,
-    election_id: electionId,
-    office_sought: contest.office || null,
-    district: contest.district?.name || null,
-    office_level: inferOfficeLevel(contest),
-    party: candidate.party || null,
-    campaign_website: candidate.candidateUrl || null,
-    campaign_email: candidate.email || null,
-    campaign_phone: candidate.phone || null,
-    photo_url: candidate.photoUrl || null,
-    is_active: 'Yes',
-    data_source: 'google_civic',
-    last_updated: new Date().toISOString(),
-  };
-
-  // Extract LinkedIn from channels
-  if (candidate.channels) {
-    for (const ch of candidate.channels) {
-      if (ch.type === 'LinkedIn') row.linkedin_url = `https://linkedin.com/in/${ch.id}`;
-    }
-  }
-
-  return row;
-}
-
-async function buildBallotItemRow(
-  contest: GoogleContest,
-  electionId: string,
-  electionDate: string,
-): Promise<Record<string, unknown>> {
-  const title = contest.referendumTitle || contest.office || 'Unknown';
-  const hash = await sha256(`${electionId}|${title}`);
-  const itemId = `BALL_GC_${hash.substring(0, 12)}`;
-
-  // Determine item type from title
-  const lower = title.toLowerCase();
-  let itemType = 'Proposition';
-  if (lower.includes('bond')) itemType = 'Bond';
-  else if (lower.includes('amendment')) itemType = 'Constitutional Amendment';
-  else if (lower.includes('measure')) itemType = 'Measure';
-
-  return {
-    item_id: itemId,
-    item_name: title,
-    election_id: electionId,
-    election_date: electionDate,
-    item_type: itemType,
-    jurisdiction: inferJurisdiction(title),
-    description: contest.referendumText || contest.referendumSubtitle || null,
-    for_argument: contest.referendumProStatement || null,
-    against_argument: contest.referendumConStatement || null,
-    is_active: 'Yes',
-    data_source: 'google_civic',
-    last_updated: new Date().toISOString(),
-  };
-}
-
-// ─── Main handler ────────────────────────────────────────────────────────────
+// ─── Main Handler ────────────────────────────────────────────────────────────
 
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
@@ -293,7 +307,8 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json().catch(() => ({}));
     const mode: string = body.mode || 'full';
-    const enrich: boolean = body.enrich !== false; // enrichment on by default
+    const enrich: boolean = body.enrich !== false;
+    const sources: string[] = body.sources || ['txsos', 'fec', 'google_civic'];
 
     const stats = {
       elections_found: 0,
@@ -302,150 +317,275 @@ Deno.serve(async (req: Request) => {
       ballot_items_upserted: 0,
       enriched: 0,
       errors: 0,
-      zips_queried: 0,
+      sources_used: [] as string[],
     };
 
-    // ── Step 1: Discover elections ──
-    console.log('Fetching elections from Google Civic API...');
-    const googleElections = await fetchGoogleElections();
-    stats.elections_found = googleElections.length;
-
-    if (googleElections.length === 0) {
-      await db('ingestion_log', 'POST', {
-        event_type: 'sync_elections',
-        source: 'google_civic',
-        status: 'success',
-        message: 'No active elections found in Google Civic API',
-        item_count: 0,
-      });
-      return new Response(JSON.stringify({ success: true, message: 'No active elections found', ...stats }), {
-        headers: { ...CORS, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Filter to Texas/Houston-relevant elections
-    const relevantElections = googleElections.filter(e => {
-      const lower = (e.name || '').toLowerCase();
-      // Include Texas elections + any US-wide general elections
-      return lower.includes('texas') || lower.includes('tx') ||
-             lower.includes('houston') || lower.includes('harris') ||
-             lower.includes('general election') || lower.includes('primary election');
-    });
-
-    // If no Texas-specific match, take the first non-test election (national elections apply)
-    const electionsToProcess = relevantElections.length > 0
-      ? relevantElections
-      : googleElections.slice(0, 3);
-
-    console.log(`Processing ${electionsToProcess.length} elections`);
-
-    // ── Step 2: Upsert elections ──
-    const electionRows = electionsToProcess.map(buildElectionRow);
-    const upsertResult = await db('elections?on_conflict=election_id', 'POST', electionRows);
-    if (upsertResult) {
-      stats.elections_upserted = electionRows.length;
-    } else {
-      stats.errors++;
-    }
-
-    // ── Step 3: Fetch contests + candidates + ballot items per election ──
-    // Use a set of Houston-area ZIP codes to get comprehensive contest coverage
-    const HOUSTON_ZIPS = [
-      '77001', '77002', '77003', '77004', '77005', '77006', '77007', '77008',
-      '77009', '77010', '77011', '77012', '77013', '77014', '77015', '77016',
-      '77017', '77018', '77019', '77020', '77021', '77022', '77023', '77024',
-      '77025', '77026', '77027', '77028', '77029', '77030', '77031', '77032',
-      '77033', '77034', '77035', '77036', '77037', '77038', '77039', '77040',
-      '77041', '77042', '77043', '77044', '77045', '77046', '77047', '77048',
-      '77049', '77050', '77051', '77053', '77054', '77055', '77056', '77057',
-      '77058', '77059', '77060', '77061', '77062', '77063', '77064', '77065',
-      '77066', '77067', '77068', '77069', '77070', '77071', '77072', '77073',
-      '77074', '77075', '77076', '77077', '77078', '77079', '77080', '77081',
-      '77082', '77083', '77084', '77085', '77086', '77087', '77088', '77089',
-      '77090', '77091', '77092', '77093', '77094', '77095', '77096', '77098',
-      '77099',
-    ];
-
-    // In sample mode, just use a few representative ZIPs across Houston
-    const zipsToQuery = mode === 'sample'
-      ? ['77002', '77024', '77045', '77084', '77058'] // downtown, memorial, south, west, clear lake
-      : HOUSTON_ZIPS;
-
+    const now = new Date().toISOString();
+    const currentYear = new Date().getFullYear();
+    const allElectionRows: Record<string, unknown>[] = [];
     const allCandidates = new Map<string, Record<string, unknown>>();
     const allBallotItems = new Map<string, Record<string, unknown>>();
 
-    for (const election of electionsToProcess) {
-      const electionId = `ELEC_GC_${election.id}`;
-      const seenContests = new Set<string>(); // dedupe contests across ZIPs
+    // ═══ SOURCE 1: TX Secretary of State ═══
+    if (sources.includes('txsos')) {
+      stats.sources_used.push('txsos');
+      console.log('Fetching TX SOS election calendar...');
+      const txElections = await fetchTXSOSElections();
+      console.log(`TX SOS: found ${txElections.length} upcoming elections`);
 
-      for (const zip of zipsToQuery) {
-        const info = await fetchVoterInfo(election.id, `${zip}, TX`);
-        stats.zips_queried++;
+      for (const txe of txElections) {
+        const electionId = `ELEC_TXSOS_${txe.date.replace(/-/g, '')}`;
+        allElectionRows.push({
+          election_id: electionId,
+          election_name: txe.name,
+          election_date: txe.date,
+          election_type: txe.type,
+          jurisdiction: 'State of Texas',
+          is_active: 'Yes',
+          registration_deadline: txe.deadlines.registration_deadline || null,
+          early_voting_start: txe.deadlines.early_voting_start || null,
+          early_voting_end: txe.deadlines.early_voting_end || null,
+          polls_open: '7:00 AM',
+          polls_close: '7:00 PM',
+          find_polling_url: 'https://www.harrisvotes.com/Polling-Locations',
+          register_url: 'https://www.votetexas.gov/register-to-vote/',
+          data_source: 'tx_sos',
+          last_updated: now,
+        });
+      }
+    }
 
-        for (const contest of info.contests) {
-          // Dedupe by office/referendum title
-          const contestKey = contest.referendumTitle || contest.office || '';
-          if (seenContests.has(contestKey)) continue;
-          seenContests.add(contestKey);
+    // ═══ SOURCE 2: FEC API ═══
+    if (sources.includes('fec') && FEC_API_KEY) {
+      stats.sources_used.push('fec');
+      const electionYear = currentYear % 2 === 0 ? currentYear : currentYear + 1;
+      console.log(`Fetching FEC candidates for ${electionYear}...`);
+      const fecCandidates = await fetchFECCandidates(electionYear);
+      console.log(`FEC: found ${fecCandidates.length} TX candidates`);
 
-          if (contest.referendumTitle) {
-            // It's a ballot item (referendum/proposition)
-            const row = await buildBallotItemRow(contest, electionId, election.electionDay);
-            allBallotItems.set(row.item_id as string, row);
-          } else if (contest.candidates && contest.candidates.length > 0) {
-            // It's a race with candidates
-            for (const candidate of contest.candidates) {
-              const row = await buildCandidateRow(candidate, contest, electionId);
-              allCandidates.set(row.candidate_id as string, row);
+      const houstonCandidates = fecCandidates.filter(c =>
+        !c.candidate_inactive &&
+        (c.office === 'S' || isHoustonDistrict(c.district))
+      );
+      console.log(`FEC: ${houstonCandidates.length} Houston-area candidates`);
+
+      const federalElectionDate = getFederalElectionDate(electionYear);
+      const federalElectionId = `ELEC_FED_${electionYear}`;
+      const existingGeneral = allElectionRows.find(r => r.election_date === federalElectionDate);
+
+      if (!existingGeneral) {
+        allElectionRows.push({
+          election_id: federalElectionId,
+          election_name: `${electionYear} Federal Election`,
+          election_date: federalElectionDate,
+          election_type: 'General',
+          jurisdiction: 'Federal',
+          is_active: 'Yes',
+          polls_open: '7:00 AM',
+          polls_close: '7:00 PM',
+          find_polling_url: 'https://www.harrisvotes.com/Polling-Locations',
+          register_url: 'https://www.votetexas.gov/register-to-vote/',
+          data_source: 'fec',
+          last_updated: now,
+        });
+      }
+
+      const targetElectionId = existingGeneral
+        ? existingGeneral.election_id as string
+        : federalElectionId;
+
+      for (const fc of houstonCandidates) {
+        const candidateId = `CAND_FEC_${fc.candidate_id}`;
+        const officeName = fc.office === 'S'
+          ? 'U.S. Senator'
+          : `U.S. Representative, District ${parseInt(fc.district)}`;
+
+        allCandidates.set(candidateId, {
+          candidate_id: candidateId,
+          candidate_name: formatCandidateName(fc.name),
+          election_id: targetElectionId,
+          office_sought: officeName,
+          district: fc.office === 'S' ? 'Texas' : `TX-${parseInt(fc.district)}`,
+          office_level: 'Federal',
+          party: fc.party_full || fc.party || null,
+          incumbent_status: fc.incumbent_challenge_full || null,
+          is_active: 'Yes',
+          has_raised_funds: fc.has_raised_funds || false,
+          data_source: 'fec',
+          fec_candidate_id: fc.candidate_id,
+          last_updated: now,
+        });
+      }
+    }
+
+    // ═══ SOURCE 3: Google Civic API ═══
+    if (sources.includes('google_civic') && GOOGLE_CIVIC_API_KEY) {
+      stats.sources_used.push('google_civic');
+      console.log('Fetching Google Civic elections...');
+
+      try {
+        const electionsUrl = `https://www.googleapis.com/civicinfo/v2/elections?key=${GOOGLE_CIVIC_API_KEY}`;
+        const electionsRes = await fetch(electionsUrl, { signal: AbortSignal.timeout(10000) });
+
+        if (electionsRes.ok) {
+          const electionsData = await electionsRes.json();
+          const googleElections = (electionsData.elections || []).filter((e: { id: string }) => e.id !== '2000');
+          console.log(`Google Civic: found ${googleElections.length} elections`);
+
+          const relevant = googleElections.filter((e: { name: string }) => {
+            const lower = e.name.toLowerCase();
+            return lower.includes('texas') || lower.includes('tx') ||
+                   lower.includes('houston') || lower.includes('harris') ||
+                   lower.includes('general') || lower.includes('primary');
+          });
+          const electionsToProcess = relevant.length > 0 ? relevant : googleElections.slice(0, 3);
+
+          const SAMPLE_ZIPS = ['77002', '77024', '77045', '77084', '77058'];
+          const FULL_ZIPS = [
+            '77001','77002','77003','77004','77005','77006','77007','77008','77009','77010',
+            '77011','77012','77013','77014','77015','77016','77017','77018','77019','77020',
+            '77021','77022','77023','77024','77025','77026','77027','77028','77029','77030',
+            '77031','77032','77033','77034','77035','77036','77037','77038','77039','77040',
+            '77041','77042','77043','77044','77045','77046','77047','77048','77049','77050',
+            '77051','77053','77054','77055','77056','77057','77058','77059','77060','77061',
+            '77062','77063','77064','77065','77066','77067','77068','77069','77070',
+          ];
+          const zipsToQuery = mode === 'sample' ? SAMPLE_ZIPS : FULL_ZIPS;
+
+          for (const election of electionsToProcess) {
+            const ge = election as { id: string; name: string; electionDay: string };
+            const electionId = `ELEC_GC_${ge.id}`;
+            const existingForDate = allElectionRows.find(r => r.election_date === ge.electionDay);
+
+            if (!existingForDate) {
+              allElectionRows.push({
+                election_id: electionId,
+                election_name: ge.name,
+                election_date: ge.electionDay,
+                election_type: inferElectionType(ge.name),
+                jurisdiction: inferJurisdiction(ge.name),
+                is_active: 'Yes',
+                polls_open: '7:00 AM',
+                polls_close: '7:00 PM',
+                find_polling_url: 'https://www.harrisvotes.com/Polling-Locations',
+                register_url: 'https://www.votetexas.gov/register-to-vote/',
+                data_source: 'google_civic',
+                last_updated: now,
+              });
+            }
+
+            const targetId = existingForDate ? existingForDate.election_id as string : electionId;
+            const seenContests = new Set<string>();
+
+            for (const zip of zipsToQuery) {
+              try {
+                const viUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${zip},TX&electionId=${ge.id}&key=${GOOGLE_CIVIC_API_KEY}`;
+                const viRes = await fetch(viUrl, { signal: AbortSignal.timeout(10000) });
+                if (!viRes.ok) continue;
+                const viData = await viRes.json();
+                const contests: GoogleContest[] = viData.contests || [];
+
+                for (const contest of contests) {
+                  const contestKey = contest.referendumTitle || contest.office || '';
+                  if (seenContests.has(contestKey)) continue;
+                  seenContests.add(contestKey);
+
+                  if (contest.referendumTitle) {
+                    const title = contest.referendumTitle;
+                    const hash = await sha256(`${targetId}|${title}`);
+                    const itemId = `BALL_GC_${hash.substring(0, 12)}`;
+                    const tl = title.toLowerCase();
+                    let itemType = 'Proposition';
+                    if (tl.includes('bond')) itemType = 'Bond';
+                    else if (tl.includes('amendment')) itemType = 'Constitutional Amendment';
+                    else if (tl.includes('measure')) itemType = 'Measure';
+
+                    allBallotItems.set(itemId, {
+                      item_id: itemId,
+                      item_name: title,
+                      election_id: targetId,
+                      election_date: ge.electionDay,
+                      item_type: itemType,
+                      jurisdiction: inferJurisdiction(title),
+                      description: contest.referendumText || contest.referendumSubtitle || null,
+                      for_argument: contest.referendumProStatement || null,
+                      against_argument: contest.referendumConStatement || null,
+                      is_active: 'Yes',
+                      data_source: 'google_civic',
+                      last_updated: now,
+                    });
+                  } else if (contest.candidates) {
+                    for (const candidate of contest.candidates) {
+                      const hash = await sha256(`${targetId}|${contest.office || ''}|${candidate.name}`);
+                      const candidateId = `CAND_GC_${hash.substring(0, 12)}`;
+                      if (allCandidates.has(candidateId)) continue;
+                      const row: Record<string, unknown> = {
+                        candidate_id: candidateId,
+                        candidate_name: candidate.name,
+                        election_id: targetId,
+                        office_sought: contest.office || null,
+                        district: contest.district?.name || null,
+                        office_level: inferOfficeLevel(contest),
+                        party: candidate.party || null,
+                        campaign_website: candidate.candidateUrl || null,
+                        campaign_email: candidate.email || null,
+                        campaign_phone: candidate.phone || null,
+                        photo_url: candidate.photoUrl || null,
+                        is_active: 'Yes',
+                        data_source: 'google_civic',
+                        last_updated: now,
+                      };
+                      if (candidate.channels) {
+                        for (const ch of candidate.channels) {
+                          if (ch.type === 'LinkedIn') row.linkedin_url = `https://linkedin.com/in/${ch.id}`;
+                        }
+                      }
+                      allCandidates.set(candidateId, row);
+                    }
+                  }
+                }
+              } catch { /* skip ZIP */ }
+              await sleep(200);
             }
           }
         }
-
-        // Throttle API calls
-        if (stats.zips_queried < zipsToQuery.length * electionsToProcess.length) {
-          await sleep(200);
-        }
+      } catch (err) {
+        console.error('Google Civic error:', (err as Error).message);
       }
     }
 
-    // ── Step 4: Batch upsert candidates ──
+    // ═══ UPSERT ═══
+    stats.elections_found = allElectionRows.length;
+    if (allElectionRows.length > 0) {
+      const result = await db('elections?on_conflict=election_id', 'POST', allElectionRows);
+      if (result) stats.elections_upserted = allElectionRows.length;
+      else stats.errors++;
+    }
+
     const candidateRows = Array.from(allCandidates.values());
-    if (candidateRows.length > 0) {
-      for (let i = 0; i < candidateRows.length; i += 50) {
-        const batch = candidateRows.slice(i, i + 50);
-        const result = await db('candidates?on_conflict=candidate_id', 'POST', batch);
-        if (result) {
-          stats.candidates_upserted += batch.length;
-        } else {
-          stats.errors++;
-        }
-      }
+    for (let i = 0; i < candidateRows.length; i += 50) {
+      const batch = candidateRows.slice(i, i + 50);
+      const result = await db('candidates?on_conflict=candidate_id', 'POST', batch);
+      if (result) stats.candidates_upserted += batch.length;
+      else stats.errors++;
     }
 
-    // ── Step 5: Batch upsert ballot items ──
     const ballotItemRows = Array.from(allBallotItems.values());
-    if (ballotItemRows.length > 0) {
-      for (let i = 0; i < ballotItemRows.length; i += 50) {
-        const batch = ballotItemRows.slice(i, i + 50);
-        const result = await db('ballot_items?on_conflict=item_id', 'POST', batch);
-        if (result) {
-          stats.ballot_items_upserted += batch.length;
-        } else {
-          stats.errors++;
-        }
-      }
+    for (let i = 0; i < ballotItemRows.length; i += 50) {
+      const batch = ballotItemRows.slice(i, i + 50);
+      const result = await db('ballot_items?on_conflict=item_id', 'POST', batch);
+      if (result) stats.ballot_items_upserted += batch.length;
+      else stats.errors++;
     }
 
-    // ── Step 6: Enrich with Claude (plain-language summaries) ──
+    // ═══ ENRICH ═══
     if (enrich && ANTHROPIC_API_KEY) {
-      // Enrich elections with community_impact_summary
-      for (const row of electionRows) {
-        if (row.community_impact_summary) continue;
+      for (const row of allElectionRows) {
         const summary = await enrichWithClaude(
           `Write a 2-sentence plain-language summary of what this election means for Houston residents. ` +
-          `Use simple language (6th grade reading level). Be specific to Houston/Harris County where possible. ` +
+          `Use simple language (6th grade reading level). ` +
           `Election: ${row.election_name}, Date: ${row.election_date}, Type: ${row.election_type}. ` +
-          `Just return the summary text, no labels or formatting.`
+          `Just return the summary text.`
         );
         if (summary) {
           await db(`elections?election_id=eq.${row.election_id}`, 'PATCH', {
@@ -457,36 +597,30 @@ Deno.serve(async (req: Request) => {
         await sleep(500);
       }
 
-      // Enrich ballot items with description_5th_grade
-      for (const row of ballotItemRows) {
-        if (!row.description || (row as Record<string, unknown>).description_5th_grade) continue;
+      for (const row of ballotItemRows.slice(0, 20)) {
+        if (!row.description) continue;
         const simplified = await enrichWithClaude(
-          `Rewrite this ballot measure description in plain language a 5th grader could understand. ` +
-          `Keep it to 2-3 sentences. Be accurate but simple. ` +
-          `Title: ${row.item_name}. Description: ${row.description}. ` +
-          `Just return the simplified text, no labels or formatting.`
+          `Rewrite this ballot measure in plain language a 5th grader could understand. 2-3 sentences. ` +
+          `Title: ${row.item_name}. Description: ${row.description}. Just return the text.`
         );
         if (simplified) {
-          await db(`ballot_items?item_id=eq.${row.item_id}`, 'PATCH', {
-            description_5th_grade: simplified,
-          });
+          await db(`ballot_items?item_id=eq.${row.item_id}`, 'PATCH', { description_5th_grade: simplified });
           stats.enriched++;
         }
         await sleep(500);
       }
     }
 
-    // ── Step 7: Log ──
+    // ═══ LOG ═══
     await db('ingestion_log', 'POST', {
       event_type: 'sync_elections',
-      source: 'google_civic',
+      source: stats.sources_used.join('+'),
       status: stats.errors === 0 ? 'success' : 'partial',
-      message: `Synced ${stats.elections_upserted} elections, ${stats.candidates_upserted} candidates, ${stats.ballot_items_upserted} ballot items. Enriched ${stats.enriched} items.`,
+      message: `Synced ${stats.elections_upserted} elections, ${stats.candidates_upserted} candidates, ${stats.ballot_items_upserted} ballot items from ${stats.sources_used.join(', ')}.`,
       item_count: stats.elections_upserted + stats.candidates_upserted + stats.ballot_items_upserted,
     });
 
     console.log('Sync complete:', stats);
-
     return new Response(JSON.stringify({ success: true, ...stats }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     });

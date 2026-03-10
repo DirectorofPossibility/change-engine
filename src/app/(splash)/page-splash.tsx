@@ -233,7 +233,7 @@ export default function SplashPage() {
 
         <button
           onClick={function () { setShowImagine(!showImagine) }}
-          className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
           <span className="flex items-center gap-2.5">
             <Info size={16} className="text-brand-muted shrink-0" />
@@ -273,7 +273,7 @@ export default function SplashPage() {
           href="https://thechangelab.substack.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
           <BookOpen size={16} className="text-brand-muted shrink-0" />
           {t('splash.read_substack')}
@@ -284,7 +284,7 @@ export default function SplashPage() {
 
         <Link
           href="/login"
-          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
           <LogIn size={16} className="text-brand-muted shrink-0" />
           {t('splash.beta_login')}
@@ -307,7 +307,7 @@ export default function SplashPage() {
           href="https://www.thechangelab.net/about2"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
           <Building2 size={16} className="text-brand-muted shrink-0" />
           {t('splash.learn_about')}
@@ -316,7 +316,7 @@ export default function SplashPage() {
 
         <a
           href="mailto:david@thechangelab.net?subject=Explore%20Partnership"
-          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
+          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all"
         >
           <Handshake size={16} className="text-brand-muted shrink-0" />
           {t('splash.explore_partnership')}
@@ -457,7 +457,7 @@ export default function SplashPage() {
                       className="mt-4 text-sm text-brand-accent font-semibold hover:underline">{t('splash.back_to_map')}</button>
                   </div>
                 ) : (
-                  <div className="bg-white rounded-xl border-2 border-brand-border p-8 shadow-xl">
+                  <div className="bg-white rounded-xl border border-brand-border p-8 shadow-xl">
                     <div className="flex justify-end mb-2">
                       <button onClick={function () { setPanel('goodthings') }} className="text-brand-muted hover:text-brand-text transition-colors">
                         <X size={18} />
@@ -469,10 +469,10 @@ export default function SplashPage() {
                     <form onSubmit={handleBeta} className="space-y-4">
                       <input type="text" required value={betaName} onChange={function (e) { setBetaName(e.target.value) }}
                         placeholder={t('splash.your_name')}
-                        className="w-full px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
+                        className="w-full px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
                       <input type="email" required value={betaEmail} onChange={function (e) { setBetaEmail(e.target.value) }}
                         placeholder={t('splash.your_email')}
-                        className="w-full px-4 py-3 border-2 border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
+                        className="w-full px-4 py-3 border border-brand-border rounded-xl text-sm bg-brand-bg focus:outline-none focus:border-brand-accent transition-colors" />
                       <button type="submit"
                         className="w-full py-3 bg-brand-accent text-white rounded-xl font-semibold hover:bg-brand-accent-hover transition-colors">
                         {t('splash.request_beta')}
@@ -577,12 +577,12 @@ export default function SplashPage() {
 
                     <div className="space-y-2 pt-2">
                       <button onClick={handleEmailCopy}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
+                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
                         <Mail size={14} />
                         {t('splash.email_copy')}
                       </button>
                       <button onClick={handleDownload}
-                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border-2 border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
+                        className="w-full flex items-center justify-center gap-2 py-2.5 bg-white border border-brand-border rounded-lg text-sm font-semibold text-brand-text hover:border-brand-accent/40 transition-all">
                         <Download size={14} />
                         {t('splash.download')}
                       </button>

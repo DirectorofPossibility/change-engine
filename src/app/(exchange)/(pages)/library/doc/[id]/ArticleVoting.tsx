@@ -65,7 +65,7 @@ export function ArticleVoting({ documentId }: ArticleVotingProps) {
   if (voted && counts) {
     const total = counts.helpful + counts.not_helpful
     return (
-      <div className="bg-white rounded-xl border-2 border-brand-border p-5 text-center">
+      <div className="bg-white rounded-xl border border-brand-border p-5 text-center">
         <p className="text-sm font-semibold text-brand-text mb-2">
           {t('library.vote_thanks')}
         </p>
@@ -77,7 +77,7 @@ export function ArticleVoting({ documentId }: ArticleVotingProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border-2 border-brand-border p-5 text-center">
+    <div className="bg-white rounded-xl border border-brand-border p-5 text-center">
       <p className="text-sm font-semibold text-brand-text mb-3">
         {t('library.was_helpful')}
       </p>
@@ -85,7 +85,7 @@ export function ArticleVoting({ documentId }: ArticleVotingProps) {
         <button
           onClick={function () { handleVote('helpful') }}
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-border text-sm text-brand-text hover:bg-green-50 hover:border-green-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-brand-border text-sm text-brand-text hover:bg-green-50 hover:border-green-300 transition-colors disabled:opacity-50"
         >
           <ThumbsUp size={14} />
           {t('library.vote_yes')}
@@ -93,7 +93,7 @@ export function ArticleVoting({ documentId }: ArticleVotingProps) {
         <button
           onClick={function () { handleVote('not_helpful') }}
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-border text-sm text-brand-text hover:bg-red-50 hover:border-red-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-brand-border text-sm text-brand-text hover:bg-red-50 hover:border-red-300 transition-colors disabled:opacity-50"
         >
           <ThumbsDown size={14} />
           {t('library.vote_no')}

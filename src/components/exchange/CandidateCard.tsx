@@ -19,7 +19,7 @@ export function CandidateCard({
   bioSummary, campaignWebsite, linkedinUrl, policyPositions, endorsements,
 }: CandidateCardProps) {
   return (
-    <div className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-2 mb-2">
         <h4 className="font-semibold text-brand-text">{name}</h4>
         {incumbent === 'Yes' && (

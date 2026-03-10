@@ -8,6 +8,10 @@ export async function getNextElection(): Promise<{
   polls_close: string | null
   find_polling_url: string | null
   register_url: string | null
+  registration_deadline: string | null
+  early_voting_start: string | null
+  early_voting_end: string | null
+  description: string | null
 } | null> {
   const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
@@ -28,6 +32,10 @@ export async function getNextElection(): Promise<{
     polls_close: row.polls_close ?? null,
     find_polling_url: row.find_polling_url ?? null,
     register_url: row.register_url ?? null,
+    registration_deadline: row.registration_deadline ?? null,
+    early_voting_start: row.early_voting_start ?? null,
+    early_voting_end: row.early_voting_end ?? null,
+    description: row.description ?? null,
   }
 }
 

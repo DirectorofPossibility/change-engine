@@ -66,7 +66,7 @@ export function ModuleTimeline({ modules }: ModuleTimelineProps) {
               {index + 1}
             </div>
             {/* Module content */}
-            <div className="bg-white rounded-xl border-2 border-brand-border p-5">
+            <div className="bg-white rounded-xl border border-brand-border p-5">
               {/* Hook / Opening quote */}
               {mod.hookText && (
                 <div className="mb-4 pl-4 border-l-3 border-brand-accent/40">
@@ -85,7 +85,7 @@ export function ModuleTimeline({ modules }: ModuleTimelineProps) {
 
               {/* Video embed */}
               {embedId && (
-                <div className="mb-4 rounded-lg overflow-hidden border-2 border-brand-border">
+                <div className="mb-4 rounded-lg overflow-hidden border border-brand-border">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
                       className="absolute inset-0 w-full h-full"

@@ -64,7 +64,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
 
   if (status === 'sent') {
     return (
-      <div className="border-2 border-brand-border rounded-xl p-5 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+      <div className="border border-brand-border rounded-xl p-5 text-center">
         <FlowerOfLifeIcon size={28} color="#38a169" className="mx-auto mb-2" />
         <p className="text-sm font-semibold text-brand-text">Thank you for your feedback</p>
         <p className="text-xs text-brand-muted mt-1">Our team will review this and update the record if needed.</p>
@@ -80,7 +80,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
 
   if (!open) {
     return (
-      <div className="border-2 border-brand-border rounded-xl p-4 text-center" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+      <div className="border border-brand-border rounded-xl p-4 text-center">
         <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-2">Feedback Loop</p>
         <button
           onClick={function () { setOpen(true) }}
@@ -96,7 +96,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
   const selectedKind = FEEDBACK_KINDS.find(function (k) { return k.value === kind })
 
   return (
-    <div className="border-2 border-brand-border rounded-xl overflow-hidden" style={{ boxShadow: '3px 3px 0 #D5D0C8' }}>
+    <div className="border border-brand-border rounded-xl overflow-hidden">
       <div className="px-4 py-3 bg-brand-bg border-b border-brand-border flex items-center justify-between">
         <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">Feedback Loop</p>
         <button onClick={reset} className="text-xs text-brand-muted hover:text-brand-accent">Cancel</button>
@@ -113,7 +113,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
                   key={k.value}
                   type="button"
                   onClick={function () { setKind(k.value) }}
-                  className="block w-full text-left px-3 py-2 text-sm font-medium text-brand-text rounded-lg border-2 border-brand-border hover:border-brand-accent hover:text-brand-accent transition-colors"
+                  className="block w-full text-left px-3 py-2 text-sm font-medium text-brand-text rounded-lg border border-brand-border hover:border-brand-accent hover:text-brand-accent transition-colors"
                 >
                   {k.label}
                 </button>
@@ -140,7 +140,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
                 rows={3}
                 maxLength={1000}
                 required
-                className="w-full text-sm border-2 border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent resize-none"
+                className="w-full text-sm border border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent resize-none"
                 placeholder="Be as specific as you can..."
               />
             </div>
@@ -152,7 +152,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
                 type="email"
                 value={email}
                 onChange={function (e) { setEmail(e.target.value) }}
-                className="w-full text-sm border-2 border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
+                className="w-full text-sm border border-brand-border rounded-lg px-3 py-2 bg-white text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
                 placeholder="you@example.com"
               />
             </div>

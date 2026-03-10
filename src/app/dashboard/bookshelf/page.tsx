@@ -132,7 +132,7 @@ export default function BookshelfAdmin() {
 
       {/* Add/Edit form */}
       {(adding || editing) && (
-        <div className="mb-6 p-5 bg-white border-2 border-brand-border rounded-xl">
+        <div className="mb-6 p-5 bg-white border border-brand-border rounded-xl">
           <h2 className="text-lg font-semibold mb-4">{editing ? 'Edit Book' : 'New Book'}</h2>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
@@ -141,7 +141,7 @@ export default function BookshelfAdmin() {
                 <input
                   value={form.title}
                   onChange={function (e) { setForm({ ...form, title: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div>
@@ -149,7 +149,7 @@ export default function BookshelfAdmin() {
                 <input
                   value={form.author}
                   onChange={function (e) { setForm({ ...form, author: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@ export default function BookshelfAdmin() {
                 value={form.description}
                 onChange={function (e) { setForm({ ...form, description: e.target.value }) }}
                 rows={2}
-                className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -168,7 +168,7 @@ export default function BookshelfAdmin() {
                 <input
                   value={form.cover_image_url}
                   onChange={function (e) { setForm({ ...form, cover_image_url: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="https://..."
                 />
               </div>
@@ -177,7 +177,7 @@ export default function BookshelfAdmin() {
                 <input
                   value={form.isbn}
                   onChange={function (e) { setForm({ ...form, isbn: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function BookshelfAdmin() {
                 <input
                   value={form.purchase_url}
                   onChange={function (e) { setForm({ ...form, purchase_url: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                   placeholder="https://bookshop.org/..."
                 />
               </div>
@@ -196,7 +196,7 @@ export default function BookshelfAdmin() {
                 <input
                   value={form.free_url}
                   onChange={function (e) { setForm({ ...form, free_url: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function BookshelfAdmin() {
                 <select
                   value={form.theme_id}
                   onChange={function (e) { setForm({ ...form, theme_id: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none bg-white"
                 >
                   <option value="">None</option>
                   {PATHWAY_OPTIONS.map(function (pw) {
@@ -220,7 +220,7 @@ export default function BookshelfAdmin() {
                   type="number"
                   value={form.page_count}
                   onChange={function (e) { setForm({ ...form, page_count: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div>
@@ -229,7 +229,7 @@ export default function BookshelfAdmin() {
                   type="number"
                   value={form.year_published}
                   onChange={function (e) { setForm({ ...form, year_published: e.target.value }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
               <div>
@@ -238,7 +238,7 @@ export default function BookshelfAdmin() {
                   type="number"
                   value={form.display_order}
                   onChange={function (e) { setForm({ ...form, display_order: parseInt(e.target.value) || 0 }) }}
-                  className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                  className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 />
               </div>
             </div>
@@ -247,7 +247,7 @@ export default function BookshelfAdmin() {
               <input
                 value={form.tags}
                 onChange={function (e) { setForm({ ...form, tags: e.target.value }) }}
-                className="w-full px-3 py-2 border-2 border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
+                className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:border-brand-accent focus:outline-none"
                 placeholder="justice, community, housing"
               />
             </div>
@@ -267,7 +267,7 @@ export default function BookshelfAdmin() {
               </button>
               <button
                 onClick={function () { setEditing(null); setAdding(false) }}
-                className="px-4 py-2 border-2 border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
+                className="px-4 py-2 border border-brand-border text-sm font-semibold rounded-lg hover:border-brand-text transition-colors"
               >
                 Cancel
               </button>
@@ -281,7 +281,7 @@ export default function BookshelfAdmin() {
         {books.map(function (b) {
           const pw = PATHWAY_OPTIONS.find(function (p) { return p.id === b.theme_id })
           return (
-            <div key={b.id} className="p-4 bg-white border-2 border-brand-border rounded-xl flex gap-4">
+            <div key={b.id} className="p-4 bg-white border border-brand-border rounded-xl flex gap-4">
               <div className="w-1.5 rounded flex-shrink-0" style={{ background: pw?.color || '#805ad5' }} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-brand-text">{b.title}</p>

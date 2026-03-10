@@ -44,7 +44,7 @@ export function PathwayRibbons({ pathwayCounts }: PathwayRibbonsProps) {
             <Link
               key={id}
               href={'/pathways/' + theme.slug}
-              className="group flex-shrink-0 w-[240px] sm:w-auto snap-start bg-white rounded-xl border-2 border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group flex-shrink-0 w-[240px] sm:w-auto snap-start bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
               {/* Color accent bar */}
               <div className="h-1.5" style={{ backgroundColor: theme.color }} />

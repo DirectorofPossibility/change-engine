@@ -14,7 +14,7 @@ export function PathwayCard({ name, color, slug, count, description }: PathwayCa
   return (
     <Link
       href={`/pathways/${slug}`}
-      className="group block bg-white rounded-card border-2 border-brand-border overflow-hidden card-lift"
+      className="group block bg-white rounded-card border border-brand-border overflow-hidden card-lift"
     >
       {/* Color top bar */}
       <div className="h-1.5" style={{ backgroundColor: color }} />

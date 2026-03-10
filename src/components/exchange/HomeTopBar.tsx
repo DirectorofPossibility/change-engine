@@ -54,7 +54,7 @@ export function HomeTopBar({ liveCount }: { liveCount?: number }) {
             onChange={function (e) { setSearchQuery(e.target.value) }}
             placeholder={t('nav.search_placeholder')}
             aria-label="Search"
-            className="w-full pl-9 pr-3 py-1.5 text-sm border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
         </form>
 
@@ -85,7 +85,7 @@ export function HomeTopBar({ liveCount }: { liveCount?: number }) {
                 aria-label="ZIP code"
                 maxLength={5}
                 disabled={isLoading}
-                className="w-20 text-sm px-2 py-1 border-2 border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+                className="w-20 text-sm px-2 py-1 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
               />
               <button type="submit" disabled={zipInput.length !== 5 || isLoading}
                 className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">

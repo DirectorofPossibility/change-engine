@@ -31,7 +31,7 @@ export function PathwayFilterClient({ centerCounts, initialContent, translations
               key={name}
               onClick={() => setActiveCenter(name)}
               className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-                activeCenter === name ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text'
+                activeCenter === name ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
               }`}
             >
               {name} ({count})
@@ -41,7 +41,7 @@ export function PathwayFilterClient({ centerCounts, initialContent, translations
         <button
           onClick={() => setActiveCenter(null)}
           className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-            !activeCenter ? 'bg-brand-accent text-white' : 'bg-white border-2 border-brand-border text-brand-muted hover:text-brand-text'
+            !activeCenter ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text'
           }`}
         >
           All ({initialContent.length})

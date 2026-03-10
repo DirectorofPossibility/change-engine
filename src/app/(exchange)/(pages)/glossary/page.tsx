@@ -45,7 +45,7 @@ export default async function GlossaryPage() {
               <div className="space-y-4">
                 {(grouped[letter] || []).map(function (t) {
                   return (
-                    <div key={t.term_id} className="bg-white rounded-lg border-2 border-brand-border p-4">
+                    <div key={t.term_id} className="bg-white rounded-lg border border-brand-border p-4">
                       <div className="flex items-start gap-3">
                         <BookOpen className="w-4 h-4 text-brand-accent mt-1 flex-shrink-0" />
                         <div>

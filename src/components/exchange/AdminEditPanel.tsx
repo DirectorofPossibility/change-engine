@@ -79,7 +79,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
       <button
         onClick={() => setOpen(true)}
         className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 bg-brand-text text-white rounded-lg border-2 border-brand-text font-mono text-xs font-bold uppercase tracking-wider hover:bg-brand-accent transition-colors"
-        style={{ boxShadow: '3px 3px 0 #D5D0C8' }}
+       
       >
         <Pencil size={14} />
         Edit Page
@@ -115,13 +115,13 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
                         rows={4}
-                        className="w-full px-3 py-2 text-sm rounded-lg border-2 border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent resize-y"
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent resize-y"
                       />
                     ) : field.type === 'select' ? (
                       <select
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
-                        className="w-full px-3 py-2 text-sm rounded-lg border-2 border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
                       >
                         <option value="">--</option>
                         {(field.options || []).map(o => (
@@ -133,7 +133,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
                         type={field.type === 'number' ? 'number' : 'text'}
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: field.type === 'number' ? (e.target.value ? Number(e.target.value) : null) : e.target.value }))}
-                        className="w-full px-3 py-2 text-sm rounded-lg border-2 border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
                       />
                     )}
                   </div>

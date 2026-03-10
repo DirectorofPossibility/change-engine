@@ -77,7 +77,7 @@ export default async function SuperNeighborhoodsPage() {
               <Link
                 key={sn.sn_id}
                 href={'/super-neighborhoods/' + sn.sn_id}
-                className="bg-white rounded-xl border-2 border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
+                className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
               >
                 <div className="flex items-start gap-3">
                   <span
