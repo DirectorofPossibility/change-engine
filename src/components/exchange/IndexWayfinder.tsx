@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { THEMES } from '@/lib/constants'
 import { FOLWatermark } from './FOLWatermark'
+import { useTranslation } from '@/lib/use-translation'
 import Image from 'next/image'
 
 interface RelatedSection {
@@ -43,14 +44,14 @@ const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
 })
 
 const CROSS_LINKS = [
-  { label: 'Services', href: '/services', color: '#C75B2A' },
-  { label: 'Organizations', href: '/organizations', color: '#dd6b20' },
-  { label: 'Officials', href: '/officials', color: '#805ad5' },
-  { label: 'Policies', href: '/policies', color: '#3182ce' },
-  { label: 'Opportunities', href: '/opportunities', color: '#38a169' },
-  { label: 'News', href: '/news', color: '#319795' },
-  { label: 'Library', href: '/library', color: '#d69e2e' },
-  { label: 'Neighborhoods', href: '/neighborhoods', color: '#e53e3e' },
+  { i18nKey: 'wayfinder.nav_services', href: '/services', color: '#C75B2A' },
+  { i18nKey: 'wayfinder.nav_organizations', href: '/organizations', color: '#dd6b20' },
+  { i18nKey: 'wayfinder.nav_officials', href: '/officials', color: '#805ad5' },
+  { i18nKey: 'wayfinder.nav_policies', href: '/policies', color: '#3182ce' },
+  { i18nKey: 'wayfinder.nav_opportunities', href: '/opportunities', color: '#38a169' },
+  { i18nKey: 'wayfinder.nav_news', href: '/news', color: '#319795' },
+  { i18nKey: 'wayfinder.nav_library', href: '/library', color: '#d69e2e' },
+  { i18nKey: 'wayfinder.nav_neighborhoods', href: '/neighborhoods', color: '#e53e3e' },
 ]
 
 export function IndexWayfinder({
@@ -59,6 +60,7 @@ export function IndexWayfinder({
   showPathways = true,
   color = '#C75B2A',
 }: IndexWayfinderProps) {
+  const { t } = useTranslation()
   const [pathwaysOpen, setPathwaysOpen] = useState(true)
   const [exploreOpen, setExploreOpen] = useState(true)
 
@@ -69,8 +71,8 @@ export function IndexWayfinder({
         <div className="absolute right-[-10px] top-[-10px] opacity-[0.06]">
           <FOLWatermark variant="seed" size="sm" color={color} />
         </div>
-        <h3 className="font-serif text-base font-semibold text-brand-text">Explore More</h3>
-        <p className="text-[11px] text-brand-muted mt-0.5">Discover connected resources</p>
+        <h3 className="font-serif text-base font-semibold text-brand-text">{t('wayfinder.explore_more')}</h3>
+        <p className="text-[11px] text-brand-muted mt-0.5">{t('wayfinder.discover_connected')}</p>
       </div>
 
       {/* Explore — other sections */}
@@ -79,7 +81,7 @@ export function IndexWayfinder({
           onClick={function () { setExploreOpen(!exploreOpen) }}
           className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-brand-bg/50 transition-colors"
         >
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">Discover</span>
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.discover')}</span>
           {exploreOpen ? <ChevronDown size={14} className="text-brand-muted" /> : <ChevronRight size={14} className="text-brand-muted" />}
         </button>
         {exploreOpen && (
@@ -92,7 +94,7 @@ export function IndexWayfinder({
                   className="flex items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
                 >
                   <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: link.color }} />
-                  {link.label}
+                  {t(link.i18nKey)}
                 </Link>
               )
             })}
@@ -107,7 +109,7 @@ export function IndexWayfinder({
             onClick={function () { setPathwaysOpen(!pathwaysOpen) }}
             className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-brand-bg/50 transition-colors"
           >
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">Topics</span>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.topics')}</span>
             {pathwaysOpen ? <ChevronDown size={14} className="text-brand-muted" /> : <ChevronRight size={14} className="text-brand-muted" />}
           </button>
           {pathwaysOpen && (
@@ -132,7 +134,7 @@ export function IndexWayfinder({
       {/* Related items if provided */}
       {related && related.length > 0 && (
         <div className="p-4 space-y-1.5">
-          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-2">Related</p>
+          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-2">{t('wayfinder.related')}</p>
           {related.map(function (item) {
             return (
               <Link
@@ -162,7 +164,7 @@ export function IndexWayfinder({
           className="absolute right-[-20px] top-[-20px] w-[80px] h-[80px] pointer-events-none opacity-[0.06]"
          width={200} height={200} />
         <p className="text-[10px] font-mono text-brand-muted relative z-10">
-          Need help? <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
+          {t('wayfinder.need_help')} <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
         </p>
       </div>
     </aside>

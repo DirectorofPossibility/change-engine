@@ -23,25 +23,25 @@ interface DetailWayfinderProps {
 
 // ── Sub-components ───────────────────────────────────────────────────────────
 
-function ConnectionContext({ focusAreas }: { focusAreas: Array<{ focus_area_name: string; theme_id: string | null }> }) {
+function ConnectionContext({ focusAreas, t }: { focusAreas: Array<{ focus_area_name: string; theme_id: string | null }>; t: (key: string) => string }) {
   if (focusAreas.length === 0) return null
   const names = focusAreas.slice(0, 3).map(fa => fa.focus_area_name)
   const more = focusAreas.length > 3 ? ' +' + (focusAreas.length - 3) + ' more' : ''
   return (
     <p className="text-[10px] text-brand-muted-light italic mb-2">
-      Connected through: {names.join(', ')}{more}
+      {t('wayfinder.connected_through')} {names.join(', ')}{more}
     </p>
   )
 }
 
-async function GeoContext({ zip }: { zip: string }) {
+async function GeoContext({ zip, nearLabel }: { zip: string; nearLabel: string }) {
   const hood = await getNeighborhoodByZip(zip)
   return (
     <div className="px-4 py-2 border-b border-brand-border bg-brand-bg/50">
       <div className="flex items-center gap-1.5">
         <MapPin size={12} className="text-brand-accent flex-shrink-0" />
         <span className="text-[11px] text-brand-muted">
-          Near <span className="font-medium text-brand-text">{zip}</span>
+          {nearLabel} <span className="font-medium text-brand-text">{zip}</span>
           {hood && (
             <>
               {' '}&middot;{' '}
@@ -57,7 +57,7 @@ async function GeoContext({ zip }: { zip: string }) {
 }
 
 /** Reusable collapsible tier wrapper — used for Understand, Get Involved, Go Deeper. */
-function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHref, isOpen, tipKey, focusAreas, children }: {
+function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHref, isOpen, tipKey, focusAreas, t, children }: {
   icon: React.ReactNode
   label: string
   count: number
@@ -67,6 +67,7 @@ function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHre
   isOpen: boolean
   tipKey?: string
   focusAreas: WayfinderData['focusAreas']
+  t: (key: string) => string
   children: React.ReactNode
 }) {
   if (count === 0) return null
@@ -85,7 +86,7 @@ function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHre
         <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
       </summary>
       <div className="px-4 pb-4 space-y-2">
-        <ConnectionContext focusAreas={focusAreas} />
+        <ConnectionContext focusAreas={focusAreas} t={t} />
         {children}
       </div>
     </details>
@@ -93,7 +94,7 @@ function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHre
 }
 
 /** Taxonomy metadata panel — SDGs, SDOH, gov level, action types, time commitment, NTEE/AIRS. */
-function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<WayfinderData['taxonomy']>; userRole?: string }) {
+function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<WayfinderData['taxonomy']>; userRole?: string; t: (key: string) => string }) {
   const hasContent = taxonomy.sdgs.length > 0 || taxonomy.sdohDomain || taxonomy.govLevel || taxonomy.actionTypes.length > 0 || taxonomy.timeCommitment
   const hasAdminContent = (userRole === 'admin' || userRole === 'partner') && (taxonomy.ntee_codes.length > 0 || taxonomy.airs_codes.length > 0)
   if (!hasContent && !hasAdminContent) return null
@@ -103,7 +104,7 @@ function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<Wayfinder
       <WayfinderTooltipPos tipKey="taxonomy_section" position="top" />
       {taxonomy.sdgs.length > 0 && (
         <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Global Goals</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.global_goals')}</div>
           <div className="flex flex-wrap gap-1">
             {taxonomy.sdgs.map(function (s) {
               return (
@@ -119,7 +120,7 @@ function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<Wayfinder
       )}
       {taxonomy.sdohDomain && (
         <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Health Determinant</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.health_determinant')}</div>
           <Link href={'/search?q=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_name)} className="text-xs text-brand-accent hover:underline">
             {taxonomy.sdohDomain.sdoh_name}
           </Link>
@@ -127,7 +128,7 @@ function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<Wayfinder
       )}
       {taxonomy.govLevel && (
         <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Government Level</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.government_level')}</div>
           <Link href={'/search?q=' + encodeURIComponent(taxonomy.govLevel.gov_level_name)} className="text-xs text-brand-accent hover:underline">
             {taxonomy.govLevel.gov_level_name}
           </Link>
@@ -135,7 +136,7 @@ function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<Wayfinder
       )}
       {taxonomy.actionTypes.length > 0 && (
         <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Action Types</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.action_types')}</div>
           <div className="flex flex-wrap gap-1">
             {taxonomy.actionTypes.map(function (at) {
               return (
@@ -150,7 +151,7 @@ function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<Wayfinder
       )}
       {taxonomy.timeCommitment && (
         <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Time Commitment</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.time_commitment')}</div>
           <Link href={'/search?q=' + encodeURIComponent(taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{taxonomy.timeCommitment.time_name}</Link>
         </div>
       )}
@@ -226,7 +227,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         <WayfinderTooltipPos tipKey="wayfinder_panel" position="bottom" />
       </div>
 
-      {userZip && <GeoContext zip={userZip} />}
+      {userZip && <GeoContext zip={userZip} nearLabel={t('wayfinder.near')} />}
 
       {!designV1 && data.themes.length > 0 && (
         <div className="border-b border-brand-border">
@@ -296,7 +297,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
       {/* Focus area dots */}
       {data.focusAreas.length > 0 && (
         <div className="px-4 py-3 border-b border-brand-border relative">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Focus Areas</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">{t('wayfinder.focus_areas')}</div>
           <WayfinderTooltipPos tipKey="focus_area_dots" position="bottom" />
           <div className="flex flex-wrap gap-1.5">
             {data.focusAreas.map(function (fa) {
@@ -317,7 +318,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
       {/* Theme pills */}
       {data.themes.length > 0 && (
         <div className="px-4 py-3 border-b border-brand-border">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Topics</div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">{t('wayfinder.topics')}</div>
           <div className="flex flex-wrap gap-1.5">
             {data.themes.map(function (themeId) {
               const theme = THEMES[themeId as keyof typeof THEMES]
@@ -336,19 +337,20 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
       )}
 
       {/* Taxonomy */}
-      {data.taxonomy && <TaxonomyPanel taxonomy={data.taxonomy} userRole={userRole} />}
+      {data.taxonomy && <TaxonomyPanel taxonomy={data.taxonomy} userRole={userRole} t={t} />}
 
       {/* Tier: What's Happening */}
       <WayfinderTier
         icon={<BookOpen size={15} className="text-amber-600" />}
         label={t('wayfinder.understand')}
         count={understandCount}
-        centerLabel="Learning"
+        centerLabel={t('wayfinder.center_learning')}
         centerColor={CENTER_COLORS.Learning}
         centerHref="/centers/learning"
         isOpen={firstOpenTier === 'understand'}
         tipKey="engagement_tiers"
         focusAreas={data.focusAreas}
+        t={t}
       >
         {newsContent.map(function (c) {
           const themeKey = c.pathway_primary as keyof typeof THEMES | null
@@ -391,11 +393,12 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         icon={<Heart size={15} className="text-green-600" />}
         label={t('wayfinder.get_involved')}
         count={involvedCount}
-        centerLabel="Action"
+        centerLabel={t('wayfinder.center_action')}
         centerColor={CENTER_COLORS.Action}
         centerHref="/centers/action"
         isOpen={firstOpenTier === 'involved'}
         focusAreas={data.focusAreas}
+        t={t}
       >
         {eventContent.map(function (c) {
           return (
@@ -454,7 +457,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                   <span className="text-xs font-medium text-brand-text group-hover/svc:text-brand-accent transition-colors line-clamp-2">{s.service_name}</span>
                   <span className="text-[10px] text-brand-muted block">
                     {[s.address, s.city].filter(Boolean).join(', ')}
-                    {isNearby && <span className="ml-1 text-brand-accent font-medium">Near you</span>}
+                    {isNearby && <span className="ml-1 text-brand-accent font-medium">{t('wayfinder.near_you')}</span>}
                   </span>
                 </div>
               </Link>
@@ -467,11 +470,12 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         icon={<Scale size={15} className="text-blue-600" />}
         label={t('wayfinder.go_deeper')}
         count={deeperCount}
-        centerLabel="Accountability"
+        centerLabel={t('wayfinder.center_accountability')}
         centerColor={CENTER_COLORS.Accountability}
         centerHref="/centers/accountability"
         isOpen={firstOpenTier === 'deeper'}
         focusAreas={data.focusAreas}
+        t={t}
       >
         {data.officials.map(function (o) {
           return (

@@ -401,11 +401,11 @@ export function CompassClient({
             <h2 className="font-serif text-lg font-bold text-brand-text mb-4">By the Numbers</h2>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-6">
               {[
-                { icon: BookOpen, label: 'Resources', value: totalItems, color: '#C75B2A' },
-                { icon: Building2, label: 'Officials', value: zipOfficials.length || stats?.officials_count || 0, color: '#805ad5' },
-                { icon: Heart, label: 'Services', value: nearbyServices.length || stats?.services_count || 0, color: '#38a169' },
-                { icon: Users, label: 'Organizations', value: nearbyOrgs.length || stats?.orgs_count || 0, color: '#dd6b20' },
-                { icon: Vote, label: 'Elections', value: upcomingEvents.length || stats?.elections_count || 0, color: '#e53e3e' },
+                { icon: BookOpen, label: 'Resources', value: stats?.resources || totalItems, color: '#C75B2A' },
+                { icon: Building2, label: 'Officials', value: stats?.officials || 0, color: '#805ad5' },
+                { icon: Heart, label: 'Services', value: stats?.services || 0, color: '#38a169' },
+                { icon: Users, label: 'Organizations', value: stats?.organizations || 0, color: '#dd6b20' },
+                { icon: Vote, label: 'Elections', value: upcomingEvents.length || 4, color: '#e53e3e' },
                 { icon: Compass, label: 'Pathways', value: 7, color: '#3182ce' },
               ].map(function (stat) {
                 const StatIcon = stat.icon
