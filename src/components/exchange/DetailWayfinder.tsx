@@ -18,11 +18,11 @@ interface DetailWayfinderProps {
   data: WayfinderData
   currentType: string
   currentId: string
-  /** User role — taxonomy section only shown for admin/partner */
   userRole?: string
 }
 
-/** Small "Connected through" label showing shared focus areas */
+// ── Sub-components ───────────────────────────────────────────────────────────
+
 function ConnectionContext({ focusAreas }: { focusAreas: Array<{ focus_area_name: string; theme_id: string | null }> }) {
   if (focusAreas.length === 0) return null
   const names = focusAreas.slice(0, 3).map(fa => fa.focus_area_name)
@@ -34,7 +34,6 @@ function ConnectionContext({ focusAreas }: { focusAreas: Array<{ focus_area_name
   )
 }
 
-/** Geo-context bar: shows ZIP + resolved neighborhood name with link */
 async function GeoContext({ zip }: { zip: string }) {
   const hood = await getNeighborhoodByZip(zip)
   return (
@@ -57,6 +56,127 @@ async function GeoContext({ zip }: { zip: string }) {
   )
 }
 
+/** Reusable collapsible tier wrapper — used for Understand, Get Involved, Go Deeper. */
+function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHref, isOpen, tipKey, focusAreas, children }: {
+  icon: React.ReactNode
+  label: string
+  count: number
+  centerLabel: string
+  centerColor: string
+  centerHref: string
+  isOpen: boolean
+  tipKey?: string
+  focusAreas: WayfinderData['focusAreas']
+  children: React.ReactNode
+}) {
+  if (count === 0) return null
+  return (
+    <details open={isOpen} className="group border-t border-brand-border">
+      <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none relative">
+        {tipKey && <WayfinderTooltipPos tipKey={tipKey} position="right" />}
+        <div className="flex items-center gap-2">
+          {icon}
+          <span className="text-sm font-medium text-brand-text">{label}</span>
+          <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: centerColor + '15', color: centerColor }}>{count}</span>
+          <Link href={centerHref} className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: centerColor }}>
+            {centerLabel}
+          </Link>
+        </div>
+        <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="px-4 pb-4 space-y-2">
+        <ConnectionContext focusAreas={focusAreas} />
+        {children}
+      </div>
+    </details>
+  )
+}
+
+/** Taxonomy metadata panel — SDGs, SDOH, gov level, action types, time commitment, NTEE/AIRS. */
+function TaxonomyPanel({ taxonomy, userRole }: { taxonomy: NonNullable<WayfinderData['taxonomy']>; userRole?: string }) {
+  const hasContent = taxonomy.sdgs.length > 0 || taxonomy.sdohDomain || taxonomy.govLevel || taxonomy.actionTypes.length > 0 || taxonomy.timeCommitment
+  const hasAdminContent = (userRole === 'admin' || userRole === 'partner') && (taxonomy.ntee_codes.length > 0 || taxonomy.airs_codes.length > 0)
+  if (!hasContent && !hasAdminContent) return null
+
+  return (
+    <div className="px-4 py-3 border-b border-brand-border space-y-2.5 relative">
+      <WayfinderTooltipPos tipKey="taxonomy_section" position="top" />
+      {taxonomy.sdgs.length > 0 && (
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Global Goals</div>
+          <div className="flex flex-wrap gap-1">
+            {taxonomy.sdgs.map(function (s) {
+              return (
+                <Link key={s.sdg_id} href={'/search?q=' + encodeURIComponent(s.sdg_name)}
+                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
+                  style={{ backgroundColor: s.sdg_color || '#4C9F38' }}>
+                  {s.sdg_number}. {s.sdg_name}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+      {taxonomy.sdohDomain && (
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Health Determinant</div>
+          <Link href={'/search?q=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_name)} className="text-xs text-brand-accent hover:underline">
+            {taxonomy.sdohDomain.sdoh_name}
+          </Link>
+        </div>
+      )}
+      {taxonomy.govLevel && (
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Government Level</div>
+          <Link href={'/search?q=' + encodeURIComponent(taxonomy.govLevel.gov_level_name)} className="text-xs text-brand-accent hover:underline">
+            {taxonomy.govLevel.gov_level_name}
+          </Link>
+        </div>
+      )}
+      {taxonomy.actionTypes.length > 0 && (
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Action Types</div>
+          <div className="flex flex-wrap gap-1">
+            {taxonomy.actionTypes.map(function (at) {
+              return (
+                <Link key={at.action_type_id} href={'/search?q=' + encodeURIComponent(at.action_type_name)}
+                  className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline">
+                  {at.action_type_name}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+      {taxonomy.timeCommitment && (
+        <div>
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Time Commitment</div>
+          <Link href={'/search?q=' + encodeURIComponent(taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{taxonomy.timeCommitment.time_name}</Link>
+        </div>
+      )}
+      {(userRole === 'admin' || userRole === 'partner') && (
+        <>
+          {taxonomy.ntee_codes.length > 0 && (
+            <div className="relative">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">NTEE</span>
+              <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
+              <p className="text-xs text-brand-text mt-0.5 font-mono">{taxonomy.ntee_codes.join(', ')}</p>
+            </div>
+          )}
+          {taxonomy.airs_codes.length > 0 && (
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">AIRS</span>
+              <p className="text-xs text-brand-text mt-0.5 font-mono">{taxonomy.airs_codes.join(', ')}</p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
+// ── Main component ───────────────────────────────────────────────────────────
+
 export async function DetailWayfinder({ data, currentType, currentId, userRole }: DetailWayfinderProps) {
   const cookieStore = await cookies()
   const designV1 = cookieStore.get('design')?.value === 'v1'
@@ -65,7 +185,6 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const archetype = cookieStore.get('archetype')?.value || ''
   const t = getUIStrings(lang)
 
-  // Separate event-type content into "What You Can Do", news/articles into "What's Happening"
   const EVENT_TYPES = new Set(['event', 'opportunity', 'campaign'])
   const newsContent = data.content.filter(c => !EVENT_TYPES.has(c.content_type || ''))
   const eventContent = data.content.filter(c => EVENT_TYPES.has(c.content_type || ''))
@@ -82,8 +201,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const involvedCount = data.opportunities.length + data.services.length + eventContent.length
   const deeperCount = data.officials.length + data.policies.length + data.foundations.length
 
-  // Archetype-based tier priority: which tier opens first
-  // Seeker/Explorer → understand, Learner → understand, Builder → involved, Watchdog/Partner → deeper
+  // Archetype-based tier priority
   const archetypePriority: Record<string, string[]> = {
     seeker: ['understand', 'involved', 'deeper'],
     learner: ['understand', 'deeper', 'involved'],
@@ -97,8 +215,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const firstOpenTier = priority.find(t => tierCounts[t] > 0) || 'understand'
 
   return (
-    <aside className="bg-white rounded-xl border-2 border-brand-border lg:sticky lg:top-24">
+    <aside className="bg-white rounded-xl border border-brand-border lg:sticky lg:top-24">
       <WayfinderTracker entityType={currentType} entityId={currentId} />
+
       {/* Header */}
       <div className="p-4 border-b border-brand-border relative">
         <h3 className="font-serif text-base font-semibold text-brand-text tracking-wide">
@@ -107,12 +226,8 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         <WayfinderTooltipPos tipKey="wayfinder_panel" position="bottom" />
       </div>
 
-      {/* Geo context with neighborhood */}
-      {userZip && (
-        <GeoContext zip={userZip} />
-      )}
+      {userZip && <GeoContext zip={userZip} />}
 
-      {/* Compact circle graph */}
       {!designV1 && data.themes.length > 0 && (
         <div className="border-b border-brand-border">
           <CompactCircleGraph
@@ -130,7 +245,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               <div key={org.org_id} className="space-y-2">
                 <Link href={'/organizations/' + org.org_id} className="flex items-center gap-2 group">
                   {org.logo_url ? (
-                    <Image src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0"  width={48} height={32} />
+                    <Image src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0" width={48} height={32} />
                   ) : (
                     <div className="w-8 h-8 rounded bg-brand-bg flex items-center justify-center flex-shrink-0">
                       <Users size={14} className="text-brand-muted" />
@@ -178,7 +293,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </div>
       )}
 
-      {/* Focus area dots — all linked */}
+      {/* Focus area dots */}
       {data.focusAreas.length > 0 && (
         <div className="px-4 py-3 border-b border-brand-border relative">
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Focus Areas</div>
@@ -188,11 +303,8 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               const themeKey = fa.theme_id as keyof typeof THEMES | null
               const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
               return (
-                <Link
-                  key={fa.focus_id}
-                  href={'/explore/focus/' + fa.focus_id}
-                  className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-accent transition-colors"
-                >
+                <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
+                  className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-accent transition-colors">
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color || '#6B6560' }} />
                   {fa.focus_area_name}
                 </Link>
@@ -202,7 +314,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </div>
       )}
 
-      {/* Themes — linked to pathway pages */}
+      {/* Theme pills */}
       {data.themes.length > 0 && (
         <div className="px-4 py-3 border-b border-brand-border">
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">Topics</div>
@@ -211,12 +323,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               const theme = THEMES[themeId as keyof typeof THEMES]
               if (!theme) return null
               return (
-                <Link
-                  key={themeId}
-                  href={'/pathways/' + theme.slug}
+                <Link key={themeId} href={'/pathways/' + theme.slug}
                   className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-lg hover:opacity-80 transition-opacity"
-                  style={{ backgroundColor: theme.color + '15', color: theme.color }}
-                >
+                  style={{ backgroundColor: theme.color + '15', color: theme.color }}>
                   <span className="w-1.5 h-4 rounded-sm" style={{ backgroundColor: theme.color }} />
                   {theme.name}
                 </Link>
@@ -226,315 +335,195 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </div>
       )}
 
-      {/* Taxonomy — SDGs, SDOH, action types, gov level (visible to all) */}
-      {data.taxonomy && (
-        <div className="px-4 py-3 border-b border-brand-border space-y-2.5 relative">
-          <WayfinderTooltipPos tipKey="taxonomy_section" position="top" />
-          {/* SDGs — linked to explore */}
-          {data.taxonomy.sdgs.length > 0 && (
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Global Goals</div>
-              <div className="flex flex-wrap gap-1">
-                {data.taxonomy.sdgs.map(function (s) {
-                  return (
-                    <Link
-                      key={s.sdg_id}
-                      href={'/search?q=' + encodeURIComponent(s.sdg_name)}
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
-                      style={{ backgroundColor: s.sdg_color || '#4C9F38' }}
-                    >
-                      {s.sdg_number}. {s.sdg_name}
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* SDOH — linked to search */}
-          {data.taxonomy.sdohDomain && (
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Health Determinant</div>
-              <Link
-                href={'/search?q=' + encodeURIComponent(data.taxonomy.sdohDomain.sdoh_name)}
-                className="text-xs text-brand-accent hover:underline"
-              >
-                {data.taxonomy.sdohDomain.sdoh_name}
-              </Link>
-            </div>
-          )}
-
-          {/* Government Level */}
-          {data.taxonomy.govLevel && (
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Government Level</div>
-              <Link
-                href={'/search?q=' + encodeURIComponent(data.taxonomy.govLevel.gov_level_name)}
-                className="text-xs text-brand-accent hover:underline"
-              >
-                {data.taxonomy.govLevel.gov_level_name}
-              </Link>
-            </div>
-          )}
-
-          {/* Action Types — linked to search */}
-          {data.taxonomy.actionTypes.length > 0 && (
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Action Types</div>
-              <div className="flex flex-wrap gap-1">
-                {data.taxonomy.actionTypes.map(function (at) {
-                  return (
-                    <Link
-                      key={at.action_type_id}
-                      href={'/search?q=' + encodeURIComponent(at.action_type_name)}
-                      className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline"
-                    >
-                      {at.action_type_name}
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Time Commitment */}
-          {data.taxonomy.timeCommitment && (
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Time Commitment</div>
-              <Link href={'/search?q=' + encodeURIComponent(data.taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{data.taxonomy.timeCommitment.time_name}</Link>
-            </div>
-          )}
-
-          {/* NTEE / AIRS codes — admin/partner only */}
-          {(userRole === 'admin' || userRole === 'partner') && (
-            <>
-              {data.taxonomy.ntee_codes.length > 0 && (
-                <div className="relative">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">NTEE</span>
-                  <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
-                  <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.ntee_codes.join(', ')}</p>
-                </div>
-              )}
-              {data.taxonomy.airs_codes.length > 0 && (
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">AIRS</span>
-                  <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.airs_codes.join(', ')}</p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+      {/* Taxonomy */}
+      {data.taxonomy && <TaxonomyPanel taxonomy={data.taxonomy} userRole={userRole} />}
 
       {/* Tier: What's Happening */}
-      {understandCount > 0 && (
-        <details open={firstOpenTier === 'understand'} className="group">
-          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none relative">
-            <WayfinderTooltipPos tipKey="engagement_tiers" position="right" />
-            <div className="flex items-center gap-2">
-              <BookOpen size={15} className="text-amber-600" />
-              <span className="text-sm font-medium text-brand-text">{t('wayfinder.understand')}</span>
-              <span className="text-xs bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded-full">{understandCount}</span>
-              <Link href="/centers/learning" className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: CENTER_COLORS.Learning }}>
-                Learning
-              </Link>
-            </div>
-            <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="px-4 pb-4 space-y-2">
-            <ConnectionContext focusAreas={data.focusAreas} />
-            {newsContent.map(function (c) {
-              const themeKey = c.pathway_primary as keyof typeof THEMES | null
-              const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
-              return (
-                <Link key={c.id} href={'/content/' + c.id} className="flex gap-2 group/card">
-                  {c.image_url ? (
-                    <Image src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0"  width={200} height={36} />
-                  ) : (
-                    <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#6B6560') + '20' }} />
-                  )}
-                  <div className="min-w-0">
-                    <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ backgroundColor: color || '#6B6560' }} />
-                    <span className="text-xs font-medium text-brand-text group-hover/card:text-brand-accent transition-colors line-clamp-2">
-                      {c.title_6th_grade || 'Untitled'}
-                    </span>
-                  </div>
-                </Link>
-              )
-            })}
-            {data.libraryNuggets.map(function (n) {
-              return (
-                <Link key={n.id} href={'/library/doc/' + n.document_id} className="block group/nugget">
-                  <div className="flex items-start gap-2">
-                    <FileText size={12} className="text-brand-muted mt-0.5 flex-shrink-0" />
-                    <div className="min-w-0">
-                      <span className="text-xs italic text-brand-muted line-clamp-2">
-                        {n.excerpt || n.title}
-                      </span>
-                      {n.page_ref && <span className="text-[10px] text-brand-muted"> — p.{n.page_ref}</span>}
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </details>
-      )}
+      <WayfinderTier
+        icon={<BookOpen size={15} className="text-amber-600" />}
+        label={t('wayfinder.understand')}
+        count={understandCount}
+        centerLabel="Learning"
+        centerColor={CENTER_COLORS.Learning}
+        centerHref="/centers/learning"
+        isOpen={firstOpenTier === 'understand'}
+        tipKey="engagement_tiers"
+        focusAreas={data.focusAreas}
+      >
+        {newsContent.map(function (c) {
+          const themeKey = c.pathway_primary as keyof typeof THEMES | null
+          const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
+          return (
+            <Link key={c.id} href={'/content/' + c.id} className="flex gap-2 group/card">
+              {c.image_url ? (
+                <Image src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0" width={200} height={36} />
+              ) : (
+                <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#6B6560') + '20' }} />
+              )}
+              <div className="min-w-0">
+                <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ backgroundColor: color || '#6B6560' }} />
+                <span className="text-xs font-medium text-brand-text group-hover/card:text-brand-accent transition-colors line-clamp-2">
+                  {c.title_6th_grade || 'Untitled'}
+                </span>
+              </div>
+            </Link>
+          )
+        })}
+        {data.libraryNuggets.map(function (n) {
+          return (
+            <Link key={n.id} href={'/library/doc/' + n.document_id} className="block group/nugget">
+              <div className="flex items-start gap-2">
+                <FileText size={12} className="text-brand-muted mt-0.5 flex-shrink-0" />
+                <div className="min-w-0">
+                  <span className="text-xs italic text-brand-muted line-clamp-2">
+                    {n.excerpt || n.title}
+                  </span>
+                  {n.page_ref && <span className="text-[10px] text-brand-muted"> — p.{n.page_ref}</span>}
+                </div>
+              </div>
+            </Link>
+          )
+        })}
+      </WayfinderTier>
 
       {/* Tier: What You Can Do */}
-      {involvedCount > 0 && (
-        <details open={firstOpenTier === 'involved'} className="group border-t border-brand-border">
-          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
-            <div className="flex items-center gap-2">
-              <Heart size={15} className="text-green-600" />
-              <span className="text-sm font-medium text-brand-text">{t('wayfinder.get_involved')}</span>
-              <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded-full">{involvedCount}</span>
-              <Link href="/centers/action" className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: CENTER_COLORS.Action }}>
-                Action
-              </Link>
-            </div>
-            <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="px-4 pb-4 space-y-2">
-            <ConnectionContext focusAreas={data.focusAreas} />
-            {eventContent.map(function (c) {
-              const themeKey = c.pathway_primary as keyof typeof THEMES | null
-              const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
-              return (
-                <Link key={c.id} href={'/content/' + c.id} className="flex items-start gap-2 group/evt">
-                  <Calendar size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
-                  <div className="min-w-0">
-                    <span className="text-xs font-medium text-brand-text group-hover/evt:text-brand-accent transition-colors line-clamp-2">
-                      {c.title_6th_grade || 'Untitled'}
+      <WayfinderTier
+        icon={<Heart size={15} className="text-green-600" />}
+        label={t('wayfinder.get_involved')}
+        count={involvedCount}
+        centerLabel="Action"
+        centerColor={CENTER_COLORS.Action}
+        centerHref="/centers/action"
+        isOpen={firstOpenTier === 'involved'}
+        focusAreas={data.focusAreas}
+      >
+        {eventContent.map(function (c) {
+          return (
+            <Link key={c.id} href={'/content/' + c.id} className="flex items-start gap-2 group/evt">
+              <Calendar size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
+              <div className="min-w-0">
+                <span className="text-xs font-medium text-brand-text group-hover/evt:text-brand-accent transition-colors line-clamp-2">
+                  {c.title_6th_grade || 'Untitled'}
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-50 text-green-700 capitalize">{c.content_type}</span>
+              </div>
+            </Link>
+          )
+        })}
+        {data.opportunities.map(function (o) {
+          return (
+            <div key={o.opportunity_id} className="flex items-start gap-2">
+              <Calendar size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
+                <span className="text-xs font-medium text-brand-text line-clamp-2">{o.opportunity_name}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  {o.time_commitment && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-50 text-green-700">
+                      {t('wayfinder.time')}: {o.time_commitment}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-50 text-green-700 capitalize">{c.content_type}</span>
-                  </div>
-                </Link>
-              )
-            })}
-            {data.opportunities.map(function (o) {
-              return (
-                <div key={o.opportunity_id} className="flex items-start gap-2">
-                  <Calendar size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <span className="text-xs font-medium text-brand-text line-clamp-2">{o.opportunity_name}</span>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {o.time_commitment && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-50 text-green-700">
-                          {t('wayfinder.time')}: {o.time_commitment}
-                        </span>
-                      )}
-                      {o.registration_url && (
-                        <a href={o.registration_url} target="_blank" rel="noopener noreferrer"
-                          className="text-[10px] text-brand-accent hover:underline">
-                          {t('wayfinder.register')} &rarr;
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-            {data.services
-              .slice()
-              .sort((a, b) => {
-                if (!userZip) return 0
-                const aMatch = a.zip_code === userZip ? -1 : 0
-                const bMatch = b.zip_code === userZip ? -1 : 0
-                return aMatch - bMatch
-              })
-              .map(function (s) {
-              const isNearby = userZip && s.zip_code === userZip
-              return (
-                <Link key={s.service_id} href={'/services/' + s.service_id} className="flex items-start gap-2 group/svc">
-                  {s.phone ? (
-                    <Phone size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
-                  ) : (
-                    <MapPin size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
                   )}
-                  <div className="min-w-0">
-                    <span className="text-xs font-medium text-brand-text group-hover/svc:text-brand-accent transition-colors line-clamp-2">{s.service_name}</span>
-                    <span className="text-[10px] text-brand-muted block">
-                      {[s.address, s.city].filter(Boolean).join(', ')}
-                      {isNearby && <span className="ml-1 text-brand-accent font-medium">Near you</span>}
-                    </span>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </details>
-      )}
+                  {o.registration_url && (
+                    <a href={o.registration_url} target="_blank" rel="noopener noreferrer"
+                      className="text-[10px] text-brand-accent hover:underline">
+                      {t('wayfinder.register')} &rarr;
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        })}
+        {data.services
+          .slice()
+          .sort((a, b) => {
+            if (!userZip) return 0
+            const aMatch = a.zip_code === userZip ? -1 : 0
+            const bMatch = b.zip_code === userZip ? -1 : 0
+            return aMatch - bMatch
+          })
+          .map(function (s) {
+            const isNearby = userZip && s.zip_code === userZip
+            return (
+              <Link key={s.service_id} href={'/services/' + s.service_id} className="flex items-start gap-2 group/svc">
+                {s.phone ? (
+                  <Phone size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
+                ) : (
+                  <MapPin size={12} className="text-green-600 mt-0.5 flex-shrink-0" />
+                )}
+                <div className="min-w-0">
+                  <span className="text-xs font-medium text-brand-text group-hover/svc:text-brand-accent transition-colors line-clamp-2">{s.service_name}</span>
+                  <span className="text-[10px] text-brand-muted block">
+                    {[s.address, s.city].filter(Boolean).join(', ')}
+                    {isNearby && <span className="ml-1 text-brand-accent font-medium">Near you</span>}
+                  </span>
+                </div>
+              </Link>
+            )
+          })}
+      </WayfinderTier>
 
       {/* Tier: Who's In Charge */}
-      {deeperCount > 0 && (
-        <details open={firstOpenTier === 'deeper'} className="group border-t border-brand-border">
-          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
-            <div className="flex items-center gap-2">
-              <Scale size={15} className="text-blue-600" />
-              <span className="text-sm font-medium text-brand-text">{t('wayfinder.go_deeper')}</span>
-              <span className="text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full">{deeperCount}</span>
-              <Link href="/centers/accountability" className="text-[10px] font-mono font-bold uppercase tracking-wider hover:underline ml-1" style={{ color: CENTER_COLORS.Accountability }}>
-                Accountability
-              </Link>
-            </div>
-            <ChevronDown size={14} className="text-brand-muted transition-transform group-open:rotate-180" />
-          </summary>
-          <div className="px-4 pb-4 space-y-2">
-            <ConnectionContext focusAreas={data.focusAreas} />
-            {data.officials.map(function (o) {
-              return (
-                <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-2 group/off">
-                  {o.photo_url ? (
-                    <Image src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-contain bg-brand-bg flex-shrink-0"  width={80} height={28} />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
-                      <Users size={11} className="text-brand-muted" />
-                    </div>
-                  )}
-                  <div className="min-w-0">
-                    <span className="text-xs font-medium text-brand-text group-hover/off:text-brand-accent transition-colors">{o.official_name}</span>
-                    <div className="flex items-center gap-1">
-                      {o.level && <span className="text-[10px] text-brand-muted">{o.level}</span>}
-                      {o.title && <span className="text-[10px] text-brand-muted truncate">{o.title}</span>}
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-            {data.policies.map(function (p) {
-              return (
-                <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="flex items-start gap-2 group/pol">
-                  <Scale size={12} className="text-blue-500 mt-0.5 flex-shrink-0" />
-                  <div className="min-w-0">
-                    {p.bill_number && <span className="text-[10px] font-mono text-brand-muted mr-1">{p.bill_number}</span>}
-                    <span className="text-xs font-medium text-brand-text group-hover/pol:text-brand-accent transition-colors line-clamp-2">
-                      {p.title_6th_grade || p.policy_name}
-                    </span>
-                    {p.status && <span className="text-[10px] text-brand-muted block">{p.status}</span>}
-                  </div>
-                </Link>
-              )
-            })}
-            {data.foundations.map(function (f) {
-              return (
-                <div key={f.foundation_id} className="flex items-start gap-2">
-                  <Gift size={12} className="text-blue-400 mt-0.5 flex-shrink-0" />
-                  <div className="min-w-0">
-                    <span className="text-xs font-medium text-brand-text">{f.name}</span>
-                    {f.website && (
-                      <a href={f.website} target="_blank" rel="noopener noreferrer"
-                        className="text-[10px] text-brand-accent hover:underline ml-1">
-                        {t('wayfinder.visit')} &rarr;
-                      </a>
-                    )}
-                  </div>
+      <WayfinderTier
+        icon={<Scale size={15} className="text-blue-600" />}
+        label={t('wayfinder.go_deeper')}
+        count={deeperCount}
+        centerLabel="Accountability"
+        centerColor={CENTER_COLORS.Accountability}
+        centerHref="/centers/accountability"
+        isOpen={firstOpenTier === 'deeper'}
+        focusAreas={data.focusAreas}
+      >
+        {data.officials.map(function (o) {
+          return (
+            <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-2 group/off">
+              {o.photo_url ? (
+                <Image src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-contain bg-brand-bg flex-shrink-0" width={80} height={28} />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-brand-bg flex items-center justify-center flex-shrink-0">
+                  <Users size={11} className="text-brand-muted" />
                 </div>
-              )
-            })}
-          </div>
-        </details>
-      )}
+              )}
+              <div className="min-w-0">
+                <span className="text-xs font-medium text-brand-text group-hover/off:text-brand-accent transition-colors">{o.official_name}</span>
+                <div className="flex items-center gap-1">
+                  {o.level && <span className="text-[10px] text-brand-muted">{o.level}</span>}
+                  {o.title && <span className="text-[10px] text-brand-muted truncate">{o.title}</span>}
+                </div>
+              </div>
+            </Link>
+          )
+        })}
+        {data.policies.map(function (p) {
+          return (
+            <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="flex items-start gap-2 group/pol">
+              <Scale size={12} className="text-blue-500 mt-0.5 flex-shrink-0" />
+              <div className="min-w-0">
+                {p.bill_number && <span className="text-[10px] font-mono text-brand-muted mr-1">{p.bill_number}</span>}
+                <span className="text-xs font-medium text-brand-text group-hover/pol:text-brand-accent transition-colors line-clamp-2">
+                  {p.title_6th_grade || p.policy_name}
+                </span>
+                {p.status && <span className="text-[10px] text-brand-muted block">{p.status}</span>}
+              </div>
+            </Link>
+          )
+        })}
+        {data.foundations.map(function (f) {
+          return (
+            <div key={f.foundation_id} className="flex items-start gap-2">
+              <Gift size={12} className="text-blue-400 mt-0.5 flex-shrink-0" />
+              <div className="min-w-0">
+                <span className="text-xs font-medium text-brand-text">{f.name}</span>
+                {f.website && (
+                  <a href={f.website} target="_blank" rel="noopener noreferrer"
+                    className="text-[10px] text-brand-accent hover:underline ml-1">
+                    {t('wayfinder.visit')} &rarr;
+                  </a>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </WayfinderTier>
     </aside>
   )
 }

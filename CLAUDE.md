@@ -172,6 +172,7 @@ git push origin master
 | 1 AM | `batch-translate` | Translate untranslated content → ES, VI |
 | 3 AM | `poll-rss` | Poll all active RSS feeds → classify new items |
 | 5 AM Mon | `sync-federal-spending` | USAspending → federal grants/contracts/loans in Harris County |
+| 5:30 AM Mon | `sync-elections` | Google Civic → elections, candidates, ballot items for Houston + Claude enrichment |
 | 6 AM | `sync-polling-places` | Refresh voter locations |
 | 7 AM | `sync-city-houston` | Legistar API → Houston officials + ordinances + classify + geo bind |
 | 8 AM | `sync-county-harris` | Legistar API → Harris County officials + legislation + classify + geo bind |
