@@ -526,6 +526,7 @@ export async function POST(req: NextRequest) {
     hero_image_url: homepage.meta.image || null,
     data_source: 'org_crawl',
     last_updated: new Date().toISOString(),
+    crawl_status: 'active',
   })
 
   // Ensure domain mapping exists
@@ -723,6 +724,14 @@ export async function POST(req: NextRequest) {
   const created = results.filter(r => r.status === 'created').length
   const skippedCount = results.filter(r => r.status === 'skipped').length
   const errors = results.filter(r => r.status === 'error').length
+
+  // Update org crawl tracking
+  await supaRest('PATCH', `organizations?org_id=eq.${encodeURIComponent(orgId)}`, {
+    last_crawled_at: new Date().toISOString(),
+    crawl_status: errors === 0 ? 'completed' : 'partial',
+    pages_found: discoveredUrls.length,
+    entities_found: created,
+  }).catch(() => {})
 
   await supaRest('POST', 'ingestion_log', {
     event_type: 'org_deep_crawl',

@@ -906,6 +906,14 @@ const es: Record<string, string> = {
   'officials.title': 'Funcionarios Electos',
   'officials.subtitle': 'Encuentre y contacte a sus representantes electos en todos los niveles de gobierno.',
 
+  // Organizations page
+  'organizations.title': 'Organizaciones',
+  'organizations.subtitle': 'Organizaciones sin fines de lucro, fundaciones y grupos comunitarios que sirven a Houston.',
+
+  // Policies page
+  'policies.title': 'Políticas y Legislación',
+  'policies.subtitle': 'Siga proyectos de ley, órdenes ejecutivas y políticas que afectan a las comunidades de Houston en todos los niveles de gobierno.',
+
   // Lookup page
   'lookup.address_or_zip': 'Ingrese su dirección o código postal',
   'lookup.showing_results': 'Mostrando resultados para',
@@ -1699,6 +1707,14 @@ const vi: Record<string, string> = {
   // Officials page
   'officials.title': 'Quan Chức Dân Cử',
   'officials.subtitle': 'Tìm và liên hệ đại diện dân cử của bạn ở mọi cấp chính quyền.',
+
+  // Organizations page
+  'organizations.title': 'Tổ Chức',
+  'organizations.subtitle': 'Tổ chức phi lợi nhuận, quỹ và nhóm cộng đồng phục vụ Houston.',
+
+  // Policies page
+  'policies.title': 'Chính Sách & Luật Pháp',
+  'policies.subtitle': 'Theo dõi dự luật, lệnh hành pháp và chính sách ảnh hưởng đến cộng đồng Houston ở mọi cấp chính quyền.',
 
   // Lookup page
   'lookup.address_or_zip': 'Nhập địa chỉ hoặc mã bưu điện của bạn',

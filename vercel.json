@@ -13,7 +13,8 @@
     { "path": "/api/cron/sync-federal-spending", "schedule": "0 5 * * 1" },
     { "path": "/api/cron/classify-pending", "schedule": "0 11 * * *" },
     { "path": "/api/cron/rewrite-descriptions", "schedule": "0 12 * * *" },
-    { "path": "/api/cron/send-reminders", "schedule": "0 14 * * *" }
+    { "path": "/api/cron/send-reminders", "schedule": "0 14 * * *" },
+    { "path": "/api/cron/crawl-orgs", "schedule": "0 4 * * 0" }
   ],
   "headers": [
     {
