@@ -23,6 +23,7 @@ export default async function EventsPage() {
   const { data: events } = await supabase
     .from('events')
     .select('event_id, event_name, description_5th_grade, event_type, start_datetime, end_datetime, address, city, zip_code, is_virtual, is_free, registration_url')
+    .eq('is_active' as any, 'Yes')
     .order('start_datetime', { ascending: true })
 
   const now = new Date().toISOString()

@@ -25,6 +25,7 @@ export default async function OpportunitiesPage() {
   const { data: opportunities } = await supabase
     .from('opportunities')
     .select('opportunity_id, opportunity_name, description_5th_grade, org_id, zip_code, is_virtual')
+    .eq('is_active' as any, 'Yes')
     .order('opportunity_name')
     .limit(50)
 

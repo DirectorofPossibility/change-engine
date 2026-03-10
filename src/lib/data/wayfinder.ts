@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
-import type { SDG } from '@/lib/types/exchange'
 /**
  * Newsfeed for a specific pathway, optionally filtered by engagement level (center).
  * Returns news items (articles, videos, research, reports, courses) — not community resources.
@@ -157,11 +156,6 @@ export async function getPathwayBraidedFeed(themeId: string, zipCode?: string) {
  * Get pathway bridge connections: count of shared focus areas between pathways.
  * Used to render connection lines between pathway circles.
  */
-
-/**
- * Get pathway bridge connections: count of shared focus areas between pathways.
- * Used to render connection lines between pathway circles.
- */
 export async function getPathwayBridges(): Promise<Array<[string, string, number]>> {
   const supabase = await createClient()
   const [{ data: focusAreas }, { data: contentPathways }] = await Promise.all([
@@ -206,11 +200,6 @@ export async function getPathwayBridges(): Promise<Array<[string, string, number
  * Get bridge connections for a single pathway.
  * Filters the global bridge data and maps to theme names/colors/slugs.
  */
-
-/**
- * Get bridge connections for a single pathway.
- * Filters the global bridge data and maps to theme names/colors/slugs.
- */
 export async function getBridgesForPathway(themeId: string): Promise<Array<{ targetThemeId: string; targetName: string; targetColor: string; targetSlug: string; sharedCount: number }>> {
   const { THEMES } = await import('@/lib/constants')
   const allBridges = await getPathwayBridges()
@@ -234,48 +223,15 @@ export async function getBridgesForPathway(themeId: string): Promise<Array<{ tar
 
 /**
  * Get the full entity profile with mesh connections for the wayfinder panel.
- * Every entity type returns its focus areas + related entities from other types.
- *
- * @param entityType - 'content' | 'official' | 'policy' | 'service' | 'organization'
- * @param entityId - The entity's primary key value
- */
-
-/**
- * Get the full entity profile with mesh connections for the wayfinder panel.
- * Every entity type returns its focus areas + related entities from other types.
- *
- * @param entityType - 'content' | 'official' | 'policy' | 'service' | 'organization'
- * @param entityId - The entity's primary key value
+ * Used by EntityMesh component for simpler 5-type entity profiles.
  */
 export async function getEntityMeshProfile(entityType: string, entityId: string) {
   const supabase = await createClient()
 
   const emptyResult = { focusAreas: [] as Array<{ focus_id: string; focus_area_name: string; theme_id: string | null }>, relatedContent: [] as Array<{ id: string; title_6th_grade: string | null; center: string | null }>, relatedOfficials: [] as Array<{ official_id: string; official_name: string; title: string | null; level: string | null }>, relatedPolicies: [] as Array<{ policy_id: string; policy_name: string; status: string | null }>, relatedServices: [] as Array<{ service_id: string; service_name: string; org_id: string | null }> }
 
-  // Get this entity's focus areas by entity type
-  let focusIds: string[] = []
-  if (entityType === 'content') {
-    const { data } = await supabase.from('content_focus_areas').select('focus_id').eq('content_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'official') {
-    const { data } = await supabase.from('official_focus_areas').select('focus_id').eq('official_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'policy') {
-    const { data } = await supabase.from('policy_focus_areas').select('focus_id').eq('policy_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'service') {
-    const { data } = await supabase.from('service_focus_areas').select('focus_id').eq('service_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'organization') {
-    const { data } = await supabase.from('organization_focus_areas').select('focus_id').eq('org_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else {
-    return emptyResult
-  }
-
-  if (focusIds.length === 0) {
-    return emptyResult
-  }
+  const focusIds = await getFocusIds(supabase, entityType, entityId)
+  if (focusIds.length === 0) return emptyResult
 
   // Get focus area names
   const { data: focusAreas } = await supabase
@@ -299,10 +255,10 @@ export async function getEntityMeshProfile(entityType: string, entityId: string)
       : Promise.resolve({ data: [] }),
   ])
 
-  const relContentIds = Array.from<string>(new Set((contentJ.data ?? []).map(j => String(j.content_id)))).slice(0, 5)
-  const relOfficialIds = Array.from<string>(new Set((officialJ.data ?? []).map(j => String(j.official_id)))).slice(0, 5)
-  const relPolicyIds = Array.from<string>(new Set((policyJ.data ?? []).map(j => String(j.policy_id)))).slice(0, 5)
-  const relServiceIds = Array.from<string>(new Set((serviceJ.data ?? []).map(j => String(j.service_id)))).slice(0, 5)
+  const relContentIds = rankByOverlap(contentJ.data ?? [], 'content_id', entityId, 5)
+  const relOfficialIds = rankByOverlap(officialJ.data ?? [], 'official_id', entityId, 5)
+  const relPolicyIds = rankByOverlap(policyJ.data ?? [], 'policy_id', entityId, 5)
+  const relServiceIds = rankByOverlap(serviceJ.data ?? [], 'service_id', entityId, 5)
 
   const [relContent, relOfficials, relPolicies, relServices] = await Promise.all([
     relContentIds.length > 0
@@ -328,14 +284,184 @@ export async function getEntityMeshProfile(entityType: string, entityId: string)
   }
 }
 
-/**
- * Universal Wayfinder context — surfaces ALL related entities through shared focus areas.
- * Replaces getEntityMeshProfile with richer, multi-hop traversal.
- */
+// ── Config-driven focus area resolution ──────────────────────────────────────
+
+type FocusConfig = { table: string; idCol: string; mode: 'junction' | 'inline' }
+
+const FOCUS_MAP: Record<string, FocusConfig> = {
+  content:            { table: 'content_focus_areas',           idCol: 'content_id',           mode: 'junction' },
+  official:           { table: 'official_focus_areas',          idCol: 'official_id',          mode: 'junction' },
+  policy:             { table: 'policy_focus_areas',            idCol: 'policy_id',            mode: 'junction' },
+  service:            { table: 'service_focus_areas',           idCol: 'service_id',           mode: 'junction' },
+  organization:       { table: 'organization_focus_areas',      idCol: 'org_id',               mode: 'junction' },
+  foundation:         { table: 'foundation_focus_areas',        idCol: 'foundation_id',        mode: 'junction' },
+  candidate:          { table: 'candidate_focus_areas',         idCol: 'candidate_id',         mode: 'junction' },
+  municipal_service:  { table: 'municipal_service_focus_areas', idCol: 'municipal_service_id', mode: 'junction' },
+  life_situation:     { table: 'life_situation_focus_areas',    idCol: 'situation_id',         mode: 'junction' },
+  opportunity:        { table: 'opportunity_focus_areas',       idCol: 'opportunity_id',       mode: 'junction' },
+  guide:              { table: 'guides',              idCol: 'guide_id',        mode: 'inline' },
+  kb_document:        { table: 'kb_documents',        idCol: 'id',              mode: 'inline' },
+  learning_path:      { table: 'learning_paths',      idCol: 'path_id',         mode: 'inline' },
+  campaign:           { table: 'campaigns',           idCol: 'campaign_id',     mode: 'inline' },
+  benefit:            { table: 'benefit_programs',    idCol: 'benefit_id',      mode: 'inline' },
+  agency:             { table: 'agencies',            idCol: 'agency_id',       mode: 'inline' },
+  event:              { table: 'events',              idCol: 'event_id',        mode: 'inline' },
+  ballot_item:        { table: 'ballot_items',        idCol: 'item_id',         mode: 'inline' },
+  neighborhood:       { table: 'neighborhoods',       idCol: 'neighborhood_id', mode: 'inline' },
+  super_neighborhood: { table: 'super_neighborhoods', idCol: 'sn_id',           mode: 'inline' },
+  story:              { table: 'success_stories',     idCol: 'story_id',        mode: 'inline' },
+  collection:         { table: 'featured_collections', idCol: 'collection_id',  mode: 'inline' },
+}
+
+/** Resolve focus area IDs for any entity type via config-driven lookup. */
+async function getFocusIds(supabase: any, entityType: string, entityId: string): Promise<string[]> {
+  // Elections aggregate focus areas from their candidates
+  if (entityType === 'election') {
+    const { data: cands } = await supabase.from('candidates').select('candidate_id').eq('election_id', entityId)
+    if (!cands?.length) return []
+    const { data: cfa } = await supabase.from('candidate_focus_areas').select('focus_id').in('candidate_id', cands.map((c: any) => c.candidate_id))
+    return Array.from(new Set((cfa ?? []).map((j: any) => j.focus_id)))
+  }
+
+  const config = FOCUS_MAP[entityType]
+  if (!config) return []
+
+  if (config.mode === 'junction') {
+    const { data } = await supabase.from(config.table).select('focus_id').eq(config.idCol, entityId)
+    return (data ?? []).map((j: any) => j.focus_id)
+  }
+
+  // Inline mode: focus_area_ids stored as array column on the entity row
+  let query = supabase.from(config.table).select('focus_area_ids')
+  if (entityType === 'story' || entityType === 'collection') {
+    query = query.or(`${config.idCol}.eq.${entityId},id.eq.${entityId}`)
+  } else {
+    query = query.eq(config.idCol, entityId)
+  }
+  const { data } = await query.single()
+  const raw = data?.focus_area_ids
+  return Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
+}
+
+/** Rank entity IDs by focus area overlap count — more shared focus areas = more relevant. */
+function rankByOverlap(junctions: any[] | null, idField: string, excludeId: string, limit: number): string[] {
+  const counts: Record<string, number> = {}
+  for (const j of junctions ?? []) {
+    const id = String(j[idField])
+    if (id !== excludeId) counts[id] = (counts[id] || 0) + 1
+  }
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([id]) => id)
+}
+
+// ── Taxonomy resolution ──────────────────────────────────────────────────────
+
+const SDG_MAP: Record<string, { table: string; idCol: string }> = {
+  content:      { table: 'content_sdgs',      idCol: 'content_id' },
+  official:     { table: 'official_sdgs',     idCol: 'official_id' },
+  service:      { table: 'service_sdgs',      idCol: 'service_id' },
+  organization: { table: 'organization_sdgs', idCol: 'org_id' },
+  ballot_item:  { table: 'ballot_item_sdgs',  idCol: 'item_id' },
+}
+
+/** Resolve taxonomy metadata for an entity. Content has the richest taxonomy; others have SDGs + extras. */
+async function resolveTaxonomy(
+  supabase: any,
+  entityType: string,
+  entityId: string,
+): Promise<import('@/lib/types/exchange').WayfinderData['taxonomy']> {
+  const empty = { sdgs: [] as any[], sdohDomain: null, actionTypes: [] as any[], govLevel: null, timeCommitment: null, ntee_codes: [] as string[], airs_codes: [] as string[] }
+
+  // Content has the richest taxonomy — SDGs, SDOH, action types, gov levels, time commitment, NTEE/AIRS
+  if (entityType === 'content') {
+    const [sdgJ, contentRow, actionTypeJ, govLevelJ] = await Promise.all([
+      supabase.from('content_sdgs').select('sdg_id').eq('content_id', entityId),
+      supabase.from('content_published').select('sdoh_domain, time_commitment_id, gov_level_id').eq('id', entityId).single(),
+      (supabase as any).from('content_action_types').select('action_type_id').eq('content_id', entityId),
+      (supabase as any).from('content_government_levels').select('gov_level_id').eq('content_id', entityId),
+    ])
+
+    const sdgIds = (sdgJ.data ?? []).map((j: any) => j.sdg_id)
+    const atIds = (actionTypeJ.data ?? []).map((j: any) => j.action_type_id)
+    const glIds = (govLevelJ.data ?? []).map((j: any) => j.gov_level_id)
+    const pub = contentRow.data as any
+
+    const [sdgRows, sdohRow, atRows, glRow, tcRow, reviewRow] = await Promise.all([
+      sdgIds.length > 0 ? supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color').in('sdg_id', sdgIds) : Promise.resolve({ data: [] }),
+      pub?.sdoh_domain ? supabase.from('sdoh_domains').select('sdoh_code, sdoh_name, sdoh_description').eq('sdoh_code', pub.sdoh_domain).single() : Promise.resolve({ data: null }),
+      atIds.length > 0 ? supabase.from('action_types').select('action_type_id, action_type_name, category').in('action_type_id', atIds) : Promise.resolve({ data: [] }),
+      glIds.length > 0 ? supabase.from('government_levels').select('gov_level_id, gov_level_name').in('gov_level_id', glIds).limit(1) : Promise.resolve({ data: [] }),
+      pub?.time_commitment_id ? supabase.from('time_commitments').select('time_id, time_name').eq('time_id', pub.time_commitment_id).single() : Promise.resolve({ data: null }),
+      supabase.from('content_review_queue').select('ai_classification').eq('inbox_id', entityId).single(),
+    ])
+
+    let ntee_codes: string[] = []
+    let airs_codes: string[] = []
+    if (reviewRow.data?.ai_classification) {
+      const cls = typeof reviewRow.data.ai_classification === 'string' ? JSON.parse(reviewRow.data.ai_classification) : reviewRow.data.ai_classification
+      ntee_codes = cls.ntee_codes || []
+      airs_codes = cls.airs_codes || []
+    }
+
+    return {
+      sdgs: (sdgRows.data ?? []) as any[],
+      sdohDomain: sdohRow.data as any,
+      actionTypes: (atRows.data ?? []) as any[],
+      govLevel: (glRow.data as any)?.[0] || null,
+      timeCommitment: tcRow.data as any,
+      ntee_codes,
+      airs_codes,
+    }
+  }
+
+  // For types with SDG junction tables
+  const sdgConfig = SDG_MAP[entityType]
+  if (!sdgConfig) return empty
+
+  const { data: sdgJ } = await supabase.from(sdgConfig.table).select('sdg_id').eq(sdgConfig.idCol, entityId)
+  const sdgIds = (sdgJ ?? []).map((j: any) => j.sdg_id)
+  const sdgs = sdgIds.length > 0
+    ? ((await supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color').in('sdg_id', sdgIds)).data ?? []) as any[]
+    : []
+
+  // Official: also has gov level
+  if (entityType === 'official') {
+    const { data: row } = await supabase.from('elected_officials').select('gov_level_id').eq('official_id', entityId).single()
+    let govLevel = null
+    if ((row as any)?.gov_level_id) {
+      const { data } = await supabase.from('government_levels').select('gov_level_id, gov_level_name').eq('gov_level_id', (row as any).gov_level_id).single()
+      govLevel = data
+    }
+    return { ...empty, sdgs, govLevel }
+  }
+
+  // Organization: also has NTEE code
+  if (entityType === 'organization') {
+    const { data: row } = await supabase.from('organizations').select('ntee_code').eq('org_id', entityId).single()
+    return { ...empty, sdgs, ntee_codes: (row as any)?.ntee_code ? [(row as any).ntee_code] : [] }
+  }
+
+  // Ballot item: jurisdiction → gov level
+  if (entityType === 'ballot_item') {
+    const { data: row } = await (supabase as any).from('ballot_items').select('jurisdiction').eq('item_id', entityId).single()
+    let govLevel = null
+    if (row?.jurisdiction) {
+      const { data: gl } = await supabase.from('government_levels').select('gov_level_id, gov_level_name').ilike('gov_level_name', `%${row.jurisdiction}%`).limit(1)
+      if (gl?.length) govLevel = gl[0]
+    }
+    return { ...empty, sdgs, govLevel }
+  }
+
+  return { ...empty, sdgs }
+}
+
+// ── Universal Wayfinder context ──────────────────────────────────────────────
 
 /**
- * Universal Wayfinder context — surfaces ALL related entities through shared focus areas.
- * Replaces getEntityMeshProfile with richer, multi-hop traversal.
+ * Surfaces ALL related entities through shared focus areas.
+ * Config-driven Hop 1 + relevance-ranked Hop 2 + parallel Hop 3.
  */
 export async function getWayfinderContext(
   entityType: string,
@@ -351,100 +477,11 @@ export async function getWayfinderContext(
     foundations: [], organizations: [],
   }
 
-  // ── Hop 1: Get this entity's focus area IDs ──
-  let focusIds: string[] = []
-  if (entityType === 'content') {
-    const { data } = await supabase.from('content_focus_areas').select('focus_id').eq('content_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'official') {
-    const { data } = await supabase.from('official_focus_areas').select('focus_id').eq('official_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'policy') {
-    const { data } = await supabase.from('policy_focus_areas').select('focus_id').eq('policy_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'service') {
-    const { data } = await (supabase as any).from('service_focus_areas').select('focus_id').eq('service_id', entityId)
-    focusIds = (data ?? []).map((j: any) => j.focus_id)
-  } else if (entityType === 'organization') {
-    const { data } = await supabase.from('organization_focus_areas').select('focus_id').eq('org_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'guide') {
-    // Guide stores focus_area_ids inline
-    const { data } = await supabase.from('guides').select('focus_area_ids').eq('guide_id', entityId).single()
-    focusIds = (data as any)?.focus_area_ids ?? []
-  } else if (entityType === 'kb_document') {
-    const { data } = await (supabase as any).from('kb_documents').select('focus_area_ids, theme_ids').eq('id', entityId).single()
-    focusIds = (data as any)?.focus_area_ids ?? []
-  } else if (entityType === 'life_situation') {
-    const { data } = await supabase.from('life_situation_focus_areas').select('focus_id').eq('situation_id', entityId)
-    focusIds = (data ?? []).map(j => j.focus_id)
-  } else if (entityType === 'opportunity') {
-    const { data } = await (supabase as any).from('opportunity_focus_areas').select('focus_id').eq('opportunity_id', entityId)
-    focusIds = (data ?? []).map((j: any) => j.focus_id)
-  } else if (entityType === 'learning_path') {
-    const { data } = await supabase.from('learning_paths').select('focus_area_ids').eq('path_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'campaign') {
-    const { data } = await supabase.from('campaigns').select('focus_area_ids').eq('campaign_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'benefit') {
-    const { data } = await supabase.from('benefit_programs').select('focus_area_ids').eq('benefit_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'agency') {
-    const { data } = await supabase.from('agencies').select('focus_area_ids').eq('agency_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'event') {
-    const { data } = await supabase.from('events').select('focus_area_ids').eq('event_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'foundation') {
-    const { data } = await supabase.from('foundation_focus_areas').select('focus_id').eq('foundation_id', entityId)
-    focusIds = (data ?? []).map((j: any) => j.focus_id)
-  } else if (entityType === 'candidate') {
-    const { data } = await (supabase as any).from('candidate_focus_areas').select('focus_id').eq('candidate_id', entityId)
-    focusIds = (data ?? []).map((j: any) => j.focus_id)
-  } else if (entityType === 'municipal_service') {
-    const { data } = await (supabase as any).from('municipal_service_focus_areas').select('focus_id').eq('municipal_service_id', entityId)
-    focusIds = (data ?? []).map((j: any) => j.focus_id)
-  } else if (entityType === 'ballot_item') {
-    const { data } = await (supabase as any).from('ballot_items').select('focus_area_ids').eq('item_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'election') {
-    // Elections don't have focus areas directly — aggregate from their candidates
-    const { data: cands } = await (supabase as any).from('candidates').select('candidate_id').eq('election_id', entityId)
-    if (cands && cands.length > 0) {
-      const candIds = cands.map((c: any) => c.candidate_id)
-      const { data: cfa } = await (supabase as any).from('candidate_focus_areas').select('focus_id').in('candidate_id', candIds)
-      focusIds = Array.from(new Set((cfa ?? []).map((j: any) => j.focus_id)))
-    }
-  } else if (entityType === 'neighborhood') {
-    const { data } = await (supabase as any).from('neighborhoods').select('focus_area_ids, theme_id').eq('neighborhood_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'super_neighborhood') {
-    const { data } = await (supabase as any).from('super_neighborhoods').select('focus_area_ids, theme_id').eq('sn_id', entityId).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'story') {
-    const { data } = await (supabase as any).from('success_stories').select('focus_area_ids, theme_id').or(`story_id.eq.${entityId},id.eq.${entityId}`).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else if (entityType === 'collection') {
-    const { data } = await (supabase as any).from('featured_collections').select('focus_area_ids, theme_id').or(`collection_id.eq.${entityId},id.eq.${entityId}`).single()
-    const raw = (data as any)?.focus_area_ids
-    focusIds = Array.isArray(raw) ? raw : typeof raw === 'string' ? JSON.parse(raw) : []
-  } else {
-    return empty
-  }
-
+  // ── Hop 1: Config-driven focus area resolution ──
+  const focusIds = await getFocusIds(supabase, entityType, entityId)
   if (focusIds.length === 0) return empty
 
-  // Get focus area details
+  // Get focus area details + derive themes
   const { data: focusAreas } = await supabase
     .from('focus_areas')
     .select('focus_id, focus_area_name, theme_id')
@@ -452,11 +489,9 @@ export async function getWayfinderContext(
 
   const faList = focusAreas ?? []
   const themes = Array.from(new Set(faList.map(fa => fa.theme_id).filter(Boolean))) as string[]
-
-  // ── Hop 2: Fan out through focus areas to find related entity IDs ──
-  // Foundation junction uses focus_area name strings, not IDs
   const faNames = faList.map(fa => fa.focus_area_name)
 
+  // ── Hop 2: Fan out through focus areas ──
   const [contentJ, officialJ, policyJ, serviceJ, orgJ, oppJ, foundationJ] = await Promise.all([
     entityType !== 'content'
       ? supabase.from('content_focus_areas').select('content_id').in('focus_id', focusIds)
@@ -471,18 +506,17 @@ export async function getWayfinderContext(
       : Promise.resolve({ data: [] as any[] }),
   ])
 
-  // Exclude the current entity from its own related results (M3 self-referencing fix)
-  const exclude = (ids: string[]) => ids.filter(id => id !== entityId)
-  const relContentIds = exclude(Array.from<string>(new Set((contentJ.data ?? []).map((j: any) => String(j.content_id))))).slice(0, 6)
-  const relOfficialIds = exclude(Array.from<string>(new Set((officialJ.data ?? []).map((j: any) => String(j.official_id))))).slice(0, 4)
-  const relPolicyIds = exclude(Array.from<string>(new Set((policyJ.data ?? []).map((j: any) => String(j.policy_id))))).slice(0, 4)
-  const relServiceIds = exclude(Array.from<string>(new Set((serviceJ.data ?? []).map((j: any) => String(j.service_id))))).slice(0, 6)
-  const relOrgIds = exclude(Array.from<string>(new Set((orgJ.data ?? []).map((j: any) => String(j.org_id))))).slice(0, 4)
-  const relOppIds = exclude(Array.from<string>(new Set((oppJ.data ?? []).map((j: any) => String(j.opportunity_id))))).slice(0, 4)
+  // Rank by relevance — entities sharing more focus areas rank higher
+  const relContentIds = rankByOverlap(contentJ.data, 'content_id', entityId, 6)
+  const relOfficialIds = rankByOverlap(officialJ.data, 'official_id', entityId, 4)
+  const relPolicyIds = rankByOverlap(policyJ.data, 'policy_id', entityId, 4)
+  const relServiceIds = rankByOverlap(serviceJ.data, 'service_id', entityId, 6)
+  const relOrgIds = rankByOverlap(orgJ.data, 'org_id', entityId, 4)
+  const relOppIds = rankByOverlap(oppJ.data, 'opportunity_id', entityId, 4)
   const relFoundationIds = Array.from<string>(new Set((foundationJ.data ?? []).map((j: any) => String(j.foundation_id)))).slice(0, 3)
 
-  // ── Hop 3: Fetch enriched entity details in parallel ──
-  const [relContent, relOfficials, relPolicies, relServices, relOrgs, relOpps, nuggets, relFoundations] = await Promise.all([
+  // ── Hop 3: Fetch enriched details + library nuggets + taxonomy in parallel ──
+  const [relContent, relOfficials, relPolicies, relServices, relOrgs, relOpps, nuggets, relFoundations, taxonomy] = await Promise.all([
     relContentIds.length > 0
       ? supabase.from('content_published')
           .select('id, title_6th_grade, summary_6th_grade, pathway_primary, center, image_url, source_url, inbox_id, content_type')
@@ -517,158 +551,8 @@ export async function getWayfinderContext(
     relFoundationIds.length > 0
       ? (supabase as any).from('foundations').select('id, name, mission, website_url').in('id', relFoundationIds)
       : Promise.resolve({ data: [] }),
+    resolveTaxonomy(supabase, entityType, entityId),
   ])
-
-  // Map foundation results from parallel queries above
-  const foundations = ((relFoundations.data ?? []) as any[]).map((f: any) => ({
-    foundation_id: f.id,
-    name: f.name,
-    description: f.mission || null,
-    website: f.website_url || null,
-  }))
-
-  // ── Taxonomy metadata — available to all users ──
-  let taxonomy: import('@/lib/types/exchange').WayfinderData['taxonomy']
-
-  // Helper to resolve SDGs from a junction table
-  async function resolveSDGs(table: string, idCol: string, idVal: string) {
-    const { data: junctions } = await (supabase as any).from(table).select('sdg_id').eq(idCol, idVal)
-    const ids = (junctions ?? []).map((j: any) => j.sdg_id)
-    if (ids.length === 0) return []
-    const { data } = await supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color').in('sdg_id', ids)
-    return (data ?? []) as any[]
-  }
-
-  // Helper to resolve gov level from a gov_level_id
-  async function resolveGovLevel(govLevelId: string | null) {
-    if (!govLevelId) return null
-    const { data } = await supabase.from('government_levels').select('gov_level_id, gov_level_name').eq('gov_level_id', govLevelId).single()
-    return data as any
-  }
-
-  if (entityType === 'content') {
-    const [sdgJ, contentRow, actionTypeJ, govLevelJ] = await Promise.all([
-      supabase.from('content_sdgs').select('sdg_id').eq('content_id', entityId),
-      supabase.from('content_published').select('sdoh_domain, time_commitment_id, gov_level_id').eq('id', entityId).single(),
-      (supabase as any).from('content_action_types').select('action_type_id').eq('content_id', entityId),
-      (supabase as any).from('content_government_levels').select('gov_level_id').eq('content_id', entityId),
-    ])
-
-    const sdgIds = (sdgJ.data ?? []).map((j: any) => j.sdg_id)
-    const atIds = (actionTypeJ.data ?? []).map((j: any) => j.action_type_id)
-    const glIds = (govLevelJ.data ?? []).map((j: any) => j.gov_level_id)
-    const pub = contentRow.data as any
-
-    const [sdgRows, sdohRow, atRows, glRow, tcRow, reviewRowResult] = await Promise.all([
-      sdgIds.length > 0
-        ? supabase.from('sdgs').select('sdg_id, sdg_number, sdg_name, sdg_color').in('sdg_id', sdgIds)
-        : Promise.resolve({ data: [] }),
-      pub?.sdoh_domain
-        ? supabase.from('sdoh_domains').select('sdoh_code, sdoh_name, sdoh_description').eq('sdoh_code', pub.sdoh_domain).single()
-        : Promise.resolve({ data: null }),
-      atIds.length > 0
-        ? supabase.from('action_types').select('action_type_id, action_type_name, category').in('action_type_id', atIds)
-        : Promise.resolve({ data: [] }),
-      glIds.length > 0
-        ? supabase.from('government_levels').select('gov_level_id, gov_level_name').in('gov_level_id', glIds).limit(1)
-        : Promise.resolve({ data: [] }),
-      pub?.time_commitment_id
-        ? supabase.from('time_commitments').select('time_id, time_name').eq('time_id', pub.time_commitment_id).single()
-        : Promise.resolve({ data: null }),
-      supabase.from('content_review_queue').select('ai_classification').eq('inbox_id', entityId).single(),
-    ])
-
-    // Get NTEE/AIRS from the review queue classification
-    let ntee_codes: string[] = []
-    let airs_codes: string[] = []
-    const reviewRow = reviewRowResult.data
-    if (reviewRow?.ai_classification) {
-      const cls = typeof reviewRow.ai_classification === 'string'
-        ? JSON.parse(reviewRow.ai_classification)
-        : reviewRow.ai_classification
-      ntee_codes = cls.ntee_codes || []
-      airs_codes = cls.airs_codes || []
-    }
-
-    taxonomy = {
-      sdgs: (sdgRows.data ?? []) as any[],
-      sdohDomain: sdohRow.data as any,
-      actionTypes: (atRows.data ?? []) as any[],
-      govLevel: (glRow.data as any)?.[0] || null,
-      timeCommitment: tcRow.data as any,
-      ntee_codes,
-      airs_codes,
-    }
-  } else if (entityType === 'official') {
-    const { data: officialRow } = await supabase.from('elected_officials').select('gov_level_id').eq('official_id', entityId).single()
-    const [sdgs, govLevel] = await Promise.all([
-      resolveSDGs('official_sdgs', 'official_id', entityId),
-      resolveGovLevel((officialRow as any)?.gov_level_id),
-    ])
-    taxonomy = {
-      sdgs,
-      sdohDomain: null,
-      actionTypes: [],
-      govLevel,
-      timeCommitment: null,
-      ntee_codes: [],
-      airs_codes: [],
-    }
-  } else if (entityType === 'service') {
-    const sdgs = await resolveSDGs('service_sdgs', 'service_id', entityId)
-    taxonomy = {
-      sdgs,
-      sdohDomain: null,
-      actionTypes: [],
-      govLevel: null,
-      timeCommitment: null,
-      ntee_codes: [],
-      airs_codes: [],
-    }
-  } else if (entityType === 'organization') {
-    const sdgs = await resolveSDGs('organization_sdgs', 'org_id', entityId)
-    // Get NTEE from org row
-    const { data: orgRow } = await supabase.from('organizations').select('ntee_code').eq('org_id', entityId).single()
-    const ntee_codes = (orgRow as any)?.ntee_code ? [(orgRow as any).ntee_code] : []
-    taxonomy = {
-      sdgs,
-      sdohDomain: null,
-      actionTypes: [],
-      govLevel: null,
-      timeCommitment: null,
-      ntee_codes,
-      airs_codes: [],
-    }
-  } else if (entityType === 'ballot_item') {
-    const sdgs = await resolveSDGs('ballot_item_sdgs', 'item_id', entityId)
-    const { data: biRow } = await (supabase as any).from('ballot_items').select('jurisdiction').eq('item_id', entityId).single()
-    // Map jurisdiction to gov level
-    let govLevel = null
-    if (biRow?.jurisdiction) {
-      const { data: gl } = await supabase.from('government_levels').select('gov_level_id, gov_level_name').ilike('gov_level_name', `%${biRow.jurisdiction}%`).limit(1)
-      if (gl && gl.length > 0) govLevel = gl[0]
-    }
-    taxonomy = {
-      sdgs,
-      sdohDomain: null,
-      actionTypes: [],
-      govLevel,
-      timeCommitment: null,
-      ntee_codes: [],
-      airs_codes: [],
-    }
-  } else if (entityType === 'election' || entityType === 'neighborhood' || entityType === 'super_neighborhood') {
-    // Minimal taxonomy for these entity types
-    taxonomy = {
-      sdgs: [],
-      sdohDomain: null,
-      actionTypes: [],
-      govLevel: null,
-      timeCommitment: null,
-      ntee_codes: [],
-      airs_codes: [],
-    }
-  }
 
   return {
     focusAreas: faList,
@@ -679,7 +563,9 @@ export async function getWayfinderContext(
     services: (relServices.data ?? []) as any[],
     officials: (relOfficials.data ?? []) as any[],
     policies: (relPolicies.data ?? []) as any[],
-    foundations,
+    foundations: ((relFoundations.data ?? []) as any[]).map((f: any) => ({
+      foundation_id: f.id, name: f.name, description: f.mission || null, website: f.website_url || null,
+    })),
     organizations: (relOrgs.data ?? []) as any[],
     taxonomy,
   }
