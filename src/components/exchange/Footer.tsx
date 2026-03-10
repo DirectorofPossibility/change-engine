@@ -125,7 +125,7 @@ export async function Footer() {
       <div className="border-t border-brand-border">
         <div className="max-w-[1200px] mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-brand-muted-light">
-            &copy; 2026 The Change Lab
+            &copy; {new Date().getFullYear()} The Change Lab
           </p>
 
           <div className="flex items-center gap-4">

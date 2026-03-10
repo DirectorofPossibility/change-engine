@@ -33,7 +33,7 @@ export function D2Footer() {
 
   const ABOUT = [
     { label: t('d2footer.about_change_lab'), href: '/about' },
-    { label: t('d2footer.our_approach'), href: '/about' },
+    { label: t('d2footer.our_approach'), href: '/pathways' },
     { label: t('d2footer.contact'), href: '/contact' },
     { label: t('d2footer.user_manual'), href: '/manual' },
     { label: t('d2footer.accessibility'), href: '/accessibility' },
