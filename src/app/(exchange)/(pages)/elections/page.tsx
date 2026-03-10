@@ -10,7 +10,7 @@ import { VotingDashboardClient } from './VotingDashboardClient'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { FOLLoading } from '@/components/exchange/FOLLoading'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Elections & Voting — Community Exchange',
