@@ -30,31 +30,68 @@ const sections = [
     ],
   },
   {
+    title: 'Submit a URL with multiple events or articles',
+    paragraphs: [
+      'Found a page that lists several events or news stories? Just submit the URL once. The platform will automatically detect multiple items on the page and split them into separate entries \u2014 each with its own title, date, and classification.',
+      'This works for event calendars, news roundups, newsletters, and listing pages. Each extracted item goes to the review queue individually.',
+    ],
+  },
+  {
     title: 'Follow what\u2019s happening',
     paragraphs: [
-      'The live dashboard shows what\u2019s moving right now \u2014 legislation, community activity, events you can attend.',
-      'Three Good Things shows you three positive civic stories every day.',
+      'The news feed pulls from RSS sources, official government feeds, and community submissions \u2014 updated daily. Everything is rewritten at a 6th-grade reading level so it\u2019s accessible to everyone.',
+      'Three Good Things on the splash page shows positive stories shared by neighbors across Houston.',
+    ],
+  },
+  {
+    title: 'Find your elected officials',
+    paragraphs: [
+      'Enter your address or ZIP code in the Civic Compass. We cover every level: Houston City Council, Harris County Commissioners Court, Texas state legislators, and your U.S. representatives and senators.',
+      'Each official\u2019s page shows their contact info, committees, recent legislation, and which pathways their work touches.',
+    ],
+  },
+  {
+    title: 'Services and organizations',
+    paragraphs: [
+      'The platform includes 211 services, nonprofit organizations, and government agencies serving the Houston area. Browse by category, search by name, or find them through the pathways.',
+      'Every service and organization is mapped to the same knowledge graph as news and officials \u2014 so you can see how they connect.',
+    ],
+  },
+  {
+    title: 'Elections and polling places',
+    paragraphs: [
+      'Check upcoming elections, find your polling place, and see who\u2019s on the ballot \u2014 all in one place. Election data syncs from the Texas Secretary of State and FEC.',
     ],
   },
   {
     title: 'Save what matters',
     paragraphs: [
       'Create a free account to save officials, organizations, and articles. Set your language. Get notified about things in your area.',
-      'You don\u2019t need an account. But it helps if you want to keep track.',
+      'You don\u2019t need an account to browse. But it helps if you want to keep track.',
     ],
   },
   {
     title: 'Languages',
     paragraphs: [
       'English, Spanish, and Vietnamese. Switch in the top navigation or in your settings.',
-      'All service content is reviewed by a human editor before it publishes in any language.',
+      'All content is translated by AI and reviewed for accuracy. Translations run nightly for newly published content.',
     ],
   },
   {
-    title: 'Wayfinder',
+    title: 'The Knowledge Graph',
     paragraphs: [
-      'At the bottom of every page \u2014 every official, every organization, every service \u2014 you\u2019ll see Wayfinder. It shows you what\u2019s connected to what you\u2019re looking at. Three hops out from any starting point.',
-      'It\u2019s how you go from \u2018I need help with rent\u2019 to \u2018here are the organizations, the officials responsible, and the policy that funds it\u2019 \u2014 without having to already know where to look.',
+      'Everything in the platform is connected through a knowledge graph. Each article, service, official, and organization is classified across 16 dimensions \u2014 pathways, focus areas, SDGs, social determinants of health, and more.',
+      'This means when you look at one thing, you can see everything related to it. An article about housing connects to the housing pathway, the officials responsible for housing policy, the organizations providing housing services, and the federal grants funding them.',
+    ],
+  },
+  {
+    title: 'Tips and shortcuts',
+    paragraphs: [
+      'Use the search bar in the header for quick autocomplete results across all content types.',
+      'The Civic Compass accepts addresses, ZIP codes, or neighborhood names.',
+      'On any official\u2019s page, you\u2019ll find direct contact info and links to their official sites.',
+      'Content with a green badge has been translated into all three languages.',
+      'Pages with multiple events on a single URL? Submit the URL once \u2014 the system splits them automatically.',
     ],
   },
 ]

@@ -113,6 +113,7 @@ export default async function ManualPage() {
 
   tocItems.push(
     { href: '#content-pipeline', label: 'How Content Works' },
+    { href: '#hints', label: 'Helpful Hints' },
     { href: '#wayfinder', label: 'Using the Wayfinder' },
     { href: '#languages', label: 'Languages' },
   )
@@ -427,6 +428,35 @@ export default async function ManualPage() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* -- Helpful Hints -- */}
+          <SectionHeading id="hints">Helpful Hints</SectionHeading>
+          <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-5 space-y-4">
+            <div>
+              <p className="font-medium text-gray-900 text-sm">Multi-event and multi-article URLs</p>
+              <p className="text-xs text-gray-600 mt-0.5">Submit a URL that lists multiple events or news stories and the platform will automatically split them into individual items. Works with event calendars, newsletters, and roundup pages. Each item gets its own review queue entry.</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 text-sm">Content is rewritten for accessibility</p>
+              <p className="text-xs text-gray-600 mt-0.5">Every piece of ingested content is rewritten at a 6th-grade reading level by AI. The original source is always preserved. Translations to Spanish and Vietnamese run nightly for all published content.</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 text-sm">RSS feeds auto-ingest</p>
+              <p className="text-xs text-gray-600 mt-0.5">Add an RSS feed URL and new articles will be automatically pulled, classified, and queued for review every morning at 3 AM CT. No manual re-submission needed.</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 text-sm">Everything is connected</p>
+              <p className="text-xs text-gray-600 mt-0.5">Each item is classified across 16 taxonomy dimensions (pathways, focus areas, SDGs, SDOH, audience segments, and more). This means related content surfaces automatically — an article about food access will connect to nutrition services, relevant officials, and community organizations.</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 text-sm">Government data syncs daily</p>
+              <p className="text-xs text-gray-600 mt-0.5">Officials, legislation, elections, polling places, and federal spending data sync automatically from official sources (Congress.gov, Texas Legislature Online, Legistar, USAspending, Google Civic, FEC). No manual entry needed for civic data.</p>
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 text-sm">Search the header bar</p>
+              <p className="text-xs text-gray-600 mt-0.5">The search bar in the site header offers live autocomplete across all content types — articles, services, officials, organizations, and more. Start typing and select from the dropdown.</p>
+            </div>
           </div>
 
           {/* -- Wayfinder -- */}
