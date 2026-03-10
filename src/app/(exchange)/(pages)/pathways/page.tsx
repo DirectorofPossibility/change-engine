@@ -81,7 +81,7 @@ export default async function PathwaysPage() {
           <Breadcrumb items={[{ label: 'Topics' }]} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
         <div>
         {/* ── Pathway Sections ── */}
         {Object.entries(THEMES).map(function ([themeId, theme], idx) {
@@ -94,7 +94,7 @@ export default async function PathwaysPage() {
           const isEven = idx % 2 === 0
 
           return (
-            <section key={themeId} className="mb-12 first:mt-0">
+            <section key={themeId} className="mb-8 first:mt-0">
               {/* Pathway color band header */}
               <div
                 className="rounded-xl overflow-hidden mb-6"

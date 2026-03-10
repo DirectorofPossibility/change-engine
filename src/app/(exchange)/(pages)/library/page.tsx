@@ -40,7 +40,7 @@ export default async function LibraryPage() {
           <FOLWatermark variant="seed" size="lg" color="#3182ce" />
         </div>
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-14">
+        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-10 items-center">
             {/* Left: text */}
             <div>
@@ -110,7 +110,7 @@ export default async function LibraryPage() {
 
               {/* Floating stat */}
               <div
-                className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3 py-2 font-mono text-[10px]"
+                className="absolute z-[5] bg-white border border-brand-text rounded-[10px] px-3 py-2 font-mono text-[10px]"
                 style={{ bottom: 15, left: 10 }}
               >
                 <span className="block text-[24px] font-black text-[#3182ce] leading-none">{documents.length}</span>
@@ -133,7 +133,7 @@ export default async function LibraryPage() {
       </section>
 
       {/* ── CONTENT ── */}
-      <div className="max-w-[1200px] mx-auto px-8 py-10">
+      <div className="max-w-[1200px] mx-auto px-8 py-6">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="flex-1 min-w-0">
             <LibraryClient documents={documents} />

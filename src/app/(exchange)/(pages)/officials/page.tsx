@@ -59,7 +59,7 @@ export default async function OfficialsPage() {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Officials' }]} />
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
+        <div className="flex flex-col lg:flex-row gap-6 mt-4">
           {/* Main content */}
           <div className="flex-1 min-w-0">
             <OfficialsPageClient

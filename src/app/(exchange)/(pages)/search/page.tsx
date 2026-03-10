@@ -257,7 +257,7 @@ export default async function SearchPage({
         <SearchResultsHeader query={query} totalCount={totalCount} />
 
         {totalCount > 0 && (
-          <div className="flex flex-col lg:flex-row gap-8">
+          <div className="flex flex-col lg:flex-row gap-6">
             <div className="flex-1 min-w-0">
               <SearchTabs tabs={tabs}>{sections}</SearchTabs>
             </div>

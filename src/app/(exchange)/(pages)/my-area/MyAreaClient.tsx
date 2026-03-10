@@ -230,7 +230,7 @@ export function MyAreaClient({
   const sections: Record<string, React.ReactNode> = {
     pathways: (
       <section key="pathways" className="mb-10">
-        <div className="bg-white rounded-lg border border-brand-border p-5">
+        <div className="bg-white rounded-xl border border-brand-border p-5">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <CompactCircleGraph activePathways={activePathways} accentColor="#C75B2A" />
             <div className="flex-1">
@@ -263,7 +263,7 @@ export function MyAreaClient({
         </div>
 
         {/* Archetype selector */}
-        <div className="bg-white rounded-lg border border-brand-border p-5 mt-4">
+        <div className="bg-white rounded-xl border border-brand-border p-5 mt-4">
           <h2 className="font-serif font-bold text-brand-text text-lg mb-1">Your Journey</h2>
           <p className="text-xs text-brand-muted mb-4">Choose how you explore the community. This personalizes the order of sections below.</p>
           <ArchetypeSelector />

@@ -335,7 +335,7 @@ export function GoodThingsClient() {
 
       {/* ── Map (at the top) ── */}
       <section>
-        <div className="bg-white border-b-2 border-brand-border overflow-hidden">
+        <div className="bg-white border-b border-brand-border overflow-hidden">
           <GoodThingsMap entries={entries} focusEntry={lastEntry} />
         </div>
       </section>
@@ -469,7 +469,7 @@ export function GoodThingsClient() {
         ) : (
           /* ── Success ── */
           <section className="mb-12">
-            <div className="bg-white rounded-2xl border-2 border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden">
+            <div className="bg-white rounded-2xl border border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden">
               <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#38a169]" />
               <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
               <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">{t('gt.success_title')}</h2>

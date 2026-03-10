@@ -141,7 +141,7 @@ export default async function NewsPage({
   return (
     <div className="bg-brand-bg min-h-screen">
       {/* Masthead */}
-      <div className="border-b-2 border-brand-text">
+      <div className="border-b border-brand-text">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
           <Breadcrumb items={[{ label: 'News Stand' }]} />
           <Link href="/centers/learning" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#3182ce' }}>
@@ -178,7 +178,7 @@ export default async function NewsPage({
                   href={href}
                   className={'text-xs px-3 py-1.5 font-medium transition-colors ' +
                     (active
-                      ? 'text-brand-text border-b-2 border-brand-text'
+                      ? 'text-brand-text border-b border-brand-text'
                       : 'text-brand-muted hover:text-brand-text')}
                 >
                   {ct.label}
@@ -218,7 +218,7 @@ export default async function NewsPage({
         ) : (
           <>
             {/* ABOVE THE FOLD: Hero + Secondary */}
-            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b-2 border-brand-text">
+            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-brand-text">
               <WayfinderTooltipPos tipKey="source_attribution_card" position="bottom" />
               {/* Hero story */}
               {hero && (
@@ -307,7 +307,7 @@ export default async function NewsPage({
                   return (
                     <section key={section.type} className="mb-10">
                       {/* Section header */}
-                      <div className="flex items-center gap-3 mb-4 pb-2 border-b-2 border-brand-text">
+                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-brand-text">
                         <span className="text-brand-muted">{typeIcon(section.type)}</span>
                         <h2 className="font-serif text-xl font-bold text-brand-text">{section.label}</h2>
                         <span className="text-xs text-brand-muted">{section.items.length}</span>

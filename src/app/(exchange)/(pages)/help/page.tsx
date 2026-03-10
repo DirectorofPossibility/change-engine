@@ -52,12 +52,12 @@ export default async function HelpPage() {
         intro={PAGE_INTROS.availableResources}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Available Resources' }]} />
         <HelpCrisisBanner />
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
-          <div className="space-y-10">
+          <div className="space-y-6">
             {URGENCY_LEVELS.map((level) => {
               const items = grouped[level]
               if (!items || items.length === 0) return null

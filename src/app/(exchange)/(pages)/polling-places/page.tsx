@@ -27,12 +27,12 @@ export default async function PollingPlacesPage() {
   const activeElection = upcoming && upcoming.length > 0 ? upcoming[0] : null
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Breadcrumb items={[{ label: 'Polling Places' }]} />
       <PollingHero />
 
       {activeElection && (
-        <div className="mb-10">
+        <div className="mb-6">
           <ElectionCountdown
             electionName={activeElection.election_name}
             electionDate={activeElection.election_date}

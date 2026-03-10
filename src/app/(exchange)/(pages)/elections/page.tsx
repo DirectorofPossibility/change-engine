@@ -43,7 +43,7 @@ export default async function ElectionsPage({
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Elections' }]} />
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
+        <div className="flex flex-col lg:flex-row gap-6 mt-4">
           <div className="flex-1 min-w-0">
             <Suspense fallback={<div className="text-brand-muted py-12 text-center">Loading your voting dashboard...</div>}>
               <VotingDashboardClient

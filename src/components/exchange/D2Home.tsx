@@ -117,13 +117,13 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Link href="/compass" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
+                <Link href="/compass" className="px-5 py-2.5 rounded-lg border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   Find my way in
                 </Link>
-                <Link href="/neighborhoods" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
+                <Link href="/neighborhoods" className="px-5 py-2.5 rounded-lg border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   In my neighborhood
                 </Link>
-                <Link href="/calendar" className="px-5 py-2.5 rounded-lg border-2 border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
+                <Link href="/calendar" className="px-5 py-2.5 rounded-lg border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   What&apos;s happening now
                 </Link>
               </div>
@@ -193,7 +193,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <Link
                 key={item.label}
                 href={item.href}
-                className={'relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 group border-2' + (item.cta ? ' col-span-2 md:col-span-1' : '')}
+                className={'relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 group border' + (item.cta ? ' col-span-2 md:col-span-1' : '')}
                 style={{ aspectRatio: '1', borderColor: item.color + '40', boxShadow: '3px 3px 0 ' + item.color + '25' }}
               >
                 {item.cta && (
@@ -237,7 +237,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <Link
                 key={key}
                 href={'/centers/' + c.slug}
-                className="relative border-2 rounded-xl overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
+                className="relative border rounded-xl overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
                 style={{ borderColor: c.color + '50', boxShadow: '3px 3px 0 ' + c.color + '20' }}
               >
                 {/* Color header with icon */}
