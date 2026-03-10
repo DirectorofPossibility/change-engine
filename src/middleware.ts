@@ -70,7 +70,7 @@ export async function middleware(request: NextRequest) {
 
   // Non-logged-in users hitting exchange pages → send to splash
   // Allow: /, /login, /signup, /reset-password, /goodthings, /api/*, /auth/*, static assets
-  const publicPaths = ['/', '/login', '/signup', '/reset-password', '/goodthings', '/account-locked', '/accessibility', '/privacy', '/terms', '/about']
+  const publicPaths = ['/', '/login', '/signup', '/reset-password', '/goodthings', '/account-locked', '/accessibility', '/privacy', '/terms', '/about', '/coming-soon']
   const isPublicPath = publicPaths.some(function (p) { return pathname === p })
   const isPublicPrefix = pathname.startsWith('/api/') || pathname.startsWith('/auth/') || pathname.startsWith('/_next/') || pathname.startsWith('/goodthings/')
   if (!user && !isPublicPath && !isPublicPrefix && !pathname.startsWith('/dashboard') && !pathname.startsWith('/me')) {

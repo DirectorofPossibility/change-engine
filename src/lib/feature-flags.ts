@@ -100,7 +100,7 @@ const ALWAYS_ENABLED_PREFIXES = [
   '/api/',
   '/auth/',
   '/_next/',
-  '/dashboard',
+  '/dashboard/',
   '/images/',
   '/geo/',
 ]
@@ -108,6 +108,7 @@ const ALWAYS_ENABLED_PREFIXES = [
 const ALWAYS_ENABLED_EXACT = [
   '/',
   '/account-locked',
+  '/dashboard',
 ]
 
 /**
@@ -117,7 +118,7 @@ const ALWAYS_ENABLED_EXACT = [
 export function getLaunchPhase(): LaunchPhase {
   const env = process.env.NEXT_PUBLIC_LAUNCH_PHASE as LaunchPhase | undefined
   if (env && env in PHASE_ROUTES) return env
-  return process.env.NODE_ENV === 'development' ? 'full' : 'full'
+  return process.env.NODE_ENV === 'development' ? 'full' : 'mvp'
 }
 
 /**
