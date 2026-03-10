@@ -189,10 +189,10 @@ export function ServicesClient({ services, translations = {}, categories, initia
           <p className="text-center text-brand-muted py-12">No services with location data found.</p>
         )
       ) : (
-        <div className="flex gap-6">
-          {/* ── Category Quick-Jump (desktop) ── */}
-          <nav className="hidden md:block w-48 flex-shrink-0">
-            <div className="sticky top-24 space-y-0.5">
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* ── Category Quick-Jump ── */}
+          <nav className="w-full md:w-48 flex-shrink-0">
+            <div className="md:sticky md:top-24 space-y-0.5 mb-6 md:mb-0">
               <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted mb-2">Categories</p>
               {categoryList.map(cat => (
                 <button
@@ -211,23 +211,6 @@ export function ServicesClient({ services, translations = {}, categories, initia
 
           {/* ── Phone Book Directory ── */}
           <div className="flex-1 min-w-0 space-y-3">
-            {/* Mobile category pills */}
-            <div className="flex md:hidden gap-2 overflow-x-auto pb-2 -mx-1 px-1">
-              {categoryList.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => scrollToCategory(cat.id)}
-                  className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors"
-                  style={{
-                    borderColor: cat.color + '40',
-                    color: activeCategory === cat.id ? '#fff' : cat.color,
-                    backgroundColor: activeCategory === cat.id ? cat.color : 'transparent',
-                  }}
-                >
-                  {cat.name} ({cat.count})
-                </button>
-              ))}
-            </div>
 
             {grouped.map(([catId, items]) => {
               const catInfo = catId === 'OTHER'
