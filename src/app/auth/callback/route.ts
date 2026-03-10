@@ -6,7 +6,12 @@ import type { NextRequest } from 'next/server'
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') || '/me'
+  let next = searchParams.get('next') || '/me'
+
+  // Prevent open redirect: only allow relative paths, block protocol-relative URLs
+  if (!next.startsWith('/') || next.startsWith('//')) {
+    next = '/me'
+  }
 
   if (code) {
     const cookieStore = await cookies()

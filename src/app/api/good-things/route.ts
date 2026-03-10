@@ -8,6 +8,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+// Add random offset within ~1.5 miles to protect privacy
+function jitterCoords(lat: number, lng: number): { lat: number; lng: number } {
+  const angle = Math.random() * 2 * Math.PI
+  const radius = Math.random() * 0.02 // ~1.4 miles max
+  return {
+    lat: lat + radius * Math.cos(angle),
+    lng: lng + radius * Math.sin(angle),
+  }
+}
+
 // ZIP → lat/lng: try Census geocoder, then fall back to Zippopotam.us
 async function geocodeZip(zip: string): Promise<{ lat: number; lng: number; city: string; state: string } | null> {
   // Try Census geocoder first
@@ -61,8 +71,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Valid 5-digit ZIP code required' }, { status: 400 })
     }
 
-    // Geocode the ZIP
+    // Geocode the ZIP, then jitter to protect privacy
     const geo = await geocodeZip(zip_code.trim())
+    const jittered = geo ? jitterCoords(geo.lat, geo.lng) : null
 
     const supabase = await createClient()
     const { data, error } = await (supabase as any)
@@ -74,8 +85,8 @@ export async function POST(request: NextRequest) {
         zip_code: zip_code.trim(),
         display_name: display_name?.trim() || null,
         email: email?.trim() || null,
-        latitude: geo?.lat || null,
-        longitude: geo?.lng || null,
+        latitude: jittered?.lat || null,
+        longitude: jittered?.lng || null,
         city: geo?.city || null,
         state: geo?.state || null,
       })
@@ -106,8 +117,14 @@ export async function GET() {
     )
     if (!res.ok) return NextResponse.json({ entries: [] })
 
-    const entries = await res.json()
-    return NextResponse.json({ entries })
+    const entries = (await res.json()) as any[]
+    // Jitter all coordinates on read to protect older entries too
+    const safeEntries = entries.map((e: any) => {
+      if (!e.latitude || !e.longitude) return e
+      const j = jitterCoords(e.latitude, e.longitude)
+      return { ...e, latitude: j.lat, longitude: j.lng }
+    })
+    return NextResponse.json({ entries: safeEntries })
   } catch {
     return NextResponse.json({ entries: [] })
   }
