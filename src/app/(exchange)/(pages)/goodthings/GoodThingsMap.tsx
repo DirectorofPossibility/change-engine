@@ -22,8 +22,9 @@ interface Props {
   focusEntry?: Entry | null
 }
 
-const MARKER_COLORS = ['#38a169', '#3182ce', '#805ad5']
+const MARKER_COLORS = ['#38a169', '#3182ce', '#805ad5', '#C75B2A', '#d69e2e', '#e53e3e', '#319795']
 
+// Popup uses small inline FOL icons for each "thing"
 function folSvg(color: string, size: number) {
   const r = 4, cx = 12, cy = 12
   const circles = [0, 60, 120, 180, 240, 300].map(function (deg) {
@@ -35,19 +36,96 @@ function folSvg(color: string, size: number) {
     circles + '</svg>'
 }
 
-function createMarkerIcon(isActive: boolean) {
+// Simple hash to get a consistent number from an entry ID
+function hashIndex(id: string, max: number): number {
+  let h = 0
+  for (let i = 0; i < id.length; i++) {
+    h = ((h << 5) - h + id.charCodeAt(i)) | 0
+  }
+  return Math.abs(h) % max
+}
+
+type FOLVariant = 'seed' | 'vesica' | 'tripod' | 'flower' | 'borromean' | 'metatron'
+const FOL_VARIANTS: FOLVariant[] = ['seed', 'vesica', 'tripod', 'flower', 'borromean', 'metatron']
+
+// Generate unique FOL SVG for each marker based on entry ID
+function folMarkerSvg(variant: FOLVariant, color: string, size: number, strokeW: number): string {
+  const cx = size / 2, cy = size / 2, r = size * 0.18
+  let shapes = ''
+
+  switch (variant) {
+    case 'seed':
+      // 7 circles — classic seed of life
+      shapes = [0, 60, 120, 180, 240, 300].map(function (deg) {
+        const rad = (deg * Math.PI) / 180
+        return '<circle cx="' + (cx + r * Math.cos(rad)) + '" cy="' + (cy + r * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>'
+      }).join('')
+      shapes += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (strokeW * 1.2) + '" fill="none"/>'
+      break
+    case 'vesica':
+      // 2 overlapping circles
+      shapes = '<circle cx="' + (cx - r * 0.5) + '" cy="' + cy + '" r="' + (r * 1.2) + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>' +
+        '<circle cx="' + (cx + r * 0.5) + '" cy="' + cy + '" r="' + (r * 1.2) + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>'
+      break
+    case 'tripod':
+      // 3 circles in triangle
+      shapes = [0, 120, 240].map(function (deg) {
+        const rad = ((deg - 90) * Math.PI) / 180
+        return '<circle cx="' + (cx + r * 0.8 * Math.cos(rad)) + '" cy="' + (cy + r * 0.8 * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>'
+      }).join('')
+      break
+    case 'flower':
+      // Full flower with outer ring
+      var outerR = r * 1.732
+      shapes = [30, 90, 150, 210, 270, 330].map(function (deg) {
+        const rad = (deg * Math.PI) / 180
+        return '<circle cx="' + (cx + outerR * Math.cos(rad)) + '" cy="' + (cy + outerR * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (strokeW * 0.7) + '" fill="none" opacity="0.5"/>'
+      }).join('')
+      shapes += [0, 60, 120, 180, 240, 300].map(function (deg) {
+        const rad = (deg * Math.PI) / 180
+        return '<circle cx="' + (cx + r * Math.cos(rad)) + '" cy="' + (cy + r * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>'
+      }).join('')
+      shapes += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (strokeW * 1.2) + '" fill="none"/>'
+      break
+    case 'borromean':
+      // 3 interlocking rings
+      shapes = '<circle cx="' + cx + '" cy="' + (cy - r * 0.5) + '" r="' + (r * 0.9) + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>' +
+        '<circle cx="' + (cx - r * 0.45) + '" cy="' + (cy + r * 0.35) + '" r="' + (r * 0.9) + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>' +
+        '<circle cx="' + (cx + r * 0.45) + '" cy="' + (cy + r * 0.35) + '" r="' + (r * 0.9) + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>'
+      break
+    case 'metatron':
+      // Seed + connecting lines
+      shapes = [0, 60, 120, 180, 240, 300].map(function (deg) {
+        const rad = (deg * Math.PI) / 180
+        return '<circle cx="' + (cx + r * Math.cos(rad)) + '" cy="' + (cy + r * Math.sin(rad)) + '" r="' + (r * 0.7) + '" stroke="' + color + '" stroke-width="' + (strokeW * 0.8) + '" fill="none"/>'
+      }).join('')
+      // Connecting lines between outer circles
+      for (let i = 0; i < 6; i++) {
+        const rad1 = (i * 60 * Math.PI) / 180
+        const rad2 = (((i + 1) % 6) * 60 * Math.PI) / 180
+        shapes += '<line x1="' + (cx + r * Math.cos(rad1)) + '" y1="' + (cy + r * Math.sin(rad1)) + '" x2="' + (cx + r * Math.cos(rad2)) + '" y2="' + (cy + r * Math.sin(rad2)) + '" stroke="' + color + '" stroke-width="' + (strokeW * 0.4) + '" opacity="0.5"/>'
+      }
+      shapes += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r * 0.7) + '" stroke="' + color + '" stroke-width="' + strokeW + '" fill="none"/>'
+      break
+  }
+
+  return shapes
+}
+
+function createMarkerIcon(isActive: boolean, entryId: string) {
   const size = isActive ? 42 : 24
-  const color = isActive ? '#C75B2A' : '#38a169'
+  const colorIdx = hashIndex(entryId, MARKER_COLORS.length)
+  const variantIdx = hashIndex(entryId + '_v', FOL_VARIANTS.length)
+  const color = isActive ? '#C75B2A' : MARKER_COLORS[colorIdx]
+  const variant = FOL_VARIANTS[variantIdx]
   const glow = isActive ? 'filter:drop-shadow(0 0 6px rgba(199,91,42,0.6));' : ''
-  const r = size * 0.18, cx = size / 2, cy = size / 2
-  const circles = [0, 60, 120, 180, 240, 300].map(function (deg) {
-    const rad = (deg * Math.PI) / 180
-    return '<circle cx="' + (cx + r * Math.cos(rad)) + '" cy="' + (cy + r * Math.sin(rad)) + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (isActive ? 1.8 : 1.2) + '" fill="none"/>'
-  }).join('')
+  const strokeW = isActive ? 1.8 : 1.2
+  const r = size * 0.18
+
+  const shapes = folMarkerSvg(variant, color, size, strokeW)
   const svg = '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" fill="none" style="' + glow + '">' +
-    '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r * 2.2) + '" stroke="' + color + '" stroke-width="0.8" fill="white" fill-opacity="0.7"/>' +
-    '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" stroke="' + color + '" stroke-width="' + (isActive ? 2 : 1.5) + '" fill="none"/>' +
-    circles + '</svg>'
+    '<circle cx="' + (size / 2) + '" cy="' + (size / 2) + '" r="' + (r * 2.2) + '" stroke="' + color + '" stroke-width="0.8" fill="white" fill-opacity="0.7"/>' +
+    shapes + '</svg>'
   return L.divIcon({
     html: svg,
     className: '',
@@ -121,7 +199,7 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
       const isActive = focusEntry?.id === entry.id
       const marker = L.marker(
         [entry.latitude!, entry.longitude!],
-        { icon: createMarkerIcon(isActive) }
+        { icon: createMarkerIcon(isActive, entry.id) }
       ).addTo(map)
 
       marker.bindPopup(buildPopupHtml(entry), { closeButton: false, maxWidth: 280 })
@@ -149,7 +227,7 @@ export function GoodThingsMap({ entries, focusEntry }: Props) {
 
     // Update marker icons — highlight focused, reset others
     markersRef.current.forEach(function (marker, id) {
-      marker.setIcon(createMarkerIcon(id === focusEntry.id))
+      marker.setIcon(createMarkerIcon(id === focusEntry.id, id))
       if (id === focusEntry.id) {
         marker.openPopup()
       }
