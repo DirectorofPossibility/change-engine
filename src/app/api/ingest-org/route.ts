@@ -348,9 +348,15 @@ Classify this page. Return JSON:
 
 // ── Entity insertion ─────────────────────────────────────────────────
 
-function makeEntityId(prefix: string, orgDomain: string, index: number): string {
-  const domainSlug = orgDomain.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20).toUpperCase()
-  return `${prefix}_${domainSlug}_${String(index).padStart(3, '0')}`
+/**
+ * Generate a deterministic entity ID from the source URL.
+ * Same URL always produces the same ID, so re-crawling an org
+ * upserts instead of duplicating.
+ */
+function makeEntityId(prefix: string, sourceUrl: string): string {
+  // Simple hash: take URL path, strip special chars, truncate
+  const path = sourceUrl.replace(/https?:\/\/[^/]+/, '').replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40).toUpperCase()
+  return `${prefix}_${path || 'ROOT'}`.replace(/_+/g, '_').replace(/_$/, '')
 }
 
 async function insertService(
@@ -531,17 +537,27 @@ export async function POST(req: NextRequest) {
   // Step 3: Discover internal pages
   const discoveredUrls = discoverPages(homepage.html, orgUrl)
 
-  // Step 4: Dedup against already-ingested URLs
+  // Step 4: Dedup against already-ingested URLs across ALL entity tables
   const toProcess: string[] = []
   const skipped: string[] = []
+
+  async function isDuplicate(url: string): Promise<boolean> {
+    const encoded = encodeURIComponent(url)
+    const checks = await Promise.all([
+      supaRest('GET', `services_211?website=eq.${encoded}&select=service_id&limit=1`).catch(() => []),
+      supaRest('GET', `events?registration_url=eq.${encoded}&select=event_id&limit=1`).catch(() => []),
+      supaRest('GET', `opportunities?registration_url=eq.${encoded}&select=opportunity_id&limit=1`).catch(() => []),
+      supaRest('GET', `content_inbox?source_url=eq.${encoded}&select=id&limit=1`).catch(() => []),
+    ])
+    return checks.some(r => r && r.length > 0)
+  }
+
   for (const url of discoveredUrls.slice(0, maxPages)) {
-    // Check services, events, opportunities for this URL
-    const existingService = await supaRest('GET', `services_211?website=eq.${encodeURIComponent(url)}&select=service_id&limit=1`).catch(() => [])
-    if (existingService && existingService.length > 0) {
+    if (await isDuplicate(url)) {
       skipped.push(url)
-      continue
+    } else {
+      toProcess.push(url)
     }
-    toProcess.push(url)
   }
 
   // Step 5: Process each page
@@ -554,8 +570,6 @@ export async function POST(req: NextRequest) {
     error?: string
     children?: number
   }> = []
-  let entityIndex = 1
-
   for (const pageUrl of toProcess) {
     try {
       const page = await fetchPage(pageUrl)
@@ -578,8 +592,7 @@ export async function POST(req: NextRequest) {
         classification.entity_type === 'opportunity' ? 'OPP' :
         classification.entity_type === 'campaign' ? 'CMP' :
         classification.entity_type === 'benefit' ? 'BEN' : 'CTN',
-        domain,
-        entityIndex++,
+        pageUrl,
       )
 
       let insertedId: string | null = null
@@ -623,12 +636,12 @@ export async function POST(req: NextRequest) {
       if (classification.children && classification.children.length > 0) {
         for (const child of classification.children) {
           if (child.entity_type === 'skip') continue
+          const childIdx = classification.children!.indexOf(child)
           const childId = makeEntityId(
             child.entity_type === 'service' ? 'SVC' :
             child.entity_type === 'event' ? 'EVT' :
             child.entity_type === 'opportunity' ? 'OPP' : 'CTN',
-            domain,
-            entityIndex++,
+            pageUrl + '/child_' + childIdx,
           )
           const childClassification = { ...classification, ...child, name: child.name, description_5th_grade: child.description_5th_grade }
 
