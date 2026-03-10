@@ -104,7 +104,8 @@ export async function middleware(request: NextRequest) {
       .eq('auth_id', user.id)
       .single()
 
-    if ((profile as any)?.account_status === 'locked') {
+    const profileData = profile as { account_status?: string; role?: string } | null
+    if (profileData?.account_status === 'locked') {
       const lockedUrl = request.nextUrl.clone()
       lockedUrl.pathname = '/account-locked'
       lockedUrl.search = ''
@@ -113,7 +114,7 @@ export async function middleware(request: NextRequest) {
 
     // Enforce role-based access for /dashboard routes
     if (pathname.startsWith('/dashboard')) {
-      const role = (profile as any)?.role || 'neighbor'
+      const role = profileData?.role || 'neighbor'
       if (role !== 'admin' && role !== 'partner' && role !== 'neighbor') {
         const meUrl = request.nextUrl.clone()
         meUrl.pathname = '/me'

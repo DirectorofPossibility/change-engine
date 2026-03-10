@@ -36,6 +36,10 @@ export const metadata: Metadata = {
     template: '%s | Community Exchange',
   },
   description: 'Your guide to services, civic engagement, and community resources in Houston, Texas.',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     siteName: 'Community Exchange',
     locale: 'en_US',
