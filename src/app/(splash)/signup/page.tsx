@@ -46,7 +46,7 @@ export default function SignupPage() {
   async function handleResendVerification() {
     setResending(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.resend({ type: 'signup', email })
+    const { error } = await supabase.auth.resend({ type: 'signup', email, options: { emailRedirectTo: window.location.origin + '/auth/callback?next=/exchange' } })
     if (error) {
       setError(friendlyError(error.message))
     } else {
@@ -87,6 +87,7 @@ export default function SignupPage() {
       password,
       options: {
         data: { display_name: displayName },
+        emailRedirectTo: window.location.origin + '/auth/callback?next=/exchange',
       },
     })
 

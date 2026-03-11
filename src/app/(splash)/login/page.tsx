@@ -8,10 +8,14 @@ import { createClient } from '@/lib/supabase/client'
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
+  const urlError = searchParams.get('error')
+  const initialError = urlError === 'confirmation' ? 'Email verification failed or link expired. Please try signing up again or resend the verification email.'
+    : urlError === 'auth' ? 'Authentication failed. Please try signing in again.'
+    : null
+  const [error, setError] = useState<string | null>(initialError)
+  const [loading, setLoading] = useState(false)
   // Prevent open redirect: only allow relative paths, block protocol-relative URLs
   let redirect = searchParams.get('redirect') || '/compass'
   if (!redirect.startsWith('/') || redirect.startsWith('//')) {
