@@ -545,7 +545,7 @@ export default function CircleKnowledgeGraph() {
           </div>
         </div>
         <div style={{ fontSize: 10, color: C.lt }}>
-          307 resources, 200 officials, 80 policies, 312 focus areas
+          307 resources, 200 officials, 80 policies, 164 focus areas
         </div>
       </div>
 

@@ -256,8 +256,8 @@ export default function TermsPage() {
             <p>Houston, Texas 77002, USA</p>
             <p>
               Email:{' '}
-              <a href="mailto:hello@changelab.net" className="text-brand-accent hover:underline">
-                hello@changelab.net
+              <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
+                hello@thechangelab.net
               </a>
             </p>
             <p>Phone: 713-416-2633</p>

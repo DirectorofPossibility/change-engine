@@ -51,8 +51,8 @@ export default function AccessibilityPage() {
           <h2 className="font-serif text-xl font-bold text-brand-text mb-2">Feedback</h2>
           <p className="leading-relaxed text-brand-text/80">
             If you experience any difficulty accessing content on the Community Exchange, or have suggestions for how we can improve accessibility, please reach out to us at{' '}
-            <a href="mailto:hello@thechangelab.org" className="text-brand-accent hover:underline">
-              hello@thechangelab.org
+            <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
+              hello@thechangelab.net
             </a>
             . We take all feedback seriously and will do our best to respond promptly.
           </p>

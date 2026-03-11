@@ -193,8 +193,8 @@ export default async function PartnerOrganizationPage() {
         <p className="text-xs text-brand-muted">
           Organization details are managed by The Change Lab team. If you need to update your
           organization information, please contact us at{' '}
-          <a href="mailto:hello@changeengine.us" className="text-brand-accent hover:underline">
-            hello@changeengine.us
+          <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
+            hello@thechangelab.net
           </a>.
         </p>
       </div>

@@ -161,7 +161,7 @@ export default async function AboutPage() {
 
         <div className="text-center mb-8">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">Why It Matters</p>
-          <h2 className="font-serif text-2xl font-bold text-brand-text">Theory of Change</h2>
+          <p className="font-serif text-2xl font-bold text-brand-text">Theory of Change</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -267,7 +267,7 @@ export default async function AboutPage() {
               <div>
                 <p className="font-serif font-bold text-brand-text mb-1">Built by The Change Lab</p>
                 <p className="text-sm text-brand-muted leading-relaxed">
-                  The Change Lab builds civic technology that helps communities organize, connect, and thrive. We are a Houston-based team using AI, open data, and community partnerships to make civic participation accessible to everyone.
+                  The Change Lab builds civic technology in Houston. We use AI and open data to make it easier for people to show up, find resources, and get involved.
                 </p>
               </div>
             </div>
@@ -283,8 +283,8 @@ export default async function AboutPage() {
                 <p className="font-serif font-bold text-brand-text mb-1">Partner With Us</p>
                 <p className="text-sm text-brand-muted leading-relaxed">
                   We work with community organizations, government agencies, and funders who believe in equitable access to civic information.{' '}
-                  <a href="mailto:hello@changeengine.us" className="text-brand-accent hover:underline font-medium">
-                    hello@changeengine.us
+                  <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline font-medium">
+                    hello@thechangelab.net
                   </a>
                 </p>
               </div>

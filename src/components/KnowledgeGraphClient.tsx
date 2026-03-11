@@ -5,7 +5,7 @@
  * click-to-inspect functionality. Each node carries approximately 35
  * dimensions across five groups: classification (14), actions (7), graph
  * edges (5), content rings (5), and metadata (4). The graph visualizes
- * 7 pathways, 4 centers, 5 SDOH domains, 12 SDGs, and 312 focus areas
+ * 7 pathways, 4 centers, 5 SDOH domains, 12 SDGs, and 164 focus areas
  * as interconnected nodes with no orphans or dead ends.
  *
  * The component is entirely client-side (`'use client'`) and self-contained,
@@ -20,7 +20,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 // ═══════════════════════════════════════════════════════════════
 // THE CHANGE ENGINE — CIVIC KNOWLEDGE MESH v5
 // ~35 dimensions per node · Seamless wayfinder mirror
-// 5 rings · 7 pathways · 4 centers · 312 focus areas
+// 5 rings · 7 pathways · 4 centers · 164 focus areas
 // Every node interconnects: no orphans, no dead ends.
 // ═══════════════════════════════════════════════════════════════
 
@@ -251,7 +251,7 @@ const DOMAINS: Record<string, { name: string; color: string; items: { icon: stri
   learning: { name: "Learning",  color: "#3182ce",  items: [{ icon: "🛤️", name: "Paths", count: 20 }, { icon: "📖", name: "Modules", count: 50 }, { icon: "❓", name: "Quizzes", count: 22 }, { icon: "🏅", name: "Badges", count: 30 }] },
   civic:    { name: "Civic",     color: "#d53f8c",  items: [{ icon: "🗳️", name: "Elections", count: 8 }, { icon: "☑️", name: "Ballot Items", count: 10 }, { icon: "📍", name: "Voting Locations", count: 30 }] },
   geo:      { name: "Geography", color: "#d69e2e",  items: [{ icon: "📮", name: "ZIP Codes", count: 238 }, { icon: "🏘️", name: "Neighborhoods", count: 50 }, { icon: "📊", name: "Census Tracts", count: 50 }, { icon: "🗺️", name: "Precincts", count: 40 }, { icon: "🏞️", name: "Counties", count: 18 }] },
-  taxonomy: { name: "Taxonomy",  color: "#319795",  items: [{ icon: "🎯", name: "Focus Areas", count: 312 }] },
+  taxonomy: { name: "Taxonomy",  color: "#319795",  items: [{ icon: "🎯", name: "Focus Areas", count: 164 }] },
 };
 
 // ─── Dimension Groups ─────────────────────────────────────────
@@ -294,7 +294,7 @@ const TOTAL_EDGES = DIMENSION_GROUPS.reduce((s, g) => s + g.dims.reduce((ss, d) 
 const STATS = {
   content: 195, services: 100, officials: 100, orgs: 100,
   policies: 30, situations: 25, paths: 20, translations: 170,
-  feeds: 10, zipCodes: 238, neighborhoods: 50, focusAreas: 312,
+  feeds: 10, zipCodes: 238, neighborhoods: 50, focusAreas: 164,
   elections: 8, badges: 30, resources: 307,
   totalEdges: TOTAL_EDGES, totalRecords: 2630,
   objectTypes: 24, tables: 67, bridging: 43,
@@ -1244,7 +1244,7 @@ export default function KnowledgeGraphClient() {
                 {[
                   { label: "Records", value: STATS.totalRecords.toLocaleString(), color: "#E8723A" },
                   { label: "Edges", value: STATS.totalEdges.toLocaleString(), color: "#6366f1" },
-                  { label: "Focus Areas", value: "312", color: "#319795" },
+                  { label: "Focus Areas", value: "164", color: "#319795" },
                   { label: "Organizations", value: String(STATS.orgs), color: "#dd6b20" },
                   { label: "Translations", value: String(STATS.translations), color: "#f59e0b" },
                   { label: "Pathways", value: "7", color: "#E8723A" },
@@ -1733,7 +1733,7 @@ export default function KnowledgeGraphClient() {
           <div style={{ padding: 18, background: "rgba(49,151,149,0.06)", borderRadius: 12, border: "1px solid rgba(49,151,149,0.15)" }}>
             <h3 style={{ margin: "0 0 10px", fontSize: 15, color: "#319795" }}>Rosetta Stone</h3>
             <div style={{ fontSize: 13, color: "#6b6157", lineHeight: 1.6, marginBottom: 12 }}>
-              312 focus areas × 5 systems = <strong style={{ color: "#319795" }}>1,560 crosswalks</strong>. Every focus area inherits SDG, SDOH, NTEE, and AIRS codes — making it the universal key that connects all classification systems.
+              164 focus areas × 5 systems = <strong style={{ color: "#319795" }}>820 crosswalks</strong>. Every focus area inherits SDG, SDOH, NTEE, and AIRS codes — making it the universal key that connects all classification systems.
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {CROSSWALKS.map(cw => (

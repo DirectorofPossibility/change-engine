@@ -130,10 +130,10 @@ export default function ManualPage() {
           <p className="text-brand-muted mt-3">
             Questions? Reach us at{' '}
             <a
-              href="mailto:hello@changeengine.us"
+              href="mailto:hello@thechangelab.net"
               className="text-brand-accent hover:underline font-medium"
             >
-              hello@changeengine.us
+              hello@thechangelab.net
             </a>
             .
           </p>

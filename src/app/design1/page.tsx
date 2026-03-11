@@ -402,7 +402,7 @@ export default function Design1Page() {
             {t('about.contact', language)}
           </h3>
           <a
-            href="mailto:hello@changeengine.us"
+            href="mailto:hello@thechangelab.net"
             style={{
               fontFamily: "'Space Mono', monospace",
               fontSize: 11,
@@ -424,7 +424,7 @@ export default function Design1Page() {
               e.currentTarget.style.color = '#D94F2B'
             }}
           >
-            hello@changeengine.us
+            hello@thechangelab.net
           </a>
         </div>
       </section>

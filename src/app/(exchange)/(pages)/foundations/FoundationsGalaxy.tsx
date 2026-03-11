@@ -110,7 +110,7 @@ function computeGalaxyPositions(
 
 /* ── Suggest an Edit button ── */
 function SuggestEditButton({ subject }: { subject: string }) {
-  const mailtoHref = `mailto:hello@changeengine.us?subject=${encodeURIComponent("Suggested Edit: " + subject)}&body=${encodeURIComponent("Hi Change Engine team,\n\nI'd like to suggest an update regarding: " + subject + "\n\n— What needs updating:\n\n— Correct information:\n\n— Source (if available):\n\nThank you!")}`
+  const mailtoHref = `mailto:hello@thechangelab.net?subject=${encodeURIComponent("Suggested Edit: " + subject)}&body=${encodeURIComponent("Hi Change Engine team,\n\nI'd like to suggest an update regarding: " + subject + "\n\n— What needs updating:\n\n— Correct information:\n\n— Source (if available):\n\nThank you!")}`
   return (
     <a href={mailtoHref} title="Suggest an edit" onClick={e => e.stopPropagation()} style={{
       display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 10,

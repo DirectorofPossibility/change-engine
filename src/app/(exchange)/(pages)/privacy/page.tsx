@@ -45,9 +45,10 @@ export default function PrivacyPage() {
           <p>
             The Change Lab is a nonprofit initiative operating under the fiscal sponsorship of{' '}
             <strong>Impact Hub Houston</strong>, located at 4201 Main St., Suite L055-C, Houston,
-            Texas 77002, USA. The Change Engine is our civic technology platform connecting Houston
-            residents with resources, services, and civic participation opportunities. The Community
-            Exchange is our community-driven space for sharing knowledge and resources.
+            Texas 77002, USA. Community Exchange is our civic discovery platform at changeengine.us,
+            connecting Houston residents with resources, services, and civic participation
+            opportunities. The Change Engine is the underlying technology infrastructure that
+            powers the platform.
           </p>
         </section>
 
@@ -131,8 +132,8 @@ export default function PrivacyPage() {
           </ul>
           <p>
             To exercise any of these rights, contact us at{' '}
-            <a href="mailto:hello@changelab.net" className="text-brand-accent hover:underline">
-              hello@changelab.net
+            <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
+              hello@thechangelab.net
             </a>.
           </p>
         </section>
@@ -193,8 +194,8 @@ export default function PrivacyPage() {
             <p>Houston, Texas 77002, USA</p>
             <p>
               Email:{' '}
-              <a href="mailto:hello@changelab.net" className="text-brand-accent hover:underline">
-                hello@changelab.net
+              <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
+                hello@thechangelab.net
               </a>
             </p>
           </address>

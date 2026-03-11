@@ -16,7 +16,7 @@ export default function AccountLockedPage() {
           contact our support team for assistance.
         </p>
         <Link
-          href="mailto:hello@changeengine.us"
+          href="mailto:hello@thechangelab.net"
           className="inline-block bg-brand-accent text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity text-sm"
         >
           Contact Support

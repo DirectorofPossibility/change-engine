@@ -20,7 +20,7 @@ export default function ContactPage() {
           <div className="bg-white rounded-xl border border-brand-border p-6">
             <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-4">The Change Lab</h2>
             <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-brand-muted" /><a href="mailto:hello@thechangelab.org" className="text-brand-accent hover:underline">hello@thechangelab.org</a></div>
+              <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-brand-muted" /><a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">hello@thechangelab.net</a></div>
               <div className="flex items-start gap-2"><MapPin className="w-4 h-4 text-brand-muted mt-0.5" /><span className="text-brand-text">Houston, Texas</span></div>
               <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href="https://www.changeengine.us" className="text-brand-accent hover:underline">www.changeengine.us</a></div>
             </div>

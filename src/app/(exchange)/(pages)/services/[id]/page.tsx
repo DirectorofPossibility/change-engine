@@ -109,6 +109,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[
             { label: 'Services', href: '/services' },
+            ...(org ? [{ label: org.org_name, href: '/organizations/' + org.org_id }] : []),
             { label: displayName }
           ]} />
 
