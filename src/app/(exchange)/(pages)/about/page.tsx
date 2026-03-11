@@ -18,7 +18,7 @@ const SECTIONS = [
     icon: BookOpen,
     title: 'Our Mission',
     color: '#3182ce',
-    body: 'The Change Engine organizes community life — making it easier to discover resources, connect with organizations, and participate in civic life. We believe every person has strengths to contribute and every neighborhood has assets to build on.',
+    body: 'Community Exchange organizes community life — making it easier to discover resources, connect with organizations, and participate in civic life. We believe every person has strengths to contribute and every neighborhood has assets to build on.',
   },
   {
     icon: Users,
@@ -30,7 +30,7 @@ const SECTIONS = [
     icon: Globe,
     title: 'Available in Three Languages',
     color: '#805ad5',
-    body: 'The Change Engine is available in English, Spanish, and Vietnamese — reflecting the three most-spoken languages in Greater Houston. Translations are generated using AI and reviewed for accuracy and cultural relevance.',
+    body: 'Community Exchange is available in English, Spanish, and Vietnamese — reflecting the three most-spoken languages in Greater Houston. Translations are generated using AI and reviewed for accuracy and cultural relevance.',
   },
   {
     icon: MapPin,
@@ -93,7 +93,7 @@ export default async function AboutPage() {
                 </span>
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted mb-8 max-w-lg">
-                Most people never show up — not because they don&apos;t care, but because nobody showed them the way in. The Change Engine maps every resource, every official, every opportunity in Houston and connects them into one accessible platform.
+                Most people never show up — not because they don&apos;t care, but because nobody showed them the way in. Community Exchange maps every resource, every official, every opportunity in Houston and connects them into one accessible platform.
               </p>
               {/* Stats */}
               <div className="flex items-center gap-8">
@@ -147,7 +147,7 @@ export default async function AboutPage() {
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: section.color + '15' }}>
                       <Icon size={20} style={{ color: section.color }} />
                     </div>
-                    <h2 className="font-serif font-bold text-brand-text text-lg">{section.title}</h2>
+                    <h3 className="font-serif font-bold text-brand-text text-lg">{section.title}</h3>
                   </div>
                   <p className="text-sm text-brand-muted leading-relaxed">{section.body}</p>
                 </div>
@@ -174,7 +174,7 @@ export default async function AboutPage() {
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: item.color + '15' }}>
                       <Icon size={20} style={{ color: item.color }} />
                     </div>
-                    <h2 className="font-serif font-bold text-brand-text text-base">{item.title}</h2>
+                    <h3 className="font-serif font-bold text-brand-text text-base">{item.title}</h3>
                   </div>
                   <p className="text-sm text-brand-muted leading-relaxed">{item.body}</p>
                 </div>
