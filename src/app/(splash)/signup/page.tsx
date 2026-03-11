@@ -15,13 +15,17 @@ function validatePassword(pw: string): string | null {
 }
 
 /** Map Supabase auth errors to user-friendly messages */
-function friendlyError(msg: string): string {
+function friendlyError(raw: unknown): string {
+  const msg = typeof raw === 'string' ? raw : (raw && typeof raw === 'object' ? JSON.stringify(raw) : String(raw || ''))
+  if (!msg || msg === '{}' || msg === 'undefined') return 'Something went wrong. Please try again in a moment.'
   if (msg.includes('already registered') || msg.includes('already been registered')) {
     return 'An account with this email already exists. Try signing in instead.'
   }
   if (msg.includes('valid email')) return 'Please enter a valid email address.'
   if (msg.includes('rate') || msg.includes('too many')) return 'Too many attempts. Please wait a minute and try again.'
   if (msg.includes('weak password') || msg.includes('should be at least')) return 'Password is too weak. Use at least 8 characters with a number and uppercase letter.'
+  if (msg.includes('sending') && msg.includes('email')) return 'We had trouble sending the confirmation email. Please try again.'
+  if (msg.includes('smtp') || msg.includes('SMTP') || msg.includes('dial tcp')) return 'Email service is temporarily unavailable. Please try again shortly.'
   return msg
 }
 
@@ -92,6 +96,7 @@ export default function SignupPage() {
     })
 
     if (authError) {
+      console.error('[signup] auth error:', authError)
       setError(friendlyError(authError.message))
       setLoading(false)
       return
@@ -105,13 +110,24 @@ export default function SignupPage() {
       return
     }
 
+    // No user returned at all — something unexpected
+    if (!authData.user) {
+      console.error('[signup] no user returned:', authData)
+      setError('Something went wrong creating your account. Please try again.')
+      setLoading(false)
+      return
+    }
+
     // Profile is auto-created by DB trigger; update with extra fields
-    if (authData.user) {
+    try {
       await supabase.from('user_profiles').update({
         zip_code: zipCode || null,
         preferred_language: language,
         gamification_enabled: true,
       }).eq('auth_id', authData.user.id)
+    } catch (profileErr) {
+      console.error('[signup] profile update error:', profileErr)
+      // Non-fatal — profile will be updated later
     }
 
     setSuccess(true)
