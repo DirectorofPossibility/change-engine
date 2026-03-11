@@ -4,12 +4,13 @@ import Link from 'next/link'
 import { FlowerOfLifeIcon } from './FlowerIcons'
 import { TipsToggle } from './TipsToggle'
 import { useTranslation } from '@/lib/use-translation'
+import { filterNavItems } from '@/lib/feature-flags'
 import Image from 'next/image'
 
 export function D2Footer() {
   const { t } = useTranslation()
 
-  const DISCOVER = [
+  const DISCOVER = filterNavItems([
     { label: t('d2footer.civic_compass'), href: '/compass' },
     { label: t('d2footer.topics'), href: '/pathways' },
     { label: t('d2footer.news'), href: '/news' },
@@ -17,23 +18,22 @@ export function D2Footer() {
     { label: t('d2footer.three_good_things'), href: '/goodthings' },
     { label: t('d2footer.polling_places'), href: '/polling-places' },
     { label: t('d2footer.tirz_zones'), href: '/tirz' },
-  ]
+  ])
 
-  const LEARN = [
+  const LEARN = filterNavItems([
     { label: t('d2footer.knowledge_graph'), href: '/knowledge-graph' },
     { label: t('d2footer.library'), href: '/library' },
     { label: t('d2footer.foundations'), href: '/foundations' },
-  ]
+  ])
 
-  const ACT = [
+  const ACT = filterNavItems([
     { label: t('d2footer.call_senators'), href: '/call-your-senators' },
     { label: t('d2footer.volunteer'), href: '/opportunities' },
     { label: t('d2footer.partner'), href: '/about' },
-  ]
+  ])
 
   const ABOUT = [
     { label: t('d2footer.about_change_lab'), href: '/about' },
-    { label: t('d2footer.our_approach'), href: '/pathways' },
     { label: t('d2footer.contact'), href: '/contact' },
     { label: t('d2footer.user_manual'), href: '/manual' },
     { label: t('d2footer.accessibility'), href: '/accessibility' },
