@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
@@ -23,7 +23,8 @@ import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
-import Image from 'next/image'
+import { ShareButtons } from '@/components/exchange/ShareButtons'
+import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 
 /** Strip scraped page chrome */
@@ -52,29 +53,41 @@ function resolveThemeSlug(themeId: string | null) {
 
 export const revalidate = 86400
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+async function resolveContent(supabase: any, idOrSlug: string) {
+  if (UUID_RE.test(idOrSlug)) {
+    const { data } = await supabase.from('content_published').select('*').eq('id', idOrSlug).eq('is_active', true).single()
+    return data
+  }
+  const { data } = await supabase.from('content_published').select('*').eq('slug', idOrSlug).eq('is_active', true).single()
+  return data
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const supabase = await createClient()
-  const { data } = await supabase.from('content_published').select('title_6th_grade, summary_6th_grade').eq('id', id).eq('is_active', true).single()
-  if (!data) return { title: 'Not Found' }
+  const item = await resolveContent(supabase, id)
+  if (!item) return { title: 'Not Found' }
   return {
-    title: data.title_6th_grade,
-    description: data.summary_6th_grade || 'Details on the Community Exchange.',
+    title: item.title_6th_grade,
+    description: item.summary_6th_grade || 'Details on the Community Exchange.',
   }
 }
 
 export default async function ContentDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+  const { id: idOrSlug } = await params
   const supabase = await createClient()
 
-  const { data: item } = await supabase
-    .from('content_published')
-    .select('*')
-    .eq('id', id)
-    .eq('is_active', true)
-    .single()
-
+  const item = await resolveContent(supabase, idOrSlug)
   if (!item) notFound()
+
+  // Redirect UUID URLs to slug for clean URLs
+  if (UUID_RE.test(idOrSlug) && item.slug) {
+    redirect('/content/' + item.slug)
+  }
+
+  const id = item.id
 
   // Language + translations
   const cookieStore = await cookies()
@@ -219,10 +232,21 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Meta row */}
               <div className="flex items-center gap-3 mb-2">
                 <ThemePill themeId={item.pathway_primary} size="sm" />
-                {(item.source_org_name || item.source_domain) && (
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">
-                    {item.source_org_name || item.source_domain}
+                {(item as any).content_type && (
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-accent/70 bg-brand-accent/5 px-2 py-0.5 rounded-full">
+                    {(item as any).content_type}
                   </span>
+                )}
+                {(item.source_org_name || item.source_domain) && (
+                  orgInfo ? (
+                    <Link href={'/organizations/' + orgInfo.org_id} className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light hover:text-brand-accent hover:underline">
+                      {item.source_org_name || item.source_domain}
+                    </Link>
+                  ) : (
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">
+                      {item.source_org_name || item.source_domain}
+                    </span>
+                  )
                 )}
                 {item.published_at && (
                   <>
@@ -257,18 +281,22 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
 
-              {/* Single source button */}
-              <div className="relative inline-block">
-                <a
-                  href={item.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
-                >
-                  <ExternalLink size={13} />
-                  Read at source
-                </a>
-                <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
+              {/* Source + Share row */}
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="relative inline-block">
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
+                  >
+                    <ExternalLink size={13} />
+                    Read at source
+                  </a>
+                  <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
+                </div>
+                <div className="w-px h-5 bg-brand-border" />
+                <ShareButtons title={title || undefined} compact />
               </div>
             </div>
 
@@ -276,7 +304,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {item.image_url && (
               <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80">
                 <div className="rounded-lg overflow-hidden border border-brand-border">
-                  <Image src={item.image_url} alt={title || ''} className="w-full h-56 object-cover"  width={800} height={224} />
+                  <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
                 </div>
               </div>
             )}
@@ -325,7 +353,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             })()}
 
             {/* Body */}
-            {bodyBlocks.length > 0 && (
+            {bodyBlocks.length > 0 ? (
               <div className="space-y-4">
                 {bodyBlocks.map(function (block, i) {
                   if (!block) return null
@@ -368,6 +396,21 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   }
                   return <p key={i} className="text-brand-text leading-relaxed">{block}</p>
                 })}
+              </div>
+            ) : (
+              <div className="rounded-lg border border-brand-border bg-brand-bg p-6 text-center">
+                <p className="text-sm text-brand-muted mb-3">
+                  Full article available at the original source. Use <strong>Break it down for me</strong> below for a quick overview.
+                </p>
+                <a
+                  href={item.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
+                >
+                  <ExternalLink size={13} />
+                  Visit {item.source_org_name || item.source_domain || 'source'}
+                </a>
               </div>
             )}
 

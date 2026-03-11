@@ -11,6 +11,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.wikipedia.org' },
       { protocol: 'https', hostname: '**.usaspending.gov' },
       { protocol: 'https', hostname: '**.legistar.com' },
+      { protocol: 'https', hostname: '**' },
     ],
   },
   async redirects() {

@@ -32,11 +32,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Content pages
   const { data: content } = await supabase
     .from('content_published')
-    .select('id, published_at')
+    .select('id, slug, published_at')
     .eq('is_active', true)
-  const contentPages = (content || []).map(function (c) {
+  const contentPages = (content || []).map(function (c: any) {
     return {
-      url: baseUrl + '/content/' + c.id,
+      url: baseUrl + '/content/' + (c.slug || c.id),
       lastModified: c.published_at ? new Date(c.published_at) : new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,

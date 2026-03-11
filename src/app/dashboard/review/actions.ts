@@ -106,8 +106,21 @@ async function approveItemCore(
 
   // Step 4: Insert into content_published
   const actions = classification.action_items || {}
+  const rawTitle = classification.title_6th_grade || inbox.title || 'Untitled'
+  const baseSlug = rawTitle.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')
+  // Check for duplicate slugs
+  const { data: existingSlugs } = await svc.from('content_published').select('slug').like('slug', baseSlug + '%')
+  const slugSet = new Set((existingSlugs || []).map((r: any) => r.slug))
+  let slug = baseSlug
+  if (slugSet.has(slug)) {
+    let n = 2
+    while (slugSet.has(baseSlug + '-' + n)) n++
+    slug = baseSlug + '-' + n
+  }
+
   const { data: published, error: pubErr } = await svc.from('content_published').insert({
     inbox_id: inboxId,
+    slug,
     source_url: inbox.source_url || '',
     source_domain: inbox.source_domain || '',
     resource_type: classification.resource_type_id || null,
@@ -201,6 +214,7 @@ async function approveItemCore(
   if (LIBRARY_TYPES.includes(contentType)) {
     const keyPoints = (classification as any).key_points || []
     await svc.from('kb_documents').insert({
+      file_path: (inbox as any).source_url || `content/${inbox.id}`,
       title: classification.title_6th_grade || inbox.title || 'Untitled',
       summary: classification.summary_6th_grade || inbox.description || '',
       key_points: keyPoints.length > 0 ? keyPoints : null,
@@ -212,7 +226,7 @@ async function approveItemCore(
       focus_area_ids_v2: classification.focus_area_ids || [],
       tags: classification.keywords || [],
       classification_v2: classification as any,
-    }).then(() => {})
+    } as any).then(() => {})
   }
 
   return { success: true }
