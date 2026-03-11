@@ -63,6 +63,15 @@ change-lab-api/                         # Local clone (repo name: change-engine)
 │   │   │   ├── enrich/                # Content enrichment
 │   │   │   ├── enrich-entity/         # Entity enrichment
 │   │   │   ├── ingest/                # Content ingestion
+│   │   │   │   ├── route.ts          # Thin dispatcher
+│   │   │   │   └── handlers/         # Modular pipeline stages
+│   │   │   │       ├── scraper.ts    # URL fetch, HTML strip, metadata
+│   │   │   │       ├── taxonomy.ts   # Taxonomy loading + prompt building
+│   │   │   │       ├── claude.ts     # Claude API + translation
+│   │   │   │       ├── multi-item-extraction.ts  # Event/article listing split
+│   │   │   │       ├── supabase-helpers.ts       # DB operations + junctions
+│   │   │   │       ├── ingest-url.ts             # Full URL pipeline
+│   │   │   │       └── ingest-pre-scraped.ts     # Pre-scraped pipeline
 │   │   │   └── translate/             # Translation
 │   │   ├── dashboard/                  # Admin dashboard (auth-protected)
 │   │   ├── globals.css
@@ -75,6 +84,7 @@ change-lab-api/                         # Local clone (repo name: change-engine)
 │   │   └── ui/                         # Generic UI (Modal, Badge, etc.)
 │   ├── lib/
 │   │   ├── api-auth.ts                 # API key authentication
+│   │   ├── api-response.ts             # Standardized API response helpers
 │   │   ├── constants.ts                # Themes, focus areas, languages, SDGs
 │   │   ├── contexts/                   # React contexts (Language, Neighborhood)
 │   │   ├── data/                       # Data fetching layer
@@ -109,7 +119,6 @@ change-lab-api/                         # Local clone (repo name: change-engine)
 ├── public/
 │   ├── geo/                           # GeoJSON files
 │   └── images/                        # Static images, SVGs
-├── knowledge-mesh/                    # DEPRECATED — standalone prototype, superseded by main app
 ├── vercel.json                        # Vercel config (crons, headers)
 ├── next.config.js                     # Next.js config
 ├── tailwind.config.ts                 # Tailwind config (brand colors, theme colors)
