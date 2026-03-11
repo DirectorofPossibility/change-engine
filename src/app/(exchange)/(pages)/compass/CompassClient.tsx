@@ -188,7 +188,7 @@ export function CompassClient({
                     Community Exchange
                   </p>
                   <h1 className="text-2xl sm:text-3xl font-serif font-bold leading-tight">
-                    The Compass
+                    Civic Compass
                   </h1>
                   <p className="text-sm text-brand-muted mt-2 max-w-xl leading-relaxed">
                     Enter your address to unlock a personalized view of every official, service, and resource in your community.

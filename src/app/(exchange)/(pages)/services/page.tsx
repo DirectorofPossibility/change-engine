@@ -65,7 +65,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
       />
 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Local Resources' }]} />
+        <Breadcrumb items={[{ label: 'Services' }]} />
 
         <div className="flex flex-col lg:flex-row gap-6 mt-4">
           <div className="flex-1 min-w-0">
@@ -74,6 +74,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
               translations={translations}
               categories={categoryMap}
               initialZip={urlZip}
+              hasLocations={withLocation > 0}
             />
           </div>
 

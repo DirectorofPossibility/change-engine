@@ -137,6 +137,10 @@ export default async function NewsPage({
   }
 
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+  const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000
+  function isPastEvent(item: Item) {
+    return item.content_type === 'event' && item.published_at && new Date(item.published_at).getTime() < thirtyDaysAgo
+  }
 
   return (
     <div className="bg-brand-bg min-h-screen">
@@ -243,6 +247,9 @@ export default async function NewsPage({
                         {hero.content_type}
                       </span>
                     )}
+                    {isPastEvent(hero) && (
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-muted/10 text-brand-muted">Past</span>
+                    )}
                   </div>
                   <h2 className="font-serif text-3xl sm:text-4xl font-bold text-brand-text leading-tight group-hover:text-brand-accent transition-colors">
                     {hero.title_6th_grade}
@@ -280,11 +287,16 @@ export default async function NewsPage({
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        {theme && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider block mb-1" style={{ color: theme.color }}>
-                            {theme.name}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-2 mb-1">
+                          {theme && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: theme.color }}>
+                              {theme.name}
+                            </span>
+                          )}
+                          {isPastEvent(item) && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-muted/10 text-brand-muted">Past</span>
+                          )}
+                        </div>
                         <h3 className="font-serif text-lg font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-3">
                           {item.title_6th_grade}
                         </h3>
@@ -325,11 +337,16 @@ export default async function NewsPage({
                                width={800} height={400} />
                             </div>
                             <div>
-                              {getTheme(section.items[0]) && (
-                                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: getTheme(section.items[0])!.color }}>
-                                  {getTheme(section.items[0])!.name}
-                                </span>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {getTheme(section.items[0]) && (
+                                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: getTheme(section.items[0])!.color }}>
+                                    {getTheme(section.items[0])!.name}
+                                  </span>
+                                )}
+                                {isPastEvent(section.items[0]) && (
+                                  <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-muted/10 text-brand-muted">Past</span>
+                                )}
+                              </div>
                               <h3 className="font-serif text-xl font-bold text-brand-text leading-snug mt-1 group-hover:text-brand-accent transition-colors">
                                 {section.items[0].title_6th_grade}
                               </h3>
@@ -377,6 +394,9 @@ export default async function NewsPage({
                                   )}
                                   {item.source_domain && <span>{item.source_domain}</span>}
                                   <span>{shortDate(item.published_at)}</span>
+                                  {isPastEvent(item) && (
+                                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-brand-muted/10">Past</span>
+                                  )}
                                 </div>
                               </div>
                               <ArrowRight size={14} className="text-brand-muted/30 group-hover:text-brand-accent flex-shrink-0 mt-1 transition-colors" />

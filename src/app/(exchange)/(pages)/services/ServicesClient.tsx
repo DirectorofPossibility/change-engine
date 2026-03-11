@@ -39,9 +39,10 @@ interface ServicesClientProps {
   translations?: TranslationMap
   categories: Record<string, CategoryInfo>
   initialZip?: string
+  hasLocations?: boolean
 }
 
-export function ServicesClient({ services, translations = {}, categories, initialZip }: ServicesClientProps) {
+export function ServicesClient({ services, translations = {}, categories, initialZip, hasLocations = false }: ServicesClientProps) {
   const { zip: savedZip } = useNeighborhood()
   const [search, setSearch] = useState('')
   const [zipFilter, setZipFilter] = useState(initialZip || '')
@@ -164,22 +165,24 @@ export function ServicesClient({ services, translations = {}, categories, initia
         <span className="text-sm text-brand-muted self-center whitespace-nowrap">
           {filtered.length} services
         </span>
-        <div className="flex gap-1 ml-auto bg-brand-bg rounded-lg p-1">
-          <button
-            onClick={() => setView('directory')}
-            className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'directory' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
-          >
-            <List size={16} className="inline mr-1" />
-            Directory
-          </button>
-          <button
-            onClick={() => setView('map')}
-            className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'map' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
-          >
-            <MapIcon size={16} className="inline mr-1" />
-            Map
-          </button>
-        </div>
+        {hasLocations && (
+          <div className="flex gap-1 ml-auto bg-brand-bg rounded-lg p-1">
+            <button
+              onClick={() => setView('directory')}
+              className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'directory' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
+            >
+              <List size={16} className="inline mr-1" />
+              Directory
+            </button>
+            <button
+              onClick={() => setView('map')}
+              className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'map' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
+            >
+              <MapIcon size={16} className="inline mr-1" />
+              Map
+            </button>
+          </div>
+        )}
       </div>
 
       {view === 'map' ? (
