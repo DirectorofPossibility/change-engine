@@ -25,77 +25,80 @@ import { MapPin, BookOpen, Users, Building2, Heart, Vote, Newspaper, Search, Arr
 
 // ── MVP Resource Cards ────────────────────────────────────────────
 
-const MVP_SECTIONS = [
-  {
-    title: 'Services & Resources',
-    description: 'Food banks, legal aid, shelters, health clinics — 84 services mapped and searchable.',
-    href: '/services',
-    icon: Heart,
-    color: '#C75B2A',
-    stat: '84',
-    statLabel: 'services',
-    image: '/images/editorial/health-worker.jpg',
-  },
-  {
-    title: 'Organizations',
-    description: '518 nonprofits, foundations, and community groups. Every one is a doorway.',
-    href: '/organizations',
-    icon: Building2,
-    color: '#38a169',
-    stat: '518',
-    statLabel: 'organizations',
-    image: '/images/editorial/community-meeting.jpg',
-  },
-  {
-    title: 'Elected Officials',
-    description: 'City council to Congress. Who represents you, how to reach them, what they\'re working on.',
-    href: '/officials',
-    icon: Shield,
-    color: '#805ad5',
-    stat: '44',
-    statLabel: 'officials',
-    image: '/images/editorial/civic-building.jpg',
-  },
-  {
-    title: 'Elections & Voting',
-    description: 'Upcoming elections, polling places, ballot items, candidates — your voice matters.',
-    href: '/elections',
-    icon: Vote,
-    color: '#e53e3e',
-    stat: '8',
-    statLabel: 'elections tracked',
-    image: '/images/editorial/polling-place.jpg',
-  },
-  {
-    title: 'News & Library',
-    description: '269 articles covering policy, community, health, education — all written for real people.',
-    href: '/news',
-    icon: Newspaper,
-    color: '#3182ce',
-    stat: '269',
-    statLabel: 'articles',
-    image: '/images/editorial/person-reading.jpg',
-  },
-  {
-    title: 'Opportunities',
-    description: 'Volunteer, intern, get involved. 30 ways to turn caring into action right now.',
-    href: '/opportunities',
-    icon: Users,
-    color: '#d69e2e',
-    stat: '30',
-    statLabel: 'opportunities',
-    image: '/images/editorial/volunteers.jpg',
-  },
-]
-
 interface EditorialHomeProps {
-  stats: { resources: number; officials: number; policies: number; focusAreas: number }
+  stats: { resources: number; officials: number; policies: number; focusAreas: number; services?: number; opportunities?: number; elections?: number }
   organizations: number
   latestContent: Array<Record<string, unknown>>
 }
 
+function getMvpSections(stats: EditorialHomeProps['stats'], organizations: number) {
+  return [
+    {
+      title: 'Services & Resources',
+      description: `Food banks, legal aid, shelters, health clinics — ${stats.services || 0} services mapped and searchable.`,
+      href: '/services',
+      icon: Heart,
+      color: '#C75B2A',
+      stat: String(stats.services || 0),
+      statLabel: 'services',
+      image: '/images/editorial/health-worker.jpg',
+    },
+    {
+      title: 'Organizations',
+      description: `${organizations} nonprofits, foundations, and community groups. Every one is a doorway.`,
+      href: '/organizations',
+      icon: Building2,
+      color: '#38a169',
+      stat: String(organizations),
+      statLabel: 'organizations',
+      image: '/images/editorial/community-meeting.jpg',
+    },
+    {
+      title: 'Elected Officials',
+      description: 'City council to Congress. Who represents you, how to reach them, what they\'re working on.',
+      href: '/officials',
+      icon: Shield,
+      color: '#805ad5',
+      stat: String(stats.officials),
+      statLabel: 'officials',
+      image: '/images/editorial/civic-building.jpg',
+    },
+    {
+      title: 'Elections & Voting',
+      description: 'Upcoming elections, polling places, ballot items, candidates — your voice matters.',
+      href: '/elections',
+      icon: Vote,
+      color: '#e53e3e',
+      stat: String(stats.elections || 8),
+      statLabel: 'elections tracked',
+      image: '/images/editorial/polling-place.jpg',
+    },
+    {
+      title: 'News & Library',
+      description: `${stats.resources} articles covering policy, community, health, education — all written for real people.`,
+      href: '/news',
+      icon: Newspaper,
+      color: '#3182ce',
+      stat: String(stats.resources),
+      statLabel: 'articles',
+      image: '/images/editorial/person-reading.jpg',
+    },
+    {
+      title: 'Opportunities',
+      description: `Volunteer, intern, get involved. ${stats.opportunities || 0} ways to turn caring into action right now.`,
+      href: '/opportunities',
+      icon: Users,
+      color: '#d69e2e',
+      stat: String(stats.opportunities || 0),
+      statLabel: 'opportunities',
+      image: '/images/editorial/volunteers.jpg',
+    },
+  ]
+}
+
 export function EditorialHome({ stats, organizations, latestContent }: EditorialHomeProps) {
   const totalResources = stats.resources + stats.officials + (stats.policies || 0) + organizations
+  const MVP_SECTIONS = getMvpSections(stats, organizations)
 
   return (
     <div className="relative">

@@ -39,6 +39,8 @@ export interface ExchangeStats {
   learningPaths: number
   organizations: number
   policies: number
+  opportunities: number
+  elections: number
 }
 
 /** Service row enriched with its parent organization's name and coordinates. */
