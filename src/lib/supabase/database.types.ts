@@ -604,6 +604,7 @@ export type Database = {
           fiscal_impact: string | null
           focus_area_ids: string | null
           for_argument: string | null
+          is_active: string | null
           is_featured: string | null
           item_id: string
           item_name: string
@@ -628,6 +629,7 @@ export type Database = {
           fiscal_impact?: string | null
           focus_area_ids?: string | null
           for_argument?: string | null
+          is_active?: string | null
           is_featured?: string | null
           item_id: string
           item_name: string
@@ -652,6 +654,7 @@ export type Database = {
           fiscal_impact?: string | null
           focus_area_ids?: string | null
           for_argument?: string | null
+          is_active?: string | null
           is_featured?: string | null
           item_id?: string
           item_name?: string
@@ -1383,9 +1386,12 @@ export type Database = {
           district: string | null
           election_id: string | null
           endorsements: string | null
+          fec_candidate_id: string | null
           fundraising_total: string | null
           general_date: string | null
+          has_raised_funds: boolean | null
           incumbent: string | null
+          incumbent_status: string | null
           is_active: string | null
           last_updated: string | null
           linkedin_url: string | null
@@ -1410,9 +1416,12 @@ export type Database = {
           district?: string | null
           election_id?: string | null
           endorsements?: string | null
+          fec_candidate_id?: string | null
           fundraising_total?: string | null
           general_date?: string | null
+          has_raised_funds?: boolean | null
           incumbent?: string | null
+          incumbent_status?: string | null
           is_active?: string | null
           last_updated?: string | null
           linkedin_url?: string | null
@@ -1437,9 +1446,12 @@ export type Database = {
           district?: string | null
           election_id?: string | null
           endorsements?: string | null
+          fec_candidate_id?: string | null
           fundraising_total?: string | null
           general_date?: string | null
+          has_raised_funds?: boolean | null
           incumbent?: string | null
+          incumbent_status?: string | null
           is_active?: string | null
           last_updated?: string | null
           linkedin_url?: string | null
@@ -2002,8 +2014,11 @@ export type Database = {
           extracted_text: string | null
           id: string
           image_url: string | null
+          last_error: string | null
+          last_retry_at: string | null
           org_id: string | null
           referral_url: string | null
+          retry_count: number | null
           scraped_at: string | null
           source_domain: string | null
           source_trust_level: string | null
@@ -2018,8 +2033,11 @@ export type Database = {
           extracted_text?: string | null
           id?: string
           image_url?: string | null
+          last_error?: string | null
+          last_retry_at?: string | null
           org_id?: string | null
           referral_url?: string | null
+          retry_count?: number | null
           scraped_at?: string | null
           source_domain?: string | null
           source_trust_level?: string | null
@@ -2034,8 +2052,11 @@ export type Database = {
           extracted_text?: string | null
           id?: string
           image_url?: string | null
+          last_error?: string | null
+          last_retry_at?: string | null
           org_id?: string | null
           referral_url?: string | null
+          retry_count?: number | null
           scraped_at?: string | null
           source_domain?: string | null
           source_trust_level?: string | null
@@ -2179,6 +2200,7 @@ export type Database = {
           resource_type: string | null
           sdg_ids: string[] | null
           sdoh_domain: string | null
+          slug: string | null
           source_domain: string | null
           source_org_name: string | null
           source_url: string
@@ -2227,6 +2249,7 @@ export type Database = {
           resource_type?: string | null
           sdg_ids?: string[] | null
           sdoh_domain?: string | null
+          slug?: string | null
           source_domain?: string | null
           source_org_name?: string | null
           source_url: string
@@ -2275,6 +2298,7 @@ export type Database = {
           resource_type?: string | null
           sdg_ids?: string[] | null
           sdoh_domain?: string | null
+          slug?: string | null
           source_domain?: string | null
           source_org_name?: string | null
           source_url?: string
@@ -2799,6 +2823,77 @@ export type Database = {
         }
         Relationships: []
       }
+      election_reminder_log: {
+        Row: {
+          election_id: string | null
+          email_subject: string | null
+          id: string
+          reminder_id: string | null
+          reminder_type: string
+          scheduled_date: string
+          sent_at: string | null
+        }
+        Insert: {
+          election_id?: string | null
+          email_subject?: string | null
+          id?: string
+          reminder_id?: string | null
+          reminder_type: string
+          scheduled_date: string
+          sent_at?: string | null
+        }
+        Update: {
+          election_id?: string | null
+          email_subject?: string | null
+          id?: string
+          reminder_id?: string | null
+          reminder_type?: string
+          scheduled_date?: string
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "election_reminder_log_reminder_id_fkey"
+            columns: ["reminder_id"]
+            isOneToOne: false
+            referencedRelation: "election_reminders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      election_reminders: {
+        Row: {
+          auth_id: string | null
+          created_at: string | null
+          email: string
+          id: string
+          is_active: boolean | null
+          reminder_types: string[] | null
+          unsubscribe_token: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          auth_id?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          is_active?: boolean | null
+          reminder_types?: string[] | null
+          unsubscribe_token?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          auth_id?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          reminder_types?: string[] | null
+          unsubscribe_token?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
       elections: {
         Row: {
           ballot_items: string | null
@@ -2811,9 +2906,13 @@ export type Database = {
           election_id: string
           election_name: string
           election_type: string | null
+          find_polling_url: string | null
           is_active: string | null
           jurisdiction: string | null
           last_updated: string | null
+          polls_close: string | null
+          polls_open: string | null
+          register_url: string | null
           registration_deadline: string | null
           results_certified: string | null
           turnout_pct: number | null
@@ -2829,9 +2928,13 @@ export type Database = {
           election_id: string
           election_name: string
           election_type?: string | null
+          find_polling_url?: string | null
           is_active?: string | null
           jurisdiction?: string | null
           last_updated?: string | null
+          polls_close?: string | null
+          polls_open?: string | null
+          register_url?: string | null
           registration_deadline?: string | null
           results_certified?: string | null
           turnout_pct?: number | null
@@ -2847,9 +2950,13 @@ export type Database = {
           election_id?: string
           election_name?: string
           election_type?: string | null
+          find_polling_url?: string | null
           is_active?: string | null
           jurisdiction?: string | null
           last_updated?: string | null
+          polls_close?: string | null
+          polls_open?: string | null
+          register_url?: string | null
           registration_deadline?: string | null
           results_certified?: string | null
           turnout_pct?: number | null
@@ -5503,6 +5610,8 @@ export type Database = {
           city: string | null
           classification_v2: Json | null
           county_id: string | null
+          crawl_frequency_days: number | null
+          crawl_status: string | null
           data_feeds: Json | null
           data_source: string | null
           description_5th_grade: string | null
@@ -5510,6 +5619,7 @@ export type Database = {
           ein: string | null
           email: string | null
           engagement_level: string | null
+          entities_found: number | null
           focus_area_ids: string | null
           fts: unknown
           google_play_url: string | null
@@ -5517,6 +5627,7 @@ export type Database = {
           hours_of_operation: Json | null
           irs_subsection: string | null
           is_verified: string | null
+          last_crawled_at: string | null
           last_updated: string | null
           latitude: number | null
           logo_url: string | null
@@ -5527,6 +5638,7 @@ export type Database = {
           org_id: string
           org_name: string
           org_type: string | null
+          pages_found: number | null
           partner_count: number | null
           people_served: string | null
           phone: string | null
@@ -5549,6 +5661,8 @@ export type Database = {
           city?: string | null
           classification_v2?: Json | null
           county_id?: string | null
+          crawl_frequency_days?: number | null
+          crawl_status?: string | null
           data_feeds?: Json | null
           data_source?: string | null
           description_5th_grade?: string | null
@@ -5556,6 +5670,7 @@ export type Database = {
           ein?: string | null
           email?: string | null
           engagement_level?: string | null
+          entities_found?: number | null
           focus_area_ids?: string | null
           fts?: unknown
           google_play_url?: string | null
@@ -5563,6 +5678,7 @@ export type Database = {
           hours_of_operation?: Json | null
           irs_subsection?: string | null
           is_verified?: string | null
+          last_crawled_at?: string | null
           last_updated?: string | null
           latitude?: number | null
           logo_url?: string | null
@@ -5573,6 +5689,7 @@ export type Database = {
           org_id: string
           org_name: string
           org_type?: string | null
+          pages_found?: number | null
           partner_count?: number | null
           people_served?: string | null
           phone?: string | null
@@ -5595,6 +5712,8 @@ export type Database = {
           city?: string | null
           classification_v2?: Json | null
           county_id?: string | null
+          crawl_frequency_days?: number | null
+          crawl_status?: string | null
           data_feeds?: Json | null
           data_source?: string | null
           description_5th_grade?: string | null
@@ -5602,6 +5721,7 @@ export type Database = {
           ein?: string | null
           email?: string | null
           engagement_level?: string | null
+          entities_found?: number | null
           focus_area_ids?: string | null
           fts?: unknown
           google_play_url?: string | null
@@ -5609,6 +5729,7 @@ export type Database = {
           hours_of_operation?: Json | null
           irs_subsection?: string | null
           is_verified?: string | null
+          last_crawled_at?: string | null
           last_updated?: string | null
           latitude?: number | null
           logo_url?: string | null
@@ -5619,6 +5740,7 @@ export type Database = {
           org_id?: string
           org_name?: string
           org_type?: string | null
+          pages_found?: number | null
           partner_count?: number | null
           people_served?: string | null
           phone?: string | null
@@ -8274,3 +8396,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

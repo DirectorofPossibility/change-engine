@@ -167,6 +167,31 @@ export async function getRandomQuote(pathwayId?: string) {
   return quotes[Math.floor(Math.random() * quotes.length)]
 }
 
+// ── Promotions ──────────────────────────────────────────────────────────
+
+export async function getActivePromotions(pathwayId?: string, limit = 5) {
+  const supabase = await createClient()
+  const now = new Date().toISOString()
+  let query = (supabase as any)
+    .from('promotions')
+    .select('promo_id, title, subtitle, description, promo_type, image_url, cta_text, cta_href, color, start_date, end_date, display_order')
+    .eq('is_active', true)
+    .order('display_order', { ascending: true })
+    .limit(limit)
+
+  // Only include promotions within their active date window
+  query = query.or(`start_date.is.null,start_date.lte.${now}`)
+  query = query.or(`end_date.is.null,end_date.gte.${now}`)
+
+  if (pathwayId) {
+    // If pathwayId provided, include promotions for that pathway or general (no pathway)
+    query = query.or(`pathway_id.eq.${pathwayId},pathway_id.is.null`)
+  }
+
+  const { data } = await query
+  return data || []
+}
+
 // ── Pathways Hub ────────────────────────────────────────────────────────
 
 export interface PathwayHubItem {

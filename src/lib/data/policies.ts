@@ -21,16 +21,6 @@ export async function getRelatedPolicies(focusAreaIds: string[]) {
 
 /** Fetch services sharing any of the given focus areas via junction table. */
 
-/** Get official IDs for a policy from the junction table. */
-export async function getPolicyOfficialIds(policyId: string): Promise<string[]> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('policy_officials')
-    .select('official_id')
-    .eq('policy_id', policyId)
-  return (data ?? []).map(j => j.official_id)
-}
-
 /** Get life situation IDs linked to content from the junction table. */
 
 /** Get published policies affecting a ZIP code's districts. */

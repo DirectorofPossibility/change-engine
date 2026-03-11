@@ -329,17 +329,4 @@ export async function getTirzZone(tirzId: string): Promise<TirzZone | null> {
   return (data as unknown as TirzZone) ?? null
 }
 
-/** Find TIRZ zone by site number (used for GeoJSON → DB lookup). */
-
-/** Find TIRZ zone by site number (used for GeoJSON → DB lookup). */
-export async function getTirzZoneBySiteNumber(siteNo: number): Promise<TirzZone | null> {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('tirz_zones')
-    .select('*')
-    .eq('site_number', siteNo)
-    .single()
-  return (data as unknown as TirzZone) ?? null
-}
-
 /** Get officials whose council districts overlap a TIRZ zone. */
