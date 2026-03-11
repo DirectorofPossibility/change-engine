@@ -51,17 +51,13 @@ export function TickerTape({ election }: TickerTapeProps) {
           href={electionItem.href}
           className="flex-1 overflow-hidden hover:bg-brand-border/30 transition-colors"
         >
-          <div className="announcement-scroll flex items-center gap-8 whitespace-nowrap py-2.5 px-4">
-            {[0, 1].map(function (copy) {
-              return (
-                <span key={copy} className="inline-flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent">
-                    {electionItem.text}
-                  </span>
-                </span>
-              )
-            })}
+          <div className="flex items-center whitespace-nowrap py-2.5 px-4">
+            <span className="inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
+              <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent">
+                {electionItem.text}
+              </span>
+            </span>
           </div>
         </Link>
       </div>

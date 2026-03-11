@@ -160,9 +160,8 @@ export function D2Footer() {
               <Link href="/privacy" className="hover:text-brand-accent transition-colors">{t('d2footer.privacy')}</Link>
               <Link href="/terms" className="hover:text-brand-accent transition-colors">{t('d2footer.terms')}</Link>
               <Link href="/accessibility" className="hover:text-brand-accent transition-colors">{t('d2footer.accessibility')}</Link>
-              <span className="text-brand-border">|</span>
               <TipsToggle />
-              <span className="text-brand-border">|</span>
+              <span className="text-brand-border">&middot;</span>
               <span>English &middot; Espa&ntilde;ol &middot; Ti&#7871;ng Vi&#7879;t</span>
             </div>
           </div>

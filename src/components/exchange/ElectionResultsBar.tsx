@@ -68,7 +68,7 @@ export function ElectionResultsBar({ office, district, candidates }: ElectionRes
                     </span>
                   )}
                 </div>
-                <span className="text-sm font-semibold text-brand-text">{pct}%</span>
+                <span className="text-sm font-semibold text-brand-text">{parseFloat(pct.toFixed(1))}%</span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2.5">
                 <div

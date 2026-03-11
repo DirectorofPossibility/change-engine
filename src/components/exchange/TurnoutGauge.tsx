@@ -20,7 +20,7 @@ export function TurnoutGauge({ turnoutPct, electionName }: TurnoutGaugeProps) {
       )}
       <div className="flex items-end justify-between mb-2">
         <h4 className="font-semibold text-brand-text text-sm">Voter Turnout</h4>
-        <span className="text-2xl font-bold text-brand-accent">{turnoutPct}%</span>
+        <span className="text-2xl font-bold text-brand-accent">{parseFloat(turnoutPct.toFixed(1))}%</span>
       </div>
       <div className="w-full bg-gray-100 rounded-full h-3 mb-2">
         <div

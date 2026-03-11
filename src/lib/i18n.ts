@@ -112,6 +112,7 @@ const en: Record<string, string> = {
 
   // Opportunities page
   'opportunities.title': 'Opportunities',
+  'opportunities.subtitle': 'Find ways to get involved in your community',
 
   // Events page
   'events.title': 'Events',
@@ -1136,6 +1137,7 @@ const es: Record<string, string> = {
 
   // Opportunities page
   'opportunities.title': 'Oportunidades',
+  'opportunities.subtitle': 'Encuentra formas de participar en tu comunidad',
 
   // Events page
   'events.title': 'Eventos',
@@ -2160,6 +2162,7 @@ const vi: Record<string, string> = {
 
   // Opportunities page
   'opportunities.title': 'Cơ Hội',
+  'opportunities.subtitle': 'Tìm cách tham gia vào cộng đồng của bạn',
 
   // Events page
   'events.title': 'Sự Kiện',

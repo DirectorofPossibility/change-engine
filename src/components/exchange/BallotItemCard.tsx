@@ -40,8 +40,8 @@ export function BallotItemCard({
       {voteForPct != null && (
         <div className="mb-3">
           <div className="flex justify-between text-xs text-brand-muted mb-1">
-            <span>For: {voteForPct}%</span>
-            <span>Against: {100 - voteForPct}%</span>
+            <span>For: {parseFloat(voteForPct.toFixed(1))}%</span>
+            <span>Against: {parseFloat((100 - voteForPct).toFixed(1))}%</span>
           </div>
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div className="h-full bg-green-500 rounded-full" style={{ width: voteForPct + '%' }} />
