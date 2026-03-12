@@ -1,9 +1,26 @@
 'use client'
 
+/**
+ * @fileoverview Login page — culture guide editorial aesthetic.
+ *
+ * Parchment background, Georgia serif, Courier New mono,
+ * seed-of-life watermark, zero border-radius.
+ */
+
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -16,7 +33,6 @@ export default function LoginPage() {
     : null
   const [error, setError] = useState<string | null>(initialError)
   const [loading, setLoading] = useState(false)
-  // Prevent open redirect: only allow relative paths, block protocol-relative URLs
   let redirect = searchParams.get('redirect') || '/compass'
   if (!redirect.startsWith('/') || redirect.startsWith('//')) {
     redirect = '/compass'
@@ -45,7 +61,6 @@ export default function LoginPage() {
       return
     }
 
-    // If no explicit redirect was set, check role and send admin/partner/neighbor to dashboard
     if (redirect === '/compass') {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -67,58 +82,137 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16">
-      <h1 className="text-2xl font-bold text-brand-text mb-2">Good to have you back.</h1>
-      <p className="text-brand-muted mb-8">Sign in to pick up where you left off.</p>
+    <div className="min-h-screen relative" style={{ background: PARCHMENT }}>
+      {/* Sacred geometry watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+        <Image
+          src="/images/fol/seed-of-life.svg"
+          alt=""
+          width={500}
+          height={500}
+          className="opacity-[0.04]"
+        />
+      </div>
 
-      {error && (
-        <div role="alert" className="bg-[#FDF2F2] border border-[#C53030]/20 text-[#C53030] text-sm rounded-lg p-3 mb-4">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-brand-text mb-1">Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={function (e) { setEmail(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-            placeholder="you@example.com"
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-brand-text mb-1">Password</label>
-          <input
-            id="password"
-            type="password"
-            required
-            value={password}
-            onChange={function (e) { setPassword(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-            placeholder="Your password"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2.5 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {loading ? 'Signing in...' : 'Sign In'}
-        </button>
-      </form>
-
-      <div className="mt-6 text-center space-y-2">
-        <Link href="/reset-password" className="block text-sm text-brand-accent hover:underline">
-          Forgot your password? No stress — we&apos;ll sort it.
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
+        {/* Header */}
+        <Link href="/" className="mb-12 hover:opacity-80 transition-opacity">
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
         </Link>
-        <p className="text-sm text-brand-muted">
-          Don&apos;t have an account? You don&apos;t need one to look around. But if you want to save things and get updates —{' '}
-          <Link href="/signup" className="text-brand-accent hover:underline">it&apos;s free</Link>.
-        </p>
+
+        <div className="w-full max-w-[400px]">
+          {/* Title */}
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, color: INK, lineHeight: 1.15, marginBottom: 8 }}>
+            Good to have you back.
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED, marginBottom: 32 }}>
+            Sign in to pick up where you left off.
+          </p>
+
+          {/* Error */}
+          {error && (
+            <div
+              role="alert"
+              className="mb-5 p-3"
+              style={{ background: '#FDF2F2', border: '1px solid rgba(197,48,48,0.2)', fontFamily: SERIF, fontSize: 14, color: '#C53030' }}
+            >
+              {error}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label
+                htmlFor="email"
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={function (e) { setEmail(e.target.value) }}
+                className="w-full px-4 py-3 focus:outline-none"
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 15,
+                  color: INK,
+                  background: '#ffffff',
+                  border: `1px solid ${RULE_COLOR}`,
+                }}
+                placeholder="you@example.com"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={function (e) { setPassword(e.target.value) }}
+                className="w-full px-4 py-3 focus:outline-none"
+                style={{
+                  fontFamily: SERIF,
+                  fontSize: 15,
+                  color: INK,
+                  background: '#ffffff',
+                  border: `1px solid ${RULE_COLOR}`,
+                }}
+                placeholder="Your password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+              style={{ fontFamily: MONO, fontSize: 13, letterSpacing: '0.04em', background: CLAY }}
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+
+          {/* Rule */}
+          <div className="my-8" style={{ height: 1, background: RULE_COLOR }} />
+
+          {/* Links */}
+          <div className="text-center space-y-3">
+            <Link
+              href="/reset-password"
+              className="block hover:underline"
+              style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+            >
+              Forgot your password? No stress.
+            </Link>
+            <p style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+              No account? You don&apos;t need one to look around. But if you want to save things and get updates —{' '}
+              <Link href="/signup" className="hover:underline" style={{ color: CLAY }}>
+                join free
+              </Link>.
+            </p>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-16">
+          <Link
+            href="/exchange"
+            className="hover:underline"
+            style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}
+          >
+            &larr; Back to The Community Exchange
+          </Link>
+        </div>
       </div>
     </div>
   )

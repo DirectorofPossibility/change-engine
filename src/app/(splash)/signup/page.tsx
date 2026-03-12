@@ -1,20 +1,33 @@
 'use client'
 
+/**
+ * @fileoverview Signup page — culture guide editorial aesthetic.
+ *
+ * Parchment background, Georgia serif, Courier New mono,
+ * flower-of-life watermark, zero border-radius.
+ */
+
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
-import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
-import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 
-/** Validate password complexity: 8+ chars, 1 uppercase, 1 number */
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 function validatePassword(pw: string): string | null {
   if (pw.length < 8) return 'Password must be at least 8 characters.'
-  if (!/[A-Z]/.test(pw)) return 'Password must include at least one uppercase letter.'
-  if (!/[0-9]/.test(pw)) return 'Password must include at least one number.'
+  if (!/[A-Z]/.test(pw)) return 'Include at least one uppercase letter.'
+  if (!/[0-9]/.test(pw)) return 'Include at least one number.'
   return null
 }
 
-/** Map Supabase auth errors to user-friendly messages */
 function friendlyError(raw: unknown): string {
   const msg = typeof raw === 'string' ? raw : (raw && typeof raw === 'object' ? JSON.stringify(raw) : String(raw || ''))
   if (!msg || msg === '{}' || msg === 'undefined') return 'Something went wrong. Please try again in a moment.'
@@ -66,14 +79,12 @@ export default function SignupPage() {
       return
     }
 
-    // Client-side password validation
     const pwError = validatePassword(password)
     if (pwError) {
       setError(pwError)
       return
     }
 
-    // Rate limit: 10 second cooldown between attempts
     const now = Date.now()
     if (now - lastSubmit < 10000) {
       setError('Please wait a moment before trying again.')
@@ -102,15 +113,12 @@ export default function SignupPage() {
       return
     }
 
-    // Supabase returns a user with a fake session when email already exists (security measure).
-    // Detect this: if identities array is empty, the email is taken.
     if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
       setError('An account with this email already exists. Try signing in instead.')
       setLoading(false)
       return
     }
 
-    // No user returned at all — something unexpected
     if (!authData.user) {
       console.error('[signup] no user returned:', authData)
       setError('Something went wrong creating your account. Please try again.')
@@ -118,7 +126,6 @@ export default function SignupPage() {
       return
     }
 
-    // Profile is auto-created by DB trigger; update with extra fields
     try {
       await supabase.from('user_profiles').update({
         zip_code: zipCode || null,
@@ -127,206 +134,252 @@ export default function SignupPage() {
       }).eq('auth_id', authData.user.id)
     } catch (profileErr) {
       console.error('[signup] profile update error:', profileErr)
-      // Non-fatal — profile will be updated later
     }
 
     setSuccess(true)
     setLoading(false)
   }
 
+  // ── Success state ──
+
   if (success) {
     return (
-      <div className="max-w-md mx-auto px-4 py-16 text-center">
-        <FlowerOfLifeIcon size={48} className="mx-auto mb-4" />
-        <h1 className="text-2xl font-serif font-bold text-brand-text mb-4">Check your email</h1>
-        <p className="text-brand-muted mb-6">
-          We sent a verification link to <strong>{email}</strong>. Click the link to activate your account and start exploring your community.
-        </p>
-        <p className="text-brand-muted text-xs mb-4">
-          Check your spam folder if you don&apos;t see it in a few minutes.
-        </p>
-        {resent ? (
-          <p className="text-sm text-green-600 mb-4">Verification email resent!</p>
-        ) : (
-          <button
-            onClick={handleResendVerification}
-            disabled={resending}
-            className="text-sm text-brand-accent hover:underline disabled:opacity-50 mb-4 block mx-auto"
-          >
-            {resending ? 'Resending...' : 'Didn\u2019t get it? Resend verification email'}
-          </button>
-        )}
-        {error && (
-          <p className="text-sm text-red-600 mb-4">{error}</p>
-        )}
-        <Link href="/login" className="text-brand-accent hover:underline text-sm">
-          Back to sign in
-        </Link>
+      <div className="min-h-screen relative flex items-center justify-center px-6" style={{ background: PARCHMENT }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={400} height={400} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 w-full max-w-[440px] text-center">
+          <Image src="/images/fol/flower-full.svg" alt="" width={60} height={60} className="mx-auto mb-6 opacity-30" />
+          <h1 style={{ fontFamily: SERIF, fontSize: 28, color: INK, marginBottom: 12 }}>
+            Check your email.
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED, lineHeight: 1.7, marginBottom: 24 }}>
+            We sent a verification link to <strong style={{ color: INK }}>{email}</strong>.
+            Click the link to activate your account and start exploring.
+          </p>
+          <p style={{ fontFamily: MONO, fontSize: 11, color: MUTED, marginBottom: 20 }}>
+            Check spam if you don&apos;t see it in a few minutes.
+          </p>
+          {resent ? (
+            <p style={{ fontFamily: MONO, fontSize: 12, color: '#16a34a', marginBottom: 16 }}>Verification email resent.</p>
+          ) : (
+            <button
+              onClick={handleResendVerification}
+              disabled={resending}
+              className="hover:underline disabled:opacity-50 mb-4 block mx-auto"
+              style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+            >
+              {resending ? 'Resending...' : 'Didn\u2019t get it? Resend.'}
+            </button>
+          )}
+          {error && (
+            <p style={{ fontFamily: SERIF, fontSize: 13, color: '#C53030', marginBottom: 16 }}>{error}</p>
+          )}
+          <Link href="/login" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}>
+            Back to sign in
+          </Link>
+        </div>
       </div>
     )
   }
 
+  // ── Main form ──
+
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-12">
-      <div className="w-full max-w-lg mx-auto px-4">
+    <div className="min-h-screen relative" style={{ background: PARCHMENT }}>
+      {/* Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+        <Image src="/images/fol/flower-full.svg" alt="" width={600} height={600} className="opacity-[0.03]" />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center py-12 px-6">
         {/* Header */}
-        <div className="text-center mb-8 relative">
-          <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-[0.04] pointer-events-none">
-            <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
-          </div>
-          <FlowerOfLifeIcon size={40} className="mx-auto mb-3" />
-          <h1 className="text-2xl font-serif font-bold text-brand-text mb-1">Join the Change Engine</h1>
-          <p className="text-brand-muted text-sm">Connect with resources, services, and civic opportunities in Houston.</p>
-        </div>
+        <Link href="/" className="mb-10 hover:opacity-80 transition-opacity">
+          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+        </Link>
 
-        {error && (
-          <div role="alert" className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl p-3 mb-4">
-            {error}
-          </div>
-        )}
+        <div className="w-full max-w-[460px]">
+          {/* Title */}
+          <h1 style={{ fontFamily: SERIF, fontSize: 32, color: INK, lineHeight: 1.15, marginBottom: 8 }}>
+            Join the Exchange.
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED, marginBottom: 32 }}>
+            Connect with resources, services, and civic opportunities in Houston.
+          </p>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-brand-border p-6 space-y-4">
-          <div>
-            <label htmlFor="displayName" className="block text-sm font-medium text-brand-text mb-1">Display Name</label>
-            <input
-              id="displayName"
-              type="text"
-              required
-              value={displayName}
-              maxLength={50}
-              onChange={function (e) { setDisplayName(e.target.value) }}
-              className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-              placeholder="Your name"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-brand-text mb-1">Email</label>
-            <input
-              id="email"
-              type="email"
-              required
-              value={email}
-              onChange={function (e) { setEmail(e.target.value) }}
-              className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-              placeholder="you@example.com"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-brand-text mb-1">Password</label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={8}
-              value={password}
-              onChange={function (e) {
-                setPassword(e.target.value)
-                setPasswordHint(validatePassword(e.target.value))
-              }}
-              className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-              placeholder="8+ characters, uppercase + number"
-            />
-            {password && passwordHint && (
-              <p className="text-xs text-amber-600 mt-1">{passwordHint}</p>
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="zipCode" className="block text-sm font-medium text-brand-text mb-1">ZIP Code <span className="text-brand-muted">(optional)</span></label>
-              <input
-                id="zipCode"
-                type="text"
-                maxLength={5}
-                value={zipCode}
-                onChange={function (e) { setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-                className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
-                placeholder="77001"
-              />
+          {/* Error */}
+          {error && (
+            <div
+              role="alert"
+              className="mb-5 p-3"
+              style={{ background: '#FDF2F2', border: '1px solid rgba(197,48,48,0.2)', fontFamily: SERIF, fontSize: 14, color: '#C53030' }}
+            >
+              {error}
             </div>
-            <div>
-              <label htmlFor="language" className="block text-sm font-medium text-brand-text mb-1">Language</label>
-              <select
-                id="language"
-                value={language}
-                onChange={function (e) { setLanguage(e.target.value) }}
-                className="w-full px-3 py-2.5 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent bg-white"
-              >
-                <option value="en">English</option>
-                <option value="es">Espanol</option>
-                <option value="vi">Tieng Viet</option>
-              </select>
-            </div>
-          </div>
+          )}
 
-          {/* Policy agreements */}
-          <div className="pt-3 border-t border-brand-border space-y-3">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">Review & Agree</p>
-
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={agreedPrivacy}
-                onChange={function () { setAgreedPrivacy(!agreedPrivacy) }}
-                className="mt-0.5 w-4 h-4 rounded border border-brand-border text-brand-accent focus:ring-brand-accent"
-              />
-              <span className="text-sm text-brand-text">
-                I have read and agree to the{' '}
-                <Link href="/privacy" target="_blank" className="text-brand-accent hover:underline font-medium">Privacy Policy</Link>
-              </span>
-            </label>
-
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={agreedAccessibility}
-                onChange={function () { setAgreedAccessibility(!agreedAccessibility) }}
-                className="mt-0.5 w-4 h-4 rounded border border-brand-border text-brand-accent focus:ring-brand-accent"
-              />
-              <span className="text-sm text-brand-text">
-                I have read the{' '}
-                <Link href="/accessibility" target="_blank" className="text-brand-accent hover:underline font-medium">Accessibility Statement</Link>
-              </span>
-            </label>
-
-            <label className="flex items-start gap-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={agreedTerms}
-                onChange={function () { setAgreedTerms(!agreedTerms) }}
-                className="mt-0.5 w-4 h-4 rounded border border-brand-border text-brand-accent focus:ring-brand-accent"
-              />
-              <span className="text-sm text-brand-text">
-                I agree to the{' '}
-                <Link href="/terms" target="_blank" className="text-brand-accent hover:underline font-medium">Terms of Service</Link>
-              </span>
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading || !allAgreed}
-            className="w-full py-3 bg-brand-accent text-white rounded-xl text-sm font-semibold hover:bg-brand-accent-hover transition-colors disabled:opacity-50"
+          {/* Form */}
+          <form
+            onSubmit={handleSubmit}
+            className="p-6 space-y-5"
+            style={{ background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
           >
-            {loading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
+            <div>
+              <label htmlFor="displayName" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                Display Name
+              </label>
+              <input
+                id="displayName" type="text" required value={displayName} maxLength={50}
+                onChange={function (e) { setDisplayName(e.target.value) }}
+                className="w-full px-4 py-3 focus:outline-none"
+                style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                placeholder="Your name"
+              />
+            </div>
 
-        <p className="mt-6 text-center text-sm text-brand-muted">
-          Already have an account?{' '}
-          <Link href="/login" className="text-brand-accent hover:underline font-medium">Sign in</Link>
-        </p>
+            <div>
+              <label htmlFor="email" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                Email
+              </label>
+              <input
+                id="email" type="email" required value={email}
+                onChange={function (e) { setEmail(e.target.value) }}
+                className="w-full px-4 py-3 focus:outline-none"
+                style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                placeholder="you@example.com"
+              />
+            </div>
 
-        {/* Account info */}
-        <div className="relative mt-8">
-          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-theme-voice mb-1">Neighbor Account</p>
-            <p className="text-xl font-serif font-bold text-brand-text">Free</p>
-            <p className="text-[11px] text-brand-muted mt-1">Share resources, submit content, track your civic activity, and earn impact points.</p>
+            <div>
+              <label htmlFor="password" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                Password
+              </label>
+              <input
+                id="password" type="password" required minLength={8} value={password}
+                onChange={function (e) { setPassword(e.target.value); setPasswordHint(validatePassword(e.target.value)) }}
+                className="w-full px-4 py-3 focus:outline-none"
+                style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                placeholder="8+ characters, uppercase + number"
+              />
+              {password && passwordHint && (
+                <p style={{ fontFamily: MONO, fontSize: 11, color: '#b45309', marginTop: 4 }}>{passwordHint}</p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="zipCode" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                  ZIP Code <span style={{ color: RULE_COLOR }}>(optional)</span>
+                </label>
+                <input
+                  id="zipCode" type="text" maxLength={5} value={zipCode}
+                  onChange={function (e) { setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+                  className="w-full px-4 py-3 focus:outline-none"
+                  style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                  placeholder="77001"
+                />
+              </div>
+              <div>
+                <label htmlFor="language" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                  Language
+                </label>
+                <select
+                  id="language" value={language}
+                  onChange={function (e) { setLanguage(e.target.value) }}
+                  className="w-full px-4 py-3 focus:outline-none"
+                  style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                >
+                  <option value="en">English</option>
+                  <option value="es">Espanol</option>
+                  <option value="vi">Tieng Viet</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Policy agreements */}
+            <div className="pt-4 space-y-3" style={{ borderTop: `1px solid ${RULE_COLOR}` }}>
+              <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase' }}>
+                Review &amp; Agree
+              </p>
+
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox" checked={agreedPrivacy}
+                  onChange={function () { setAgreedPrivacy(!agreedPrivacy) }}
+                  className="mt-0.5 w-4 h-4"
+                  style={{ accentColor: CLAY }}
+                />
+                <span style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                  I have read and agree to the{' '}
+                  <Link href="/privacy" target="_blank" className="hover:underline" style={{ color: CLAY }}>Privacy Policy</Link>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox" checked={agreedAccessibility}
+                  onChange={function () { setAgreedAccessibility(!agreedAccessibility) }}
+                  className="mt-0.5 w-4 h-4"
+                  style={{ accentColor: CLAY }}
+                />
+                <span style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                  I have read the{' '}
+                  <Link href="/accessibility" target="_blank" className="hover:underline" style={{ color: CLAY }}>Accessibility Statement</Link>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox" checked={agreedTerms}
+                  onChange={function () { setAgreedTerms(!agreedTerms) }}
+                  className="mt-0.5 w-4 h-4"
+                  style={{ accentColor: CLAY }}
+                />
+                <span style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                  I agree to the{' '}
+                  <Link href="/terms" target="_blank" className="hover:underline" style={{ color: CLAY }}>Terms of Service</Link>
+                </span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading || !allAgreed}
+              className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+              style={{ fontFamily: MONO, fontSize: 13, letterSpacing: '0.04em', background: CLAY }}
+            >
+              {loading ? 'Creating account...' : 'Create Account'}
+            </button>
+          </form>
+
+          <p className="mt-6 text-center" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+            Already have an account?{' '}
+            <Link href="/login" className="hover:underline" style={{ color: CLAY }}>Sign in</Link>
+          </p>
+
+          {/* Account tier */}
+          <div className="mt-8 p-5 text-center" style={{ background: PARCHMENT_WARM, border: `1px solid ${RULE_COLOR}` }}>
+            <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase', marginBottom: 4 }}>
+              Neighbor Account
+            </p>
+            <p style={{ fontFamily: SERIF, fontSize: 24, color: INK }}>Free</p>
+            <p style={{ fontFamily: SERIF, fontSize: 13, color: MUTED, marginTop: 6 }}>
+              Share resources, submit content, track your civic activity, and earn impact points.
+            </p>
           </div>
+          <p className="text-center mt-2" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+            Organizations can upgrade to Community Partner from the account dashboard.
+          </p>
         </div>
-        <p className="text-center text-[11px] text-brand-muted mt-2">
-          Organizations can upgrade to Community Partner from the account dashboard.
-        </p>
+
+        {/* Footer */}
+        <div className="mt-12">
+          <Link href="/exchange" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+            &larr; Back to The Community Exchange
+          </Link>
+        </div>
       </div>
     </div>
   )
