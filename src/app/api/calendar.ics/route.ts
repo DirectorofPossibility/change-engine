@@ -134,11 +134,11 @@ export async function GET(req: NextRequest) {
   const lines: string[] = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Community Exchange//changeengine.us//EN',
+    'PRODID:-//Change Engine//changeengine.us//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:Community Exchange Events',
-    'X-WR-CALDESC:Events from the Community Exchange — Houston civic engagement platform',
+    'X-WR-CALNAME:Change Engine Events',
+    'X-WR-CALDESC:Events from the Change Engine — Houston civic engagement platform',
   ]
 
   for (const ev of icsEvents) {

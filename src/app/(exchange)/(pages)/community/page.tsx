@@ -8,7 +8,7 @@ import { MapPin, Building2, Heart, CalendarDays } from 'lucide-react'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Community — Community Exchange',
+  title: 'Community — Change Engine',
   description: 'Explore your community — neighborhoods, organizations, foundations, and events across Houston.',
 }
 
@@ -87,7 +87,7 @@ export default async function CommunityIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
                
               >
                 <div className="flex">

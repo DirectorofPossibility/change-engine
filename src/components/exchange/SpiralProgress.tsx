@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import { getSpiralCounts, getSpiralCycles, type SpiralTier } from '@/lib/spiral'
 
 const TIERS: { key: SpiralTier; label: string; color: string; question: string }[] = [
-  { key: 'understand', label: 'Understand', color: '#d69e2e', question: 'What is happening?' },
-  { key: 'involved', label: 'Get Involved', color: '#38a169', question: 'How can I help?' },
-  { key: 'deeper', label: 'Go Deeper', color: '#3182ce', question: 'Who decides?' },
+  { key: 'understand', label: 'Understand', color: '#4a2870', question: 'What is happening?' },
+  { key: 'involved', label: 'Get Involved', color: '#7a2018', question: 'How can I help?' },
+  { key: 'deeper', label: 'Go Deeper', color: '#6a4e10', question: 'Who decides?' },
 ]
 
 interface SpiralProgressProps {
@@ -42,8 +42,7 @@ export function SpiralProgress({ variant = 'compact' }: SpiralProgressProps) {
                 className="w-2.5 h-2.5 rounded-full transition-all"
                 style={{
                   backgroundColor: active ? tier.color : '#E2DDD5',
-                  boxShadow: active ? '0 0 6px ' + tier.color + '40' : 'none',
-                }}
+                                  }}
               />
               {count > 0 && (
                 <span className="text-[10px] font-mono font-bold" style={{ color: tier.color }}>

@@ -28,7 +28,7 @@ interface GoodThingEntry {
   created_at: string
 }
 
-const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
+const THING_COLORS = ['#7a2018', '#6a4e10', '#1a3460']
 
 // GradientFOL is now imported from @/components/exchange/GradientFOL
 
@@ -178,7 +178,7 @@ export default function SplashPage() {
           onClick={function () { setShareOpen(true); setMobileMenuOpen(false) }}
           className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all flex items-center gap-2.5"
         >
-          <FlowerOfLifeIcon size={16} color="#38a169" />
+          <FlowerOfLifeIcon size={16} color="#7a2018" />
           {t('splash.three_good_things')}
         </button>
 
@@ -301,13 +301,13 @@ export default function SplashPage() {
 
       {/* ── Spectrum bar ── */}
       <div className="spectrum-bar relative z-10 shrink-0">
-        <div style={{ background: '#e53e3e' }} />
-        <div style={{ background: '#dd6b20' }} />
-        <div style={{ background: '#d69e2e' }} />
-        <div style={{ background: '#38a169' }} />
-        <div style={{ background: '#3182ce' }} />
-        <div style={{ background: '#319795' }} />
-        <div style={{ background: '#805ad5' }} />
+        <div style={{ background: '#1a6b56' }} />
+        <div style={{ background: '#1e4d7a' }} />
+        <div style={{ background: '#4a2870' }} />
+        <div style={{ background: '#7a2018' }} />
+        <div style={{ background: '#6a4e10' }} />
+        <div style={{ background: '#1a5030' }} />
+        <div style={{ background: '#1a3460' }} />
       </div>
 
       {/* ── Mobile header ── */}
@@ -362,7 +362,7 @@ export default function SplashPage() {
             <div className="absolute top-0 left-0 right-0 z-[2]">
               <div className="bg-white/95 backdrop-blur-sm border-b border-brand-border px-5 py-3.5 flex items-center justify-between animate-map-pulse">
                 <div className="flex items-center gap-3">
-                  <FlowerOfLifeIcon size={26} color="#38a169" />
+                  <FlowerOfLifeIcon size={26} color="#7a2018" />
                   <div>
                     <p className="font-serif text-lg font-bold text-brand-text leading-tight">{t('splash.three_good_things')}</p>
                     <p className="text-[11px] text-brand-muted font-mono uppercase tracking-wider">{t('splash.program_label')}</p>
@@ -449,9 +449,9 @@ export default function SplashPage() {
                   <form onSubmit={handleGoodThings} className="space-y-3">
                     <p className="text-xs text-brand-muted mb-1">{t('splash.share_prompt')}</p>
                     {[
-                      { n: 1, color: '#38a169', val: thing1, set: setThing1, ph: t('splash.placeholder_1') },
-                      { n: 2, color: '#3182ce', val: thing2, set: setThing2, ph: t('splash.placeholder_2') },
-                      { n: 3, color: '#805ad5', val: thing3, set: setThing3, ph: t('splash.placeholder_3') },
+                      { n: 1, color: '#7a2018', val: thing1, set: setThing1, ph: t('splash.placeholder_1') },
+                      { n: 2, color: '#6a4e10', val: thing2, set: setThing2, ph: t('splash.placeholder_2') },
+                      { n: 3, color: '#1a3460', val: thing3, set: setThing3, ph: t('splash.placeholder_3') },
                     ].map(function (f) {
                       return (
                         <div key={f.n} className="flex items-center gap-2">
@@ -479,7 +479,7 @@ export default function SplashPage() {
                   </form>
                 ) : (
                   <div className="text-center space-y-4">
-                    <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto" />
+                    <FlowerOfLifeIcon size={32} color="#7a2018" className="mx-auto" />
                     <p className="font-serif text-lg font-bold text-brand-text">{t('splash.on_the_map')}</p>
                     <p className="text-sm text-brand-muted">{t('splash.on_the_map_desc')}</p>
 

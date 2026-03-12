@@ -12,17 +12,17 @@ import type { CircleGraphData } from '@/lib/data/exchange'
 // ═══════════════════════════════════════════════════════════════
 
 const C = {
-  bg: '#FAF8F5', card: '#FFFFFF', bgAlt: '#EDE8E0',
+  bg: '#f4f5f7', card: '#FFFFFF', bgAlt: '#dde1e8',
   text: '#1A1A1A', muted: '#6B6560', mutedLight: '#9B9590',
   border: '#E2DDD5', sand: '#D5D0C8', accent: '#C75B2A',
 }
 
 const ENTITY_META: Record<string, { label: string; color: string; href: string }> = {
   content: { label: 'Content', color: '#C75B2A', href: '/news' },
-  services: { label: 'Services', color: '#d69e2e', href: '/services' },
-  officials: { label: 'Officials', color: '#805ad5', href: '/officials' },
-  organizations: { label: 'Orgs', color: '#dd6b20', href: '/organizations' },
-  policies: { label: 'Policies', color: '#3182ce', href: '/policies' },
+  services: { label: 'Services', color: '#4a2870', href: '/services' },
+  officials: { label: 'Officials', color: '#1a3460', href: '/officials' },
+  organizations: { label: 'Orgs', color: '#1e4d7a', href: '/organizations' },
+  policies: { label: 'Policies', color: '#6a4e10', href: '/policies' },
 }
 
 // ── Geometry ──
@@ -435,11 +435,11 @@ function GraphSummary({ data, totalEntities, onSelect }: {
       <div className="grid grid-cols-3 gap-2 mb-5">
         {[
           { v: data.totals.content, l: 'Content', c: '#C75B2A' },
-          { v: data.totals.organizations, l: 'Organizations', c: '#dd6b20' },
-          { v: data.totals.services, l: 'Services', c: '#d69e2e' },
-          { v: data.totals.officials, l: 'Officials', c: '#805ad5' },
-          { v: data.totals.policies, l: 'Policies', c: '#3182ce' },
-          { v: data.totals.focusAreas, l: 'Focus Areas', c: '#38a169' },
+          { v: data.totals.organizations, l: 'Organizations', c: '#1e4d7a' },
+          { v: data.totals.services, l: 'Services', c: '#4a2870' },
+          { v: data.totals.officials, l: 'Officials', c: '#1a3460' },
+          { v: data.totals.policies, l: 'Policies', c: '#6a4e10' },
+          { v: data.totals.focusAreas, l: 'Focus Areas', c: '#7a2018' },
         ].map(function (s) {
           return (
             <div key={s.l} className="bg-white border border-brand-border p-2 text-center">

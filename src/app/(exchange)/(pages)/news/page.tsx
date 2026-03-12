@@ -12,7 +12,7 @@ import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'The News Stand — Community Exchange',
+  title: 'The News Stand — Change Engine',
   description: 'Articles, videos, guides, reports, tools, courses, and more from across the Houston community.',
 }
 

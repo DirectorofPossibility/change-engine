@@ -11,7 +11,7 @@ import { Calendar, MapPin, Clock, Video } from 'lucide-react'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Community Events — Community Exchange',
+  title: 'Community Events — Change Engine',
   description: 'Upcoming events, town halls, workshops, and community gatherings in the Houston area.',
 }
 
@@ -44,7 +44,7 @@ export default async function EventsPage() {
   function EventCard({ e }: { e: any }) {
     const date = e.start_datetime ? new Date(e.start_datetime) : null
     return (
-      <Link href={`/events/${e.event_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
+      <Link href={`/events/${e.event_id}`} className="block bg-white border border-brand-border p-5 hover:border-ink transition-shadow">
         <div className="flex items-start gap-4">
           {date && (
             <div className="flex-shrink-0 w-14 h-14 bg-brand-accent/10 flex flex-col items-center justify-center">
@@ -70,7 +70,7 @@ export default async function EventsPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#d69e2e" title="Community Events" subtitle="Town halls, workshops, volunteer days, and civic gatherings happening across Houston." />
+      <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#4a2870" title="Community Events" subtitle="Town halls, workshops, volunteer days, and civic gatherings happening across Houston." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Events' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
@@ -92,7 +92,7 @@ export default async function EventsPage() {
             <div className="sticky top-24 space-y-4">
               <IndexWayfinder
                 currentPage="events"
-                color="#38a169"
+                color="#7a2018"
                 related={[
                   { label: 'Calendar', href: '/calendar' },
                   { label: 'Organizations', href: '/organizations' },

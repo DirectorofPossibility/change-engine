@@ -12,13 +12,13 @@ interface GuideMiniGraphProps {
 }
 
 const THEME_COLORS: Record<string, string> = {
-  THEME_01: '#e53e3e',
-  THEME_02: '#dd6b20',
-  THEME_03: '#d69e2e',
-  THEME_04: '#38a169',
-  THEME_05: '#3182ce',
-  THEME_06: '#319795',
-  THEME_07: '#805ad5',
+  THEME_01: '#1a6b56',
+  THEME_02: '#1e4d7a',
+  THEME_03: '#4a2870',
+  THEME_04: '#7a2018',
+  THEME_05: '#6a4e10',
+  THEME_06: '#1a5030',
+  THEME_07: '#1a3460',
 }
 
 function themeColor(themeId: string | null): string {

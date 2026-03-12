@@ -27,7 +27,7 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
   const levelColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
 
   const cardContent = (
-    <div className="bg-white border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 group" style={{ boxShadow: '3px 3px 0 ' + levelColor + '20' }}>
+    <div className="bg-white border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:border-ink transition-all duration-200 group">
       {/* Level color bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: levelColor }} />
 

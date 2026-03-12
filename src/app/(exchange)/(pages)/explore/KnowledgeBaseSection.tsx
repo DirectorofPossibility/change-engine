@@ -459,7 +459,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                   <Link
                     key={item.id}
                     href={getItemHref(item)}
-                    className="group bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
+                    className="group bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
                   >
                     {item.image_url && (
                       <div className="w-full h-28 overflow-hidden mb-3 bg-brand-bg">
@@ -520,7 +520,7 @@ function renderItem(item: KBItem, themeMap: Record<string, KBTheme>) {
     <Link
       key={item.id}
       href={getItemHref(item)}
-      className="flex items-start gap-2.5 py-2 px-2 hover:bg-white hover:shadow-sm transition-all group/item"
+      className="flex items-start gap-2.5 py-2 px-2 hover:bg-white hover:border-ink transition-all group/item"
     >
       <Icon size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
       <div className="min-w-0 flex-1">

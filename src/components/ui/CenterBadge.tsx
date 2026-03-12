@@ -2,10 +2,10 @@ import Link from 'next/link'
 import { CENTERS } from '@/lib/constants'
 
 const CENTER_COLORS: Record<string, string> = {
-  Learning:       '#d69e2e',
-  Action:         '#38a169',
-  Resource:       '#3182ce',
-  Accountability: '#805ad5',
+  Learning:       '#4a2870',
+  Action:         '#7a2018',
+  Resource:       '#6a4e10',
+  Accountability: '#1a3460',
 }
 
 const CENTER_CONFIG: Record<string, { question: string }> = {

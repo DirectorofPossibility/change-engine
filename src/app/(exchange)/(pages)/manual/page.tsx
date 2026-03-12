@@ -4,8 +4,8 @@ import { PageHero } from '@/components/exchange/PageHero'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'User Manual — Community Exchange',
-  description: 'How Community Exchange works. Start anywhere. The platform will show you what connects.',
+  title: 'User Manual — Change Engine',
+  description: 'How Change Engine works. Start anywhere. The platform will show you what connects.',
 }
 
 const sections = [
@@ -101,7 +101,7 @@ export default function ManualPage() {
     <div>
       <PageHero
         variant="editorial"
-        title="How Community Exchange works."
+        title="How Change Engine works."
         subtitle="Start anywhere. The platform will show you what connects."
         intro="You don't need a guide to use this. But here's one anyway."
       />

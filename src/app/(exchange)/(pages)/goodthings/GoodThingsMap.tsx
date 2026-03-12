@@ -22,7 +22,7 @@ interface Props {
   focusEntry?: Entry | null
 }
 
-const MARKER_COLORS = ['#38a169', '#3182ce', '#805ad5', '#C75B2A', '#d69e2e', '#e53e3e', '#319795']
+const MARKER_COLORS = ['#7a2018', '#6a4e10', '#1a3460', '#C75B2A', '#4a2870', '#1a6b56', '#1a5030']
 
 // Popup uses small inline FOL icons for each "thing"
 function folSvg(color: string, size: number) {

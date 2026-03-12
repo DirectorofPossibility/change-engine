@@ -1,5 +1,5 @@
 /**
- * @fileoverview Users Manual for the Community Exchange platform.
+ * @fileoverview Users Manual for the Change Engine platform.
  *
  * A guide for Neighbors and Partners explaining how to use the platform,
  * create a profile, contribute content, and participate in the civic
@@ -95,7 +95,7 @@ export default async function ManualPage() {
 
   // Build TOC based on role
   const tocItems: { href: string; label: string }[] = [
-    { href: '#overview', label: 'What is the Community Exchange?' },
+    { href: '#overview', label: 'What is the Change Engine?' },
     { href: '#pathways', label: 'The Seven Pathways' },
     { href: '#centers', label: 'Four Centers' },
     { href: '#roles', label: 'Neighbors & Partners' },
@@ -131,8 +131,8 @@ export default async function ManualPage() {
           {isAdmin
             ? 'Complete guide for all roles — Neighbors, Partners, and Admins.'
             : isPartner
-              ? 'Your guide to managing content and representing your organization on the Community Exchange.'
-              : 'Your guide to exploring and contributing to the Community Exchange.'
+              ? 'Your guide to managing content and representing your organization on the Change Engine.'
+              : 'Your guide to exploring and contributing to the Change Engine.'
           }
         </p>
       </div>
@@ -142,9 +142,9 @@ export default async function ManualPage() {
         <div className="space-y-0">
 
           {/* -- Overview -- */}
-          <SectionHeading id="overview">What is the Community Exchange?</SectionHeading>
+          <SectionHeading id="overview">What is the Change Engine?</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            The Community Exchange is a civic platform built for Houston. It brings together articles, services, organizations, elected officials, policies, and community opportunities into one place — organized around the topics that matter most to daily life.
+            The Change Engine is a civic platform built for Houston. It brings together articles, services, organizations, elected officials, policies, and community opportunities into one place — organized around the topics that matter most to daily life.
           </p>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
             Every piece of content is mapped onto a <strong>knowledge graph</strong> — a web of connections between pathways, focus areas, global goals, and social determinants of health. When you explore one topic, you can see how it connects to everything else.
@@ -156,7 +156,7 @@ export default async function ManualPage() {
           {/* -- The Seven Pathways -- */}
           <SectionHeading id="pathways">The Seven Pathways</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
-            Everything in the Community Exchange is organized around seven pathways of civic life. Each one connects to the others through shared focus areas, officials, and policies.
+            Everything in the Change Engine is organized around seven pathways of civic life. Each one connects to the others through shared focus areas, officials, and policies.
           </p>
           <div className="grid sm:grid-cols-2 gap-2 mb-3">
             {Object.entries(PATHWAY_COLORS).map(([name, { color, sub }]) => (
@@ -191,7 +191,7 @@ export default async function ManualPage() {
           {/* -- Roles -- */}
           <SectionHeading id="roles">Neighbors &amp; Partners</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-4">
-            The Community Exchange is built by and for the community. There are two ways to participate beyond browsing.
+            The Change Engine is built by and for the community. There are two ways to participate beyond browsing.
           </p>
 
           <div className="space-y-4">
@@ -462,7 +462,7 @@ export default async function ManualPage() {
           {/* -- Wayfinder -- */}
           <SectionHeading id="wayfinder">Using the Wayfinder</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            The <strong>Wayfinder</strong> is the heart of the Community Exchange homepage. It displays the seven pathways as interactive circles, with bridge lines showing how many resources connect between them.
+            The <strong>Wayfinder</strong> is the heart of the Change Engine homepage. It displays the seven pathways as interactive circles, with bridge lines showing how many resources connect between them.
           </p>
           <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-2 text-sm text-gray-600">
             <p><strong>Click a pathway circle</strong> to see its resources, focus areas, connected officials, and related services.</p>
@@ -474,7 +474,7 @@ export default async function ManualPage() {
           {/* -- Languages -- */}
           <SectionHeading id="languages">Languages</SectionHeading>
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            The Community Exchange is available in three languages:
+            The Change Engine is available in three languages:
           </p>
           <div className="flex flex-wrap gap-2 mb-3">
             <div className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-center">

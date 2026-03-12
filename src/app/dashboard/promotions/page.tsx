@@ -31,10 +31,10 @@ interface OrgOption {
 }
 
 const PROMO_TYPES = [
-  { value: 'partner_spotlight', label: 'Partner Spotlight', color: '#dd6b20' },
-  { value: 'event', label: 'Event', color: '#38a169' },
-  { value: 'resource', label: 'Resource', color: '#3182ce' },
-  { value: 'campaign', label: 'Campaign', color: '#805ad5' },
+  { value: 'partner_spotlight', label: 'Partner Spotlight', color: '#1e4d7a' },
+  { value: 'event', label: 'Event', color: '#7a2018' },
+  { value: 'resource', label: 'Resource', color: '#6a4e10' },
+  { value: 'campaign', label: 'Campaign', color: '#1a3460' },
   { value: 'announcement', label: 'Announcement', color: '#C75B2A' },
 ]
 

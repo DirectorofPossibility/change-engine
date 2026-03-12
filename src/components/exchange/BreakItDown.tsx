@@ -41,7 +41,7 @@ export function BreakItDown({ title, summary, type, accentColor = '#E8723A' }: B
         <button
           onClick={handleClick}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 border-2 hover:shadow-md disabled:opacity-60"
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 border-2 hover:border-ink disabled:opacity-60"
           style={{
             borderColor: accentColor,
             color: accentColor,

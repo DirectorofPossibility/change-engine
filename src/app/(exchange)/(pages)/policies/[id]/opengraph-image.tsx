@@ -18,7 +18,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   const label = [data?.level, data?.bill_number].filter(Boolean).join(' · ') || 'Policy'
 
   return new ImageResponse(
-    <OGLayout title={title} subtitle={subtitle} label={label} accentColor="#e53e3e" />,
+    <OGLayout title={title} subtitle={subtitle} label={label} accentColor="#1a6b56" />,
     { ...size }
   )
 }

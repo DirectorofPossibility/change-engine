@@ -18,7 +18,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   const subtitle = [date, data?.description_5th_grade].filter(Boolean).join(' — ') || undefined
 
   return new ImageResponse(
-    <OGLayout title={title} subtitle={subtitle} label="Event" accentColor="#d69e2e" />,
+    <OGLayout title={title} subtitle={subtitle} label="Event" accentColor="#4a2870" />,
     { ...size }
   )
 }

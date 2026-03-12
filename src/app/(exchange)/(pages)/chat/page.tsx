@@ -6,7 +6,7 @@ import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Chat with Chance | Community Exchange',
+  title: 'Chat with Chance | Change Engine',
   description: 'Ask Chance about anything in Houston — community resources, services, organizations, elected officials, policies, and more.',
 }
 

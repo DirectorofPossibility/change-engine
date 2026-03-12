@@ -72,7 +72,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
       breadcrumbs={[{ label: 'Campaigns', href: '/campaigns' }, { label: c.campaign_name }]}
       eyebrow={{
         text: c.status || 'Campaign',
-        bgColor: '#805ad5',
+        bgColor: '#1a3460',
       }}
       eyebrowMeta={
         c.campaign_type ? (
@@ -82,11 +82,11 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
       title={c.campaign_name}
       subtitle={c.description_5th_grade || null}
       metaRow={metaRow}
-      mastheadBorderTop="3px solid #805ad5"
+      mastheadBorderTop="3px solid #1a3460"
       actions={{
         share: { title: c.campaign_name, url: canonicalUrl },
       }}
-      themeColor="#805ad5"
+      themeColor="#1a3460"
       wayfinderData={wayfinderData}
       wayfinderType="campaign"
       wayfinderEntityId={id}

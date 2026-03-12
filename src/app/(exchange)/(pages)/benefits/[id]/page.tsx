@@ -30,11 +30,11 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
       breadcrumbs={[{ label: 'Benefits', href: '/benefits' }, { label: b.benefit_name }]}
       eyebrow={b.benefit_type ? { text: b.benefit_type } : undefined}
       eyebrowMeta={
-        <Heart className="w-5 h-5" style={{ color: '#e53e3e' }} />
+        <Heart className="w-5 h-5" style={{ color: '#1a6b56' }} />
       }
       title={b.benefit_name}
       subtitle={b.description_5th_grade}
-      themeColor="#e53e3e"
+      themeColor="#1a6b56"
       wayfinderData={wayfinderData}
       wayfinderType="benefit"
       wayfinderEntityId={id}

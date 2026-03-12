@@ -27,8 +27,8 @@ export function ShareButtons({ url, title, via, compact = false }: ShareButtonsP
   const iconSize = compact ? 15 : 14
 
   const btnBase = 'inline-flex items-center justify-center rounded-full transition-all duration-200'
-  const btnCompact = btnBase + ' w-9 h-9 border border-brand-border hover:shadow-sm'
-  const btnFull = btnBase + ' gap-2 px-3.5 py-2 border border-brand-border text-[12px] font-medium hover:shadow-sm'
+  const btnCompact = btnBase + ' w-9 h-9 border border-brand-border hover:border-ink'
+  const btnFull = btnBase + ' gap-2 px-3.5 py-2 border border-brand-border text-[12px] font-medium hover:border-ink'
 
   return (
     <div className={'flex items-center ' + (compact ? 'gap-2' : 'gap-2 flex-wrap')}>

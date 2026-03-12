@@ -90,7 +90,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
 
   if (variant === 'banner') {
     return (
-      <div className="relative overflow-hidden border border-brand-border" style={{ background: 'linear-gradient(135deg, #FAF8F5 0%, #EDE8E0 100%)' }}>
+      <div className="relative overflow-hidden border border-brand-border" style={{ background: 'linear-gradient(135deg, #f4f5f7 0%, #dde1e8 100%)' }}>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, #D5D0C8, #C75B2A)' }} />
         <div className="flex items-center gap-5 p-5">
           {promo.image_url ? (
@@ -124,7 +124,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
 
   if (variant === 'hero') {
     return (
-      <div className="relative overflow-hidden" style={{ boxShadow: '4px 4px 0 ' + color + '30' }}>
+      <div className="relative overflow-hidden border border-brand-border">
         {promo.image_url && (
           <div className="h-40 overflow-hidden">
             <Image src={promo.image_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />

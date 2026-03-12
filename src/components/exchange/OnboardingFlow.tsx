@@ -123,7 +123,7 @@ export function OnboardingFlow() {
        
       >
         {/* ── Branded header ── */}
-        <div className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
+        <div className="relative overflow-hidden" style={{ background: '#f4f5f7' }}>
           {/* Animated gradient FOL watermarks */}
           <div className="absolute pointer-events-none" style={{ width: '300px', height: '300px', top: '-80px', right: '-60px', opacity: 0.08 }}>
             <GradientFOL variant="full" spinDur={90} colorDur={12} />
@@ -211,7 +211,6 @@ export function OnboardingFlow() {
               <button
                 onClick={handleGetStarted}
                 className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm hover:brightness-110 transition-all"
-                style={{ boxShadow: '3px 3px 0 #1b5e8a30' }}
               >
                 Get started
               </button>
@@ -330,7 +329,7 @@ export function OnboardingFlow() {
                         borderColor: selected ? pw.color : '#E2DDD5',
                         backgroundColor: selected ? pw.color + '12' : 'white',
                         color: selected ? pw.color : '#6B6560',
-                        boxShadow: selected ? '2px 2px 0 ' + pw.color + '30' : 'none',
+                        border: selected ? '2px solid ' + pw.color : undefined,
                       }}
                     >
                       <div
@@ -348,7 +347,6 @@ export function OnboardingFlow() {
               <button
                 onClick={handleFinish}
                 className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm hover:brightness-110 transition-all"
-                style={{ boxShadow: '3px 3px 0 #1b5e8a30' }}
               >
                 Show me my community
               </button>

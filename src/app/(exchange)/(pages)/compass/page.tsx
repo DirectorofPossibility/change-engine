@@ -8,7 +8,7 @@ import { THEMES } from '@/lib/constants'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Civic Compass — Community Exchange',
+  title: 'Civic Compass — Change Engine',
   description: 'Most people don\'t know who represents them. That\'s not their fault. It\'s a design problem. We fixed it.',
 }
 

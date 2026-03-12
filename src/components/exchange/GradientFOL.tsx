@@ -27,7 +27,7 @@ interface GradientFOLProps {
   strokeOpacity?: number
 }
 
-const BRAND_COLORS = '#C75B2A;#805ad5;#3182ce;#38a169;#d69e2e;#C75B2A'
+const BRAND_COLORS = '#C75B2A;#1a3460;#6a4e10;#7a2018;#4a2870;#C75B2A'
 
 function shiftColors(colors: string, offset: number): string {
   const parts = colors.split(';')
@@ -55,10 +55,10 @@ export function GradientFOL({
         <stop offset="0%" stopColor="#C75B2A">
           <animate attributeName="stop-color" values={colorString} dur={`${colorDur}s`} repeatCount="indefinite" />
         </stop>
-        <stop offset="50%" stopColor="#805ad5">
+        <stop offset="50%" stopColor="#1a3460">
           <animate attributeName="stop-color" values={shiftColors(colorString, 1)} dur={`${colorDur}s`} repeatCount="indefinite" />
         </stop>
-        <stop offset="100%" stopColor="#3182ce">
+        <stop offset="100%" stopColor="#6a4e10">
           <animate attributeName="stop-color" values={shiftColors(colorString, 2)} dur={`${colorDur}s`} repeatCount="indefinite" />
         </stop>
       </linearGradient>
@@ -145,7 +145,7 @@ function FOLDivider({
   className: string
 }) {
   // 7 overlapping circles in a row (one per pathway color)
-  const PATHWAY_COLORS = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#319795', '#805ad5']
+  const PATHWAY_COLORS = ['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#6a4e10', '#1a5030', '#1a3460']
   const circleR = 8
   const spacing = 13
   const totalW = spacing * 6 + circleR * 2
@@ -206,10 +206,10 @@ export function FOLSpinner({ size = 40, className = '' }: { size?: number; class
           <stop offset="0%" stopColor="#C75B2A">
             <animate attributeName="stop-color" values={BRAND_COLORS} dur="6s" repeatCount="indefinite" />
           </stop>
-          <stop offset="50%" stopColor="#805ad5">
+          <stop offset="50%" stopColor="#1a3460">
             <animate attributeName="stop-color" values={shiftColors(BRAND_COLORS, 1)} dur="6s" repeatCount="indefinite" />
           </stop>
-          <stop offset="100%" stopColor="#3182ce">
+          <stop offset="100%" stopColor="#6a4e10">
             <animate attributeName="stop-color" values={shiftColors(BRAND_COLORS, 2)} dur="6s" repeatCount="indefinite" />
           </stop>
         </linearGradient>

@@ -16,13 +16,13 @@ import { createGuide, updateGuide, deleteGuide } from './actions'
 import Image from 'next/image'
 
 const THEMES: Record<string, { name: string; color: string }> = {
-  THEME_01: { name: 'Health', color: '#e53e3e' },
-  THEME_02: { name: 'Families', color: '#dd6b20' },
-  THEME_03: { name: 'Neighborhood', color: '#d69e2e' },
-  THEME_04: { name: 'Voice', color: '#38a169' },
-  THEME_05: { name: 'Money', color: '#3182ce' },
-  THEME_06: { name: 'Planet', color: '#319795' },
-  THEME_07: { name: 'The Bigger We', color: '#805ad5' },
+  THEME_01: { name: 'Health', color: '#1a6b56' },
+  THEME_02: { name: 'Families', color: '#1e4d7a' },
+  THEME_03: { name: 'Neighborhood', color: '#4a2870' },
+  THEME_04: { name: 'Voice', color: '#7a2018' },
+  THEME_05: { name: 'Money', color: '#6a4e10' },
+  THEME_06: { name: 'Planet', color: '#1a5030' },
+  THEME_07: { name: 'The Bigger We', color: '#1a3460' },
 }
 
 const ENGAGEMENT_LEVELS = [

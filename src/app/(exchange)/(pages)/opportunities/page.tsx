@@ -12,7 +12,7 @@ import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Opportunities — Community Exchange',
+  title: 'Opportunities — Change Engine',
   description: 'Volunteer, learn, and get involved in your Houston community.',
 }
 
@@ -99,7 +99,7 @@ export default async function OpportunitiesPage() {
                     <Link
                       key={opp.opportunity_id}
                       href={'/opportunities/' + opp.opportunity_id}
-                      className="bg-white border border-rule p-5 hover:shadow-md transition-shadow group relative overflow-hidden"
+                      className="bg-white border border-rule p-5 hover:border-ink transition-shadow group relative overflow-hidden"
                     >
                       {/* Color bar */}
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-theme-voice group-hover:w-1.5 transition-all" />

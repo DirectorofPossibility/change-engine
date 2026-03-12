@@ -5,24 +5,19 @@ import { createClient } from '@/lib/supabase/server'
 import { Phone, Mail, Globe, MapPin, Clock, Users, DollarSign, Calendar, ExternalLink, BookOpen, Heart } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { ContentCard } from '@/components/exchange/ContentCard'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getUIStrings } from '@/lib/i18n'
 import { cookies } from 'next/headers'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
-import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
-import { ShareButtons } from '@/components/exchange/ShareButtons'
 import Image from 'next/image'
 import { organizationJsonLd } from '@/lib/jsonld'
-import { FlowerOfLife } from '@/components/geo/sacred'
 import { THEMES } from '@/lib/constants'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 86400
 
@@ -33,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.org_name,
-    description: data.description_5th_grade || 'Details on the Community Exchange.',
+    description: data.description_5th_grade || 'Details on the Change Engine.',
   }
 }
 
@@ -128,353 +123,308 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   return (
     <div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_organization" />
 
-      {/* ─── Masthead ─── */}
-      <header style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
-          <Breadcrumb items={[
-            { label: 'Organizations', href: '/organizations' },
-            { label: displayOrgName }
-          ]} />
+      <DetailPageLayout
+        breadcrumbs={[
+          { label: 'Organizations', href: '/organizations' },
+          { label: displayOrgName }
+        ]}
+        eyebrow={{ text: t('detail.organization') }}
+        eyebrowMeta={
+          org.org_type && org.org_type !== 'Organization' ? (
+            <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+              {org.org_type}
+            </span>
+          ) : undefined
+        }
+        title={displayOrgName}
+        subtitle={org.mission_statement || displayOrgDesc || null}
+        heroImage={
+          org.logo_url ? (
+            <div className="flex items-start gap-4 -mt-3">
+              <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0 hidden sm:block" style={{ border: '1px solid #dde1e8' }} width={72} height={72} />
+            </div>
+          ) : undefined
+        }
+        metaRow={
+          <>
+            {org.phone && (
+              <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+                <span style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} /> {org.phone}
+              </span>
+            )}
+            {fullAddress && (
+              <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+                <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {fullAddress}
+              </span>
+            )}
+            {org.website && (
+              <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em] hover:underline" style={{ color: '#1b5e8a' }}>
+                <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {t('detail.website')}
+              </a>
+            )}
+            {org.year_founded && (
+              <span className="relative inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+                <span style={{ display: 'inline-block', width: 6, height: 6, background: '#8a929e' }} /> Est. {org.year_founded}
+                <WayfinderTooltipPos tipKey="year_founded" position="bottom" />
+              </span>
+            )}
+            {org.ntee_code && (
+              <span className="relative font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>
+                NTEE {org.ntee_code}
+                <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
+              </span>
+            )}
+          </>
+        }
+        actions={{
+          translate: { isTranslated: !!orgTranslation?.title, contentType: 'organizations', contentId: org.org_id },
+          share: { title: displayOrgName || undefined, url: 'https://www.changeengine.us/organizations/' + id },
+        }}
+        themeColor={accentColor}
+        wayfinderData={wayfinderData}
+        wayfinderType="organization"
+        wayfinderEntityId={id}
+        userRole={userProfile?.role}
+        feedbackType="organizations"
+        feedbackId={id}
+        feedbackName={org.org_name || ''}
+        jsonLd={jsonLd}
+        sidebar={
+          <div className="lg:sticky lg:top-24 space-y-6">
+            {/* sidebar content intentionally empty — feedback handled by layout */}
+          </div>
+        }
+      >
+        {/* ── Main column content ── */}
 
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 mt-6">
-            {/* Left: Hero content (2/3) */}
-            <div className="pr-0 lg:pr-8">
-              {/* Eyebrow pill */}
-              <div className="flex items-center gap-3 mb-4">
-                <span className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
-                  {t('detail.organization')}
-                </span>
-                {org.org_type && org.org_type !== 'Organization' && (
-                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
-                    {org.org_type}
-                  </span>
-                )}
-              </div>
+        {/* About section */}
+        {((org.mission_statement && displayOrgDesc) || (!org.mission_statement && displayOrgDesc)) && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.about')}</h2>
+            <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
+              <p className="font-body leading-relaxed" style={{ color: '#5c6474' }}>{displayOrgDesc}</p>
+            </div>
+          </section>
+        )}
 
-              <div className="flex items-start gap-4">
-                {org.logo_url && (
-                  <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0 hidden sm:block" style={{ border: '1px solid #dde1e8' }} width={72} height={72} />
-                )}
-                <div className="min-w-0">
-                  <h1 className="font-display" style={{ fontWeight: 900, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', lineHeight: 1.1, color: '#0d1117' }}>
-                    {displayOrgName}
-                    {(org as any).is_verified === 'Yes' && (
-                      <svg className="w-6 h-6 inline-block ml-2 -mt-1" viewBox="0 0 20 20" fill="none" aria-label="Verified">
-                        <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#1b5e8a" />
-                        <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                  </h1>
-                </div>
-              </div>
-
-              {org.mission_statement && (
-                <p className="font-body italic mt-3" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{org.mission_statement}</p>
-              )}
-              {!org.mission_statement && displayOrgDesc && (
-                <p className="font-body italic mt-3" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{displayOrgDesc}</p>
-              )}
-
-              {/* Quick facts */}
-              <div className="flex items-center gap-4 mt-4 flex-wrap">
+        {/* Contact section */}
+        {(org.phone || org.email || org.website || fullAddress || org.map_link || socialLinks.length > 0) && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.contact')}</h2>
+            <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
+              <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
+              <ul className="space-y-2">
                 {org.phone && (
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
-                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} /> {org.phone}
-                  </span>
+                  <li className="flex items-center gap-2">
+                    <Phone size={14} style={{ color: '#8a929e' }} />
+                    <a href={'tel:' + org.phone} className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>{org.phone}</a>
+                  </li>
                 )}
-                {fullAddress && (
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
-                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {fullAddress}
-                  </span>
+                {org.email && (
+                  <li className="flex items-center gap-2">
+                    <Mail size={14} style={{ color: '#8a929e' }} />
+                    <a href={'mailto:' + org.email} className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>{org.email}</a>
+                  </li>
                 )}
                 {org.website && (
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em] hover:underline" style={{ color: '#1b5e8a' }}>
-                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {t('detail.website')}
-                  </a>
+                  <li className="flex items-center gap-2">
+                    <Globe size={14} style={{ color: '#8a929e' }} />
+                    <a href={org.website} target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>
+                      {t('detail.website')} <ExternalLink size={10} className="inline opacity-50" />
+                    </a>
+                  </li>
                 )}
-                {org.year_founded && (
-                  <span className="relative inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
-                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#8a929e' }} /> Est. {org.year_founded}
-                    <WayfinderTooltipPos tipKey="year_founded" position="bottom" />
-                  </span>
+                {fullAddress && (
+                  <li className="flex items-center gap-2">
+                    <MapPin size={14} style={{ color: '#8a929e' }} />
+                    <span className="font-body text-sm" style={{ color: '#5c6474' }}>{fullAddress}</span>
+                  </li>
                 )}
-                {org.ntee_code && (
-                  <span className="relative font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>
-                    NTEE {org.ntee_code}
-                    <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
-                  </span>
+                {org.map_link && (
+                  <li className="flex items-center gap-2">
+                    <MapPin size={14} style={{ color: '#8a929e' }} />
+                    <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>
+                      View on Map <ExternalLink size={10} className="inline opacity-50" />
+                    </a>
+                  </li>
                 )}
-              </div>
+              </ul>
 
-              <div className="flex items-center gap-3 mt-4">
-                <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
-                <ShareButtons
-                  title={displayOrgName || undefined}
-                  url={'https://www.changeengine.us/organizations/' + id}
-                  compact
-                />
-              </div>
+              {/* Social links */}
+              {socialLinks.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
+                  {socialLinks.map(function (link) {
+                    return (
+                      <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1 capitalize hover:underline" style={{ color: '#1b5e8a', border: '1px solid #dde1e8' }}>
+                        {link.platform}
+                      </a>
+                    )
+                  })}
+                </div>
+              )}
             </div>
+          </section>
+        )}
 
-            {/* Right: Wayfinder + FOL (1/3) */}
-            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
-              <FlowerOfLife size={192} color={accentColor} opacity={0.15} />
-              <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* ─── Body: 2-column grid ─── */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0" style={{ border: '1px solid #dde1e8' }}>
-
-          {/* ── Main column ── */}
-          <div className="min-w-0 p-6 lg:p-8" style={{ borderRight: '1px solid #dde1e8' }}>
-
-            {/* About section */}
-            {((org.mission_statement && displayOrgDesc) || (!org.mission_statement && displayOrgDesc)) && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.about')}</h2>
-                <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
-                  <p className="font-body leading-relaxed" style={{ color: '#5c6474' }}>{displayOrgDesc}</p>
-                </div>
-              </section>
-            )}
-
-            {/* Contact section */}
-            {(org.phone || org.email || org.website || fullAddress || org.map_link || socialLinks.length > 0) && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.contact')}</h2>
-                <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
-                  <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
-                  <ul className="space-y-2">
-                    {org.phone && (
-                      <li className="flex items-center gap-2">
-                        <Phone size={14} style={{ color: '#8a929e' }} />
-                        <a href={'tel:' + org.phone} className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>{org.phone}</a>
-                      </li>
-                    )}
-                    {org.email && (
-                      <li className="flex items-center gap-2">
-                        <Mail size={14} style={{ color: '#8a929e' }} />
-                        <a href={'mailto:' + org.email} className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>{org.email}</a>
-                      </li>
-                    )}
-                    {org.website && (
-                      <li className="flex items-center gap-2">
-                        <Globe size={14} style={{ color: '#8a929e' }} />
-                        <a href={org.website} target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>
-                          {t('detail.website')} <ExternalLink size={10} className="inline opacity-50" />
-                        </a>
-                      </li>
-                    )}
-                    {fullAddress && (
-                      <li className="flex items-center gap-2">
-                        <MapPin size={14} style={{ color: '#8a929e' }} />
-                        <span className="font-body text-sm" style={{ color: '#5c6474' }}>{fullAddress}</span>
-                      </li>
-                    )}
-                    {org.map_link && (
-                      <li className="flex items-center gap-2">
-                        <MapPin size={14} style={{ color: '#8a929e' }} />
-                        <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>
-                          View on Map <ExternalLink size={10} className="inline opacity-50" />
-                        </a>
-                      </li>
-                    )}
-                  </ul>
-
-                  {/* Social links */}
-                  {socialLinks.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
-                      {socialLinks.map(function (link) {
-                        return (
-                          <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1 capitalize hover:underline" style={{ color: '#1b5e8a', border: '1px solid #dde1e8' }}>
-                            {link.platform}
-                          </a>
-                        )
-                      })}
+        {/* Hours of operation */}
+        {hoursList.length > 0 && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3 flex items-center gap-2" style={{ color: '#5c6474' }}>
+              <Clock size={14} /> Hours of Operation
+            </h2>
+            <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
+                {hoursList.map(function (h) {
+                  return (
+                    <div key={h.day} className="flex justify-between text-sm py-1" style={{ borderBottom: '1px solid #dde1e8' }}>
+                      <span className="font-body font-medium" style={{ color: '#0d1117' }}>{h.day}</span>
+                      <span className="font-body" style={{ color: '#5c6474' }}>{h.time}</span>
                     </div>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {/* Hours of operation */}
-            {hoursList.length > 0 && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3 flex items-center gap-2" style={{ color: '#5c6474' }}>
-                  <Clock size={14} /> Hours of Operation
-                </h2>
-                <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
-                    {hoursList.map(function (h) {
-                      return (
-                        <div key={h.day} className="flex justify-between text-sm py-1" style={{ borderBottom: '1px solid #dde1e8' }}>
-                          <span className="font-body font-medium" style={{ color: '#0d1117' }}>{h.day}</span>
-                          <span className="font-body" style={{ color: '#5c6474' }}>{h.time}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </section>
-            )}
-
-            {/* Stats row */}
-            {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>At a Glance</h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0" style={{ borderTop: '2px solid #0d1117' }}>
-                  {org.people_served && (
-                    <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.people_served}</span>
-                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>People Served</span>
-                    </div>
-                  )}
-                  {org.service_area && (
-                    <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.service_area}</span>
-                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Service Area</span>
-                    </div>
-                  )}
-                  {org.partner_count != null && (
-                    <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.partner_count}</span>
-                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Partners</span>
-                    </div>
-                  )}
-                  {org.annual_budget != null && (
-                    <div className="p-4" style={{ borderBottom: '1px solid #dde1e8' }}>
-                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{'$' + org.annual_budget.toLocaleString()}</span>
-                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Annual Budget</span>
-                    </div>
-                  )}
-                </div>
-              </section>
-            )}
-
-            {/* Tags */}
-            {org.tags && org.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-8">
-                {org.tags.map(function (tag) {
-                  return <span key={tag} className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1" style={{ color: '#5c6474', border: '1px solid #dde1e8' }}>{tag}</span>
+                  )
                 })}
               </div>
-            )}
-
-            {/* ─── Services ─── */}
-            {services && services.length > 0 && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
-                  Services ({services.length})
-                </h2>
-                <div style={{ borderTop: '1.5px solid #dde1e8' }}>
-                  {services.map(function (svc) {
-                    const st = serviceTranslations[svc.service_id]
-                    const svcName = st?.title || svc.service_name
-                    const svcDesc = st?.summary || svc.description_5th_grade
-                    return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 group hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
-                        <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} />
-                        <div className="min-w-0">
-                          <span className="font-body font-semibold block" style={{ color: '#0d1117' }}>{svcName}</span>
-                          {svcDesc && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{svcDesc}</span>}
-                        </div>
-                      </Link>
-                    )
-                  })}
-                </div>
-              </section>
-            )}
-
-            {/* ─── Content / News ─── */}
-            {content && content.length > 0 && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
-                  News & Resources ({content.length})
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {content.map(function (item: any) {
-                    const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
-                    return (
-                      <ContentCard
-                        key={item.id}
-                        id={item.id}
-                        title={item.title_6th_grade}
-                        summary={item.summary_6th_grade}
-                        pathway={item.pathway_primary}
-                        center={item.center}
-                        sourceUrl={item.source_url}
-                        publishedAt={item.published_at}
-                        imageUrl={item.image_url}
-                        translatedTitle={ct?.title}
-                        translatedSummary={ct?.summary}
-                      />
-                    )
-                  })}
-                </div>
-              </section>
-            )}
-
-            {/* ─── Opportunities ─── */}
-            {opportunities && opportunities.length > 0 && (
-              <section className="mb-8">
-                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
-                  Opportunities ({opportunities.length})
-                </h2>
-                <div style={{ borderTop: '1.5px solid #dde1e8' }}>
-                  {opportunities.map(function (opp: any) {
-                    return (
-                      <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-3 group hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
-                        <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} />
-                        <div className="min-w-0">
-                          <span className="font-body font-semibold block" style={{ color: '#0d1117' }}>{opp.opportunity_name}</span>
-                          {opp.description_5th_grade && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{opp.description_5th_grade}</span>}
-                          <div className="flex items-center gap-2 flex-wrap mt-1">
-                            {opp.time_commitment && (
-                              <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>{opp.time_commitment}</span>
-                            )}
-                            {opp.is_virtual === 'Yes' && (
-                              <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-1.5 py-0.5" style={{ color: '#1b5e8a', border: '1px solid #1b5e8a' }}>Virtual</span>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
-                    )
-                  })}
-                </div>
-              </section>
-            )}
-
-            {/* Empty state when no children */}
-            {childCount === 0 && (
-              <div className="text-center py-12" style={{ border: '1px dashed #dde1e8' }}>
-                <p className="font-body" style={{ color: '#5c6474' }}>No services, content, or opportunities have been linked to this organization yet.</p>
-              </div>
-            )}
-
-            {/* Quote */}
-            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} />}
-          </div>
-
-          {/* ── Sidebar ── */}
-          <div className="p-6 lg:p-8">
-            <div className="lg:sticky lg:top-24 space-y-6">
-              {/* Wayfinder (mobile only — desktop version is in masthead) */}
-              <div className="lg:hidden">
-                <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
-              </div>
-              <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
             </div>
-          </div>
+          </section>
+        )}
 
-        </div>
-      </div>
+        {/* Stats row */}
+        {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>At a Glance</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-0" style={{ borderTop: '2px solid #0d1117' }}>
+              {org.people_served && (
+                <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.people_served}</span>
+                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>People Served</span>
+                </div>
+              )}
+              {org.service_area && (
+                <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.service_area}</span>
+                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Service Area</span>
+                </div>
+              )}
+              {org.partner_count != null && (
+                <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.partner_count}</span>
+                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Partners</span>
+                </div>
+              )}
+              {org.annual_budget != null && (
+                <div className="p-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{'$' + org.annual_budget.toLocaleString()}</span>
+                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Annual Budget</span>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* Tags */}
+        {org.tags && org.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-8">
+            {org.tags.map(function (tag) {
+              return <span key={tag} className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1" style={{ color: '#5c6474', border: '1px solid #dde1e8' }}>{tag}</span>
+            })}
+          </div>
+        )}
+
+        {/* Services */}
+        {services && services.length > 0 && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+              Services ({services.length})
+            </h2>
+            <div style={{ borderTop: '1.5px solid #dde1e8' }}>
+              {services.map(function (svc) {
+                const st = serviceTranslations[svc.service_id]
+                const svcName = st?.title || svc.service_name
+                const svcDesc = st?.summary || svc.description_5th_grade
+                return (
+                  <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 group hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                    <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} />
+                    <div className="min-w-0">
+                      <span className="font-body font-semibold block" style={{ color: '#0d1117' }}>{svcName}</span>
+                      {svcDesc && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{svcDesc}</span>}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Content / News */}
+        {content && content.length > 0 && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+              News & Resources ({content.length})
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {content.map(function (item: any) {
+                const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
+                return (
+                  <ContentCard
+                    key={item.id}
+                    id={item.id}
+                    title={item.title_6th_grade}
+                    summary={item.summary_6th_grade}
+                    pathway={item.pathway_primary}
+                    center={item.center}
+                    sourceUrl={item.source_url}
+                    publishedAt={item.published_at}
+                    imageUrl={item.image_url}
+                    translatedTitle={ct?.title}
+                    translatedSummary={ct?.summary}
+                  />
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Opportunities */}
+        {opportunities && opportunities.length > 0 && (
+          <section className="mb-8">
+            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+              Opportunities ({opportunities.length})
+            </h2>
+            <div style={{ borderTop: '1.5px solid #dde1e8' }}>
+              {opportunities.map(function (opp: any) {
+                return (
+                  <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-3 group hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                    <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} />
+                    <div className="min-w-0">
+                      <span className="font-body font-semibold block" style={{ color: '#0d1117' }}>{opp.opportunity_name}</span>
+                      {opp.description_5th_grade && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{opp.description_5th_grade}</span>}
+                      <div className="flex items-center gap-2 flex-wrap mt-1">
+                        {opp.time_commitment && (
+                          <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>{opp.time_commitment}</span>
+                        )}
+                        {opp.is_virtual === 'Yes' && (
+                          <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-1.5 py-0.5" style={{ color: '#1b5e8a', border: '1px solid #1b5e8a' }}>Virtual</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Empty state when no children */}
+        {childCount === 0 && (
+          <div className="text-center py-12" style={{ border: '1px dashed #dde1e8' }}>
+            <p className="font-body" style={{ color: '#5c6474' }}>No services, content, or opportunities have been linked to this organization yet.</p>
+          </div>
+        )}
+
+        {/* Quote */}
+        {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} />}
+      </DetailPageLayout>
 
       <AdminEditPanel
         entityType="organizations"

@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const zone = await getTirzZone(id)
   if (!zone) return { title: 'Not Found' }
   return {
-    title: zone.name + ' TIRZ — Community Exchange',
+    title: zone.name + ' TIRZ — Change Engine',
     description: 'TIRZ-' + zone.site_number + ' ' + zone.name + ': Tax Increment Reinvestment Zone in Houston. View boundaries, related officials, and policies.',
   }
 }
@@ -144,7 +144,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     <Link
                       key={official.official_id}
                       href={'/officials/' + official.official_id}
-                      className="flex items-center gap-3 bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="flex items-center gap-3 bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
                     >
                       {official.photo_url ? (
                         <Image
@@ -184,7 +184,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     <Link
                       key={p.policy_id}
                       href={'/policies/' + p.policy_id}
-                      className="bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {p.level && <span className="text-xs px-2 py-0.5 bg-brand-bg text-brand-muted">{p.level}</span>}

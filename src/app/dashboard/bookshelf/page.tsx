@@ -282,7 +282,7 @@ export default function BookshelfAdmin() {
           const pw = PATHWAY_OPTIONS.find(function (p) { return p.id === b.theme_id })
           return (
             <div key={b.id} className="p-4 bg-white border border-brand-border rounded-xl flex gap-4">
-              <div className="w-1.5 rounded flex-shrink-0" style={{ background: pw?.color || '#805ad5' }} />
+              <div className="w-1.5 rounded flex-shrink-0" style={{ background: pw?.color || '#1a3460' }} />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-brand-text">{b.title}</p>
                 <p className="text-xs text-brand-muted">by {b.author} {b.year_published ? '(' + b.year_published + ')' : ''}</p>

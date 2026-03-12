@@ -44,7 +44,7 @@ export function ServiceCard({ serviceId, name, orgName, orgId, description, phon
   const displayDesc = translatedDescription || description
 
   const card = (
-    <div className="bg-white border border-brand-border p-5 hover:shadow-lg transition-shadow h-full">
+    <div className="bg-white border border-brand-border p-5 hover:border-ink transition-shadow h-full">
       <h3 className="font-semibold text-brand-text mb-1 line-clamp-2">{displayName}</h3>
       {orgName && orgId ? (
         <Link href={'/organizations/' + orgId} className="text-xs text-brand-accent hover:underline mb-2 block" onClick={function (e) { e.stopPropagation() }}>

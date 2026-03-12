@@ -19,7 +19,7 @@ import Image from 'next/image'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Governance — Community Exchange',
+  title: 'Governance — Change Engine',
   description: 'See who represents Houston at every level of government and the policies they are working on.',
 }
 
@@ -97,14 +97,14 @@ export default async function GovernancePage() {
   return (
     <div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#805ad5' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#805ad5' }} />
+        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1a3460' }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1a3460' }} />
           Accountability Center
         </Link>
       </div>
 
       <IndexPageHero
-        color="#805ad5"
+        color="#1a3460"
         pattern="metatron"
         title="Governance"
         subtitle="Who\u2019s in charge and what they\u2019re doing"
@@ -156,7 +156,7 @@ export default async function GovernancePage() {
                               key={o.official_id}
                               href={'/officials/' + o.official_id}
                               className="group flex-shrink-0 w-[160px] bg-white border border-brand-border hover:-translate-y-1 transition-all duration-200 overflow-hidden"
-                              style={{ boxShadow: '3px 3px 0 ' + level.color + '20' }}
+                              style={{}}
                             >
                               {/* Photo or color header */}
                               {o.photo_url ? (
@@ -253,12 +253,12 @@ export default async function GovernancePage() {
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="governance"
-                color="#805ad5"
+                color="#1a3460"
                 related={[
-                  { label: 'Officials', href: '/officials', color: '#805ad5' },
-                  { label: 'Policies', href: '/policies', color: '#3182ce' },
-                  { label: 'Elections', href: '/elections', color: '#38a169' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
+                  { label: 'Officials', href: '/officials', color: '#1a3460' },
+                  { label: 'Policies', href: '/policies', color: '#6a4e10' },
+                  { label: 'Elections', href: '/elections', color: '#7a2018' },
+                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>

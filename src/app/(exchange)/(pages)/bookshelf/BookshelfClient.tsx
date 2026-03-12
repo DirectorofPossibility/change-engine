@@ -217,7 +217,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
       style={{ boxShadow: 'none' }}
     >
       {/* Book spine */}
-      <div className="w-2 flex-shrink-0" style={{ background: theme?.color || '#805ad5' }} />
+      <div className="w-2 flex-shrink-0" style={{ background: theme?.color || '#1a3460' }} />
 
       {/* Cover or placeholder */}
       {book.cover_image_url ? (
@@ -226,9 +226,9 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
         </div>
       ) : (
         <div className="w-16 flex-shrink-0 flex flex-col items-center justify-center py-4 bg-brand-bg border-r border-brand-border">
-          <BookOpen size={20} style={{ color: theme?.color || '#805ad5' }} />
+          <BookOpen size={20} style={{ color: theme?.color || '#1a3460' }} />
           {book.year_published && (
-            <span className="font-mono text-[8px] font-bold mt-1" style={{ color: theme?.color || '#805ad5' }}>{book.year_published}</span>
+            <span className="font-mono text-[8px] font-bold mt-1" style={{ color: theme?.color || '#1a3460' }}>{book.year_published}</span>
           )}
         </div>
       )}

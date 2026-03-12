@@ -8,7 +8,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 900 // 15 minutes
 
 export const metadata: Metadata = {
-  title: 'Houston Live Dashboard — Community Exchange',
+  title: 'Houston Live Dashboard — Change Engine',
   description: 'Houston civic life — right now. Real data. Updated every morning. No spin.',
 }
 

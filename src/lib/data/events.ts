@@ -209,3 +209,65 @@ export const getCalendarItems = cache(async function getCalendarItems(pathway?: 
 /**
  * News feed — articles, reports, announcements. Excludes events, guides, courses, tools.
  */
+
+/**
+ * Upcoming events — next N events across all sources (events table + civic_calendar).
+ * Returns a flat list sorted by date ascending, for the homepage ticker.
+ */
+export async function getUpcomingEvents(limit = 5) {
+  const supabase = await createClient()
+  const now = new Date().toISOString()
+
+  const [eventsRes, civicRes] = await Promise.all([
+    supabase
+      .from('events')
+      .select('event_id, event_name, event_type, start_datetime, city, is_virtual, org_id')
+      .eq('is_active', 'Yes')
+      .gte('start_datetime', now)
+      .order('start_datetime', { ascending: true })
+      .limit(limit),
+    supabase
+      .from('civic_calendar')
+      .select('event_id, event_name, event_type, date_start, time_start, location_name, is_virtual')
+      .eq('is_active', 'Yes')
+      .gte('date_start', now.split('T')[0])
+      .order('date_start', { ascending: true })
+      .limit(limit),
+  ])
+
+  type UpcomingEvent = {
+    id: string
+    title: string
+    date: string
+    type: string | null
+    location: string | null
+    href: string
+  }
+
+  const items: UpcomingEvent[] = []
+
+  for (const e of (eventsRes.data ?? [])) {
+    items.push({
+      id: e.event_id,
+      title: e.event_name,
+      date: e.start_datetime || '',
+      type: e.event_type,
+      location: e.city || (e.is_virtual === 'Yes' ? 'Virtual' : null),
+      href: `/events/${e.event_id}`,
+    })
+  }
+
+  for (const c of (civicRes.data ?? [])) {
+    items.push({
+      id: c.event_id,
+      title: c.event_name,
+      date: c.date_start + (c.time_start ? 'T' + c.time_start : ''),
+      type: c.event_type,
+      location: c.location_name || (c.is_virtual === 'Yes' ? 'Virtual' : null),
+      href: `/calendar`,
+    })
+  }
+
+  items.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  return items.slice(0, limit)
+}

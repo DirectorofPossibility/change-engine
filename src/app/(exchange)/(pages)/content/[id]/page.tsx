@@ -8,7 +8,6 @@ import { THEMES, LANGUAGES } from '@/lib/constants'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
@@ -16,17 +15,15 @@ import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { ExternalLink, Globe, Sparkles, ArrowRight } from 'lucide-react'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
-import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
-import { ShareButtons } from '@/components/exchange/ShareButtons'
-import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -72,7 +69,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!item) return { title: 'Not Found' }
   return {
     title: item.title_6th_grade,
-    description: item.summary_6th_grade || 'Details on the Community Exchange.',
+    description: item.summary_6th_grade || 'Details on the Change Engine.',
   }
 }
 
@@ -235,291 +232,78 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div style={{ background: '#f4f5f7' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="read_article" pathway={item.pathway_primary || undefined} />
-      {/* ── MASTHEAD ── */}
-      <section style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
-        <div className="max-w-[1200px] mx-auto px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0">
-            {/* Left: Hero content (2/3) */}
-            <div className="pr-0 lg:pr-8">
-              {/* Eyebrow row */}
-              <div className="flex items-center gap-3 mb-4">
-                <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
-                  {themeEntry?.name || t('content.news')}
-                </span>
-                {(item as any).content_type && (
-                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
-                    {(item as any).content_type}
-                    {item.pathway_primary && ' / ' + (themeEntry?.name || '')}
-                  </span>
-                )}
-                {item.source_url && (
-                  <a
-                    href={item.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline inline-flex items-center gap-1"
-                    style={{ color: '#5c6474' }}
-                  >
-                    <ExternalLink size={10} />
-                    Source: {item.source_org_name || item.source_domain || new URL(item.source_url).hostname}
-                    <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
-                  </a>
-                )}
-                {isTranslated && (
-                  <span className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] flex items-center gap-1" style={{ color: '#1b5e8a' }}>
-                    <Globe size={11} /> {t('content.translated')}
-                    <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
-                  </span>
-                )}
+
+      <DetailPageLayout
+        eyebrow={{ text: themeEntry?.name || t('content.news') }}
+        eyebrowMeta={
+          <>
+            {(item as any).content_type && (
+              <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+                {(item as any).content_type}
+                {item.pathway_primary && ' / ' + (themeEntry?.name || '')}
+              </span>
+            )}
+            {isTranslated && (
+              <span className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] flex items-center gap-1" style={{ color: '#1b5e8a' }}>
+                <Globe size={11} /> {t('content.translated')}
+                <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
+              </span>
+            )}
+          </>
+        }
+        title={title}
+        heroImage={
+          <>
+            {item.image_url && (
+              <div className="overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
+                <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
               </div>
-
-              <h1 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.15] mb-3" style={{ color: '#0d1117', fontWeight: 900 }}>
-                {title}
-              </h1>
-
-              {/* Date + Language + Share */}
-              <div className="flex items-center gap-3 flex-wrap mb-4">
-                {item.published_at && (
-                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#8a929e' }}>
-                    {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </span>
-                )}
-                <TranslatePageButton isTranslated={isTranslated} contentType="content_published" contentId={item.inbox_id || id} />
-                <ShareButtons
-                  title={title || undefined}
-                  via={item.source_org_name || item.source_domain || undefined}
-                  url={'https://www.changeengine.us/content/' + (item.slug || id)}
-                  compact
-                />
-              </div>
-
-              {/* Image */}
-              {item.image_url && (
-                <div className="overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
-                  <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
+            )}
+            {/* Summary — directly under image */}
+            {summary && (
+              <div className="mt-4">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Sparkles size={11} style={{ color: '#1b5e8a' }} />
+                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>{t('content.summary')}</span>
+                  <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
                 </div>
-              )}
-
-              {/* Summary — directly under image */}
-              {summary && (
-                <div className="mt-4">
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <Sparkles size={11} style={{ color: '#1b5e8a' }} />
-                    <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>{t('content.summary')}</span>
-                    <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
-                  </div>
-                  <p className="font-body text-[15px] leading-relaxed" style={{ color: '#5c6474' }}>
-                    {summary}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Right: Wayfinder + FOL (1/3) */}
-            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
-              <FlowerOfLife size={192} color={themeColor} opacity={0.15} />
-              <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── MAIN + SIDEBAR (2-column grid) ── */}
-      <div className="max-w-[1200px] mx-auto px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0">
-          {/* Main content column */}
-          <div className="pr-0 lg:pr-8" style={{ borderRight: 'none' }}>
-            <style>{`@media (min-width: 1024px) { .editorial-main { border-right: 1px solid #dde1e8; padding-right: 2rem; } }`}</style>
-            <div className="editorial-main">
-
-
-            {/* Video embed */}
-            {(item as any).video_url && (() => {
-              const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
-              const videoId = match ? match[1] : null
-              if (!videoId) return null
-              return (
-                <div className="mb-6">
-                  <div className="relative w-full overflow-hidden" style={{ paddingBottom: '56.25%', border: '1px solid #dde1e8' }}>
-                    <iframe
-                      className="absolute inset-0 w-full h-full"
-                      src={'https://www.youtube-nocookie.com/embed/' + videoId}
-                      title={t('content.video')}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </div>
-                </div>
-              )
-            })()}
-
-            {/* Body */}
-            {bodyBlocks.length > 0 ? (
-              <div className="space-y-4">
-                <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] block mb-2" style={{ color: '#5c6474' }}>{t('content.article')}</span>
-                {bodyBlocks.map(function (block, i) {
-                  if (!block) return null
-                  if (block.startsWith('## ')) {
-                    sectionNumber++
-                    return (
-                      <div key={i} className="flex items-baseline gap-2.5 mt-6 first:mt-0 pb-1.5" style={{ borderBottom: '1px solid #dde1e8' }}>
-                        <span
-                          className="font-mono text-xs font-bold flex-shrink-0"
-                          style={{ color: themeColor }}
-                        >
-                          {String(sectionNumber).padStart(2, '0')}
-                        </span>
-                        <h2 className="text-lg font-display font-bold" style={{ color: '#0d1117' }}>{block.replace(/^## /, '')}</h2>
-                      </div>
-                    )
-                  }
-                  if (block.match(/^[-\u2022*] /m)) {
-                    const items = block.split(/\n/).filter(function (l) { return l.trim() })
-                    return (
-                      <ul key={i} className="font-body list-disc list-outside space-y-1 leading-relaxed ml-5" style={{ color: '#0d1117' }}>
-                        {items.map(function (li, j) {
-                          return <li key={j}>{li.replace(/^[-\u2022*]\s*/, '').trim()}</li>
-                        })}
-                      </ul>
-                    )
-                  }
-                  // Drop cap on first regular paragraph
-                  const isFirstParagraph = i === bodyBlocks.findIndex(function (b) { return b && !b.startsWith('## ') && !b.match(/^[-\u2022*] /m) })
-                  if (isFirstParagraph && block.length > 40) {
-                    const firstChar = block.charAt(0)
-                    const rest = block.slice(1)
-                    return (
-                      <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>
-                        <span
-                          className="font-display float-left leading-[0.8] mr-2 mt-1"
-                          style={{ fontSize: '3.5rem', fontWeight: 900, color: themeColor }}
-                        >
-                          {firstChar}
-                        </span>
-                        {rest}
-                      </p>
-                    )
-                  }
-                  if (block.match(/\*\*[^*]+\*\*/)) {
-                    const parts = block.split(/(\*\*[^*]+\*\*)/)
-                    return (
-                      <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>
-                        {parts.map(function (part, j) {
-                          if (part.startsWith('**') && part.endsWith('**')) {
-                            return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
-                          }
-                          return <span key={j}>{part}</span>
-                        })}
-                      </p>
-                    )
-                  }
-                  return <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>{block}</p>
-                })}
-              </div>
-            ) : (
-              <div className="p-6 text-center" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
-                <p className="text-sm mb-3" style={{ color: '#5c6474' }}>
-                  Full article available at the original source. Use <strong>Break it down for me</strong> below for a quick overview.
+                <p className="font-body text-[15px] leading-relaxed" style={{ color: '#5c6474' }}>
+                  {summary}
                 </p>
-                <a
-                  href={item.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-                  style={{ color: '#1b5e8a' }}
-                >
-                  <ExternalLink size={13} />
-                  {t('content.visit')} {item.source_org_name || item.source_domain || 'source'}
-                </a>
               </div>
             )}
-
-            {/* Break It Down */}
-            <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
-
-            {/* Programs */}
-            {programs.length > 0 && (
-              <div className="mt-6">
-                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>Programs</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {programs.map(function (prog, i) {
-                    return (
-                      <div key={i} className="p-4 flex gap-3" style={{ border: '1px solid #dde1e8' }}>
-                        <div className="w-1 flex-shrink-0" style={{ backgroundColor: themeColor }} />
-                        <div>
-                          <p className="text-sm font-semibold" style={{ color: '#0d1117' }}>{prog.name}</p>
-                          <p className="text-xs mt-1 leading-relaxed" style={{ color: '#5c6474' }}>{prog.description}</p>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Related */}
-            {related && related.length > 0 && (
-              <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
-                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>Related</p>
-                <RelatedContent items={related} />
-              </div>
-            )}
-
-            {/* Also part of these destinations */}
-            {focusAreas.length > 0 && (
-              <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
-                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
-                  {t('content.also_part_of') || 'Also part of these destinations'}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
-                  {focusAreas.slice(0, 4).map(function (fa: any) {
-                    const faTheme = fa.theme_id ? (THEMES as Record<string, { color: string }>)[fa.theme_id] : null
-                    const faColor = faTheme?.color || themeColor
-                    return (
-                      <Link
-                        key={fa.focus_id}
-                        href={'/explore/focus/' + fa.focus_id}
-                        className="group flex items-center gap-3 p-4 transition-colors hover:bg-white"
-                        style={{ border: '1px solid #dde1e8' }}
-                      >
-                        <FlowerOfLife size={28} color={faColor} opacity={0.6} />
-                        <div>
-                          <span className="font-body text-[.88rem] font-semibold block" style={{ color: '#0d1117' }}>
-                            {fa.focus_area_name}
-                          </span>
-                          {fa.theme_id && (THEMES as Record<string, { name: string }>)[fa.theme_id] && (
-                            <span className="font-mono uppercase tracking-[0.08em] text-[0.52rem]" style={{ color: faColor }}>
-                              {(THEMES as Record<string, { name: string }>)[fa.theme_id].name}
-                            </span>
-                          )}
-                        </div>
-                        <ArrowRight size={14} className="ml-auto text-faint group-hover:text-blue transition-colors" />
-                      </Link>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Quote */}
-            {quote && (
-              <div className="mt-8">
-                <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />
-              </div>
-            )}
-
+          </>
+        }
+        metaRow={
+          item.published_at ? (
+            <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#8a929e' }}>
+              {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </span>
+          ) : undefined
+        }
+        actions={{
+          translate: { isTranslated, contentType: 'content_published', contentId: item.inbox_id || id },
+          share: { title: title || undefined, via: item.source_org_name || item.source_domain || undefined, url: 'https://www.changeengine.us/content/' + (item.slug || id) },
+        }}
+        themeColor={themeColor}
+        wayfinderData={wayfinderData}
+        wayfinderType="content"
+        wayfinderEntityId={id}
+        userRole={userProfile?.role}
+        feedbackType="content_published"
+        feedbackId={id}
+        feedbackName={item.title_6th_grade || ''}
+        jsonLd={jsonLd}
+        footer={
+          libraryNuggets.length > 0 ? (
+            <div className="max-w-[1200px] mx-auto px-8">
+              <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} />
             </div>
-          </div>
-
-          {/* ── SIDEBAR ── */}
-          <div className="pl-0 lg:pl-8 space-y-6 mt-8 lg:mt-0">
-            {/* Wayfinder (mobile only — desktop version is in masthead) */}
-            <div className="lg:hidden">
-              <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
-            </div>
-
+          ) : undefined
+        }
+        sidebar={
+          <>
             {/* Topics & Focus Areas */}
             <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
               <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('content.at_a_glance')}</p>
@@ -606,23 +390,222 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 </blockquote>
               </div>
             )}
+          </>
+        }
+      >
+        {/* Video embed */}
+        {(item as any).video_url && (() => {
+          const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
+          const videoId = match ? match[1] : null
+          if (!videoId) return null
+          return (
+            <div className="mb-6">
+              <div className="relative w-full overflow-hidden" style={{ paddingBottom: '56.25%', border: '1px solid #dde1e8' }}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src={'https://www.youtube-nocookie.com/embed/' + videoId}
+                  title={t('content.video')}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          )
+        })()}
 
-            {/* Feedback Loop */}
-            <FeedbackLoop
-              entityType="content_published"
-              entityId={id}
-              entityName={item.title_6th_grade || ''}
-            />
+        {/* Body */}
+        {bodyBlocks.length > 0 ? (
+          <div className="space-y-4">
+            <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] block mb-2" style={{ color: '#5c6474' }}>{t('content.article')}</span>
+            {bodyBlocks.map(function (block, i) {
+              if (!block) return null
+              if (block.startsWith('## ')) {
+                sectionNumber++
+                return (
+                  <div key={i} className="flex items-baseline gap-2.5 mt-6 first:mt-0 pb-1.5" style={{ borderBottom: '1px solid #dde1e8' }}>
+                    <span
+                      className="font-mono text-xs font-bold flex-shrink-0"
+                      style={{ color: themeColor }}
+                    >
+                      {String(sectionNumber).padStart(2, '0')}
+                    </span>
+                    <h2 className="text-lg font-display font-bold" style={{ color: '#0d1117' }}>{block.replace(/^## /, '')}</h2>
+                  </div>
+                )
+              }
+              if (block.match(/^[-\u2022*] /m)) {
+                const items = block.split(/\n/).filter(function (l) { return l.trim() })
+                return (
+                  <ul key={i} className="font-body list-disc list-outside space-y-1 leading-relaxed ml-5" style={{ color: '#0d1117' }}>
+                    {items.map(function (li, j) {
+                      return <li key={j}>{li.replace(/^[-\u2022*]\s*/, '').trim()}</li>
+                    })}
+                  </ul>
+                )
+              }
+              // Drop cap on first regular paragraph
+              const isFirstParagraph = i === bodyBlocks.findIndex(function (b) { return b && !b.startsWith('## ') && !b.match(/^[-\u2022*] /m) })
+              if (isFirstParagraph && block.length > 40) {
+                const firstChar = block.charAt(0)
+                const rest = block.slice(1)
+                return (
+                  <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>
+                    <span
+                      className="font-display float-left leading-[0.8] mr-2 mt-1"
+                      style={{ fontSize: '3.5rem', fontWeight: 900, color: themeColor }}
+                    >
+                      {firstChar}
+                    </span>
+                    {rest}
+                  </p>
+                )
+              }
+              if (block.match(/\*\*[^*]+\*\*/)) {
+                const parts = block.split(/(\*\*[^*]+\*\*)/)
+                return (
+                  <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>
+                    {parts.map(function (part, j) {
+                      if (part.startsWith('**') && part.endsWith('**')) {
+                        return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
+                      }
+                      return <span key={j}>{part}</span>
+                    })}
+                  </p>
+                )
+              }
+              return <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>{block}</p>
+            })}
           </div>
-        </div>
-      </div>
+        ) : (
+          item.source_url ? (
+          <div className="p-5 flex items-center justify-between gap-4" style={{ border: `2px solid ${themeColor}`, background: '#ffffff' }}>
+            <div>
+              <p className="font-mono uppercase tracking-[0.08em] text-[0.56rem] mb-1" style={{ color: '#5c6474' }}>
+                {(item as any).content_type === 'video' ? 'Watch the video' :
+                 (item as any).content_type === 'tool' ? 'Use the tool' :
+                 (item as any).content_type === 'podcast' ? 'Listen now' :
+                 'Read the full guide'}
+              </p>
+              <p className="font-body text-sm" style={{ color: '#0d1117' }}>
+                We found this for you at <strong>{item.source_org_name || item.source_domain || (() => { try { return new URL(item.source_url).hostname } catch { return 'the source' } })()}</strong>
+              </p>
+            </div>
+            <a
+              href={item.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 font-mono uppercase tracking-[0.08em] text-[0.7rem] font-semibold text-white transition-opacity hover:opacity-90"
+              style={{ background: themeColor }}
+            >
+              <ExternalLink size={14} /> Take me there
+            </a>
+          </div>
+          ) : null
+        )}
 
-      {/* Library nuggets */}
-      {libraryNuggets.length > 0 && (
-        <div className="max-w-[1200px] mx-auto px-8">
-          <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} />
-        </div>
-      )}
+        {/* Break It Down */}
+        <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
+
+        {/* Deep link CTA — concierge handoff to the actual resource */}
+        {item.source_url && (
+          <div className="mt-6 p-5 flex items-center justify-between gap-4" style={{ border: `2px solid ${themeColor}`, background: '#ffffff' }}>
+            <div>
+              <p className="font-mono uppercase tracking-[0.08em] text-[0.56rem] mb-1" style={{ color: '#5c6474' }}>
+                {(item as any).content_type === 'book' ? 'Read the book' :
+                 (item as any).content_type === 'course' ? 'Start the course' :
+                 (item as any).content_type === 'video' ? 'Watch the video' :
+                 (item as any).content_type === 'diy_kit' ? 'Get the kit' :
+                 (item as any).content_type === 'tool' ? 'Use the tool' :
+                 (item as any).content_type === 'podcast' ? 'Listen now' :
+                 'Go to this resource'}
+              </p>
+              <p className="font-body text-sm" style={{ color: '#0d1117' }}>
+                We found this for you at <strong>{item.source_org_name || item.source_domain || (() => { try { return new URL(item.source_url).hostname } catch { return 'the source' } })()}</strong>
+              </p>
+            </div>
+            <a
+              href={item.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 font-mono uppercase tracking-[0.08em] text-[0.7rem] font-semibold text-white transition-opacity hover:opacity-90"
+              style={{ background: themeColor }}
+            >
+              <ExternalLink size={14} /> Take me there
+            </a>
+          </div>
+        )}
+
+        {/* Programs */}
+        {programs.length > 0 && (
+          <div className="mt-6">
+            <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>Programs</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {programs.map(function (prog, i) {
+                return (
+                  <div key={i} className="p-4 flex gap-3" style={{ border: '1px solid #dde1e8' }}>
+                    <div className="w-1 flex-shrink-0" style={{ backgroundColor: themeColor }} />
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: '#0d1117' }}>{prog.name}</p>
+                      <p className="text-xs mt-1 leading-relaxed" style={{ color: '#5c6474' }}>{prog.description}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Related */}
+        {related && related.length > 0 && (
+          <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
+            <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>Related</p>
+            <RelatedContent items={related} />
+          </div>
+        )}
+
+        {/* Also part of these destinations */}
+        {focusAreas.length > 0 && (
+          <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
+            <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+              {t('content.also_part_of') || 'Also part of these destinations'}
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+              {focusAreas.slice(0, 4).map(function (fa: any) {
+                const faTheme = fa.theme_id ? (THEMES as Record<string, { color: string }>)[fa.theme_id] : null
+                const faColor = faTheme?.color || themeColor
+                return (
+                  <Link
+                    key={fa.focus_id}
+                    href={'/explore/focus/' + fa.focus_id}
+                    className="group flex items-center gap-3 p-4 transition-colors hover:bg-white"
+                    style={{ border: '1px solid #dde1e8' }}
+                  >
+                    <FlowerOfLife size={28} color={faColor} opacity={0.6} />
+                    <div>
+                      <span className="font-body text-[.88rem] font-semibold block" style={{ color: '#0d1117' }}>
+                        {fa.focus_area_name}
+                      </span>
+                      {fa.theme_id && (THEMES as Record<string, { name: string }>)[fa.theme_id] && (
+                        <span className="font-mono uppercase tracking-[0.08em] text-[0.52rem]" style={{ color: faColor }}>
+                          {(THEMES as Record<string, { name: string }>)[fa.theme_id].name}
+                        </span>
+                      )}
+                    </div>
+                    <ArrowRight size={14} className="ml-auto text-faint group-hover:text-blue transition-colors" />
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Quote */}
+        {quote && (
+          <div className="mt-8">
+            <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />
+          </div>
+        )}
+      </DetailPageLayout>
 
       <AdminEditPanel
         entityType="content_published"

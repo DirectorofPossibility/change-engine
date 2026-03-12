@@ -74,7 +74,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
   return (
     <div>
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden" style={{ background: '#FAF8F5' }}>
+      <section className="relative overflow-hidden" style={{ background: '#f4f5f7' }}>
         {/* Noise texture */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: 'radial-gradient(circle, rgba(44,44,44,0.03) 1px, transparent 1px)',
@@ -141,27 +141,27 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <div className="relative h-[400px]">
                 {/* 1 — back of the pile, peeking top-right */}
                 <div className="absolute overflow-hidden border border-brand-border"
-                  style={{ width: '280px', height: '200px', top: '0', right: '0', transform: 'rotate(3deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 1 }}>
+                  style={{ width: '280px', height: '200px', top: '0', right: '0', transform: 'rotate(3deg)', zIndex: 1 }}>
                   <Image src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 2 — peeking bottom-right */}
                 <div className="absolute overflow-hidden border border-brand-border"
-                  style={{ width: '240px', height: '170px', bottom: '0', right: '20px', transform: 'rotate(-2deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 2 }}>
+                  style={{ width: '240px', height: '170px', bottom: '0', right: '20px', transform: 'rotate(-2deg)', zIndex: 2 }}>
                   <Image src="/images/editorial/cleanup.jpg" alt="Community cleanup" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 3 — large, anchors the pile center-left */}
                 <div className="absolute overflow-hidden border border-brand-border"
-                  style={{ width: '300px', height: '220px', top: '20px', left: '0', transform: 'rotate(-1.5deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 3 }}>
+                  style={{ width: '300px', height: '220px', top: '20px', left: '0', transform: 'rotate(-1.5deg)', zIndex: 3 }}>
                   <Image src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 4 — overlaps center, tilted right */}
                 <div className="absolute overflow-hidden border border-brand-border"
-                  style={{ width: '260px', height: '190px', top: '80px', right: '10px', transform: 'rotate(2deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 4 }}>
+                  style={{ width: '260px', height: '190px', top: '80px', right: '10px', transform: 'rotate(2deg)', zIndex: 4 }}>
                   <Image src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 5 — top of the pile, bottom-left */}
                 <div className="absolute overflow-hidden border border-brand-border"
-                  style={{ width: '250px', height: '180px', bottom: '0', left: '10px', transform: 'rotate(1.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
+                  style={{ width: '250px', height: '180px', bottom: '0', left: '10px', transform: 'rotate(1.5deg)', zIndex: 5 }}>
                   <Image src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
 
@@ -183,7 +183,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 key={item.label}
                 href={item.href}
                 className={'relative overflow-hidden transition-all duration-300 hover:-translate-y-1 group border' + (item.cta ? ' col-span-2 md:col-span-1' : '')}
-                style={{ aspectRatio: '1', borderColor: item.color + '40', boxShadow: '3px 3px 0 ' + item.color + '25' }}
+                style={{ aspectRatio: '1', borderColor: item.color + '40' }}
               >
                 {item.cta && (
                   <div className="relative inline-block" style={{ position: 'absolute', top: 4, left: 4, zIndex: 5 }}>
@@ -200,7 +200,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, ' + item.color + ' 0%, ' + item.color + '99 35%, transparent 70%)' }} />
                 {/* Text */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 z-[2]">
-                  <span className="block font-display text-lg font-bold text-white leading-tight" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+                  <span className="block font-display text-lg font-bold text-white leading-tight">
                     {item.label}
                   </span>
                   <span className="block text-[11px] text-white/80 mt-0.5 leading-snug">
@@ -227,7 +227,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 key={key}
                 href={'/centers/' + c.slug}
                 className="relative border overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
-                style={{ borderColor: c.color + '50', boxShadow: '3px 3px 0 ' + c.color + '20' }}
+                style={{ borderColor: c.color + '50' }}
               >
                 {/* Color header with icon */}
                 <div className="relative h-20 flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, ' + c.color + ' 0%, ' + c.color + 'dd 100%)' }}>
@@ -236,7 +236,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                     alt="" aria-hidden="true"
                     className="absolute w-[100px] h-[100px] opacity-[0.15] pointer-events-none"
                    width={200} height={200} />
-                  <span className="relative z-[1] font-display text-xl font-bold text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{key}</span>
+                  <span className="relative z-[1] font-display text-xl font-bold text-white">{key}</span>
                 </div>
                 {/* Body */}
                 <div className="p-4 bg-white">

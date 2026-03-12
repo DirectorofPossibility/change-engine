@@ -18,7 +18,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Who Represents You — Community Exchange',
+  title: 'Who Represents You — Change Engine',
   description: 'Find your elected officials at every level of government in Houston, Texas.',
 }
 

@@ -9,7 +9,7 @@ import { TirzMap } from './TirzMap'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'TIRZ Zones — Community Exchange',
+  title: 'TIRZ Zones — Change Engine',
   description: 'Explore Houston\'s 27 Tax Increment Reinvestment Zones (TIRZ). See how reinvestment dollars are shaping neighborhoods across the city.',
 }
 
@@ -133,11 +133,11 @@ export default async function TirzPage() {
                 currentPage="tirz"
                 color="#C75B2A"
                 related={[
-                  { label: 'Districts', href: '/districts', color: '#805ad5' },
-                  { label: 'Officials Directory', href: '/officials', color: '#3182ce' },
-                  { label: 'Policies', href: '/policies', color: '#38a169' },
-                  { label: 'Geography', href: '/geography', color: '#319795' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
+                  { label: 'Districts', href: '/districts', color: '#1a3460' },
+                  { label: 'Officials Directory', href: '/officials', color: '#6a4e10' },
+                  { label: 'Policies', href: '/policies', color: '#7a2018' },
+                  { label: 'Geography', href: '/geography', color: '#1a5030' },
+                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
                 ]}
               />
             </div>

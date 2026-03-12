@@ -255,7 +255,7 @@ function renderPolicyGroup(title: string, policies: NonNullable<CivicProfileResu
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {policies.slice(0, 6).map(function (p) {
           return (
-            <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="bg-white border border-brand-border p-4 hover:shadow-md transition-shadow">
+            <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="bg-white border border-brand-border p-4 hover:border-ink transition-shadow">
               <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{p.title_6th_grade || p.policy_name}</h4>
               {p.bill_number && <p className="text-xs font-mono text-brand-muted mb-1">{p.bill_number}</p>}
               <div className="flex items-center gap-2">

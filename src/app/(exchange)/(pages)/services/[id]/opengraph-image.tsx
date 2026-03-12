@@ -17,7 +17,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   const subtitle = data?.description_5th_grade || undefined
 
   return new ImageResponse(
-    <OGLayout title={title} subtitle={subtitle} label="Service" accentColor="#38a169" />,
+    <OGLayout title={title} subtitle={subtitle} label="Service" accentColor="#7a2018" />,
     { ...size }
   )
 }

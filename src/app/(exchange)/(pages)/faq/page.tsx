@@ -7,8 +7,8 @@ import { faqJsonLd } from '@/lib/jsonld'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions — Community Exchange',
-  description: 'Answers to common questions about civic participation, services, and the Community Exchange.',
+  title: 'Frequently Asked Questions — Change Engine',
+  description: 'Answers to common questions about civic participation, services, and the Change Engine.',
 }
 
 export default async function FAQPage() {
@@ -32,7 +32,7 @@ export default async function FAQPage() {
   return (
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#d69e2e" title="Frequently Asked Questions" subtitle="Quick answers to the most common questions about civic participation, services, and how to use the Community Exchange." />
+      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#4a2870" title="Frequently Asked Questions" subtitle="Quick answers to the most common questions about civic participation, services, and how to use the Change Engine." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'FAQ' }]} />
         {Object.entries(grouped).map(function ([category, items]) {

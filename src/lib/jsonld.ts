@@ -25,7 +25,7 @@ export function articleJsonLd(item: {
     author: item.source_org_name ? { '@type': 'Organization', name: item.source_org_name } : undefined,
     publisher: {
       '@type': 'Organization',
-      name: 'Community Exchange',
+      name: 'Change Engine',
       url: SITE_URL,
     },
   }

@@ -8,7 +8,7 @@ import { BookOpen, Newspaper, Compass, MessageCircle, Map } from 'lucide-react'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Learning — Community Exchange',
+  title: 'Learning — Change Engine',
   description: 'Understand your community through research, news, guided pathways, and conversation.',
 }
 
@@ -93,7 +93,7 @@ export default async function LearningIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
                
               >
                 <div className="flex">

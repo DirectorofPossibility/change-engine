@@ -23,7 +23,7 @@ function NuggetCard({ nugget, color = '#8B7E74', readMoreLabel = 'Read more' }: 
   return (
     <Link
       href={nugget.link}
-      className="group block bg-white border border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+      className="group block bg-white border border-brand-border hover:border-ink hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
     >
       <div className="flex">
         <div

@@ -5,7 +5,7 @@ import { SenatorToolClient } from './SenatorToolClient'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Call Your Senators — Community Exchange',
+  title: 'Call Your Senators — Change Engine',
   description: 'Two minutes. One call. Your senators have staff whose only job is to count opinions like yours.',
 }
 

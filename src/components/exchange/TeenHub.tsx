@@ -66,17 +66,17 @@ interface TeenHubProps {
 // ── Vibe System (Identity Selection — Self-Determination Theory) ──
 
 const VIBES = [
-  { id: 'curious', label: 'The Curious One', icon: BookOpen, color: '#3182ce', gradient: 'from-blue-500 to-cyan-400', desc: 'You want to understand how things actually work', filter: 'learn' },
-  { id: 'fired-up', label: 'The Fired Up One', icon: Flame, color: '#e53e3e', gradient: 'from-red-500 to-orange-400', desc: 'You see something wrong and want to fix it', filter: 'act' },
-  { id: 'builder', label: 'The Builder', icon: Target, color: '#38a169', gradient: 'from-green-500 to-emerald-400', desc: 'You want to create something that lasts', filter: 'build' },
-  { id: 'connector', label: 'The Connector', icon: Users, color: '#805ad5', gradient: 'from-purple-500 to-pink-400', desc: 'You bring people together', filter: null },
+  { id: 'curious', label: 'The Curious One', icon: BookOpen, color: '#6a4e10', gradient: 'from-blue-500 to-cyan-400', desc: 'You want to understand how things actually work', filter: 'learn' },
+  { id: 'fired-up', label: 'The Fired Up One', icon: Flame, color: '#1a6b56', gradient: 'from-red-500 to-orange-400', desc: 'You see something wrong and want to fix it', filter: 'act' },
+  { id: 'builder', label: 'The Builder', icon: Target, color: '#7a2018', gradient: 'from-green-500 to-emerald-400', desc: 'You want to create something that lasts', filter: 'build' },
+  { id: 'connector', label: 'The Connector', icon: Users, color: '#1a3460', gradient: 'from-purple-500 to-pink-400', desc: 'You bring people together', filter: null },
 ] as const
 
 // ── Pathway colors for accent mapping ──
 
 const PATHWAY_COLORS: Record<string, string> = {
-  THEME_01: '#e53e3e', THEME_02: '#dd6b20', THEME_03: '#d69e2e',
-  THEME_04: '#38a169', THEME_05: '#3182ce', THEME_06: '#319795', THEME_07: '#805ad5',
+  THEME_01: '#1a6b56', THEME_02: '#1e4d7a', THEME_03: '#4a2870',
+  THEME_04: '#7a2018', THEME_05: '#6a4e10', THEME_06: '#1a5030', THEME_07: '#1a3460',
 }
 
 // ── Component ──
@@ -133,9 +133,9 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
         }} />
 
         {/* Floating gradient orbs */}
-        <div className="absolute top-20 left-[10%] w-[400px] h-[400px] rounded-full opacity-20 blur-[120px] animate-pulse" style={{ background: 'radial-gradient(circle, #805ad5, transparent)' }} />
-        <div className="absolute bottom-20 right-[15%] w-[350px] h-[350px] rounded-full opacity-15 blur-[100px] animate-pulse" style={{ background: 'radial-gradient(circle, #3182ce, transparent)', animationDelay: '1s' }} />
-        <div className="absolute top-[40%] right-[30%] w-[250px] h-[250px] rounded-full opacity-10 blur-[80px] animate-pulse" style={{ background: 'radial-gradient(circle, #e53e3e, transparent)', animationDelay: '2s' }} />
+        <div className="absolute top-20 left-[10%] w-[400px] h-[400px] rounded-full opacity-20 blur-[120px] animate-pulse" style={{ background: 'radial-gradient(circle, #1a3460, transparent)' }} />
+        <div className="absolute bottom-20 right-[15%] w-[350px] h-[350px] rounded-full opacity-15 blur-[100px] animate-pulse" style={{ background: 'radial-gradient(circle, #6a4e10, transparent)', animationDelay: '1s' }} />
+        <div className="absolute top-[40%] right-[30%] w-[250px] h-[250px] rounded-full opacity-10 blur-[80px] animate-pulse" style={{ background: 'radial-gradient(circle, #1a6b56, transparent)', animationDelay: '2s' }} />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           {/* Glitch-style label */}
@@ -192,15 +192,15 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
          ════════════════════════════════════════════════════════════ */}
       <section className="relative border-y border-white/5 bg-white/[0.02] overflow-hidden">
         <div className="flex items-center gap-12 py-4 px-6 overflow-x-auto scrollbar-hide">
-          <StatPill value={stats.orgs + '+'} label="organizations" color="#805ad5" />
+          <StatPill value={stats.orgs + '+'} label="organizations" color="#1a3460" />
           <div className="w-px h-6 bg-white/10 flex-shrink-0" />
-          <StatPill value={stats.stories + '+'} label="stories" color="#3182ce" />
+          <StatPill value={stats.stories + '+'} label="stories" color="#6a4e10" />
           <div className="w-px h-6 bg-white/10 flex-shrink-0" />
-          <StatPill value={stats.events + '+'} label="events this month" color="#38a169" />
+          <StatPill value={stats.events + '+'} label="events this month" color="#7a2018" />
           <div className="w-px h-6 bg-white/10 flex-shrink-0" />
-          <StatPill value={stats.services + '+'} label="services" color="#e53e3e" />
+          <StatPill value={stats.services + '+'} label="services" color="#1a6b56" />
           <div className="w-px h-6 bg-white/10 flex-shrink-0" />
-          <StatPill value="7" label="pathways to explore" color="#dd6b20" />
+          <StatPill value="7" label="pathways to explore" color="#1e4d7a" />
         </div>
       </section>
 
@@ -290,9 +290,9 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
           {/* Effort level tabs */}
           <div className="flex flex-wrap gap-3 mt-8">
             {[
-              { label: 'Quick Wins', icon: Zap, desc: '5 min', color: '#38a169', missions: missions.quickWins },
-              { label: 'Get Involved', icon: Target, desc: '1-2 hrs', color: '#3182ce', missions: missions.getInvolved },
-              { label: 'Go Deeper', icon: Flame, desc: 'Ongoing', color: '#e53e3e', missions: missions.goDeeper },
+              { label: 'Quick Wins', icon: Zap, desc: '5 min', color: '#7a2018', missions: missions.quickWins },
+              { label: 'Get Involved', icon: Target, desc: '1-2 hrs', color: '#6a4e10', missions: missions.getInvolved },
+              { label: 'Go Deeper', icon: Flame, desc: 'Ongoing', color: '#1a6b56', missions: missions.goDeeper },
             ].map(tier => (
               <div
                 key={tier.label}
@@ -618,13 +618,13 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-10">
             {[
-              { slug: 'health', name: 'Health', desc: 'Mental health, wellness, clinics, nutrition', color: '#e53e3e' },
-              { slug: 'families', name: 'Families', desc: 'Schools, youth programs, childcare, safety', color: '#dd6b20' },
-              { slug: 'neighborhood', name: 'Neighborhood', desc: 'Housing, parks, libraries, your block', color: '#d69e2e' },
-              { slug: 'voice', name: 'Voice', desc: 'Voting, advocacy, town halls, power', color: '#38a169' },
-              { slug: 'money', name: 'Money', desc: 'Jobs, internships, scholarships, business', color: '#3182ce' },
-              { slug: 'planet', name: 'Planet', desc: 'Climate, environment, energy, water', color: '#319795' },
-              { slug: 'the-bigger-we', name: 'The Bigger We', desc: 'Bridging, dialogue, inclusion, trust', color: '#805ad5' },
+              { slug: 'health', name: 'Health', desc: 'Mental health, wellness, clinics, nutrition', color: '#1a6b56' },
+              { slug: 'families', name: 'Families', desc: 'Schools, youth programs, childcare, safety', color: '#1e4d7a' },
+              { slug: 'neighborhood', name: 'Neighborhood', desc: 'Housing, parks, libraries, your block', color: '#4a2870' },
+              { slug: 'voice', name: 'Voice', desc: 'Voting, advocacy, town halls, power', color: '#7a2018' },
+              { slug: 'money', name: 'Money', desc: 'Jobs, internships, scholarships, business', color: '#6a4e10' },
+              { slug: 'planet', name: 'Planet', desc: 'Climate, environment, energy, water', color: '#1a5030' },
+              { slug: 'the-bigger-we', name: 'The Bigger We', desc: 'Bridging, dialogue, inclusion, trust', color: '#1a3460' },
             ].map(p => (
               <Link
                 key={p.slug}
@@ -652,7 +652,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
          ════════════════════════════════════════════════════════════ */}
       <section className="relative py-24 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-[20%] w-[500px] h-[500px] rounded-full opacity-10 blur-[150px]" style={{ background: 'radial-gradient(circle, #805ad5, transparent)' }} />
+        <div className="absolute bottom-0 left-[20%] w-[500px] h-[500px] rounded-full opacity-10 blur-[150px]" style={{ background: 'radial-gradient(circle, #1a3460, transparent)' }} />
 
         <div className="relative max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
@@ -688,7 +688,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
 
       {/* Spectrum bar at very bottom */}
       <div className="h-1 flex">
-        {['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#319795', '#805ad5'].map(c => (
+        {['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#6a4e10', '#1a5030', '#1a3460'].map(c => (
           <div key={c} className="flex-1" style={{ backgroundColor: c }} />
         ))}
       </div>
@@ -723,9 +723,9 @@ function MissionCard({ mission, index, isHovered, onHover }: {
   onHover: (id: string | null) => void
 }) {
   const categoryColors = {
-    learn: { bg: 'from-blue-500/20 to-cyan-500/20', border: '#3182ce', label: 'Learn', icon: BookOpen },
-    act: { bg: 'from-green-500/20 to-emerald-500/20', border: '#38a169', label: 'Act', icon: Target },
-    build: { bg: 'from-red-500/20 to-orange-500/20', border: '#e53e3e', label: 'Build', icon: Flame },
+    learn: { bg: 'from-blue-500/20 to-cyan-500/20', border: '#6a4e10', label: 'Learn', icon: BookOpen },
+    act: { bg: 'from-green-500/20 to-emerald-500/20', border: '#7a2018', label: 'Act', icon: Target },
+    build: { bg: 'from-red-500/20 to-orange-500/20', border: '#1a6b56', label: 'Build', icon: Flame },
   }
 
   const cat = categoryColors[mission.category]

@@ -6,7 +6,7 @@ import { Mail, MapPin, Globe } from 'lucide-react'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Contact Us — Community Exchange',
+  title: 'Contact Us — Change Engine',
   description: 'Get in touch with The Change Lab team.',
 }
 

@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Engine — Houston</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700;1,9..144,900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET & TOKENS ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --white:   #ffffff;
+  --paper:   #f4f5f7;
+  --ink:     #0d1117;
+  --dim:     #5c6474;
+  --faint:   #8a929e;
+  --rule:    #dde1e8;
+  --blue:    #1b5e8a;
+  --blue-lt: #2a7db5;
+  --blue-bg: #e8f2fa;
+  --health:  #1a6b56;
+  --health-lt:#e4f2ed;
+  --health-dk:#0a2a22;
+  --teal:    #7ec8e3;
+}
+
+body {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  background: var(--white);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── DEMO NAV (page switcher) ── */
+.demo-bar {
+  background: #1a1a2e; padding: .6rem 1.5rem;
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  position: sticky; top: 0; z-index: 1000;
+  border-bottom: 2px solid #7ec8e3;
+}
+.demo-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem; letter-spacing: .2em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin-right: .5rem;
+}
+.demo-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: .35rem .9rem; color: rgba(255,255,255,.5);
+  border: 1px solid rgba(255,255,255,.15); transition: all .15s; cursor: pointer;
+}
+.demo-btn.active, .demo-btn:hover {
+  background: #7ec8e3; color: #0d1117; border-color: #7ec8e3;
+}
+
+/* ── SITE NAV ── */
+.site-nav {
+  background: white; border-bottom: 2px solid var(--ink);
+  height: 54px; display: flex; align-items: center;
+  padding: 0 1.5rem; justify-content: space-between;
+  position: sticky; top: 37px; z-index: 900;
+}
+.nav-brand { display: flex; align-items: center; gap: .6rem; }
+.nav-geo { width: 28px; height: 28px; }
+.nav-wordmark { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+.nav-ed {
+  font-family: 'DM Mono', monospace; font-size: .52rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--dim); border: 1px solid var(--rule); padding: .15rem .45rem;
+}
+.nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+.nav-links a {
+  font-family: 'DM Mono', monospace; font-size: .68rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--dim);
+}
+.nav-cta {
+  font-family: 'DM Mono', monospace; font-size: .68rem;
+  letter-spacing: .08em; text-transform: uppercase;
+  background: var(--ink); color: white !important;
+  padding: .45rem 1.1rem; transition: background .15s;
+}
+.nav-cta:hover { background: var(--blue); }
+
+/* ── PAGE VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   WAYFINDER — persistent, appears on every page type
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.wayfinder {
+  background: var(--ink);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.wf-inner {
+  max-width: 1080px; margin: 0 auto; padding: 0 1.5rem;
+  display: flex; align-items: stretch; flex-wrap: wrap;
+}
+
+/* Breadcrumb strip */
+.wf-crumb {
+  display: flex; align-items: center; gap: 0;
+  border-right: 1px solid rgba(255,255,255,.08);
+  flex: 1; min-width: 0; overflow-x: auto;
+}
+.wf-crumb::-webkit-scrollbar { display: none; }
+.wf-step {
+  display: flex; align-items: center;
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem; letter-spacing: .06em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); padding: .7rem .8rem;
+  white-space: nowrap; cursor: pointer; transition: color .15s;
+  border-bottom: 2px solid transparent;
+}
+.wf-step:hover { color: rgba(255,255,255,.65); }
+.wf-step.here { color: var(--teal); border-bottom-color: var(--teal); }
+.wf-sep { color: rgba(255,255,255,.15); font-size: .65rem; padding: 0 .1rem; }
+
+/* Trail level indicator — right side */
+.wf-trail {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .7rem 1rem;
+}
+.wf-trail-label {
+  font-family: 'DM Mono', monospace; font-size: .56rem;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.25); white-space: nowrap;
+}
+.wf-dots { display: flex; gap: 3px; }
+.wf-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.15);
+}
+.wf-dot.lit { background: var(--teal); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PAGE 1: THEME HUB — The State of Health in Houston
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Feature masthead */
+.theme-mast {
+  background: linear-gradient(158deg, var(--health-dk) 0%, #143d2e 50%, #1a6b56 100%);
+  padding: 3.5rem 1.5rem 3rem;
+  position: relative; overflow: hidden;
+}
+.tm-geo1 {
+  position: absolute; top: 50%; right: -60px;
+  transform: translateY(-50%);
+  width: 380px; height: 380px; opacity: .1; pointer-events: none;
+  animation: spin 120s linear infinite;
+}
+.tm-geo2 {
+  position: absolute; bottom: -60px; left: -40px;
+  width: 240px; height: 240px; opacity: .05; pointer-events: none;
+  animation: spincw 90s linear infinite;
+}
+@keyframes spin   { to { transform: translateY(-50%) rotate(360deg); } }
+@keyframes spincw { to { transform: rotate(-360deg); } }
+
+.tm-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 2; }
+.tm-dateline {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  letter-spacing: .24em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-bottom: .6rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.tm-dateline::before { content: ''; display: block; width: 24px; height: 1px; background: rgba(255,255,255,.3); }
+
+.tm-hed {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 900; line-height: .95; letter-spacing: -.025em;
+  color: white; margin-bottom: 1.25rem;
+}
+.tm-hed em { font-style: italic; color: #a8d8c4; display: block; }
+
+.tm-rule { width: 50px; height: 2px; background: rgba(255,255,255,.3); margin-bottom: 1.25rem; }
+
+.tm-dek {
+  font-style: italic; font-size: 1rem; line-height: 1.7;
+  color: rgba(255,255,255,.65); max-width: 560px; margin-bottom: 2rem;
+}
+
+/* Data callouts — story-first, not charts */
+.tm-stats {
+  display: flex; gap: 0; flex-wrap: wrap;
+  border: 1px solid rgba(255,255,255,.12); max-width: 640px;
+}
+.tm-stat {
+  padding: 1rem 1.5rem; border-right: 1px solid rgba(255,255,255,.12);
+  flex: 1; min-width: 140px;
+}
+.tm-stat:last-child { border-right: none; }
+.tm-stat-num {
+  font-family: 'Fraunces', serif; font-size: 2rem;
+  font-weight: 900; color: #a8d8c4; line-height: 1; display: block;
+}
+.tm-stat-desc {
+  font-family: 'DM Mono', monospace; font-size: .58rem;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-top: .3rem;
+}
+
+/* Editorial feature body */
+.theme-editorial { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+/* Opening feature — full lede paragraph like a magazine article */
+.feature-open {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; border-bottom: 1.5px solid var(--rule);
+}
+@media (max-width: 680px) { .feature-open { grid-template-columns: 1fr; } }
+
+.feature-lede {
+  padding: 2.5rem 2.5rem 2.5rem 0;
+  border-right: 1.5px solid var(--rule);
+}
+@media (max-width: 680px) { .feature-lede { padding: 2rem 0; border-right: none; border-bottom: 1.5px solid var(--rule); } }
+
+.feature-lede-drop {
+  font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 900;
+  line-height: .85; float: left; margin: .05em .18em -.05em 0;
+  color: var(--health);
+}
+.feature-lede p {
+  font-size: .92rem; line-height: 1.85; color: var(--ink);
+  margin-bottom: 1rem;
+}
+.feature-lede p:last-child { margin-bottom: 0; }
+
+.feature-pull {
+  padding: 2.5rem 0 2.5rem 2.5rem;
+  display: flex; flex-direction: column; justify-content: center; gap: 1.5rem;
+}
+@media (max-width: 680px) { .feature-pull { padding: 2rem 0; } }
+
+.pull-quote {
+  font-family: 'Fraunces', serif; font-size: 1.35rem; font-weight: 700;
+  font-style: italic; line-height: 1.35; color: var(--ink);
+  padding-left: 1.25rem; border-left: 3px solid var(--health);
+}
+.pull-source {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+  margin-top: .5rem; display: block;
+}
+
+/* Data story cards — not charts, narrative numbers */
+.data-stories {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; border-bottom: 1.5px solid var(--rule);
+}
+@media (max-width: 680px) { .data-stories { grid-template-columns: 1fr; } }
+
+.data-story {
+  padding: 1.75rem; border-right: 1.5px solid var(--rule);
+}
+.data-story:last-child { border-right: none; }
+@media (max-width: 680px) { .data-story { border-right: none; border-bottom: 1.5px solid var(--rule); } }
+@media (max-width: 680px) { .data-story:last-child { border-bottom: none; } }
+
+.ds-num {
+  font-family: 'Fraunces', serif; font-size: 2.8rem; font-weight: 900;
+  color: var(--health); line-height: 1; display: block; margin-bottom: .4rem;
+}
+.ds-hed { font-size: .9rem; font-weight: 700; margin-bottom: .5rem; }
+.ds-copy { font-style: italic; font-size: .78rem; line-height: 1.65; color: var(--dim); }
+
+/* From the Couch — editorial reads */
+.couch-section {
+  padding: 2.5rem 0;
+  border-bottom: 1.5px solid var(--rule);
+}
+.section-hed-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.section-kicker {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+  display: block; margin-bottom: .35rem;
+}
+.section-hed {
+  font-family: 'Fraunces', serif; font-size: 1.5rem;
+  font-weight: 700; letter-spacing: -.015em;
+}
+.section-hed em { font-style: italic; }
+.section-all {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--blue);
+  white-space: nowrap;
+}
+.section-all::after { content: ' →'; }
+
+/* Couch content in editorial magazine layout */
+.couch-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 0;
+  border: 1.5px solid var(--rule);
+}
+@media (max-width: 680px) { .couch-grid { grid-template-columns: 1fr; } }
+
+.couch-feature {
+  grid-row: 1 / 3; grid-column: 1;
+  border-right: 1.5px solid var(--rule);
+  display: flex; flex-direction: column;
+}
+@media (max-width: 680px) { .couch-feature { grid-row: auto; grid-column: auto; } }
+
+.couch-illus {
+  background: var(--health-lt);
+  aspect-ratio: 3/2; display: flex; align-items: center; justify-content: center;
+  border-bottom: 1.5px solid var(--rule);
+  position: relative; overflow: hidden;
+}
+.couch-illus-geo {
+  position: absolute; opacity: .18; animation: spin 60s linear infinite;
+}
+.couch-body { padding: 1.5rem; flex: 1; }
+.couch-type {
+  font-family: 'DM Mono', monospace; font-size: .56rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: .4rem; display: block;
+}
+.couch-hed {
+  font-family: 'Fraunces', serif; font-size: 1.1rem;
+  font-weight: 700; line-height: 1.25; margin-bottom: .5rem;
+}
+.couch-dek { font-style: italic; font-size: .78rem; line-height: 1.6; color: var(--dim); }
+.couch-meta {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  color: var(--faint); margin-top: .75rem; display: block;
+}
+
+.couch-side {
+  border-bottom: 1.5px solid var(--rule); padding: 1.25rem;
+  display: flex; flex-direction: column; gap: .5rem;
+}
+.couch-side:last-child { border-bottom: none; }
+@media (max-width: 680px) { .couch-side { border-right: none; border-bottom: 1.5px solid var(--rule); } }
+
+/* ── CONTROL PANEL — Focus area instruments ── */
+.control-panel-section { padding: 2.5rem 0 0; }
+
+.cp-intro { margin-bottom: 2rem; }
+
+/* The instrument grid */
+.cp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-left: 2px solid var(--ink);
+  border-top: 2px solid var(--ink);
+}
+@media (max-width: 900px) { .cp-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 600px) { .cp-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.cp-instrument {
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background: white; cursor: pointer;
+  transition: background .15s;
+  text-decoration: none; display: block;
+  position: relative; overflow: hidden;
+}
+.cp-instrument:hover { background: var(--health-lt); }
+.cp-instrument:hover .cp-geo { opacity: .2; transform: translate(-50%,-50%) rotate(15deg) scale(1.05); }
+
+/* Instrument face — the sacred geometry gauge */
+.cp-face {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--rule);
+  position: relative; overflow: hidden;
+  background: var(--health-lt);
+}
+.cp-geo {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 85%; opacity: .14; pointer-events: none;
+  transition: opacity .3s, transform .3s;
+}
+
+/* Status arc — shows content depth as a partial circle ring */
+.cp-arc-wrap {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 70%; aspect-ratio: 1;
+}
+
+/* Destination label below gauge */
+.cp-label { padding: .75rem .9rem .7rem; }
+.cp-dest-name {
+  font-family: 'Fraunces', serif; font-size: .85rem;
+  font-weight: 700; line-height: 1.2; margin-bottom: .35rem;
+}
+.cp-readings {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.cp-level-dots { display: flex; gap: 2.5px; }
+.cp-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--rule); }
+.cp-dot.on { background: var(--health); }
+.cp-live {
+  font-family: 'DM Mono', monospace; font-size: .52rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--dim);
+}
+.cp-live.hot { color: #b03a2a; font-weight: 600; }
+.cp-go {
+  font-family: 'DM Mono', monospace; font-size: .56rem;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--blue); display: block; margin-top: .35rem;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PAGE 2: FOCUS AREA HUB — Mental Health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.focus-mast {
+  background: linear-gradient(155deg, #0a1e18 0%, #0e3428 50%, #1a6b56 100%);
+  padding: 3rem 1.5rem 2.5rem;
+  position: relative; overflow: hidden;
+}
+.fm-geo {
+  position: absolute; top: 50%; right: -40px;
+  transform: translateY(-50%);
+  width: 300px; height: 300px; opacity: .1; pointer-events: none;
+  animation: spin 90s linear infinite;
+}
+.fm-inner { max-width: 1080px; margin: 0 auto; position: relative; z-index: 2; }
+.fm-region-link {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); display: flex; align-items: center; gap: .5rem;
+  margin-bottom: .6rem;
+}
+.fm-region-link::before { content: '←'; }
+.fm-hed {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 900; line-height: 1; letter-spacing: -.025em;
+  color: white; margin-bottom: .75rem;
+  display: flex; align-items: flex-start; gap: .75rem;
+}
+.fm-geo-mark { width: 44px; height: 44px; flex-shrink: 0; margin-top: .1rem; opacity: .65; }
+.fm-dek {
+  font-style: italic; font-size: .92rem; line-height: 1.7;
+  color: rgba(255,255,255,.55); max-width: 500px;
+}
+
+/* Focus hub trail — the full 5-level layout */
+.focus-trail { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+.ft-level {
+  display: grid; grid-template-columns: 180px 1fr;
+  border-bottom: 1.5px solid var(--rule);
+  min-height: 0;
+}
+@media (max-width: 680px) { .ft-level { grid-template-columns: 1fr; } }
+
+.ft-level:last-child { border-bottom: 2px solid var(--ink); }
+
+/* Level spine */
+.ft-spine {
+  background: var(--paper); border-right: 1.5px solid var(--rule);
+  padding: 1.5rem 1.25rem; display: flex; flex-direction: column;
+  justify-content: flex-start; gap: .35rem;
+  cursor: pointer; transition: background .15s;
+  position: relative; overflow: hidden;
+}
+@media (max-width: 680px) { .ft-spine { border-right: none; border-bottom: 1.5px solid var(--rule); flex-direction: row; align-items: center; gap: .75rem; } }
+.ft-spine:hover { background: #eeeff2; }
+
+.ft-spine-geo {
+  position: absolute; bottom: -20px; right: -20px;
+  width: 80px; height: 80px; opacity: .06; pointer-events: none;
+}
+
+.ft-pip { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.lvl1 .ft-pip { background: #1b5e8a; }
+.lvl2 .ft-pip { background: #1a6b56; }
+.lvl3 .ft-pip { background: #4a2870; }
+.lvl4 .ft-pip { background: #7a2018; }
+.lvl5 .ft-pip { background: var(--ink); }
+
+.ft-level-num {
+  font-family: 'DM Mono', monospace; font-size: .56rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  display: block;
+}
+.lvl1 .ft-level-num { color: #1b5e8a; }
+.lvl2 .ft-level-num { color: #1a6b56; }
+.lvl3 .ft-level-num { color: #4a2870; }
+.lvl4 .ft-level-num { color: #7a2018; }
+.lvl5 .ft-level-num { color: var(--ink); }
+
+.ft-level-name {
+  font-family: 'Fraunces', serif; font-size: .88rem;
+  font-weight: 700; line-height: 1.2; color: var(--ink); flex: 1;
+}
+.ft-level-type {
+  font-style: italic; font-size: .72rem; color: var(--dim);
+}
+.ft-count {
+  font-family: 'DM Mono', monospace; font-size: .58rem;
+  color: var(--faint); margin-top: auto;
+}
+@media (max-width: 680px) { .ft-count { margin-top: 0; margin-left: auto; } }
+
+/* Level content */
+.ft-content { padding: 1.5rem; }
+
+.ft-entries { display: flex; flex-direction: column; gap: .5rem; }
+
+.ft-entry {
+  display: flex; gap: .9rem; align-items: flex-start;
+  padding: .85rem; border: 1px solid var(--rule);
+  cursor: pointer; transition: border-color .15s, background .15s;
+  text-decoration: none; background: white;
+}
+.ft-entry:hover { border-color: var(--health); background: var(--health-lt); }
+.ft-entry-geo { width: 36px; height: 36px; flex-shrink: 0; opacity: .5; }
+.ft-entry-body { flex: 1; min-width: 0; }
+.ft-entry-type {
+  font-family: 'DM Mono', monospace; font-size: .55rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--dim);
+  margin-bottom: .2rem; display: block;
+}
+.ft-entry-title { font-size: .82rem; font-weight: 700; line-height: 1.35; margin-bottom: .2rem; }
+.ft-entry-meta { font-family: 'DM Mono', monospace; font-size: .58rem; color: var(--faint); }
+.ft-entry-arrow {
+  font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--dim);
+  flex-shrink: 0; margin-top: .1rem;
+}
+
+.ft-see-all {
+  display: flex; justify-content: flex-end; margin-top: .75rem;
+}
+.ft-see-all a {
+  font-family: 'DM Mono', monospace; font-size: .6rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--blue);
+}
+.ft-see-all a::after { content: ' →'; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PAGE 3: RESOURCE PAGE — The Harris Center (Org)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.resource-mast {
+  border-bottom: 2px solid var(--ink);
+  padding: 3rem 1.5rem 2.5rem;
+  background: white; position: relative;
+}
+.rm-inner { max-width: 1080px; margin: 0 auto; }
+.rm-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: .58rem;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+  margin-bottom: .6rem; display: flex; align-items: center; gap: .5rem;
+}
+.rm-type-pill {
+  background: var(--ink); color: white;
+  padding: .15rem .55rem;
+  font-family: 'DM Mono', monospace; font-size: .52rem;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+
+.rm-grid {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 2rem; align-items: start;
+}
+@media (max-width: 680px) { .rm-grid { grid-template-columns: 1fr; } }
+
+.rm-hed {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 900; line-height: 1; letter-spacing: -.02em;
+  margin-bottom: .75rem;
+}
+.rm-sub { font-style: italic; font-size: .95rem; line-height: 1.65; color: var(--dim); margin-bottom: 1.25rem; max-width: 580px; }
+
+/* Quick facts — address, hours, cost */
+.rm-facts { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.rm-fact {
+  font-family: 'DM Mono', monospace; font-size: .62rem;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--dim);
+  display: flex; align-items: center; gap: .4rem;
+}
+.rm-fact strong { color: var(--ink); }
+.rm-fact-pip { width: 6px; height: 6px; border-radius: 50%; background: var(--health); }
+
+/* Resource geo mark */
+.rm-geo-col { display: flex; flex-direction: column; align-items: flex-end; gap: .75rem; }
+.rm-geo-mark { width: 80px; height: 80px; opacity: .35; }
+.rm-cta {
+  font-family: 'DM Mono', monospace; font-size: .68rem;
+  letter-spacing: .1em; text-transform: uppercase;
+  background: var(--health); color: white;
+  padding: .7rem 1.25rem; display: block; text-align: center;
+  transition: background .15s;
+}
+.rm-cta:hover { background: #0f4434; }
+
+/* Resource body */
+.resource-body { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+.rb-grid {
+  display: grid; grid-template-columns: 2fr 1fr;
+  gap: 0; border-bottom: 1.5px solid var(--rule);
+  align-items: start;
+}
+@media (max-width: 680px) { .rb-grid { grid-template-columns: 1fr; } }
+
+.rb-main { padding: 2.5rem 2.5rem 2.5rem 0; border-right: 1.5px solid var(--rule); }
+@media (max-width: 680px) { .rb-main { padding: 2rem 0; border-right: none; border-bottom: 1.5px solid var(--rule); } }
+
+.rb-section-label {
+  font-family: 'DM Mono', monospace; font-size: .58rem;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+  margin-bottom: .75rem; display: block;
+}
+.rb-body-hed { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: .75rem; }
+.rb-body-copy { font-size: .88rem; line-height: 1.85; color: var(--ink); }
+.rb-body-copy p { margin-bottom: 1rem; }
+.rb-body-copy p:last-child { margin-bottom: 0; }
+
+/* Services list */
+.rb-services { margin-top: 1.75rem; }
+.rb-service-item {
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: .75rem 0; border-bottom: 1px solid var(--rule);
+}
+.rb-service-item:last-child { border-bottom: none; }
+.rb-service-pip { width: 6px; height: 6px; border-radius: 50%; background: var(--health); flex-shrink: 0; margin-top: .35rem; }
+.rb-service-name { font-size: .82rem; font-weight: 700; margin-bottom: .15rem; }
+.rb-service-desc { font-style: italic; font-size: .75rem; color: var(--dim); line-height: 1.55; }
+
+/* Sidebar */
+.rb-side { padding: 2.5rem 0 2.5rem 2.5rem; display: flex; flex-direction: column; gap: 1.75rem; }
+@media (max-width: 680px) { .rb-side { padding: 2rem 0; } }
+
+.rb-side-block { }
+.rb-side-hed {
+  font-family: 'DM Mono', monospace; font-size: .58rem;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--dim);
+  margin-bottom: .75rem; padding-bottom: .5rem;
+  border-bottom: 1px solid var(--rule); display: block;
+}
+
+/* Levels available at this resource */
+.rb-level-list { display: flex; flex-direction: column; gap: .4rem; }
+.rb-level-row {
+  display: flex; align-items: center; gap: .6rem;
+  font-family: 'DM Mono', monospace; font-size: .62rem;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--dim);
+}
+.rb-level-pip { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); flex-shrink: 0; }
+.rb-level-pip.active { background: var(--health); }
+.rb-level-row.active { color: var(--ink); font-weight: 500; }
+
+/* Connections — what else links here */
+.rb-connections { display: flex; flex-direction: column; gap: .5rem; }
+.rb-conn {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .65rem; border: 1px solid var(--rule);
+  text-decoration: none; transition: border-color .15s, background .15s;
+  cursor: pointer;
+}
+.rb-conn:hover { border-color: var(--health); background: var(--health-lt); }
+.rb-conn-geo { width: 28px; height: 28px; flex-shrink: 0; opacity: .4; }
+.rb-conn-label { font-family: 'Fraunces', serif; font-size: .8rem; font-weight: 700; flex: 1; }
+.rb-conn-type { font-family: 'DM Mono', monospace; font-size: .55rem; color: var(--dim); text-transform: uppercase; letter-spacing: .08em; }
+
+/* Related resources */
+.related-section { padding: 2.5rem 0; border-top: 1.5px solid var(--rule); }
+.related-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-left: 1.5px solid var(--rule);
+  border-top: 1.5px solid var(--rule);
+  margin-top: 1.25rem;
+}
+@media (max-width: 680px) { .related-grid { grid-template-columns: 1fr; } }
+
+.related-card {
+  border-right: 1.5px solid var(--rule);
+  border-bottom: 1.5px solid var(--rule);
+  padding: 1.25rem; background: white;
+  cursor: pointer; transition: background .15s;
+  text-decoration: none; display: block;
+  position: relative;
+}
+.related-card:hover { background: var(--health-lt); }
+/* Dog-ear */
+.related-card::after {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 0; height: 0; border-style: solid;
+  border-width: 0 12px 12px 0;
+  border-color: transparent var(--rule) transparent transparent;
+}
+.rc-type {
+  font-family: 'DM Mono', monospace; font-size: .55rem;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: .4rem; display: block;
+}
+.rc-title { font-family: 'Fraunces', serif; font-size: .85rem; font-weight: 700; line-height: 1.3; margin-bottom: .35rem; }
+.rc-meta { font-family: 'DM Mono', monospace; font-size: .58rem; color: var(--faint); }
+
+/* ── SHARED UTILITIES ── */
+.max-wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+.section-divider {
+  border: none; border-top: 1.5px solid var(--rule); margin: 0;
+}
+
+</style>
+</head>
+<body>
+
+<!-- PAGE SWITCHER (demo only) -->
+<div class="demo-bar">
+  <span class="demo-label">Page templates ·</span>
+  <button class="demo-btn active" onclick="showView('v-theme', this)">01 — Theme Hub: Health</button>
+  <button class="demo-btn" onclick="showView('v-focus', this)">02 — Focus Area: Mental Health</button>
+  <button class="demo-btn" onclick="showView('v-resource', this)">03 — Resource: The Harris Center</button>
+</div>
+
+<!-- SITE NAV — appears on every page -->
+<nav class="site-nav">
+  <div class="nav-brand">
+    <svg class="nav-geo" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+      <circle cx="68" cy="50" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+      <circle cx="32" cy="50" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+      <circle cx="59" cy="34.4" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+      <circle cx="41" cy="34.4" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+      <circle cx="59" cy="65.6" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+      <circle cx="41" cy="65.6" r="18" stroke="#1b5e8a" stroke-width="2.2"/>
+    </svg>
+    <span class="nav-wordmark">Change Engine</span>
+    <span class="nav-ed">Houston · 2026</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Regions</a></li>
+    <li><a href="#">Routes</a></li>
+    <li><a href="#" class="nav-cta">Find my way</a></li>
+  </ul>
+</nav>
+
+
+<!-- ════════════════════════════════════════
+     VIEW 1: THEME HUB — Health
+════════════════════════════════════════ -->
+<div id="v-theme" class="view active">
+
+  <!-- Wayfinder: Theme level -->
+  <div class="wayfinder">
+    <div class="wf-inner">
+      <div class="wf-crumb">
+        <span class="wf-step" onclick="">Guide</span>
+        <span class="wf-sep">›</span>
+        <span class="wf-step here">Health</span>
+      </div>
+      <div class="wf-trail">
+        <span class="wf-trail-label">Trail depth</span>
+        <div class="wf-dots">
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature masthead -->
+  <div class="theme-mast">
+    <!-- Vesica Piscis -->
+    <svg class="tm-geo1" viewBox="0 0 300 300" fill="none">
+      <circle cx="120" cy="150" r="90" stroke="white" stroke-width="1.2"/>
+      <circle cx="180" cy="150" r="90" stroke="white" stroke-width="1.2"/>
+      <circle cx="150" cy="150" r="130" stroke="white" stroke-width=".5" opacity=".4"/>
+      <circle cx="150" cy="150" r="70" stroke="white" stroke-width=".7" opacity=".3"/>
+      <circle cx="150" cy="60"  r="90" stroke="white" stroke-width=".7" opacity=".35"/>
+      <circle cx="150" cy="240" r="90" stroke="white" stroke-width=".7" opacity=".35"/>
+    </svg>
+    <svg class="tm-geo2" viewBox="0 0 240 240" fill="none">
+      <circle cx="120" cy="120" r="40" stroke="white" stroke-width="1.2"/>
+      <circle cx="160" cy="120" r="40" stroke="white" stroke-width="1.2"/>
+      <circle cx="80"  cy="120" r="40" stroke="white" stroke-width="1.2"/>
+      <circle cx="140" cy="81"  r="40" stroke="white" stroke-width="1.2"/>
+      <circle cx="100" cy="81"  r="40" stroke="white" stroke-width="1.2"/>
+      <circle cx="140" cy="159" r="40" stroke="white" stroke-width="1.2"/>
+      <circle cx="100" cy="159" r="40" stroke="white" stroke-width="1.2"/>
+    </svg>
+    <div class="tm-inner">
+      <p class="tm-dateline">Houston, TX · Region 01 · 2026 Edition</p>
+      <h1 class="tm-hed">The State of<br><em>Health in Houston</em></h1>
+      <div class="tm-rule"></div>
+      <p class="tm-dek">Twenty-four destinations. One region. What it means to be well in this city — from your zip code's clinics to the policies setting the terms.</p>
+      <div class="tm-stats">
+        <div class="tm-stat">
+          <span class="tm-stat-num">24</span>
+          <span class="tm-stat-desc">Destinations</span>
+        </div>
+        <div class="tm-stat">
+          <span class="tm-stat-num">1 in 3</span>
+          <span class="tm-stat-desc">Harris Co. adults report poor mental health</span>
+        </div>
+        <div class="tm-stat">
+          <span class="tm-stat-num">4th</span>
+          <span class="tm-stat-desc">Largest city. Ranked last in food security among major metros.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Editorial body -->
+  <div class="theme-editorial">
+
+    <!-- Opening feature -->
+    <div class="feature-open">
+      <div class="feature-lede">
+        <span class="feature-lede-drop">H</span>
+        <p>ouston has world-class medical institutions and some of the worst health outcomes of any major American city. Both things are true. The Texas Medical Center — the largest in the world — sits inside a city where nearly a million residents have no health insurance, where the maternal mortality rate for Black women is three times the rate for white women, and where zip code remains the strongest predictor of how long you'll live.</p>
+        <p>This region is a guide to that gap — and to the thousands of people working inside it. What exists, how to use it, who's fighting to change it, and how you can be part of that fight starting from wherever you are right now.</p>
+        <p style="font-style:italic;font-size:.78rem;color:var(--dim);margin-top:1rem;">Sources: Houston Health Department · Harris County Public Health · Texas DSHS · 2025</p>
+      </div>
+      <div class="feature-pull">
+        <div>
+          <div class="pull-quote">"That's not a motivation problem. It's a navigation problem. The resources exist. Most people just can't find them."</div>
+          <span class="pull-source">The Change Lab · Community Exchange framing</span>
+        </div>
+        <div>
+          <div class="pull-quote" style="font-size:1.1rem;">"Your body exists in a neighborhood. Your neighborhood determines your options."</div>
+          <span class="pull-source">Houston Health Atlas · 2024</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data stories -->
+    <div class="data-stories">
+      <div class="data-story">
+        <span class="ds-num">970K</span>
+        <div class="ds-hed">Uninsured residents in Harris County</div>
+        <p class="ds-copy">The highest uninsured rate of any major metro county. Most are working adults in industries without employer coverage. Federal marketplace enrollment has grown, but the gap remains enormous.</p>
+      </div>
+      <div class="data-story">
+        <span class="ds-num">1 in 4</span>
+        <div class="ds-hed">Houston children experience food insecurity</div>
+        <p class="ds-copy">Houston has more food banks and food pantries per capita than most cities its size — and still ranks near the bottom for food security outcomes. Distribution, awareness, and access barriers are all at work.</p>
+      </div>
+      <div class="data-story">
+        <span class="ds-num">3×</span>
+        <div class="ds-hed">Gap in maternal mortality by race</div>
+        <p class="ds-copy">Black mothers in Harris County die at more than three times the rate of white mothers during or after childbirth. Doula access, insurance coverage, and hospital proximity are all factors with active advocacy campaigns.</p>
+      </div>
+    </div>
+
+    <!-- From the Couch: editorial reads -->
+    <div class="couch-section">
+      <div class="section-hed-row">
+        <div>
+          <span class="section-kicker">Before you go · From the couch</span>
+          <h2 class="section-hed">Read the region<br><em>before you enter it</em></h2>
+        </div>
+        <a href="#" class="section-all">All couch content</a>
+      </div>
+      <div class="couch-grid">
+        <!-- Feature read -->
+        <div class="couch-feature">
+          <div class="couch-illus">
+            <svg class="couch-illus-geo" width="180" height="180" viewBox="0 0 240 240" fill="none">
+              <circle cx="120" cy="100" r="60" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="120" cy="140" r="60" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="86"  cy="120" r="60" stroke="#1a6b56" stroke-width="1"/>
+              <circle cx="154" cy="120" r="60" stroke="#1a6b56" stroke-width="1"/>
+              <circle cx="120" cy="120" r="90" stroke="#1a6b56" stroke-width=".5"/>
+            </svg>
+          </div>
+          <div class="couch-body">
+            <span class="couch-type">Feature · Long Read</span>
+            <div class="couch-hed">Where you live determines how long you live: Houston's zip code health divide</div>
+            <p class="couch-dek">A data investigation into the 20-year life expectancy gap between Houston's wealthiest and poorest zip codes — and what residents and advocates are doing about it.</p>
+            <span class="couch-meta">Houston Chronicle · 18 min read</span>
+          </div>
+        </div>
+        <!-- Side reads -->
+        <div class="couch-side" style="border-right:1.5px solid var(--rule);">
+          <span class="couch-type">Explainer · Video</span>
+          <div class="couch-hed" style="font-size:.88rem;">How the Texas healthcare system actually works — in plain language</div>
+          <span class="couch-meta">The Change Lab · 8 min</span>
+        </div>
+        <div class="couch-side">
+          <span class="couch-type">Data</span>
+          <div class="couch-hed" style="font-size:.88rem;">Healthcare access by Houston zip code — interactive map</div>
+          <span class="couch-meta">SAMHSA · Interactive · Updated monthly</span>
+        </div>
+        <div class="couch-side" style="border-right:1.5px solid var(--rule);">
+          <span class="couch-type">Podcast · Episode</span>
+          <div class="couch-hed" style="font-size:.88rem;">Mental health in the Third Ward: community voices</div>
+          <span class="couch-meta">Houston Matters · 42 min</span>
+        </div>
+        <div class="couch-side">
+          <span class="couch-type">Report</span>
+          <div class="couch-hed" style="font-size:.88rem;">2025 State of Health in Harris County</div>
+          <span class="couch-meta">Harris County Public Health · PDF · Free</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control Panel: focus area instruments -->
+    <div class="control-panel-section">
+      <div class="cp-intro">
+        <span class="section-kicker">24 destinations · Choose where to go</span>
+        <h2 class="section-hed">The Health region,<br><em>destination by destination</em></h2>
+      </div>
+
+      <div class="cp-grid">
+
+        <!-- Each instrument: sacred geometry face + status readings -->
+
+        <!-- MENTAL HEALTH — Vesica Piscis face -->
+        <a class="cp-instrument" href="#" onclick="showView('v-focus', document.querySelector('.demo-btn:nth-child(3)')); return false;">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <circle cx="55" cy="60" r="38" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="85" cy="60" r="38" stroke="#1a6b56" stroke-width="1.5"/>
+              <path d="M70 24.2 Q55 60 70 95.8 Q85 60 70 24.2Z" stroke="#1a6b56" stroke-width="1" fill="rgba(26,107,86,.1)"/>
+              <circle cx="70" cy="60" r="8" stroke="#1a6b56" stroke-width="1.2"/>
+            </svg>
+            <!-- Status arc: partial ring showing content depth -->
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="158" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Mental Health</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live">2 of 5 levels</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- FOOD ACCESS — Flower of Life face -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <circle cx="70" cy="60" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="92" cy="60" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="48" cy="60" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="81" cy="41" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="59" cy="41" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="81" cy="79" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <circle cx="59" cy="79" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="105" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Food Access</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot on"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live">3 of 5 levels</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- HEALTHCARE ACCESS — Compass rose -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <circle cx="70" cy="60" r="48" stroke="#1a6b56" stroke-width="1.2" opacity=".5"/>
+              <circle cx="70" cy="60" r="32" stroke="#1a6b56" stroke-width="1" opacity=".65"/>
+              <circle cx="70" cy="60" r="16" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <line x1="70" y1="12" x2="70" y2="108" stroke="#1a6b56" stroke-width="1.2"/>
+              <line x1="22" y1="60" x2="118" y2="60" stroke="#1a6b56" stroke-width="1.2"/>
+              <circle cx="70" cy="12" r="5" stroke="#1a6b56" stroke-width="1.2" fill="none"/>
+              <circle cx="118" cy="60" r="5" stroke="#1a6b56" stroke-width="1.2" fill="none"/>
+              <circle cx="70" cy="108" r="5" stroke="#1a6b56" stroke-width="1.2" fill="none"/>
+              <circle cx="22" cy="60" r="5" stroke="#1a6b56" stroke-width="1.2" fill="none"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="105" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Healthcare Access</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot on"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live">3 of 5 levels</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- MATERNAL HEALTH — nested circles -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <circle cx="70" cy="60" r="50" stroke="#1a6b56" stroke-width="1" opacity=".4"/>
+              <circle cx="70" cy="60" r="38" stroke="#1a6b56" stroke-width="1.2" opacity=".6"/>
+              <circle cx="70" cy="60" r="26" stroke="#1a6b56" stroke-width="1.4" opacity=".75"/>
+              <circle cx="70" cy="60" r="14" stroke="#1a6b56" stroke-width="1.6" opacity=".9"/>
+              <circle cx="70" cy="60" r="5"  stroke="#1a6b56" stroke-width="2" fill="rgba(26,107,86,.2)"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="211" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Maternal Health</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot"></div>
+                <div class="cp-dot"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live hot">Active legislation</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- SUBSTANCE USE — spiral -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <path d="M70 60 Q70 48 82 48 Q94 48 94 60 Q94 78 70 78 Q46 78 46 60 Q46 36 70 36 Q100 36 100 60 Q100 88 70 88 Q38 88 38 60 Q38 28 70 28 Q108 28 108 60" stroke="#1a6b56" stroke-width="1.5" fill="none"/>
+              <circle cx="70" cy="60" r="6" stroke="#1a6b56" stroke-width="1.5" fill="rgba(26,107,86,.1)"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="105" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Substance Use & Recovery</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot on"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live">3 of 5 levels</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- DISABILITY — wheel -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <circle cx="70" cy="60" r="48" stroke="#1a6b56" stroke-width="1" opacity=".5"/>
+              <circle cx="70" cy="60" r="30" stroke="#1a6b56" stroke-width="1.2" opacity=".7"/>
+              <circle cx="70" cy="60" r="10" stroke="#1a6b56" stroke-width="1.5"/>
+              <line x1="70" y1="50" x2="70" y2="12" stroke="#1a6b56" stroke-width="1.2"/>
+              <line x1="70" y1="70" x2="70" y2="108" stroke="#1a6b56" stroke-width="1.2"/>
+              <line x1="60" y1="60" x2="22" y2="60" stroke="#1a6b56" stroke-width="1.2"/>
+              <line x1="80" y1="60" x2="118" y2="60" stroke="#1a6b56" stroke-width="1.2"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="52" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Disability & Access</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot on"></div><div class="cp-dot on"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live">4 of 5 levels</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- ORAL HEALTH — petal rose -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <circle cx="70" cy="38" r="22" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <circle cx="70" cy="82" r="22" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <circle cx="51" cy="49" r="22" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <circle cx="89" cy="49" r="22" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <circle cx="51" cy="71" r="22" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <circle cx="89" cy="71" r="22" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <circle cx="70" cy="60" r="22" stroke="#1a6b56" stroke-width="1.5"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="105" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Oral Health</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot on"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live">3 of 5 levels</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+        <!-- ENVIRONMENTAL HEALTH — torus -->
+        <a class="cp-instrument" href="#">
+          <div class="cp-face dc-health">
+            <svg class="cp-geo" viewBox="0 0 140 120" fill="none">
+              <ellipse cx="70" cy="60" rx="55" ry="22" stroke="#1a6b56" stroke-width="1.5"/>
+              <ellipse cx="70" cy="60" rx="55" ry="55" stroke="#1a6b56" stroke-width=".8" opacity=".5"/>
+              <ellipse cx="70" cy="60" rx="32" ry="13" stroke="#1a6b56" stroke-width="1.2" opacity=".8"/>
+              <ellipse cx="70" cy="60" rx="14" ry="6"  stroke="#1a6b56" stroke-width="1" opacity=".9"/>
+              <line x1="70" y1="5" x2="70" y2="115" stroke="#1a6b56" stroke-width=".7" opacity=".3"/>
+            </svg>
+            <svg class="cp-arc-wrap" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#dde1e8" stroke-width="4" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#1a6b56" stroke-width="4" fill="none"
+                stroke-dasharray="263" stroke-dashoffset="105" stroke-linecap="round"
+                transform="rotate(-90 50 50)"/>
+            </svg>
+          </div>
+          <div class="cp-label">
+            <div class="cp-dest-name">Environmental Health</div>
+            <div class="cp-readings">
+              <div class="cp-level-dots">
+                <div class="cp-dot on"></div><div class="cp-dot on"></div>
+                <div class="cp-dot on"></div><div class="cp-dot"></div><div class="cp-dot"></div>
+              </div>
+              <span class="cp-live hot">Comment open now</span>
+            </div>
+            <span class="cp-go">Explore →</span>
+          </div>
+        </a>
+
+      </div><!-- /cp-grid -->
+    </div><!-- /control-panel-section -->
+
+  </div><!-- /theme-editorial -->
+  <div style="height:4rem;"></div>
+
+</div><!-- /v-theme -->
+
+
+<!-- ════════════════════════════════════════
+     VIEW 2: FOCUS AREA HUB — Mental Health
+════════════════════════════════════════ -->
+<div id="v-focus" class="view">
+
+  <!-- Wayfinder: Focus Area level -->
+  <div class="wayfinder">
+    <div class="wf-inner">
+      <div class="wf-crumb">
+        <span class="wf-step">Guide</span>
+        <span class="wf-sep">›</span>
+        <span class="wf-step">Health</span>
+        <span class="wf-sep">›</span>
+        <span class="wf-step here">Mental Health</span>
+      </div>
+      <div class="wf-trail">
+        <span class="wf-trail-label">Trail depth</span>
+        <div class="wf-dots">
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot"></div>
+          <div class="wf-dot"></div>
+          <div class="wf-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Focus masthead -->
+  <div class="focus-mast">
+    <svg class="fm-geo" viewBox="0 0 300 300" fill="none">
+      <circle cx="120" cy="150" r="90" stroke="white" stroke-width="1.2"/>
+      <circle cx="180" cy="150" r="90" stroke="white" stroke-width="1.2"/>
+      <circle cx="150" cy="60"  r="90" stroke="white" stroke-width=".7" opacity=".4"/>
+      <circle cx="150" cy="240" r="90" stroke="white" stroke-width=".7" opacity=".4"/>
+      <circle cx="150" cy="150" r="130" stroke="white" stroke-width=".4" opacity=".2"/>
+    </svg>
+    <div class="fm-inner">
+      <div class="fm-region-link">Health · Region 01</div>
+      <div class="fm-hed">
+        <svg class="fm-geo-mark" viewBox="0 0 140 120" fill="none">
+          <circle cx="55"  cy="60" r="38" stroke="white" stroke-width="1.5"/>
+          <circle cx="85"  cy="60" r="38" stroke="white" stroke-width="1.5"/>
+          <path d="M70 24.2 Q55 60 70 95.8 Q85 60 70 24.2Z" stroke="white" stroke-width="1" fill="rgba(255,255,255,.1)"/>
+          <circle cx="70" cy="60" r="8" stroke="white" stroke-width="1.2"/>
+        </svg>
+        Mental Health
+      </div>
+      <p class="fm-dek">Therapy access, crisis support, community wellness, and the stigma we can all help reduce. Start wherever you are.</p>
+    </div>
+  </div>
+
+  <!-- Five-level trail layout -->
+  <div class="focus-trail">
+
+    <!-- Level 1: Before You Go -->
+    <div class="ft-level lvl1">
+      <div class="ft-spine">
+        <svg class="ft-spine-geo" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="10" stroke="#1b5e8a" stroke-width="1.2"/>
+          <circle cx="40" cy="40" r="25" stroke="#1b5e8a" stroke-width=".8"/>
+          <circle cx="40" cy="40" r="38" stroke="#1b5e8a" stroke-width=".5"/>
+          <line x1="40" y1="2" x2="40" y2="78" stroke="#1b5e8a" stroke-width=".5"/>
+          <line x1="2" y1="40" x2="78" y2="40" stroke="#1b5e8a" stroke-width=".5"/>
+        </svg>
+        <div class="ft-pip"></div>
+        <div>
+          <span class="ft-level-num">Level 1 · Before You Go</span>
+          <div class="ft-level-name">News, data, explainers</div>
+          <div class="ft-level-type">Read, watch, listen from home</div>
+        </div>
+        <span class="ft-count">12 resources</span>
+      </div>
+      <div class="ft-content">
+        <div class="ft-entries">
+          <a class="ft-entry" href="#" onclick="showView('v-resource', document.querySelector('.demo-btn:nth-child(4)')); return false;">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="10" stroke="#1b5e8a" stroke-width="1.2"/>
+              <circle cx="30" cy="30" r="22" stroke="#1b5e8a" stroke-width=".8" opacity=".5"/>
+              <line x1="30" y1="8" x2="30" y2="52" stroke="#1b5e8a" stroke-width=".8" opacity=".4"/>
+              <line x1="8" y1="30" x2="52" y2="30" stroke="#1b5e8a" stroke-width=".8" opacity=".4"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Feature Article</span>
+              <div class="ft-entry-title">Houston's mental health crisis: what the data actually shows</div>
+              <span class="ft-entry-meta">Houston Chronicle · 15 min read · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="18" stroke="#1b5e8a" stroke-width="1.2"/>
+              <circle cx="40" cy="30" r="18" stroke="#1b5e8a" stroke-width="1.2"/>
+              <circle cx="35" cy="22" r="18" stroke="#1b5e8a" stroke-width=".7" opacity=".5"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Explainer Video</span>
+              <div class="ft-entry-title">Community mental health, in plain language — what it is, who pays for it, what's changing</div>
+              <span class="ft-entry-meta">The Change Lab · 8 min · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <ellipse cx="30" cy="30" rx="25" ry="10" stroke="#1b5e8a" stroke-width="1.2"/>
+              <ellipse cx="30" cy="30" rx="25" ry="25" stroke="#1b5e8a" stroke-width=".7" opacity=".5"/>
+              <circle cx="30" cy="30" r="4" stroke="#1b5e8a" stroke-width="1.2" fill="none"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Data Map</span>
+              <div class="ft-entry-title">Mental health access by zip code — Harris County</div>
+              <span class="ft-entry-meta">SAMHSA · Interactive · Updated monthly</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+        </div>
+        <div class="ft-see-all"><a href="#">See all 12 resources</a></div>
+      </div>
+    </div>
+
+    <!-- Level 2: Packing List -->
+    <div class="ft-level lvl2">
+      <div class="ft-spine">
+        <svg class="ft-spine-geo" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="30" r="22" stroke="#1a6b56" stroke-width="1"/>
+          <circle cx="40" cy="50" r="22" stroke="#1a6b56" stroke-width="1"/>
+          <circle cx="40" cy="40" r="8" stroke="#1a6b56" stroke-width="1.2"/>
+        </svg>
+        <div class="ft-pip"></div>
+        <div>
+          <span class="ft-level-num">Level 2 · Packing List</span>
+          <div class="ft-level-name">Guides, tools, self-study</div>
+          <div class="ft-level-type">Do something, from home</div>
+        </div>
+        <span class="ft-count">8 guides</span>
+      </div>
+      <div class="ft-content">
+        <div class="ft-entries">
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="14" stroke="#1a6b56" stroke-width="1.2"/>
+              <circle cx="30" cy="30" r="26" stroke="#1a6b56" stroke-width=".7" opacity=".5"/>
+              <circle cx="30" cy="30" r="5" stroke="#1a6b56" stroke-width="1.2" fill="rgba(26,107,86,.1)"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Step-by-Step Guide</span>
+              <div class="ft-entry-title">How to find a therapist in Texas who takes Medicaid — a plain-language walkthrough</div>
+              <span class="ft-entry-meta">The Change Lab · 10 min · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <path d="M30 30 Q30 18 42 18 Q54 18 54 30 Q54 47 30 57 Q6 47 6 30 Q6 18 18 18 Q30 18 30 30Z" stroke="#1a6b56" stroke-width="1.2" fill="none"/>
+              <circle cx="30" cy="30" r="7" stroke="#1a6b56" stroke-width="1" opacity=".5"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Online Course · Free Certification</span>
+              <div class="ft-entry-title">Mental Health First Aid — 8-hour self-paced certification</div>
+              <span class="ft-entry-meta">National Council · Self-paced · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+        </div>
+        <div class="ft-see-all"><a href="#">See all 8 guides</a></div>
+      </div>
+    </div>
+
+    <!-- Level 3: Day Trips -->
+    <div class="ft-level lvl3">
+      <div class="ft-spine">
+        <svg class="ft-spine-geo" viewBox="0 0 80 80" fill="none">
+          <polygon points="40,10 53,27 53,53 40,70 27,53 27,27" stroke="#4a2870" stroke-width="1"/>
+          <polygon points="40,20 50,34 50,46 40,60 30,46 30,34" stroke="#4a2870" stroke-width=".7" opacity=".5"/>
+          <circle cx="40" cy="40" r="6" stroke="#4a2870" stroke-width="1.2"/>
+        </svg>
+        <div class="ft-pip"></div>
+        <div>
+          <span class="ft-level-num">Level 3 · Day Trips</span>
+          <div class="ft-level-name">Classes, events near you</div>
+          <div class="ft-level-type">Leave the house, come back</div>
+        </div>
+        <span class="ft-count">5 upcoming</span>
+      </div>
+      <div class="ft-content">
+        <div class="ft-entries">
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <polygon points="30,8 39,20 39,40 30,52 21,40 21,20" stroke="#4a2870" stroke-width="1.2" fill="none"/>
+              <circle cx="30" cy="30" r="6" stroke="#4a2870" stroke-width="1" fill="none"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Peer Support Group · Weekly</span>
+              <div class="ft-entry-title">NAMI Houston — free peer support, open to all, every Monday</div>
+              <span class="ft-entry-meta">Mondays 6pm · Midtown · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="25" r="14" stroke="#4a2870" stroke-width="1.2"/>
+              <circle cx="30" cy="35" r="14" stroke="#4a2870" stroke-width="1.2"/>
+              <circle cx="22" cy="30" r="14" stroke="#4a2870" stroke-width=".7" opacity=".5"/>
+              <circle cx="38" cy="30" r="14" stroke="#4a2870" stroke-width=".7" opacity=".5"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Workshop</span>
+              <div class="ft-entry-title">Stress and community resilience — Third Ward community room</div>
+              <span class="ft-entry-meta">Sat Mar 22 · 10am · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+        </div>
+        <div class="ft-see-all"><a href="#">See all 5 upcoming</a></div>
+      </div>
+    </div>
+
+    <!-- Level 4: Local Guides -->
+    <div class="ft-level lvl4">
+      <div class="ft-spine">
+        <svg class="ft-spine-geo" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="30" stroke="#7a2018" stroke-width=".8" opacity=".5"/>
+          <circle cx="40" cy="18" r="10" stroke="#7a2018" stroke-width="1"/>
+          <circle cx="57" cy="29" r="10" stroke="#7a2018" stroke-width="1"/>
+          <circle cx="57" cy="51" r="10" stroke="#7a2018" stroke-width="1"/>
+          <circle cx="40" cy="62" r="10" stroke="#7a2018" stroke-width="1"/>
+          <circle cx="23" cy="51" r="10" stroke="#7a2018" stroke-width="1"/>
+          <circle cx="23" cy="29" r="10" stroke="#7a2018" stroke-width="1"/>
+          <circle cx="40" cy="40" r="7" stroke="#7a2018" stroke-width="1.2"/>
+        </svg>
+        <div class="ft-pip"></div>
+        <div>
+          <span class="ft-level-num">Level 4 · Local Guides</span>
+          <div class="ft-level-name">Organizations & services</div>
+          <div class="ft-level-type">Connect, volunteer, get help</div>
+        </div>
+        <span class="ft-count">28 organizations</span>
+      </div>
+      <div class="ft-content">
+        <div class="ft-entries">
+          <a class="ft-entry" href="#" onclick="showView('v-resource', document.querySelector('.demo-btn:nth-child(4)')); return false;">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="18" r="10" stroke="#7a2018" stroke-width="1.2"/>
+              <circle cx="42" cy="30" r="10" stroke="#7a2018" stroke-width="1.2"/>
+              <circle cx="42" cy="42" r="10" stroke="#7a2018" stroke-width="1.2"/>
+              <circle cx="30" cy="42" r="10" stroke="#7a2018" stroke-width="1.2"/>
+              <circle cx="18" cy="30" r="10" stroke="#7a2018" stroke-width="1.2"/>
+              <circle cx="18" cy="42" r="10" stroke="#7a2018" stroke-width="1.2"/>
+              <circle cx="30" cy="30" r="7" stroke="#7a2018" stroke-width="1.5"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Organization · Public Mental Health</span>
+              <div class="ft-entry-title">The Harris Center for Mental Health & IDD — sliding scale, multiple locations</div>
+              <span class="ft-entry-meta">Harris County · 10 locations · Open now</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="10" stroke="#7a2018" stroke-width="2"/>
+              <circle cx="30" cy="30" r="22" stroke="#7a2018" stroke-width="1.2" opacity=".6"/>
+              <circle cx="30" cy="30" r="34" stroke="#7a2018" stroke-width=".7" opacity=".3"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Crisis Service · 24/7</span>
+              <div class="ft-entry-title">Crisis Text Line — text HOME to 741741, immediate, free, confidential</div>
+              <span class="ft-entry-meta">Nationwide · 24/7 · Free</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+        </div>
+        <div class="ft-see-all"><a href="#">See all 28 organizations</a></div>
+      </div>
+    </div>
+
+    <!-- Level 5: The Deep Journey -->
+    <div class="ft-level lvl5">
+      <div class="ft-spine">
+        <svg class="ft-spine-geo" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="8" stroke="#0d1117" stroke-width="2"/>
+          <circle cx="40" cy="40" r="20" stroke="#0d1117" stroke-width="1.2" opacity=".6"/>
+          <circle cx="40" cy="40" r="34" stroke="#0d1117" stroke-width=".8" opacity=".3"/>
+          <line x1="40" y1="6" x2="40" y2="74" stroke="#0d1117" stroke-width=".6" opacity=".3"/>
+          <line x1="6"  y1="40" x2="74" y2="40" stroke="#0d1117" stroke-width=".6" opacity=".3"/>
+        </svg>
+        <div class="ft-pip"></div>
+        <div>
+          <span class="ft-level-num">Level 5 · The Deep Journey</span>
+          <div class="ft-level-name">Officials, policy, live action</div>
+          <div class="ft-level-type" style="color:#b03a2a;font-weight:700;">2 active right now</div>
+        </div>
+        <span class="ft-count" style="color:#b03a2a;">2 active</span>
+      </div>
+      <div class="ft-content">
+        <div class="ft-entries">
+          <a class="ft-entry" href="#" style="border-left: 3px solid #b03a2a;">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="10" stroke="#0d1117" stroke-width="1.5"/>
+              <circle cx="30" cy="30" r="22" stroke="#0d1117" stroke-width="1" opacity=".5"/>
+              <line x1="30" y1="8" x2="30" y2="52" stroke="#0d1117" stroke-width=".8" opacity=".35"/>
+              <line x1="8" y1="30" x2="52" y2="30" stroke="#0d1117" stroke-width=".8" opacity=".35"/>
+              <line x1="15" y1="15" x2="45" y2="45" stroke="#0d1117" stroke-width=".6" opacity=".25"/>
+              <line x1="45" y1="15" x2="15" y2="45" stroke="#0d1117" stroke-width=".6" opacity=".25"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type" style="color:#b03a2a;">Active Now · Public Comment</span>
+              <div class="ft-entry-title">Harris County mental health bond — public comment period open through Apr 4</div>
+              <span class="ft-entry-meta">Harris County Commissioners Court · 23 days left</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+          <a class="ft-entry" href="#">
+            <svg class="ft-entry-geo" viewBox="0 0 60 60" fill="none">
+              <circle cx="30" cy="30" r="20" stroke="#0d1117" stroke-width="1.2"/>
+              <line x1="10" y1="30" x2="50" y2="30" stroke="#0d1117" stroke-width=".8" opacity=".4"/>
+              <line x1="30" y1="10" x2="30" y2="50" stroke="#0d1117" stroke-width=".8" opacity=".4"/>
+              <circle cx="30" cy="30" r="6" stroke="#0d1117" stroke-width="1.5" fill="none"/>
+            </svg>
+            <div class="ft-entry-body">
+              <span class="ft-entry-type">Legislation · In Committee</span>
+              <div class="ft-entry-title">SB 2118 — mental health parity enforcement, Texas legislature</div>
+              <span class="ft-entry-meta">84th Legislature · Senate Health Committee</span>
+            </div>
+            <span class="ft-entry-arrow">→</span>
+          </a>
+        </div>
+        <div class="ft-see-all"><a href="#">See full civic picture</a></div>
+      </div>
+    </div>
+
+  </div><!-- /focus-trail -->
+  <div style="height:4rem;"></div>
+
+</div><!-- /v-focus -->
+
+
+<!-- ════════════════════════════════════════
+     VIEW 3: RESOURCE PAGE — The Harris Center
+════════════════════════════════════════ -->
+<div id="v-resource" class="view">
+
+  <!-- Wayfinder: Resource level -->
+  <div class="wayfinder">
+    <div class="wf-inner">
+      <div class="wf-crumb">
+        <span class="wf-step">Guide</span>
+        <span class="wf-sep">›</span>
+        <span class="wf-step">Health</span>
+        <span class="wf-sep">›</span>
+        <span class="wf-step">Mental Health</span>
+        <span class="wf-sep">›</span>
+        <span class="wf-step here">The Harris Center</span>
+      </div>
+      <div class="wf-trail">
+        <span class="wf-trail-label">You are at</span>
+        <div class="wf-dots">
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot lit"></div>
+          <div class="wf-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resource masthead -->
+  <div class="resource-mast">
+    <div class="rm-inner">
+      <div class="rm-eyebrow">
+        <span class="rm-type-pill">Organization</span>
+        Mental Health · Local Guide · Level 4
+      </div>
+      <div class="rm-grid">
+        <div>
+          <h1 class="rm-hed">The Harris Center for<br>Mental Health & IDD</h1>
+          <p class="rm-sub">Harris County's public mental health authority — the largest publicly funded behavioral health system in Texas. Sliding scale fees. Ten locations. Crisis services 24/7.</p>
+          <div class="rm-facts">
+            <span class="rm-fact"><div class="rm-fact-pip"></div><strong>Open now</strong> · Mon–Fri 8am–5pm, Crisis 24/7</span>
+            <span class="rm-fact"><div class="rm-fact-pip"></div>Sliding scale · Medicaid accepted</span>
+            <span class="rm-fact"><div class="rm-fact-pip"></div>10 locations across Harris County</span>
+          </div>
+        </div>
+        <div class="rm-geo-col">
+          <svg class="rm-geo-mark" viewBox="0 0 140 120" fill="none">
+            <circle cx="55" cy="60" r="38" stroke="#1a6b56" stroke-width="1.5"/>
+            <circle cx="85" cy="60" r="38" stroke="#1a6b56" stroke-width="1.5"/>
+            <path d="M70 24.2 Q55 60 70 95.8 Q85 60 70 24.2Z" stroke="#1a6b56" stroke-width="1.2" fill="rgba(26,107,86,.15)"/>
+            <circle cx="70" cy="60" r="8" stroke="#1a6b56" stroke-width="1.5" fill="rgba(26,107,86,.12)"/>
+          </svg>
+          <a href="#" class="rm-cta">Get services</a>
+          <a href="#" style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:center;display:block;">713-970-7000</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resource body -->
+  <div class="resource-body">
+    <div class="rb-grid">
+
+      <div class="rb-main">
+        <span class="rb-section-label">About this organization</span>
+        <div class="rb-body-hed">What the Harris Center actually is — and who it's for</div>
+        <div class="rb-body-copy">
+          <p>The Harris Center is the local mental health authority for Harris County — which means it's the government-designated organization responsible for providing publicly funded mental health and intellectual/developmental disability services in the region. That sounds bureaucratic. In practice, it means it's the place you go when other systems haven't worked, when you can't afford private care, or when you're in crisis and need help immediately.</p>
+          <p>The Harris Center does not turn people away based on ability to pay. Services are available on a sliding-fee scale, and they accept Medicaid, CHIP, and many insurance plans. For uninsured residents, costs are based on household income. That's not marketing language — it's the actual policy.</p>
+          <p>They operate ten outpatient locations across Harris County, a 24-hour crisis stabilization unit, mobile crisis outreach teams, and a crisis hotline staffed by mental health professionals. They also run one of the largest jail diversion programs in Texas — which means they're the organization keeping mentally ill residents out of the criminal justice system.</p>
+        </div>
+
+        <div class="rb-services">
+          <span class="rb-section-label" style="margin-top:2rem;">Services available</span>
+          <div class="rb-service-item">
+            <div class="rb-service-pip"></div>
+            <div><div class="rb-service-name">Outpatient Mental Health Counseling</div><div class="rb-service-desc">Individual and group therapy, psychiatric evaluation, medication management. Sliding scale.</div></div>
+          </div>
+          <div class="rb-service-item">
+            <div class="rb-service-pip"></div>
+            <div><div class="rb-service-name">24/7 Crisis Services</div><div class="rb-service-desc">Crisis hotline, mobile outreach teams, crisis stabilization unit. No appointment needed.</div></div>
+          </div>
+          <div class="rb-service-item">
+            <div class="rb-service-pip"></div>
+            <div><div class="rb-service-name">Intellectual & Developmental Disability Services</div><div class="rb-service-desc">Case management, residential support, day programs for adults and children.</div></div>
+          </div>
+          <div class="rb-service-item">
+            <div class="rb-service-pip"></div>
+            <div><div class="rb-service-name">Jail Diversion Program</div><div class="rb-service-desc">Mental health intervention for people entering the Harris County criminal justice system.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rb-side">
+        <!-- Trail position -->
+        <div class="rb-side-block">
+          <span class="rb-side-hed">Where this fits on the trail</span>
+          <div class="rb-level-list">
+            <div class="rb-level-row"><div class="rb-level-pip"></div>Level 1 · Read & learn</div>
+            <div class="rb-level-row"><div class="rb-level-pip"></div>Level 2 · DIY guides</div>
+            <div class="rb-level-row"><div class="rb-level-pip"></div>Level 3 · Events & classes</div>
+            <div class="rb-level-row active"><div class="rb-level-pip active"></div>Level 4 · Organization — you are here</div>
+            <div class="rb-level-row"><div class="rb-level-pip"></div>Level 5 · Civic arena</div>
+          </div>
+        </div>
+
+        <!-- Also appears in -->
+        <div class="rb-side-block">
+          <span class="rb-side-hed">Also part of these destinations</span>
+          <div class="rb-connections">
+            <a class="rb-conn" href="#">
+              <svg class="rb-conn-geo" viewBox="0 0 60 60" fill="none">
+                <path d="M30 30 Q30 18 42 18 Q54 18 54 30 Q54 47 30 57 Q6 47 6 30 Q6 18 18 18 Q30 18 30 30Z" stroke="#7a2018" stroke-width="1.2" fill="none"/>
+              </svg>
+              <div><div class="rb-conn-label">Substance Use & Recovery</div><div class="rb-conn-type">Health · Level 4</div></div>
+            </a>
+            <a class="rb-conn" href="#">
+              <svg class="rb-conn-geo" viewBox="0 0 60 60" fill="none">
+                <circle cx="30" cy="20" r="12" stroke="#4a2870" stroke-width="1.2"/>
+                <circle cx="42" cy="34" r="12" stroke="#4a2870" stroke-width="1.2"/>
+                <circle cx="18" cy="34" r="12" stroke="#4a2870" stroke-width="1.2"/>
+              </svg>
+              <div><div class="rb-conn-label">Families in Crisis</div><div class="rb-conn-type">Families · Level 4</div></div>
+            </a>
+            <a class="rb-conn" href="#">
+              <svg class="rb-conn-geo" viewBox="0 0 60 60" fill="none">
+                <circle cx="30" cy="30" r="22" stroke="#0d1117" stroke-width="1"/>
+                <line x1="10" y1="30" x2="50" y2="30" stroke="#0d1117" stroke-width=".8" opacity=".4"/>
+                <line x1="30" y1="10" x2="30" y2="50" stroke="#0d1117" stroke-width=".8" opacity=".4"/>
+                <circle cx="30" cy="30" r="6" stroke="#0d1117" stroke-width="1.2"/>
+              </svg>
+              <div><div class="rb-conn-label">Criminal Justice Reform</div><div class="rb-conn-type">Voice · Level 4 & 5</div></div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Take action -->
+        <div class="rb-side-block">
+          <span class="rb-side-hed">Next steps from here</span>
+          <div style="display:flex;flex-direction:column;gap:.5rem;">
+            <a href="#" style="display:block;padding:.8rem;background:var(--health);color:white;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;text-align:center;">Get services →</a>
+            <a href="#" style="display:block;padding:.8rem;border:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:var(--dim);">Volunteer here →</a>
+            <a href="#" style="display:block;padding:.8rem;border:1px solid var(--rule);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:var(--dim);">Advocate for funding →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Related resources -->
+    <div class="related-section">
+      <div class="section-hed-row">
+        <div>
+          <span class="section-kicker">From the same destination · Mental Health</span>
+          <h3 class="section-hed" style="font-size:1.2rem;">Other field notes<br><em>in this destination</em></h3>
+        </div>
+        <a href="#" class="section-all">All Mental Health resources</a>
+      </div>
+      <div class="related-grid">
+        <a class="related-card" href="#">
+          <span class="rc-type">Crisis Service · Level 4</span>
+          <div class="rc-title">Crisis Text Line — text HOME to 741741</div>
+          <span class="rc-meta">24/7 · Free · Immediate</span>
+        </a>
+        <a class="related-card" href="#">
+          <span class="rc-type">Legislation · Level 5</span>
+          <div class="rc-title">SB 2118 — mental health parity enforcement, Texas</div>
+          <span class="rc-meta">In committee · Track it</span>
+        </a>
+        <a class="related-card" href="#">
+          <span class="rc-type">DIY Guide · Level 2</span>
+          <div class="rc-title">How to find a Medicaid therapist in Texas</div>
+          <span class="rc-meta">Step-by-step · Free · 10 min</span>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /resource-body -->
+  <div style="height:4rem;"></div>
+
+</div><!-- /v-resource -->
+
+<script>
+function showView(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+<!-- dc-health class reuse -->
+<style>
+.dc-health { background: linear-gradient(145deg, #d4ede6, #eaf5f1); }
+</style>
+
+</body>
+</html>

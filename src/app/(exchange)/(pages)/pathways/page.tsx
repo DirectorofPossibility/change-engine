@@ -116,7 +116,7 @@ export default async function PathwaysPage() {
                     </div>
                     <Link
                       href={'/pathways/' + theme.slug}
-                      className="text-sm font-medium px-4 py-2 border border-brand-border hover:shadow-sm transition-shadow flex-shrink-0"
+                      className="text-sm font-medium px-4 py-2 border border-brand-border hover:border-ink transition-shadow flex-shrink-0"
                       style={{ color: theme.color }}
                     >
                       Explore {theme.name} &rarr;
@@ -230,7 +230,7 @@ export default async function PathwaysPage() {
                             <Link
                               key={type}
                               href={'/news?pathway=' + themeId + '&type=' + type}
-                              className="inline-flex items-center gap-1 text-xs bg-brand-bg-alt px-2 py-1 hover:shadow-sm transition-shadow"
+                              className="inline-flex items-center gap-1 text-xs bg-brand-bg-alt px-2 py-1 hover:border-ink transition-shadow"
                             >
                               <span className="font-medium text-brand-text">{count}</span>
                               <span className="text-brand-muted">{CONTENT_TYPE_LABELS[type] || type}</span>
@@ -254,7 +254,7 @@ export default async function PathwaysPage() {
                             <Link
                               key={fa.focus_id}
                               href={'/explore/focus/' + fa.focus_id}
-                              className="group inline-flex items-center gap-1.5 text-xs border border-brand-border px-2.5 py-1.5 hover:border-transparent hover:shadow-sm transition-all"
+                              className="group inline-flex items-center gap-1.5 text-xs border border-brand-border px-2.5 py-1.5 hover:border-transparent hover:border-ink transition-all"
                             >
                               <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                               <span className="text-brand-text group-hover:underline">{fa.focus_area_name}</span>
@@ -350,7 +350,7 @@ export default async function PathwaysPage() {
                   {/* Explore CTA */}
                   <Link
                     href={'/pathways/' + theme.slug}
-                    className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white transition-all hover:shadow-lg"
+                    className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white transition-all hover:border-ink"
                     style={{ backgroundColor: theme.color }}
                   >
                     Explore {theme.name}

@@ -68,10 +68,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
               style={{
                 background: 'linear-gradient(145deg, #F0ECE6 0%, ' + color + '10 100%)',
                 border: '2px solid ' + (isHovered ? color : '#D1D5E0'),
-                boxShadow: isHovered
-                  ? '4px 4px 0 ' + color + '40'
-                  : '3px 3px 0 #D1D5E0',
-              }}
+                              }}
             >
               {/* FOL watermark */}
               <Image

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.election_name,
-    description: data.description || 'Details on the Community Exchange.',
+    description: data.description || 'Details on the Change Engine.',
   }
 }
 
@@ -92,7 +92,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       actions={{
         share: { title: election.election_name, url: canonicalUrl },
       }}
-      themeColor="#805ad5"
+      themeColor="#1a3460"
       wayfinderData={wayfinderData}
       wayfinderType={'election' as any}
       wayfinderEntityId={id}

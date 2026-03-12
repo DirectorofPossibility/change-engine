@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const areas = await getFocusAreasByIds([id])
   if (areas.length === 0) return { title: 'Not Found' }
   return {
-    title: areas[0].focus_area_name + ' — Community Exchange',
+    title: areas[0].focus_area_name + ' — Change Engine',
     description: areas[0].description || 'Explore resources related to ' + areas[0].focus_area_name,
   }
 }
@@ -220,7 +220,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <div className="space-y-2">
                 {foundations.map(function (f: any) {
                   return (
-                    <Link key={f.id} href="/foundations" className="block bg-white border border-brand-border p-3 hover:shadow-sm transition-all">
+                    <Link key={f.id} href="/foundations" className="block bg-white border border-brand-border p-3 hover:border-ink transition-all">
                       <div className="font-medium text-brand-text text-sm">{f.name}</div>
                       <div className="flex items-center gap-2 mt-1">
                         {f.assets && <span className="text-xs font-semibold text-brand-accent">{f.assets}</span>}

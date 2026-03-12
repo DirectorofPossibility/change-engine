@@ -10,7 +10,7 @@ export default async function Image() {
       title="Elections"
       subtitle="Upcoming elections, candidates, polling places, and voter registration for Houston and Harris County."
       label="Action"
-      accentColor="#d69e2e"
+      accentColor="#4a2870"
     />,
     { ...size }
   )

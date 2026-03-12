@@ -8,7 +8,7 @@ import { Users, ScrollText, Vote } from 'lucide-react'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Action — Community Exchange',
+  title: 'Action — Change Engine',
   description: 'Know who represents you, what policies affect you, and when to show up.',
 }
 
@@ -18,7 +18,7 @@ const SECTIONS = [
     label: 'Officials',
     description: 'Every elected official who represents you — from city council to Congress — with contact information, committee assignments, and voting records.',
     icon: Users,
-    color: '#3182ce',
+    color: '#6a4e10',
     countKey: 'officials',
   },
   {
@@ -26,7 +26,7 @@ const SECTIONS = [
     label: 'Policies',
     description: 'Legislation, ordinances, and policy proposals at every level of government — tracked and explained at a reading level everyone can access.',
     icon: ScrollText,
-    color: '#805ad5',
+    color: '#1a3460',
     countKey: 'policies',
   },
   {
@@ -34,7 +34,7 @@ const SECTIONS = [
     label: 'Elections',
     description: 'Upcoming elections, ballot information, polling locations, and registration deadlines — everything you need to make your voice count.',
     icon: Vote,
-    color: '#e53e3e',
+    color: '#1a6b56',
     countKey: 'elections',
   },
 ]
@@ -57,7 +57,7 @@ export default async function ActionIndexPage() {
   return (
     <div>
       <IndexPageHero
-        color="#38a169"
+        color="#7a2018"
         pattern="vesica"
         title="Action"
         subtitle="Know who makes decisions, what they are deciding, and how to participate."
@@ -77,7 +77,7 @@ export default async function ActionIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
                
               >
                 <div className="flex">
@@ -149,7 +149,7 @@ export default async function ActionIndexPage() {
 
         <div className="mt-10 text-center">
           <div className="inline-flex items-center gap-2 text-brand-muted-light">
-            <FlowerOfLifeIcon size={20} color="#38a169" />
+            <FlowerOfLifeIcon size={20} color="#7a2018" />
             <p className="text-sm font-display italic">
               Democracy works when people show up.
             </p>

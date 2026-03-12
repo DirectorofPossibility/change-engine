@@ -38,13 +38,13 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
     '@graph': [
       {
         '@type': 'Organization',
-        name: 'Community Exchange',
+        name: 'Change Engine',
         url: 'https://www.changeengine.us',
         description: 'A civic platform connecting Houston residents with resources, services, and civic participation opportunities.',
       },
       {
         '@type': 'WebSite',
-        name: 'Community Exchange',
+        name: 'Change Engine',
         url: 'https://www.changeengine.us',
         potentialAction: {
           '@type': 'SearchAction',

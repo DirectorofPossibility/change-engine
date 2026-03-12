@@ -13,7 +13,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Guides — Community Exchange',
+  title: 'Guides — Change Engine',
   description: 'Civic engagement guides for Houston — contacting officials, voting, community organizing, and local resources.',
 }
 
@@ -46,7 +46,7 @@ export default async function GuidesPage() {
                 <Link
                   key={guide.guide_id}
                   href={'/guides/' + guide.slug}
-                  className="bg-white border border-brand-border hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+                  className="bg-white border border-brand-border hover:border-ink transition-shadow overflow-hidden flex flex-col"
                 >
                   {guide.hero_image_url && (
                     <div className="relative w-full h-40">

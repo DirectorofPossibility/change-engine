@@ -10,7 +10,7 @@ export default async function Image() {
       title="News"
       subtitle="Local journalism and community reporting — what is happening right now in Houston."
       label="Learning"
-      accentColor="#319795"
+      accentColor="#1a5030"
     />,
     { ...size }
   )

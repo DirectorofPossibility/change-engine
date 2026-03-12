@@ -23,7 +23,7 @@ export function PersonaSelector() {
             <div key={persona.id}>
               <button
                 onClick={function () { toggle(persona.id) }}
-                className="w-full text-left bg-white border border-brand-border p-4 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 relative overflow-hidden"
+                className="w-full text-left bg-white border border-brand-border p-4 transition-all duration-200 hover:border-ink hover:-translate-y-0.5 relative overflow-hidden"
                 style={{
                   borderColor: isOpen ? persona.color + '60' : undefined,
                 }}
@@ -67,7 +67,7 @@ export function PersonaSelector() {
                   {firstTheme && (
                     <Link
                       href={'/pathways/' + firstTheme.slug}
-                      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-all hover:shadow-md hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-all hover:border-ink hover:-translate-y-0.5"
                       style={{ backgroundColor: persona.color }}
                     >
                       Start your journey &rarr;
@@ -85,7 +85,7 @@ export function PersonaSelector() {
                           <Link
                             key={themeId}
                             href={'/pathways/' + theme.slug}
-                            className="flex items-center gap-2.5 px-3 py-2 bg-white border border-brand-border text-xs font-medium text-brand-text transition-all hover:shadow-sm hover:-translate-y-0.5"
+                            className="flex items-center gap-2.5 px-3 py-2 bg-white border border-brand-border text-xs font-medium text-brand-text transition-all hover:border-ink hover:-translate-y-0.5"
                           >
                             <div className="w-1 h-6 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                             {theme.name}

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Individual content card for the Community Exchange grid.
+ * @fileoverview Individual content card for the Change Engine grid.
  *
  * Displays a content item as a clickable card with a hero image (or a
  * gradient placeholder with a Houston skyline silhouette when no image is
@@ -77,8 +77,8 @@ export function ContentCard({
   const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-shadow cursor-pointer' }
-    : { href: href || '/content/' + id, className: 'block bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-shadow' }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-brand-border overflow-hidden hover:border-ink transition-colors cursor-pointer' }
+    : { href: href || '/content/' + id, className: 'block bg-white border border-brand-border overflow-hidden hover:border-ink transition-colors' }
   return (
     <Wrapper {...wrapperProps as any}>
       {/* TODO: Replace with real Houston photography */}

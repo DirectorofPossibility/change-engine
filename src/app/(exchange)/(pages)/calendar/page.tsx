@@ -8,7 +8,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { CalendarClient } from './CalendarClient'
 
 export const metadata: Metadata = {
-  title: 'Community Calendar — Community Exchange',
+  title: 'Community Calendar — Change Engine',
   description: 'Upcoming events, civic meetings, volunteer opportunities, and community gatherings in Houston.',
 }
 
@@ -29,7 +29,7 @@ export default async function CalendarPage({
   return (
     <div>
       <IndexPageHero
-        color="#3182ce"
+        color="#6a4e10"
         pattern="tripod"
         title="Community Calendar"
         subtitle="Events, civic meetings, and opportunities to get involved"
@@ -55,11 +55,11 @@ export default async function CalendarPage({
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="calendar"
-                color="#3182ce"
+                color="#6a4e10"
                 related={[
-                  { label: 'Opportunities', href: '/opportunities', color: '#38a169' },
-                  { label: 'Organizations', href: '/organizations', color: '#dd6b20' },
-                  { label: 'News', href: '/news', color: '#319795' },
+                  { label: 'Opportunities', href: '/opportunities', color: '#7a2018' },
+                  { label: 'Organizations', href: '/organizations', color: '#1e4d7a' },
+                  { label: 'News', href: '/news', color: '#1a5030' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>

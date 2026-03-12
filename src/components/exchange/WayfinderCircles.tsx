@@ -1,5 +1,5 @@
 /**
- * @fileoverview Signature circle visualization for The Change Engine's Community Exchange.
+ * @fileoverview Signature circle visualization for The Change Engine's Change Engine.
  *
  * Renders the 7 pathways as interactive SVG circles that rearrange across three states:
  *   - **Home** — flower/orbital arrangement with bridge lines and platform stats
@@ -152,7 +152,7 @@ function computePositions(
 // ── Component ────────────────────────────────────────────────────────
 
 /**
- * Signature interactive circle visualization for the Community Exchange.
+ * Signature interactive circle visualization for the Change Engine.
  *
  * Displays the 7 pathways as colored SVG circles that smoothly rearrange
  * between home (flower), selected (orbit), and compact (row) states.

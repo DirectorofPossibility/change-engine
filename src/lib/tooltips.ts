@@ -1,5 +1,5 @@
 /**
- * All 53 InfoBubble tooltip definitions for Community Exchange.
+ * All 53 InfoBubble tooltip definitions for Change Engine.
  * Grouped by section. Text is resolved via i18n keys at render time.
  */
 

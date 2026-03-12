@@ -27,7 +27,7 @@ interface GoodThingEntry {
   created_at: string
 }
 
-const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
+const THING_COLORS = ['#7a2018', '#6a4e10', '#1a3460']
 
 export function GoodThingsClient() {
   const { t } = useTranslation()
@@ -136,7 +136,7 @@ export function GoodThingsClient() {
 
     // ── Background gradient — warm cream to soft peach ──
     const bgGrad = ctx.createLinearGradient(0, 0, s, s)
-    bgGrad.addColorStop(0, '#FAF8F5')
+    bgGrad.addColorStop(0, '#f4f5f7')
     bgGrad.addColorStop(0.5, '#FDF6F0')
     bgGrad.addColorStop(1, '#F8F0E8')
     ctx.fillStyle = bgGrad
@@ -164,7 +164,7 @@ export function GoodThingsClient() {
     ctx.globalAlpha = 1
 
     // ── Spectrum bar — top ──
-    const spectrum = ['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#319795', '#3182ce', '#805ad5']
+    const spectrum = ['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#1a5030', '#6a4e10', '#1a3460']
     const barW = s / spectrum.length
     spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, 0, barW + 1, 8) })
 
@@ -232,8 +232,8 @@ export function GoodThingsClient() {
 
     // ── Decorative corner FOLs ──
     ctx.globalAlpha = 0.06
-    drawFOL(ctx, s - 60, 60, 30, '#805ad5', 1)
-    drawFOL(ctx, 60, s - 60, 30, '#38a169', 1)
+    drawFOL(ctx, s - 60, 60, 30, '#1a3460', 1)
+    drawFOL(ctx, 60, s - 60, 30, '#7a2018', 1)
     ctx.globalAlpha = 1
 
     // ── Bottom section — branded footer ──
@@ -299,7 +299,7 @@ export function GoodThingsClient() {
         <div className="absolute right-[-80px] top-[-40px] opacity-[0.04]">
           <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
         </div>
-        <div className="h-1 bg-gradient-to-r from-[#e53e3e] via-[#38a169] to-[#805ad5]" />
+        <div className="h-1 bg-gradient-to-r from-[#1a6b56] via-[#7a2018] to-[#1a3460]" />
         <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <p className="text-base text-brand-muted mb-3 max-w-xl mx-auto">
             {t('gt.hero_sub')}
@@ -380,7 +380,7 @@ export function GoodThingsClient() {
           /* ── Form ── */
           <section ref={formRef} className="mb-12">
             <div className="bg-white border border-brand-border p-6 sm:p-8 relative overflow-hidden">
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5]" />
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#7a2018] via-[#6a4e10] to-[#1a3460]" />
               <div className="pl-4">
                 <h2 className="font-display text-2xl font-bold text-brand-text mb-1">{t('gt.form_title')}</h2>
                 <p className="text-sm text-brand-muted mb-6">
@@ -388,9 +388,9 @@ export function GoodThingsClient() {
                 </p>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {[
-                    { n: 1, color: '#38a169', val: thing1, set: setThing1, label: t('gt.thing_1_label'), ph: t('gt.thing_1_ph') },
-                    { n: 2, color: '#3182ce', val: thing2, set: setThing2, label: t('gt.thing_2_label'), ph: t('gt.thing_2_ph') },
-                    { n: 3, color: '#805ad5', val: thing3, set: setThing3, label: t('gt.thing_3_label'), ph: t('gt.thing_3_ph') },
+                    { n: 1, color: '#7a2018', val: thing1, set: setThing1, label: t('gt.thing_1_label'), ph: t('gt.thing_1_ph') },
+                    { n: 2, color: '#6a4e10', val: thing2, set: setThing2, label: t('gt.thing_2_label'), ph: t('gt.thing_2_ph') },
+                    { n: 3, color: '#1a3460', val: thing3, set: setThing3, label: t('gt.thing_3_label'), ph: t('gt.thing_3_ph') },
                   ].map(function (f) {
                     return (
                       <div key={f.n}>
@@ -465,9 +465,9 @@ export function GoodThingsClient() {
         ) : (
           /* ── Success ── */
           <section className="mb-12">
-            <div className="bg-white border border-[#38a169]/30 p-6 sm:p-8 text-center relative overflow-hidden">
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#38a169]" />
-              <FlowerOfLifeIcon size={32} color="#38a169" className="mx-auto mb-3" />
+            <div className="bg-white border border-[#7a2018]/30 p-6 sm:p-8 text-center relative overflow-hidden">
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#7a2018]" />
+              <FlowerOfLifeIcon size={32} color="#7a2018" className="mx-auto mb-3" />
               <h2 className="font-display text-2xl font-bold text-brand-text mb-2">{t('gt.success_title')}</h2>
               <p className="text-sm text-brand-muted mb-6 max-w-md mx-auto">
                 {t('gt.success_desc')}
@@ -520,7 +520,7 @@ export function GoodThingsClient() {
                   <div key={entry.id}
                     className="bg-white border border-brand-border p-4 relative overflow-hidden group hover:border-brand-text transition-all"
                    >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5] transition-all" />
+                    <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 bg-gradient-to-b from-[#7a2018] via-[#6a4e10] to-[#1a3460] transition-all" />
                     <div className="pl-3">
                       {[entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
                         return (

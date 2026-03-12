@@ -13,7 +13,7 @@ import { FOLLoading } from '@/components/exchange/FOLLoading'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Elections & Voting — Community Exchange',
+  title: 'Elections & Voting — Change Engine',
   description: 'See recent election results, upcoming elections, who represents you, and where to vote.',
 }
 

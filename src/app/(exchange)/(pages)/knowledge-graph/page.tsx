@@ -5,7 +5,7 @@ import CircleKnowledgeGraph from '@/components/exchange/CircleKnowledgeGraph'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 export const metadata: Metadata = {
-  title: 'Civic Knowledge Graph — Community Exchange',
+  title: 'Civic Knowledge Graph — Change Engine',
   description: 'Explore the Civic Knowledge Graph: 7 pathways, hundreds of focus areas, and thousands of connected entities across Houston.',
 }
 

@@ -9,12 +9,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 const TYPE_COLORS: Record<string, string> = {
-  content: '#3182ce',
+  content: '#6a4e10',
   service: '#C75B2A',
-  official: '#805ad5',
-  organization: '#38a169',
-  opportunity: '#d69e2e',
-  election: '#e53e3e',
+  official: '#1a3460',
+  organization: '#7a2018',
+  opportunity: '#4a2870',
+  election: '#1a6b56',
 }
 
 export async function GET(req: NextRequest) {

@@ -14,7 +14,7 @@ export default async function Image({ params }: { params: { id: string } }) {
     .eq('is_active', true)
     .single()
 
-  const title = data?.title_6th_grade || 'Community Exchange'
+  const title = data?.title_6th_grade || 'Change Engine'
   const subtitle = data?.summary_6th_grade || undefined
   const label = [data?.content_type, data?.source_org_name].filter(Boolean).join(' · ') || 'Article'
 

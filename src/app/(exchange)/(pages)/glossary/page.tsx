@@ -7,7 +7,7 @@ import { BookOpen } from 'lucide-react'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Civic Glossary — Community Exchange',
+  title: 'Civic Glossary — Change Engine',
   description: 'Plain-language definitions of civic, government, and community terms.',
 }
 
@@ -29,7 +29,7 @@ export default async function GlossaryPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="vesica" gradientColor="#3182ce" title="Civic Glossary" subtitle="Plain-language definitions for civic, government, and community terms. Built for understanding, not confusion." />
+      <PageHero variant="sacred" sacredPattern="vesica" gradientColor="#6a4e10" title="Civic Glossary" subtitle="Plain-language definitions for civic, government, and community terms. Built for understanding, not confusion." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Glossary' }]} />
         {/* Letter nav */}

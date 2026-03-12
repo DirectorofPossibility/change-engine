@@ -28,7 +28,7 @@ interface IconProps {
 
 // ─── ARCHETYPE ICONS ───────────────────────────────────────
 
-export function SeekerIcon({ size = 20, color = '#d69e2e', className }: IconProps) {
+export function SeekerIcon({ size = 20, color = '#4a2870', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="24" cy="24" r="8" stroke={color} strokeWidth="1.5" opacity="0.7" />
@@ -42,7 +42,7 @@ export function SeekerIcon({ size = 20, color = '#d69e2e', className }: IconProp
   )
 }
 
-export function LearnerIcon({ size = 20, color = '#3182ce', className }: IconProps) {
+export function LearnerIcon({ size = 20, color = '#6a4e10', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="19" cy="24" r="11" stroke={color} strokeWidth="1.5" opacity="0.5" />
@@ -51,7 +51,7 @@ export function LearnerIcon({ size = 20, color = '#3182ce', className }: IconPro
   )
 }
 
-export function BuilderIcon({ size = 20, color = '#38a169', className }: IconProps) {
+export function BuilderIcon({ size = 20, color = '#7a2018', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="24" cy="16" r="8" stroke={color} strokeWidth="1.5" opacity="0.5" />
@@ -61,7 +61,7 @@ export function BuilderIcon({ size = 20, color = '#38a169', className }: IconPro
   )
 }
 
-export function WatchdogIcon({ size = 20, color = '#805ad5', className }: IconProps) {
+export function WatchdogIcon({ size = 20, color = '#1a3460', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="24" cy="24" r="4" stroke={color} strokeWidth="1.5" />
@@ -81,7 +81,7 @@ export function WatchdogIcon({ size = 20, color = '#805ad5', className }: IconPr
   )
 }
 
-export function PartnerIcon({ size = 20, color = '#dd6b20', className }: IconProps) {
+export function PartnerIcon({ size = 20, color = '#1e4d7a', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="20" cy="20" r="10" stroke={color} strokeWidth="1.5" opacity="0.45" />

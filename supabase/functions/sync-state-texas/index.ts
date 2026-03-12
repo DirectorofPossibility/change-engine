@@ -280,7 +280,7 @@ async function syncFromOpenStates(mode: string): Promise<{ officials_upserted: n
 
     while (hasMore && page <= 5) {
       const billsRes = await fetch(
-        `https://v3.openstates.org/bills?jurisdiction=tx&session=89&updated_since=${since}&per_page=50&page=${page}`,
+        `https://v3.openstates.org/bills?jurisdiction=tx&session=892&updated_since=${since}&per_page=50&page=${page}`,
         { headers: { 'X-API-KEY': OPEN_STATES_API_KEY }, signal: AbortSignal.timeout(20000) },
       );
 

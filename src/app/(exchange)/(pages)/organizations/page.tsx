@@ -10,7 +10,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Organizations — Community Exchange',
+  title: 'Organizations — Change Engine',
   description: 'Browse nonprofits, foundations, agencies, and community organizations serving the Houston area.',
 }
 

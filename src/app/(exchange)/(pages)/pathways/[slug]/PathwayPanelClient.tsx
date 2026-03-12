@@ -268,7 +268,7 @@ export function PathwayPanelClient({
       {/* ── Elected Officials ── */}
       {officials.length > 0 && (
         <section className="py-8 border-t border-brand-border">
-          <SectionHeading icon={SECTION_ICONS.officials} title="Elected Officials" count={officials.length} color="#805ad5" />
+          <SectionHeading icon={SECTION_ICONS.officials} title="Elected Officials" count={officials.length} color="#1a3460" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {officials.map(function (o) {
               const t = officialTranslations[o.official_id]
@@ -350,7 +350,7 @@ export function PathwayPanelClient({
       {/* ── Life Situations ── */}
       {situations.length > 0 && (
         <section className="py-8 border-t border-brand-border">
-          <SectionHeading icon={SECTION_ICONS.situations} title="Available Resources" count={situations.length} color="#38a169" />
+          <SectionHeading icon={SECTION_ICONS.situations} title="Available Resources" count={situations.length} color="#7a2018" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {situations.map(function (s) {
               return (

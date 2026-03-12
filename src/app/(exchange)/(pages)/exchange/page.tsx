@@ -1,5 +1,5 @@
 /**
- * @fileoverview Homepage for The Change Engine Community Exchange.
+ * @fileoverview Homepage for The Change Engine Change Engine.
  *
  * Community Guide -- a civic & social onramp for the general public.
  * Three pillars: Find Help (211), Who's Responsible, Get Involved.
@@ -17,6 +17,7 @@ import {
   getRandomQuote,
   getActivePromotions,
 } from '@/lib/data/exchange'
+import { getUpcomingEvents } from '@/lib/data/events'
 import { CommunityGuide } from '@/components/exchange/CommunityGuide'
 
 export const revalidate = 600
@@ -27,11 +28,12 @@ export const metadata: Metadata = {
 }
 
 export default async function ExchangeHomePage() {
-  const [stats, latestContent, quote, promotions] = await Promise.all([
+  const [stats, latestContent, quote, promotions, upcomingEvents] = await Promise.all([
     getExchangeStats(),
     getLatestContent(6),
     getRandomQuote(),
     getActivePromotions(undefined, 3),
+    getUpcomingEvents(5),
   ])
 
   return (
@@ -46,6 +48,7 @@ export default async function ExchangeHomePage() {
       latestContent={latestContent}
       quote={quote}
       promotions={promotions}
+      upcomingEvents={upcomingEvents}
     />
   )
 }

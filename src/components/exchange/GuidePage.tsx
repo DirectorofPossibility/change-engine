@@ -167,7 +167,7 @@ export function GuidePage({
         {featuredContent && (
           <section className="my-8">
             <Link href={'/content/' + featuredContent.id} className="block group">
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 bg-white border border-brand-border overflow-hidden hover:border-ink transition-colors">
                 {/* Image */}
                 <div className="lg:col-span-3 relative h-64 lg:h-auto min-h-[240px]">
                   {featuredContent.image_url ? (
@@ -257,7 +257,7 @@ export function GuidePage({
                     const color = themeKey ? THEMES[themeKey]?.color : BRAND.muted
                     return (
                       <Link href={'/content/' + item.id} className="group block">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white border border-brand-border overflow-hidden hover:border-ink transition-shadow">
                           <div className="h-48 sm:h-auto relative overflow-hidden">
                             {item.image_url ? (
                               <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
@@ -290,7 +290,7 @@ export function GuidePage({
                       const themeKey = item.pathway_primary as keyof typeof THEMES | null
                       const color = themeKey ? THEMES[themeKey]?.color : BRAND.muted
                       return (
-                        <Link key={item.id} href={'/content/' + item.id} className="group block bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+                        <Link key={item.id} href={'/content/' + item.id} className="group block bg-white border border-brand-border overflow-hidden hover:border-ink transition-shadow">
                           {item.image_url && (
                             <div className="h-32 overflow-hidden">
                               <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
@@ -325,7 +325,7 @@ export function GuidePage({
               <div className="space-y-4">
                 {/* Election countdown */}
                 {upcomingElection && daysUntilElection > 0 && (
-                  <Link href="/elections" className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow" style={{ borderLeft: `4px solid ${BRAND.accent}` }}>
+                  <Link href="/elections" className="block bg-white border border-brand-border p-5 hover:border-ink transition-shadow" style={{ borderLeft: `4px solid ${BRAND.accent}` }}>
                     <div className="flex items-center gap-4">
                       <Vote size={28} style={{ color: BRAND.accent }} />
                       <div>
@@ -345,7 +345,7 @@ export function GuidePage({
                       Federal: '#1b5e8a', State: '#4a2870', County: '#4a2870', City: '#1a6b56',
                     } as Record<string, string>)[official.level] || BRAND.muted
                     return (
-                      <Link key={official.official_id} href={'/officials/' + official.official_id} className="flex items-center gap-3 bg-white border border-brand-border p-4 hover:shadow-md transition-shadow">
+                      <Link key={official.official_id} href={'/officials/' + official.official_id} className="flex items-center gap-3 bg-white border border-brand-border p-4 hover:border-ink transition-shadow">
                         <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: levelColor + '15' }}>
                           <span className="text-lg font-bold" style={{ color: levelColor }}>{official.official_name?.charAt(0)}</span>
                         </div>
@@ -423,7 +423,7 @@ export function GuidePage({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {nearbyServices.map(function (service) {
                       return (
-                        <Link key={service.service_id} href={'/services/' + service.service_id} className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow" style={{ borderTop: `3px solid ${BRAND.accent}` }}>
+                        <Link key={service.service_id} href={'/services/' + service.service_id} className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow" style={{ borderTop: `3px solid ${BRAND.accent}` }}>
                           <p className="font-semibold text-brand-text text-sm line-clamp-2">{service.service_name}</p>
                           {service.org_name && (
                             <p className="text-xs text-brand-muted mt-1 italic">{service.org_name}</p>
@@ -477,7 +477,7 @@ export function GuidePage({
                     {guides.slice(0, 3).map(function (guide: any) {
                       const theme = guide.theme_id ? THEMES[guide.theme_id as keyof typeof THEMES] : null
                       return (
-                        <Link key={guide.guide_id} href={'/guides/' + guide.slug} className="group block bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow">
+                        <Link key={guide.guide_id} href={'/guides/' + guide.slug} className="group block bg-white border border-brand-border overflow-hidden hover:border-ink transition-shadow">
                           {guide.hero_image_url && (
                             <div className="h-28 overflow-hidden">
                               <Image src={guide.hero_image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"  width={800} height={400} />
@@ -511,7 +511,7 @@ export function GuidePage({
                   }
                   const color = urgencyColors[sit.urgency_level] || BRAND.muted
                   return (
-                    <Link key={sit.situation_id} href={'/help/' + sit.situation_slug} className="group block bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow" style={{ borderTop: `3px solid ${color}` }}>
+                    <Link key={sit.situation_id} href={'/help/' + sit.situation_slug} className="group block bg-white border border-brand-border overflow-hidden hover:border-ink transition-shadow" style={{ borderTop: `3px solid ${color}` }}>
                       <div className="p-4">
                         <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: color + '15' }}>
                           <span className="text-lg" style={{ color }}>{sit.icon_name ? '●' : '○'}</span>

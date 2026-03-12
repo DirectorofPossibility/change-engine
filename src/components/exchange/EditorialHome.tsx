@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * @fileoverview Editorial landing page for the Community Exchange MVP.
+ * @fileoverview Editorial landing page for the Change Engine MVP.
  *
  * Magazine-style layout with FOL as the visual DNA — backgrounds, bullets,
  * dividers, glassmorphic cards, depth layers. Features:
@@ -105,7 +105,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
       {/* ══════════════════════════════════════════════════════════════
           HERO — Full-width, editorial left / compass right
          ══════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #FAF8F5 0%, #EDE8E0 50%, #FAF8F5 100%)' }}>
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f4f5f7 0%, #dde1e8 50%, #f4f5f7 100%)' }}>
         {/* Noise texture */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: 'radial-gradient(circle, rgba(44,44,44,0.03) 1px, transparent 1px)',
@@ -167,7 +167,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                   </div>
                 </div>
                 {/* Compass entry card */}
-                <div className="relative bg-white/80 border border-brand-border p-8 shadow-offset-lg group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300" style={{ backdropFilter: 'blur(8px)' }}>
+                <div className="relative bg-white/80 border border-brand-border p-8 group-hover:border-ink group-hover:-translate-y-1 transition-all duration-300" style={{ backdropFilter: 'blur(8px)' }}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 flex items-center justify-center" style={{ background: '#1b5e8a' }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36z" /></svg>
@@ -229,7 +229,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                   <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${section.color}cc 0%, ${section.color}40 40%, transparent 100%)` }} />
                   {/* Stat badge */}
                   <div className="absolute bottom-3 left-4 flex items-center gap-2">
-                    <span className="text-2xl font-black text-white" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{section.stat}</span>
+                    <span className="text-2xl font-black text-white">{section.stat}</span>
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/80">{section.statLabel}</span>
                   </div>
                   {/* Icon */}
@@ -278,7 +278,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
               <Link
                 href={'/content/' + (latestContent[0] as any).id}
                 className="lg:col-span-2 relative overflow-hidden group border border-brand-border hover:-translate-y-1 transition-all duration-300"
-                style={{ minHeight: '320px', boxShadow: '3px 3px 0 #D5D0C8' }}
+                style={{ minHeight: '320px' }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/60 to-transparent z-[1]" />
                 {(latestContent[0] as any).hero_image_url ? (
@@ -307,7 +307,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                   <Link
                     key={item.id}
                     href={'/content/' + item.id}
-                    className="flex gap-3 p-3 border border-brand-border bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
+                    className="flex gap-3 p-3 border border-brand-border bg-white hover:border-ink hover:-translate-y-0.5 transition-all duration-200 group"
                   >
                     <div className="flex-shrink-0 w-16 h-16 overflow-hidden bg-brand-bg-alt">
                       {item.hero_image_url ? (
@@ -353,7 +353,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                 key={center.href}
                 href={center.href}
                 className="relative overflow-hidden border group hover:-translate-y-1 transition-all duration-300"
-                style={{ borderColor: center.color + '30', boxShadow: `3px 3px 0 ${center.color}15` }}
+                style={{ borderColor: center.color + '30' }}
               >
                 {/* Color header with FOL */}
                 <div className="relative h-24 flex flex-col items-center justify-center overflow-hidden" style={{ background: `linear-gradient(135deg, ${center.color} 0%, ${center.color}dd 100%)` }}>
@@ -370,7 +370,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                     </div>
                   </div>
                   <Icon size={24} color="white" className="relative z-[1] mb-1" />
-                  <span className="relative z-[1] font-display text-base font-bold text-white text-center" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{center.label}</span>
+                  <span className="relative z-[1] font-display text-base font-bold text-white text-center">{center.label}</span>
                 </div>
                 {/* Body */}
                 <div className="p-4 bg-white">
@@ -399,7 +399,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
           MOBILE COMPASS CTA (shown only on mobile, replaces hidden desktop compass)
          ══════════════════════════════════════════════════════════════ */}
       <div className="lg:hidden max-w-[1200px] mx-auto px-6 sm:px-8 py-6">
-        <Link href="/compass" className="block relative overflow-hidden border border-brand-accent/20 p-6 group" style={{ background: 'linear-gradient(135deg, #FAF8F5, #EDE8E0)', boxShadow: '3px 3px 0 #1b5e8a20' }}>
+        <Link href="/compass" className="block relative overflow-hidden border border-brand-accent/20 p-6 group" style={{ background: 'linear-gradient(135deg, #f4f5f7, #dde1e8)' }}>
           <div className="absolute top-2 right-2 w-24 h-24 opacity-[0.1]">
             <GradientFOL variant="seed" spinDur={30} colorDur={8} />
           </div>

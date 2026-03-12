@@ -8,7 +8,7 @@ import { Vote, ThumbsUp, ThumbsDown, Scale } from 'lucide-react'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Ballot Items — Community Exchange',
+  title: 'Ballot Items — Change Engine',
   description: 'Propositions, measures, and ballot items for upcoming Houston-area elections.',
 }
 
@@ -21,7 +21,7 @@ export default async function BallotPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="metatron" gradientColor="#e53e3e" title="Ballot Items" subtitle="Propositions, bonds, and measures on the ballot. Understand what you are voting on with plain-language explanations." />
+      <PageHero variant="sacred" sacredPattern="metatron" gradientColor="#1a6b56" title="Ballot Items" subtitle="Propositions, bonds, and measures on the ballot. Understand what you are voting on with plain-language explanations." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Elections', href: '/elections' }, { label: 'Ballot' }]} />
         <div className="space-y-4 mt-4">

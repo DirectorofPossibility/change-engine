@@ -48,7 +48,7 @@ export function CenterDoorways({ centerCounts }: CenterDoorwaysProps) {
             <Link
               key={name}
               href={'/centers/' + center.slug}
-              className="group relative flex flex-col items-center text-center gap-5 p-8 min-h-[280px] rounded-3xl bg-white border border-brand-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              className="group relative flex flex-col items-center text-center gap-5 p-8 min-h-[280px] rounded-3xl bg-white border border-brand-border hover:border-ink hover:-translate-y-1 transition-all duration-300 overflow-hidden"
             >
               {/* Subtle gradient background on hover */}
               <div

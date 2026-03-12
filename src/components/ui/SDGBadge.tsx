@@ -8,7 +8,7 @@ interface SDGBadgeProps {
 }
 
 export function SDGBadge({ sdgNumber, sdgName, sdgColor, linkToExplore }: SDGBadgeProps) {
-  const color = sdgColor || '#3182ce'
+  const color = sdgColor || '#6a4e10'
   const badge = (
     <span className="inline-flex items-center gap-1.5 text-xs font-medium text-brand-text">
       <span className="w-4 h-4 rounded-sm flex-shrink-0" style={{ backgroundColor: color }} />

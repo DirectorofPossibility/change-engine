@@ -8,7 +8,7 @@ import { Layers, Sparkles, LifeBuoy } from 'lucide-react'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Resources — Community Exchange',
+  title: 'Resources — Change Engine',
   description: 'Find services, opportunities, and support available across Houston.',
 }
 
@@ -18,7 +18,7 @@ const SECTIONS = [
     label: 'Services',
     description: 'Searchable directory of 211 social services — food, housing, healthcare, legal aid, childcare, and more — mapped to your neighborhood.',
     icon: Layers,
-    color: '#38a169',
+    color: '#7a2018',
     countKey: 'services',
   },
   {
@@ -26,7 +26,7 @@ const SECTIONS = [
     label: 'Opportunities',
     description: 'Volunteer positions, job openings, training programs, and ways to contribute your time and skills.',
     icon: Sparkles,
-    color: '#d69e2e',
+    color: '#4a2870',
     countKey: 'opportunities',
   },
   {
@@ -34,7 +34,7 @@ const SECTIONS = [
     label: 'Available Resources',
     description: 'Life situations organized by urgency — from crisis support to long-term planning. Find what exists for your specific situation.',
     icon: LifeBuoy,
-    color: '#e53e3e',
+    color: '#1a6b56',
     countKey: 'situations',
   },
 ]
@@ -77,7 +77,7 @@ export default async function ResourcesIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
                
               >
                 <div className="flex">

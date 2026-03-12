@@ -48,7 +48,7 @@ export default function SubmitResourcePage() {
         <h1 className="text-2xl font-bold text-brand-text mb-2 font-display">Share a Resource</h1>
         <p className="text-sm text-brand-muted mb-6">
           Know a great resource for the Houston community? Share the link and our
-          team will review it for inclusion in the Community Exchange.
+          team will review it for inclusion in the Change Engine.
         </p>
 
         {result?.success ? (

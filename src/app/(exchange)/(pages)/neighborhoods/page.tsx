@@ -10,7 +10,7 @@ import { MapPin } from 'lucide-react'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Neighborhoods — Community Exchange',
+  title: 'Neighborhoods — Change Engine',
   description: 'Explore Houston neighborhoods and the resources, officials, and organizations that serve them.',
 }
 

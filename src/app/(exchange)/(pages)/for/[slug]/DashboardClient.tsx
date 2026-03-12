@@ -16,32 +16,32 @@ const ICONS: Record<string, typeof SeekerIcon> = {
 }
 
 const OTHER_PERSONAS = [
-  { slug: 'seeker', name: 'The Seeker', desc: 'Find resources', color: '#d69e2e' },
-  { slug: 'learner', name: 'The Learner', desc: 'Understand issues', color: '#3182ce' },
-  { slug: 'builder', name: 'The Builder', desc: 'Take action', color: '#38a169' },
-  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#805ad5' },
-  { slug: 'partner', name: 'The Partner', desc: 'Collaborate', color: '#dd6b20' },
+  { slug: 'seeker', name: 'The Seeker', desc: 'Find resources', color: '#4a2870' },
+  { slug: 'learner', name: 'The Learner', desc: 'Understand issues', color: '#6a4e10' },
+  { slug: 'builder', name: 'The Builder', desc: 'Take action', color: '#7a2018' },
+  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#1a3460' },
+  { slug: 'partner', name: 'The Partner', desc: 'Collaborate', color: '#1e4d7a' },
   { slug: 'explorer', name: 'The Explorer', desc: 'Discover it all', color: '#E8723A' },
 ]
 
 const CENTER_META: Record<string, { label: string; question: string; color: string; icon: string; entities: string[] }> = {
   Learning: {
-    label: 'Learning Center', question: 'How can I understand?', color: '#3182ce',
+    label: 'Learning Center', question: 'How can I understand?', color: '#6a4e10',
     icon: 'M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342',
     entities: ['learningPaths', 'library'],
   },
   Resource: {
-    label: 'Resource Center', question: "What's available to me?", color: '#d69e2e',
+    label: 'Resource Center', question: "What's available to me?", color: '#4a2870',
     icon: 'M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25',
     entities: ['services', 'opportunities'],
   },
   Action: {
-    label: 'Action Center', question: 'How can I help?', color: '#38a169',
+    label: 'Action Center', question: 'How can I help?', color: '#7a2018',
     icon: 'M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z',
     entities: ['opportunities', 'services'],
   },
   Accountability: {
-    label: 'Accountability Center', question: 'Who makes decisions?', color: '#805ad5',
+    label: 'Accountability Center', question: 'Who makes decisions?', color: '#1a3460',
     icon: 'M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418',
     entities: ['officials', 'policies'],
   },
@@ -60,13 +60,13 @@ const CONTENT_TYPE_META: Record<string, { label: string; effort: string }> = {
 }
 
 const THEMES: Record<string, { name: string; color: string }> = {
-  THEME_01: { name: 'Health', color: '#e53e3e' },
-  THEME_02: { name: 'Families', color: '#dd6b20' },
-  THEME_03: { name: 'Neighborhood', color: '#d69e2e' },
-  THEME_04: { name: 'Voice', color: '#38a169' },
-  THEME_05: { name: 'Money', color: '#3182ce' },
-  THEME_06: { name: 'Planet', color: '#319795' },
-  THEME_07: { name: 'The Bigger We', color: '#805ad5' },
+  THEME_01: { name: 'Health', color: '#1a6b56' },
+  THEME_02: { name: 'Families', color: '#1e4d7a' },
+  THEME_03: { name: 'Neighborhood', color: '#4a2870' },
+  THEME_04: { name: 'Voice', color: '#7a2018' },
+  THEME_05: { name: 'Money', color: '#6a4e10' },
+  THEME_06: { name: 'Planet', color: '#1a5030' },
+  THEME_07: { name: 'The Bigger We', color: '#1a3460' },
 }
 
 function hasValidImage(url: string | null): boolean {
@@ -340,7 +340,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
             {/* Research Library */}
             {filteredLibrary.length > 0 && (
-              <SidebarCard title="Research Library" iconColor="#805ad5" seeAllHref="/library">
+              <SidebarCard title="Research Library" iconColor="#1a3460" seeAllHref="/library">
                 {filteredLibrary.slice(0, 4).map(function (doc: any) {
                   return (
                     <Link key={doc.id} href={'/library/' + doc.id}

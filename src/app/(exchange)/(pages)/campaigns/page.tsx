@@ -10,7 +10,7 @@ import { Target, Users } from 'lucide-react'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Community Campaigns — Community Exchange',
+  title: 'Community Campaigns — Change Engine',
   description: 'Active campaigns and community initiatives in the Houston area.',
 }
 
@@ -23,7 +23,7 @@ export default async function CampaignsPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#805ad5" title="Community Campaigns" subtitle="Organized community efforts making a difference across Houston. Join a campaign and amplify your impact." />
+      <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#1a3460" title="Community Campaigns" subtitle="Organized community efforts making a difference across Houston. Join a campaign and amplify your impact." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Campaigns' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 mt-4">
@@ -31,7 +31,7 @@ export default async function CampaignsPage() {
             <div className="space-y-4">
               {(campaigns || []).map(function (c) {
                 return (
-                  <Link key={c.campaign_id} href={`/campaigns/${c.campaign_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
+                  <Link key={c.campaign_id} href={`/campaigns/${c.campaign_id}`} className="block bg-white border border-brand-border p-5 hover:border-ink transition-shadow">
                     <div className="flex items-start gap-3">
                       <Target className="w-5 h-5 text-theme-bigger mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -56,7 +56,7 @@ export default async function CampaignsPage() {
             <div className="sticky top-24 space-y-4">
               <IndexWayfinder
                 currentPage="campaigns"
-                color="#e53e3e"
+                color="#1a6b56"
                 related={[
                   { label: 'Officials', href: '/officials' },
                   { label: 'Policies', href: '/policies' },

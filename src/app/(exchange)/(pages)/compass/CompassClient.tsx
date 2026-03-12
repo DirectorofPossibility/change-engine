@@ -50,42 +50,42 @@ const INTENTS = [
     label: 'Find help or services',
     description: 'Browse nearby clinics, food banks, legal aid, and more.',
     href: '/services',
-    color: '#38a169',
+    color: '#7a2018',
     Icon: Heart,
   },
   {
     label: 'See who represents me',
     description: 'Your elected officials from City Hall to Congress.',
     href: '/officials',
-    color: '#805ad5',
+    color: '#1a3460',
     Icon: Building2,
   },
   {
     label: 'Learn about upcoming votes',
     description: 'Elections, deadlines, and where to cast your ballot.',
     href: '/elections',
-    color: '#e53e3e',
+    color: '#1a6b56',
     Icon: Vote,
   },
   {
     label: 'Explore my neighborhood',
     description: 'Maps, districts, and what is happening around you.',
     href: '/my-neighborhood',
-    color: '#d69e2e',
+    color: '#4a2870',
     Icon: Compass,
   },
   {
     label: 'Find volunteer opportunities',
     description: 'Ways to give back and get involved locally.',
     href: '/events',
-    color: '#3182ce',
+    color: '#6a4e10',
     Icon: CalendarHeart,
   },
   {
     label: 'Read the latest research',
     description: 'News, policy briefs, and community analysis.',
     href: '/library',
-    color: '#319795',
+    color: '#1a5030',
     Icon: Library,
   },
 ] as const
@@ -107,9 +107,9 @@ function timeAgo(dateStr: string | null) {
 }
 
 function categoryPill(item: any): { label: string; color: string } {
-  if (item.content_type === 'event' || item.content_type === 'opportunity') return { label: 'Event', color: '#3182ce' }
-  if (item.content_type === 'policy' || item.content_type === 'legislation') return { label: 'Policy', color: '#805ad5' }
-  if (item.content_type === 'service') return { label: 'Service', color: '#38a169' }
+  if (item.content_type === 'event' || item.content_type === 'opportunity') return { label: 'Event', color: '#6a4e10' }
+  if (item.content_type === 'policy' || item.content_type === 'legislation') return { label: 'Policy', color: '#1a3460' }
+  if (item.content_type === 'service') return { label: 'Service', color: '#7a2018' }
   return { label: 'News', color: '#C75B2A' }
 }
 
@@ -185,7 +185,7 @@ export function CompassClient({
               ) : (
                 <>
                   <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">
-                    Community Exchange
+                    Change Engine
                   </p>
                   <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
                     Civic Compass
@@ -345,7 +345,7 @@ export function CompassClient({
           <section>
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-xl font-bold text-brand-text flex items-center gap-2">
-                <Building2 size={20} className="text-[#805ad5]" />
+                <Building2 size={20} className="text-[#1a3460]" />
                 Your Representatives
               </h2>
               <Link href="/officials" className="text-sm text-brand-accent hover:underline flex items-center gap-1">
@@ -354,9 +354,9 @@ export function CompassClient({
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {zipOfficials.slice(0, 8).map(function (o: any) {
-                const levelColors: Record<string, string> = { Federal: '#805ad5', State: '#3182ce', County: '#38a169', City: '#dd6b20' }
+                const levelColors: Record<string, string> = { Federal: '#1a3460', State: '#6a4e10', County: '#7a2018', City: '#1e4d7a' }
                 const ringColor = levelColors[o.level] || '#5A6178'
-                const partyColors: Record<string, string> = { Republican: '#e53e3e', Democrat: '#3182ce', Independent: '#38a169' }
+                const partyColors: Record<string, string> = { Republican: '#1a6b56', Democrat: '#6a4e10', Independent: '#7a2018' }
                 const partyDot = partyColors[o.party] || '#9ca3af'
                 return (
                   <Link
@@ -402,11 +402,11 @@ export function CompassClient({
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-6">
               {[
                 { icon: BookOpen, label: 'Resources', value: stats?.resources || totalItems, color: '#C75B2A' },
-                { icon: Building2, label: 'Officials', value: stats?.officials || 0, color: '#805ad5' },
-                { icon: Heart, label: 'Services', value: stats?.services || 0, color: '#38a169' },
-                { icon: Users, label: 'Organizations', value: stats?.organizations || 0, color: '#dd6b20' },
-                { icon: Vote, label: 'Elections', value: upcomingEvents.length || 4, color: '#e53e3e' },
-                { icon: Compass, label: 'Pathways', value: 7, color: '#3182ce' },
+                { icon: Building2, label: 'Officials', value: stats?.officials || 0, color: '#1a3460' },
+                { icon: Heart, label: 'Services', value: stats?.services || 0, color: '#7a2018' },
+                { icon: Users, label: 'Organizations', value: stats?.organizations || 0, color: '#1e4d7a' },
+                { icon: Vote, label: 'Elections', value: upcomingEvents.length || 4, color: '#1a6b56' },
+                { icon: Compass, label: 'Pathways', value: 7, color: '#6a4e10' },
               ].map(function (stat) {
                 const StatIcon = stat.icon
                 return (
@@ -477,12 +477,12 @@ export function CompassClient({
           <div className="bg-white border border-brand-border p-3 sm:p-4">
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               {[
-                { href: '/services', label: 'Find Services', icon: Heart, color: '#38a169' },
-                { href: '/officials', label: 'Representatives', icon: Building2, color: '#805ad5' },
-                { href: '/elections', label: 'Elections & Voting', icon: Vote, color: '#e53e3e' },
-                { href: '/library', label: 'Research Library', icon: BookOpen, color: '#3182ce' },
-                { href: '/chat', label: 'Ask Chance', icon: Zap, color: '#319795' },
-                { href: '/call-your-senators', label: 'Call Your Senators', icon: Phone, color: '#dd6b20' },
+                { href: '/services', label: 'Find Services', icon: Heart, color: '#7a2018' },
+                { href: '/officials', label: 'Representatives', icon: Building2, color: '#1a3460' },
+                { href: '/elections', label: 'Elections & Voting', icon: Vote, color: '#1a6b56' },
+                { href: '/library', label: 'Research Library', icon: BookOpen, color: '#6a4e10' },
+                { href: '/chat', label: 'Ask Chance', icon: Zap, color: '#1a5030' },
+                { href: '/call-your-senators', label: 'Call Your Senators', icon: Phone, color: '#1e4d7a' },
               ].map(function (action) {
                 const ActionIcon = action.icon
                 return (

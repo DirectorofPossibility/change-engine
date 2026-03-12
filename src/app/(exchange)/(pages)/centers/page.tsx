@@ -12,7 +12,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Layers of Engagement | Community Exchange',
+  title: 'Layers of Engagement | Change Engine',
   description: 'Four ways to engage with your community: Learning, Action, Resource, and Accountability.',
 }
 
@@ -141,7 +141,7 @@ export default async function CentersIndexPage() {
                 <Link
                   key={name}
                   href={'/centers/' + config.slug}
-                  className="block bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
+                  className="block bg-white border border-brand-border overflow-hidden hover:border-ink transition-shadow group"
                 >
                   <div className="flex flex-col sm:flex-row">
                     {/* Color accent + icon */}

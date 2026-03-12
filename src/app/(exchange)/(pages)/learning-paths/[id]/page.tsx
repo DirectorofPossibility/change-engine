@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!path) return { title: 'Not Found' }
 
   return {
-    title: path.path_name + ' — Community Exchange',
-    description: 'A structured learning journey on the Community Exchange.',
+    title: path.path_name + ' — Change Engine',
+    description: 'A structured learning journey on the Change Engine.',
   }
 }
 
@@ -40,7 +40,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   if (!path) notFound()
 
   const theme = (path as any).theme_id ? THEMES[(path as any).theme_id as keyof typeof THEMES] : null
-  const themeColor = theme?.color ?? '#3182ce'
+  const themeColor = theme?.color ?? '#6a4e10'
 
   const userProfile = await getUserProfile()
 

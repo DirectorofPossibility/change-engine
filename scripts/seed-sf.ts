@@ -13,8 +13,20 @@
  * This script is idempotent — uses deterministic IDs so re-running upserts.
  */
 
-import * as dotenv from 'dotenv'
-dotenv.config({ path: '.env.local' })
+// Load .env.local manually (no dotenv dependency needed)
+import { readFileSync } from 'fs'
+try {
+  const envFile = readFileSync('.env.local', 'utf-8')
+  for (const line of envFile.split('\n')) {
+    const trimmed = line.trim()
+    if (!trimmed || trimmed.startsWith('#')) continue
+    const eq = trimmed.indexOf('=')
+    if (eq === -1) continue
+    const key = trimmed.substring(0, eq)
+    const val = trimmed.substring(eq + 1).replace(/^["']|["']$/g, '')
+    if (!process.env[key]) process.env[key] = val
+  }
+} catch { /* .env.local may not exist if vars set in environment */ }
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!

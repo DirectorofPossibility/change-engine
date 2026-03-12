@@ -47,12 +47,12 @@ export function CenterCard({ name, emoji, question, slug, count }: CenterCardPro
     <Link
       href={'/centers/' + slug}
       className="flex flex-col items-center p-6 bg-white border border-brand-border
-                 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 text-center group"
+                 hover:border-ink hover:scale-[1.02] transition-all duration-200 text-center group"
     >
       {/* Circular image area */}
       <div className="relative mb-4">
-        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden shadow-md
-                        group-hover:shadow-lg transition-shadow">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border border-brand-border
+                        group-hover:border-ink transition-shadow">
           {imageSrc ? (
             <Image
               src={imageSrc}

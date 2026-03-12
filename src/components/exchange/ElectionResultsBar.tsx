@@ -2,7 +2,7 @@
 
 /**
  * Horizontal bar chart showing candidate vote percentages for a race,
- * grouped by office_sought. Party colors: R=#e53e3e, D=#3182ce.
+ * grouped by office_sought. Party colors: R=#1a6b56, D=#6a4e10.
  */
 
 interface CandidateResult {
@@ -22,10 +22,10 @@ interface ElectionResultsBarProps {
 }
 
 const PARTY_COLORS: Record<string, string> = {
-  Republican: '#e53e3e',
-  Democratic: '#3182ce',
-  Libertarian: '#d69e2e',
-  Green: '#38a169',
+  Republican: '#1a6b56',
+  Democratic: '#6a4e10',
+  Libertarian: '#4a2870',
+  Green: '#7a2018',
   Independent: '#8B7E74',
 }
 

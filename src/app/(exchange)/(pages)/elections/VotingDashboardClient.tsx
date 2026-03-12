@@ -106,7 +106,7 @@ export function VotingDashboardClient({
         <section>
           <SectionHeading
             title={recentElection.election_name + ' Results'}
-            color="#e53e3e"
+            color="#1a6b56"
           />
 
           {/* Turnout + Community Impact side by side */}
@@ -201,7 +201,7 @@ export function VotingDashboardClient({
           SECTION 2: What's Next (countdown + timeline + ballot + register)
           ═══════════════════════════════════════════════════ */}
       <section>
-        <SectionHeading title="What's Next" color="#3182ce" />
+        <SectionHeading title="What's Next" color="#6a4e10" />
 
         {nextElection ? (
           <div className="space-y-4">
@@ -321,7 +321,7 @@ export function VotingDashboardClient({
                       href="https://www.votetexas.gov/voting/vote-by-mail.html"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border text-brand-text rounded-card text-sm font-medium hover:shadow-sm transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border text-brand-text rounded-card text-sm font-medium hover:border-ink transition-colors"
                     >
                       <Mail size={14} />
                       Vote by mail
@@ -350,7 +350,7 @@ export function VotingDashboardClient({
           SECTION 3: Who Represents You (with ZIP input integrated)
           ═══════════════════════════════════════════════════ */}
       <section>
-        <SectionHeading title="Who Represents You" color="#805ad5" />
+        <SectionHeading title="Who Represents You" color="#1a3460" />
 
         {/* ZIP input — warm and integrated */}
         <form onSubmit={handleZipSubmit} className="flex items-center gap-3 max-w-md mb-6">
@@ -445,7 +445,7 @@ export function VotingDashboardClient({
                 <Link
                   key={item.id}
                   href={'/content/' + item.id}
-                  className="bg-white rounded-card border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
+                  className="bg-white rounded-card border border-brand-border overflow-hidden hover:border-ink transition-shadow group"
                 >
                   {item.image_url && (
                     <div className="h-32 overflow-hidden">
@@ -475,7 +475,7 @@ export function VotingDashboardClient({
           SECTION 5: Your Civic Journey + Get Reminders
           ═══════════════════════════════════════════════════ */}
       <section>
-        <SectionHeading title="Your Civic Journey" color="#38a169" />
+        <SectionHeading title="Your Civic Journey" color="#7a2018" />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <CivicScorecard />
           <ElectionReminderSignup />
@@ -491,7 +491,7 @@ export function VotingDashboardClient({
             href="https://www.votetexas.gov/register-to-vote/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:shadow-sm transition-shadow"
+            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:border-ink transition-colors"
           >
             <div className="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
               <ClipboardCheck size={18} className="text-brand-accent" />
@@ -506,7 +506,7 @@ export function VotingDashboardClient({
             href="https://www.votetexas.gov/voting/vote-by-mail.html"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:shadow-sm transition-shadow"
+            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:border-ink transition-colors"
           >
             <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
               <Mail size={18} className="text-blue-600" />
@@ -519,7 +519,7 @@ export function VotingDashboardClient({
 
           <Link
             href="/officials"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:shadow-sm transition-shadow"
+            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:border-ink transition-colors"
           >
             <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
               <Users size={18} className="text-green-600" />

@@ -12,7 +12,7 @@ import { PoliciesPageClient } from './PoliciesPageClient'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Policies & Legislation — Community Exchange',
+  title: 'Policies & Legislation — Change Engine',
   description: 'Track legislation and policies affecting Houston and Harris County communities.',
 }
 

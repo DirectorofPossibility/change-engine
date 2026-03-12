@@ -71,7 +71,7 @@ function OfficialCard({ official }: { official: any }) {
   return (
     <Link
       href={'/officials/' + official.official_id}
-      className="group flex items-start gap-3 p-3 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
+      className="group flex items-start gap-3 p-3 border border-brand-border bg-white hover:border-ink hover:-translate-y-0.5 transition-all"
     >
       <div className="w-1 h-12 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
       <div className="flex-1 min-w-0">
@@ -101,7 +101,7 @@ function PolicyCard({ policy }: { policy: any }) {
   return (
     <Link
       href={'/policies/' + policy.policy_id}
-      className="group block p-3 border border-brand-border bg-white hover:shadow-sm transition-all"
+      className="group block p-3 border border-brand-border bg-white hover:border-ink transition-all"
     >
       <div className="flex items-start gap-2">
         <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: color }} />
@@ -126,7 +126,7 @@ function ServiceCard({ service }: { service: any }) {
   return (
     <Link
       href={'/services/' + service.service_id}
-      className="group block p-3 border border-brand-border bg-white hover:shadow-sm transition-all"
+      className="group block p-3 border border-brand-border bg-white hover:border-ink transition-all"
     >
       <p className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
         {service.service_name}
@@ -151,7 +151,7 @@ function ContentCard({ item, translation }: { item: any, translation?: { title?:
   return (
     <Link
       href={'/content/' + item.id}
-      className="group block p-3 border border-brand-border bg-white hover:shadow-sm transition-all"
+      className="group block p-3 border border-brand-border bg-white hover:border-ink transition-all"
     >
       <p className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
         {title}
@@ -417,15 +417,15 @@ export function MyAreaClient({
       <section key="action" className="mb-10">
         <SectionHeader icon={Briefcase} title="What You Can Do" count={undefined} color="#E8723A" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Link href="/opportunities" className="group block p-5 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+          <Link href="/opportunities" className="group block p-5 border border-brand-border bg-white hover:border-ink hover:-translate-y-0.5 transition-all">
             <h3 className="font-display font-bold text-brand-text group-hover:text-brand-accent transition-colors">Volunteer</h3>
             <p className="text-xs text-brand-muted mt-1">Find opportunities to give your time and skills</p>
           </Link>
-          <Link href="/organizations" className="group block p-5 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+          <Link href="/organizations" className="group block p-5 border border-brand-border bg-white hover:border-ink hover:-translate-y-0.5 transition-all">
             <h3 className="font-display font-bold text-brand-text group-hover:text-brand-accent transition-colors">Organizations</h3>
             <p className="text-xs text-brand-muted mt-1">Connect with groups working in your community</p>
           </Link>
-          <Link href="/foundations" className="group block p-5 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+          <Link href="/foundations" className="group block p-5 border border-brand-border bg-white hover:border-ink hover:-translate-y-0.5 transition-all">
             <h3 className="font-display font-bold text-brand-text group-hover:text-brand-accent transition-colors">Foundations</h3>
             <p className="text-xs text-brand-muted mt-1">Explore funding and grantmaking in your focus areas</p>
           </Link>

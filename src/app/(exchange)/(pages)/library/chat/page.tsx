@@ -5,7 +5,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Chat with Chance | Community Exchange',
+  title: 'Chat with Chance | Change Engine',
   description: 'Ask Chance, your neighborhood guide, about Houston community resources, services, organizations, elected officials, and more.',
 }
 

@@ -194,7 +194,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                         <Link
                           key={official.official_id}
                           href={'/officials/' + official.official_id}
-                          className="bg-white border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all flex items-start gap-3"
+                          className="bg-white border border-brand-border p-4 hover:border-ink hover:border-brand-accent/30 transition-all flex items-start gap-3"
                         >
                           <div
                             className="w-10 h-10 flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
@@ -269,7 +269,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     <Link
                       key={svc.service_id}
                       href={'/services/' + svc.service_id}
-                      className="bg-white border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
+                      className="bg-white border border-brand-border p-4 hover:border-ink hover:border-brand-accent/30 transition-all"
                     >
                       <h4 className="font-semibold text-brand-text text-sm line-clamp-2">
                         {svc.service_name}
@@ -328,7 +328,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     <Link
                       key={policy.policy_id}
                       href={'/policies/' + policy.policy_id}
-                      className="bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {policy.level && (
@@ -375,7 +375,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     <Link
                       key={item.id}
                       href={'/content/' + item.id}
-                      className="flex items-start gap-3 bg-white border border-brand-border p-3 hover:shadow-md transition-shadow"
+                      className="flex items-start gap-3 bg-white border border-brand-border p-3 hover:border-ink transition-shadow"
                     >
                       <div
                         className="w-1.5 h-10 rounded-full flex-shrink-0 mt-0.5"
@@ -420,7 +420,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                   key={i}
                   className={
                     'bg-white border p-4 ' +
-                    (isUrgent ? 'border-brand-accent/40 shadow-sm' : 'border-brand-border')
+                    (isUrgent ? 'border-brand-accent/40' : 'border-brand-border')
                   }
                 >
                   <div className="flex items-start justify-between gap-3">

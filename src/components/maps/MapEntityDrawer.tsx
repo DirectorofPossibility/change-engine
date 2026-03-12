@@ -33,16 +33,16 @@ interface MapEntityDrawerProps {
 }
 
 const TYPE_LABELS: Record<string, { label: string; color: string }> = {
-  organization: { label: 'Organization', color: '#38a169' },
-  service: { label: 'Service', color: '#3182ce' },
-  voting: { label: 'Voting Location', color: '#e53e3e' },
-  official: { label: 'Official', color: '#805ad5' },
-  park: { label: 'Park', color: '#38a169' },
-  police: { label: 'Police', color: '#3182ce' },
-  fire: { label: 'Fire Station', color: '#e53e3e' },
-  school: { label: 'School', color: '#dd6b20' },
-  medical: { label: 'Medical', color: '#805ad5' },
-  library: { label: 'Library', color: '#d69e2e' },
+  organization: { label: 'Organization', color: '#7a2018' },
+  service: { label: 'Service', color: '#6a4e10' },
+  voting: { label: 'Voting Location', color: '#1a6b56' },
+  official: { label: 'Official', color: '#1a3460' },
+  park: { label: 'Park', color: '#7a2018' },
+  police: { label: 'Police', color: '#6a4e10' },
+  fire: { label: 'Fire Station', color: '#1a6b56' },
+  school: { label: 'School', color: '#1e4d7a' },
+  medical: { label: 'Medical', color: '#1a3460' },
+  library: { label: 'Library', color: '#4a2870' },
 }
 
 export function MapEntityDrawer({ entity, onClose, onPathwayClick }: MapEntityDrawerProps) {

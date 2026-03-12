@@ -125,7 +125,7 @@ export function PathwayContextBar({ activePathways = [], showLabels = false }: P
           cx={cx}
           cy={cy}
           r={centerR}
-          fill="#FAF8F5"
+          fill="#f4f5f7"
           stroke="#C75B2A"
           strokeWidth="2"
         />

@@ -72,7 +72,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
                 onClick={function () { setActiveSDG(isActive ? null : s.sdg_id) }}
                 className={'px-3 py-1.5 rounded-full text-xs font-medium transition-colors ' +
                   (isActive ? 'text-white' : 'border text-brand-muted hover:text-brand-text')}
-                style={isActive ? { backgroundColor: s.sdg_color || '#3182ce' } : { borderColor: s.sdg_color || '#3182ce', color: s.sdg_color || '#3182ce' }}
+                style={isActive ? { backgroundColor: s.sdg_color || '#6a4e10' } : { borderColor: s.sdg_color || '#6a4e10', color: s.sdg_color || '#6a4e10' }}
               >
                 {s.sdg_number}
               </button>
@@ -123,7 +123,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
               </div>
               <div className="flex flex-wrap gap-2">
                 {filtered.map(function (fa) {
-                  let baseClass = 'text-xs px-3 py-1.5 rounded-full bg-white text-brand-text hover:shadow-md transition-shadow'
+                  let baseClass = 'text-xs px-3 py-1.5 rounded-full bg-white text-brand-text hover:border-ink transition-shadow'
                   if (fa.is_bridging) {
                     baseClass += ' border border-dashed'
                   } else {
@@ -159,7 +159,7 @@ export function ExploreFilterClient({ themes, unthemedAreas, sdgs, sdohDomains }
                     <Link
                       key={fa.focus_id}
                       href={'/explore/focus/' + fa.focus_id}
-                      className="text-xs px-3 py-1.5 rounded-full bg-white border border-brand-border text-brand-text hover:shadow-md transition-shadow"
+                      className="text-xs px-3 py-1.5 rounded-full bg-white border border-brand-border text-brand-text hover:border-ink transition-shadow"
                     >
                       {fa.focus_area_name}
                     </Link>

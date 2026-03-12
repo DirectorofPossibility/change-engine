@@ -10,7 +10,7 @@ import { Heart, ExternalLink } from 'lucide-react'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Benefit Programs — Community Exchange',
+  title: 'Benefit Programs — Change Engine',
   description: 'Government benefit programs available to Houston-area residents.',
 }
 
@@ -23,7 +23,7 @@ export default async function BenefitsPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="flower" gradientColor="#38a169" title="Benefit Programs" subtitle="Government programs that provide financial assistance, food, healthcare, and other support to eligible Houston-area residents." />
+      <PageHero variant="sacred" sacredPattern="flower" gradientColor="#7a2018" title="Benefit Programs" subtitle="Government programs that provide financial assistance, food, healthcare, and other support to eligible Houston-area residents." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Benefits' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 mt-4">
@@ -31,7 +31,7 @@ export default async function BenefitsPage() {
             <div className="space-y-4">
               {(benefits || []).map(function (b) {
                 return (
-                  <Link key={b.benefit_id} href={`/benefits/${b.benefit_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
+                  <Link key={b.benefit_id} href={`/benefits/${b.benefit_id}`} className="block bg-white border border-brand-border p-5 hover:border-ink transition-shadow">
                     <div className="flex items-start gap-3">
                       <Heart className="w-5 h-5 text-theme-health mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -53,7 +53,7 @@ export default async function BenefitsPage() {
             <div className="sticky top-24 space-y-4">
               <IndexWayfinder
                 currentPage="benefits"
-                color="#38a169"
+                color="#7a2018"
                 related={[
                   { label: 'Services', href: '/services' },
                   { label: 'Agencies', href: '/agencies' },

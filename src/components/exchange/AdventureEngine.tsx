@@ -783,7 +783,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleRestart}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-brand-border bg-white text-sm font-medium text-brand-text hover:shadow-md transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-brand-border bg-white text-sm font-medium text-brand-text hover:border-ink transition-all"
              
             >
               <RotateCcw size={14} /> Try a Different Path
@@ -791,7 +791,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
             <Link
               href="/adventures"
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
-              style={{ backgroundColor: adventure.color, boxShadow: `3px 3px 0 ${adventure.color}40` }}
+              style={{ backgroundColor: adventure.color }}
             >
               <Sparkles size={14} /> More Adventures
             </Link>
@@ -804,7 +804,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
               <button
                 key={i}
                 onClick={() => handleChoice(choice)}
-                className="w-full text-left px-5 py-4 border border-brand-border bg-white hover:shadow-md hover:translate-y-[-1px] transition-all group"
+                className="w-full text-left px-5 py-4 border border-brand-border bg-white hover:border-ink hover:translate-y-[-1px] transition-all group"
                
               >
                 <div className="flex items-center gap-3">

@@ -8,7 +8,7 @@ import Image from 'next/image'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Bookshelf — Community Exchange',
+  title: 'Bookshelf — Change Engine',
   description: 'Curated reading list for civic-minded Houstonians. Books on community, justice, environment, and building a better city.',
 }
 
@@ -35,7 +35,7 @@ export default async function BookshelfPage() {
 
         {/* FOL watermarks */}
         <div className="absolute -top-20 -right-20 opacity-[0.04]">
-          <FOLWatermark variant="seed" size="lg" color="#805ad5" />
+          <FOLWatermark variant="seed" size="lg" color="#1a3460" />
         </div>
         <div className="absolute bottom-10 -left-16 opacity-[0.03]">
           <FOLWatermark variant="vesica" size="md" color="#C75B2A" />
@@ -47,7 +47,7 @@ export default async function BookshelfPage() {
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Community Bookshelf</p>
               <h1 className="font-display text-[clamp(2.2rem,4.5vw,3.2rem)] leading-[1.1] text-brand-text mb-4">
-                Read. <span className="font-hand text-[1.15em] font-bold text-[#805ad5]">Reflect.</span> Act.
+                Read. <span className="font-hand text-[1.15em] font-bold text-[#1a3460]">Reflect.</span> Act.
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted max-w-lg mb-6">
                 Books that shaped how we think about community, justice, and civic life. Each one chosen because it changes the conversation.
@@ -64,18 +64,18 @@ export default async function BookshelfPage() {
             {/* Right: book stack collage */}
             <div className="relative h-[300px] hidden lg:block">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.05]">
-                <FOLWatermark variant="vesica" size="lg" color="#805ad5" />
+                <FOLWatermark variant="vesica" size="lg" color="#1a3460" />
               </div>
 
               {/* Stacked book spines visual */}
               <div className="absolute top-6 left-8 w-[200px]" style={{ transform: 'rotate(-3deg)' }}>
                 {[
-                  { color: '#e53e3e', w: 200, h: 28 },
-                  { color: '#dd6b20', w: 190, h: 24 },
-                  { color: '#d69e2e', w: 210, h: 30 },
-                  { color: '#38a169', w: 195, h: 26 },
-                  { color: '#3182ce', w: 205, h: 28 },
-                  { color: '#805ad5', w: 185, h: 24 },
+                  { color: '#1a6b56', w: 200, h: 28 },
+                  { color: '#1e4d7a', w: 190, h: 24 },
+                  { color: '#4a2870', w: 210, h: 30 },
+                  { color: '#7a2018', w: 195, h: 26 },
+                  { color: '#6a4e10', w: 205, h: 28 },
+                  { color: '#1a3460', w: 185, h: 24 },
                   { color: '#C75B2A', w: 200, h: 32 },
                 ].map(function (book, i) {
                   return (
@@ -87,7 +87,7 @@ export default async function BookshelfPage() {
                         height: book.h,
                         backgroundColor: book.color,
                         marginBottom: 2,
-                        boxShadow: '2px 2px 4px rgba(0,0,0,0.15)',
+                        border: '1px solid #dde1e8',
                       }}
                     />
                   )
@@ -97,7 +97,7 @@ export default async function BookshelfPage() {
               {/* Reading image */}
               <div
                 className="absolute w-[220px] h-[160px] rounded-[10px] border-[3px] border-white overflow-hidden z-[2]"
-                style={{ top: 80, right: 0, transform: 'rotate(2deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
+                style={{ top: 80, right: 0, transform: 'rotate(2deg)', border: '1px solid #dde1e8' }}
               >
                 <Image
                   src={BUCKET + '/reading.jpg'}
@@ -111,7 +111,7 @@ export default async function BookshelfPage() {
                 className="absolute z-[5] bg-white border-2 border-brand-text rounded-[10px] px-3 py-2 font-mono text-[10px]"
                 style={{ bottom: 10, left: 10 }}
               >
-                <span className="block text-[24px] font-black text-[#805ad5] leading-none">{books.length}</span>
+                <span className="block text-[24px] font-black text-[#1a3460] leading-none">{books.length}</span>
                 books
               </div>
 
@@ -124,13 +124,13 @@ export default async function BookshelfPage() {
 
         {/* Spectrum bar */}
         <div className="spectrum-bar">
-          <div style={{ background: '#e53e3e' }} />
-          <div style={{ background: '#dd6b20' }} />
-          <div style={{ background: '#d69e2e' }} />
-          <div style={{ background: '#38a169' }} />
-          <div style={{ background: '#3182ce' }} />
-          <div style={{ background: '#319795' }} />
-          <div style={{ background: '#805ad5' }} />
+          <div style={{ background: '#1a6b56' }} />
+          <div style={{ background: '#1e4d7a' }} />
+          <div style={{ background: '#4a2870' }} />
+          <div style={{ background: '#7a2018' }} />
+          <div style={{ background: '#6a4e10' }} />
+          <div style={{ background: '#1a5030' }} />
+          <div style={{ background: '#1a3460' }} />
         </div>
       </section>
 

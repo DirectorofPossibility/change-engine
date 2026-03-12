@@ -1,6 +1,6 @@
 /**
  * @fileoverview Terms of Use page for The Change Lab, The Change Engine,
- * and the Community Exchange.
+ * and the Change Engine.
  *
  * @route GET /terms
  */
@@ -11,7 +11,7 @@ export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
-  description: 'Terms of use for The Change Lab, The Change Engine, and the Community Exchange.',
+  description: 'Terms of use for The Change Lab, The Change Engine, and the Change Engine.',
 }
 
 export default function TermsPage() {
@@ -28,7 +28,7 @@ export default function TermsPage() {
         <section>
           <p>
             Welcome to <strong>The Change Lab</strong>, <strong>The Change Engine</strong>{' '}
-            (www.changeengine.us), and the <strong>Community Exchange</strong> (collectively, the
+            (www.changeengine.us), and the <strong>Change Engine</strong> (collectively, the
             &ldquo;Platforms&rdquo;). These Terms of Use (&ldquo;Terms&rdquo;) govern your access to
             and use of our websites, applications, and services. By using the Platforms, you agree to
             these Terms. If you do not agree, please do not use our Platforms.
@@ -139,7 +139,7 @@ export default function TermsPage() {
             <li>Promote hate, discrimination, or harassment based on race, ethnicity, gender, religion, sexual orientation, disability, or any other protected characteristic</li>
             <li>Post or share disinformation, extremist content, or calls to violence</li>
             <li>Use the Platforms for commercial purposes without our written permission</li>
-            <li>Misrepresent your affiliation with The Change Lab, The Change Engine, or the Community Exchange</li>
+            <li>Misrepresent your affiliation with The Change Lab, The Change Engine, or the Change Engine</li>
             <li>Take content out of context in ways that contradict our mission or values</li>
             <li>Attempt to gain unauthorized access to our systems, accounts, or data</li>
             <li>Use automated tools (bots, scrapers, etc.) to access the Platforms without our prior consent</li>

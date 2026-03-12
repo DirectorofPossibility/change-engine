@@ -4,7 +4,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Accessibility | Community Exchange',
+  title: 'Accessibility | Change Engine',
   description: 'Our commitment to making civic participation accessible to everyone.',
 }
 
@@ -24,7 +24,7 @@ export default function AccessibilityPage() {
         <section>
           <h2 className="font-display text-xl font-bold text-brand-text mb-2">Our Commitment</h2>
           <p className="leading-relaxed text-brand-text/80">
-            The Change Lab believes that civic life should be open to everyone. We are committed to ensuring that the Community Exchange is accessible to people of all abilities, backgrounds, and circumstances. We continuously work to improve the usability and experience of our platform for all visitors.
+            The Change Lab believes that civic life should be open to everyone. We are committed to ensuring that the Change Engine is accessible to people of all abilities, backgrounds, and circumstances. We continuously work to improve the usability and experience of our platform for all visitors.
           </p>
         </section>
 
@@ -50,7 +50,7 @@ export default function AccessibilityPage() {
         <section>
           <h2 className="font-display text-xl font-bold text-brand-text mb-2">Feedback</h2>
           <p className="leading-relaxed text-brand-text/80">
-            If you experience any difficulty accessing content on the Community Exchange, or have suggestions for how we can improve accessibility, please reach out to us at{' '}
+            If you experience any difficulty accessing content on the Change Engine, or have suggestions for how we can improve accessibility, please reach out to us at{' '}
             <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
               hello@thechangelab.net
             </a>

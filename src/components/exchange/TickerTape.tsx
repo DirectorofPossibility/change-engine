@@ -53,7 +53,7 @@ export function TickerTape({ election }: TickerTapeProps) {
         >
           <div className="flex items-center whitespace-nowrap py-2.5 px-4">
             <span className="inline-flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#e53e3e' }} />
+              <span className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse" style={{ backgroundColor: '#1a6b56' }} />
               <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-accent">
                 {electionItem.text}
               </span>

@@ -20,7 +20,7 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const LEGISTAR_BASE = 'https://webapi.legistar.com/v1/houston';
+const LEGISTAR_BASE = 'https://webapi.legistar.com/v1/cityofhouston';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 

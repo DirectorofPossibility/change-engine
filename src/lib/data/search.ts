@@ -14,7 +14,7 @@ import type { SearchResults, SearchResultService } from '@/lib/types/exchange'
 
 /**
  * Search across all content types using PostgreSQL full-text search.
- * Multi-word queries are AND'd together (all words must match).
+ * Multi-word queries use OR so any matching word returns results.
  * Services are enriched with their parent organization name via a follow-up query.
  */
 export async function searchAll(query: string): Promise<SearchResults> {
@@ -22,7 +22,10 @@ export async function searchAll(query: string): Promise<SearchResults> {
   if (!query || query.trim().length === 0) return empty
 
   const supabase = await createClient()
-  const tsQuery = query.trim().split(/\s+/).join(' & ')
+  // Strip non-word chars (& symbols etc.) and OR the words for broader matching
+  const words = query.trim().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean)
+  if (words.length === 0) return empty
+  const tsQuery = words.join(' | ')
 
   const [contentRes, servicesRes, officialsRes, orgsRes, policiesRes, situationsRes, resourcesRes, pathsRes] = await Promise.all([
     supabase

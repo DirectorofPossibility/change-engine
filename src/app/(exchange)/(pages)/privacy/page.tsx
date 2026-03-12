@@ -1,6 +1,6 @@
 /**
  * @fileoverview Privacy Policy page for The Change Lab, The Change Engine,
- * and the Community Exchange.
+ * and the Change Engine.
  *
  * @route GET /privacy
  */
@@ -11,7 +11,7 @@ export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Privacy policy for The Change Lab, The Change Engine, and the Community Exchange.',
+  description: 'Privacy policy for The Change Lab, The Change Engine, and the Change Engine.',
 }
 
 export default function PrivacyPage() {
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
             This Privacy Policy describes how <strong>The Change Lab</strong> (operating through its
             fiscal sponsor, <strong>Impact Hub Houston</strong>), its digital platform{' '}
             <strong>The Change Engine</strong> (www.changeengine.us), and the{' '}
-            <strong>Community Exchange</strong> (collectively, &ldquo;we,&rdquo; &ldquo;us,&rdquo;
+            <strong>Change Engine</strong> (collectively, &ldquo;we,&rdquo; &ldquo;us,&rdquo;
             or &ldquo;our&rdquo;) collect, use, and protect information when you use our websites,
             applications, and services.
           </p>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
           <p>
             The Change Lab is a nonprofit initiative operating under the fiscal sponsorship of{' '}
             <strong>Impact Hub Houston</strong>, located at 4201 Main St., Suite L055-C, Houston,
-            Texas 77002, USA. Community Exchange is our civic discovery platform at changeengine.us,
+            Texas 77002, USA. Change Engine is our civic discovery platform at changeengine.us,
             connecting Houston residents with resources, services, and civic participation
             opportunities. The Change Engine is the underlying technology infrastructure that
             powers the platform.

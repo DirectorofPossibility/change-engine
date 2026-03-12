@@ -21,7 +21,7 @@ export default function AdventuresPage() {
   return (
     <div>
       <IndexPageHero
-        color="#805ad5"
+        color="#1a3460"
         pattern="seed"
         title="Community Adventures"
         subtitle="Interactive stories where your choices shape the outcome."
@@ -51,7 +51,7 @@ export default function AdventuresPage() {
                   <Link
                     key={adventure.slug}
                     href={'/adventures/' + adventure.slug}
-                    className="group block bg-white border border-brand-border overflow-hidden hover:shadow-lg hover:translate-y-[-2px] transition-all"
+                    className="group block bg-white border border-brand-border overflow-hidden hover:border-ink hover:translate-y-[-2px] transition-all"
                    
                   >
                     <div className="flex">
@@ -122,12 +122,12 @@ export default function AdventuresPage() {
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="adventures"
-                color="#805ad5"
+                color="#1a3460"
                 related={[
-                  { label: 'Pathways', href: '/pathways', color: '#805ad5' },
-                  { label: 'Knowledge Graph', href: '/knowledge-graph', color: '#d69e2e' },
-                  { label: 'Library', href: '/library', color: '#3182ce' },
-                  { label: 'Ask Chance', href: '/chat', color: '#38a169' },
+                  { label: 'Pathways', href: '/pathways', color: '#1a3460' },
+                  { label: 'Knowledge Graph', href: '/knowledge-graph', color: '#4a2870' },
+                  { label: 'Library', href: '/library', color: '#6a4e10' },
+                  { label: 'Ask Chance', href: '/chat', color: '#7a2018' },
                 ]}
               />
             </div>

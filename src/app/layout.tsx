@@ -29,8 +29,8 @@ const dmMono = DM_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.changeengine.us'),
   title: {
-    default: 'Community Exchange — Powered by The Change Lab',
-    template: '%s | Community Exchange',
+    default: 'Change Engine — Powered by The Change Lab',
+    template: '%s | Change Engine',
   },
   description: 'Your guide to services, civic engagement, and community resources in Houston, Texas.',
   icons: {
@@ -38,14 +38,14 @@ export const metadata: Metadata = {
     apple: '/icon.svg',
   },
   openGraph: {
-    siteName: 'Community Exchange',
+    siteName: 'Change Engine',
     locale: 'en_US',
     type: 'website',
-    images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: 'Community Exchange — Powered by The Change Lab' }],
+    images: [{ url: '/images/og-image.png', width: 1200, height: 630, alt: 'Change Engine — Powered by The Change Lab' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Community Exchange — Powered by The Change Lab',
+    title: 'Change Engine — Powered by The Change Lab',
     description: 'Your guide to services, civic engagement, and community resources in Houston, Texas.',
     images: ['/images/og-image.png'],
   },

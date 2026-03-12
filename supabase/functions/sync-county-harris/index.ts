@@ -22,7 +22,7 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-const LEGISTAR_BASE = 'https://webapi.legistar.com/v1/harriscounty';
+const LEGISTAR_BASE = 'https://webapi.legistar.com/v1/harriscountytx';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 

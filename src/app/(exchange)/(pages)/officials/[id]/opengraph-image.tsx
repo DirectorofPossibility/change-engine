@@ -18,7 +18,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   const label = data?.level || 'Official'
 
   return new ImageResponse(
-    <OGLayout title={title} subtitle={subtitle} label={label} accentColor="#3182ce" />,
+    <OGLayout title={title} subtitle={subtitle} label={label} accentColor="#6a4e10" />,
     { ...size }
   )
 }

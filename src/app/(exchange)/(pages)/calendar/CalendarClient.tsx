@@ -47,10 +47,10 @@ interface CalendarClientProps {
 // ── Category styling ──
 
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; bgClass: string; textClass: string; icon: typeof Calendar }> = {
-  event:       { label: 'Community',   color: '#38a169', bgClass: 'bg-green-50',  textClass: 'text-green-700',  icon: Calendar },
-  civic:       { label: 'Civic',       color: '#3182ce', bgClass: 'bg-blue-50',   textClass: 'text-blue-700',   icon: Landmark },
-  opportunity: { label: 'Opportunity', color: '#805ad5', bgClass: 'bg-purple-50', textClass: 'text-purple-700', icon: Heart },
-  content:     { label: 'Featured',    color: '#dd6b20', bgClass: 'bg-orange-50', textClass: 'text-orange-700', icon: Calendar },
+  event:       { label: 'Community',   color: '#7a2018', bgClass: 'bg-green-50',  textClass: 'text-green-700',  icon: Calendar },
+  civic:       { label: 'Civic',       color: '#6a4e10', bgClass: 'bg-blue-50',   textClass: 'text-blue-700',   icon: Landmark },
+  opportunity: { label: 'Opportunity', color: '#1a3460', bgClass: 'bg-purple-50', textClass: 'text-purple-700', icon: Heart },
+  content:     { label: 'Featured',    color: '#1e4d7a', bgClass: 'bg-orange-50', textClass: 'text-orange-700', icon: Calendar },
 }
 
 type ViewMode = 'month' | 'week' | '3day' | 'day'
@@ -401,7 +401,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                         <button
                           key={item.id}
                           onClick={function () { setSelectedEvent(item) }}
-                          className="w-full text-left p-2 border transition-shadow hover:shadow-sm"
+                          className="w-full text-left p-2 border transition-colors hover:border-ink"
                           style={{ borderColor: cfg.color + '40', backgroundColor: cfg.color + '08' }}
                         >
                           <div className="flex items-center gap-1 mb-0.5">
@@ -501,7 +501,7 @@ function renderEventCard(item: CalendarItem, themes: ThemeInfo[], onClick: () =>
   return (
     <div
       key={item.id}
-      className="flex gap-4 bg-white border border-brand-border p-4 hover:shadow-sm transition-shadow cursor-pointer"
+      className="flex gap-4 bg-white border border-brand-border p-4 hover:border-ink transition-colors cursor-pointer"
       onClick={onClick}
     >
       {dateInfo && (

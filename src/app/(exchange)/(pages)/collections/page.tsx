@@ -11,7 +11,7 @@ import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Curated Collections — Community Exchange',
+  title: 'Curated Collections — Change Engine',
   description: 'Hand-curated collections of resources, guides, and content for Houston community members.',
 }
 
@@ -54,7 +54,7 @@ export default async function CollectionsPage() {
                     <Link
                       key={c.collection_id || c.id}
                       href={'/collections/' + (c.collection_id || c.id)}
-                      className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                      className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
                      
                     >
                       <div className="h-2" style={{ backgroundColor: color }} />

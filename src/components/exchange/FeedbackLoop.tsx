@@ -65,7 +65,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
   if (status === 'sent') {
     return (
       <div className="border border-brand-border p-5 text-center">
-        <FlowerOfLifeIcon size={28} color="#38a169" className="mx-auto mb-2" />
+        <FlowerOfLifeIcon size={28} color="#7a2018" className="mx-auto mb-2" />
         <p className="text-sm font-semibold text-brand-text">Thank you for your feedback</p>
         <p className="text-xs text-brand-muted mt-1">Our team will review this and update the record if needed.</p>
         <button

@@ -17,7 +17,7 @@ import Link from 'next/link'
 
 // ── Shared gradient animation ─────────────────────────────────────
 
-const BRAND_COLORS = '#C75B2A;#805ad5;#3182ce;#38a169;#d69e2e;#C75B2A'
+const BRAND_COLORS = '#C75B2A;#1a3460;#6a4e10;#7a2018;#4a2870;#C75B2A'
 
 function AnimatedGradient({ id, dur = 8 }: { id: string; dur?: number }) {
   return (
@@ -26,8 +26,8 @@ function AnimatedGradient({ id, dur = 8 }: { id: string; dur?: number }) {
         <stop offset="0%" stopColor="#C75B2A">
           <animate attributeName="stop-color" values={BRAND_COLORS} dur={`${dur}s`} repeatCount="indefinite" />
         </stop>
-        <stop offset="100%" stopColor="#3182ce">
-          <animate attributeName="stop-color" values="#3182ce;#38a169;#d69e2e;#C75B2A;#805ad5;#3182ce" dur={`${dur}s`} repeatCount="indefinite" />
+        <stop offset="100%" stopColor="#6a4e10">
+          <animate attributeName="stop-color" values="#6a4e10;#7a2018;#4a2870;#C75B2A;#1a3460;#6a4e10" dur={`${dur}s`} repeatCount="indefinite" />
         </stop>
       </linearGradient>
     </defs>
@@ -98,7 +98,7 @@ export function FOLButton({
 }) {
   const base = 'inline-flex items-center gap-2.5 font-display font-bold transition-all duration-300 group'
   const variants = {
-    primary: 'px-6 py-3 bg-brand-accent text-white hover:bg-brand-accent-hover hover:shadow-lg hover:-translate-y-0.5',
+    primary: 'px-6 py-3 bg-brand-accent text-white hover:bg-brand-accent-hover hover:border-ink hover:-translate-y-0.5',
     secondary: 'px-6 py-3 border border-brand-text bg-white text-brand-text hover:bg-brand-text hover:text-white hover:-translate-y-0.5',
     ghost: 'px-4 py-2 text-brand-accent hover:text-brand-accent-hover',
   }
@@ -182,13 +182,12 @@ export function FOLGlassCard({
 }) {
   const content = (
     <div
-      className={`relative overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group ${className}`}
+      className={`relative overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:border-ink group ${className}`}
       style={{
         background: 'rgba(255,255,255,0.85)',
         backdropFilter: 'blur(12px)',
         borderColor: accentColor + '30',
-        boxShadow: `3px 3px 0 ${accentColor}15`,
-      }}
+              }}
     >
       {/* FOL watermark in corner */}
       <div className="absolute -top-4 -right-4 w-24 h-24 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity" style={{ animation: 'fol-spin 60s linear infinite' }}>

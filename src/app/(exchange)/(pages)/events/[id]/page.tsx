@@ -132,7 +132,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       title={event.event_name}
       subtitle={null}
       metaRow={metaRow}
-      themeColor="#38a169"
+      themeColor="#7a2018"
       wayfinderData={wayfinderData}
       wayfinderType="event"
       wayfinderEntityId={id}

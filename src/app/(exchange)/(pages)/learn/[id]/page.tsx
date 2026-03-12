@@ -45,8 +45,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const data: any = await resolvePathByIdOrSlug(supabase, id)
   if (!data) return { title: 'Not Found' }
   return {
-    title: data.path_name + ' — Community Exchange',
-    description: data.description_5th_grade || 'A learning path on the Community Exchange.',
+    title: data.path_name + ' — Change Engine',
+    description: data.description_5th_grade || 'A learning path on the Change Engine.',
   }
 }
 
@@ -263,7 +263,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.related_policies')}</h3>
           <div className="space-y-2">
             {policies.slice(0, 4).map(p => (
-              <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-3 bg-brand-bg hover:shadow-sm transition-shadow">
+              <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-3 bg-brand-bg hover:border-ink transition-colors">
                 <div className="font-medium text-sm text-brand-text">{p.policy_name}</div>
                 <div className="flex items-center gap-2 mt-1">
                   {p.status && <span className="text-xs text-brand-muted">{p.status}</span>}

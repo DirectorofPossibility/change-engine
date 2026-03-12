@@ -56,7 +56,7 @@ export function PathwayCircle({ id, name, color, slug, count }: PathwayCirclePro
         {/* Circle container */}
         <div
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden flex items-center justify-center
-                     shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-200
+                     border border-brand-border group-hover:border-ink group-hover:scale-110 transition-all duration-200
                      ring-2 ring-white ring-offset-2"
           style={{ backgroundColor: color }}
         >

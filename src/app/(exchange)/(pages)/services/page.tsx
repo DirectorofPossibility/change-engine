@@ -11,7 +11,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Find Services — Community Exchange',
+  title: 'Find Services — Change Engine',
   description: 'Free and low-cost services in the Houston area — a community resource directory.',
 }
 

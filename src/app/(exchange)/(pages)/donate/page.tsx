@@ -5,8 +5,8 @@ import { FOLWatermark } from '@/components/exchange/FOLWatermark'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
-  title: 'Donate — Community Exchange',
-  description: 'Help us keep Community Exchange free for everyone. Your donation keeps civic infrastructure running.',
+  title: 'Donate — Change Engine',
+  description: 'Help us keep Change Engine free for everyone. Your donation keeps civic infrastructure running.',
 }
 
 const tiers = [
@@ -30,7 +30,7 @@ export default function DonatePage() {
       <PageHero
         variant="editorial"
         title="Help us keep it free for everyone."
-        subtitle="Community Exchange is free. It stays free because people like you think it should be."
+        subtitle="Change Engine is free. It stays free because people like you think it should be."
         intro="Civic infrastructure shouldn't cost money to access. Building it does."
       />
 

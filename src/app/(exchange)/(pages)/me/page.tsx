@@ -14,8 +14,8 @@ import Image from 'next/image'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'My Account — Community Exchange',
-  description: 'Your personal dashboard on the Community Exchange.',
+  title: 'My Account — Change Engine',
+  description: 'Your personal dashboard on the Change Engine.',
 }
 
 export default async function MyDashboardPage() {
@@ -228,7 +228,7 @@ export default async function MyDashboardPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {representatives.map(function (rep: any) {
                     const levelColors: Record<string, string> = {
-                      Federal: '#805ad5', State: '#3182ce', County: '#38a169', City: '#dd6b20',
+                      Federal: '#1a3460', State: '#6a4e10', County: '#7a2018', City: '#1e4d7a',
                     }
                     const color = levelColors[rep.level] || '#6B6560'
                     return (

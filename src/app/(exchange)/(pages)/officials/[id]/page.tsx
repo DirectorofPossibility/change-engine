@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.official_name,
-    description: data.title || 'Details on the Community Exchange.',
+    description: data.title || 'Details on the Change Engine.',
   }
 }
 

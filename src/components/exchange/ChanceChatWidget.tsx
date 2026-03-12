@@ -46,7 +46,7 @@ export function ChanceChatWidget() {
         aria-label="Chat with Chance"
       >
         <div className="relative">
-          <div className="w-14 h-14 rounded-full bg-brand-accent shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+          <div className="w-14 h-14 rounded-full bg-brand-accent border border-brand-border flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
             <MessageCircle size={24} className="text-white" />
           </div>
           {/* Pulse ring removed — too distracting */}
@@ -67,7 +67,7 @@ export function ChanceChatWidget() {
         <button
           onClick={function () { setIsMinimized(false) }}
           aria-label="Open chat with Chance"
-          className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 shadow-lg hover:shadow-xl transition-shadow"
+          className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 hover:border-ink transition-colors"
         >
           <MessageCircle size={16} />
           <span className="text-sm font-medium">Chance</span>

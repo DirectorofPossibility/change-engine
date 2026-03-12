@@ -131,7 +131,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
               <Link
                 key={itemId}
                 href={href}
-                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
               >
                 {image ? (
                   <div className="h-36 overflow-hidden">

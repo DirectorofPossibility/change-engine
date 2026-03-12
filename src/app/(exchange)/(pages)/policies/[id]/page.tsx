@@ -6,24 +6,19 @@ import { createClient } from '@/lib/supabase/server'
 import { getUIStrings } from '@/lib/i18n'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
-import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { PolicyImpactSection } from '@/components/exchange/PolicyImpactSection'
 import { MapPin, ExternalLink, Calendar, Scale, FileText, Users, ArrowRight } from 'lucide-react'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
-import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
-import { ShareButtons } from '@/components/exchange/ShareButtons'
-import { FlowerOfLife } from '@/components/geo/sacred'
 import { policyJsonLd } from '@/lib/jsonld'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 function statusColor(status: string | null): { dotColor: string; textColor: string } {
   if (!status) return { dotColor: '#1b5e8a', textColor: '#1b5e8a' }
@@ -58,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!data) return { title: 'Not Found' }
   return {
     title: data.title_6th_grade || data.policy_name,
-    description: data.summary_6th_grade || data.summary_5th_grade || 'Policy details on the Community Exchange.',
+    description: data.summary_6th_grade || data.summary_5th_grade || 'Policy details on the Change Engine.',
   }
 }
 
@@ -148,271 +143,72 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
   return (
     <div style={{ background: '#f4f5f7' }}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_policy" />
 
-      {/* Masthead — civic red left border for active policies */}
-      <header style={{
-        background: '#ffffff',
-        borderTop: `3px solid ${levelColor_hex}`,
-        borderBottom: '2px solid #0d1117',
-        borderLeft: ['pending', 'introduced', 'in committee', 'active'].includes((policy.status || '').toLowerCase()) ? '4px solid #b03a2a' : 'none',
-      }}>
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Breadcrumb items={[
-            { label: t('policy.policies'), href: '/policies' },
-            { label: displayName }
-          ]} />
-
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 mt-5">
-            {/* Left: Policy info (2/3) */}
-            <div className="pr-0 lg:pr-8">
-              {/* Eyebrow row */}
-              <div className="flex items-center gap-3 mb-4 flex-wrap">
-                {policy.level && (
-                  <span
-                    className="font-mono uppercase"
-                    style={{
-                      fontSize: '0.7rem',
-                      letterSpacing: '0.2em',
-                      color: '#ffffff',
-                      background: '#0d1117',
-                      padding: '3px 10px',
-                      display: 'inline-block',
-                    }}
-                  >
-                    {policy.level}
-                  </span>
-                )}
-                {policy.policy_type && (
-                  <span
-                    className="font-mono uppercase"
-                    style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
-                  >
-                    {policy.policy_type}
-                  </span>
-                )}
-                {policy.status && (
-                  <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: sc.dotColor, display: 'inline-block', flexShrink: 0 }} />
-                    <span className="font-mono uppercase" style={{ fontSize: '0.58rem', letterSpacing: '0.2em' }}>
-                      {policy.status}
-                    </span>
-                  </span>
-                )}
-              </div>
-
-              <h1
-                className="font-display max-w-3xl leading-tight mb-3"
-                style={{ fontWeight: 900, fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', color: '#0d1117' }}
-              >
-                {displayName}
-              </h1>
-
-              {policy.bill_number && (
-                <p className="font-mono mb-3" style={{ fontSize: '0.8rem', color: '#5c6474' }}>{policy.bill_number}</p>
-              )}
-
-              {/* Summary under title */}
-              {displaySummary && (
-                <p className="font-body leading-relaxed mb-4" style={{ fontSize: '1rem', color: '#5c6474' }}>
-                  {displaySummary}
-                </p>
-              )}
-
-              <div className="flex items-center gap-4 flex-wrap">
-                <TranslatePageButton isTranslated={!!translatedName} contentType="policies" contentId={policy.policy_id} />
-                <ShareButtons
-                  title={displayName || undefined}
-                  via={policy.level || undefined}
-                  url={'https://www.changeengine.us/policies/' + id}
-                  compact
-                />
-                {policy.source_url && (
-                  <a
-                    href={policy.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline"
-                    style={{ color: '#5c6474' }}
-                  >
-                    <ExternalLink size={10} />
-                    Source: {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'Official record'}
-                  </a>
-                )}
-              </div>
-            </div>
-
-            {/* Right: Wayfinder + FOL (1/3) */}
-            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
-              <FlowerOfLife size={192} color={levelColor_hex} opacity={0.15} />
-              <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Body */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr]" style={{ gap: 0 }}>
-
-          {/* Main column */}
-          <div style={{ borderRight: '1px solid #dde1e8', paddingRight: '2rem' }} className="lg:pr-8 min-w-0">
-
-            {/* What this does */}
-            {displaySummary && (
-              <section className="mb-8">
-                <h2
-                  className="font-mono uppercase mb-4"
-                  style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
-                >
-                  {t('policy.what_it_does')}
-                </h2>
-                <p className="font-body leading-relaxed" style={{ fontSize: '1rem', color: '#0d1117' }}>
-                  {displaySummary}
-                </p>
-              </section>
-            )}
-
-            {/* Impact */}
-            {policy.impact_statement && (
-              <PolicyImpactSection impactStatement={policy.impact_statement} />
-            )}
-
-            {/* AI Break It Down */}
-            <BreakItDown title={displayName} summary={displaySummary} type="policy" />
-
-            {/* Timeline */}
-            <section className="mb-8">
-              <h2
-                className="font-mono uppercase mb-4"
+      <DetailPageLayout
+        breadcrumbs={[
+          { label: t('policy.policies'), href: '/policies' },
+          { label: displayName }
+        ]}
+        eyebrow={policy.level ? { text: policy.level } : undefined}
+        eyebrowMeta={
+          <>
+            {policy.policy_type && (
+              <span
+                className="font-mono uppercase"
                 style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
               >
-                {t('policy.timeline')}
-              </h2>
-              <div>
-                {policy.introduced_date && (
-                  <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1b5e8a', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
-                    <div>
-                      <p className="font-body" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1117' }}>{t('policy.introduced')}</p>
-                      <p className="font-body" style={{ fontSize: '0.85rem', color: '#5c6474' }}>{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    </div>
-                  </div>
-                )}
-                {policy.last_action && (
-                  <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: sc.dotColor, marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
-                    <div>
-                      <p className="font-body" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1117' }}>{t('policy.latest_action')}</p>
-                      <p className="font-body" style={{ fontSize: '0.85rem', color: '#5c6474' }}>{policy.last_action}</p>
-                      {policy.last_action_date && (
-                        <p className="font-mono mt-0.5" style={{ fontSize: '0.7rem', color: '#8a929e' }}>
-                          {new Date(policy.last_action_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
-                {policy.source_url && (
-                  <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#dde1e8', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
-                    <div>
-                      <p className="font-body" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1117' }}>{t('policy.source')}</p>
-                      <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.85rem', color: '#1b5e8a' }}>
-                        View on {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'source'} <ExternalLink size={12} />
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {/* Decision Makers */}
-            {officials.length > 0 && (
-              <section className="mb-8">
-                <h2
-                  className="font-mono uppercase mb-4"
-                  style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
-                >
-                  {t('policy.leaders_connected')}
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {officials.map(function (o) {
-                    const ot = officialTranslations[o.official_id]
-                    return (
-                      <OfficialCard
-                        key={o.official_id}
-                        id={o.official_id}
-                        name={o.official_name}
-                        title={o.title}
-                        party={o.party}
-                        level={o.level}
-                        email={o.email}
-                        phone={o.office_phone}
-                        website={o.website}
-                        photoUrl={o.photo_url}
-                        translatedTitle={ot?.title}
-                      />
-                    )
-                  })}
-                </div>
-              </section>
+                {policy.policy_type}
+              </span>
             )}
-
-            {/* Related Policies */}
-            {related && related.length > 0 && (
-              <section className="mb-8">
-                <h2
-                  className="font-mono uppercase mb-4"
-                  style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
-                >
-                  {t('policy.related_policies')}
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
-                  {related.map(function (p, i) {
-                    const rpt = relatedPolicyTranslations[p.policy_id]
-                    return (
-                      <Link
-                        key={p.policy_id}
-                        href={'/policies/' + p.policy_id}
-                        style={{
-                          display: 'block',
-                          padding: '1rem',
-                          borderBottom: '1px solid #dde1e8',
-                          borderRight: i % 2 === 0 ? '1px solid #dde1e8' : 'none',
-                        }}
-                      >
-                        <PolicyCard
-                          name={p.title_6th_grade || p.policy_name}
-                          summary={p.summary_6th_grade || p.summary_5th_grade}
-                          billNumber={p.bill_number}
-                          status={p.status}
-                          level={p.level}
-                          sourceUrl={p.source_url}
-                          translatedName={rpt?.title}
-                          translatedSummary={rpt?.summary}
-                          impactPreview={p.impact_statement}
-                          lastActionDate={(p as any).last_action_date}
-                        />
-                      </Link>
-                    )
-                  })}
-                </div>
-              </section>
+            {policy.status && (
+              <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: sc.dotColor, display: 'inline-block', flexShrink: 0 }} />
+                <span className="font-mono uppercase" style={{ fontSize: '0.58rem', letterSpacing: '0.2em' }}>
+                  {policy.status}
+                </span>
+              </span>
             )}
-
-            {/* Quote */}
-            {quote && (
-              <div className="mt-6 mb-8">
-                <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
-              </div>
+          </>
+        }
+        title={displayName}
+        subtitle={displaySummary}
+        mastheadBorderTop={`3px solid ${levelColor_hex}`}
+        mastheadBorderLeft={['pending', 'introduced', 'in committee', 'active'].includes((policy.status || '').toLowerCase()) ? '4px solid #b03a2a' : undefined}
+        metaRow={
+          <>
+            {policy.bill_number && (
+              <span className="font-mono" style={{ fontSize: '0.8rem', color: '#5c6474' }}>{policy.bill_number}</span>
             )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="lg:pl-8 space-y-6" style={{ paddingLeft: '2rem' }}>
-
+            {policy.source_url && (
+              <a
+                href={policy.source_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline"
+                style={{ color: '#5c6474' }}
+              >
+                <ExternalLink size={10} />
+                Source: {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'Official record'}
+              </a>
+            )}
+          </>
+        }
+        actions={{
+          translate: { isTranslated: !!translatedName, contentType: 'policies', contentId: policy.policy_id },
+          share: { title: displayName || undefined, via: policy.level || undefined, url: 'https://www.changeengine.us/policies/' + id },
+        }}
+        themeColor={levelColor_hex}
+        wayfinderData={wayfinderData}
+        wayfinderType="policy"
+        wayfinderEntityId={id}
+        userRole={userProfile?.role}
+        feedbackType="policies"
+        feedbackId={policy.policy_id}
+        feedbackName={policy.title_6th_grade || policy.policy_name || ''}
+        jsonLd={jsonLd}
+        sidebar={
+          <>
             {/* Quick Facts */}
             <div>
               <h3
@@ -514,16 +310,159 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                 </div>
               </div>
             )}
+          </>
+        }
+      >
+        {/* What this does */}
+        {displaySummary && (
+          <section className="mb-8">
+            <h2
+              className="font-mono uppercase mb-4"
+              style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
+            >
+              {t('policy.what_it_does')}
+            </h2>
+            <p className="font-body leading-relaxed" style={{ fontSize: '1rem', color: '#0d1117' }}>
+              {displaySummary}
+            </p>
+          </section>
+        )}
 
-            {/* Wayfinder (mobile only — desktop version is in masthead) */}
-            <div className="lg:hidden">
-              <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
-            </div>
+        {/* Impact */}
+        {policy.impact_statement && (
+          <PolicyImpactSection impactStatement={policy.impact_statement} />
+        )}
 
-            <FeedbackLoop entityType="policies" entityId={policy.policy_id} entityName={policy.title_6th_grade || policy.policy_name || ''} />
+        {/* AI Break It Down */}
+        <BreakItDown title={displayName} summary={displaySummary} type="policy" />
+
+        {/* Timeline */}
+        <section className="mb-8">
+          <h2
+            className="font-mono uppercase mb-4"
+            style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
+          >
+            {t('policy.timeline')}
+          </h2>
+          <div>
+            {policy.introduced_date && (
+              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1b5e8a', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+                <div>
+                  <p className="font-body" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1117' }}>{t('policy.introduced')}</p>
+                  <p className="font-body" style={{ fontSize: '0.85rem', color: '#5c6474' }}>{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+              </div>
+            )}
+            {policy.last_action && (
+              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: sc.dotColor, marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+                <div>
+                  <p className="font-body" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1117' }}>{t('policy.latest_action')}</p>
+                  <p className="font-body" style={{ fontSize: '0.85rem', color: '#5c6474' }}>{policy.last_action}</p>
+                  {policy.last_action_date && (
+                    <p className="font-mono mt-0.5" style={{ fontSize: '0.7rem', color: '#8a929e' }}>
+                      {new Date(policy.last_action_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+            {policy.source_url && (
+              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#dde1e8', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+                <div>
+                  <p className="font-body" style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0d1117' }}>{t('policy.source')}</p>
+                  <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.85rem', color: '#1b5e8a' }}>
+                    View on {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'source'} <ExternalLink size={12} />
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      </div>
+        </section>
+
+        {/* Decision Makers */}
+        {officials.length > 0 && (
+          <section className="mb-8">
+            <h2
+              className="font-mono uppercase mb-4"
+              style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
+            >
+              {t('policy.leaders_connected')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {officials.map(function (o) {
+                const ot = officialTranslations[o.official_id]
+                return (
+                  <OfficialCard
+                    key={o.official_id}
+                    id={o.official_id}
+                    name={o.official_name}
+                    title={o.title}
+                    party={o.party}
+                    level={o.level}
+                    email={o.email}
+                    phone={o.office_phone}
+                    website={o.website}
+                    photoUrl={o.photo_url}
+                    translatedTitle={ot?.title}
+                  />
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Related Policies */}
+        {related && related.length > 0 && (
+          <section className="mb-8">
+            <h2
+              className="font-mono uppercase mb-4"
+              style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
+            >
+              {t('policy.related_policies')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
+              {related.map(function (p, i) {
+                const rpt = relatedPolicyTranslations[p.policy_id]
+                return (
+                  <Link
+                    key={p.policy_id}
+                    href={'/policies/' + p.policy_id}
+                    style={{
+                      display: 'block',
+                      padding: '1rem',
+                      borderBottom: '1px solid #dde1e8',
+                      borderRight: i % 2 === 0 ? '1px solid #dde1e8' : 'none',
+                    }}
+                  >
+                    <PolicyCard
+                      name={p.title_6th_grade || p.policy_name}
+                      summary={p.summary_6th_grade || p.summary_5th_grade}
+                      billNumber={p.bill_number}
+                      status={p.status}
+                      level={p.level}
+                      sourceUrl={p.source_url}
+                      translatedName={rpt?.title}
+                      translatedSummary={rpt?.summary}
+                      impactPreview={p.impact_statement}
+                      lastActionDate={(p as any).last_action_date}
+                    />
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Quote */}
+        {quote && (
+          <div className="mt-6 mb-8">
+            <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
+          </div>
+        )}
+      </DetailPageLayout>
 
       <AdminEditPanel
         entityType="policies"

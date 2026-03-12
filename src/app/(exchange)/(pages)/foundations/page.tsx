@@ -10,7 +10,7 @@ import FoundationsListClient from './FoundationsListClient'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Foundations | Community Exchange',
+  title: 'Foundations | Change Engine',
   description: 'Explore Houston-area foundations — discover funding, focus areas, and connections across seven community pathways.',
 }
 
@@ -92,7 +92,7 @@ export default async function FoundationsPage() {
             <div className="sticky top-24 space-y-4 mt-6">
               <IndexWayfinder
                 currentPage="foundations"
-                color="#805ad5"
+                color="#1a3460"
                 related={[
                   { label: 'Organizations', href: '/organizations' },
                   { label: 'Services', href: '/services' },

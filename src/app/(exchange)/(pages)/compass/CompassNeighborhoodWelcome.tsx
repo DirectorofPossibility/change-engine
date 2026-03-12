@@ -36,7 +36,7 @@ export function CompassNeighborhoodWelcome() {
                   <Link
                     key={o.official_id}
                     href={'/officials/' + o.official_id}
-                    className="text-xs bg-brand-bg border border-brand-border px-2.5 py-1 text-brand-text hover:shadow-sm transition-shadow"
+                    className="text-xs bg-brand-bg border border-brand-border px-2.5 py-1 text-brand-text hover:border-ink transition-colors"
                   >
                     {o.official_name}
                     {o.title ? ' — ' + o.title : ''}

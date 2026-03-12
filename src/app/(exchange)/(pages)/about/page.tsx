@@ -18,7 +18,7 @@ const SECTIONS = [
     icon: BookOpen,
     title: 'Our Mission',
     color: '#1b5e8a',
-    body: 'Community Exchange organizes community life — making it easier to discover resources, connect with organizations, and participate in civic life. We believe every person has strengths to contribute and every neighborhood has assets to build on.',
+    body: 'Change Engine organizes community life — making it easier to discover resources, connect with organizations, and participate in civic life. We believe every person has strengths to contribute and every neighborhood has assets to build on.',
   },
   {
     icon: Users,
@@ -30,7 +30,7 @@ const SECTIONS = [
     icon: Globe,
     title: 'Available in Three Languages',
     color: '#4a2870',
-    body: 'Community Exchange is available in English, Spanish, and Vietnamese — reflecting the three most-spoken languages in Greater Houston. Translations are generated using AI and reviewed for accuracy and cultural relevance.',
+    body: 'Change Engine is available in English, Spanish, and Vietnamese — reflecting the three most-spoken languages in Greater Houston. Translations are generated using AI and reviewed for accuracy and cultural relevance.',
   },
   {
     icon: MapPin,
@@ -70,7 +70,7 @@ export default async function AboutPage() {
       {/* ══════════════════════════════════════════════════════════════
           HERO — Full-width, editorial left / FOL wayfinder right
          ══════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #FAF8F5 0%, #EDE8E0 50%, #FAF8F5 100%)' }}>
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f4f5f7 0%, #dde1e8 50%, #f4f5f7 100%)' }}>
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: 'radial-gradient(circle, rgba(44,44,44,0.03) 1px, transparent 1px)',
           backgroundSize: '20px 20px',
@@ -93,7 +93,7 @@ export default async function AboutPage() {
                 </span>
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted mb-8 max-w-lg">
-                Most people never show up — not because they don&apos;t care, but because nobody showed them the way in. Community Exchange maps every resource, every official, every opportunity in Houston and connects them into one accessible platform.
+                Most people never show up — not because they don&apos;t care, but because nobody showed them the way in. Change Engine maps every resource, every official, every opportunity in Houston and connects them into one accessible platform.
               </p>
               {/* Stats */}
               <div className="flex items-center gap-8">
@@ -229,8 +229,8 @@ export default async function AboutPage() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group relative overflow-hidden border p-5 hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
-                style={{ borderColor: item.color + '30', boxShadow: `3px 3px 0 ${item.color}15` }}
+                className="group relative overflow-hidden border p-5 hover:-translate-y-1 hover:border-ink transition-all duration-300"
+                style={{ borderColor: item.color + '30' }}
               >
                 <div className="absolute -top-3 -right-3 w-16 h-16 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity" style={{ animation: 'fol-spin 60s linear infinite' }}>
                   <svg viewBox="2 2 16 16" fill="none">

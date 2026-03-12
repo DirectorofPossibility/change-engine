@@ -10,7 +10,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Government Agencies — Community Exchange',
+  title: 'Government Agencies — Change Engine',
   description: 'Federal, state, and local government agencies serving the Houston area.',
 }
 
@@ -35,7 +35,7 @@ export default async function AgenciesPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="metatron" gradientColor="#3182ce" title="Government Agencies" subtitle="Federal, state, and local agencies serving Houston and Harris County." />
+      <PageHero variant="sacred" sacredPattern="metatron" gradientColor="#6a4e10" title="Government Agencies" subtitle="Federal, state, and local agencies serving Houston and Harris County." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Agencies' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
@@ -49,7 +49,7 @@ export default async function AgenciesPage() {
                   <div className="space-y-3">
                     {items.map(function (a) {
                       return (
-                        <Link key={a.agency_id} href={`/agencies/${a.agency_id}`} className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow">
+                        <Link key={a.agency_id} href={`/agencies/${a.agency_id}`} className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow">
                           <div className="flex items-start gap-3">
                             <Building2 className="w-5 h-5 text-brand-accent mt-0.5 flex-shrink-0" />
                             <div className="flex-1 min-w-0">
@@ -75,7 +75,7 @@ export default async function AgenciesPage() {
           </div>
           <div className="hidden lg:block">
             <div className="sticky top-24 space-y-4">
-              <IndexWayfinder currentPage="agencies" related={[{label:'Officials',href:'/officials'},{label:'City Services',href:'/municipal-services'},{label:'Policies',href:'/policies'}]} color="#3182ce" />
+              <IndexWayfinder currentPage="agencies" related={[{label:'Officials',href:'/officials'},{label:'City Services',href:'/municipal-services'},{label:'Policies',href:'/policies'}]} color="#6a4e10" />
               <FeaturedPromo variant="card" />
             </div>
           </div>

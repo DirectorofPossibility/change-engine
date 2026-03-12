@@ -11,7 +11,7 @@ import { getUIStrings } from '@/lib/i18n'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Learning Paths — Community Exchange',
+  title: 'Learning Paths — Change Engine',
   description: 'Free self-guided courses on civic engagement, housing, health, finance, community organizing, and more.',
 }
 

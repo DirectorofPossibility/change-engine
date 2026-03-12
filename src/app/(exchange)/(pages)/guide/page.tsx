@@ -25,7 +25,7 @@ import { PersonaSelector } from '@/components/exchange/PersonaSelector'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Your Guide to What\'s Going On — Community Exchange',
+  title: 'Your Guide to What\'s Going On — Change Engine',
   description: 'What\'s happening in Houston civic life. Written so anyone can understand it. Curated. Local. Updated daily.',
 }
 

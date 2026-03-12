@@ -28,11 +28,11 @@ const CENTER_ICON_PATHS: Record<string, string> = {
 }
 
 const OTHER_PERSONAS = [
-  { slug: 'seeker', name: 'The Seeker', desc: 'Find resources', color: '#d69e2e' },
-  { slug: 'learner', name: 'The Learner', desc: 'Understand issues', color: '#3182ce' },
-  { slug: 'builder', name: 'The Builder', desc: 'Take action', color: '#38a169' },
-  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#805ad5' },
-  { slug: 'partner', name: 'The Partner', desc: 'Collaborate', color: '#dd6b20' },
+  { slug: 'seeker', name: 'The Seeker', desc: 'Find resources', color: '#4a2870' },
+  { slug: 'learner', name: 'The Learner', desc: 'Understand issues', color: '#6a4e10' },
+  { slug: 'builder', name: 'The Builder', desc: 'Take action', color: '#7a2018' },
+  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#1a3460' },
+  { slug: 'partner', name: 'The Partner', desc: 'Collaborate', color: '#1e4d7a' },
   { slug: 'explorer', name: 'The Explorer', desc: 'Discover it all', color: '#E8723A' },
 ]
 
@@ -118,7 +118,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             {/* Right: quick actions + ZIP */}
             <div className="lg:w-[340px] flex-shrink-0 space-y-4">
               {/* ZIP personalization */}
-              <div className="bg-white border border-brand-border p-4" style={{ boxShadow: '3px 3px 0 ' + centerColor + '20' }}>
+              <div className="bg-white border border-brand-border p-4" style={{}}>
                 <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted block mb-2">
                   Personalize Your View
                 </label>

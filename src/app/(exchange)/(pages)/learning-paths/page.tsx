@@ -10,7 +10,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Learning Paths — Community Exchange',
+  title: 'Learning Paths — Change Engine',
   description: 'Structured journeys to deepen your understanding of civic life in Houston — explore guided learning paths across community topics.',
 }
 
@@ -30,7 +30,7 @@ export default async function LearningPathsPage() {
       <IndexPageHero
         title="Learning Paths"
         subtitle="Structured journeys to deepen your understanding of civic life"
-        color="#3182ce"
+        color="#6a4e10"
         pattern="tripod"
       />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -42,13 +42,13 @@ export default async function LearningPathsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {items.map(function (path: any) {
                   const theme = path.theme_id ? THEMES[path.theme_id as keyof typeof THEMES] : null
-                  const themeColor = theme?.color ?? '#3182ce'
+                  const themeColor = theme?.color ?? '#6a4e10'
 
                   return (
                     <Link
                       key={path.path_id}
                       href={'/learning-paths/' + path.path_id}
-                      className="bg-white border border-brand-border p-5 card-chunky flex hover:shadow-md transition-shadow"
+                      className="bg-white border border-brand-border p-5 card-chunky flex hover:border-ink transition-shadow"
                     >
                       {/* Theme color bar */}
                       <div
@@ -92,7 +92,7 @@ export default async function LearningPathsPage() {
           </div>
           <div className="hidden lg:block">
             <div className="sticky top-24 space-y-4">
-              <IndexWayfinder currentPage="learning-paths" related={[{label:'Guides',href:'/guides'},{label:'Library',href:'/library'},{label:'Topics',href:'/pathways'}]} color="#3182ce" />
+              <IndexWayfinder currentPage="learning-paths" related={[{label:'Guides',href:'/guides'},{label:'Library',href:'/library'},{label:'Topics',href:'/pathways'}]} color="#6a4e10" />
               <FeaturedPromo variant="card" />
             </div>
           </div>

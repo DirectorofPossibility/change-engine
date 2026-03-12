@@ -10,7 +10,7 @@ export default async function Image() {
       title="Elected Officials"
       subtitle="Your representatives at city, county, state, and federal levels — with contact info and policy connections."
       label="Action"
-      accentColor="#e53e3e"
+      accentColor="#1a6b56"
     />,
     { ...size }
   )

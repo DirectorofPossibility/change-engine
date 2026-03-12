@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sign In',
-  description: 'Sign in to your Community Exchange account.',
+  description: 'Sign in to your Change Engine account.',
   robots: { index: false, follow: false },
 }
 

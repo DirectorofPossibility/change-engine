@@ -92,7 +92,7 @@ export function OGLayout({ title, subtitle, label, accentColor }: {
         borderTop: '1px solid #333',
       }}>
         <div style={{ fontSize: 18, fontWeight: 700, color: BRAND.cream, display: 'flex' }}>
-          Community Exchange
+          Change Engine
         </div>
         <div style={{ fontSize: 16, color: BRAND.muted, display: 'flex' }}>
           changeengine.us

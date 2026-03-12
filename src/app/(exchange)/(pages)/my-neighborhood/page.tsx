@@ -24,7 +24,7 @@ import { ZipPrompt } from './ZipPrompt'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'State of My Neighborhood — Community Exchange',
+  title: 'State of My Neighborhood — Change Engine',
   description: 'A data-driven portrait of your neighborhood — demographics, representatives, services, policies, and civic engagement opportunities.',
 }
 

@@ -10,7 +10,7 @@ export default async function Image() {
       title="Library"
       subtitle="Research reports, policy briefs, and deep dives curated from trusted sources across Houston and beyond."
       label="Learning"
-      accentColor="#3182ce"
+      accentColor="#6a4e10"
     />,
     { ...size }
   )

@@ -14,10 +14,10 @@ import { TurnoutLabel, CertifiedBadge } from './ElectionsSectionHeaders'
 /* ── Tab definitions ── */
 
 const TABS = [
-  { level: 'City',    label: 'Houston',      color: '#38a169', Icon: Building },
-  { level: 'County',  label: 'Harris County', color: '#d69e2e', Icon: Building2 },
-  { level: 'State',   label: 'Texas',        color: '#805ad5', Icon: Star },
-  { level: 'Federal', label: 'Federal',      color: '#3182ce', Icon: Landmark },
+  { level: 'City',    label: 'Houston',      color: '#7a2018', Icon: Building },
+  { level: 'County',  label: 'Harris County', color: '#4a2870', Icon: Building2 },
+  { level: 'State',   label: 'Texas',        color: '#1a3460', Icon: Star },
+  { level: 'Federal', label: 'Federal',      color: '#6a4e10', Icon: Landmark },
 ] as const
 
 /** Map election jurisdiction values to government levels. */
@@ -102,7 +102,7 @@ export function CivicHubClient({
 
   /* ── Tab accent color for section headers ── */
   const currentTab = TABS.find(function (tab) { return tab.level === activeTab })
-  const accentColor = currentTab?.color || '#38a169'
+  const accentColor = currentTab?.color || '#7a2018'
 
   return (
     <div>
@@ -122,7 +122,7 @@ export function CivicHubClient({
                 'inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all ' +
                 (isActive
                   ? 'text-white shadow-md'
-                  : 'bg-white border-2 hover:shadow-sm')
+                  : 'bg-white border-2 hover:border-ink')
               }
               style={isActive
                 ? { backgroundColor: tab.color }
@@ -276,7 +276,7 @@ export function CivicHubClient({
                       <Link
                         key={e.election_id}
                         href={'/elections/' + e.election_id}
-                        className="bg-white border border-brand-border p-5 hover:shadow-md transition-shadow"
+                        className="bg-white border border-brand-border p-5 hover:border-ink transition-shadow"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="font-semibold text-brand-text">{e.election_name}</h4>
@@ -313,7 +313,7 @@ export function CivicHubClient({
                       <Link
                         key={e.election_id}
                         href={'/elections/' + e.election_id}
-                        className="bg-white border border-brand-border p-5 hover:shadow-md transition-shadow opacity-75"
+                        className="bg-white border border-brand-border p-5 hover:border-ink transition-shadow opacity-75"
                       >
                         <h4 className="font-semibold text-brand-text mb-1">{e.election_name}</h4>
                         {e.election_type && (

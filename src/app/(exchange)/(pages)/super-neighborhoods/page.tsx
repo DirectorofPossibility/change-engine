@@ -25,7 +25,7 @@ import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Super Neighborhoods — Community Exchange',
+  title: 'Super Neighborhoods — Change Engine',
   description: 'Explore Houston\'s 88 super neighborhoods. View boundaries, demographics, and community resources.',
 }
 
@@ -77,7 +77,7 @@ export default async function SuperNeighborhoodsPage() {
               <Link
                 key={sn.sn_id}
                 href={'/super-neighborhoods/' + sn.sn_id}
-                className="bg-white border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
+                className="bg-white border border-brand-border p-4 hover:border-ink hover:border-brand-accent/30 transition-all"
               >
                 <div className="flex items-start gap-3">
                   <span

@@ -146,7 +146,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
   const displayDocs = isSearching ? searchResults! : (filteredDocs || docs)
 
   return (
-    <div className="relative min-h-screen" style={{ backgroundColor: '#F5F1EB' }}>
+    <div className="relative min-h-screen" style={{ backgroundColor: '#f4f5f7' }}>
 
       {/* Animated gradient FOL background watermark */}
       <div className="absolute top-8 right-4 w-[200px] h-[200px] opacity-[0.06] pointer-events-none">
@@ -179,7 +179,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
 
       {/* ── Search Bar — library terminal style ── */}
       <div className="max-w-2xl mx-auto mb-8 px-4">
-        <div className="relative border-2 shadow-lg" style={{ borderColor: '#5D3A1A', backgroundColor: '#FFFEF7' }}>
+        <div className="relative border-2" style={{ borderColor: '#5D3A1A', backgroundColor: '#FFFEF7' }}>
           <div className="flex items-center gap-2 px-4 py-1.5 border-b" style={{ backgroundColor: '#5D3A1A' }}>
             <Search size={12} className="text-amber-200" />
             <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-amber-200">Library Search Terminal</span>
@@ -232,9 +232,6 @@ export function LibraryClient({ documents }: LibraryClientProps) {
                   style={{
                     backgroundColor: isActive ? '#5D3A1A' : '#FFFEF7',
                     borderColor: isActive ? '#5D3A1A' : '#C4A882',
-                    boxShadow: isActive
-                      ? 'inset 0 1px 3px rgba(0,0,0,0.3)'
-                      : '0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
                     cursor: hasItems ? 'pointer' : 'default',
                     transform: isActive ? 'translateY(1px)' : 'none',
                   }}
@@ -259,7 +256,6 @@ export function LibraryClient({ documents }: LibraryClientProps) {
                     className="w-1.5 h-1.5 rounded-full mt-0.5"
                     style={{
                       backgroundColor: '#B8860B',
-                      boxShadow: '0 0.5px 1px rgba(0,0,0,0.2)',
                     }}
                   />
                 </div>
@@ -398,7 +394,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
         <div className="max-w-4xl mx-auto px-4">
           <div className=" border overflow-hidden" style={{ borderColor: '#C4A882', backgroundColor: '#FFFEF7' }}>
             {/* Table header */}
-            <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b font-mono text-[10px] font-bold uppercase tracking-widest" style={{ borderColor: '#C4A882', color: '#8B7355', backgroundColor: '#F5F1EB' }}>
+            <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b font-mono text-[10px] font-bold uppercase tracking-widest" style={{ borderColor: '#C4A882', color: '#8B7355', backgroundColor: '#f4f5f7' }}>
               <div className="col-span-6 sm:col-span-5">Title</div>
               <div className="col-span-3 sm:col-span-3 hidden sm:block">Collection</div>
               <div className="col-span-3 sm:col-span-2 text-right">Pages</div>
@@ -450,7 +446,6 @@ function BookshelfRow({
         className="h-4 rounded-b-sm"
         style={{
           background: 'linear-gradient(180deg, #8B6914 0%, #6B4E12 40%, #5D3A1A 100%)',
-          boxShadow: '0 4px 8px rgba(93, 58, 26, 0.3), inset 0 1px 0 rgba(255,255,255,0.15)',
         }}
       />
       {/* Shelf bracket shadow */}
@@ -480,7 +475,7 @@ function BookSpine({
 }) {
   const themes = getThemeInfo(doc.theme_ids)
   const primary = themes[0]
-  const spineColor = primary?.color || '#3182ce'
+  const spineColor = primary?.color || '#6a4e10'
   const spineWidth = getSpineWidth(doc.page_count)
 
   // Lighten or darken spine color for gradient
@@ -501,9 +496,6 @@ function BookSpine({
             width: spineWidth + 'px',
             height: '140px',
             background: 'linear-gradient(90deg, ' + lightenColor(spineColor, 30) + ' 0%, ' + spineColor + ' 30%, ' + spineColor + ' 70%, ' + lightenColor(spineColor, -20) + ' 100%)',
-            boxShadow: isHovered
-              ? '0 -8px 16px rgba(0,0,0,0.25), 2px 0 4px rgba(0,0,0,0.15)'
-              : '2px 0 3px rgba(0,0,0,0.1), -1px 0 2px rgba(0,0,0,0.05)',
             transform: isHovered ? 'translateY(-12px) scale(1.02)' : 'translateY(0)',
             borderTop: '2px solid ' + lightenColor(spineColor, 40),
             borderLeft: '1px solid ' + lightenColor(spineColor, 20),
@@ -518,7 +510,6 @@ function BookSpine({
             <span
               className="font-display text-[9px] sm:text-[10px] font-bold text-white leading-tight text-center"
               style={{
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                 maxHeight: '110px',
                 overflow: 'hidden',
                 display: '-webkit-box',
@@ -539,7 +530,7 @@ function BookSpine({
       {/* ── Hover tooltip / card ── */}
       {isHovered && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-64 sm:w-72 border-2 shadow-xl p-4 z-50 pointer-events-none"
+          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-64 sm:w-72 border-2 p-4 z-50 pointer-events-none"
           style={{
             backgroundColor: '#FFFEF7',
             borderColor: '#5D3A1A',
@@ -600,11 +591,10 @@ function CatalogCard({ doc }: { doc: LibraryDoc }) {
   return (
     <Link href={'/library/doc/' + doc.id} className="group block">
       <article
-        className="relative rounded-sm border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg overflow-hidden"
+        className="relative rounded-sm border transition-all duration-200 hover:-translate-y-1 overflow-hidden"
         style={{
           backgroundColor: '#FFFDE8',
           borderColor: '#D4C5A0',
-          boxShadow: '2px 2px 4px rgba(0,0,0,0.08)',
         }}
       >
         {/* Red top line — like a real index card */}
@@ -627,7 +617,7 @@ function CatalogCard({ doc }: { doc: LibraryDoc }) {
           {/* Theme color bar on left */}
           <div
             className="absolute left-0 top-0 bottom-0 w-1"
-            style={{ backgroundColor: primary?.color || '#3182ce' }}
+            style={{ backgroundColor: primary?.color || '#6a4e10' }}
           />
 
           {/* Card content */}
@@ -705,7 +695,7 @@ function ListRow({ doc, isEven }: { doc: LibraryDoc; isEven: boolean }) {
         }}
       >
         <div className="col-span-9 sm:col-span-5 flex items-center gap-2 min-w-0">
-          <div className="w-1 h-6 rounded-sm flex-shrink-0" style={{ backgroundColor: primary?.color || '#3182ce' }} />
+          <div className="w-1 h-6 rounded-sm flex-shrink-0" style={{ backgroundColor: primary?.color || '#6a4e10' }} />
           <span className="font-display text-sm truncate group-hover:underline" style={{ color: '#2C1810' }}>
             {doc.title}
           </span>

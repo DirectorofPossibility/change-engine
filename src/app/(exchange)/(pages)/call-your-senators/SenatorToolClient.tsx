@@ -539,7 +539,7 @@ export function SenatorToolClient() {
                     <a
                       href={'tel:' + s.ph}
                       className="inline-flex items-center gap-2 bg-brand-accent text-white text-sm font-bold px-6 py-3 hover:-translate-y-0.5 transition-transform"
-                      style={{ boxShadow: '0 4px 12px rgba(199,91,42,0.3)' }}
+                      style={{}}
                     >
                       <Phone size={16} /> Call Now
                     </a>
@@ -696,7 +696,7 @@ export function SenatorToolClient() {
             }
           }}
           className="flex items-center justify-center gap-3 w-full py-4 bg-brand-accent text-white text-base font-bold"
-          style={{ boxShadow: '0 4px 12px rgba(199,91,42,0.3)' }}
+          style={{}}
         >
           <Phone size={18} /> {senators.length > 0 ? 'Call ' + senators[0].n : 'Find My Senators'}
         </a>

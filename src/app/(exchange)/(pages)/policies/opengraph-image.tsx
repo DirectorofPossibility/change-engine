@@ -10,7 +10,7 @@ export default async function Image() {
       title="Policies & Legislation"
       subtitle="Track bills and policies at every level of government — explained in plain language."
       label="Action"
-      accentColor="#3182ce"
+      accentColor="#6a4e10"
     />,
     { ...size }
   )

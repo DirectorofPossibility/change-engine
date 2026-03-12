@@ -11,7 +11,7 @@ import Image from 'next/image'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Research Library — Community Exchange',
+  title: 'Research Library — Change Engine',
   description: 'Curated research, reports, and policy briefs from Houston organizations and community partners.',
 }
 
@@ -25,7 +25,7 @@ export default async function LibraryPage() {
       {/* ══════════════════════════════════════════════════════════════
           HERO — Full-width, editorial left / FOL wayfinder right
          ══════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F8F9FC 0%, #EDE8E0 50%, #F8F9FC 100%)' }}>
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f4f5f7 0%, #dde1e8 50%, #f4f5f7 100%)' }}>
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: 'radial-gradient(circle, rgba(44,44,44,0.03) 1px, transparent 1px)',
           backgroundSize: '20px 20px',
@@ -72,7 +72,7 @@ export default async function LibraryPage() {
                 {/* Main image */}
                 <div
                   className="absolute w-[260px] h-[180px] border-[3px] border-white overflow-hidden z-[2]"
-                  style={{ top: 10, left: 20, transform: 'rotate(-2deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
+                  style={{ top: 10, left: 20, transform: 'rotate(-2deg)', border: '1px solid #dde1e8' }}
                 >
                   <Image src={BUCKET + '/person-reading.jpg'} alt="Person reading at a library" className="w-full h-full object-cover" width={800} height={400} />
                 </div>
@@ -80,7 +80,7 @@ export default async function LibraryPage() {
                 {/* Second image */}
                 <div
                   className="absolute w-[180px] h-[130px] border-[3px] border-white overflow-hidden z-[1]"
-                  style={{ top: 150, left: -5, transform: 'rotate(3deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
+                  style={{ top: 150, left: -5, transform: 'rotate(3deg)', border: '1px solid #dde1e8' }}
                 >
                   <Image src={BUCKET + '/reading.jpg'} alt="Books and reading materials" className="w-full h-full object-cover" width={800} height={400} />
                 </div>
@@ -88,7 +88,7 @@ export default async function LibraryPage() {
                 {/* Third image */}
                 <div
                   className="absolute w-[220px] h-[160px] border-[3px] border-white overflow-hidden z-[3]"
-                  style={{ top: 140, right: 0, transform: 'rotate(-1deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
+                  style={{ top: 140, right: 0, transform: 'rotate(-1deg)', border: '1px solid #dde1e8' }}
                 >
                   <Image src={BUCKET + '/person-reading2.jpg'} alt="Studying and research" className="w-full h-full object-cover" width={800} height={400} />
                 </div>

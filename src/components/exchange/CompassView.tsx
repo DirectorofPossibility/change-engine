@@ -156,7 +156,7 @@ export function CompassView({ pathwayCounts, bridges, preview }: CompassViewProp
               <button
                 onClick={() => setActivePathway(isActive ? null : id)}
                 className={'group flex items-center w-full bg-white border transition-all duration-200 overflow-hidden ' +
-                  (isActive ? 'border-brand-border shadow-md' : 'border-brand-border hover:shadow-sm')}
+                  (isActive ? 'border-brand-border border-ink' : 'border-brand-border hover:border-ink')}
               >
                 <div
                   className="w-1 self-stretch flex-shrink-0 transition-all duration-200"

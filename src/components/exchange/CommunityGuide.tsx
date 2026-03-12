@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * @fileoverview Community Guide -- the civic & social onramp.
+ * @fileoverview Community Guide -- the civic & social concierge.
  *
  * Editorial design system: Fraunces (display), Libre Baskerville (body),
  * DM Mono (labels/meta). No border-radius, no box-shadows, no emojis.
@@ -12,7 +12,7 @@
  *   2. Featured Promotion (GAP 1)
  *   3. Quote (GAP 2)
  *   4. Pathway Grid (7 pathways)
- *   5. What's Happening (latest content)
+ *   5. News Wire (one-line feed) + Upcoming Events
  *   6. Always Available (crisis lines)
  */
 
@@ -22,7 +22,7 @@ import { HeroSearchInput } from './HeroSearchInput'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
 import { SeedOfLife, FlowerOfLife } from '@/components/geo/sacred'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Calendar } from 'lucide-react'
 
 // ── Colors ──────────────────────────────────────────────────────────────
 
@@ -34,6 +34,15 @@ const BLUE = '#1b5e8a'
 const TEAL = '#7ec8e3'
 
 // ── Types ───────────────────────────────────────────────────────────────
+
+interface UpcomingEvent {
+  id: string
+  title: string
+  date: string
+  type: string | null
+  location: string | null
+  href: string
+}
 
 interface CommunityGuideProps {
   stats: {
@@ -58,6 +67,7 @@ interface CommunityGuideProps {
     cta_href?: string
     color?: string
   }>
+  upcomingEvents?: UpcomingEvent[]
 }
 
 // ── Pathway geo marks ───────────────────────────────────────────────────
@@ -74,7 +84,7 @@ const PATHWAY_GEOS: Record<string, React.ComponentType<{ color?: string; size?: 
 
 // ── Component ───────────────────────────────────────────────────────────
 
-export function CommunityGuide({ stats, latestContent, quote, promotions }: CommunityGuideProps) {
+export function CommunityGuide({ stats, latestContent, quote, promotions, upcomingEvents }: CommunityGuideProps) {
   const { t } = useTranslation()
 
   const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, theme]) {
@@ -306,80 +316,129 @@ export function CommunityGuide({ stats, latestContent, quote, promotions }: Comm
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          SECTION 5 -- WHAT'S HAPPENING (Latest Content)
+          SECTION 5 -- THE WIRE + UPCOMING EVENTS (one-line feeds)
          ═══════════════════════════════════════════════════════════════════ */}
-      {latestContent.length > 0 && (
-        <section style={{ borderTop: `1.5px solid ${RULE}`, background: PAPER }}>
-          <div className="max-w-[1100px] mx-auto px-6 py-14">
-            {/* Section header */}
-            <p
-              className="font-mono uppercase tracking-[0.08em] mb-3"
-              style={{ fontSize: '0.62rem', color: DIM }}
-            >
-              {t('guide.latest_label')}
-            </p>
-            <div className="flex items-end justify-between mb-10">
-              <h2
-                className="font-display"
-                style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: INK }}
-              >
-                {t('guide.whats_happening')}
-              </h2>
-              <Link
-                href="/news"
-                className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-1"
-                style={{ fontSize: '0.62rem', color: BLUE, fontWeight: 600 }}
-              >
-                {t('guide.all_news')} <ArrowRight size={12} />
-              </Link>
+      <section style={{ borderTop: `1.5px solid ${RULE}`, background: PAPER }}>
+        <div className="max-w-[1100px] mx-auto px-6 py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+
+            {/* News wire — compact one-line feed */}
+            <div style={{ borderRight: `1px solid ${RULE}` }} className="pr-0 lg:pr-8">
+              <div className="flex items-center justify-between mb-4">
+                <p
+                  className="font-mono uppercase tracking-[0.08em]"
+                  style={{ fontSize: '0.62rem', color: DIM }}
+                >
+                  {t('guide.latest_label')}
+                </p>
+                <Link
+                  href="/news"
+                  className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-1"
+                  style={{ fontSize: '0.56rem', color: BLUE, fontWeight: 600 }}
+                >
+                  {t('guide.all_news')} <ArrowRight size={10} />
+                </Link>
+              </div>
+
+              <div className="space-y-0">
+                {latestContent.slice(0, 6).map(function (item: any) {
+                  return (
+                    <Link
+                      key={item.id}
+                      href={'/content/' + item.id}
+                      className="group flex items-baseline gap-3 py-2.5 transition-colors hover:bg-white px-2 -mx-2"
+                      style={{ borderBottom: `1px solid ${RULE}` }}
+                    >
+                      <span
+                        className="font-mono uppercase tracking-[0.08em] flex-shrink-0"
+                        style={{ fontSize: '0.5rem', color: DIM, minWidth: '3rem' }}
+                      >
+                        {item.published_at
+                          ? new Date(item.published_at as string).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                          : ''}
+                      </span>
+                      <span
+                        className="font-body text-sm line-clamp-1 group-hover:underline"
+                        style={{ color: INK }}
+                      >
+                        {item.title_6th_grade as string}
+                      </span>
+                      {item.source_url && (
+                        <span
+                          className="font-mono uppercase tracking-[0.08em] flex-shrink-0 hidden sm:inline"
+                          style={{ fontSize: '0.48rem', color: BLUE }}
+                        >
+                          source
+                        </span>
+                      )}
+                    </Link>
+                  )
+                })}
+              </div>
             </div>
 
-            {/* Content grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0">
-              {latestContent.slice(0, 6).map(function (item: any) {
-                return (
-                  <Link
-                    key={item.id}
-                    href={'/content/' + item.id}
-                    className="group flex flex-col p-5 transition-colors hover:bg-white"
-                    style={{ border: `1px solid ${RULE}` }}
-                  >
-                    {/* Type tag */}
-                    <span
-                      className="font-mono uppercase tracking-[0.08em] mb-3"
-                      style={{ fontSize: '0.56rem', color: DIM }}
-                    >
-                      {(item.center as string) || t('content.news')}
-                    </span>
+            {/* Upcoming events — compact one-line feed */}
+            <div className="pl-0 lg:pl-8 mt-8 lg:mt-0">
+              <div className="flex items-center justify-between mb-4">
+                <p
+                  className="font-mono uppercase tracking-[0.08em]"
+                  style={{ fontSize: '0.62rem', color: DIM }}
+                >
+                  Coming Up
+                </p>
+                <Link
+                  href="/calendar"
+                  className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-1"
+                  style={{ fontSize: '0.56rem', color: BLUE, fontWeight: 600 }}
+                >
+                  Full Calendar <ArrowRight size={10} />
+                </Link>
+              </div>
 
-                    {/* Title */}
-                    <h3
-                      className="font-display line-clamp-2 mb-3 group-hover:underline"
-                      style={{ fontSize: '1rem', fontWeight: 700, color: INK }}
-                    >
-                      {item.title_6th_grade as string}
-                    </h3>
-
-                    {/* Meta */}
-                    {item.published_at && (
-                      <span
-                        className="font-mono uppercase tracking-[0.08em] mt-auto"
-                        style={{ fontSize: '0.52rem', color: DIM }}
+              {upcomingEvents && upcomingEvents.length > 0 ? (
+                <div className="space-y-0">
+                  {upcomingEvents.map(function (event) {
+                    const eventDate = new Date(event.date)
+                    return (
+                      <Link
+                        key={event.id}
+                        href={event.href}
+                        className="group flex items-baseline gap-3 py-2.5 transition-colors hover:bg-white px-2 -mx-2"
+                        style={{ borderBottom: `1px solid ${RULE}` }}
                       >
-                        {new Date(item.published_at as string).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </span>
-                    )}
-                  </Link>
-                )
-              })}
+                        <span
+                          className="font-mono uppercase tracking-[0.08em] flex-shrink-0"
+                          style={{ fontSize: '0.5rem', color: DIM, minWidth: '3rem' }}
+                        >
+                          {eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
+                        <span
+                          className="font-body text-sm line-clamp-1 group-hover:underline"
+                          style={{ color: INK }}
+                        >
+                          {event.title}
+                        </span>
+                        {event.location && (
+                          <span
+                            className="font-mono uppercase tracking-[0.08em] flex-shrink-0 hidden sm:inline"
+                            style={{ fontSize: '0.48rem', color: DIM }}
+                          >
+                            {event.location}
+                          </span>
+                        )}
+                      </Link>
+                    )
+                  })}
+                </div>
+              ) : (
+                <p className="font-body text-sm italic" style={{ color: DIM }}>
+                  No upcoming events right now. Check the <Link href="/calendar" className="underline" style={{ color: BLUE }}>calendar</Link> for past events and civic deadlines.
+                </p>
+              )}
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
           SECTION 6 -- ALWAYS AVAILABLE (crisis lines)

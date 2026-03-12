@@ -220,7 +220,7 @@ export function HeroBook() {
             ) : (
               <button
                 onClick={function () { setShowSearch(true) }}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-brand-border text-sm text-brand-muted hover:text-brand-text hover:border-brand-accent/40 hover:shadow-sm transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-brand-border text-sm text-brand-muted hover:text-brand-text hover:border-brand-accent/40 hover:border-ink transition-all"
               >
                 <Search size={15} />
                 Search for something specific
@@ -230,14 +230,14 @@ export function HeroBook() {
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/help"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-white border border-brand-border text-sm font-medium text-brand-text hover:border-brand-accent/40 hover:shadow-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-white border border-brand-border text-sm font-medium text-brand-text hover:border-brand-accent/40 hover:border-ink transition-all"
               >
                 Available Resources <ArrowRight size={13} />
               </Link>
               {!hasZip && (
                 <Link
                   href="/officials"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-white border border-brand-border text-sm font-medium text-brand-text hover:border-brand-accent/40 hover:shadow-sm transition-all"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-white border border-brand-border text-sm font-medium text-brand-text hover:border-brand-accent/40 hover:border-ink transition-all"
                 >
                   Find Officials <ArrowRight size={13} />
                 </Link>

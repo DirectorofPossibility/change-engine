@@ -10,7 +10,7 @@ export default async function Image() {
       title="Community Adventures"
       subtitle="Interactive stories where your choices shape the outcome. Navigate a town hall, discover neighborhood assets, or prepare for hurricane season."
       label="Learning"
-      accentColor="#805ad5"
+      accentColor="#1a3460"
     />,
     { ...size }
   )

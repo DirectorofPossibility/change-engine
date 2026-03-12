@@ -11,7 +11,7 @@ import { MessageCircle, FileText } from 'lucide-react'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Knowledge Base — Community Exchange',
+  title: 'Knowledge Base — Change Engine',
   description: 'Browse articles, reports, guides, videos, and research across all pathways.',
 }
 

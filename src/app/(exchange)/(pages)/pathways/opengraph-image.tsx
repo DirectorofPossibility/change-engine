@@ -10,7 +10,7 @@ export default async function Image() {
       title="Topics"
       subtitle="Seven thematic journeys connecting you to content, services, and people across Houston."
       label="Explore"
-      accentColor="#805ad5"
+      accentColor="#1a3460"
     />,
     { ...size }
   )

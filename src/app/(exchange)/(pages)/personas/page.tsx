@@ -11,7 +11,7 @@ import {
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Your Journey | Community Exchange',
+  title: 'Your Journey | Change Engine',
   description: 'Find the path that matches how you want to engage with your community.',
 }
 
@@ -23,7 +23,7 @@ const PERSONAS = [
     description: 'You are looking for resources, services, and support. Whether it is food access, legal help, job training, or healthcare — you want to know what exists and how to reach it.',
     center: 'Resource' as const,
     Icon: SeekerIcon,
-    color: '#d69e2e',
+    color: '#4a2870',
     actions: ['Search local services', 'Find organizations near you', 'Connect with 211 resources'],
   },
   {
@@ -33,7 +33,7 @@ const PERSONAS = [
     description: 'You want to learn how things work — from housing policy to climate resilience to education access. You read, watch, and listen to build understanding before acting.',
     center: 'Learning' as const,
     Icon: LearnerIcon,
-    color: '#3182ce',
+    color: '#6a4e10',
     actions: ['Read community research', 'Explore pathways', 'Browse the library'],
   },
   {
@@ -43,7 +43,7 @@ const PERSONAS = [
     description: 'You are ready to act. You volunteer, organize events, join campaigns, and build alongside your neighbors. You see problems as opportunities to create something better.',
     center: 'Action' as const,
     Icon: BuilderIcon,
-    color: '#38a169',
+    color: '#7a2018',
     actions: ['Find volunteer opportunities', 'View the calendar', 'Join a campaign'],
   },
   {
@@ -53,7 +53,7 @@ const PERSONAS = [
     description: 'You track decisions, follow the money, attend public meetings, and hold elected officials accountable. Transparency and civic engagement are your tools for change.',
     center: 'Accountability' as const,
     Icon: WatchdogIcon,
-    color: '#805ad5',
+    color: '#1a3460',
     actions: ['Track elected officials', 'Follow policy changes', 'View civic calendar'],
   },
   {
@@ -63,7 +63,7 @@ const PERSONAS = [
     description: 'You are an organization, a civic leader, or a community connector. You work in partnership — bridging the gap between institutions and neighborhoods.',
     center: null,
     Icon: PartnerIcon,
-    color: '#dd6b20',
+    color: '#1e4d7a',
     actions: ['Partner dashboard', 'Manage your organization', 'Submit events'],
   },
   {
@@ -98,7 +98,7 @@ export default function PersonasPage() {
             <Link
               key={p.id}
               href={'/for/' + p.id}
-              className="group bg-white border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group bg-white border border-brand-border overflow-hidden hover:border-ink hover:-translate-y-0.5 transition-all duration-200"
               style={{ borderColor: undefined }}
             >
               {/* Color top bar */}

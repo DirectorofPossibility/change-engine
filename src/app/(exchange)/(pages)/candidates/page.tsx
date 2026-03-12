@@ -9,7 +9,7 @@ import Image from 'next/image'
 export const revalidate = 300
 
 export const metadata: Metadata = {
-  title: 'Candidates — Community Exchange',
+  title: 'Candidates — Change Engine',
   description: 'Candidates running for office in the Houston area.',
 }
 
@@ -23,13 +23,13 @@ export default async function CandidatesPage() {
 
   return (
     <div>
-      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#e53e3e" title="Candidates" subtitle="Get to know the candidates running for office in Houston and Harris County." />
+      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#1a6b56" title="Candidates" subtitle="Get to know the candidates running for office in Houston and Harris County." />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Elections', href: '/elections' }, { label: 'Candidates' }]} />
         <div className="space-y-4 mt-4">
           {(candidates || []).map(function (c) {
             return (
-              <Link key={c.candidate_id} href={`/candidates/${c.candidate_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
+              <Link key={c.candidate_id} href={`/candidates/${c.candidate_id}`} className="block bg-white border border-brand-border p-5 hover:border-ink transition-shadow">
                 <div className="flex items-start gap-4">
                   {c.photo_url ? (
                     <Image src={c.photo_url} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0"  width={80} height={56} />

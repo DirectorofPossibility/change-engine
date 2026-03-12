@@ -8,7 +8,7 @@ import { MapPin, Building2, Landmark, Scale, GraduationCap, Users, Flag, Trendin
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Districts — Community Exchange',
+  title: 'Districts — Change Engine',
   description: 'Every district. Every representative. Mapped. City council, county precinct, state house and senate, Congress — they all overlap where you live.',
 }
 

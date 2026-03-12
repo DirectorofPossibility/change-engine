@@ -16,13 +16,13 @@ const C = {
 
 /* ── Pathway definitions ── */
 const PW: Record<string, { name: string; color: string; short: string; slug: string }> = {
-  health:       { name: "Health",        color: "#e53e3e", short: "Health",       slug: "health" },
-  families:     { name: "Families",      color: "#dd6b20", short: "Families",     slug: "families" },
-  neighborhood: { name: "Neighborhood",  color: "#d69e2e", short: "Neighborhood", slug: "neighborhood" },
-  voice:        { name: "Voice",         color: "#38a169", short: "Voice",        slug: "voice" },
-  money:        { name: "Money",         color: "#3182ce", short: "Money",        slug: "money" },
-  planet:       { name: "Planet",        color: "#319795", short: "Planet",       slug: "planet" },
-  bigger_we:    { name: "The Bigger We",     color: "#805ad5", short: "Bigger We",    slug: "the-bigger-we" },
+  health:       { name: "Health",        color: "#1a6b56", short: "Health",       slug: "health" },
+  families:     { name: "Families",      color: "#1e4d7a", short: "Families",     slug: "families" },
+  neighborhood: { name: "Neighborhood",  color: "#4a2870", short: "Neighborhood", slug: "neighborhood" },
+  voice:        { name: "Voice",         color: "#7a2018", short: "Voice",        slug: "voice" },
+  money:        { name: "Money",         color: "#6a4e10", short: "Money",        slug: "money" },
+  planet:       { name: "Planet",        color: "#1a5030", short: "Planet",       slug: "planet" },
+  bigger_we:    { name: "The Bigger We",     color: "#1a3460", short: "Bigger We",    slug: "the-bigger-we" },
 }
 const PW_KEYS = Object.keys(PW)
 
@@ -154,7 +154,7 @@ function ContactRow({ icon, label, val, href }: { icon: string; label: string; v
 /* ── Bottom Drawer for Foundation Detail ── */
 function FoundationDrawer({ f, onClose, faIdMap }: { f: Foundation; onClose: () => void; faIdMap: Record<string, string> }) {
   const geo = GM[f.geo_level] || GEO[0]
-  const RS: Record<string, { c: string; l: string }> = { executive: { c: C.ac, l: "Exec" }, board: { c: "#805ad5", l: "Board" }, grants: { c: "#38a169", l: "Grants" } }
+  const RS: Record<string, { c: string; l: string }> = { executive: { c: C.ac, l: "Exec" }, board: { c: "#1a3460", l: "Board" }, grants: { c: "#7a2018", l: "Grants" } }
 
   return (
     <div style={{
@@ -198,7 +198,7 @@ function FoundationDrawer({ f, onClose, faIdMap }: { f: Foundation; onClose: () 
                 <div style={{ fontSize: 9, color: C.t3, textTransform: "uppercase" }}>Assets</div>
               </div>
               <div style={{ background: "rgba(56,161,105,0.05)", border: "1px solid rgba(56,161,105,0.18)", borderRadius: 10, padding: "10px 12px", textAlign: "center" }}>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "#38a169" }}>{f.annual_giving || "N/A"}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#7a2018" }}>{f.annual_giving || "N/A"}</div>
                 <div style={{ fontSize: 9, color: C.t3, textTransform: "uppercase" }}>Annual Giving</div>
               </div>
             </div>
@@ -463,7 +463,7 @@ export default function FoundationsGalaxy() {
     <div style={{ minHeight: "60vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
         <div style={{ fontSize: 20, fontWeight: 600, color: C.tx }}>Loading Foundations...</div>
-        <div style={{ fontSize: 13, color: C.t3, marginTop: 8 }}>Connecting to the Community Exchange</div>
+        <div style={{ fontSize: 13, color: C.t3, marginTop: 8 }}>Connecting to the Change Engine</div>
       </div>
     </div>
   )
@@ -535,9 +535,9 @@ export default function FoundationsGalaxy() {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
               {[
                 { l: "Showing", v: filtered.length, c: C.ac },
-                { l: "Assets", v: totalAssets >= 1000 ? "$" + (totalAssets / 1000).toFixed(0) + "B+" : "$" + totalAssets.toFixed(0) + "M+", c: "#38a169" },
-                { l: "Focus Areas", v: uniqueFocusAreas, c: "#3182ce" },
-                { l: "People", v: allPeople.length, c: "#805ad5" },
+                { l: "Assets", v: totalAssets >= 1000 ? "$" + (totalAssets / 1000).toFixed(0) + "B+" : "$" + totalAssets.toFixed(0) + "M+", c: "#7a2018" },
+                { l: "Focus Areas", v: uniqueFocusAreas, c: "#6a4e10" },
+                { l: "People", v: allPeople.length, c: "#1a3460" },
               ].map(s => (
                 <div key={s.l} style={{ background: C.alt, borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: s.c, lineHeight: 1.1 }}>{s.v}</div>
@@ -615,7 +615,7 @@ export default function FoundationsGalaxy() {
               <div style={{ background: C.alt, borderRadius: 10, padding: "10px 12px", border: "1px solid " + C.bd }}>
                 {expLog.slice(0, 4).map((ex: any, i: number) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 0", borderBottom: i < Math.min(expLog.length, 4) - 1 ? "1px solid " + C.bd : "none" }}>
-                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: ex.status === "completed" ? "#38a169" : "#d69e2e" }} />
+                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: ex.status === "completed" ? "#7a2018" : "#4a2870" }} />
                     <span style={{ fontSize: 10, fontWeight: 500, flex: 1 }}>{ex.state_name}</span>
                     <span style={{ fontSize: 9, color: C.t3 }}>+{ex.foundations_added}</span>
                   </div>

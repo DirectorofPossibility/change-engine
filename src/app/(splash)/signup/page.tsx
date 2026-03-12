@@ -175,7 +175,7 @@ export default function SignupPage() {
             <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
           </div>
           <FlowerOfLifeIcon size={40} className="mx-auto mb-3" />
-          <h1 className="text-2xl font-serif font-bold text-brand-text mb-1">Join the Community Exchange</h1>
+          <h1 className="text-2xl font-serif font-bold text-brand-text mb-1">Join the Change Engine</h1>
           <p className="text-brand-muted text-sm">Connect with resources, services, and civic opportunities in Houston.</p>
         </div>
 

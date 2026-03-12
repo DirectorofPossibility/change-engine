@@ -79,9 +79,9 @@ const BOUNDARY_LAYERS = [
 
 const ENTITY_TYPES = [
   { key: 'organizations', label: 'Organizations', icon: Building2, color: '#C75B2A' },
-  { key: 'services', label: 'Services', icon: Heart, color: '#38a169' },
-  { key: 'officials', label: 'Officials', icon: Landmark, color: '#3182ce' },
-  { key: 'voting', label: 'Voting', icon: Vote, color: '#805ad5' },
+  { key: 'services', label: 'Services', icon: Heart, color: '#7a2018' },
+  { key: 'officials', label: 'Officials', icon: Landmark, color: '#6a4e10' },
+  { key: 'voting', label: 'Voting', icon: Vote, color: '#1a3460' },
 ]
 
 export function GeographyClient({

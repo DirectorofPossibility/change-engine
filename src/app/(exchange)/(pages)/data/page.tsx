@@ -8,8 +8,8 @@ import { THEMES } from '@/lib/constants'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Open Data — Community Exchange',
-  description: 'Platform transparency and statistics — see how the Community Exchange organizes community knowledge across Houston.',
+  title: 'Open Data — Change Engine',
+  description: 'Platform transparency and statistics — see how the Change Engine organizes community knowledge across Houston.',
 }
 
 const DATA_SOURCES = [
@@ -64,7 +64,7 @@ export default async function OpenDataPage() {
       <PageHero
         variant="sacred"
         sacredPattern="metatron"
-        gradientColor="#319795"
+        gradientColor="#1a5030"
         title="Open Data"
         subtitle="Transparency in how we organize community knowledge"
       />
@@ -96,7 +96,7 @@ export default async function OpenDataPage() {
           <h2 className="font-display text-2xl text-brand-text mb-6">Data Sources</h2>
           <div className="bg-white border border-brand-border p-6">
             <p className="text-sm text-brand-muted mb-4">
-              The Community Exchange aggregates information from trusted public data sources to keep our community knowledge current and accurate.
+              The Change Engine aggregates information from trusted public data sources to keep our community knowledge current and accurate.
             </p>
             <ul className="space-y-3">
               {DATA_SOURCES.map(function (source) {
@@ -104,7 +104,7 @@ export default async function OpenDataPage() {
                   <li key={source} className="flex items-center gap-3 text-brand-text">
                     <span
                       className="w-2 h-2 flex-shrink-0"
-                      style={{ backgroundColor: '#319795' }}
+                      style={{ backgroundColor: '#1a5030' }}
                     />
                     <span className="text-sm">{source}</span>
                   </li>

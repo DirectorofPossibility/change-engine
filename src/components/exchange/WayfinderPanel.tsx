@@ -75,7 +75,7 @@ const DETAIL_PATHS: Record<PanelData['type'], string | null> = {
   path: '/learn/',
 }
 
-const DEFAULT_ACCENT = '#319795'
+const DEFAULT_ACCENT = '#1a5030'
 
 function labelStyle(color: string): React.CSSProperties {
   return {
@@ -144,7 +144,7 @@ function MiniCard({
       className="w-full text-left bg-white border border-brand-border rounded-md px-3 py-2.5 hover:shadow transition-shadow cursor-pointer group"
     >
       {children}
-      <span className="block text-xs text-[#319795] font-medium mt-1 group-hover:underline">
+      <span className="block text-xs text-[#1a5030] font-medium mt-1 group-hover:underline">
         {viewLabel} &rsaquo;
       </span>
     </button>
@@ -275,7 +275,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         {panel.orgId ? (
                           <Link
                             href={'/organizations/' + panel.orgId}
-                            className="text-[#319795] hover:underline"
+                            className="text-[#1a5030] hover:underline"
                           >
                             {panel.orgName}
                           </Link>
@@ -289,7 +289,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         href={panel.sourceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-[#319795] hover:underline"
+                        className="inline-flex items-center gap-1 text-sm text-[#1a5030] hover:underline"
                       >
                         <ExternalLink size={14} />
                         {t('wayfinder.view_source')}
@@ -313,7 +313,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                     {panel.phone && (
                       <a
                         href={'tel:' + panel.phone}
-                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-[#319795] transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-[#1a5030] transition-colors"
                       >
                         <Phone size={14} className="text-brand-muted" />
                         {panel.phone}
@@ -322,7 +322,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                     {panel.email && (
                       <a
                         href={'mailto:' + panel.email}
-                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-[#319795] transition-colors"
+                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-[#1a5030] transition-colors"
                       >
                         <Mail size={14} className="text-brand-muted" />
                         {panel.email}
@@ -333,7 +333,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         href={panel.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm text-[#319795] hover:underline"
+                        className="flex items-center gap-1.5 text-sm text-[#1a5030] hover:underline"
                       >
                         <Globe size={14} />
                         {t('wayfinder.website')}
@@ -434,7 +434,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
                         href={panel.registrationUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-[#319795] hover:underline mt-1"
+                        className="inline-flex items-center gap-1 text-sm text-[#1a5030] hover:underline mt-1"
                       >
                         <ExternalLink size={14} />
                         {t('wayfinder.register')}
