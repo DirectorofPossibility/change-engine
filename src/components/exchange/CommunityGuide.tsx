@@ -102,6 +102,27 @@ export function CommunityGuide({ stats, latestContent, quote, promotions, upcomi
     <div className="relative">
 
       {/* ═══════════════════════════════════════════════════════════════════
+          HERO BAR -- tagline strip below nav, above masthead
+         ═══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="w-full text-center px-6 py-6 sm:py-8"
+        style={{ backgroundColor: '#EDEAE3', borderBottom: '1px solid #d9d4cb' }}
+      >
+        <p
+          className="font-display font-bold leading-snug tracking-tight mb-1"
+          style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', color: '#2C2C2C' }}
+        >
+          Your Houston. Every neighborhood. Every language.
+        </p>
+        <p
+          className="font-body max-w-2xl mx-auto leading-relaxed"
+          style={{ fontSize: 'clamp(0.85rem, 1.2vw, 1rem)', color: '#5c5548' }}
+        >
+          The Change Engine connects residents to resources, news, and civic life — organized by the things that matter most to you.
+        </p>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
           SECTION 1 -- MASTHEAD
          ═══════════════════════════════════════════════════════════════════ */}
       <section
