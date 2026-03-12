@@ -8,7 +8,6 @@ import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
-import { ThemePill } from '@/components/ui/ThemePill'
 import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -18,7 +17,6 @@ import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { PolicyImpactSection } from '@/components/exchange/PolicyImpactSection'
 import { MapPin, ExternalLink, Calendar, Scale, FileText, Users, ArrowRight } from 'lucide-react'
-import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
@@ -163,7 +161,6 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             { label: t('policy.policies'), href: '/policies' },
             { label: displayName }
           ]} />
-          <PathwayContextBar activePathways={themePrimary ? [themePrimary] : []} showLabels />
 
           {/* Eyebrow row */}
           <div className="flex items-center gap-3 mt-5 mb-4 flex-wrap">
@@ -198,7 +195,6 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                 </span>
               </span>
             )}
-            {themePrimary && <ThemePill themeId={themePrimary} size="sm" />}
           </div>
 
           <h1
