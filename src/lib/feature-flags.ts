@@ -51,6 +51,9 @@ const PHASE_ROUTES: Record<LaunchPhase, string[]> = {
     '/accessibility',
     '/chat',
     '/my-area',
+    '/learn',
+    '/learning',
+    '/learning-paths',
   ],
   update1: [
     '/neighborhoods',
