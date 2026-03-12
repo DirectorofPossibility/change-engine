@@ -21,6 +21,7 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
+import { ShareButtons } from '@/components/exchange/ShareButtons'
 import { policyJsonLd } from '@/lib/jsonld'
 
 function statusColor(status: string | null): { dotColor: string; textColor: string } {
@@ -162,66 +163,84 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             { label: displayName }
           ]} />
 
-          {/* Eyebrow row */}
-          <div className="flex items-center gap-3 mt-5 mb-4 flex-wrap">
-            {policy.level && (
-              <span
-                className="font-mono uppercase"
-                style={{
-                  fontSize: '0.7rem',
-                  letterSpacing: '0.2em',
-                  color: '#ffffff',
-                  background: '#0d1117',
-                  padding: '3px 10px',
-                  display: 'inline-block',
-                }}
-              >
-                {policy.level}
-              </span>
-            )}
-            {policy.policy_type && (
-              <span
-                className="font-mono uppercase"
-                style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
-              >
-                {policy.policy_type}
-              </span>
-            )}
-            {policy.status && (
-              <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: sc.dotColor, display: 'inline-block', flexShrink: 0 }} />
-                <span className="font-mono uppercase" style={{ fontSize: '0.58rem', letterSpacing: '0.2em' }}>
-                  {policy.status}
-                </span>
-              </span>
-            )}
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 mt-5">
+            {/* Left: Policy info (2/3) */}
+            <div className="pr-0 lg:pr-8">
+              {/* Eyebrow row */}
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
+                {policy.level && (
+                  <span
+                    className="font-mono uppercase"
+                    style={{
+                      fontSize: '0.7rem',
+                      letterSpacing: '0.2em',
+                      color: '#ffffff',
+                      background: '#0d1117',
+                      padding: '3px 10px',
+                      display: 'inline-block',
+                    }}
+                  >
+                    {policy.level}
+                  </span>
+                )}
+                {policy.policy_type && (
+                  <span
+                    className="font-mono uppercase"
+                    style={{ fontSize: '0.58rem', letterSpacing: '0.2em', color: '#5c6474' }}
+                  >
+                    {policy.policy_type}
+                  </span>
+                )}
+                {policy.status && (
+                  <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: sc.dotColor, display: 'inline-block', flexShrink: 0 }} />
+                    <span className="font-mono uppercase" style={{ fontSize: '0.58rem', letterSpacing: '0.2em' }}>
+                      {policy.status}
+                    </span>
+                  </span>
+                )}
+              </div>
 
-          <h1
-            className="font-display max-w-3xl leading-tight mb-3"
-            style={{ fontWeight: 900, fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', color: '#0d1117' }}
-          >
-            {displayName}
-          </h1>
-
-          {policy.bill_number && (
-            <p className="font-mono mb-3" style={{ fontSize: '0.8rem', color: '#5c6474' }}>{policy.bill_number}</p>
-          )}
-
-          <div className="flex items-center gap-4 flex-wrap">
-            <TranslatePageButton isTranslated={!!translatedName} contentType="policies" contentId={policy.policy_id} />
-            {policy.source_url && (
-              <a
-                href={policy.source_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 hover:underline"
-                style={{ fontSize: '0.85rem', color: '#1b5e8a' }}
+              <h1
+                className="font-display max-w-3xl leading-tight mb-3"
+                style={{ fontWeight: 900, fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', color: '#0d1117' }}
               >
-                <ExternalLink size={14} />
-                {t('policy.read_full')}
-              </a>
-            )}
+                {displayName}
+              </h1>
+
+              {policy.bill_number && (
+                <p className="font-mono mb-3" style={{ fontSize: '0.8rem', color: '#5c6474' }}>{policy.bill_number}</p>
+              )}
+
+              {/* Summary under title */}
+              {displaySummary && (
+                <p className="font-body leading-relaxed mb-4" style={{ fontSize: '1rem', color: '#5c6474' }}>
+                  {displaySummary}
+                </p>
+              )}
+
+              <div className="flex items-center gap-4 flex-wrap">
+                <TranslatePageButton isTranslated={!!translatedName} contentType="policies" contentId={policy.policy_id} />
+                <ShareButtons title={displayName || undefined} compact />
+                {policy.source_url && (
+                  <a
+                    href={policy.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline"
+                    style={{ color: '#5c6474' }}
+                  >
+                    <ExternalLink size={10} />
+                    Source: {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'Official record'}
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Right: Wayfinder (1/3) */}
+            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
+            </div>
           </div>
         </div>
       </header>
@@ -489,8 +508,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               </div>
             )}
 
-            {/* Wayfinder */}
-            <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
+            {/* Wayfinder (mobile only — desktop version is in masthead) */}
+            <div className="lg:hidden">
+              <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
+            </div>
 
             <FeedbackLoop entityType="policies" entityId={policy.policy_id} entityName={policy.title_6th_grade || policy.policy_name || ''} />
           </div>

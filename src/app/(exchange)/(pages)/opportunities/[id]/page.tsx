@@ -10,6 +10,8 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import { ShareButtons } from '@/components/exchange/ShareButtons'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { THEMES } from '@/lib/constants'
 import Image from 'next/image'
 
@@ -128,25 +130,31 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       <SpiralTracker action="view_opportunity" />
 
       {/* ── HERO ── */}
-      <section className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <header style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
           <Breadcrumb items={[
             { label: 'Opportunities', href: '/opportunities' },
             { label: displayName }
           ]} />
 
-          <div className="flex items-start gap-5 mt-4">
-            {org?.logo_url && (
-              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 object-contain bg-white border border-brand-border flex-shrink-0"  width={48} height={64} />
-            )}
-            <div className="min-w-0">
-              <h1 className="font-display text-[clamp(1.8rem,4vw,2.5rem)] leading-tight text-brand-text mb-2">{displayName}</h1>
-              {org && (
-                <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline text-sm inline-block mb-2">
-                  {org.org_name}
-                </Link>
-              )}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-brand-muted">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 mt-6">
+            {/* Left: Hero content (2/3) */}
+            <div className="pr-0 lg:pr-8">
+              <div className="flex items-start gap-5">
+                {org?.logo_url && (
+                  <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 object-contain bg-white border border-brand-border flex-shrink-0"  width={48} height={64} />
+                )}
+                <div className="min-w-0">
+                  <h1 className="font-display text-[clamp(1.8rem,4vw,2.5rem)] leading-tight text-brand-text mb-2">{displayName}</h1>
+                  {org && (
+                    <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline text-sm inline-block mb-2">
+                      {org.org_name}
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 text-sm text-brand-muted mt-4">
                 {opportunity.start_date && (
                   <span className="flex items-center gap-1.5">
                     <Calendar size={14} /> Starts {new Date(opportunity.start_date).toLocaleDateString()}
@@ -163,11 +171,21 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
                   </span>
                 )}
               </div>
+
+              <div className="flex items-center gap-3 mt-4">
+                <TranslatePageButton isTranslated={!!translation?.title} contentType="opportunities" contentId={id} />
+                <ShareButtons compact />
+              </div>
+            </div>
+
+            {/* Right: Wayfinder (1/3) */}
+            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <DetailWayfinder data={wayfinderData} currentType="opportunity" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>
         </div>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, ' + themeColor + ', transparent 60%)' }} />
-      </section>
+      </header>
 
       {/* ── MAIN + SIDEBAR ── */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
@@ -261,7 +279,9 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
           {/* ── Sidebar ── */}
           <div className="space-y-4">
-            <DetailWayfinder data={wayfinderData} currentType="opportunity" currentId={id} userRole={userProfile?.role} />
+            <div className="lg:hidden">
+              <DetailWayfinder data={wayfinderData} currentType="opportunity" currentId={id} userRole={userProfile?.role} />
+            </div>
 
             {/* Org card in sidebar */}
             {org && (

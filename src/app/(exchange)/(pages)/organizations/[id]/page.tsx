@@ -139,8 +139,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             { label: displayOrgName }
           ]} />
 
-          <div className="flex items-start justify-between gap-8 mt-6">
-            <div className="min-w-0 flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 mt-6">
+            {/* Left: Hero content (2/3) */}
+            <div className="pr-0 lg:pr-8">
               {/* Eyebrow pill */}
               <div className="flex items-center gap-3 mb-4">
                 <span className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
@@ -153,22 +154,28 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                 )}
               </div>
 
-              <h1 className="font-display" style={{ fontWeight: 900, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', lineHeight: 1.1, color: '#0d1117' }}>
-                {displayOrgName}
-              </h1>
-
-              {(org as any).is_verified === 'Yes' && (
-                <svg className="w-6 h-6 inline-block ml-2 -mt-1" viewBox="0 0 20 20" fill="none" aria-label="Verified">
-                  <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#1b5e8a" />
-                  <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
+              <div className="flex items-start gap-4">
+                {org.logo_url && (
+                  <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0 hidden sm:block" style={{ border: '1px solid #dde1e8' }} width={72} height={72} />
+                )}
+                <div className="min-w-0">
+                  <h1 className="font-display" style={{ fontWeight: 900, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', lineHeight: 1.1, color: '#0d1117' }}>
+                    {displayOrgName}
+                    {(org as any).is_verified === 'Yes' && (
+                      <svg className="w-6 h-6 inline-block ml-2 -mt-1" viewBox="0 0 20 20" fill="none" aria-label="Verified">
+                        <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#1b5e8a" />
+                        <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </h1>
+                </div>
+              </div>
 
               {org.mission_statement && (
-                <p className="font-body italic mt-3 max-w-2xl" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{org.mission_statement}</p>
+                <p className="font-body italic mt-3" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{org.mission_statement}</p>
               )}
               {!org.mission_statement && displayOrgDesc && (
-                <p className="font-body italic mt-3 max-w-2xl" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{displayOrgDesc}</p>
+                <p className="font-body italic mt-3" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{displayOrgDesc}</p>
               )}
 
               {/* Quick facts */}
@@ -208,13 +215,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               </div>
             </div>
 
-            {/* Logo / Geo mark on right */}
-            <div className="flex-shrink-0 hidden sm:flex flex-col items-center gap-3">
-              {org.logo_url ? (
-                <Image src={org.logo_url} alt={org.org_name} className="object-contain" style={{ border: '1px solid #dde1e8' }} width={96} height={96} />
-              ) : (
-                <FlowerOfLife size={80} color={accentColor} opacity={0.2} />
-              )}
+            {/* Right: Wayfinder (1/3) */}
+            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>
         </div>
@@ -457,7 +460,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           {/* ── Sidebar ── */}
           <div className="p-6 lg:p-8">
             <div className="lg:sticky lg:top-24 space-y-6">
-              <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
+              {/* Wayfinder (mobile only — desktop version is in masthead) */}
+              <div className="lg:hidden">
+                <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
+              </div>
               <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
             </div>
           </div>

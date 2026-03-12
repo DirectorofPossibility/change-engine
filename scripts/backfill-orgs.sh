@@ -14,7 +14,7 @@
 #
 
 API_URL="https://www.changeengine.us/api/ingest-org"
-CRON_SECRET="backfill-local-secret-2026"
+CRON_SECRET="83836a0cbf4a443625dd4261a6fd0d3318e5494ae1df73b06955d63e66090eac"
 SUPABASE_URL="https://xesojwzcnjqtpuossmuv.supabase.co"
 SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhlc29qd3pjbmpxdHB1b3NzbXV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5ODEzODUsImV4cCI6MjA4NzU1NzM4NX0.9B3_TX3qBG0SXI9UifYH7sJQMmiHjc_YRbaYBAk7l0w"
 
@@ -57,8 +57,8 @@ for o in orgs:
     # Skip Amazon, generic, or non-org sites
     if not w or 'amazon.com' in w.lower():
         continue
-    print(f\"{w}|||{n}\")
-" | while IFS='|||' read -r WEBSITE ORG_NAME; do
+    print(f\"{w}\t{n}\")
+" | while IFS=$'\t' read -r WEBSITE ORG_NAME; do
   IDX=$((IDX + 1))
 
   echo "[$IDX/$TOTAL] Crawling: $ORG_NAME"
