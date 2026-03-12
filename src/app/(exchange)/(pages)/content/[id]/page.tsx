@@ -17,7 +17,6 @@ import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { ExternalLink, Globe, Sparkles, ArrowRight } from 'lucide-react'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
@@ -218,13 +217,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     <div style={{ background: '#f4f5f7' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="read_article" pathway={item.pathway_primary || undefined} />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Breadcrumb items={[
-          ...(themeEntry ? [{ label: themeEntry.name, href: '/pathways/' + themeSlug }] : []),
-          { label: title || 'Content' },
-        ]} />
-      </div>
-
       {/* ── MASTHEAD ── */}
       <section style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
         <div className="max-w-[1200px] mx-auto px-8 py-8">
@@ -242,16 +234,18 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     {item.pathway_primary && ' / ' + (themeEntry?.name || '')}
                   </span>
                 )}
-                {(item.source_org_name || item.source_domain) && (
-                  orgInfo ? (
-                    <Link href={'/organizations/' + orgInfo.org_id} className="font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline" style={{ color: '#5c6474' }}>
-                      {item.source_org_name || item.source_domain}
-                    </Link>
-                  ) : (
-                    <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
-                      {item.source_org_name || item.source_domain}
-                    </span>
-                  )
+                {item.source_url && (
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline inline-flex items-center gap-1"
+                    style={{ color: '#5c6474' }}
+                  >
+                    <ExternalLink size={10} />
+                    Source: {item.source_org_name || item.source_domain || new URL(item.source_url).hostname}
+                    <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
+                  </a>
                 )}
                 {isTranslated && (
                   <span className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] flex items-center gap-1" style={{ color: '#1b5e8a' }}>
@@ -309,22 +303,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
-            {/* Source + Share row */}
+            {/* Share row */}
             <div className="flex items-center gap-4 flex-wrap mb-6 pb-6" style={{ borderBottom: '1px solid #dde1e8' }}>
-              <div className="relative inline-block">
-                <a
-                  href={item.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-                  style={{ color: '#1b5e8a' }}
-                >
-                  <ExternalLink size={13} />
-                  {t('content.read_source')}
-                </a>
-                <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
-              </div>
-              <div className="w-px h-5" style={{ background: '#dde1e8' }} />
               <ShareButtons title={title || undefined} compact />
             </div>
 
