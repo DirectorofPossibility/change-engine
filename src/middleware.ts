@@ -81,29 +81,31 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(exchangeUrl)
   }
 
-  // Beta gate — unauthenticated users can only see splash + auth pages
-  const PUBLIC_PATHS = [
-    '/',
-    '/login',
-    '/signup',
-    '/reset-password',
-    '/about',
-    '/privacy',
-    '/terms',
-    '/accessibility',
-    '/contact',
-    '/account-locked',
-    '/coming-soon',
-  ]
-  const isPublicPath = PUBLIC_PATHS.includes(pathname)
-    || pathname.startsWith('/auth/')
-
-  if (!user && !isPublicPath) {
-    const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = '/login'
-    loginUrl.searchParams.set('redirect', pathname)
-    return NextResponse.redirect(loginUrl)
-  }
+  // Beta gate — TEMPORARILY DISABLED
+  // To re-enable, uncomment the block below:
+  //
+  // const PUBLIC_PATHS = [
+  //   '/',
+  //   '/login',
+  //   '/signup',
+  //   '/reset-password',
+  //   '/about',
+  //   '/privacy',
+  //   '/terms',
+  //   '/accessibility',
+  //   '/contact',
+  //   '/account-locked',
+  //   '/coming-soon',
+  // ]
+  // const isPublicPath = PUBLIC_PATHS.includes(pathname)
+  //   || pathname.startsWith('/auth/')
+  //
+  // if (!user && !isPublicPath) {
+  //   const loginUrl = request.nextUrl.clone()
+  //   loginUrl.pathname = '/login'
+  //   loginUrl.searchParams.set('redirect', pathname)
+  //   return NextResponse.redirect(loginUrl)
+  // }
 
   // Check account status and role for authenticated users
   if (user && !pathname.startsWith('/account-locked')) {
