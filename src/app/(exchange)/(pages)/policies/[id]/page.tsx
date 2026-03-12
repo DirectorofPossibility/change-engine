@@ -222,7 +222,12 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
               <div className="flex items-center gap-4 flex-wrap">
                 <TranslatePageButton isTranslated={!!translatedName} contentType="policies" contentId={policy.policy_id} />
-                <ShareButtons title={displayName || undefined} compact />
+                <ShareButtons
+                  title={displayName || undefined}
+                  via={policy.level || undefined}
+                  url={'https://www.changeengine.us/policies/' + id}
+                  compact
+                />
                 {policy.source_url && (
                   <a
                     href={policy.source_url}

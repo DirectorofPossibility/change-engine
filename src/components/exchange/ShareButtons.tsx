@@ -6,14 +6,16 @@ import { useTranslation } from '@/lib/use-translation'
 interface ShareButtonsProps {
   url?: string
   title?: string
+  via?: string
   compact?: boolean
 }
 
-export function ShareButtons({ url, title, compact = false }: ShareButtonsProps) {
+export function ShareButtons({ url, title, via, compact = false }: ShareButtonsProps) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '')
-  const shareTitle = title || (typeof document !== 'undefined' ? document.title : '')
+  const rawTitle = title || (typeof document !== 'undefined' ? document.title : '')
+  const shareTitle = via ? rawTitle + ' — via ' + via + ' on Change Engine' : rawTitle + ' — Change Engine'
 
   function copyLink() {
     navigator.clipboard.writeText(shareUrl).then(function () {

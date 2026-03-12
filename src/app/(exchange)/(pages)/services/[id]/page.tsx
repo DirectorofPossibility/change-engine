@@ -201,7 +201,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
-                <ShareButtons compact />
+                <ShareButtons
+                  title={displayName || undefined}
+                  via={org?.org_name || undefined}
+                  url={'https://www.changeengine.us/services/' + id}
+                  compact
+                />
               </div>
             </div>
 

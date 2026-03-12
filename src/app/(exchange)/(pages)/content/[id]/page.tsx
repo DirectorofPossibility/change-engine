@@ -287,7 +287,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   </span>
                 )}
                 <TranslatePageButton isTranslated={isTranslated} contentType="content_published" contentId={item.inbox_id || id} />
-                <ShareButtons title={title || undefined} compact />
+                <ShareButtons
+                  title={title || undefined}
+                  via={item.source_org_name || item.source_domain || undefined}
+                  url={'https://www.changeengine.us/content/' + (item.slug || id)}
+                  compact
+                />
               </div>
 
               {/* Image */}

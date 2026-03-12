@@ -211,7 +211,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
               <div className="flex items-center gap-3 mt-4">
                 <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
-                <ShareButtons compact />
+                <ShareButtons
+                  title={displayOrgName || undefined}
+                  url={'https://www.changeengine.us/organizations/' + id}
+                  compact
+                />
               </div>
             </div>
 

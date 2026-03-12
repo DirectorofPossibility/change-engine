@@ -175,7 +175,12 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
               <div className="flex items-center gap-3 mt-4">
                 <TranslatePageButton isTranslated={!!translation?.title} contentType="opportunities" contentId={id} />
-                <ShareButtons compact />
+                <ShareButtons
+                  title={displayName || undefined}
+                  via={org?.org_name || undefined}
+                  url={'https://www.changeengine.us/opportunities/' + id}
+                  compact
+                />
               </div>
             </div>
 
