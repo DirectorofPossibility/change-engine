@@ -1,30 +1,27 @@
 import type { Metadata } from 'next'
-import { DM_Sans, DM_Serif_Display, Caveat, Space_Mono } from 'next/font/google'
+import { Fraunces, Libre_Baskerville, DM_Mono } from 'next/font/google'
 import { cookies } from 'next/headers'
 import './globals.css'
 
-const sans = DM_Sans({
+const fraunces = Fraunces({
   subsets: ['latin'],
-  variable: '--font-sans',
+  weight: ['700', '900'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
   display: 'swap',
 })
 
-const serif = DM_Serif_Display({
-  weight: '400',
+const libreBaskerville = Libre_Baskerville({
   subsets: ['latin'],
-  variable: '--font-serif',
-  display: 'swap',
-})
-
-const hand = Caveat({
-  subsets: ['latin'],
-  variable: '--font-hand',
-  display: 'swap',
-})
-
-const mono = Space_Mono({
   weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const dmMono = DM_Mono({
   subsets: ['latin'],
+  weight: ['400'],
   variable: '--font-mono',
   display: 'swap',
 })
@@ -78,7 +75,7 @@ export default async function RootLayout({
   const lang = LANG_MAP[cookieStore.get('lang')?.value ?? ''] ?? 'en'
 
   return (
-    <html lang={lang} className={`${sans.variable} ${serif.variable} ${hand.variable} ${mono.variable}`}>
+    <html lang={lang} className={`${fraunces.variable} ${libreBaskerville.variable} ${dmMono.variable}`}>
       <body>{children}</body>
     </html>
   )

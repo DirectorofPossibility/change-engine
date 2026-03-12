@@ -1,12 +1,16 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { Phone, Globe, MapPin, Clock } from 'lucide-react'
+import { getUIStrings } from '@/lib/i18n'
+import { Phone, Globe, MapPin, Clock, ArrowRight } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { SingleLocationMap } from '@/components/maps/dynamic'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
+import { getActivePromotions } from '@/lib/data/homepage'
+import { getRelatedServices } from '@/lib/data/services'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
@@ -18,6 +22,8 @@ import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { serviceJsonLd } from '@/lib/jsonld'
+import { Geo } from '@/components/geo/sacred'
+import { THEMES } from '@/lib/constants'
 
 export const revalidate = 300
 
@@ -68,13 +74,24 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     relatedServices = related || []
   }
 
-  // Resolve focus areas for library nuggets
+  // Resolve focus areas for library nuggets + related services (GAP 3)
   const { data: focusJunctions } = await (supabase as any)
     .from('service_focus_areas')
     .select('focus_id')
     .eq('service_id', id)
   const focusIds = ((focusJunctions ?? []) as Array<{ focus_id: string }>).map(j => j.focus_id)
-  const libraryNuggets = await getLibraryNuggets([], focusIds, 3)
+
+  // Resolve pathway for contextual color
+  const { data: themeJunctions } = await (supabase as any)
+    .from('service_themes')
+    .select('theme_id')
+    .eq('service_id', id)
+  const themeIds = ((themeJunctions ?? []) as Array<{ theme_id: string }>).map(j => j.theme_id)
+  const primaryTheme = themeIds.length > 0
+    ? Object.entries(THEMES).find(([k]) => themeIds.includes(k))
+    : undefined
+  const themeColor = primaryTheme ? primaryTheme[1].color : '#1b5e8a'
+  const themeName = primaryTheme ? primaryTheme[1].name : undefined
 
   const fullAddress = [service.address, service.city, service.state, service.zip_code].filter(Boolean).join(', ')
 
@@ -83,98 +100,279 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   let translatedName: string | undefined
   let translatedDesc: string | undefined
   if (langId) {
-    const t = await fetchTranslationsForTable('services_211', [service.service_id], langId)
-    translatedName = t[service.service_id]?.title
-    translatedDesc = t[service.service_id]?.summary
+    const tr = await fetchTranslationsForTable('services_211', [service.service_id], langId)
+    translatedName = tr[service.service_id]?.title
+    translatedDesc = tr[service.service_id]?.summary
   }
+
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
 
   const displayName = translatedName || service.service_name
   const displayDesc = translatedDesc || service.description_5th_grade
 
   const userProfile = await getUserProfile()
-  const [wayfinderData, quote] = await Promise.all([
+  const [wayfinderData, quote, libraryNuggets, focusRelatedServices, promotions] = await Promise.all([
     getWayfinderContext('service', id, userProfile?.role),
-    getRandomQuote(),
+    getRandomQuote(primaryTheme ? primaryTheme[0] : undefined),
+    getLibraryNuggets([], focusIds, 3),
+    getRelatedServices(focusIds),
+    getActivePromotions(primaryTheme ? primaryTheme[0] : undefined, 1),
   ])
 
+  // Merge org-related + focus-related services, dedupe, exclude self
+  const allRelated = [...relatedServices]
+  for (const s of focusRelatedServices) {
+    if (s.service_id !== id && !allRelated.some(r => r.service_id === s.service_id)) {
+      allRelated.push(s)
+    }
+  }
+  const displayRelated = allRelated.slice(0, 6)
+
   const jsonLd = serviceJsonLd(service as any, org?.org_name)
+  const promo = promotions && promotions.length > 0 ? promotions[0] : null
+
+  // Geo type from service or fallback
+  const geoType = (service as any).geo_type || 'vesica_piscis'
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_service" />
 
-      {/* Hero */}
-      <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <Breadcrumb items={[
-            { label: 'Services', href: '/services' },
-            ...(org ? [{ label: org.org_name, href: '/organizations/' + org.org_id }] : []),
-            { label: displayName }
-          ]} />
-
-          <h1 className="font-serif text-2xl lg:text-3xl text-brand-text mt-4 mb-3">{displayName}</h1>
-
-          <div className="flex flex-wrap items-center gap-3 mb-2">
-            <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
-            {service.airs_code && (
-              <span className="text-xs px-2 py-0.5 rounded-lg bg-white border border-brand-border text-brand-muted">AIRS: {service.airs_code}</span>
-            )}
+      {/* ═══════════════════════════════════════════════════════════════════
+          RESOURCE MASTHEAD
+         ═══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative"
+        style={{ borderBottom: '2px solid #0d1117' }}
+      >
+        <div className="max-w-[1080px] mx-auto px-6 py-10 lg:py-14">
+          {/* Eyebrow */}
+          <div className="flex items-center gap-2 mb-3">
+            <span
+              className="font-mono uppercase tracking-[0.12em] px-2 py-0.5"
+              style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
+            >
+              {t('detail.service')}
+            </span>
+            <span
+              className="font-mono uppercase tracking-[0.12em]"
+              style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
+            >
+              {themeName && <>{themeName} &middot; </>}{t('detail.community_resource')}
+            </span>
           </div>
 
-          {org && (
-            <p className="text-brand-muted">
-              Provided by{' '}
-              <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline">
-                {org.org_name}
-              </Link>
-            </p>
-          )}
-        </div>
-        <div className="h-1" style={{ background: 'linear-gradient(90deg, #C75B2A, transparent 60%)' }} />
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-start">
+            <div>
+              {/* Title */}
+              <h1
+                className="font-display leading-[1] tracking-tight mb-3"
+                style={{
+                  fontSize: 'clamp(1.8rem, 4vw, 3rem)',
+                  fontWeight: 900,
+                  color: '#0d1117',
+                }}
+              >
+                {displayName}
+              </h1>
 
-      {/* Two-column grid */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+              {/* Description */}
+              {displayDesc && (
+                <p
+                  className="font-body italic leading-relaxed mb-5 max-w-[580px]"
+                  style={{ fontSize: '0.95rem', color: '#5c6474' }}
+                >
+                  {displayDesc}
+                </p>
+              )}
 
-          {/* Main column */}
-          <div className="min-w-0">
-            {/* Description */}
-            {displayDesc && (
-              <div className="mb-5">
-                <p className="text-brand-text leading-relaxed text-lg">{displayDesc}</p>
+              {/* Quick facts */}
+              <div className="flex flex-wrap gap-4">
+                {service.phone && (
+                  <a
+                    href={'tel:' + service.phone}
+                    className="flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: themeColor }} />
+                    <Phone size={12} />
+                    <strong style={{ color: '#0d1117' }}>{service.phone}</strong>
+                  </a>
+                )}
+                {fullAddress && (
+                  <span
+                    className="flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: themeColor }} />
+                    <MapPin size={12} />
+                    <strong style={{ color: '#0d1117' }}>{fullAddress}</strong>
+                  </span>
+                )}
+                {service.hours && (
+                  <span
+                    className="flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: themeColor }} />
+                    <Clock size={12} />
+                    <strong style={{ color: '#0d1117' }}>{service.hours}</strong>
+                  </span>
+                )}
               </div>
+
+              <div className="flex flex-wrap items-center gap-3 mt-4">
+                <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
+                {service.airs_code && (
+                  <span
+                    className="font-mono uppercase tracking-[0.08em]"
+                    style={{ fontSize: '0.52rem', color: '#5c6474', border: '1px solid #dde1e8', padding: '2px 8px' }}
+                  >
+                    AIRS: {service.airs_code}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Geo mark + CTA */}
+            <div className="flex flex-col items-end gap-3">
+              <Geo type={geoType} color={themeColor} size={80} opacity={0.35} />
+              {service.website && (
+                <a
+                  href={service.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block font-mono uppercase tracking-[0.1em] text-center transition-opacity hover:opacity-80"
+                  style={{ fontSize: '0.68rem', background: themeColor, color: '#ffffff', padding: '0.7rem 1.25rem' }}
+                >
+                  {t('detail.get_services')}
+                </a>
+              )}
+              {service.phone && (
+                <a
+                  href={'tel:' + service.phone}
+                  className="block font-mono uppercase tracking-[0.1em] text-center"
+                  style={{ fontSize: '0.62rem', color: '#5c6474' }}
+                >
+                  {service.phone}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          PROMOTION (GAP 1)
+         ═══════════════════════════════════════════════════════════════════ */}
+      {promo && (
+        <section style={{ borderBottom: '2px solid #0d1117' }}>
+          <div className="max-w-[1080px] mx-auto px-6 py-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <h2
+                  className="font-display mb-0.5"
+                  style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0d1117' }}
+                >
+                  {promo.title}
+                </h2>
+                {promo.subtitle && (
+                  <p className="font-body" style={{ fontSize: '0.85rem', color: '#5c6474' }}>
+                    {promo.subtitle}
+                  </p>
+                )}
+              </div>
+              {promo.cta_href && (
+                <Link
+                  href={promo.cta_href}
+                  className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-2 flex-shrink-0"
+                  style={{ fontSize: '0.65rem', color: '#1b5e8a', fontWeight: 600 }}
+                >
+                  {promo.cta_text || t('detail.learn_more')} <ArrowRight size={14} />
+                </Link>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          RESOURCE BODY — 2-column grid
+         ═══════════════════════════════════════════════════════════════════ */}
+      <div className="max-w-[1080px] mx-auto px-6">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] items-start"
+          style={{ borderBottom: '1.5px solid #dde1e8' }}
+        >
+          {/* ── Main column ── */}
+          <div
+            className="py-10 lg:pr-10 lg:border-r min-w-0"
+            style={{ borderColor: '#dde1e8' }}
+          >
+            {/* About */}
+            {displayDesc && (
+              <>
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('detail.about_service')}
+                </span>
+                <p
+                  className="font-body leading-[1.85] mb-8"
+                  style={{ fontSize: '0.88rem', color: '#0d1117' }}
+                >
+                  {displayDesc}
+                </p>
+              </>
             )}
 
-            {/* Contact & Access */}
-            <div className="bg-white rounded-card border border-brand-border p-5 mb-5 space-y-3">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Contact &amp; Access</p>
+            {/* Contact block */}
+            <div className="mb-8 space-y-3">
+              <span
+                className="font-mono uppercase tracking-[0.2em] block mb-3"
+                style={{ fontSize: '0.58rem', color: '#5c6474' }}
+              >
+                {t('detail.contact')}
+              </span>
               {service.phone && (
-                <a href={'tel:' + service.phone} className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-                  <Phone size={16} /> {service.phone}
+                <a
+                  href={'tel:' + service.phone}
+                  className="flex items-center gap-2 hover:underline"
+                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                >
+                  <Phone size={15} /> {service.phone}
                 </a>
               )}
               {service.website && (
-                <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
-                  <Globe size={16} /> {service.website}
+                <a
+                  href={service.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:underline"
+                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                >
+                  <Globe size={15} /> {t('detail.website')}
                 </a>
               )}
               {fullAddress && (
-                <p className="flex items-center gap-2 text-sm text-brand-muted">
-                  <MapPin size={16} className="shrink-0" /> {fullAddress}
+                <p className="flex items-center gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
+                  <MapPin size={15} className="shrink-0" /> {fullAddress}
                 </p>
               )}
               {service.hours && (
-                <p className="flex items-center gap-2 text-sm text-brand-muted">
-                  <Clock size={16} /> {service.hours}
+                <p className="flex items-center gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
+                  <Clock size={15} /> {service.hours}
                 </p>
               )}
             </div>
 
             {/* Location Map */}
             {(service as any).latitude != null && (service as any).longitude != null && (
-              <div className="mb-5">
+              <div className="mb-8" style={{ border: '1px solid #dde1e8' }}>
                 <SingleLocationMap
                   marker={{
                     id: service.service_id,
@@ -189,96 +387,188 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
-            {/* Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-              {service.eligibility && (
-                <div className="bg-white rounded-card border border-brand-border p-4">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Eligibility</p>
-                  <p className="text-sm text-brand-text">{service.eligibility}</p>
+            {/* Detail fields */}
+            {(service.eligibility || service.fees || service.languages) && (
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('detail.details')}
+                </span>
+                <div className="space-y-0">
+                  {service.eligibility && (
+                    <div className="flex items-start gap-3 py-3" style={{ borderBottom: '1px solid #dde1e8' }}>
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style={{ background: themeColor }} />
+                      <div>
+                        <p className="font-display text-sm font-bold mb-0.5" style={{ color: '#0d1117' }}>{t('detail.eligibility')}</p>
+                        <p className="font-body italic text-sm" style={{ color: '#5c6474' }}>{service.eligibility}</p>
+                      </div>
+                    </div>
+                  )}
+                  {service.fees && (
+                    <div className="flex items-start gap-3 py-3" style={{ borderBottom: '1px solid #dde1e8' }}>
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style={{ background: themeColor }} />
+                      <div>
+                        <p className="font-display text-sm font-bold mb-0.5" style={{ color: '#0d1117' }}>{t('detail.fees')}</p>
+                        <p className="font-body italic text-sm" style={{ color: '#5c6474' }}>{service.fees}</p>
+                      </div>
+                    </div>
+                  )}
+                  {service.languages && (
+                    <div className="flex items-start gap-3 py-3">
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style={{ background: themeColor }} />
+                      <div>
+                        <p className="font-display text-sm font-bold mb-0.5" style={{ color: '#0d1117' }}>{t('detail.languages')}</p>
+                        <p className="font-body italic text-sm" style={{ color: '#5c6474' }}>{service.languages}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-              {service.fees && (
-                <div className="bg-white rounded-card border border-brand-border p-4">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Fees</p>
-                  <p className="text-sm text-brand-text">{service.fees}</p>
-                </div>
-              )}
-              {service.languages && (
-                <div className="bg-white rounded-card border border-brand-border p-4">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Languages</p>
-                  <p className="text-sm text-brand-text">{service.languages}</p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Parent Organization */}
             {org && (
-              <section className="mb-6">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Organization</p>
-                <Link href={'/organizations/' + org.org_id} className="block bg-white rounded-card border border-brand-border p-5 hover:shadow-md transition-shadow">
-                  <h3 className="font-semibold text-brand-text mb-1">{org.org_name}</h3>
-                  {org.description_5th_grade && <p className="text-sm text-brand-muted line-clamp-2">{org.description_5th_grade}</p>}
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('detail.organization')}
+                </span>
+                <Link
+                  href={'/organizations/' + org.org_id}
+                  className="block p-5 transition-colors hover:bg-[#f4f5f7]"
+                  style={{ border: '1px solid #dde1e8' }}
+                >
+                  <h3
+                    className="font-display mb-1"
+                    style={{ fontSize: '1rem', fontWeight: 700, color: '#0d1117' }}
+                  >
+                    {org.org_name}
+                  </h3>
+                  {org.description_5th_grade && (
+                    <p className="font-body text-sm line-clamp-2" style={{ color: '#5c6474' }}>
+                      {org.description_5th_grade}
+                    </p>
+                  )}
                 </Link>
-              </section>
+              </div>
             )}
 
-            {/* Related services */}
-            {relatedServices.length > 0 && (
-              <section className="mb-6">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Related Services</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {relatedServices.map(function (svc) {
-                    return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id}>
-                        <ServiceCard
-                          name={svc.service_name}
-                          description={svc.description_5th_grade}
-                          phone={svc.phone}
-                          address={svc.address}
-                          city={svc.city}
-                          state={svc.state}
-                          zipCode={svc.zip_code}
-                          website={svc.website}
-                        />
-                      </Link>
-                    )
-                  })}
-                </div>
-              </section>
-            )}
-
-            {/* Library nuggets */}
-            {libraryNuggets.length > 0 && (
-              <section className="mb-6">
-                <LibraryNugget
-                  nuggets={libraryNuggets}
-                  variant="section"
-                  color="#d69e2e"
-                  labels={{ goDeeper: 'Understanding this resource' }}
-                />
-              </section>
-            )}
-
-            {/* Quote */}
+            {/* Quote (GAP 2) */}
             {quote && (
-              <section className="mb-6">
-                <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
-              </section>
+              <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />
             )}
           </div>
 
-          {/* Sidebar column */}
-          <aside className="space-y-6">
+          {/* ── Sidebar ── */}
+          <aside className="py-10 lg:pl-10 flex flex-col gap-7">
+            {/* Wayfinder */}
             <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
-            <div className="max-w-sm">
+
+            {/* Library nuggets */}
+            {libraryNuggets.length > 0 && (
+              <div>
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3 pb-2"
+                  style={{ fontSize: '0.58rem', color: '#5c6474', borderBottom: '1px solid #dde1e8' }}
+                >
+                  {t('detail.go_deeper')}
+                </span>
+                <LibraryNugget
+                  nuggets={libraryNuggets}
+                  variant="section"
+                  color={themeColor}
+                  labels={{ goDeeper: t('detail.go_deeper') }}
+                />
+              </div>
+            )}
+
+            {/* Feedback */}
+            <div>
+              <span
+                className="font-mono uppercase tracking-[0.2em] block mb-3 pb-2"
+                style={{ fontSize: '0.58rem', color: '#5c6474', borderBottom: '1px solid #dde1e8' }}
+              >
+                {t('detail.was_helpful')}
+              </span>
               <FeedbackLoop entityType="services_211" entityId={service.service_id} entityName={service.service_name || ''} />
             </div>
           </aside>
-
         </div>
+
+        {/* ═══════════════════════════════════════════════════════════════════
+            RELATED SERVICES (GAP 3)
+           ═══════════════════════════════════════════════════════════════════ */}
+        {displayRelated.length > 0 && (
+          <section className="py-10" style={{ borderTop: '1.5px solid #dde1e8' }}>
+            <div className="flex items-end justify-between mb-4">
+              <div>
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-2"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  Related &middot; {themeName || t('detail.community_resource')}
+                </span>
+                <h3
+                  className="font-display"
+                  style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0d1117' }}
+                >
+                  {t('detail.other_resources')}
+                </h3>
+              </div>
+              <Link
+                href="/services"
+                className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-1"
+                style={{ fontSize: '0.62rem', color: '#1b5e8a', fontWeight: 600 }}
+              >
+                {t('detail.all_services')} <ArrowRight size={12} />
+              </Link>
+            </div>
+
+            <div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0"
+              style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}
+            >
+              {displayRelated.map(function (svc) {
+                return (
+                  <Link
+                    key={svc.service_id}
+                    href={'/services/' + svc.service_id}
+                    className="block p-5 bg-white transition-colors hover:bg-[#f4f5f7]"
+                    style={{ borderRight: '1.5px solid #dde1e8', borderBottom: '1.5px solid #dde1e8' }}
+                  >
+                    <span
+                      className="font-mono uppercase tracking-[0.08em] block mb-2"
+                      style={{ fontSize: '0.52rem', color: '#5c6474' }}
+                    >
+                      {t('detail.service')}
+                    </span>
+                    <h4
+                      className="font-display line-clamp-2 mb-2"
+                      style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0d1117' }}
+                    >
+                      {svc.service_name}
+                    </h4>
+                    {svc.description_5th_grade && (
+                      <p
+                        className="font-body italic line-clamp-2"
+                        style={{ fontSize: '0.75rem', color: '#5c6474' }}
+                      >
+                        {svc.description_5th_grade}
+                      </p>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
       </div>
 
-      {/* Admin panel outside grid */}
+      {/* Admin panel */}
       <AdminEditPanel
         entityType="services_211"
         entityId={service.service_id}

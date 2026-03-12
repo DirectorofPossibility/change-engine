@@ -1,37 +1,39 @@
 'use client'
 
 /**
- * @fileoverview Community Guide — the civic & social onramp.
+ * @fileoverview Community Guide -- the civic & social onramp.
  *
- * Designed for the average person: plain language, layered progressive
- * disclosure, three clear pillars (Find Help, Who's Responsible, Get Involved)
- * backed by 211, policy data, and accountability.
+ * Editorial design system: Fraunces (display), Libre Baskerville (body),
+ * DM Mono (labels/meta). No border-radius, no box-shadows, no emojis.
+ * Geo SVGs from sacred geometry library for visual marks.
  *
- * Layers:
- *   1. Welcome + orientation (search, ZIP, stats)
- *   2. Find Help & Services (211 backbone, service categories, orgs)
- *   3. Who Represents You (officials by level, policies, elections)
- *   4. Get Involved (volunteering, events, learning, pathways)
- *   5. What's Happening (latest content, compact)
- *   6. Always Available (211 / 311 / 988)
- *   7. Explore Deeper (7 pathways, compass)
+ * Sections:
+ *   1. Masthead (dark gradient, stats, search + ZIP)
+ *   2. Featured Promotion (GAP 1)
+ *   3. Quote (GAP 2)
+ *   4. Pathway Grid (7 pathways)
+ *   5. What's Happening (latest content)
+ *   6. Always Available (crisis lines)
  */
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { HeroZipInput } from './HeroZipInput'
 import { HeroSearchInput } from './HeroSearchInput'
-import { FeaturedPromo } from './FeaturedPromo'
-import { GoodThingsWidget } from './GoodThingsWidget'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
-import {
-  Phone, Heart, Shield, Users, Scale, BookOpen, Home,
-  ArrowRight, ChevronRight, Briefcase, Stethoscope,
-  GraduationCap, Megaphone, MapPin, Calendar,
-} from 'lucide-react'
+import { SeedOfLife, FlowerOfLife } from '@/components/geo/sacred'
+import { ArrowRight } from 'lucide-react'
 
-// ── Types ────────────────────────────────────────────────────────────────
+// ── Colors ──────────────────────────────────────────────────────────────
+
+const INK = '#0d1117'
+const PAPER = '#f4f5f7'
+const DIM = '#5c6474'
+const RULE = '#dde1e8'
+const BLUE = '#1b5e8a'
+const TEAL = '#7ec8e3'
+
+// ── Types ───────────────────────────────────────────────────────────────
 
 interface CommunityGuideProps {
   stats: {
@@ -42,338 +44,335 @@ interface CommunityGuideProps {
     organizations: number
   }
   latestContent: Array<Record<string, unknown>>
+  quote?: {
+    quote_text: string
+    attribution?: string
+    source_url?: string
+  } | null
+  promotions?: Array<{
+    promo_id: string
+    title: string
+    subtitle?: string
+    description?: string
+    cta_text?: string
+    cta_href?: string
+    color?: string
+  }>
 }
 
-// ── Component ────────────────────────────────────────────────────────────
+// ── Pathway geo marks ───────────────────────────────────────────────────
 
-export function CommunityGuide({ stats, latestContent }: CommunityGuideProps) {
+const PATHWAY_GEOS: Record<string, React.ComponentType<{ color?: string; size?: number; opacity?: number; animated?: boolean; className?: string }>> = {
+  THEME_01: SeedOfLife,
+  THEME_02: SeedOfLife,
+  THEME_03: SeedOfLife,
+  THEME_04: SeedOfLife,
+  THEME_05: SeedOfLife,
+  THEME_06: SeedOfLife,
+  THEME_07: FlowerOfLife,
+}
+
+// ── Component ───────────────────────────────────────────────────────────
+
+export function CommunityGuide({ stats, latestContent, quote, promotions }: CommunityGuideProps) {
   const { t } = useTranslation()
 
   const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, theme]) {
     return { id, name: theme.name, color: theme.color, slug: theme.slug }
   })
 
+  const statItems = [
+    { value: stats.services, label: t('guide.stat_services') },
+    { value: stats.officials, label: t('guide.stat_officials') },
+    { value: stats.organizations, label: t('guide.stat_organizations') },
+    { value: stats.policies, label: t('guide.stat_policies') || 'policies tracked' },
+  ]
+
   return (
     <div className="relative">
 
       {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 1 — WELCOME & ORIENTATION
+          SECTION 1 -- MASTHEAD
          ═══════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #FAF8F5 0%, #FFFFFF 100%)' }}>
-        {/* Subtle texture */}
-        <div className="absolute inset-0 pointer-events-none opacity-30" style={{
-          backgroundImage: 'radial-gradient(circle, rgba(199,91,42,0.04) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }} />
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(170deg, ${INK} 0%, ${BLUE} 100%)` }}
+      >
+        {/* Geo background element */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <SeedOfLife
+            color="#ffffff"
+            size={500}
+            opacity={0.1}
+            animated
+          />
+        </div>
 
-        <div className="relative z-10 max-w-[780px] mx-auto px-6 py-16 lg:py-24 text-center">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-4">
-            {t('guide.label')} &middot; {t('guide.houston')}
+        <div className="relative z-10 max-w-[820px] mx-auto px-6 py-20 lg:py-28 text-center">
+          {/* Dateline */}
+          <p
+            className="font-mono text-[0.6rem] uppercase tracking-[0.08em] mb-5"
+            style={{ color: 'rgba(255,255,255,0.4)' }}
+          >
+            {t('pathway.edition_label')} &middot; {t('guide.masthead')} &middot; {t('pathway.edition_suffix')}
           </p>
 
-          <h1 className="font-serif text-[clamp(2rem,5vw,3.2rem)] leading-[1.1] tracking-tight text-brand-text mb-5">
+          {/* H1 */}
+          <h1
+            className="font-display leading-[1.08] tracking-tight mb-6"
+            style={{
+              fontSize: 'clamp(2.4rem, 5vw, 4.2rem)',
+              fontWeight: 900,
+              color: '#ffffff',
+            }}
+          >
             {t('guide.title')}
           </h1>
 
-          <p className="text-lg leading-relaxed text-brand-muted max-w-2xl mx-auto mb-10">
+          {/* Rule */}
+          <div
+            className="mx-auto mb-6"
+            style={{ width: 50, height: 2, background: 'rgba(255,255,255,0.3)' }}
+          />
+
+          {/* Deck */}
+          <p
+            className="font-body italic text-lg leading-relaxed max-w-2xl mx-auto mb-10"
+            style={{ color: 'rgba(255,255,255,0.7)' }}
+          >
             {t('guide.subtitle')}
           </p>
 
-          {/* Search + ZIP — centered, stacked */}
-          <div className="max-w-md mx-auto space-y-3 mb-10">
+          {/* Search + ZIP */}
+          <div className="max-w-md mx-auto space-y-3 mb-12">
             <HeroSearchInput />
             <HeroZipInput />
           </div>
 
-          {/* Quiet stats */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-brand-muted">
-            <span>
-              <strong className="text-brand-text font-semibold">{stats.services.toLocaleString()}</strong>{' '}
-              {t('guide.stat_services')}
-            </span>
-            <span className="hidden sm:inline text-brand-border">|</span>
-            <span>
-              <strong className="text-brand-text font-semibold">{stats.organizations.toLocaleString()}</strong>{' '}
-              {t('guide.stat_organizations')}
-            </span>
-            <span className="hidden sm:inline text-brand-border">|</span>
-            <span>
-              <strong className="text-brand-text font-semibold">{stats.officials}</strong>{' '}
-              {t('guide.stat_officials')}
-            </span>
+          {/* Stats row */}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {statItems.map(function (stat, i) {
+              return (
+                <div
+                  key={i}
+                  className="px-5 py-3"
+                  style={{ border: '1.5px solid rgba(255,255,255,0.15)' }}
+                >
+                  <span
+                    className="font-display block leading-none mb-1"
+                    style={{ fontSize: '2rem', fontWeight: 900, color: TEAL }}
+                  >
+                    {stat.value.toLocaleString()}
+                  </span>
+                  <span
+                    className="font-mono block uppercase tracking-[0.08em]"
+                    style={{ fontSize: '0.58rem', color: 'rgba(255,255,255,0.4)' }}
+                  >
+                    {stat.label}
+                  </span>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 2 — FIND HELP & SERVICES (211 backbone)
+          SECTION 2 -- FEATURED PROMOTION (GAP 1)
          ═══════════════════════════════════════════════════════════════════ */}
-      <section className="border-t border-brand-border">
-        <div className="max-w-[1100px] mx-auto px-6 py-14 lg:py-16">
-          <div className="flex flex-col lg:flex-row lg:gap-16">
-
-            {/* Left — narrative + 211 callout */}
-            <div className="lg:w-[38%] mb-10 lg:mb-0">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: '#C75B2A12' }}>
-                  <Heart size={20} className="text-[#C75B2A]" />
-                </div>
-                <h2 className="font-serif text-2xl font-bold text-brand-text">{t('guide.help_title')}</h2>
-              </div>
-
-              <p className="text-[15px] text-brand-muted leading-relaxed mb-8">
-                {t('guide.help_description')}
-              </p>
-
-              {/* 211 callout — the backbone */}
-              <div className="rounded-xl p-5 border" style={{ background: '#C75B2A08', borderColor: '#C75B2A20' }}>
-                <div className="flex items-center gap-3 mb-2">
-                  <Phone size={18} className="text-[#C75B2A]" />
-                  <span className="text-xl font-black text-brand-text">211</span>
-                </div>
-                <p className="text-sm text-brand-muted leading-relaxed mb-3">
-                  {t('guide.211_description')}
-                </p>
-                <a
-                  href="tel:211"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C75B2A] hover:gap-2.5 transition-all"
+      {promotions && promotions.length > 0 && (
+        <section
+          style={{
+            borderTop: `2px solid ${INK}`,
+            borderBottom: `2px solid ${INK}`,
+          }}
+        >
+          <div className="max-w-[1100px] mx-auto px-6 py-8">
+            {promotions.slice(0, 1).map(function (promo) {
+              return (
+                <div
+                  key={promo.promo_id}
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
                 >
-                  {t('guide.call_211')} <ArrowRight size={14} />
-                </a>
-              </div>
-            </div>
-
-            {/* Right — service categories + links */}
-            <div className="lg:w-[62%]">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {[
-                  { key: 'cat_housing', href: '/services?q=housing', icon: Home, color: '#C75B2A' },
-                  { key: 'cat_food', href: '/services?q=food', icon: Heart, color: '#e53e3e' },
-                  { key: 'cat_health', href: '/services?q=health', icon: Stethoscope, color: '#38a169' },
-                  { key: 'cat_jobs', href: '/services?q=employment', icon: Briefcase, color: '#3182ce' },
-                  { key: 'cat_legal', href: '/services?q=legal', icon: Scale, color: '#805ad5' },
-                  { key: 'cat_youth', href: '/services?q=youth+education', icon: GraduationCap, color: '#d69e2e' },
-                ].map(function (cat) {
-                  const Icon = cat.icon
-                  return (
-                    <Link
-                      key={cat.key}
-                      href={cat.href}
-                      className="flex items-center gap-3 p-4 rounded-xl border border-brand-border bg-white hover:shadow-sm hover:border-brand-accent/20 transition-all group"
+                  <div>
+                    <h2
+                      className="font-display mb-1"
+                      style={{ fontSize: '1.4rem', fontWeight: 700, color: INK }}
                     >
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: cat.color + '12' }}>
-                        <Icon size={18} style={{ color: cat.color }} />
-                      </div>
-                      <span className="text-sm font-medium text-brand-text group-hover:text-brand-accent transition-colors">
-                        {t('guide.' + cat.key)}
-                      </span>
+                      {promo.title}
+                    </h2>
+                    {promo.subtitle && (
+                      <p className="font-body" style={{ fontSize: '0.95rem', color: DIM }}>
+                        {promo.subtitle}
+                      </p>
+                    )}
+                  </div>
+                  {promo.cta_href && (
+                    <Link
+                      href={promo.cta_href}
+                      className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-2 flex-shrink-0"
+                      style={{ fontSize: '0.7rem', color: BLUE, fontWeight: 600 }}
+                    >
+                      {promo.cta_text || t('detail.learn_more')} <ArrowRight size={14} />
                     </Link>
-                  )
-                })}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 mt-6">
-                <Link
-                  href="/services"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#C75B2A] hover:gap-2.5 transition-all"
-                >
-                  {t('guide.browse_services')} <ArrowRight size={14} />
-                </Link>
-                <Link
-                  href="/organizations"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-muted hover:text-brand-text transition-colors"
-                >
-                  {t('guide.browse_organizations')} <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 3 — WHO REPRESENTS YOU (officials, policy, elections)
+          SECTION 3 -- QUOTE (GAP 2)
          ═══════════════════════════════════════════════════════════════════ */}
-      <section className="border-t border-brand-border bg-[#FAFAF8]">
-        <div className="max-w-[1100px] mx-auto px-6 py-14 lg:py-16">
-          <div className="flex flex-col lg:flex-row-reverse lg:gap-16">
-
-            {/* Right — narrative */}
-            <div className="lg:w-[38%] mb-10 lg:mb-0">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: '#805ad512' }}>
-                  <Shield size={20} className="text-[#805ad5]" />
-                </div>
-                <h2 className="font-serif text-2xl font-bold text-brand-text">{t('guide.responsible_title')}</h2>
-              </div>
-
-              <p className="text-[15px] text-brand-muted leading-relaxed">
-                {t('guide.responsible_description')}
-              </p>
-            </div>
-
-            {/* Left — government levels */}
-            <div className="lg:w-[62%]">
-              <div className="space-y-3">
-                {[
-                  { key: 'city', color: '#38a169', count: null },
-                  { key: 'county', color: '#3182ce', count: null },
-                  { key: 'state', color: '#805ad5', count: null },
-                  { key: 'federal', color: '#e53e3e', count: null },
-                ].map(function (gov) {
-                  return (
-                    <Link
-                      key={gov.key}
-                      href={'/officials?level=' + gov.key}
-                      className="flex items-center justify-between p-4 rounded-xl border border-brand-border bg-white hover:shadow-sm transition-all group"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-1.5 h-10 rounded-full flex-shrink-0" style={{ backgroundColor: gov.color }} />
-                        <div className="min-w-0">
-                          <span className="block text-sm font-semibold text-brand-text">
-                            {t('guide.level_' + gov.key)}
-                          </span>
-                          <span className="block text-xs text-brand-muted truncate">
-                            {t('guide.level_' + gov.key + '_desc')}
-                          </span>
-                        </div>
-                      </div>
-                      <ChevronRight size={16} className="text-brand-muted group-hover:text-[#805ad5] transition-colors flex-shrink-0 ml-3" />
-                    </Link>
-                  )
-                })}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-4 mt-6">
-                <Link
-                  href="/officials"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#805ad5] hover:gap-2.5 transition-all"
-                >
-                  {t('guide.find_officials')} <ArrowRight size={14} />
-                </Link>
-                <Link
-                  href="/policies"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-muted hover:text-brand-text transition-colors"
-                >
-                  {t('guide.active_policies')} ({stats.policies}) <ArrowRight size={14} />
-                </Link>
-                <Link
-                  href="/elections"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-muted hover:text-brand-text transition-colors"
-                >
-                  {t('guide.elections_voting')} <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {quote && (
+        <section className="max-w-[820px] mx-auto px-6 py-12">
+          <blockquote
+            className="font-body italic leading-relaxed"
+            style={{
+              fontSize: 'clamp(1.05rem, 2vw, 1.2rem)',
+              color: DIM,
+              borderLeft: `3px solid ${BLUE}`,
+              paddingLeft: '1.25rem',
+            }}
+          >
+            {quote.quote_text}
+          </blockquote>
+          {quote.attribution && (
+            <p
+              className="font-mono uppercase tracking-[0.08em] mt-3"
+              style={{ fontSize: '0.62rem', color: DIM, paddingLeft: '1.25rem' }}
+            >
+              -- {quote.attribution}
+            </p>
+          )}
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 4 — GET INVOLVED
+          SECTION 4 -- PATHWAY GRID
          ═══════════════════════════════════════════════════════════════════ */}
-      <section className="border-t border-brand-border">
-        <div className="max-w-[1100px] mx-auto px-6 py-14 lg:py-16">
-          <div className="flex flex-col lg:flex-row lg:gap-16">
+      <section style={{ borderTop: `1.5px solid ${RULE}` }}>
+        <div className="max-w-[1100px] mx-auto px-6 py-14 lg:py-18">
+          {/* Section header */}
+          <p
+            className="font-mono uppercase tracking-[0.08em] mb-3"
+            style={{ fontSize: '0.62rem', color: DIM }}
+          >
+            {t('guide.pathways_label')}
+          </p>
+          <h2
+            className="font-display mb-10"
+            style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: INK }}
+          >
+            {t('guide.pathways_heading')}
+          </h2>
 
-            {/* Left — narrative */}
-            <div className="lg:w-[38%] mb-10 lg:mb-0">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: '#38a16912' }}>
-                  <Users size={20} className="text-[#38a169]" />
-                </div>
-                <h2 className="font-serif text-2xl font-bold text-brand-text">{t('guide.involved_title')}</h2>
-              </div>
-
-              <p className="text-[15px] text-brand-muted leading-relaxed">
-                {t('guide.involved_description')}
-              </p>
-            </div>
-
-            {/* Right — action cards */}
-            <div className="lg:w-[62%]">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[
-                  { titleKey: 'guide.volunteer', descKey: 'guide.volunteer_desc', href: '/opportunities', icon: Heart, color: '#38a169' },
-                  { titleKey: 'guide.attend', descKey: 'guide.attend_desc', href: '/news?type=event', icon: Calendar, color: '#3182ce' },
-                  { titleKey: 'guide.learn_more', descKey: 'guide.learn_desc', href: '/library', icon: BookOpen, color: '#d69e2e' },
-                  { titleKey: 'guide.explore_pathways', descKey: 'guide.explore_pathways_desc', href: '/pathways', icon: MapPin, color: '#805ad5' },
-                ].map(function (item) {
-                  const Icon = item.icon
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="p-5 rounded-xl border border-brand-border bg-white hover:shadow-sm transition-all group"
-                    >
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-3" style={{ background: item.color + '12' }}>
-                        <Icon size={18} style={{ color: item.color }} />
-                      </div>
-                      <span className="block text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors mb-1">
-                        {t(item.titleKey)}
-                      </span>
-                      <span className="block text-xs text-brand-muted leading-relaxed">
-                        {t(item.descKey)}
-                      </span>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
+          {/* Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-0">
+            {PATHWAY_LIST.map(function (pw) {
+              const GeoMark = PATHWAY_GEOS[pw.id] || SeedOfLife
+              return (
+                <Link
+                  key={pw.id}
+                  href={'/pathways/' + pw.slug}
+                  className="group relative flex flex-col items-start p-6 transition-colors"
+                  style={{
+                    border: `1px solid ${RULE}`,
+                    borderTop: `3px solid ${pw.color}`,
+                  }}
+                >
+                  <div className="mb-4">
+                    <GeoMark color={pw.color} size={36} opacity={0.7} />
+                  </div>
+                  <h3
+                    className="font-display mb-3"
+                    style={{ fontSize: '1.15rem', fontWeight: 700, color: INK }}
+                  >
+                    {pw.name}
+                  </h3>
+                  <span
+                    className="font-mono uppercase tracking-[0.08em] mt-auto inline-flex items-center gap-1 group-hover:gap-2 transition-all"
+                    style={{ fontSize: '0.6rem', color: pw.color, fontWeight: 600 }}
+                  >
+                    {t('guide.explore')} <ArrowRight size={12} />
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 5 — WHAT'S HAPPENING (compact news)
+          SECTION 5 -- WHAT'S HAPPENING (Latest Content)
          ═══════════════════════════════════════════════════════════════════ */}
       {latestContent.length > 0 && (
-        <section className="border-t border-brand-border bg-[#FAFAF8]">
+        <section style={{ borderTop: `1.5px solid ${RULE}`, background: PAPER }}>
           <div className="max-w-[1100px] mx-auto px-6 py-14">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-serif text-2xl font-bold text-brand-text">
+            {/* Section header */}
+            <p
+              className="font-mono uppercase tracking-[0.08em] mb-3"
+              style={{ fontSize: '0.62rem', color: DIM }}
+            >
+              {t('guide.latest_label')}
+            </p>
+            <div className="flex items-end justify-between mb-10">
+              <h2
+                className="font-display"
+                style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 900, color: INK }}
+              >
                 {t('guide.whats_happening')}
               </h2>
               <Link
                 href="/news"
-                className="text-sm font-semibold text-brand-accent hover:underline"
+                className="font-mono uppercase tracking-[0.08em] inline-flex items-center gap-1"
+                style={{ fontSize: '0.62rem', color: BLUE, fontWeight: 600 }}
               >
-                {t('guide.all_news')} &rarr;
+                {t('guide.all_news')} <ArrowRight size={12} />
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Content grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0">
               {latestContent.slice(0, 6).map(function (item: any) {
                 return (
                   <Link
                     key={item.id}
                     href={'/content/' + item.id}
-                    className="rounded-xl border border-brand-border bg-white overflow-hidden hover:shadow-sm transition-all group"
+                    className="group flex flex-col p-5 transition-colors hover:bg-white"
+                    style={{ border: `1px solid ${RULE}` }}
                   >
-                    {/* Image or color bar */}
-                    {item.hero_image_url ? (
-                      <div className="relative h-32 overflow-hidden">
-                        <Image
-                          src={item.hero_image_url}
-                          alt=""
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-2 w-full" style={{ background: '#C75B2A' }} />
-                    )}
-                    <div className="p-4">
-                      <span className="block text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-2">
-                        {item.center || 'News'}
+                    {/* Type tag */}
+                    <span
+                      className="font-mono uppercase tracking-[0.08em] mb-3"
+                      style={{ fontSize: '0.56rem', color: DIM }}
+                    >
+                      {(item.center as string) || t('content.news')}
+                    </span>
+
+                    {/* Title */}
+                    <h3
+                      className="font-display line-clamp-2 mb-3 group-hover:underline"
+                      style={{ fontSize: '1rem', fontWeight: 700, color: INK }}
+                    >
+                      {item.title_6th_grade as string}
+                    </h3>
+
+                    {/* Meta */}
+                    {item.published_at && (
+                      <span
+                        className="font-mono uppercase tracking-[0.08em] mt-auto"
+                        style={{ fontSize: '0.52rem', color: DIM }}
+                      >
+                        {new Date(item.published_at as string).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
                       </span>
-                      <h3 className="text-sm font-semibold text-brand-text line-clamp-2 group-hover:text-brand-accent transition-colors mb-1">
-                        {item.title_6th_grade}
-                      </h3>
-                      {item.summary_6th_grade && (
-                        <p className="text-xs text-brand-muted line-clamp-2">{item.summary_6th_grade}</p>
-                      )}
-                    </div>
+                    )}
                   </Link>
                 )
               })}
@@ -383,108 +382,49 @@ export function CommunityGuide({ stats, latestContent }: CommunityGuideProps) {
       )}
 
       {/* ═══════════════════════════════════════════════════════════════════
-          FEATURED + GOOD THINGS
+          SECTION 6 -- ALWAYS AVAILABLE (crisis lines)
          ═══════════════════════════════════════════════════════════════════ */}
-      <div className="border-t border-brand-border">
-        <div className="max-w-[1100px] mx-auto px-6 py-8 space-y-4">
-          <FeaturedPromo variant="banner" />
-          <GoodThingsWidget variant="banner" />
-        </div>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 6 — ALWAYS AVAILABLE (211 / 311 / 988)
-         ═══════════════════════════════════════════════════════════════════ */}
-      <section className="border-t border-brand-border bg-[#FAFAF8]">
+      <section style={{ borderTop: `1.5px solid ${RULE}`, background: PAPER }}>
         <div className="max-w-[1100px] mx-auto px-6 py-12">
-          <h2 className="font-serif text-xl font-bold text-brand-text text-center mb-8">
+          <p
+            className="font-mono uppercase tracking-[0.08em] mb-3 text-center"
+            style={{ fontSize: '0.62rem', color: DIM }}
+          >
             {t('guide.always_available')}
-          </h2>
+          </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
             {[
-              { number: '211', labelKey: 'guide.line_211', descKey: 'guide.line_211_desc', color: '#C75B2A' },
-              { number: '311', labelKey: 'guide.line_311', descKey: 'guide.line_311_desc', color: '#3182ce' },
-              { number: '988', labelKey: 'guide.line_988', descKey: 'guide.line_988_desc', color: '#805ad5' },
+              { number: '988', label: t('guide.line_988'), desc: t('guide.line_988_desc') },
+              { number: '311', label: t('guide.line_311'), desc: t('guide.line_311_desc') },
+              { number: '211', label: t('guide.line_211'), desc: t('guide.line_211_desc') },
+              { number: '1-800-799-7233', label: t('guide.dv_hotline'), desc: t('guide.dv_hotline_desc') },
             ].map(function (line) {
               return (
                 <a
                   key={line.number}
                   href={'tel:' + line.number}
-                  className="flex items-center gap-4 p-5 rounded-xl border border-brand-border bg-white hover:shadow-sm transition-all"
+                  className="flex flex-col items-center p-5 transition-colors hover:bg-white"
+                  style={{ border: `1px solid ${RULE}` }}
                 >
-                  <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: line.color + '10' }}
+                  <span
+                    className="font-display block mb-2"
+                    style={{ fontSize: '1.6rem', fontWeight: 900, color: INK }}
                   >
-                    <span className="text-xl font-black" style={{ color: line.color }}>
-                      {line.number}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-sm font-semibold text-brand-text">
-                      {t(line.labelKey)}
-                    </span>
-                    <span className="block text-xs text-brand-muted">
-                      {t(line.descKey)}
-                    </span>
-                  </div>
+                    {line.number}
+                  </span>
+                  <span
+                    className="font-mono uppercase tracking-[0.08em] text-center"
+                    style={{ fontSize: '0.52rem', color: DIM }}
+                  >
+                    {line.label}
+                  </span>
                 </a>
               )
             })}
           </div>
         </div>
       </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          LAYER 7 — EXPLORE DEEPER (pathways + compass)
-         ═══════════════════════════════════════════════════════════════════ */}
-      <section className="border-t border-brand-border">
-        <div className="max-w-[1100px] mx-auto px-6 py-14 text-center">
-          <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
-            {t('guide.explore_deeper')}
-          </h2>
-          <p className="text-sm text-brand-muted mb-8">
-            {t('guide.explore_deeper_desc')}
-          </p>
-
-          {/* Pathway pills */}
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {PATHWAY_LIST.map(function (pw) {
-              return (
-                <Link
-                  key={pw.id}
-                  href={'/pathways/' + pw.slug}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border bg-white hover:shadow-sm transition-all group"
-                  style={{ borderColor: pw.color + '30' }}
-                >
-                  <span
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: pw.color }}
-                  />
-                  <span className="text-sm font-medium text-brand-text group-hover:text-brand-accent transition-colors">
-                    {pw.name}
-                  </span>
-                </Link>
-              )
-            })}
-          </div>
-
-          <Link
-            href="/compass"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-accent text-white font-semibold text-sm hover:shadow-md hover:bg-brand-accent/90 transition-all"
-          >
-            {t('guide.open_compass')} <ArrowRight size={16} />
-          </Link>
-        </div>
-      </section>
-
-      {/* Quiet footer line */}
-      <div className="border-t border-brand-border py-6 text-center">
-        <p className="text-[11px] font-mono text-brand-muted tracking-wider">
-          {t('guide.powered_by')}
-        </p>
-      </div>
     </div>
   )
 }

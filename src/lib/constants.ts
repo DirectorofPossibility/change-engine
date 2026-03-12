@@ -17,13 +17,13 @@
  * Colors are used for pills, charts, and pathway cards across the UI.
  */
 export const THEMES = {
-  THEME_01: { name: 'Health', color: '#e53e3e', slug: 'health', emoji: '', description: 'Wellness, healing, and care for every Houstonian. Explore clinics, mental health support, nutrition programs, and insurance options that keep our communities strong.' },
-  THEME_02: { name: 'Families', color: '#dd6b20', slug: 'families', emoji: '', description: 'Strong foundations for every family. Find schools, childcare, youth programs, and safety resources that help Houston families grow and thrive.' },
-  THEME_03: { name: 'Neighborhood', color: '#d69e2e', slug: 'neighborhood', emoji: '', description: 'The places we share and call home. Discover housing resources, parks, libraries, and neighborhood initiatives that make Houston a better place to live.' },
-  THEME_04: { name: 'Voice', color: '#38a169', slug: 'voice', emoji: '', description: 'Your civic power, amplified. Get informed about voting, advocacy, town halls, and organizing opportunities that put your community in charge.' },
-  THEME_05: { name: 'Money', color: '#3182ce', slug: 'money', emoji: '', description: 'Financial opportunity for everyone. Explore jobs, benefits, credit-building, and small business resources that strengthen economic well-being.' },
-  THEME_06: { name: 'Planet', color: '#319795', slug: 'planet', emoji: '', description: 'Climate, environment, and sustainability in our region. Learn about air quality, flooding, energy programs, and green initiatives shaping Houston\'s future.' },
-  THEME_07: { name: 'The Bigger We', color: '#805ad5', slug: 'the-bigger-we', emoji: '', description: 'Building across difference, together. Explore resources for bridging, dialogue, inclusion, and trust that connect all of Houston\'s communities.' },
+  THEME_01: { name: 'Health', color: '#1a6b56', slug: 'health', emoji: '', description: 'Wellness, healing, and care for every Houstonian. Explore clinics, mental health support, nutrition programs, and insurance options that keep our communities strong.' },
+  THEME_02: { name: 'Families', color: '#1e4d7a', slug: 'families', emoji: '', description: 'Strong foundations for every family. Find schools, childcare, youth programs, and safety resources that help Houston families grow and thrive.' },
+  THEME_03: { name: 'Neighborhood', color: '#4a2870', slug: 'neighborhood', emoji: '', description: 'The places we share and call home. Discover housing resources, parks, libraries, and neighborhood initiatives that make Houston a better place to live.' },
+  THEME_04: { name: 'Voice', color: '#7a2018', slug: 'voice', emoji: '', description: 'Your civic power, amplified. Get informed about voting, advocacy, town halls, and organizing opportunities that put your community in charge.' },
+  THEME_05: { name: 'Money', color: '#6a4e10', slug: 'money', emoji: '', description: 'Financial opportunity for everyone. Explore jobs, benefits, credit-building, and small business resources that strengthen economic well-being.' },
+  THEME_06: { name: 'Planet', color: '#1a5030', slug: 'planet', emoji: '', description: 'Climate, environment, and sustainability in our region. Learn about air quality, flooding, energy programs, and green initiatives shaping Houston\'s future.' },
+  THEME_07: { name: 'The Bigger We', color: '#1a3460', slug: 'the-bigger-we', emoji: '', description: 'Building across difference, together. Explore resources for bridging, dialogue, inclusion, and trust that connect all of Houston\'s communities.' },
 } as const;
 
 /**
@@ -61,16 +61,16 @@ export const BRAND = {
   name: 'Community Exchange',
   tagline: 'Powered by The Change Lab',
   origin: 'Built in Houston, made for everyone',
-  background: '#FAFAF8',
-  text: '#1A1A1A',
-  accent: '#E8723A',
-  muted: '#6C7380',
-  border: '#E5E1DB',
-  cardBg: '#FFFFFF',
-  dark: '#292524',
-  success: '#2D8659',
-  warning: '#C47D1A',
-  danger: '#C53030',
+  background: '#ffffff',
+  text: '#0d1117',
+  accent: '#1b5e8a',
+  muted: '#5c6474',
+  border: '#dde1e8',
+  cardBg: '#ffffff',
+  dark: '#0d1117',
+  success: '#16a34a',
+  warning: '#6a4e10',
+  danger: '#b03a2a',
 } as const;
 
 /**
@@ -115,7 +115,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'superNeighborhoods',
     label: 'Super Neighborhoods',
     url: '/geo/super-neighborhoods.geojson',
-    color: '#805ad5',
+    color: '#4a2870',
     idProperty: 'SN_ID',
     detailPath: '/super-neighborhoods/',
   },
@@ -123,7 +123,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'councilDistricts',
     label: 'Council Districts',
     url: '/geo/council-districts.geojson',
-    color: '#38a169',
+    color: '#1a6b56',
     idProperty: 'DISTRICT',
     detailPath: '/officials/',
   },
@@ -131,7 +131,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'congressionalDistricts',
     label: 'Congressional Districts',
     url: '/geo/congressional-districts.geojson',
-    color: '#3182ce',
+    color: '#1b5e8a',
     idProperty: 'CD',
     detailPath: null,
   },
@@ -139,7 +139,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'stateSenate',
     label: 'State Senate Districts',
     url: '/geo/state-senate-districts.geojson',
-    color: '#e53e3e',
+    color: '#7a2018',
     idProperty: 'SD',
     detailPath: null,
   },
@@ -147,7 +147,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'stateHouse',
     label: 'State House Districts',
     url: '/geo/state-house-districts.geojson',
-    color: '#dd6b20',
+    color: '#1e4d7a',
     idProperty: 'HD',
     detailPath: null,
   },
@@ -155,7 +155,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'schoolDistricts',
     label: 'School Districts',
     url: '/geo/school-districts.geojson',
-    color: '#d69e2e',
+    color: '#6a4e10',
     idProperty: 'SD_ID',
     detailPath: null,
   },
@@ -163,7 +163,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'zipCodes',
     label: 'ZIP Codes',
     url: '/geo/zip-codes.geojson',
-    color: '#319795',
+    color: '#1a5030',
     idProperty: 'ZCTA5CE20',
     detailPath: null,
   },
@@ -179,7 +179,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'tirzZones',
     label: 'TIRZ Zones',
     url: '/geo/tirz-zones.geojson',
-    color: '#C75B2A',
+    color: '#b03a2a',
     idProperty: 'SITENO',
     detailPath: '/tirz/',
   },
@@ -253,11 +253,11 @@ export const MAP_CENTERS = {
 
 /** Government level → hex color. Used by OfficialCard, policy pages, etc. */
 export const LEVEL_COLORS: Record<string, string> = {
-  Federal: '#3182ce',
-  State: '#805ad5',
-  County: '#d69e2e',
-  City: '#38a169',
-  'School District': '#dd6b20',
+  Federal: '#1b5e8a',
+  State: '#4a2870',
+  County: '#6a4e10',
+  City: '#1a6b56',
+  'School District': '#1e4d7a',
 }
 
 export const DEFAULT_LEVEL_COLOR = '#8B7E74'
@@ -290,10 +290,10 @@ export const ENGAGEMENT_LEVEL_COLORS: Record<string, string> = {
 
 /** Center → hex color. Used by FeedCard, CentersGrid, etc. */
 export const CENTER_COLORS: Record<string, string> = {
-  Learning: '#3182ce',
-  Action: '#38a169',
-  Resource: '#d69e2e',
-  Accountability: '#805ad5',
+  Learning: '#2563eb',
+  Action: '#dc2626',
+  Resource: '#16a34a',
+  Accountability: '#9333ea',
 }
 
 /** Compass entry card prompts — maps center keys to i18n keys. */

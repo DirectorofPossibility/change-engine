@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { X, Menu, Search } from 'lucide-react'
 import { HeaderSearch } from './HeaderSearch'
-import { FlowerOfLifeIcon } from './FlowerIcons'
 import { ArchetypeSelector } from './ArchetypeSelector'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
 import { SpiralProgress } from './SpiralProgress'
+import { SeedOfLife } from '@/components/geo/sacred'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems, isSectionVisible } from '@/lib/feature-flags'
@@ -19,7 +19,6 @@ function useCenters(t: (key: string) => string) {
     {
       label: t('d2nav.community'),
       href: '/community',
-      color: '#805ad5',
       items: [
         { href: '/neighborhoods', label: t('d2nav.neighborhoods') },
         { href: '/organizations', label: t('d2nav.organizations') },
@@ -30,7 +29,6 @@ function useCenters(t: (key: string) => string) {
     {
       label: t('d2nav.learning'),
       href: '/learning',
-      color: '#3182ce',
       items: [
         { href: '/library', label: t('d2nav.library') },
         { href: '/news', label: t('d2nav.news') },
@@ -41,7 +39,6 @@ function useCenters(t: (key: string) => string) {
     {
       label: t('d2nav.resources'),
       href: '/resources',
-      color: '#C75B2A',
       items: [
         { href: '/services', label: t('d2nav.services') },
         { href: '/opportunities', label: t('d2nav.opportunities') },
@@ -51,7 +48,6 @@ function useCenters(t: (key: string) => string) {
     {
       label: t('d2nav.action'),
       href: '/action',
-      color: '#38a169',
       items: [
         { href: '/governance', label: t('d2nav.governance') },
         { href: '/officials', label: t('d2nav.officials') },
@@ -63,7 +59,6 @@ function useCenters(t: (key: string) => string) {
     {
       label: t('d2nav.about'),
       href: '/about',
-      color: '#6B6560',
       items: [
         { href: '/about', label: t('d2nav.about_us') },
         { href: '/contact', label: t('d2nav.contact') },
@@ -77,7 +72,7 @@ function useDiscoverLinks(t: (key: string) => string) {
     { href: '/compass', label: t('d2nav.civic_compass') },
     { href: '/dashboard-live', label: t('d2nav.live_dashboard') },
     { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
-    { href: '/adventures', label: 'Community Adventures' },
+    { href: '/adventures', label: t('ui.community_adventures') },
     { href: '/goodthings', label: t('d2nav.three_good_things') },
     { href: '/teens', label: t('d2nav.teen_hub') },
     { href: '/call-your-senators', label: t('d2nav.call_senators') },
@@ -97,7 +92,6 @@ export function D2Nav() {
   const rawCenters = useCenters(t)
   const rawDiscoverLinks = useDiscoverLinks(t)
 
-  // Filter nav items based on launch phase
   const centers = rawCenters
     .map(c => ({ ...c, items: filterNavItems(c.items) }))
     .filter(c => isSectionVisible(c.items))
@@ -126,69 +120,65 @@ export function D2Nav() {
       }
     }
     document.addEventListener('keydown', handleKey)
-    // Focus the close button on open
     const closeBtn = drawerRef.current?.querySelector<HTMLElement>('button[aria-label="Close menu"]')
     closeBtn?.focus()
     return function () { document.removeEventListener('keydown', handleKey) }
   }, [drawerOpen, closeDrawer])
 
-  // Close drawer on route change
   useEffect(function () {
     setDrawerOpen(false)
   }, [pathname])
 
   return (
     <>
-      {/* Spectrum bar */}
-      <div className="spectrum-bar relative">
-        <div style={{ background: '#e53e3e' }} />
-        <div style={{ background: '#dd6b20' }} />
-        <div style={{ background: '#d69e2e' }} />
-        <div style={{ background: '#38a169' }} />
-        <div style={{ background: '#3182ce' }} />
-        <div style={{ background: '#319795' }} />
-        <div style={{ background: '#805ad5' }} />
-      </div>
-
-      {/* Top nav */}
-      <nav className="sticky top-0 z-50 border-b border-brand-border" style={{ background: 'rgba(237,232,224,0.95)', backdropFilter: 'blur(12px)' }}>
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-14">
+      {/* Site nav — matches page-system.html .site-nav */}
+      <nav
+        className="sticky top-0 z-50 bg-white border-b-2 border-ink"
+        style={{ height: 54 }}
+      >
+        <div className="max-w-[1080px] mx-auto px-6 flex items-center justify-between h-full">
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative">
-              <FlowerOfLifeIcon size={36} color="#C75B2A" className="group-hover:scale-110 transition-transform duration-300" />
-              <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ boxShadow: '0 0 20px rgba(199,91,42,0.25)' }} />
-            </div>
-            <div className="leading-none">
-              <span className="block font-serif text-[18px] font-bold text-brand-text">{t('brand.name')}</span>
-              <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.15em] text-brand-muted-light">{t('brand.the_change_lab')}</span>
-            </div>
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <SeedOfLife color="#1b5e8a" size={28} />
+            <span className="font-display text-[1rem] font-bold tracking-[-0.01em] text-ink">
+              {t('nav.change_engine')}
+            </span>
+            <span
+              className="font-mono text-[.52rem] uppercase tracking-[0.14em] text-dim border border-rule px-1.5 py-0.5"
+            >
+              {t('nav.edition')}
+            </span>
           </Link>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2.5">
-            <div className="hidden md:block">
-              <HeaderSearch />
-            </div>
-            <div className="hidden md:block">
-              <LanguageSwitcher />
-            </div>
-            <div className="hidden md:block">
-              <SpiralProgress variant="compact" />
+          {/* Right side — desktop links */}
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6">
+              <Link
+                href="/pathways"
+                className="font-mono text-[.68rem] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
+              >
+                {t('nav.regions')}
+              </Link>
+              <Link
+                href="/search"
+                className="font-mono text-[.68rem] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
+              >
+                {t('nav.routes')}
+              </Link>
             </div>
             <Link
-              href="/me"
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"
+              href="/compass"
+              className="hidden md:block font-mono text-[.68rem] uppercase tracking-[0.08em] bg-ink text-white px-4 py-2 hover:bg-blue transition-colors"
             >
-              {t('d2nav.my_account')}
+              {t('nav.find_my_way')}
             </Link>
-            {/* Hamburger — all screens */}
+            {/* Hamburger */}
             <button
-              className="p-2 rounded-md hover:bg-brand-bg transition-colors"
+              className="p-2 hover:bg-paper transition-colors"
               onClick={function () { setDrawerOpen(true) }}
               aria-label="Open menu"
             >
-              <Menu size={22} />
+              <Menu size={22} className="text-ink" />
             </button>
           </div>
         </div>
@@ -198,54 +188,76 @@ export function D2Nav() {
       {drawerOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/40 z-[200]"
+            className="fixed inset-0 z-[200]"
+            style={{ background: 'rgba(13,17,23,0.7)' }}
             onClick={function () { setDrawerOpen(false) }}
           />
-          <div ref={drawerRef} role="dialog" aria-modal="true" aria-label="Navigation menu" className="fixed top-0 right-0 bottom-0 w-[340px] max-w-[90vw] z-[201] bg-brand-cream overflow-y-auto shadow-2xl">
+          <div
+            ref={drawerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
+            className="fixed top-0 right-0 bottom-0 w-[340px] max-w-[90vw] z-[201] bg-white overflow-y-auto border-l-2 border-ink"
+          >
             {/* Drawer header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-brand-border">
-              <div className="flex items-center gap-2">
-                <FlowerOfLifeIcon size={24} color="#C75B2A" />
-                <span className="font-serif text-[15px] font-bold">{t('brand.name')}</span>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-rule">
+              <div className="flex items-center gap-2.5">
+                <SeedOfLife color="#1b5e8a" size={24} />
+                <span className="font-display text-[15px] font-bold text-ink">{t('nav.change_engine')}</span>
               </div>
-              <button onClick={function () { setDrawerOpen(false) }} aria-label="Close menu" className="p-1 rounded-md hover:bg-brand-bg transition-colors">
+              <button
+                onClick={function () { setDrawerOpen(false) }}
+                aria-label="Close menu"
+                className="p-1 font-mono text-dim hover:text-ink transition-colors"
+              >
                 <X size={20} />
               </button>
             </div>
 
             <div className="px-5 py-4 space-y-1">
               {/* ZIP + Language + Search (mobile) */}
-              <div className="flex items-center gap-3 pb-3 border-b border-brand-border">
+              <div className="flex items-center gap-3 pb-3 border-b border-rule">
                 <ZipInput />
                 <LanguageSwitcher />
-                <Link href="/search" className="p-2 rounded-md hover:bg-brand-bg transition-colors md:hidden" aria-label={t('nav.search_placeholder')} onClick={closeDrawer}>
-                  <Search size={18} className="text-brand-muted" />
+                <Link
+                  href="/search"
+                  className="p-2 hover:bg-paper transition-colors md:hidden"
+                  aria-label={t('nav.search_placeholder')}
+                  onClick={closeDrawer}
+                >
+                  <Search size={18} className="text-dim" />
                 </Link>
               </div>
 
-              {/* Your Journey — archetype selector */}
-              <details className="group border-b border-brand-border">
+              {/* Desktop search */}
+              <div className="hidden md:block pb-3 border-b border-rule">
+                <HeaderSearch />
+              </div>
+
+              {/* Your Journey */}
+              <details className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.your_journey')}</span>
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                    {t('d2nav.your_journey')}
+                  </span>
                 </summary>
                 <div className="pb-3">
-                  <p className="pl-5 pb-2 text-[11px] text-brand-muted">{t('d2nav.choose_explore')}</p>
+                  <p className="pl-5 pb-2 font-body text-[.75rem] text-dim">{t('d2nav.choose_explore')}</p>
                   <ArchetypeSelector compact />
                 </div>
               </details>
 
-              {/* Centers — collapsible sections */}
+              {/* Centers */}
               {centers.map(function (center) {
                 const isActive = pathname === center.href || center.items.some(function (item) { return pathname?.startsWith(item.href) })
                 return (
-                  <details key={center.label} className="group border-b border-brand-border">
+                  <details key={center.label} className="group border-b border-rule">
                     <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                      <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                      <span className="w-2.5 h-2.5 rounded-sm" style={{ background: center.color }} />
+                      <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                       <span
-                        className="font-mono text-[11px] font-bold uppercase tracking-wider group-open:text-brand-accent transition-colors"
-                        style={{ color: isActive ? center.color : '#9B9590' }}
+                        className="font-mono text-[.62rem] uppercase tracking-[0.08em] group-open:text-blue transition-colors"
+                        style={{ color: isActive ? '#1b5e8a' : '#8a929e' }}
                       >
                         {center.label}
                       </span>
@@ -253,7 +265,7 @@ export function D2Nav() {
                     <div className="pb-3 space-y-0.5">
                       <Link
                         href={center.href}
-                        className="block pl-5 py-1.5 text-[12px] font-medium text-brand-muted hover:text-brand-accent transition-colors"
+                        className="block pl-5 py-1.5 font-mono text-[.62rem] uppercase tracking-[0.06em] text-dim hover:text-blue transition-colors"
                         onClick={closeDrawer}
                       >
                         {t('d2nav.view_all')} &rarr;
@@ -264,8 +276,8 @@ export function D2Nav() {
                           <Link
                             key={item.href}
                             href={item.href}
-                            className="block pl-5 py-1.5 text-[13px] font-medium transition-colors hover:text-brand-accent"
-                            style={{ color: itemActive ? '#C75B2A' : '#1A1A1A' }}
+                            className="block pl-5 py-1.5 font-body text-[.82rem] transition-colors hover:text-blue"
+                            style={{ color: itemActive ? '#1b5e8a' : '#0d1117' }}
                             onClick={closeDrawer}
                           >
                             {item.label}
@@ -277,11 +289,13 @@ export function D2Nav() {
                 )
               })}
 
-              {/* Topics (formerly Pathways) — open by default */}
-              <details open className="group border-b border-brand-border">
+              {/* Topics (Pathways) */}
+              <details open className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.topics')}</span>
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                    {t('d2nav.topics')}
+                  </span>
                 </summary>
                 <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
                   {PATHWAY_LIST.map(function (pw) {
@@ -289,10 +303,10 @@ export function D2Nav() {
                       <Link
                         key={pw.id}
                         href={'/pathways/' + pw.slug}
-                        className="flex items-center gap-2 px-2 py-1.5 text-[12px] font-medium hover:text-brand-accent transition-colors"
+                        className="flex items-center gap-2 px-2 py-1.5 font-body text-[.78rem] hover:text-blue transition-colors"
                         onClick={closeDrawer}
                       >
-                        <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: pw.color }} />
+                        <span className="w-2 h-2 flex-shrink-0" style={{ background: pw.color }} />
                         {pw.name}
                       </Link>
                     )
@@ -301,10 +315,12 @@ export function D2Nav() {
               </details>
 
               {/* Discover */}
-              <details className="group border-b border-brand-border">
+              <details className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.discover')}</span>
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                    {t('d2nav.discover')}
+                  </span>
                 </summary>
                 <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
                   {discoverLinks.map(function (item) {
@@ -312,7 +328,7 @@ export function D2Nav() {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="block px-2 py-1.5 text-[12px] font-medium text-brand-muted hover:text-brand-accent transition-colors"
+                        className="block px-2 py-1.5 font-body text-[.78rem] text-dim hover:text-blue transition-colors"
                         onClick={closeDrawer}
                       >
                         {item.label}
@@ -326,24 +342,31 @@ export function D2Nav() {
               <div className="pt-3">
                 <Link
                   href="/me"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-brand-accent text-white text-[11px] font-mono font-bold uppercase tracking-wide hover:bg-brand-accent-hover transition-colors"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-ink text-white font-mono text-[.62rem] uppercase tracking-[0.08em] hover:bg-blue transition-colors"
                   onClick={closeDrawer}
                 >
                   {t('d2nav.my_account')}
                 </Link>
               </div>
 
+              {/* Spiral Progress */}
+              <div className="pt-3 pb-2">
+                <SpiralProgress variant="compact" />
+              </div>
+
               {/* Support */}
               <details className="group">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-brand-muted-light transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light group-open:text-brand-accent transition-colors">{t('d2nav.support')}</span>
+                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
+                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                    {t('d2nav.support')}
+                  </span>
                 </summary>
-                <div className="pb-3 font-mono text-[11px] text-brand-muted-light space-y-1 pl-5">
-                  <p>{t('d2nav.crisis')}: <strong className="text-brand-text">988</strong></p>
-                  <p>{t('d2nav.city_services')}: <strong className="text-brand-text">311</strong></p>
-                  <p>{t('d2nav.social_services')}: <strong className="text-brand-text">211</strong></p>
-                  <p>{t('d2nav.dv_hotline')}: <strong className="text-brand-text">713-528-2121</strong></p>
+                <div className="pb-3 font-mono text-[.62rem] text-dim space-y-1 pl-5">
+                  <p>{t('d2nav.crisis')}: <strong className="text-ink">988</strong></p>
+                  <p>{t('d2nav.city_services')}: <strong className="text-ink">311</strong></p>
+                  <p>{t('d2nav.social_services')}: <strong className="text-ink">211</strong></p>
+                  <p>{t('d2nav.dv_hotline')}: <strong className="text-ink">713-528-2121</strong></p>
                 </div>
               </details>
             </div>

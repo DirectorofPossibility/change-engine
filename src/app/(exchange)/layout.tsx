@@ -22,6 +22,7 @@ import { D2Footer } from '@/components/exchange/D2Footer'
 import { TranslateBar } from '@/components/exchange/TranslateBar'
 import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
 import { TickerTape } from '@/components/exchange/TickerTape'
+import { Wayfinder } from '@/components/layout/Wayfinder'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -61,11 +62,12 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
 
-        <div className="min-h-screen bg-brand-bg">
-          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-accent focus:text-white focus:rounded-lg focus:text-sm">
+        <div className="min-h-screen bg-white">
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue focus:text-white focus:text-sm">
             Skip to main content
           </a>
           <D2Nav />
+          <Wayfinder />
           <TranslateBar />
           <main id="main-content" className="flex-1">
             {children}

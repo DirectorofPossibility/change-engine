@@ -10,14 +10,34 @@
 .leaflet-control { z-index: 10 !important; }
 
 @layer base {
+  /* Typography */
   body {
-    @apply bg-brand-bg text-brand-text font-sans antialiased;
+    font-family: var(--font-body);
+    color: #0d1117;
+    background: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Stronger default link styling */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    font-family: var(--font-display);
+    font-weight: 700;
   }
+
+  /* Sharp corners everywhere */
+  *, *::before, *::after {
+    border-radius: 0 !important;
+  }
+
+  /* No box-shadows — editorial design uses borders for depth */
+  .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl,
+  .hover\:shadow-sm:hover, .hover\:shadow:hover, .hover\:shadow-md:hover,
+  .hover\:shadow-lg:hover, .hover\:shadow-xl:hover {
+    box-shadow: none !important;
+  }
+
+  /* Exception: only circular elements */
+  .rounded-full { border-radius: 9999px !important; }
 
   /* Global focus indicators for keyboard accessibility */
   button:focus-visible,
@@ -26,7 +46,7 @@
   select:focus-visible,
   textarea:focus-visible,
   [tabindex]:focus-visible {
-    outline: 2px solid #E8723A;
+    outline: 2px solid #1b5e8a;
     outline-offset: 2px;
   }
 }
@@ -41,96 +61,84 @@
   }
 }
 
-/* Section divider pattern */
-.section-rule {
-  @apply border-none h-px bg-gradient-to-r from-brand-border via-brand-border/60 to-transparent;
+/* DM Mono for all labels */
+.label, .tag, .kicker, .meta, .badge {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* Card hover lift — editorial style with offset shadow */
+/* Meta label — DM Mono, uppercase, small */
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #5c6474;
+}
+
+/* Source attribution — DM Mono, small */
+.meta-source {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8a929e;
+}
+
+/* Section divider — clean rule */
+.section-rule {
+  border: none;
+  height: 1px;
+  background: #dde1e8;
+}
+
+/* Card hover — border-based, no shadows */
 .card-lift {
-  @apply transition-all duration-200;
+  transition: all 0.2s ease;
 }
 .card-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 3px 3px 0 #D5D0C8;
-  border-color: #D5D0C8;
+  border-color: #0d1117;
 }
 
 /* Color bar accent on cards */
 .color-bar-left {
-  @apply relative overflow-hidden;
+  position: relative;
+  overflow: hidden;
 }
 .color-bar-left::before {
   content: '';
-  @apply absolute left-0 top-0 bottom-0 w-1 transition-all duration-200;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  transition: width 0.2s ease;
 }
 .color-bar-left:hover::before {
-  @apply w-1.5;
+  width: 4px;
 }
 
-/* Chunky bordered card — mockup style */
-.card-chunky {
-  @apply bg-white border-2 border-brand-border rounded-xl p-5 transition-all duration-200;
-}
-.card-chunky:hover {
-  transform: translateY(-3px);
-  border-color: #D5D0C8;
-  box-shadow: 3px 3px 0 #D5D0C8;
-}
-
-/* Stat card — offset shadow, always visible */
-.card-stat {
-  @apply bg-brand-cream border-2 border-brand-text rounded-xl p-5 text-center relative overflow-hidden;
-  box-shadow: 3px 3px 0 #D5D0C8;
-}
-
-/* Meta label — Space Mono, uppercase, small */
-.meta-label {
-  @apply font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted;
-}
-
-/* Source attribution — Space Mono, small */
-.meta-source {
-  @apply font-mono text-[9px] uppercase tracking-wider text-brand-muted-light;
-}
-
-/* Effort tag — square badge, never pill */
+/* Effort tag — square badge */
 .effort-tag {
-  @apply inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-bg-alt text-brand-muted;
-}
-
-/* Noise texture overlay */
-.texture::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.5;
-  mix-blend-mode: multiply;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.125rem 0.5rem;
+  background: #f4f5f7;
+  color: #5c6474;
 }
 
 /* Spectrum bar — 7 pathway colors */
 .spectrum-bar {
-  @apply flex h-1;
+  display: flex;
+  height: 2px;
 }
 .spectrum-bar > div {
-  @apply flex-1;
-}
-
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-.animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
-
-/* Hero FOL color cycle — shifts hue through the full spectrum */
-@keyframes fol-color-cycle {
-  0%   { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
-}
-.animate-fol-color-cycle {
-  animation: fol-color-cycle 20s linear infinite;
+  flex: 1;
 }
 
 /* Fade-in for page transitions */
@@ -154,18 +162,30 @@
   animation-play-state: paused;
 }
 
-/* Announcement scroll + 5% pulse */
+/* Announcement scroll */
 @keyframes announcement-scroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-@keyframes announcement-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.95; }
-}
 .announcement-scroll {
-  animation: announcement-scroll 20s linear infinite, announcement-pulse 3s ease-in-out infinite;
+  animation: announcement-scroll 20s linear infinite;
 }
 .announcement-scroll:hover {
   animation-play-state: paused;
 }
+
+/* Hero FOL color cycle */
+@keyframes fol-color-cycle {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+.animate-fol-color-cycle {
+  animation: fol-color-cycle 20s linear infinite;
+}
+
+/* Bounce slow */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+.animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }

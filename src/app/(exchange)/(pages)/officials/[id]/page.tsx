@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
+import { getUIStrings } from '@/lib/i18n'
 import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin, Vote, Building2 } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
@@ -19,20 +21,12 @@ import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import Image from 'next/image'
 import { personJsonLd } from '@/lib/jsonld'
 
-function levelColor(level: string | null): string {
-  if (level === 'Federal') return 'bg-blue-100 text-blue-700'
-  if (level === 'State') return 'bg-green-100 text-green-700'
-  if (level === 'County') return 'bg-orange-100 text-orange-700'
-  if (level === 'City') return 'bg-teal-100 text-teal-700'
-  return 'bg-gray-100 text-gray-700'
-}
-
 function levelBarColor(level: string | null): string {
-  if (level === 'Federal') return '#3182ce'
-  if (level === 'State') return '#38a169'
-  if (level === 'County') return '#dd6b20'
-  if (level === 'City') return '#319795'
-  return '#6B6560'
+  if (level === 'Federal') return '#1e3a5f'
+  if (level === 'State') return '#2d5a27'
+  if (level === 'County') return '#8b4513'
+  if (level === 'City') return '#1a5e5e'
+  return '#5c6474'
 }
 
 const FOCUS_DOT_COLORS = [
@@ -119,6 +113,9 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   // Batch 3: All remaining lookups in parallel (district ZIPs, related content, translations, wayfinder, quote)
   const userProfile = await getUserProfile()
   const langId = await getLangId()
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
 
   // Build district ZIP query
   let districtZipColumn = ''
@@ -176,227 +173,348 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   const jsonLd = personJsonLd({ ...official, photo_url: profile?.photo_url || null, bio_short: profile?.bio_short || null } as any)
 
   return (
-    <div>
+    <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_official" />
 
-      {/* Hero Section */}
-      <div className="bg-brand-bg border-b border-brand-border">
-        {/* Level color bar */}
-        <div className="h-1.5" style={{ backgroundColor: barColor }} />
+      {/* ═══════════════════════════════════════════════════════════════════
+          MASTHEAD
+         ═══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative"
+        style={{ borderBottom: '2px solid #0d1117', borderTop: `3px solid ${barColor}` }}
+      >
+        <div className="max-w-[1080px] mx-auto px-6 py-10 lg:py-14">
+          {/* Breadcrumb */}
+          <div className="mb-4">
+            <Breadcrumb items={[
+              { label: t('official.civic_leaders'), href: '/officials' },
+              { label: official.official_name }
+            ]} />
+          </div>
 
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Breadcrumb items={[
-            { label: 'Civic Leaders', href: '/officials' },
-            { label: official.official_name }
-          ]} />
+          {/* Eyebrow */}
+          <div className="flex items-center gap-2 mb-3">
+            {official.level && (
+              <span
+                className="font-mono uppercase tracking-[0.12em] px-2 py-0.5"
+                style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
+              >
+                {official.level}
+              </span>
+            )}
+            <span
+              className="font-mono uppercase tracking-[0.12em]"
+              style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
+            >
+              {displayTitle && <>{displayTitle}</>}
+              {displayTitle && official.jurisdiction && <> &middot; </>}
+              {official.jurisdiction && <>{official.jurisdiction}</>}
+            </span>
+          </div>
 
-          <div className="mt-4 flex flex-col sm:flex-row gap-6">
-            {photoUrl && (
-              <div className="flex-shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-start">
+            {/* Left: Name, subtitle, quick facts */}
+            <div>
+              <h1
+                className="font-display leading-[1] tracking-tight mb-3"
+                style={{
+                  fontSize: 'clamp(1.8rem, 4vw, 3rem)',
+                  fontWeight: 900,
+                  color: '#0d1117',
+                }}
+              >
+                {official.official_name}
+              </h1>
+
+              {(displayTitle || official.jurisdiction) && (
+                <p
+                  className="font-body italic leading-relaxed mb-5 max-w-[580px]"
+                  style={{ fontSize: '0.95rem', color: '#5c6474' }}
+                >
+                  {displayTitle}{displayTitle && official.jurisdiction ? ', ' : ''}{official.jurisdiction}
+                </p>
+              )}
+
+              {/* Quick facts */}
+              <div className="flex flex-wrap gap-4">
+                {official.party && (
+                  <span
+                    className="flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
+                  >
+                    <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: barColor }} />
+                    <strong style={{ color: '#0d1117' }}>{official.party}</strong>
+                  </span>
+                )}
+                {official.term_end && (
+                  <span
+                    className="flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
+                  >
+                    <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: barColor }} />
+                    <Calendar size={12} />
+                    <strong style={{ color: '#0d1117' }}>{t('official.term_ends')} {new Date(official.term_end).toLocaleDateString()}</strong>
+                  </span>
+                )}
+                {official.district_id && (
+                  <span
+                    className="flex items-center gap-2"
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
+                  >
+                    <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: barColor }} />
+                    <strong style={{ color: '#0d1117' }}>District {official.district_id}</strong>
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-4">
+                <TranslatePageButton isTranslated={!!officialTranslation?.title} contentType="elected_officials" contentId={official.official_id} />
+              </div>
+            </div>
+
+            {/* Right: Photo */}
+            <div className="flex flex-col items-end gap-3">
+              {photoUrl && (
                 <Image
                   src={photoUrl}
                   alt={official.official_name}
-                  className="w-28 h-28 rounded-xl object-cover border border-brand-border"
-                 width={800} height={112} />
-              </div>
-            )}
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                {official.level && (
-                  <span className={'text-xs px-3 py-1 rounded-lg font-medium ' + levelColor(official.level)}>{official.level}</span>
-                )}
-                {official.party && (
-                  <span className="text-xs px-3 py-1 rounded-lg font-medium bg-gray-100 text-gray-700">{official.party}</span>
-                )}
-              </div>
-              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-text mb-1">{official.official_name}</h1>
-              {displayTitle && <p className="text-lg text-brand-muted mb-2">{displayTitle}</p>}
-              <div className="flex items-center gap-2 text-sm text-brand-muted">
-                {official.jurisdiction && <span>{official.jurisdiction}</span>}
-              </div>
-              <div className="mt-2">
-                <TranslatePageButton isTranslated={!!officialTranslation?.title} contentType="elected_officials" contentId={official.official_id} />
-              </div>
-              {official.term_end && (
-                <p className="text-sm text-brand-muted mt-1 flex items-center gap-1">
-                  <Calendar size={14} /> Term ends: {new Date(official.term_end).toLocaleDateString()}
-                </p>
+                  className="object-cover"
+                  style={{ border: '1px solid #dde1e8', width: 140, height: 140 }}
+                  width={140}
+                  height={140}
+                />
               )}
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Two-column layout: Main + Sidebar */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-
-          {/* ===== MAIN COLUMN ===== */}
-          <div className="min-w-0">
-
+      {/* ═══════════════════════════════════════════════════════════════════
+          BODY — 2-column grid
+         ═══════════════════════════════════════════════════════════════════ */}
+      <div className="max-w-[1080px] mx-auto px-6">
+        <div
+          className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] items-start"
+          style={{ borderBottom: '1.5px solid #dde1e8' }}
+        >
+          {/* ── Main column ── */}
+          <div
+            className="py-10 lg:pr-10 lg:border-r min-w-0"
+            style={{ borderColor: '#dde1e8' }}
+          >
             {/* About */}
             {bio && (
-              <section className="mb-5">
-                <h2 className="font-serif text-xl font-bold text-brand-text mb-3">About</h2>
-                <p className="text-brand-muted leading-relaxed">{bio}</p>
-              </section>
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('detail.about')}
+                </span>
+                <p
+                  className="font-body leading-[1.85]"
+                  style={{ fontSize: '0.88rem', color: '#0d1117' }}
+                >
+                  {bio}
+                </p>
+              </div>
             )}
 
-            {/* Contact info card */}
-            <div className="bg-white rounded-xl border border-brand-border p-6 mb-5">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {(profile?.phone_office || official.office_phone) && (
-                  <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-                    <Phone size={18} className="flex-shrink-0" /> {profile?.phone_office || official.office_phone}
-                  </a>
-                )}
-                {official.email && (
-                  <a href={'mailto:' + official.email} className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-                    <Mail size={18} className="flex-shrink-0" /> Email
-                  </a>
-                )}
-                {official.website && (
-                  <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-                    <Globe size={18} className="flex-shrink-0" /> Website
-                  </a>
-                )}
-                {profile?.social_linkedin && (
-                  <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-sm text-brand-accent hover:underline p-3 rounded-lg bg-brand-bg">
-                    <Linkedin size={18} className="flex-shrink-0" /> LinkedIn
-                  </a>
-                )}
-              </div>
-              {(profile?.address_office || profile?.address_district) && (
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {profile.address_office && (
-                    <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
-                      <MapPin size={18} className="flex-shrink-0 mt-0.5" />
-                      <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">Office</span><br />{profile.address_office}</div>
-                    </div>
-                  )}
-                  {profile.address_district && (
-                    <div className="flex items-start gap-3 text-sm text-brand-muted p-3 rounded-lg bg-brand-bg">
-                      <MapPin size={18} className="flex-shrink-0 mt-0.5" />
-                      <div><span className="font-medium text-brand-text text-xs uppercase tracking-wide">District Office</span><br />{profile.address_district}</div>
-                    </div>
-                  )}
+            {/* Contact */}
+            <div className="mb-8 space-y-3">
+              <span
+                className="font-mono uppercase tracking-[0.2em] block mb-3"
+                style={{ fontSize: '0.58rem', color: '#5c6474' }}
+              >
+                {t('detail.contact')}
+              </span>
+              {(profile?.phone_office || official.office_phone) && (
+                <a
+                  href={'tel:' + (profile?.phone_office || official.office_phone)}
+                  className="flex items-center gap-2 hover:underline"
+                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                >
+                  <Phone size={15} /> {profile?.phone_office || official.office_phone}
+                </a>
+              )}
+              {official.email && (
+                <a
+                  href={'mailto:' + official.email}
+                  className="flex items-center gap-2 hover:underline"
+                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                >
+                  <Mail size={15} /> {official.email}
+                </a>
+              )}
+              {official.website && (
+                <a
+                  href={official.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:underline"
+                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                >
+                  <Globe size={15} /> {t('detail.website')}
+                </a>
+              )}
+              {profile?.social_linkedin && (
+                <a
+                  href={profile.social_linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:underline"
+                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                >
+                  <Linkedin size={15} /> {t('official.linkedin')}
+                </a>
+              )}
+              {profile?.address_office && (
+                <div className="flex items-start gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
+                  <MapPin size={15} className="shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.office')}</span>
+                    {profile.address_office}
+                  </div>
                 </div>
               )}
-
-              {/* District info */}
-              {(official.district_type || official.district_id) && (
-                <div className="mt-4 pt-4 border-t border-brand-border">
-                  <div className="flex items-center gap-4 mb-2">
-                    {official.district_type && (
-                      <div>
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">Type</span>
-                        <p className="font-medium text-brand-text">{official.district_type}</p>
-                      </div>
-                    )}
-                    {official.district_id && (
-                      <div>
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">District</span>
-                        <p className="font-medium text-brand-text">{official.district_id}</p>
-                      </div>
-                    )}
+              {profile?.address_district && (
+                <div className="flex items-start gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
+                  <MapPin size={15} className="shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.district_office')}</span>
+                    {profile.address_district}
                   </div>
-                  {districtZips.length > 0 && (
-                    <div className="mt-2">
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted flex items-center gap-1 mb-1.5">
-                        <MapPin size={12} /> ZIP Codes Covered
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {districtZips.map(function (z) {
-                          return (
-                            <span key={z} className="text-xs px-2 py-1 bg-brand-bg rounded-md text-brand-muted font-mono">
-                              {String(z).padStart(5, '0')}
-                            </span>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
 
+            {/* District Info */}
+            {(official.district_type || official.district_id) && (
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('official.district')}
+                </span>
+                <div className="flex items-center gap-6 mb-3">
+                  {official.district_type && (
+                    <div>
+                      <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.type')}</span>
+                      <p className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{official.district_type}</p>
+                    </div>
+                  )}
+                  {official.district_id && (
+                    <div>
+                      <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.id')}</span>
+                      <p className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{official.district_id}</p>
+                    </div>
+                  )}
+                </div>
+                {districtZips.length > 0 && (
+                  <div>
+                    <span
+                      className="font-mono uppercase tracking-[0.1em] flex items-center gap-1 mb-2"
+                      style={{ fontSize: '0.52rem', color: '#5c6474' }}
+                    >
+                      <MapPin size={11} /> {t('official.zip_codes')}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {districtZips.map(function (z) {
+                        return (
+                          <span
+                            key={z}
+                            className="font-mono"
+                            style={{ fontSize: '0.7rem', color: '#5c6474', border: '1px solid #dde1e8', padding: '2px 8px' }}
+                          >
+                            {String(z).padStart(5, '0')}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* District Map */}
             {(official.district_type || official.district_id) && (
-              <div className="mb-5">
+              <div className="mb-8" style={{ border: '1px solid #dde1e8' }}>
                 <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
               </div>
             )}
 
-            {/* Focus Areas — dot + text links */}
+            {/* Focus Areas */}
             {focusAreas.length > 0 && (
-              <section className="mb-5">
-                <h2 className="font-serif text-xl font-bold text-brand-text mb-3">Focus Areas</h2>
-                <div className="flex flex-wrap gap-x-4 gap-y-2">
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('official.focus_areas')}
+                </span>
+                <div className="space-y-0">
                   {focusAreas.map(function (fa, i) {
                     const dotColor = FOCUS_DOT_COLORS[i % FOCUS_DOT_COLORS.length]
                     return (
                       <Link
                         key={fa.focus_id}
                         href={'/explore/focus/' + fa.focus_id}
-                        className="flex items-center gap-1.5 text-sm text-brand-text hover:text-brand-accent transition-colors"
+                        className="flex items-center gap-2 py-2 hover:underline"
+                        style={{ fontSize: '0.88rem', color: '#0d1117' }}
                       >
-                        <span className="inline-block w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
-                        {fa.focus_area_name}
+                        <span className="w-2 h-2 flex-shrink-0" style={{ background: dotColor }} />
+                        <span className="font-body">{fa.focus_area_name}</span>
                       </Link>
                     )
                   })}
                 </div>
-              </section>
-            )}
-
-            {/* Counties Served */}
-            {counties.length > 0 && (
-              <section className="mb-5">
-                <h2 className="font-serif text-xl font-bold text-brand-text mb-3 flex items-center gap-2">
-                  <Users size={20} /> Counties Served
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {counties.map(function (c) {
-                    return (
-                      <span key={c.county_id} className="text-sm px-3 py-1.5 bg-orange-50 text-orange-700 border border-orange-200 rounded-lg font-medium">
-                        {c.county_name}
-                      </span>
-                    )
-                  })}
-                </div>
-              </section>
+              </div>
             )}
 
             {/* Committee Assignments */}
             {committeeList.length > 0 && (
-              <section className="mb-5">
-                <h2 className="font-serif text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
-                  <Building2 size={20} /> Committee Assignments
-                </h2>
-                <div className="space-y-3">
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('official.committees')}
+                </span>
+                <div>
                   {committeeList.map(function (c, i) {
                     return (
-                      <div key={i} className="bg-white rounded-xl border border-brand-border p-4">
+                      <div
+                        key={i}
+                        className="py-3"
+                        style={{ borderBottom: i < committeeList.length - 1 ? '1px solid #dde1e8' : 'none' }}
+                      >
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="font-medium text-brand-text">{c.committee_name}</p>
+                            <p className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{c.committee_name}</p>
                             {c.chamber && (
-                              <span className="text-xs text-brand-muted">{c.chamber}</span>
+                              <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{c.chamber}</span>
                             )}
                           </div>
                           {c.role && (
-                            <span className="text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-700 border border-purple-200 font-medium flex-shrink-0">
+                            <span
+                              className="font-mono uppercase tracking-[0.12em] px-2 py-0.5 flex-shrink-0"
+                              style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
+                            >
                               {c.role}
                             </span>
                           )}
                         </div>
                         {c.jurisdiction_focus && c.jurisdiction_focus.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1.5">
+                          <div className="mt-1.5 flex flex-wrap gap-1.5">
                             {c.jurisdiction_focus.map(function (jf) {
                               return (
-                                <span key={jf} className="text-xs px-2 py-0.5 bg-brand-bg rounded text-brand-muted">
+                                <span
+                                  key={jf}
+                                  className="font-mono"
+                                  style={{ fontSize: '0.62rem', color: '#5c6474', border: '1px solid #dde1e8', padding: '1px 6px' }}
+                                >
                                   {jf}
                                 </span>
                               )
@@ -407,55 +525,74 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     )
                   })}
                 </div>
-              </section>
+              </div>
             )}
 
             {/* Vote Records */}
             {voteList.length > 0 && (
-              <section className="mb-5">
-                <h2 className="font-serif text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
-                  <Vote size={20} /> Recent Votes
-                </h2>
-                <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
-                  <div className="divide-y divide-brand-border">
-                    {voteList.map(function (v, i) {
-                      const voteColor = v.vote === 'Yea' ? 'bg-green-100 text-green-700'
-                        : v.vote === 'Nay' ? 'bg-red-100 text-red-700'
-                        : 'bg-gray-100 text-gray-600'
-                      const inner = (
-                        <div className="flex items-center justify-between gap-3 p-4">
-                          <div className="min-w-0">
-                            <p className="font-medium text-brand-text text-sm truncate">
-                              {v.bill_number || 'Vote'}
-                            </p>
-                            <div className="flex items-center gap-2 text-xs text-brand-muted mt-0.5">
-                              {v.chamber && <span>{v.chamber}</span>}
-                              {v.vote_date && <span>{new Date(v.vote_date).toLocaleDateString()}</span>}
-                            </div>
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('official.recent_votes')}
+                </span>
+                <div>
+                  {voteList.map(function (v, i) {
+                    const voteColor = v.vote === 'Yea' ? '#2d5a27'
+                      : v.vote === 'Nay' ? '#a12323'
+                      : '#5c6474'
+                    const inner = (
+                      <div
+                        className="flex items-center justify-between gap-3 py-3"
+                        style={{ borderBottom: i < voteList.length - 1 ? '1px solid #dde1e8' : 'none' }}
+                      >
+                        <div className="min-w-0">
+                          <p className="font-display text-sm font-bold truncate" style={{ color: '#0d1117' }}>
+                            {v.bill_number || t('official.vote')}
+                          </p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            {v.chamber && (
+                              <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{v.chamber}</span>
+                            )}
+                            {v.vote_date && (
+                              <span className="font-mono" style={{ fontSize: '0.52rem', color: '#8a929e' }}>{new Date(v.vote_date).toLocaleDateString()}</span>
+                            )}
                           </div>
-                          <span className={'text-xs px-2.5 py-1 rounded-lg font-semibold flex-shrink-0 ' + voteColor}>
-                            {v.vote}
-                          </span>
                         </div>
-                      )
-                      return v.policy_id ? (
-                        <Link key={i} href={'/policies/' + v.policy_id} className="block hover:bg-brand-bg transition-colors">
-                          {inner}
-                        </Link>
-                      ) : (
-                        <div key={i}>{inner}</div>
-                      )
-                    })}
-                  </div>
+                        <span
+                          className="font-mono uppercase tracking-[0.08em] font-bold flex-shrink-0"
+                          style={{ fontSize: '0.68rem', color: voteColor }}
+                        >
+                          {v.vote}
+                        </span>
+                      </div>
+                    )
+                    return v.policy_id ? (
+                      <Link key={i} href={'/policies/' + v.policy_id} className="block transition-colors hover:bg-[#f4f5f7]">
+                        {inner}
+                      </Link>
+                    ) : (
+                      <div key={i}>{inner}</div>
+                    )
+                  })}
                 </div>
-              </section>
+              </div>
             )}
 
             {/* Policies */}
             {policies && policies.length > 0 && (
-              <section className="mb-6">
-                <h2 className="font-serif text-xl font-bold text-brand-text mb-4">Policies &amp; Legislation</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="mb-8">
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3"
+                  style={{ fontSize: '0.58rem', color: '#5c6474' }}
+                >
+                  {t('official.policies')}
+                </span>
+                <div
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-0"
+                  style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}
+                >
                   {policies.map(function (p) {
                     const pt = policyTranslations[p.policy_id]
                     return (
@@ -475,36 +612,67 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     )
                   })}
                 </div>
-              </section>
+              </div>
             )}
 
             {/* Related Content */}
             {related.length > 0 && (
-              <div className="mb-6">
-                <RelatedContent title="Related Content" items={related} />
+              <div className="mb-8">
+                <RelatedContent title={t('official.related_content')} items={related} />
               </div>
             )}
 
-            {/* Quote */}
+            {/* Quote (GAP 2) */}
             {quote && (
-              <QuoteCard text={quote.quote_text} attribution={quote.attribution} />
+              <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={barColor} />
             )}
           </div>
 
-          {/* ===== SIDEBAR COLUMN ===== */}
-          <div className="space-y-6">
-            <div className="lg:sticky lg:top-6">
-              <DetailWayfinder data={wayfinderData} currentType="official" currentId={id} userRole={userProfile?.role} />
+          {/* ── Sidebar ── */}
+          <aside className="py-10 lg:pl-10 flex flex-col gap-7">
+            {/* Wayfinder */}
+            <DetailWayfinder data={wayfinderData} currentType="official" currentId={id} userRole={userProfile?.role} />
 
-              <div className="mt-6">
-                <FeedbackLoop entityType="elected_officials" entityId={official.official_id} entityName={official.official_name || ''} />
+            {/* Counties */}
+            {counties.length > 0 && (
+              <div>
+                <span
+                  className="font-mono uppercase tracking-[0.2em] block mb-3 pb-2"
+                  style={{ fontSize: '0.58rem', color: '#5c6474', borderBottom: '1px solid #dde1e8' }}
+                >
+                  {t('official.counties')}
+                </span>
+                <div className="space-y-1.5">
+                  {counties.map(function (c) {
+                    return (
+                      <p
+                        key={c.county_id}
+                        className="font-body text-sm"
+                        style={{ color: '#0d1117' }}
+                      >
+                        {c.county_name}
+                      </p>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          </div>
+            )}
 
+            {/* Feedback */}
+            <div>
+              <span
+                className="font-mono uppercase tracking-[0.2em] block mb-3 pb-2"
+                style={{ fontSize: '0.58rem', color: '#5c6474', borderBottom: '1px solid #dde1e8' }}
+              >
+                {t('detail.was_helpful')}
+              </span>
+              <FeedbackLoop entityType="elected_officials" entityId={official.official_id} entityName={official.official_name || ''} />
+            </div>
+          </aside>
         </div>
       </div>
 
+      {/* Admin panel */}
       <AdminEditPanel
         entityType="elected_officials"
         entityId={official.official_id}
@@ -522,6 +690,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           { key: 'government_level', label: 'Government Level', type: 'select', value: (official as any).government_level, options: ['federal', 'state', 'county', 'city'] },
         ] as EditField[]}
       />
-    </div>
+    </>
   )
 }

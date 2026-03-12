@@ -8,6 +8,8 @@ import { ContentCard } from '@/components/exchange/ContentCard'
 import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import { getUIStrings } from '@/lib/i18n'
+import { cookies } from 'next/headers'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
@@ -147,6 +149,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   // Translations
   const langId = await getLangId()
+  const cookieStore = await cookies()
+  const lang = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(lang)
   let orgTranslation: { title?: string; summary?: string } | undefined
   let serviceTranslations: Record<string, { title?: string; summary?: string }> = {}
   let contentTranslations: Record<string, { title?: string; summary?: string }> = {}
@@ -188,240 +193,250 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_organization" />
 
-      {/* ─── Hero ─── */}
-      <div className="relative overflow-hidden bg-brand-bg border-b border-brand-border">
-        {/* FOL sacred geometry background — always present, hero image overlays if available */}
-        <FOLHeroPattern color={accentColor} />
-
-        {/* Optional hero image as background */}
-        {org.hero_image_url && (
-          <div className="absolute inset-0">
-            <Image src={org.hero_image_url} alt="" fill className="object-cover opacity-20" />
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/90 to-brand-bg/60" />
-          </div>
-        )}
-
-        <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
+      {/* ─── Masthead ─── */}
+      <header style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-8">
           <Breadcrumb items={[
             { label: 'Organizations', href: '/organizations' },
             { label: displayOrgName }
           ]} />
 
-          <div className="flex items-start gap-5 mt-5">
-            {/* Logo with FOL ring accent */}
-            <div className="relative flex-shrink-0">
-              {org.logo_url ? (
-                <div className="relative">
-                  <div className="absolute -inset-2 opacity-[0.12] pointer-events-none" style={{ animation: 'fol-spin 60s linear infinite' }}>
-                    <svg width="84" height="84" viewBox="2 2 16 16" fill="none">
-                      <circle cx="10" cy="10" r="4" stroke={accentColor} strokeWidth="1.2" />
-                      {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
-                        const rad = (deg * Math.PI) / 180
-                        return <circle key={i} cx={10 + 4 * Math.cos(rad)} cy={10 + 4 * Math.sin(rad)} r="4" stroke={accentColor} strokeWidth="0.8" />
-                      })}
-                    </svg>
-                  </div>
-                  <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-xl object-contain bg-white border border-brand-border relative z-10" width={64} height={64} />
-                </div>
-              ) : (
-                /* FOL seed as logo placeholder */
-                <div className="w-16 h-16 rounded-xl border border-brand-border bg-white flex items-center justify-center" style={{ borderColor: accentColor + '30' }}>
-                  <FOLSeed color={accentColor} size={36} />
-                </div>
-              )}
-            </div>
-
+          <div className="flex items-start justify-between gap-8 mt-6">
             <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{displayOrgName}</h1>
-                {(org as any).is_verified === 'Yes' && (
-                  <svg className="w-6 h-6 flex-shrink-0" viewBox="0 0 20 20" fill="none" aria-label="Verified">
-                    <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#805ad5" />
-                    <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+              {/* Eyebrow pill */}
+              <div className="flex items-center gap-3 mb-4">
+                <span className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
+                  {t('detail.organization')}
+                </span>
+                {org.org_type && org.org_type !== 'Organization' && (
+                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+                    {org.org_type}
+                  </span>
                 )}
               </div>
 
+              <h1 className="font-display" style={{ fontWeight: 900, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', lineHeight: 1.1, color: '#0d1117' }}>
+                {displayOrgName}
+              </h1>
+
+              {(org as any).is_verified === 'Yes' && (
+                <svg className="w-6 h-6 inline-block ml-2 -mt-1" viewBox="0 0 20 20" fill="none" aria-label="Verified">
+                  <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#1b5e8a" />
+                  <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+
               {org.mission_statement && (
-                <p className="text-brand-muted mt-1.5 font-serif italic max-w-2xl">{org.mission_statement}</p>
+                <p className="font-body italic mt-3 max-w-2xl" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{org.mission_statement}</p>
               )}
               {!org.mission_statement && displayOrgDesc && (
-                <p className="text-brand-muted mt-1.5 max-w-2xl">{displayOrgDesc}</p>
+                <p className="font-body italic mt-3 max-w-2xl" style={{ color: '#5c6474', fontSize: '1.05rem', lineHeight: 1.6 }}>{displayOrgDesc}</p>
               )}
 
-              {/* Badges row */}
-              <div className="flex items-center gap-3 mt-3 flex-wrap">
-                {org.org_type === 'Community Partner' ? (
-                  <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: accentColor + '10', color: accentColor, border: '1px solid ' + accentColor + '30' }}>
-                    <FOLSeed color={accentColor} size={14} />
-                    Community Partner
+              {/* Quick facts */}
+              <div className="flex items-center gap-4 mt-4 flex-wrap">
+                {org.phone && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} /> {org.phone}
                   </span>
-                ) : org.org_type ? (
-                  <span className="text-xs px-2.5 py-1 rounded-full font-semibold" style={{ backgroundColor: accentColor + '10', color: accentColor, border: '1px solid ' + accentColor + '30' }}>{org.org_type}</span>
-                ) : null}
-
+                )}
+                {fullAddress && (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {fullAddress}
+                  </span>
+                )}
+                {org.website && (
+                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em] hover:underline" style={{ color: '#1b5e8a' }}>
+                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {t('detail.website')}
+                  </a>
+                )}
                 {org.year_founded && (
-                  <span className="relative inline-flex items-center gap-1.5 text-xs text-brand-muted px-2 py-0.5 rounded-full bg-brand-bg-alt border border-brand-border">
-                    <Calendar size={12} /> Founded {org.year_founded}
+                  <span className="relative inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+                    <span style={{ display: 'inline-block', width: 6, height: 6, background: '#8a929e' }} /> Est. {org.year_founded}
                     <WayfinderTooltipPos tipKey="year_founded" position="bottom" />
                   </span>
                 )}
-
                 {org.ntee_code && (
-                  <span className="relative text-xs px-2 py-0.5 rounded-full bg-brand-bg-alt border border-brand-border text-brand-muted">
-                    NTEE: {org.ntee_code}
+                  <span className="relative font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>
+                    NTEE {org.ntee_code}
                     <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-3 mt-4">
                 <TranslatePageButton isTranslated={!!orgTranslation?.title} contentType="organizations" contentId={org.org_id} />
                 <ShareButtons compact />
               </div>
             </div>
+
+            {/* Logo on right */}
+            {org.logo_url && (
+              <div className="flex-shrink-0 hidden sm:block">
+                <Image src={org.logo_url} alt={org.org_name} className="object-contain" style={{ border: '1px solid #dde1e8' }} width={96} height={96} />
+              </div>
+            )}
           </div>
         </div>
+      </header>
 
-        {/* Accent color bar */}
-        <div className="h-1" style={{ background: 'linear-gradient(90deg, ' + accentColor + ', transparent 60%)' }} />
-      </div>
+      {/* ─── Body: 2-column grid ─── */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0" style={{ border: '1px solid #dde1e8' }}>
 
-      {/* ─── Main content ─── */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          {/* ── Main column ── */}
+          <div className="min-w-0 p-6 lg:p-8" style={{ borderRight: '1px solid #dde1e8' }}>
 
-          {/* ── Left column ── */}
-          <div className="min-w-0 space-y-6">
-
-            {/* Contact strip */}
-            <div className="relative bg-white rounded-2xl border border-brand-border p-5 overflow-hidden">
-              {/* Subtle FOL watermark */}
-              <div className="absolute -top-6 -right-6 opacity-[0.04] pointer-events-none" style={{ animation: 'fol-spin 60s linear infinite' }}>
-                <svg width="120" height="120" viewBox="2 2 16 16" fill="none">
-                  <circle cx="10" cy="10" r="4" stroke={accentColor} strokeWidth="1.5" />
-                  {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
-                    const rad = (deg * Math.PI) / 180
-                    return <circle key={i} cx={10 + 4 * Math.cos(rad)} cy={10 + 4 * Math.sin(rad)} r="4" stroke={accentColor} strokeWidth="1" />
-                  })}
-                </svg>
-              </div>
-
-              <div className="relative flex flex-wrap gap-3">
-                <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
-                {org.phone && (
-                  <a href={'tel:' + org.phone} className="inline-flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-bg-alt text-brand-accent hover:underline transition-colors border border-brand-border">
-                    <Phone size={16} /> {org.phone}
-                  </a>
-                )}
-                {org.email && (
-                  <a href={'mailto:' + org.email} className="inline-flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-bg-alt text-brand-accent hover:underline transition-colors border border-brand-border">
-                    <Mail size={16} /> Email
-                  </a>
-                )}
-                {org.website && (
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-bg-alt text-brand-accent hover:underline transition-colors border border-brand-border">
-                    <Globe size={16} /> Website <ExternalLink size={12} className="opacity-50" />
-                  </a>
-                )}
-                {fullAddress && (
-                  <span className="inline-flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-brand-bg text-brand-muted border border-brand-border">
-                    <MapPin size={16} className="flex-shrink-0" /> {fullAddress}
-                  </span>
-                )}
-                {org.map_link && (
-                  <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl bg-brand-bg hover:bg-brand-bg-alt text-brand-accent hover:underline transition-colors border border-brand-border">
-                    <MapPin size={16} /> Map <ExternalLink size={12} className="opacity-50" />
-                  </a>
-                )}
-              </div>
-
-              {/* Social links */}
-              {socialLinks.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-brand-border">
-                  {socialLinks.map(function (link) {
-                    return (
-                      <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="text-xs px-3 py-1.5 rounded-full border border-brand-border text-brand-accent hover:bg-brand-bg-alt transition-colors capitalize">
-                        {link.platform}
-                      </a>
-                    )
-                  })}
+            {/* About section */}
+            {((org.mission_statement && displayOrgDesc) || (!org.mission_statement && displayOrgDesc)) && (
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.about')}</h2>
+                <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
+                  <p className="font-body leading-relaxed" style={{ color: '#5c6474' }}>{displayOrgDesc}</p>
                 </div>
-              )}
-            </div>
+              </section>
+            )}
 
-            {/* Stats row */}
-            {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {org.people_served && <OrgStat value={org.people_served} label="People Served" color={accentColor} />}
-                {org.service_area && <OrgStat value={org.service_area} label="Service Area" color={accentColor} />}
-                {org.partner_count != null && <OrgStat value={org.partner_count} label="Partners" color={accentColor} />}
-                {org.annual_budget != null && <OrgStat value={'$' + org.annual_budget.toLocaleString()} label="Annual Budget" color={accentColor} />}
-              </div>
+            {/* Contact section */}
+            {(org.phone || org.email || org.website || fullAddress || org.map_link || socialLinks.length > 0) && (
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.contact')}</h2>
+                <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
+                  <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
+                  <ul className="space-y-2">
+                    {org.phone && (
+                      <li className="flex items-center gap-2">
+                        <Phone size={14} style={{ color: '#8a929e' }} />
+                        <a href={'tel:' + org.phone} className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>{org.phone}</a>
+                      </li>
+                    )}
+                    {org.email && (
+                      <li className="flex items-center gap-2">
+                        <Mail size={14} style={{ color: '#8a929e' }} />
+                        <a href={'mailto:' + org.email} className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>{org.email}</a>
+                      </li>
+                    )}
+                    {org.website && (
+                      <li className="flex items-center gap-2">
+                        <Globe size={14} style={{ color: '#8a929e' }} />
+                        <a href={org.website} target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>
+                          {t('detail.website')} <ExternalLink size={10} className="inline opacity-50" />
+                        </a>
+                      </li>
+                    )}
+                    {fullAddress && (
+                      <li className="flex items-center gap-2">
+                        <MapPin size={14} style={{ color: '#8a929e' }} />
+                        <span className="font-body text-sm" style={{ color: '#5c6474' }}>{fullAddress}</span>
+                      </li>
+                    )}
+                    {org.map_link && (
+                      <li className="flex items-center gap-2">
+                        <MapPin size={14} style={{ color: '#8a929e' }} />
+                        <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="font-body text-sm hover:underline" style={{ color: '#1b5e8a' }}>
+                          View on Map <ExternalLink size={10} className="inline opacity-50" />
+                        </a>
+                      </li>
+                    )}
+                  </ul>
+
+                  {/* Social links */}
+                  {socialLinks.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
+                      {socialLinks.map(function (link) {
+                        return (
+                          <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1 capitalize hover:underline" style={{ color: '#1b5e8a', border: '1px solid #dde1e8' }}>
+                            {link.platform}
+                          </a>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </section>
             )}
 
             {/* Hours of operation */}
             {hoursList.length > 0 && (
-              <div className="bg-white rounded-2xl border border-brand-border p-5">
-                <h3 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3 flex items-center gap-2" style={{ color: '#5c6474' }}>
                   <Clock size={14} /> Hours of Operation
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
-                  {hoursList.map(function (h) {
-                    return (
-                      <div key={h.day} className="flex justify-between text-sm py-1 border-b border-brand-border/50 last:border-0">
-                        <span className="font-medium text-brand-text">{h.day}</span>
-                        <span className="text-brand-muted">{h.time}</span>
-                      </div>
-                    )
-                  })}
+                </h2>
+                <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
+                    {hoursList.map(function (h) {
+                      return (
+                        <div key={h.day} className="flex justify-between text-sm py-1" style={{ borderBottom: '1px solid #dde1e8' }}>
+                          <span className="font-body font-medium" style={{ color: '#0d1117' }}>{h.day}</span>
+                          <span className="font-body" style={{ color: '#5c6474' }}>{h.time}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
+              </section>
             )}
 
-            {/* About section */}
-            {org.mission_statement && displayOrgDesc && (
-              <section>
-                <h2 className="flex items-center gap-2 text-xl font-serif font-bold text-brand-text mb-3">
-                  <FOLSeed color={accentColor} size={22} /> About
-                </h2>
-                <p className="text-brand-muted leading-relaxed">{displayOrgDesc}</p>
+            {/* Stats row */}
+            {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>At a Glance</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0" style={{ borderTop: '2px solid #0d1117' }}>
+                  {org.people_served && (
+                    <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.people_served}</span>
+                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>People Served</span>
+                    </div>
+                  )}
+                  {org.service_area && (
+                    <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.service_area}</span>
+                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Service Area</span>
+                    </div>
+                  )}
+                  {org.partner_count != null && (
+                    <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.partner_count}</span>
+                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Partners</span>
+                    </div>
+                  )}
+                  {org.annual_budget != null && (
+                    <div className="p-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                      <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{'$' + org.annual_budget.toLocaleString()}</span>
+                      <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Annual Budget</span>
+                    </div>
+                  )}
+                </div>
               </section>
             )}
 
             {/* Tags */}
             {org.tags && org.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1.5 mb-8">
                 {org.tags.map(function (tag) {
-                  return <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-brand-bg border border-brand-border text-brand-muted">{tag}</span>
+                  return <span key={tag} className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1" style={{ color: '#5c6474', border: '1px solid #dde1e8' }}>{tag}</span>
                 })}
               </div>
             )}
 
-            {/* ─── Children: Services ─── */}
+            {/* ─── Services ─── */}
             {services && services.length > 0 && (
-              <section>
-                <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">
-                  <Heart size={14} style={{ color: accentColor }} />
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
                   Services ({services.length})
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div style={{ borderTop: '1.5px solid #dde1e8' }}>
                   {services.map(function (svc) {
                     const st = serviceTranslations[svc.service_id]
+                    const svcName = st?.title || svc.service_name
+                    const svcDesc = st?.summary || svc.description_5th_grade
                     return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id}>
-                        <ServiceCard
-                          name={svc.service_name}
-                          description={svc.description_5th_grade}
-                          phone={svc.phone}
-                          address={svc.address}
-                          city={svc.city}
-                          state={svc.state}
-                          zipCode={svc.zip_code}
-                          website={svc.website}
-                          translatedName={st?.title}
-                          translatedDescription={st?.summary}
-                        />
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 group hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                        <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} />
+                        <div className="min-w-0">
+                          <span className="font-body font-semibold block" style={{ color: '#0d1117' }}>{svcName}</span>
+                          {svcDesc && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{svcDesc}</span>}
+                        </div>
                       </Link>
                     )
                   })}
@@ -429,11 +444,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               </section>
             )}
 
-            {/* ─── Children: Content / News ─── */}
+            {/* ─── Content / News ─── */}
             {content && content.length > 0 && (
-              <section>
-                <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">
-                  <BookOpen size={14} style={{ color: accentColor }} />
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
                   News & Resources ({content.length})
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -459,36 +473,26 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               </section>
             )}
 
-            {/* ─── Children: Opportunities ─── */}
+            {/* ─── Opportunities ─── */}
             {opportunities && opportunities.length > 0 && (
-              <section>
-                <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">
-                  <Users size={14} style={{ color: accentColor }} />
+              <section className="mb-8">
+                <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
                   Opportunities ({opportunities.length})
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div style={{ borderTop: '1.5px solid #dde1e8' }}>
                   {opportunities.map(function (opp: any) {
                     return (
-                      <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="block">
-                        <div className="relative bg-white rounded-xl border border-brand-border p-5 hover:shadow-lg transition-shadow h-full overflow-hidden group">
-                          {/* FOL watermark */}
-                          <div className="absolute -top-3 -right-3 w-16 h-16 opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none" style={{ animation: 'fol-spin 60s linear infinite' }}>
-                            <svg viewBox="2 2 16 16" fill="none">
-                              <circle cx="10" cy="10" r="4" stroke={accentColor} strokeWidth="1.5" />
-                              {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
-                                const rad = (deg * Math.PI) / 180
-                                return <circle key={i} cx={10 + 4 * Math.cos(rad)} cy={10 + 4 * Math.sin(rad)} r="4" stroke={accentColor} strokeWidth="0.8" />
-                              })}
-                            </svg>
-                          </div>
-                          <h3 className="font-semibold text-brand-text mb-1 line-clamp-2">{opp.opportunity_name}</h3>
-                          {opp.description_5th_grade && <p className="text-sm text-brand-muted mb-2 line-clamp-2">{opp.description_5th_grade}</p>}
-                          <div className="flex items-center gap-2 flex-wrap">
+                      <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-3 group hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                        <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} />
+                        <div className="min-w-0">
+                          <span className="font-body font-semibold block" style={{ color: '#0d1117' }}>{opp.opportunity_name}</span>
+                          {opp.description_5th_grade && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{opp.description_5th_grade}</span>}
+                          <div className="flex items-center gap-2 flex-wrap mt-1">
                             {opp.time_commitment && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-bg border border-brand-border text-brand-muted">{opp.time_commitment}</span>
+                              <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>{opp.time_commitment}</span>
                             )}
                             {opp.is_virtual === 'Yes' && (
-                              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600">Virtual</span>
+                              <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-1.5 py-0.5" style={{ color: '#1b5e8a', border: '1px solid #1b5e8a' }}>Virtual</span>
                             )}
                           </div>
                         </div>
@@ -501,9 +505,8 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
             {/* Empty state when no children */}
             {childCount === 0 && (
-              <div className="text-center py-12 rounded-2xl border border-dashed border-brand-border bg-brand-bg/50">
-                <FOLSeed color={accentColor} size={48} />
-                <p className="text-brand-muted mt-3">No services, content, or opportunities have been linked to this organization yet.</p>
+              <div className="text-center py-12" style={{ border: '1px dashed #dde1e8' }}>
+                <p className="font-body" style={{ color: '#5c6474' }}>No services, content, or opportunities have been linked to this organization yet.</p>
               </div>
             )}
 
@@ -511,13 +514,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} />}
           </div>
 
-          {/* ── Right sidebar ── */}
-          <div className="space-y-6">
-            <div className="lg:sticky lg:top-24">
+          {/* ── Sidebar ── */}
+          <div className="p-6 lg:p-8">
+            <div className="lg:sticky lg:top-24 space-y-6">
               <DetailWayfinder data={wayfinderData} currentType="organization" currentId={id} userRole={userProfile?.role} />
-              <div className="mt-6">
-                <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
-              </div>
+              <FeedbackLoop entityType="organizations" entityId={id} entityName={org.org_name || ''} />
             </div>
           </div>
 

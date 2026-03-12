@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
+import { getUIStrings } from '@/lib/i18n'
 import { THEMES, LANGUAGES } from '@/lib/constants'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
@@ -92,6 +93,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   // Language + translations
   const cookieStore = await cookies()
   const langCode = cookieStore.get('lang')?.value || 'en'
+  const t = getUIStrings(langCode)
   const langConfig = LANGUAGES.find(function (l) { return l.code === langCode })
 
   let translatedTitle: string | null = null
@@ -213,7 +215,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const jsonLd = articleJsonLd(item as any)
 
   return (
-    <div>
+    <div style={{ background: '#f4f5f7' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="read_article" pathway={item.pathway_primary || undefined} />
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
@@ -224,126 +226,111 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         <PathwayContextBar activePathways={item.pathway_primary ? [item.pathway_primary] : []} showLabels />
       </div>
 
-      {/* ── HERO ── */}
-      <section className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-8 py-5">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-6">
-            <div className="flex-1 min-w-0">
-              {/* Meta row */}
-              <div className="flex items-center gap-3 mb-2">
-                <ThemePill themeId={item.pathway_primary} size="sm" />
-                {(item as any).content_type && (
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-accent/70 bg-brand-accent/5 px-2 py-0.5 rounded-full">
-                    {(item as any).content_type}
-                  </span>
-                )}
-                {(item.source_org_name || item.source_domain) && (
-                  orgInfo ? (
-                    <Link href={'/organizations/' + orgInfo.org_id} className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light hover:text-brand-accent hover:underline">
-                      {item.source_org_name || item.source_domain}
-                    </Link>
-                  ) : (
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">
-                      {item.source_org_name || item.source_domain}
-                    </span>
-                  )
-                )}
-                {item.published_at && (
-                  <>
-                    <span className="text-brand-border">/</span>
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">
-                      {new Date(item.published_at).toLocaleDateString()}
-                    </span>
-                  </>
-                )}
-                {isTranslated && (
-                  <span className="relative font-mono text-[10px] font-bold uppercase tracking-wider text-brand-success flex items-center gap-1">
-                    <Globe size={11} /> Translated
-                    <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
-                  </span>
-                )}
-              </div>
-
-              <h1 className="font-serif text-[clamp(1.6rem,3.5vw,2.4rem)] leading-tight text-brand-text mb-2">
-                {title}
-              </h1>
-
-              {summary && (
-                <div className="relative mb-4 pl-3 border-l-2" style={{ borderColor: themeColor + '40' }}>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <Sparkles size={11} style={{ color: themeColor }} />
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">Summary</span>
-                    <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
-                  </div>
-                  <p className="text-[15px] leading-relaxed text-brand-muted max-w-2xl">
-                    {summary}
-                  </p>
-                </div>
-              )}
-
-              {/* Source + Share row */}
-              <div className="flex items-center gap-4 flex-wrap">
-                <div className="relative inline-block">
-                  <a
-                    href={item.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
-                  >
-                    <ExternalLink size={13} />
-                    Read at source
-                  </a>
-                  <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
-                </div>
-                <div className="w-px h-5 bg-brand-border" />
-                <ShareButtons title={title || undefined} compact />
-              </div>
-            </div>
-
-            {/* Image */}
-            {item.image_url && (
-              <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80">
-                <div className="rounded-lg overflow-hidden border border-brand-border">
-                  <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
-                </div>
-              </div>
+      {/* ── MASTHEAD ── */}
+      <section style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
+        <div className="max-w-[1200px] mx-auto px-8 py-8">
+          {/* Eyebrow row */}
+          <div className="flex items-center gap-3 mb-4">
+            <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
+              {themeEntry?.name || t('content.news')}
+            </span>
+            {(item as any).content_type && (
+              <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+                {(item as any).content_type}
+                {item.pathway_primary && ' / ' + (themeEntry?.name || '')}
+              </span>
+            )}
+            {(item.source_org_name || item.source_domain) && (
+              orgInfo ? (
+                <Link href={'/organizations/' + orgInfo.org_id} className="font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline" style={{ color: '#5c6474' }}>
+                  {item.source_org_name || item.source_domain}
+                </Link>
+              ) : (
+                <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+                  {item.source_org_name || item.source_domain}
+                </span>
+              )
+            )}
+            {isTranslated && (
+              <span className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] flex items-center gap-1" style={{ color: '#1b5e8a' }}>
+                <Globe size={11} /> {t('content.translated')}
+                <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
+              </span>
             )}
           </div>
+
+          <h1 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.15] mb-3" style={{ color: '#0d1117', fontWeight: 900 }}>
+            {title}
+          </h1>
+
+          {item.published_at && (
+            <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-5" style={{ color: '#8a929e' }}>
+              {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          )}
+
+          {/* Image */}
+          {item.image_url && (
+            <div className="mt-4 overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
+              <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
+            </div>
+          )}
         </div>
-        <div className="h-1" style={{ background: 'linear-gradient(90deg, ' + themeColor + ', transparent 60%)' }} />
       </section>
 
-      {/* Quote banner */}
-      {heroQuote && (
-        <div className="bg-brand-bg-alt border-b border-brand-border">
-          <div className="max-w-[1200px] mx-auto px-8 py-4">
-            <div className="flex gap-4">
-              <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
-              <blockquote className="text-lg font-serif italic text-brand-text leading-relaxed">
-                &ldquo;{heroQuote}&rdquo;
-              </blockquote>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ── MAIN + SIDEBAR (2-column grid) ── */}
+      <div className="max-w-[1200px] mx-auto px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0">
+          {/* Main content column */}
+          <div className="pr-0 lg:pr-8" style={{ borderRight: 'none' }}>
+            <style>{`@media (min-width: 1024px) { .editorial-main { border-right: 1px solid #dde1e8; padding-right: 2rem; } }`}</style>
+            <div className="editorial-main">
 
-      {/* ── MAIN + SIDEBAR ── */}
-      <div className="max-w-[1200px] mx-auto px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          {/* Main content */}
-          <div>
+            {/* Summary */}
+            {summary && (
+              <div className="mb-6">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Sparkles size={11} style={{ color: '#1b5e8a' }} />
+                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>{t('content.summary')}</span>
+                  <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
+                </div>
+                <p className="font-body text-[15px] leading-relaxed max-w-2xl" style={{ color: '#5c6474' }}>
+                  {summary}
+                </p>
+              </div>
+            )}
+
+            {/* Source + Share row */}
+            <div className="flex items-center gap-4 flex-wrap mb-6 pb-6" style={{ borderBottom: '1px solid #dde1e8' }}>
+              <div className="relative inline-block">
+                <a
+                  href={item.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
+                  style={{ color: '#1b5e8a' }}
+                >
+                  <ExternalLink size={13} />
+                  {t('content.read_source')}
+                </a>
+                <WayfinderTooltipPos tipKey="source_attribution" position="bottom" />
+              </div>
+              <div className="w-px h-5" style={{ background: '#dde1e8' }} />
+              <ShareButtons title={title || undefined} compact />
+            </div>
+
             {/* Video embed */}
             {(item as any).video_url && (() => {
               const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
               const videoId = match ? match[1] : null
               if (!videoId) return null
               return (
-                <div className="mb-5">
-                  <div className="relative w-full overflow-hidden rounded-lg border border-brand-border" style={{ paddingBottom: '56.25%' }}>
+                <div className="mb-6">
+                  <div className="relative w-full overflow-hidden" style={{ paddingBottom: '56.25%', border: '1px solid #dde1e8' }}>
                     <iframe
                       className="absolute inset-0 w-full h-full"
                       src={'https://www.youtube-nocookie.com/embed/' + videoId}
-                      title="Video"
+                      title={t('content.video')}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     />
@@ -355,26 +342,27 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* Body */}
             {bodyBlocks.length > 0 ? (
               <div className="space-y-4">
+                <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] block mb-2" style={{ color: '#5c6474' }}>{t('content.article')}</span>
                 {bodyBlocks.map(function (block, i) {
                   if (!block) return null
                   if (block.startsWith('## ')) {
                     sectionNumber++
                     return (
-                      <div key={i} className="flex items-baseline gap-2.5 mt-6 first:mt-0 border-b border-brand-border pb-1.5">
+                      <div key={i} className="flex items-baseline gap-2.5 mt-6 first:mt-0 pb-1.5" style={{ borderBottom: '1px solid #dde1e8' }}>
                         <span
                           className="font-mono text-xs font-bold flex-shrink-0"
                           style={{ color: themeColor }}
                         >
                           {String(sectionNumber).padStart(2, '0')}
                         </span>
-                        <h2 className="text-lg font-serif font-semibold text-brand-text">{block.replace(/^## /, '')}</h2>
+                        <h2 className="text-lg font-display font-bold" style={{ color: '#0d1117' }}>{block.replace(/^## /, '')}</h2>
                       </div>
                     )
                   }
                   if (block.match(/^[-\u2022*] /m)) {
                     const items = block.split(/\n/).filter(function (l) { return l.trim() })
                     return (
-                      <ul key={i} className="list-disc list-outside space-y-1 text-brand-text leading-relaxed ml-5">
+                      <ul key={i} className="font-body list-disc list-outside space-y-1 leading-relaxed ml-5" style={{ color: '#0d1117' }}>
                         {items.map(function (li, j) {
                           return <li key={j}>{li.replace(/^[-\u2022*]\s*/, '').trim()}</li>
                         })}
@@ -384,7 +372,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   if (block.match(/\*\*[^*]+\*\*/)) {
                     const parts = block.split(/(\*\*[^*]+\*\*)/)
                     return (
-                      <p key={i} className="text-brand-text leading-relaxed">
+                      <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>
                         {parts.map(function (part, j) {
                           if (part.startsWith('**') && part.endsWith('**')) {
                             return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
@@ -394,22 +382,23 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                       </p>
                     )
                   }
-                  return <p key={i} className="text-brand-text leading-relaxed">{block}</p>
+                  return <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>{block}</p>
                 })}
               </div>
             ) : (
-              <div className="rounded-lg border border-brand-border bg-brand-bg p-6 text-center">
-                <p className="text-sm text-brand-muted mb-3">
+              <div className="p-6 text-center" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
+                <p className="text-sm mb-3" style={{ color: '#5c6474' }}>
                   Full article available at the original source. Use <strong>Break it down for me</strong> below for a quick overview.
                 </p>
                 <a
                   href={item.source_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
+                  style={{ color: '#1b5e8a' }}
                 >
                   <ExternalLink size={13} />
-                  Visit {item.source_org_name || item.source_domain || 'source'}
+                  {t('content.visit')} {item.source_org_name || item.source_domain || 'source'}
                 </a>
               </div>
             )}
@@ -419,16 +408,16 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Programs */}
             {programs.length > 0 && (
-              <div className="mt-5">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Programs</p>
+              <div className="mt-6">
+                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>Programs</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {programs.map(function (prog, i) {
                     return (
-                      <div key={i} className="border border-brand-border rounded-lg p-4 flex gap-3">
-                        <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
+                      <div key={i} className="p-4 flex gap-3" style={{ border: '1px solid #dde1e8' }}>
+                        <div className="w-1 flex-shrink-0" style={{ backgroundColor: themeColor }} />
                         <div>
-                          <p className="text-sm font-semibold text-brand-text">{prog.name}</p>
-                          <p className="text-xs text-brand-muted mt-1 leading-relaxed">{prog.description}</p>
+                          <p className="text-sm font-semibold" style={{ color: '#0d1117' }}>{prog.name}</p>
+                          <p className="text-xs mt-1 leading-relaxed" style={{ color: '#5c6474' }}>{prog.description}</p>
                         </div>
                       </div>
                     )
@@ -436,32 +425,49 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 </div>
               </div>
             )}
+
+            {/* Related */}
+            {related && related.length > 0 && (
+              <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
+                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>Related</p>
+                <RelatedContent items={related} />
+              </div>
+            )}
+
+            {/* Quote */}
+            {quote && (
+              <div className="mt-8">
+                <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />
+              </div>
+            )}
+
+            </div>
           </div>
 
           {/* ── SIDEBAR ── */}
-          <div className="space-y-4">
+          <div className="pl-0 lg:pl-8 space-y-6 mt-8 lg:mt-0">
             {/* Wayfinder */}
             <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
 
-            {/* At a Glance */}
-            <div className="border border-brand-border rounded-lg p-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">At a Glance</p>
+            {/* Topics & Focus Areas */}
+            <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
+              <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('content.at_a_glance')}</p>
               <div className="space-y-2">
                 {orgInfo && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-brand-muted">Organization</span>
-                    <Link href={'/organizations/' + orgInfo.org_id} className="font-semibold text-brand-accent hover:underline truncate ml-2">{orgInfo.org_name}</Link>
+                    <span style={{ color: '#5c6474' }}>Organization</span>
+                    <Link href={'/organizations/' + orgInfo.org_id} className="font-semibold hover:underline truncate ml-2" style={{ color: '#1b5e8a' }}>{orgInfo.org_name}</Link>
                   </div>
                 )}
                 {themeSlug && (
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-brand-muted">Pathway</span>
+                    <span style={{ color: '#5c6474' }}>{t('content.pathway')}</span>
                     <ThemePill themeId={item.pathway_primary} size="sm" />
                   </div>
                 )}
                 {focusAreas.length > 0 && (
-                  <div className="pt-2 border-t border-brand-border">
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-2">Focus Areas</p>
+                  <div className="pt-2" style={{ borderTop: '1px solid #dde1e8' }}>
+                    <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-2" style={{ color: '#5c6474' }}>Focus Areas</p>
                     <FocusAreaPills focusAreas={focusAreas} />
                   </div>
                 )}
@@ -470,24 +476,33 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Take Action */}
             {(opportunities.length > 0 || policies.length > 0) && (
-              <div className="border border-brand-border rounded-lg p-4">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Take Action</p>
+              <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
+                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('content.take_action')}</p>
                 <div className="space-y-2">
                   {opportunities.slice(0, 3).map(function (o: any) {
                     return (
-                      <Link key={o.opportunity_id} href={'/opportunities/' + o.opportunity_id} className="block text-sm font-medium text-brand-accent hover:underline">
+                      <Link key={o.opportunity_id} href={'/opportunities/' + o.opportunity_id} className="block text-sm font-medium hover:underline" style={{ color: '#1b5e8a' }}>
                         {o.opportunity_name}
                       </Link>
                     )
                   })}
                   {policies.slice(0, 3).map(function (p: any) {
                     return (
-                      <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block text-sm font-medium text-brand-accent hover:underline">
+                      <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block text-sm font-medium hover:underline" style={{ color: '#1b5e8a' }}>
                         {p.title_6th_grade || p.policy_name}
                       </Link>
                     )
                   })}
                 </div>
+              </div>
+            )}
+
+            {/* Hero Quote in sidebar */}
+            {heroQuote && (
+              <div className="p-4" style={{ borderLeft: '2px solid #0d1117', background: '#ffffff' }}>
+                <blockquote className="text-base font-display italic leading-relaxed" style={{ color: '#0d1117' }}>
+                  &ldquo;{heroQuote}&rdquo;
+                </blockquote>
               </div>
             )}
 
@@ -505,20 +520,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       {libraryNuggets.length > 0 && (
         <div className="max-w-[1200px] mx-auto px-8">
           <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} />
-        </div>
-      )}
-
-      {/* Quote */}
-      {quote && (
-        <div className="max-w-[1200px] mx-auto px-8">
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />
-        </div>
-      )}
-
-      {/* Related */}
-      {related && related.length > 0 && (
-        <div className="max-w-[1200px] mx-auto px-8 pb-6">
-          <RelatedContent items={related} />
         </div>
       )}
 

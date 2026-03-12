@@ -80,79 +80,87 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
   return (
     <div>
-      {/* ── Hero ── */}
-      <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      {/* ── 1. Theme Masthead ── */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          background: `linear-gradient(158deg, #0d1117 0%, ${theme.color}88 50%, ${theme.color} 100%)`,
+        }}
+      >
+        <div className="max-w-[1080px] mx-auto px-6 relative z-10" style={{ padding: '3.5rem 1.5rem 3rem' }}>
+          {/* Breadcrumb */}
           <Breadcrumb items={[
             { label: t('nav.pathways'), href: '/pathways' },
             { label: theme.name }
           ]} />
 
-          <div className="mt-4">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
-              <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: theme.color, opacity: 0.4 }} />
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">
-              {theme.name}
-            </h1>
-            <p className="text-base font-serif italic text-brand-muted mt-2 max-w-2xl leading-relaxed">
-              {theme.description}
-            </p>
+          {/* Dateline */}
+          <div className="flex items-center gap-2.5 mt-6 mb-2.5">
+            <span className="block w-6 h-px" style={{ background: 'rgba(255,255,255,.3)' }} />
+            <span className="font-mono text-[.6rem] tracking-[0.24em] uppercase" style={{ color: 'rgba(255,255,255,.4)' }}>
+              Houston, TX &middot; {theme.name} &middot; 2026 Edition
+            </span>
           </div>
 
-          {/* Connected pathways */}
-          {bridgeData.length > 0 && (
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-5">
-              <span className="text-xs text-brand-muted font-serif italic">Connected to</span>
-              {bridgeData.map(function (b) {
-                return (
-                  <Link
-                    key={b.targetThemeId}
-                    href={'/pathways/' + b.targetSlug}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium transition-colors hover:underline"
-                    style={{ color: b.targetColor }}
-                  >
-                    <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: b.targetColor }} />
-                    {b.targetName}
-                    <span className="text-brand-muted">({b.sharedCount})</span>
-                  </Link>
-                )
-              })}
-            </div>
-          )}
+          {/* Headline */}
+          <h1
+            className="font-display font-black leading-[.95] tracking-tight text-white"
+            style={{ fontSize: 'clamp(2.4rem, 5vw, 4.2rem)', letterSpacing: '-.025em' }}
+          >
+            The State of {theme.name} in Houston
+            <em className="block italic font-black" style={{ color: 'rgba(255,255,255,.55)' }}>
+              {theme.description.split('.')[0]}.
+            </em>
+          </h1>
+
+          {/* Rule */}
+          <div className="my-5" style={{ width: '50px', height: '2px', background: 'rgba(255,255,255,.3)' }} />
+
+          {/* Deck */}
+          <p
+            className="font-body italic leading-[1.7]"
+            style={{ fontSize: '1rem', color: 'rgba(255,255,255,.65)', maxWidth: '560px' }}
+          >
+            {theme.description}
+          </p>
         </div>
-        <div className="h-1" style={{ background: `linear-gradient(90deg, ${theme.color}, transparent 60%)` }} />
       </div>
 
-      {/* ── Quote (above the fold) ── */}
+      {/* ── 2. Quote ── */}
       {quote && (
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="max-w-[1080px] mx-auto px-6 pt-8">
           <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={theme.color} />
         </div>
       )}
 
-      {/* ── Focus Areas / Explore Topics ── */}
+      {/* ── 3. Focus Areas Grid ── */}
       {themeFocusAreas.length > 0 && (
-        <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h2 className="text-xl font-serif font-bold text-brand-text mb-1">{t('pathway.focus_areas_title')}</h2>
-          <div className="h-0.5 w-12 rounded-full mb-5" style={{ backgroundColor: theme.color }} />
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+        <section className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
+          <div className="mb-6">
+            <span className="font-mono text-[.6rem] tracking-[0.2em] uppercase text-[#5c6474] block mb-1.5">
+              Destinations &middot; Choose where to go
+            </span>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-[#0d1117]" style={{ letterSpacing: '-.015em' }}>
+              Explore {theme.name}
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-0">
             {themeFocusAreas.map(function (fa) {
               return (
                 <Link
                   key={fa.focus_id}
                   href={'/explore/focus/' + fa.focus_id}
-                  className="group relative bg-white rounded-lg border border-brand-border p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden"
-                 
+                  className="group relative bg-white p-3 transition-colors duration-150 overflow-hidden"
+                  style={{ border: '1px solid #dde1e8' }}
+                  onMouseOver={undefined}
                 >
                   <div
-                    className="absolute left-0 top-0 bottom-0 w-1 transition-all duration-200 group-hover:w-1.5"
-                    style={{ backgroundColor: theme.color }}
+                    className="absolute left-0 top-0 bottom-0 transition-all duration-200"
+                    style={{ width: '3px', backgroundColor: theme.color }}
                   />
-                  <span className="block text-sm font-medium text-brand-text leading-snug pl-2">{fa.focus_area_name}</span>
+                  <span className="block font-body text-[.88rem] font-bold text-[#0d1117] leading-snug pl-3">{fa.focus_area_name}</span>
                   {fa.description && (
-                    <span className="block text-xs text-brand-muted mt-1 line-clamp-2 pl-2">{fa.description}</span>
+                    <span className="block font-body text-[.78rem] italic text-[#5c6474] mt-1 line-clamp-2 pl-3">{fa.description}</span>
                   )}
                 </Link>
               )
@@ -161,24 +169,44 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* ── News Feed Link ── */}
-      {newsCount > 0 && (
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <Link
-            href={'/news?pathway=' + theme.id}
-            className="inline-flex items-center gap-2 text-sm font-medium hover:underline transition-colors"
-            style={{ color: theme.color }}
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z" />
-            </svg>
-            {newsCount} news {newsCount === 1 ? 'article' : 'articles'} in {theme.name}
-          </Link>
+      {/* ── 4. Connected Pathways ── */}
+      {bridgeData.length > 0 && (
+        <div className="max-w-[1080px] mx-auto px-6 py-6" style={{ borderBottom: '1.5px solid #dde1e8' }}>
+          <span className="font-mono text-[.6rem] tracking-[0.2em] uppercase text-[#5c6474] block mb-3">
+            Connected pathways
+          </span>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            {bridgeData.map(function (b) {
+              return (
+                <Link
+                  key={b.targetThemeId}
+                  href={'/pathways/' + b.targetSlug}
+                  className="inline-flex items-center gap-2 font-mono text-[.68rem] uppercase tracking-[0.08em] transition-colors hover:underline"
+                  style={{ color: b.targetColor }}
+                >
+                  <span
+                    className="block flex-shrink-0"
+                    style={{ width: '8px', height: '8px', backgroundColor: b.targetColor }}
+                  />
+                  {b.targetName}
+                  <span className="text-[#5c6474]">({b.sharedCount})</span>
+                </Link>
+              )
+            })}
+          </div>
         </div>
       )}
 
-      {/* ── Shelf Braid: 4 centers with mixed entity types ── */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      {/* ── 5. Content Feed (ShelfBraid) ── */}
+      <div className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
+        <div className="mb-6">
+          <span className="font-mono text-[.6rem] tracking-[0.2em] uppercase text-[#5c6474] block mb-1.5">
+            Content &middot; 4 centers
+          </span>
+          <h2 className="font-display text-2xl font-bold tracking-tight text-[#0d1117]" style={{ letterSpacing: '-.015em' }}>
+            From the <em className="italic">Community</em>
+          </h2>
+        </div>
         <ShelfBraid
           content={content}
           contentTranslations={contentTranslations}
@@ -188,20 +216,30 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           opportunities={opportunities}
           themeColor={theme.color}
         />
-
-        {/* ── Library Nuggets ── */}
-        <div className="mt-6">
-          <LibraryNugget
-            nuggets={libraryNuggets}
-            variant="sidebar"
-            color={theme.color}
-            labels={{ fromThe: t('library.from_the'), readMore: t('library.read_more') }}
-          />
-        </div>
       </div>
 
-      {/* Bottom spacing */}
-      <div className="h-8" />
+      {/* ── 6. News Link ── */}
+      {newsCount > 0 && (
+        <div className="max-w-[1080px] mx-auto px-6 py-5" style={{ borderBottom: '1.5px solid #dde1e8' }}>
+          <Link
+            href={'/news?pathway=' + theme.id}
+            className="inline-flex items-center gap-2 font-mono text-[.68rem] uppercase tracking-[0.08em] transition-colors hover:underline"
+            style={{ color: '#1b5e8a' }}
+          >
+            {newsCount} news {newsCount === 1 ? 'article' : 'articles'} in {theme.name} &rarr;
+          </Link>
+        </div>
+      )}
+
+      {/* ── 7. Library Nuggets ── */}
+      <div className="max-w-[1080px] mx-auto px-6 py-8">
+        <LibraryNugget
+          nuggets={libraryNuggets}
+          variant="sidebar"
+          color={theme.color}
+          labels={{ fromThe: t('library.from_the'), readMore: t('library.read_more') }}
+        />
+      </div>
     </div>
   )
 }
