@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageHero } from '@/components/exchange/PageHero'
-import { THEMES } from '@/lib/constants'
+import { THEMES, CIVIC_DATA_REFERENCES } from '@/lib/constants'
+import { ExternalLink, BarChart3 } from 'lucide-react'
 
 export const revalidate = 600
 
@@ -111,6 +112,45 @@ export default async function OpenDataPage() {
                 )
               })}
             </ul>
+          </div>
+        </section>
+
+        {/* Civic Data Partner */}
+        <section className="mt-14">
+          <div className="flex items-center gap-2 mb-6">
+            <BarChart3 size={18} style={{ color: '#1a5030' }} />
+            <h2 className="font-display text-2xl text-brand-text">Civic Data</h2>
+          </div>
+          <div className="bg-white border border-brand-border p-6">
+            <p className="text-sm text-brand-muted mb-4">
+              For deeper neighborhood-level indicators on health, economy, education, housing, and environment across the Houston region, we recommend Understanding Houston — a civic data dashboard from the Greater Houston Community Foundation and the Kinder Institute at Rice University.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://www.understandinghouston.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 font-mono text-[0.7rem] uppercase tracking-[0.08em] font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: '#1a5030' }}
+              >
+                <ExternalLink size={14} /> Understanding Houston
+              </a>
+              {Object.values(CIVIC_DATA_REFERENCES).flat().filter((ref, i, arr) =>
+                arr.findIndex(r => r.url === ref.url) === i
+              ).map(ref => (
+                <a
+                  key={ref.url}
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 py-2.5 px-4 text-sm text-brand-text hover:underline transition-colors"
+                  style={{ border: '1px solid #dde1e8' }}
+                >
+                  <ExternalLink size={12} style={{ color: '#5c6474' }} />
+                  {ref.label}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 

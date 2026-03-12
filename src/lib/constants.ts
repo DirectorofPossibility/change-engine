@@ -41,6 +41,38 @@ export const PAGE_INTROS = {
 } as const;
 
 /**
+ * External civic data references — Understanding Houston deep links by pathway.
+ * Used on pathway detail pages, neighborhood pages, and data-related pages.
+ */
+export const CIVIC_DATA_REFERENCES = {
+  THEME_01: [
+    { label: 'Health Indicators', url: 'https://www.understandinghouston.org/topic/health', source: 'Understanding Houston' },
+  ],
+  THEME_02: [
+    { label: 'Education Data', url: 'https://www.understandinghouston.org/topic/education', source: 'Understanding Houston' },
+    { label: 'Demographics', url: 'https://www.understandinghouston.org/topic/demographics', source: 'Understanding Houston' },
+  ],
+  THEME_03: [
+    { label: 'Housing Data', url: 'https://www.understandinghouston.org/topic/housing', source: 'Understanding Houston' },
+    { label: 'Transportation', url: 'https://www.understandinghouston.org/topic/transportation', source: 'Understanding Houston' },
+  ],
+  THEME_04: [
+    { label: 'Civic Engagement', url: 'https://www.understandinghouston.org/topic/civic-engagement', source: 'Understanding Houston' },
+    { label: 'Public Safety', url: 'https://www.understandinghouston.org/topic/public-safety', source: 'Understanding Houston' },
+  ],
+  THEME_05: [
+    { label: 'Economy & Jobs', url: 'https://www.understandinghouston.org/topic/economy', source: 'Understanding Houston' },
+  ],
+  THEME_06: [
+    { label: 'Environment', url: 'https://www.understandinghouston.org/topic/environment', source: 'Understanding Houston' },
+  ],
+  THEME_07: [
+    { label: 'Demographics', url: 'https://www.understandinghouston.org/topic/demographics', source: 'Understanding Houston' },
+    { label: 'Civic Engagement', url: 'https://www.understandinghouston.org/topic/civic-engagement', source: 'Understanding Houston' },
+  ],
+} as const;
+
+/**
  * The 4 Centers — user-intent modes that cut across all pathways.
  * Each center answers a distinct question a community member might ask.
  * Used for homepage cards, content filtering, and the classification prompt.

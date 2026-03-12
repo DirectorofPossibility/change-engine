@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { MapPin, Users, DollarSign } from 'lucide-react'
+import { MapPin, Users, DollarSign, ExternalLink, BarChart3 } from 'lucide-react'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
 import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
@@ -119,6 +119,26 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </p>
         </div>
       )}
+
+      {/* Civic data reference */}
+      <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
+        <div className="flex items-center gap-2 mb-2">
+          <BarChart3 size={12} style={{ color: '#1b5e8a' }} />
+          <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>Neighborhood data</span>
+        </div>
+        <a
+          href="https://www.understandinghouston.org/topic/demographics"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
+          style={{ color: '#1b5e8a' }}
+        >
+          <ExternalLink size={12} /> Understanding Houston
+        </a>
+        <p className="text-[0.7rem] mt-1" style={{ color: '#8a929e' }}>
+          Tract-level data on demographics, health, economy, and housing across the Houston region.
+        </p>
+      </div>
     </>
   )
 

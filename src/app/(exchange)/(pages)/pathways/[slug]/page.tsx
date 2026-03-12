@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { cookies } from 'next/headers'
-import { THEMES, CENTER_COLORS } from '@/lib/constants'
+import { THEMES, CENTER_COLORS, CIVIC_DATA_REFERENCES } from '@/lib/constants'
 import {
   getPathwayContent, getCenterContentForPathway,
   getRelatedOpportunities, getRelatedPolicies, getRelatedServices, getRelatedOfficials,
@@ -17,7 +17,7 @@ import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { getUIStrings } from '@/lib/i18n'
-import { ArrowRight, BookOpen, Heart, Package, Scale, FileText, Phone, MapPin, Calendar } from 'lucide-react'
+import { ArrowRight, BookOpen, Heart, Package, Scale, FileText, Phone, MapPin, Calendar, ExternalLink, BarChart3 } from 'lucide-react'
 import type { ContentPublished } from '@/lib/types/exchange'
 
 function resolveTheme(slug: string) {
@@ -417,6 +417,36 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                   <span className="font-body text-[.75rem] italic text-[#5c6474] hidden sm:inline">&mdash; {fa.description}</span>
                 )}
               </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          4b. CIVIC DATA — Understanding Houston deep links
+         ═══════════════════════════════════════════════════════════════════ */}
+      {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id] && (
+        <section className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 size={14} style={{ color: theme.color }} />
+            <span className="font-mono text-[.58rem] tracking-[0.2em] uppercase text-[#5c6474]">
+              See the data
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id].map(ref => (
+              <a
+                key={ref.url}
+                href={ref.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 py-2.5 px-4 transition-colors hover:bg-[#f4f5f7]"
+                style={{ border: '1px solid #dde1e8' }}
+              >
+                <ExternalLink size={12} style={{ color: theme.color }} />
+                <span className="font-body text-[.84rem] font-medium text-[#0d1117] group-hover:underline">{ref.label}</span>
+                <span className="font-mono text-[.5rem] tracking-[0.08em] uppercase text-[#8a929e]">{ref.source}</span>
+              </a>
             ))}
           </div>
         </section>
