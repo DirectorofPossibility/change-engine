@@ -43,7 +43,7 @@ export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps
             <span key={i} className="flex items-center">
               {i > 0 && (
                 <span
-                  className="text-[.65rem] px-0.5"
+                  className="text-[.75rem] px-1"
                   style={{ color: 'rgba(255,255,255,0.15)' }}
                 >
                   ›
@@ -52,21 +52,21 @@ export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps
               {crumb.href && !crumb.here ? (
                 <Link
                   href={crumb.href}
-                  className="font-mono text-[.62rem] uppercase tracking-[0.06em] whitespace-nowrap px-3 py-[0.7rem] transition-colors"
+                  className="font-mono text-[.75rem] uppercase tracking-[0.06em] whitespace-nowrap px-3 py-[0.85rem] transition-colors"
                   style={{
-                    color: 'rgba(255,255,255,0.35)',
+                    color: 'rgba(255,255,255,0.4)',
                     borderBottom: '2px solid transparent',
                   }}
-                  onMouseEnter={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.65)' }}
-                  onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.35)' }}
+                  onMouseEnter={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.7)' }}
+                  onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.4)' }}
                 >
                   {crumb.label}
                 </Link>
               ) : (
                 <span
-                  className="font-mono text-[.62rem] uppercase tracking-[0.06em] whitespace-nowrap px-3 py-[0.7rem]"
+                  className="font-mono text-[.75rem] uppercase tracking-[0.06em] whitespace-nowrap px-3 py-[0.85rem]"
                   style={{
-                    color: crumb.here ? '#7ec8e3' : 'rgba(255,255,255,0.35)',
+                    color: crumb.here ? '#7ec8e3' : 'rgba(255,255,255,0.4)',
                     borderBottom: crumb.here ? '2px solid #7ec8e3' : '2px solid transparent',
                   }}
                 >
@@ -80,7 +80,7 @@ export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps
         {/* Trail level indicator */}
         <div className="flex items-center gap-2 px-4 py-[0.7rem]">
           <span
-            className="font-mono text-[.56rem] uppercase tracking-[0.12em] whitespace-nowrap"
+            className="font-mono text-[.65rem] uppercase tracking-[0.12em] whitespace-nowrap"
             style={{ color: 'rgba(255,255,255,0.25)' }}
           >
             {label}

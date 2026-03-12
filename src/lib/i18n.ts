@@ -236,6 +236,12 @@ const en: Record<string, string> = {
   'polling.subhead': 'Early voting. Election Day. Mail ballots. It\'s all here.',
   'polling.subtitle': 'Enter your address. Get your polling place, your hours, and everything you need to show up ready.\n\nNo excuses. No surprises.',
   'polling.cta': 'Find My Polling Place',
+  'polling.zip_placeholder': 'Enter ZIP code',
+  'polling.find_button': 'Find My Polling Place',
+  'polling.your_districts': 'Your Districts',
+  'polling.accessible_only': 'Accessible Only',
+  'polling.places_found': 'polling places found',
+  'detail.helpful_links': 'Helpful Links',
 
   // Card components
   'card.read_more': 'Read more',
@@ -1365,6 +1371,12 @@ const es: Record<string, string> = {
   'polling.subhead': 'Votación anticipada. Día de elecciones. Boletas por correo. Todo está aquí.',
   'polling.subtitle': 'Ingresa tu dirección. Obtén tu lugar de votación, tus horarios y todo lo que necesitas para llegar preparado.\n\nSin excusas. Sin sorpresas.',
   'polling.cta': 'Encontrar Mi Lugar de Votación',
+  'polling.zip_placeholder': 'Ingrese código postal',
+  'polling.find_button': 'Encontrar Mi Lugar de Votación',
+  'polling.your_districts': 'Tus Distritos',
+  'polling.accessible_only': 'Solo Accesibles',
+  'polling.places_found': 'lugares de votación encontrados',
+  'detail.helpful_links': 'Enlaces Útiles',
 
   // Card components
   'card.read_more': 'Leer más',
@@ -2494,6 +2506,12 @@ const vi: Record<string, string> = {
   'polling.subhead': 'Bỏ phiếu sớm. Ngày bầu cử. Phiếu bầu qua thư. Tất cả ở đây.',
   'polling.subtitle': 'Nhập địa chỉ của bạn. Nhận địa điểm bỏ phiếu, giờ mở cửa và mọi thứ bạn cần để sẵn sàng.\n\nKhông viện cớ. Không bất ngờ.',
   'polling.cta': 'Tìm Địa Điểm Bỏ Phiếu',
+  'polling.zip_placeholder': 'Nhập mã ZIP',
+  'polling.find_button': 'Tìm Địa Điểm Bỏ Phiếu',
+  'polling.your_districts': 'Quận Của Bạn',
+  'polling.accessible_only': 'Chỉ Có Thể Tiếp Cận',
+  'polling.places_found': 'địa điểm bỏ phiếu được tìm thấy',
+  'detail.helpful_links': 'Liên Kết Hữu Ích',
 
   // Card components
   'card.read_more': 'Đọc thêm',

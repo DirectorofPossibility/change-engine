@@ -3,10 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { MapPin, ExternalLink } from 'lucide-react'
-import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
-import { TOOLTIPS } from '@/lib/tooltips'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
+import { useTranslation } from '@/lib/use-translation'
 
 interface ActiveElection {
   election_id: string
@@ -48,6 +47,7 @@ interface PollingPlaceClientProps {
 
 export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) {
   const { zip: savedZip } = useNeighborhood()
+  const { t } = useTranslation()
   const [zip, setZip] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -56,7 +56,6 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
   const [accessibilityFilter, setAccessibilityFilter] = useState(false)
   const autoSearched = useRef(false)
 
-  // Auto-search when user has a saved ZIP
   useEffect(function () {
     if (savedZip && savedZip.length === 5 && !autoSearched.current && !results) {
       autoSearched.current = true
@@ -119,81 +118,99 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
 
   return (
     <div>
-      <div className="relative mb-8">
-        <form onSubmit={handleLookup} className="flex gap-3">
-          <div className="relative flex-1 max-w-xs">
-            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
-            <input
-              type="text"
-              value={zip}
-              onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-              placeholder="Enter ZIP code"
-              className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
-              maxLength={5}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading || zip.length !== 5}
-            className="px-6 py-3 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
-          >
-            {loading ? 'Searching...' : 'Find My Polling Place'}
-          </button>
-        </form>
-        <TranslatedTooltip tip={TOOLTIPS.polling_finder} position="bottom" align="start" />
-      </div>
+      {/* Search form */}
+      <form onSubmit={handleLookup} className="flex gap-3 mb-8">
+        <div className="relative flex-1 max-w-xs">
+          <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-faint" />
+          <input
+            type="text"
+            value={zip}
+            onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
+            placeholder={t('polling.zip_placeholder') || 'Enter ZIP code'}
+            className="w-full pl-9 pr-4 py-3 border-2 border-ink font-mono text-[.82rem] bg-white focus:outline-none focus:border-blue transition-colors"
+            maxLength={5}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={loading || zip.length !== 5}
+          className="px-6 py-3 bg-ink text-white font-mono text-[.68rem] uppercase tracking-[0.08em] hover:bg-blue transition-colors disabled:opacity-50"
+        >
+          {loading ? t('ui.searching') || 'Searching...' : t('polling.find_button') || 'Find My Polling Place'}
+        </button>
+      </form>
 
-      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+      {error && <p className="text-civic font-body text-[.85rem] mb-4">{error}</p>}
 
       {results && (
         <div className="space-y-6">
           {/* District info */}
           {results.districtInfo && (
-            <div className="bg-brand-accent/5 rounded-xl p-4 border border-brand-border">
+            <div className="border-2 border-ink bg-paper px-5 py-4">
               <div className="flex items-center gap-2 mb-2">
-                <MapPin size={16} className="text-brand-accent" />
-                <span className="font-semibold text-brand-text">Your Districts</span>
-                {results.districtInfo.city && <span className="text-sm text-brand-muted">{results.districtInfo.city}</span>}
+                <MapPin size={16} className="text-blue" />
+                <span className="font-mono text-[.68rem] uppercase tracking-[0.08em] text-ink font-semibold">
+                  {t('polling.your_districts') || 'Your Districts'}
+                </span>
+                {results.districtInfo.city && (
+                  <span className="font-body text-[.82rem] text-dim">{results.districtInfo.city}</span>
+                )}
               </div>
-              <div className="flex flex-wrap gap-4 text-sm text-brand-muted">
-                {results.districtInfo.congressional_district && <span>Congressional: {results.districtInfo.congressional_district}</span>}
-                {results.districtInfo.state_senate_district && <span>State Senate: {results.districtInfo.state_senate_district}</span>}
-                {results.districtInfo.state_house_district && <span>State House: {results.districtInfo.state_house_district}</span>}
+              <div className="flex flex-wrap gap-4 font-mono text-[.68rem] text-dim">
+                {results.districtInfo.congressional_district && (
+                  <span>Congressional: <strong className="text-ink">{results.districtInfo.congressional_district}</strong></span>
+                )}
+                {results.districtInfo.state_senate_district && (
+                  <span>State Senate: <strong className="text-ink">{results.districtInfo.state_senate_district}</strong></span>
+                )}
+                {results.districtInfo.state_house_district && (
+                  <span>State House: <strong className="text-ink">{results.districtInfo.state_house_district}</strong></span>
+                )}
               </div>
             </div>
           )}
 
           {/* Filter pills */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 border-b border-rule pb-4">
             {(['all', 'Early Voting', 'Election Day'] as const).map(function (filter) {
               const isActive = locationTypeFilter === filter
               return (
                 <button
                   key={filter}
                   onClick={function () { setLocationTypeFilter(filter) }}
-                  className={'px-4 py-1.5 rounded-full text-sm font-medium transition-colors ' + (isActive ? 'bg-brand-accent text-white' : 'bg-brand-bg text-brand-muted hover:bg-brand-border')}
+                  className={'px-4 py-1.5 font-mono text-[.62rem] uppercase tracking-[0.08em] border transition-colors '
+                    + (isActive
+                      ? 'bg-ink text-white border-ink'
+                      : 'bg-white text-dim border-rule hover:border-ink hover:text-ink'
+                    )}
                 >
-                  {filter === 'all' ? 'All' : filter}
+                  {filter === 'all' ? (t('ui.all') || 'All') : filter}
                 </button>
               )
             })}
             <button
               onClick={function () { setAccessibilityFilter(!accessibilityFilter) }}
-              className={'px-4 py-1.5 rounded-full text-sm font-medium transition-colors ' + (accessibilityFilter ? 'bg-brand-accent text-white' : 'bg-brand-bg text-brand-muted hover:bg-brand-border')}
+              className={'px-4 py-1.5 font-mono text-[.62rem] uppercase tracking-[0.08em] border transition-colors '
+                + (accessibilityFilter
+                  ? 'bg-ink text-white border-ink'
+                  : 'bg-white text-dim border-rule hover:border-ink hover:text-ink'
+                )}
             >
-              Accessible Only
+              {t('polling.accessible_only') || 'Accessible Only'}
             </button>
           </div>
 
           {/* Results count */}
-          <p className="text-sm text-brand-muted">{filtered.length} polling place{filtered.length !== 1 ? 's' : ''} found</p>
+          <p className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint">
+            {filtered.length} {t('polling.places_found') || 'polling place'}{filtered.length !== 1 ? 's' : ''} {t('ui.found') || 'found'}
+          </p>
 
           {/* Results grid */}
           {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {filtered.map(function (loc) {
                 return (
-                  <div key={loc.location_id}>
+                  <div key={loc.location_id} className="border-2 border-rule hover:border-ink transition-colors">
                     <VotingLocationCard
                       name={loc.location_name}
                       address={loc.address}
@@ -211,9 +228,9 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
                         href={'https://www.google.com/maps/search/?api=1&query=' + loc.latitude + ',' + loc.longitude}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-xs text-brand-accent hover:underline mt-2 ml-1"
+                        className="flex items-center gap-1 font-mono text-[.62rem] uppercase tracking-[0.06em] text-blue hover:text-ink transition-colors px-4 pb-3"
                       >
-                        <ExternalLink size={12} /> View on Google Maps
+                        <ExternalLink size={12} /> View on Map
                       </a>
                     )}
                   </div>
@@ -221,15 +238,15 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
               })}
             </div>
           ) : (
-            <div className="text-center py-8">
-              <p className="text-brand-muted mb-2">No polling places found for the selected filters.</p>
+            <div className="text-center py-12 border-2 border-rule">
+              <p className="font-body text-[.9rem] text-dim mb-3">No polling places found for the selected filters.</p>
               <a
                 href="https://www.votetexas.gov/voting/where.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-accent hover:underline text-sm"
+                className="font-mono text-[.68rem] uppercase tracking-[0.06em] text-blue hover:text-ink transition-colors"
               >
-                Check votetexas.gov for more information
+                Check votetexas.gov &rarr;
               </a>
             </div>
           )}

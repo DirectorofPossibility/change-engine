@@ -9,7 +9,7 @@ import { ArchetypeSelector } from './ArchetypeSelector'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
 import { SpiralProgress } from './SpiralProgress'
-import { SeedOfLife } from '@/components/geo/sacred'
+import { SeedOfLife, FlowerOfLife } from '@/components/geo/sacred'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems, isSectionVisible } from '@/lib/feature-flags'
@@ -306,7 +306,7 @@ export function D2Nav() {
                         className="flex items-center gap-2 px-2 py-1.5 font-body text-[.78rem] hover:text-blue transition-colors"
                         onClick={closeDrawer}
                       >
-                        <span className="w-2 h-2 flex-shrink-0" style={{ background: pw.color }} />
+                        <FlowerOfLife color={pw.color} size={18} className="flex-shrink-0" />
                         {pw.name}
                       </Link>
                     )
