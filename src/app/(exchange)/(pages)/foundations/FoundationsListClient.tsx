@@ -241,7 +241,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
     return (
       <div>
         {/* Toggle back to list */}
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <button
             onClick={() => setView('list')}
             className="inline-flex items-center gap-2 text-sm font-medium text-brand-accent hover:underline"
@@ -258,7 +258,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
       {/* ── Spotlight Shelf ── */}
       {spotlight.length > 0 && (
         <section className="py-6">

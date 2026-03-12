@@ -9,11 +9,6 @@ import {
   getRandomQuote,
 } from '@/lib/data/exchange'
 import { getLibraryNuggets } from '@/lib/data/library'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { getUIStrings } from '@/lib/i18n'
 import Image from 'next/image'
 
@@ -43,6 +38,18 @@ const ENTITY_ICONS: Record<string, { label: string; href: string }> = {
   opportunities: { label: 'Opportunities', href: '/opportunities' },
 }
 
+/* ── Design tokens ── */
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const PARCHMENT_LIGHT = '#F8F4EC'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const SAGE = '#5C7A5E'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export default async function PathwaysPage() {
   const [hubData, stats, bridges, quote] = await Promise.all([
     getPathwaysHubData(),
@@ -59,132 +66,209 @@ export default async function PathwaysPage() {
   const totalServices = Object.values(hubData).reduce(function (sum, p) { return sum + p.entityCounts.services }, 0)
   const totalPolicies = Object.values(hubData).reduce(function (sum, p) { return sum + p.entityCounts.policies }, 0)
 
+  const themeEntries = Object.entries(THEMES)
+
   return (
-    <div>
-      {/* ── Masthead ── */}
-      <IndexPageHero
-        title="Seven Pathways Into Community Life"
-        subtitle="Every pathway connects you to content, services, officials, learning paths, and opportunities across Houston's civic landscape."
-        color="#C75B2A"
-        pattern="flower"
-        stats={[
-          { value: totalContent, label: 'Published' },
-          { value: stats.services, label: 'Services' },
-          { value: stats.officials, label: 'Officials' },
-          { value: totalPolicies, label: 'Policies' },
-          { value: stats.learningPaths, label: 'Learning Paths' },
-        ]}
-      />
+    <div style={{ color: INK }}>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="py-4">
-          <Breadcrumb items={[{ label: 'Topics' }]} />
+      {/* ══════════════════════════════════════════
+          1. HERO
+          ══════════════════════════════════════════ */}
+      <section style={{ backgroundColor: PARCHMENT }}>
+        {/* 3px clay top bar */}
+        <div style={{ height: 3, backgroundColor: CLAY }} />
+
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
+          {/* MONO breadcrumb */}
+          <nav style={{ fontFamily: MONO }} className="text-xs tracking-wider uppercase mb-6">
+            <Link href="/explore" className="hover:underline" style={{ color: MUTED }}>
+              The Exchange
+            </Link>
+            <span style={{ color: MUTED }}> / </span>
+            <span style={{ color: CLAY }}>Pathways</span>
+          </nav>
+
+          {/* Title */}
+          <h1
+            className="text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4"
+            style={{ fontFamily: SERIF, color: INK }}
+          >
+            Seven pathways into community life.
+          </h1>
+
+          {/* Subtitle */}
+          <p
+            className="text-lg sm:text-xl max-w-2xl leading-relaxed mb-8"
+            style={{ fontFamily: SERIF, fontStyle: 'italic', color: MUTED }}
+          >
+            Every pathway connects you to content, services, officials, learning paths, and opportunities across Houston's civic landscape.
+          </p>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap gap-x-8 gap-y-3 mb-8">
+            {[
+              { value: totalContent, label: 'Published' },
+              { value: stats.services, label: 'Services' },
+              { value: stats.officials, label: 'Officials' },
+              { value: totalPolicies, label: 'Policies' },
+              { value: stats.learningPaths, label: 'Learning Paths' },
+            ].map(function (stat) {
+              return (
+                <div key={stat.label} style={{ fontFamily: MONO }} className="text-center">
+                  <p className="text-2xl font-bold" style={{ color: INK }}>{stat.value}</p>
+                  <p className="text-[10px] uppercase tracking-wider" style={{ color: MUTED }}>{stat.label}</p>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* 60px clay rule */}
+          <div style={{ width: 60, height: 3, backgroundColor: CLAY }} />
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
-        <div>
-        {/* ── Pathway Sections ── */}
-        {Object.entries(THEMES).map(function ([themeId, theme], idx) {
-          const data = hubData[themeId]
-          if (!data) return null
+      {/* ══════════════════════════════════════════
+          2. PATHWAY SECTIONS
+          ══════════════════════════════════════════ */}
+      {themeEntries.map(function ([themeId, theme], idx) {
+        const data = hubData[themeId]
+        if (!data) return null
 
-          const hero = data.heroContent[0]
-          const secondary = data.heroContent.slice(1, 3)
-          const topFocusAreas = data.focusAreas.slice(0, 8)
-          const isEven = idx % 2 === 0
+        const hero = data.heroContent[0]
+        const secondary = data.heroContent.slice(1, 3)
+        const topFocusAreas = data.focusAreas.slice(0, 8)
+        const bgColor = idx % 2 === 0 ? '#ffffff' : PARCHMENT_LIGHT
 
-          return (
-            <section key={themeId} className="mb-8 first:mt-0">
-              {/* Pathway color band header */}
-              <div
-                className=" overflow-hidden mb-6"
-                style={{ borderLeft: `5px solid ${theme.color}` }}
+        return (
+          <section key={themeId} style={{ backgroundColor: bgColor }}>
+            {/* Section divider label */}
+            <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+              <p
+                className="text-[11px] uppercase tracking-[0.2em] mb-6"
+                style={{ fontFamily: MONO, color: theme.color }}
               >
-                <div className="bg-white border border-brand-border border-l-0 px-6 py-5">
-                  <div className="flex items-start justify-between gap-4 flex-wrap">
-                    <div>
-                      <Link
-                        href={'/pathways/' + theme.slug}
-                        className="font-display font-bold text-2xl sm:text-3xl text-brand-text hover:underline decoration-2 underline-offset-4"
-                        style={{ textDecorationColor: theme.color }}
-                      >
-                        {theme.name}
-                      </Link>
-                      <p className="text-sm text-brand-muted leading-relaxed mt-1 max-w-xl font-display italic">
-                        {theme.description}
-                      </p>
-                    </div>
+                Pathway {idx + 1} &middot; {theme.name}
+              </p>
+            </div>
+
+            <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+
+                {/* ── Left column: content ── */}
+                <div>
+                  {/* Pathway heading with colored left border */}
+                  <div style={{ borderLeft: `4px solid ${theme.color}`, paddingLeft: 16 }} className="mb-5">
                     <Link
                       href={'/pathways/' + theme.slug}
-                      className="text-sm font-medium px-4 py-2 border border-brand-border hover:border-ink transition-shadow flex-shrink-0"
-                      style={{ color: theme.color }}
+                      className="block hover:underline"
+                      style={{
+                        fontFamily: SERIF,
+                        fontSize: 'clamp(24px, 3vw, 36px)',
+                        color: INK,
+                        textDecorationColor: theme.color,
+                        lineHeight: 1.2,
+                      }}
                     >
-                      Explore {theme.name} &rarr;
+                      {theme.name}
                     </Link>
+                    <p
+                      className="mt-2 leading-relaxed max-w-xl"
+                      style={{ fontFamily: SERIF, fontStyle: 'italic', color: MUTED, fontSize: '0.95rem' }}
+                    >
+                      {theme.description}
+                    </p>
                   </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col lg:flex-row gap-6">
-                {/* ── Left: Pathway identity + hero ── */}
-                <div className={`flex-1 min-w-0 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
 
                   {/* Hero content card */}
                   {hero && (
                     <Link
                       href={'/content/' + hero.id}
-                      className="group block bg-white border border-brand-border overflow-hidden card-lift mb-4"
+                      className="group block border mb-5 transition-colors"
+                      style={{ borderColor: RULE_COLOR }}
                     >
-                      {hero.image_url && (
-                        <div className="aspect-[16/9] overflow-hidden">
-                          <Image
-                            src={hero.image_url}
-                            alt=""
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                           width={800} height={400} />
-                        </div>
-                      )}
-                      <div className="p-4">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          {hero.content_type && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: theme.color }}>
-                              {hero.content_type}
-                            </span>
-                          )}
-                          {hero.source_domain && (
-                            <span className="text-[10px] text-brand-muted">{hero.source_domain}</span>
-                          )}
-                        </div>
-                        <h3 className="font-display font-bold text-brand-text text-lg leading-snug group-hover:underline">
-                          {hero.title}
-                        </h3>
-                        {hero.summary && (
-                          <p className="text-sm text-brand-muted mt-1 line-clamp-2 leading-relaxed">{hero.summary}</p>
+                      <div className="group-hover:border-current" style={{ borderColor: theme.color }}>
+                        {hero.image_url && (
+                          <div className="aspect-[16/9] overflow-hidden">
+                            <Image
+                              src={hero.image_url}
+                              alt=""
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              width={800}
+                              height={400}
+                            />
+                          </div>
                         )}
+                        <div className="p-5">
+                          <div className="flex items-center gap-3 mb-2">
+                            {hero.content_type && (
+                              <span
+                                className="text-[10px] uppercase tracking-wider font-bold"
+                                style={{ fontFamily: MONO, color: theme.color }}
+                              >
+                                {hero.content_type}
+                              </span>
+                            )}
+                            {hero.source_domain && (
+                              <span
+                                className="text-[10px]"
+                                style={{ fontFamily: MONO, color: MUTED }}
+                              >
+                                {hero.source_domain}
+                              </span>
+                            )}
+                          </div>
+                          <h3
+                            className="text-lg leading-snug group-hover:underline"
+                            style={{ fontFamily: SERIF, color: INK }}
+                          >
+                            {hero.title}
+                          </h3>
+                          {hero.summary && (
+                            <p
+                              className="text-sm mt-2 line-clamp-2 leading-relaxed"
+                              style={{ color: MUTED }}
+                            >
+                              {hero.summary}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </Link>
                   )}
 
-                  {/* Secondary content */}
+                  {/* Secondary content cards */}
                   {secondary.length > 0 && (
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 gap-4">
                       {secondary.map(function (item) {
                         return (
                           <Link
                             key={item.id}
                             href={'/content/' + item.id}
-                            className="group bg-white border border-brand-border overflow-hidden card-lift"
+                            className="group block border transition-colors"
+                            style={{ borderColor: RULE_COLOR }}
                           >
                             {item.image_url && (
                               <div className="aspect-[16/9] overflow-hidden">
-                                <Image src={item.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"  width={800} height={400} />
+                                <Image
+                                  src={item.image_url}
+                                  alt=""
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                  width={800}
+                                  height={400}
+                                />
                               </div>
                             )}
                             <div className="p-3">
-                              <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.color }}>
+                              <span
+                                className="text-[9px] uppercase tracking-wider font-bold"
+                                style={{ fontFamily: MONO, color: theme.color }}
+                              >
                                 {item.content_type}
                               </span>
-                              <h4 className="font-display font-semibold text-sm text-brand-text leading-snug mt-0.5 line-clamp-2 group-hover:underline">
+                              <h4
+                                className="text-sm leading-snug mt-1 line-clamp-2 group-hover:underline"
+                                style={{ fontFamily: SERIF, color: INK }}
+                              >
                                 {item.title}
                               </h4>
                             </div>
@@ -195,27 +279,29 @@ export default async function PathwaysPage() {
                   )}
                 </div>
 
-                {/* ── Right: Integrated data sidebar ── */}
-                <div className={`lg:w-[380px] flex-shrink-0 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-                  {/* Entity counts grid */}
-                  <div className="bg-white border border-brand-border p-4 mb-3">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">What You Will Find</span>
-                    </div>
+                {/* ── Right column: data sidebar ── */}
+                <div>
+                  {/* What you will find */}
+                  <div className="border p-5 mb-4" style={{ borderColor: RULE_COLOR }}>
+                    <p
+                      className="text-[10px] uppercase tracking-[0.15em] mb-4"
+                      style={{ fontFamily: MONO, color: MUTED }}
+                    >
+                      What you will find
+                    </p>
 
-                    <div className="grid grid-cols-2 gap-2 mb-3">
-                      <div className="text-center py-2" style={{ backgroundColor: theme.color + '0A' }}>
-                        <p className="text-xl font-display font-bold" style={{ color: theme.color }}>{data.totalContent}</p>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Content</p>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center justify-between">
+                        <span style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>Content</span>
+                        <span style={{ fontFamily: MONO, color: theme.color }} className="text-lg font-bold">{data.totalContent}</span>
                       </div>
                       {Object.entries(data.entityCounts).map(function ([key, count]) {
                         if (count === 0) return null
                         const info = ENTITY_ICONS[key]
                         return (
-                          <div key={key} className="text-center py-2" style={{ backgroundColor: theme.color + '0A' }}>
-                            <p className="text-xl font-display font-bold" style={{ color: theme.color }}>{count}</p>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{info?.label || key}</p>
+                          <div key={key} className="flex items-center justify-between">
+                            <span style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>{info?.label || key}</span>
+                            <span style={{ fontFamily: MONO, color: theme.color }} className="text-lg font-bold">{count}</span>
                           </div>
                         )
                       })}
@@ -230,76 +316,88 @@ export default async function PathwaysPage() {
                             <Link
                               key={type}
                               href={'/news?pathway=' + themeId + '&type=' + type}
-                              className="inline-flex items-center gap-1 text-xs bg-brand-bg-alt px-2 py-1 hover:border-ink transition-shadow"
+                              className="inline-flex items-center gap-1 text-xs border px-2 py-1 transition-colors hover:border-current"
+                              style={{ fontFamily: MONO, borderColor: RULE_COLOR, color: INK }}
                             >
-                              <span className="font-medium text-brand-text">{count}</span>
-                              <span className="text-brand-muted">{CONTENT_TYPE_LABELS[type] || type}</span>
+                              <span className="font-bold">{count}</span>
+                              <span style={{ color: MUTED }}>{CONTENT_TYPE_LABELS[type] || type}</span>
                             </Link>
                           )
                         })}
                     </div>
                   </div>
 
-                  {/* Focus area topics */}
+                  {/* Topics (focus areas) */}
                   {topFocusAreas.length > 0 && (
-                    <div className="bg-white border border-brand-border p-4 mb-3">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Topics</span>
-                        <span className="text-[10px] text-brand-muted ml-auto">{data.focusAreas.length} total</span>
+                    <div className="border p-5 mb-4" style={{ borderColor: RULE_COLOR }}>
+                      <div className="flex items-center justify-between mb-4">
+                        <p
+                          className="text-[10px] uppercase tracking-[0.15em]"
+                          style={{ fontFamily: MONO, color: MUTED }}
+                        >
+                          Topics
+                        </p>
+                        <span className="text-[10px]" style={{ fontFamily: MONO, color: MUTED }}>
+                          {data.focusAreas.length} total
+                        </span>
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
+                      <ul className="space-y-2">
                         {topFocusAreas.map(function (fa) {
                           return (
-                            <Link
-                              key={fa.focus_id}
-                              href={'/explore/focus/' + fa.focus_id}
-                              className="group inline-flex items-center gap-1.5 text-xs border border-brand-border px-2.5 py-1.5 hover:border-transparent hover:border-ink transition-all"
-                            >
-                              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                              <span className="text-brand-text group-hover:underline">{fa.focus_area_name}</span>
-                            </Link>
+                            <li key={fa.focus_id}>
+                              <Link
+                                href={'/explore/focus/' + fa.focus_id}
+                                className="group flex items-center gap-2 hover:underline"
+                              >
+                                <span
+                                  className="w-2 h-2 flex-shrink-0"
+                                  style={{ backgroundColor: theme.color }}
+                                />
+                                <span style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>
+                                  {fa.focus_area_name}
+                                </span>
+                              </Link>
+                            </li>
                           )
                         })}
-                        {data.focusAreas.length > 8 && (
-                          <Link
-                            href={'/pathways/' + theme.slug}
-                            className="text-xs font-medium px-2.5 py-1.5"
-                            style={{ color: theme.color }}
-                          >
-                            +{data.focusAreas.length - 8} more
-                          </Link>
-                        )}
-                      </div>
+                      </ul>
+                      {data.focusAreas.length > 8 && (
+                        <Link
+                          href={'/pathways/' + theme.slug}
+                          className="inline-block mt-3 text-xs hover:underline"
+                          style={{ fontFamily: MONO, color: theme.color }}
+                        >
+                          +{data.focusAreas.length - 8} more
+                        </Link>
+                      )}
                     </div>
                   )}
 
-                  {/* Learning paths + guides */}
+                  {/* Keep Learning */}
                   {(data.learningPaths.length > 0 || data.guides.length > 0) && (
-                    <div className="bg-white border border-brand-border p-4 mb-3">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Keep Learning</span>
-                      </div>
-                      <div className="space-y-2">
+                    <div className="border p-5 mb-4" style={{ borderColor: RULE_COLOR }}>
+                      <p
+                        className="text-[10px] uppercase tracking-[0.15em] mb-4"
+                        style={{ fontFamily: MONO, color: MUTED }}
+                      >
+                        Keep Learning
+                      </p>
+                      <div className="space-y-3">
                         {data.learningPaths.map(function (lp) {
                           return (
                             <Link
                               key={lp.path_id}
                               href={'/learning/' + lp.path_id}
-                              className="group flex items-start gap-3 p-2 -mx-2 hover:bg-brand-bg-alt transition-colors"
+                              className="group block hover:underline"
                             >
-                              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: theme.color + '14' }}>
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={theme.color}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
-                                </svg>
-                              </div>
-                              <div className="min-w-0">
-                                <h4 className="text-sm font-semibold text-brand-text leading-snug group-hover:underline">{lp.path_name}</h4>
-                                {lp.estimated_minutes && (
-                                  <span className="text-[10px] text-brand-muted">~{lp.estimated_minutes} min</span>
-                                )}
-                              </div>
+                              <h4 style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>
+                                {lp.path_name}
+                              </h4>
+                              {lp.estimated_minutes && (
+                                <span className="text-[10px]" style={{ fontFamily: MONO, color: MUTED }}>
+                                  ~{lp.estimated_minutes} min
+                                </span>
+                              )}
                             </Link>
                           )
                         })}
@@ -308,17 +406,14 @@ export default async function PathwaysPage() {
                             <Link
                               key={g.guide_id}
                               href={'/guides/' + g.slug}
-                              className="group flex items-start gap-3 p-2 -mx-2 hover:bg-brand-bg-alt transition-colors"
+                              className="group block hover:underline"
                             >
-                              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: theme.color + '14' }}>
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={theme.color}>
-                                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                                </svg>
-                              </div>
-                              <div className="min-w-0">
-                                <h4 className="text-sm font-semibold text-brand-text leading-snug group-hover:underline">{g.title}</h4>
-                                <span className="text-[10px] text-brand-muted">Community Guide</span>
-                              </div>
+                              <h4 style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>
+                                {g.title}
+                              </h4>
+                              <span className="text-[10px]" style={{ fontFamily: MONO, color: MUTED }}>
+                                Community Guide
+                              </span>
                             </Link>
                           )
                         })}
@@ -328,30 +423,37 @@ export default async function PathwaysPage() {
 
                   {/* Connected pathways */}
                   {data.bridges.length > 0 && (
-                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 px-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Connected to</span>
-                      {data.bridges.slice(0, 4).map(function (b) {
-                        return (
-                          <Link
-                            key={b.targetThemeId}
-                            href={'/pathways/' + b.targetSlug}
-                            className="inline-flex items-center gap-1 text-xs font-medium hover:underline"
-                            style={{ color: b.targetColor }}
-                          >
-                            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: b.targetColor }} />
-                            {b.targetName}
-                            <span className="text-brand-muted">({b.sharedCount})</span>
-                          </Link>
-                        )
-                      })}
+                    <div className="mb-4">
+                      <p
+                        className="text-[10px] uppercase tracking-[0.15em] mb-2"
+                        style={{ fontFamily: MONO, color: MUTED }}
+                      >
+                        Connected to
+                      </p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1">
+                        {data.bridges.slice(0, 4).map(function (b) {
+                          return (
+                            <Link
+                              key={b.targetThemeId}
+                              href={'/pathways/' + b.targetSlug}
+                              className="inline-flex items-center gap-1.5 text-xs hover:underline"
+                              style={{ fontFamily: MONO, color: b.targetColor }}
+                            >
+                              <span className="w-2 h-2" style={{ backgroundColor: b.targetColor }} />
+                              {b.targetName}
+                              <span style={{ color: MUTED }}>({b.sharedCount})</span>
+                            </Link>
+                          )
+                        })}
+                      </div>
                     </div>
                   )}
 
                   {/* Explore CTA */}
                   <Link
                     href={'/pathways/' + theme.slug}
-                    className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white transition-all hover:border-ink"
-                    style={{ backgroundColor: theme.color }}
+                    className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+                    style={{ backgroundColor: theme.color, fontFamily: MONO, letterSpacing: '0.05em' }}
                   >
                     Explore {theme.name}
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -359,19 +461,33 @@ export default async function PathwaysPage() {
                     </svg>
                   </Link>
                 </div>
-              </div>
-            </section>
-          )
-        })}
 
-        {/* ── Cross-Pathway Connections ── */}
-        {bridges.length > 0 && (
-          <section className="py-8 border-t border-brand-border">
-            <h2 className="text-xl font-display font-bold text-brand-text mb-1">How Pathways Connect</h2>
-            <p className="text-sm text-brand-muted mb-5 font-display italic">
+              </div>
+            </div>
+          </section>
+        )
+      })}
+
+      {/* ══════════════════════════════════════════
+          3. CROSS-PATHWAY CONNECTIONS
+          ══════════════════════════════════════════ */}
+      {bridges.length > 0 && (
+        <section style={{ backgroundColor: PARCHMENT }} className="py-12">
+          <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
+            <p
+              className="text-[11px] uppercase tracking-[0.2em] mb-3"
+              style={{ fontFamily: MONO, color: CLAY }}
+            >
+              How pathways connect
+            </p>
+            <p
+              className="text-lg mb-8 max-w-xl"
+              style={{ fontFamily: SERIF, fontStyle: 'italic', color: MUTED }}
+            >
               Community issues do not live in silos. These pathways share content, services, and focus areas.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {bridges.slice(0, 9).map(function (b) {
                 const themeA = (THEMES as any)[b[0]]
                 const themeB = (THEMES as any)[b[1]]
@@ -379,22 +495,31 @@ export default async function PathwaysPage() {
                 return (
                   <div
                     key={b[0] + '|' + b[1]}
-                    className="flex items-center gap-3 bg-white border border-brand-border p-3"
+                    className="flex items-center gap-3 border p-4"
+                    style={{ borderColor: RULE_COLOR, backgroundColor: '#ffffff' }}
                   >
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: themeA.color }} />
-                      <Link href={'/pathways/' + themeA.slug} className="text-sm font-medium text-brand-text truncate hover:underline">
+                      <span className="w-2.5 h-2.5 flex-shrink-0" style={{ backgroundColor: themeA.color }} />
+                      <Link
+                        href={'/pathways/' + themeA.slug}
+                        className="text-sm truncate hover:underline"
+                        style={{ fontFamily: SERIF, color: INK }}
+                      >
                         {themeA.name}
                       </Link>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <div className="w-6 h-px bg-brand-border" />
-                      <span className="text-xs font-bold text-brand-muted">{b[2]}</span>
-                      <div className="w-6 h-px bg-brand-border" />
+                      <div className="w-6 h-px" style={{ backgroundColor: RULE_COLOR }} />
+                      <span className="text-xs font-bold" style={{ fontFamily: MONO, color: MUTED }}>{b[2]}</span>
+                      <div className="w-6 h-px" style={{ backgroundColor: RULE_COLOR }} />
                     </div>
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: themeB.color }} />
-                      <Link href={'/pathways/' + themeB.slug} className="text-sm font-medium text-brand-text truncate hover:underline">
+                      <span className="w-2.5 h-2.5 flex-shrink-0" style={{ backgroundColor: themeB.color }} />
+                      <Link
+                        href={'/pathways/' + themeB.slug}
+                        className="text-sm truncate hover:underline"
+                        style={{ fontFamily: SERIF, color: INK }}
+                      >
                         {themeB.name}
                       </Link>
                     </div>
@@ -402,38 +527,59 @@ export default async function PathwaysPage() {
                 )
               })}
             </div>
-          </section>
-        )}
-
-        {/* ── Quote ── */}
-        {quote && (
-          <div className="py-6">
-            <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor="#C75B2A" />
           </div>
-        )}
+        </section>
+      )}
 
-        {/* ── Spectrum bar ── */}
-        <div className="flex h-1.5 rounded-full overflow-hidden mb-8">
-          {Object.values(THEMES).map(function (theme) {
-            return <div key={theme.slug} className="flex-1" style={{ backgroundColor: theme.color }} />
-          })}
-        </div>
-        </div>
-        <div className="hidden lg:block">
-          <div className="sticky top-24 space-y-4">
-            <IndexWayfinder
-              currentPage="pathways"
-              color="#C75B2A"
-              related={[
-                { label: 'Explore', href: '/explore' },
-                { label: 'Centers', href: '/centers' },
-                { label: 'Guides', href: '/guides' },
-              ]}
-            />
-            <FeaturedPromo variant="card" />
+      {/* ══════════════════════════════════════════
+          4. QUOTE (inline blockquote)
+          ══════════════════════════════════════════ */}
+      {quote && (
+        <section style={{ backgroundColor: PARCHMENT_WARM }} className="py-10">
+          <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
+            <blockquote
+              className="max-w-2xl mx-auto text-center"
+              style={{ borderTop: `1px solid ${RULE_COLOR}`, borderBottom: `1px solid ${RULE_COLOR}`, padding: '2rem 0' }}
+            >
+              <p
+                className="text-xl sm:text-2xl leading-relaxed mb-4"
+                style={{ fontFamily: SERIF, fontStyle: 'italic', color: INK }}
+              >
+                &ldquo;{quote.quote_text}&rdquo;
+              </p>
+              {quote.attribution && (
+                <cite
+                  className="text-xs uppercase tracking-wider not-italic"
+                  style={{ fontFamily: MONO, color: MUTED }}
+                >
+                  {quote.attribution}
+                </cite>
+              )}
+            </blockquote>
           </div>
-        </div>
-        </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════
+          5. SPECTRUM BAR
+          ══════════════════════════════════════════ */}
+      <div className="flex h-1.5 overflow-hidden">
+        {Object.values(THEMES).map(function (theme) {
+          return <div key={theme.slug} className="flex-1" style={{ backgroundColor: theme.color }} />
+        })}
+      </div>
+
+      {/* ══════════════════════════════════════════
+          6. FOOTER CODA
+          ══════════════════════════════════════════ */}
+      <div className="py-10 text-center" style={{ backgroundColor: PARCHMENT }}>
+        <Link
+          href="/explore"
+          className="hover:underline"
+          style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '1rem' }}
+        >
+          &larr; Back to The Exchange
+        </Link>
       </div>
     </div>
   )

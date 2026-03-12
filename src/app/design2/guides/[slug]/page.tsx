@@ -115,7 +115,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
       <ReadingProgressBar />
 
       <div style={{ background: '#FAF8F5' }}>
-        <div className="max-w-[1200px] mx-auto px-8 py-8">
+        <div className="max-w-[1080px] mx-auto px-8 py-8">
           <Link href="/design2/library" className="text-[13px] font-semibold mb-4 inline-block" style={{ color: '#6B6560' }}>
             ← Library
           </Link>

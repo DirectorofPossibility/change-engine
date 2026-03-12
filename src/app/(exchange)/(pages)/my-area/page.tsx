@@ -101,7 +101,7 @@ export default async function MyAreaPage() {
   return (
     <div>
       <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'My Area' }]} />
           <h1 className="text-3xl sm:text-4xl font-display font-bold text-brand-text mt-4">
             Your Wayfinder
@@ -112,7 +112,7 @@ export default async function MyAreaPage() {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <MyAreaClient
           zip={zip}
           neighborhoodName={neighborhoodName}

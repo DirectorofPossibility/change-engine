@@ -33,7 +33,7 @@ export default async function LearningPathsPage() {
         color="#6a4e10"
         pattern="tripod"
       />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Learning Paths' }]} />
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 mt-6">

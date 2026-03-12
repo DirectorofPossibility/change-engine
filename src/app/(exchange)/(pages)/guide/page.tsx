@@ -65,7 +65,7 @@ export default async function GuidePageServer() {
         color="#C75B2A"
         pattern="flower"
       />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PersonaSelector />
       </div>
       <GuidePage

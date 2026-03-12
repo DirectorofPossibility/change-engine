@@ -158,7 +158,7 @@ export function CompassClient({
         <div className="absolute -top-8 -right-12 w-[280px] h-[280px] opacity-[0.06] pointer-events-none">
           <GradientFOL variant="full" spinDur={90} colorDur={14} />
         </div>
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
           {/* Top row: welcome + ZIP */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
             <div className="flex-1">
@@ -260,7 +260,7 @@ export function CompassClient({
         </div>
       </section>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
 
         {/* ═══════════════════════════════════════════════════════════
             2. COMMUNITY PULSE — Vertical Timeline Feed

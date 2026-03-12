@@ -71,7 +71,7 @@ export default async function EventsPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#4a2870" title="Community Events" subtitle="Town halls, workshops, volunteer days, and civic gatherings happening across Houston." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Events' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
           <div>

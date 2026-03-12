@@ -84,7 +84,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
         {/* Animated gradient FOL — the signature element */}
         <HeroFOLBackground />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-12 lg:py-14">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-8 py-12 lg:py-14">
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10">
             {/* Left — text */}
             <div className="flex-1 min-w-0 max-w-xl">
@@ -172,7 +172,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </section>
 
       {/* ── QUICK ACCESS GRID — 5 image-backed cards ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-3 pb-4">
+      <div className="max-w-[1080px] mx-auto px-8 pt-3 pb-4">
         <div className="relative inline-block mb-4">
           <TranslatedTooltip tip={TOOLTIPS.pathway_cards} position="bottom" />
         </div>
@@ -218,7 +218,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </div>
 
       {/* ── 4 WAYS TO ENGAGE ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-8 pb-2">
+      <div className="max-w-[1080px] mx-auto px-8 pt-8 pb-2">
         <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-4">4 ways to jump in</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {Object.entries(CENTERS_DATA).map(function ([key, c]) {
@@ -253,12 +253,12 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
       </div>
 
       {/* ── FEATURED PROMO ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-6 pb-2">
+      <div className="max-w-[1080px] mx-auto px-8 pt-6 pb-2">
         <FeaturedPromo variant="banner" />
       </div>
 
       {/* ── THREE GOOD THINGS ── */}
-      <div className="max-w-[1200px] mx-auto px-8 pt-2 pb-4">
+      <div className="max-w-[1080px] mx-auto px-8 pt-2 pb-4">
         <GoodThingsWidget variant="banner" />
       </div>
 

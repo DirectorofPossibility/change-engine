@@ -217,7 +217,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         {opportunity.registration_url && (
           <div className="p-5 flex items-center justify-between gap-4 mb-5" style={{ border: `2px solid ${themeColor}`, background: '#ffffff' }}>
             <div>
-              <p className="font-mono uppercase tracking-[0.08em] text-[0.56rem] mb-1 text-brand-muted">
+              <p className="font-mono uppercase tracking-[0.08em] text-xs mb-1 text-brand-muted">
                 Get started
               </p>
               <p className="font-body text-sm text-brand-text">

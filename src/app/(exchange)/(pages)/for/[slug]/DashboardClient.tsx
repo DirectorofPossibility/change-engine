@@ -130,7 +130,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
       <section className="relative overflow-hidden border-b border-brand-border" style={{ background: config.color + '06' }}>
         <Image src={config.folImage} alt="" aria-hidden="true"
           className="absolute right-[-40px] top-1/2 -translate-y-1/2 w-[300px] h-[300px] pointer-events-none opacity-[0.03]"  width={200} height={200} />
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <nav className="flex items-center gap-1.5 text-[11px] text-brand-muted mb-2">
             <Link href="/" className="hover:text-brand-accent transition-colors">Home</Link>
             <ChevronRight size={10} />
@@ -177,7 +177,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
       {/* ── Center tabs + pathway filter (combined toolbar) ── */}
       <div className="sticky top-0 z-20 bg-white border-b border-brand-border shadow-sm">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-1 overflow-x-auto">
             {config.centerOrder.map(function (center) {
               const meta = CENTER_META[center]
@@ -218,7 +218,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
       </div>
 
       {/* ── Dashboard body ── */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Center question as section header */}
         <p className="text-sm font-display italic mb-3" style={{ color: centerMeta.color }}>
           {centerMeta.question}

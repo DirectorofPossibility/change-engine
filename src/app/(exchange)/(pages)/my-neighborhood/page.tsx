@@ -49,7 +49,7 @@ export default async function MyNeighborhoodPage({
           intro="Enter your ZIP code to see a personalized portrait of your neighborhood — your representatives, nearby services, upcoming elections, and more."
           color={THEMES.THEME_03.color}
         />
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'My Neighborhood' }]} />
           <ZipPrompt />
         </div>
@@ -68,7 +68,7 @@ export default async function MyNeighborhoodPage({
           subtitle="A data story about where you live"
           color={THEMES.THEME_03.color}
         />
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'My Neighborhood' }]} />
           <div className="bg-white border border-brand-border p-8 text-center max-w-lg mx-auto">
             <MapPin size={32} className="mx-auto text-brand-muted mb-3" />
@@ -97,7 +97,7 @@ export default async function MyNeighborhoodPage({
           subtitle="A data story about where you live"
           color={THEMES.THEME_03.color}
         />
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'My Neighborhood' }]} />
           <p className="text-brand-muted text-center py-10">Unable to load neighborhood data. Please try again later.</p>
         </div>
@@ -129,7 +129,7 @@ export default async function MyNeighborhoodPage({
         color={THEMES.THEME_03.color}
         stats={heroStats}
       />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[
           { label: 'Super Neighborhoods', href: '/super-neighborhoods' },
           { label: storyData.neighborhood.neighborhood_name },

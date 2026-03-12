@@ -79,7 +79,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
           className="absolute right-[-60px] top-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none opacity-[0.06]"
          width={200} height={200} />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Inline breadcrumb (Breadcrumb component is server-only) */}
           <nav className="flex items-center gap-1.5 text-xs text-brand-muted mb-2">
             <Link href="/" className="hover:text-brand-accent transition-colors">Home</Link>
@@ -189,7 +189,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
       </section>
 
       {/* Content sections */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main content — shelves */}
           <div className="flex-1 min-w-0 space-y-2">

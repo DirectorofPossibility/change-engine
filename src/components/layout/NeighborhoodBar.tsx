@@ -35,7 +35,7 @@ export function NeighborhoodBar() {
         <div className="max-w-[1080px] mx-auto px-6 py-2 flex items-center gap-3">
           <ConcentricRings size={14} color="#1b5e8a" opacity={0.5} />
           {zip ? (
-            <div className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.08em]" style={{ color: '#5c6474' }}>
+            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.08em]" style={{ color: '#5c6474' }}>
               <span>{t('neighborhood.near_you') || 'Near you'}:</span>
               <strong style={{ color: '#0d1117' }}>{neighborhoodName || zip}</strong>
               <span style={{ color: '#dde1e8' }}>&middot;</span>
@@ -50,7 +50,7 @@ export function NeighborhoodBar() {
           ) : (
             <button
               onClick={function () { setModalOpen(true) }}
-              className="font-mono text-[0.62rem] uppercase tracking-[0.08em] hover:underline transition-colors"
+              className="font-mono text-xs uppercase tracking-[0.08em] hover:underline transition-colors"
               style={{ color: '#1b5e8a' }}
             >
               {t('neighborhood.prompt') || "What's happening near you?"} &middot; {t('neighborhood.set_zip') || 'Set your neighborhood'} &rarr;
@@ -101,13 +101,13 @@ export function NeighborhoodBar() {
                 autoFocus
               />
               {error && (
-                <p className="font-mono text-[0.62rem]" style={{ color: '#b03a2a' }}>{error}</p>
+                <p className="font-mono text-xs" style={{ color: '#b03a2a' }}>{error}</p>
               )}
               <div className="flex items-center gap-3">
                 <button
                   type="submit"
                   disabled={inputZip.length !== 5}
-                  className="flex-1 px-4 py-3 font-mono text-[0.68rem] uppercase tracking-[0.08em] transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 font-mono text-xs uppercase tracking-[0.08em] transition-colors disabled:opacity-50"
                   style={{ background: '#0d1117', color: '#ffffff' }}
                 >
                   {t('neighborhood.set_zip') || 'Set neighborhood'}
@@ -116,7 +116,7 @@ export function NeighborhoodBar() {
                   <button
                     type="button"
                     onClick={function () { clearZip(); setModalOpen(false) }}
-                    className="px-4 py-3 font-mono text-[0.68rem] uppercase tracking-[0.08em]"
+                    className="px-4 py-3 font-mono text-xs uppercase tracking-[0.08em]"
                     style={{ color: '#5c6474', border: '1px solid #dde1e8' }}
                   >
                     {t('ui.clear') || 'Clear'}

@@ -177,7 +177,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             {/* Promotion (GAP 1) */}
             {promo && (
               <section style={{ borderBottom: '2px solid #0d1117' }}>
-                <div className="max-w-[1200px] mx-auto px-6 py-5">
+                <div className="max-w-[1080px] mx-auto px-6 py-5">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
                       <h2
@@ -208,7 +208,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             {/* Related Services (GAP 3) */}
             {displayRelated.length > 0 && (
-              <div className="max-w-[1200px] mx-auto px-6">
+              <div className="max-w-[1080px] mx-auto px-6">
                 <section className="py-10" style={{ borderTop: '1.5px solid #dde1e8' }}>
                   <div className="flex items-end justify-between mb-4">
                     <div>
@@ -300,7 +300,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {/* Concierge CTA — the door-to-door handoff */}
         {(service.phone || service.website) && (
           <div className="mb-8 p-5" style={{ border: `2px solid ${themeColor}`, background: '#ffffff' }}>
-            <p className="font-mono uppercase tracking-[0.08em] text-[0.56rem] mb-3" style={{ color: '#5c6474' }}>
+            <p className="font-mono uppercase tracking-[0.08em] text-xs mb-3" style={{ color: '#5c6474' }}>
               Here is how to reach them
             </p>
             <div className="flex flex-wrap gap-3">

@@ -40,7 +40,7 @@ export default async function OpportunitiesPage() {
 
   return (
     <div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <Link href="/centers/action" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1a6b56' }}>
           <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1a6b56' }} />
           Action Center
@@ -57,7 +57,7 @@ export default async function OpportunitiesPage() {
         ] : undefined}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Opportunities' }]} />
 
         <div className="flex flex-col lg:flex-row gap-6 mt-4">

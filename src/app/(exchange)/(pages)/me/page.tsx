@@ -150,7 +150,7 @@ export default async function MyDashboardPage() {
         <div className="absolute right-[-60px] top-[-20px] opacity-[0.04]">
           <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
         </div>
-        <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex items-center gap-5">
             <div className="w-16 h-16 bg-brand-accent/20 flex items-center justify-center flex-shrink-0 text-xl font-display font-bold text-brand-accent">
               {displayName?.charAt(0)?.toUpperCase() || '?'}
@@ -186,7 +186,7 @@ export default async function MyDashboardPage() {
         <div className="h-1 bg-gradient-to-r from-brand-accent to-transparent" />
       </section>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main column */}
           <div className="lg:col-span-2 space-y-8">

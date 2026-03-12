@@ -101,7 +101,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[
         { label: 'Explore', href: '/explore' },
         { label: fa.focus_area_name }
@@ -242,7 +242,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
           {/* Sibling focus areas — always show for discovery */}
           {siblingFocusAreas.length > 0 && (
             <div className="mt-8">
-              <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>Related Focus Areas</h2>
+              <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-3" style={{ color: '#5c6474' }}>Related Focus Areas</h2>
               <div className="flex flex-wrap gap-2">
                 {siblingFocusAreas.map(function (sib) {
                   return (

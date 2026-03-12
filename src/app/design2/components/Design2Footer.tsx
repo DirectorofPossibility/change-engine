@@ -16,7 +16,7 @@ export function Design2Footer() {
       </div>
 
       <div className="py-12 px-8" style={{ background: '#1A1A1A' }}>
-        <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="max-w-[1080px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
               <FlowerOfLifeIcon size={28} color="#C75B2A" />

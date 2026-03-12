@@ -30,7 +30,7 @@ export default async function GlossaryPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="vesica" gradientColor="#6a4e10" title="Civic Glossary" subtitle="Plain-language definitions for civic, government, and community terms. Built for understanding, not confusion." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Glossary' }]} />
         {/* Letter nav */}
         <div className="flex flex-wrap gap-1 mt-4 mb-8">

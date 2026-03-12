@@ -38,13 +38,13 @@ export function IndexPageHero({
         <FlowerOfLife color={color} size={200} />
       </div>
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <div className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2.5 mb-3">
               <span className="block w-6 h-px" style={{ background: color }} />
               <span
-                className="font-mono text-[0.58rem] uppercase tracking-[0.2em]"
+                className="font-mono text-xs uppercase tracking-[0.2em]"
                 style={{ color: '#5c6474' }}
               >
                 Change Engine

@@ -185,7 +185,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                 href={policy.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline"
+                className="inline-flex items-center gap-1.5 font-mono uppercase tracking-[0.2em] text-xs hover:underline"
                 style={{ color: '#5c6474' }}
               >
                 <ExternalLink size={10} />

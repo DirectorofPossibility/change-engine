@@ -35,7 +35,7 @@ export function D2Hero({
         <FOLWatermark variant={folVariant} size="lg" color={folColor} animate />
       </div>
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-14">
+      <div className="relative z-10 max-w-[1080px] mx-auto px-8 py-14">
         <h1 className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight mb-3 text-brand-text">
           {title}
           {handAccent && (

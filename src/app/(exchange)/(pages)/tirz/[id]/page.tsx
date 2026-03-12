@@ -30,7 +30,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
   if (!zone) notFound()
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumb items={[
         { label: 'TIRZ Zones', href: '/tirz' },
         { label: zone.name },

@@ -124,7 +124,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
       <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
         <div className="flex items-center gap-2 mb-2">
           <BarChart3 size={12} style={{ color: '#1b5e8a' }} />
-          <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>Neighborhood data</span>
+          <span className="font-mono uppercase tracking-[0.2em] text-xs" style={{ color: '#5c6474' }}>Neighborhood data</span>
         </div>
         <a
           href="https://www.understandinghouston.org/topic/demographics"

@@ -133,7 +133,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         eyebrow={{ text: t('detail.organization') }}
         eyebrowMeta={
           org.org_type && org.org_type !== 'Organization' ? (
-            <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+            <span className="font-mono uppercase tracking-[0.2em] text-xs" style={{ color: '#5c6474' }}>
               {org.org_type}
             </span>
           ) : undefined
@@ -150,28 +150,28 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         metaRow={
           <>
             {org.phone && (
-              <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+              <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
                 <span style={{ display: 'inline-block', width: 6, height: 6, background: '#7ec8e3' }} /> {org.phone}
               </span>
             )}
             {fullAddress && (
-              <span className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+              <span className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
                 <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {fullAddress}
               </span>
             )}
             {org.website && (
-              <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em] hover:underline" style={{ color: '#1b5e8a' }}>
+              <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] hover:underline" style={{ color: '#1b5e8a' }}>
                 <span style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} /> {t('detail.website')}
               </a>
             )}
             {org.year_founded && (
-              <span className="relative inline-flex items-center gap-1.5 font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
+              <span className="relative inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em]" style={{ color: '#5c6474' }}>
                 <span style={{ display: 'inline-block', width: 6, height: 6, background: '#8a929e' }} /> Est. {org.year_founded}
                 <WayfinderTooltipPos tipKey="year_founded" position="bottom" />
               </span>
             )}
             {org.ntee_code && (
-              <span className="relative font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>
+              <span className="relative font-mono text-xs uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>
                 NTEE {org.ntee_code}
                 <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
               </span>
@@ -202,7 +202,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* About section */}
         {((org.mission_statement && displayOrgDesc) || (!org.mission_statement && displayOrgDesc)) && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.about')}</h2>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-3" style={{ color: '#5c6474' }}>{t('detail.about')}</h2>
             <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
               <p className="font-body leading-relaxed" style={{ color: '#5c6474' }}>{displayOrgDesc}</p>
             </div>
@@ -212,7 +212,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* Contact section */}
         {(org.phone || org.email || org.website || fullAddress || org.map_link || socialLinks.length > 0) && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>{t('detail.contact')}</h2>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-3" style={{ color: '#5c6474' }}>{t('detail.contact')}</h2>
             <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
               <WayfinderTooltipPos tipKey="org_action_buttons" position="bottom" />
               <ul className="space-y-2">
@@ -257,7 +257,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                 <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
                   {socialLinks.map(function (link) {
                     return (
-                      <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1 capitalize hover:underline" style={{ color: '#1b5e8a', border: '1px solid #dde1e8' }}>
+                      <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="font-mono text-xs uppercase tracking-[0.2em] px-2 py-1 capitalize hover:underline" style={{ color: '#1b5e8a', border: '1px solid #dde1e8' }}>
                         {link.platform}
                       </a>
                     )
@@ -271,7 +271,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* Hours of operation */}
         {hoursList.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3 flex items-center gap-2" style={{ color: '#5c6474' }}>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-3 flex items-center gap-2" style={{ color: '#5c6474' }}>
               <Clock size={14} /> Hours of Operation
             </h2>
             <div style={{ borderTop: '1px solid #dde1e8', paddingTop: '0.75rem' }}>
@@ -292,30 +292,30 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* Stats row */}
         {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>At a Glance</h2>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-3" style={{ color: '#5c6474' }}>At a Glance</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-0" style={{ borderTop: '2px solid #0d1117' }}>
               {org.people_served && (
                 <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
                   <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.people_served}</span>
-                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>People Served</span>
+                  <span className="block font-mono text-xs uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>People Served</span>
                 </div>
               )}
               {org.service_area && (
                 <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
                   <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.service_area}</span>
-                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Service Area</span>
+                  <span className="block font-mono text-xs uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Service Area</span>
                 </div>
               )}
               {org.partner_count != null && (
                 <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
                   <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{org.partner_count}</span>
-                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Partners</span>
+                  <span className="block font-mono text-xs uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Partners</span>
                 </div>
               )}
               {org.annual_budget != null && (
                 <div className="p-4" style={{ borderBottom: '1px solid #dde1e8' }}>
                   <span className="block font-display text-xl font-bold" style={{ color: '#0d1117' }}>{'$' + org.annual_budget.toLocaleString()}</span>
-                  <span className="block font-mono text-[0.58rem] uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Annual Budget</span>
+                  <span className="block font-mono text-xs uppercase tracking-[0.2em] mt-1" style={{ color: '#5c6474' }}>Annual Budget</span>
                 </div>
               )}
             </div>
@@ -326,7 +326,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {org.tags && org.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-8">
             {org.tags.map(function (tag) {
-              return <span key={tag} className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-2 py-1" style={{ color: '#5c6474', border: '1px solid #dde1e8' }}>{tag}</span>
+              return <span key={tag} className="font-mono text-xs uppercase tracking-[0.2em] px-2 py-1" style={{ color: '#5c6474', border: '1px solid #dde1e8' }}>{tag}</span>
             })}
           </div>
         )}
@@ -334,7 +334,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* Services */}
         {services && services.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-4" style={{ color: '#5c6474' }}>
               Services ({services.length})
             </h2>
             <div style={{ borderTop: '1.5px solid #dde1e8' }}>
@@ -359,7 +359,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* Content / News */}
         {content && content.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-4" style={{ color: '#5c6474' }}>
               News & Resources ({content.length})
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -388,7 +388,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {/* Opportunities */}
         {opportunities && opportunities.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+            <h2 className="font-mono uppercase tracking-[0.2em] text-xs mb-4" style={{ color: '#5c6474' }}>
               Opportunities ({opportunities.length})
             </h2>
             <div style={{ borderTop: '1.5px solid #dde1e8' }}>
@@ -401,10 +401,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                       {opp.description_5th_grade && <span className="font-body text-sm block line-clamp-2 mt-0.5" style={{ color: '#5c6474' }}>{opp.description_5th_grade}</span>}
                       <div className="flex items-center gap-2 flex-wrap mt-1">
                         {opp.time_commitment && (
-                          <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>{opp.time_commitment}</span>
+                          <span className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: '#8a929e' }}>{opp.time_commitment}</span>
                         )}
                         {opp.is_virtual === 'Yes' && (
-                          <span className="font-mono text-[0.58rem] uppercase tracking-[0.2em] px-1.5 py-0.5" style={{ color: '#1b5e8a', border: '1px solid #1b5e8a' }}>Virtual</span>
+                          <span className="font-mono text-xs uppercase tracking-[0.2em] px-1.5 py-0.5" style={{ color: '#1b5e8a', border: '1px solid #1b5e8a' }}>Virtual</span>
                         )}
                       </div>
                     </div>

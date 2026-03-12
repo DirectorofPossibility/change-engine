@@ -1,6 +1,6 @@
 export default function NeighborhoodLoading() {
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="h-4 w-40 bg-white/60 rounded animate-pulse mb-6" />
       <div className="h-10 w-1/2 bg-white/60 rounded animate-pulse mb-4" />
       <div className="h-64 bg-white/60 animate-pulse mb-6" />

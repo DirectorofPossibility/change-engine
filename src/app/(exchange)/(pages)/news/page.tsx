@@ -146,7 +146,7 @@ export default async function NewsPage({
     <div className="bg-paper min-h-screen">
       {/* Masthead */}
       <div className="border-b border-rule">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
           <Breadcrumb items={[{ label: 'News Stand' }]} />
           <Link href="/centers/learning" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1b5e8a' }}>
             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1b5e8a' }} />
@@ -168,7 +168,7 @@ export default async function NewsPage({
 
       {/* Filter bar */}
       <div className="border-b border-rule bg-white/60 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="relative flex flex-wrap items-center gap-2">
             <WayfinderTooltipPos tipKey="content_type_badge" position="bottom" />
             {CONTENT_TYPES.map(function (ct) {
@@ -212,7 +212,7 @@ export default async function NewsPage({
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {items.length === 0 ? (
           <div className="text-center py-24">

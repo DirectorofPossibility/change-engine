@@ -45,7 +45,7 @@ export default async function NeighborhoodsPage() {
         ]}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Neighborhoods' }]} />
         <div className="flex gap-4 mt-4 mb-6">
           <Link href="/super-neighborhoods" className="text-sm font-medium text-brand-accent hover:underline">View by Super Neighborhood</Link>

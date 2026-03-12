@@ -78,7 +78,7 @@ export default async function AboutPage() {
         <FOLDepthLayer position="top-right" size={600} opacity={0.06} />
         <FOLDepthLayer position="bottom-left" size={400} opacity={0.04} />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-6 sm:px-8 py-14 lg:py-20">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-6 sm:px-8 py-14 lg:py-20">
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
             {/* Left — editorial */}
             <div className="flex-1 min-w-0 max-w-xl">
@@ -126,7 +126,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-6 sm:px-8 py-8">
         <Breadcrumb items={[{ label: 'About' }]} />
 
         {/* ── Mission & approach ── */}

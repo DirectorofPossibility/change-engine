@@ -48,7 +48,7 @@ export default async function FoundationsPage() {
     <div className="min-h-screen bg-brand-bg">
       <SpiralTracker action="view_foundation" />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <Breadcrumb items={[{ label: 'Foundations' }]} />
       </div>
 
@@ -67,7 +67,7 @@ export default async function FoundationsPage() {
       />
 
       {/* What You Can Do + IndexWayfinder */}
-      <div className="relative max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+      <div className="relative max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
           <div>
             <div className="max-w-2xl mb-6 mt-6">

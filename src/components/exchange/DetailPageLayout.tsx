@@ -126,7 +126,7 @@ export function DetailPageLayout({
             <div className="flex items-center gap-3 mb-4 flex-wrap">
               {eyebrow && (
                 <span
-                  className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1"
+                  className="font-mono uppercase tracking-[0.2em] text-xs px-3 py-1"
                   style={{
                     background: eyebrow.bgColor || '#0d1117',
                     color: eyebrow.textColor || '#ffffff',

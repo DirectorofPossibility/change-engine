@@ -54,7 +54,7 @@ export function IndexWayfinder({
           <FlowerOfLife color={color} size={60} />
         </div>
         <h3 className="font-display text-base font-bold" style={{ color: '#0d1117' }}>{t('wayfinder.explore_more')}</h3>
-        <p className="font-mono text-[0.52rem] uppercase tracking-[0.08em] mt-1" style={{ color: '#8a929e' }}>{t('wayfinder.discover_connected')}</p>
+        <p className="font-mono text-xs uppercase tracking-[0.08em] mt-1" style={{ color: '#8a929e' }}>{t('wayfinder.discover_connected')}</p>
       </div>
 
       {/* Explore — other sections */}
@@ -63,7 +63,7 @@ export function IndexWayfinder({
           onClick={function () { setExploreOpen(!exploreOpen) }}
           className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-paper transition-colors"
         >
-          <span className="font-mono text-[0.52rem] uppercase tracking-[0.08em]" style={{ color: '#8a929e' }}>{t('wayfinder.discover')}</span>
+          <span className="font-mono text-xs uppercase tracking-[0.08em]" style={{ color: '#8a929e' }}>{t('wayfinder.discover')}</span>
           {exploreOpen ? <ChevronDown size={14} style={{ color: '#8a929e' }} /> : <ChevronRight size={14} style={{ color: '#8a929e' }} />}
         </button>
         {exploreOpen && (
@@ -92,7 +92,7 @@ export function IndexWayfinder({
             onClick={function () { setPathwaysOpen(!pathwaysOpen) }}
             className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-paper transition-colors"
           >
-            <span className="font-mono text-[0.52rem] uppercase tracking-[0.08em]" style={{ color: '#8a929e' }}>{t('wayfinder.topics')}</span>
+            <span className="font-mono text-xs uppercase tracking-[0.08em]" style={{ color: '#8a929e' }}>{t('wayfinder.topics')}</span>
             {pathwaysOpen ? <ChevronDown size={14} style={{ color: '#8a929e' }} /> : <ChevronRight size={14} style={{ color: '#8a929e' }} />}
           </button>
           {pathwaysOpen && (
@@ -118,7 +118,7 @@ export function IndexWayfinder({
       {/* Related items */}
       {related && related.length > 0 && (
         <div className="p-4 space-y-1.5">
-          <p className="font-mono text-[0.52rem] uppercase tracking-[0.08em] mb-2" style={{ color: '#8a929e' }}>{t('wayfinder.related')}</p>
+          <p className="font-mono text-xs uppercase tracking-[0.08em] mb-2" style={{ color: '#8a929e' }}>{t('wayfinder.related')}</p>
           {related.map(function (item) {
             return (
               <Link
@@ -132,7 +132,7 @@ export function IndexWayfinder({
                   {item.label}
                 </span>
                 {item.count !== undefined && (
-                  <span className="font-mono text-[0.52rem]" style={{ color: '#8a929e' }}>{item.count}</span>
+                  <span className="font-mono text-xs" style={{ color: '#8a929e' }}>{item.count}</span>
                 )}
               </Link>
             )
@@ -142,7 +142,7 @@ export function IndexWayfinder({
 
       {/* Support line */}
       <div className="px-4 py-3" style={{ borderTop: '1px solid #dde1e8', background: '#f4f5f7' }}>
-        <p className="font-mono text-[0.52rem]" style={{ color: '#8a929e' }}>
+        <p className="font-mono text-xs" style={{ color: '#8a929e' }}>
           {t('wayfinder.need_help')} <strong style={{ color: '#0d1117' }}>211</strong> / <strong style={{ color: '#0d1117' }}>311</strong> / <strong style={{ color: '#0d1117' }}>988</strong>
         </p>
       </div>

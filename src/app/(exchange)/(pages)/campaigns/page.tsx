@@ -24,7 +24,7 @@ export default async function CampaignsPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#1a3460" title="Community Campaigns" subtitle="Organized community efforts making a difference across Houston. Join a campaign and amplify your impact." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Campaigns' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 mt-4">
           <div>

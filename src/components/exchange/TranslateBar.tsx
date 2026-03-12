@@ -21,7 +21,7 @@ export function TranslateBar({ contentType, contentId, isTranslated }: Translate
 
   return (
     <div className="w-full bg-brand-bg-alt border-b border-brand-border">
-      <div className="max-w-[1200px] mx-auto px-8 py-2.5 flex items-center justify-between">
+      <div className="max-w-[1080px] mx-auto px-8 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">
             {t('translate.viewing_in')} {langName}

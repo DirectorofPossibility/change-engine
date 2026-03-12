@@ -24,7 +24,7 @@ export default async function MunicipalServicesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#7a2018" title="City Services" subtitle="Municipal services and programs provided by the City of Houston for residents." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'City Services' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 mt-4">
           <div className="space-y-3">

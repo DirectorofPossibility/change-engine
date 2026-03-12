@@ -96,7 +96,7 @@ export default async function GovernancePage() {
 
   return (
     <div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1a3460' }}>
           <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1a3460' }} />
           Accountability Center
@@ -116,7 +116,7 @@ export default async function GovernancePage() {
         ]}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Governance' }]} />
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4">

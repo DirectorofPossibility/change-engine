@@ -39,7 +39,7 @@ export default async function CalendarPage({
         ] : undefined}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Calendar' }]} />
 
         <div className="flex flex-col lg:flex-row gap-8 mt-4">

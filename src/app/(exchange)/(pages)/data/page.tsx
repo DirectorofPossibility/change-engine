@@ -69,7 +69,7 @@ export default async function OpenDataPage() {
         title="Open Data"
         subtitle="Transparency in how we organize community knowledge"
       />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Open Data' }]} />
 
         {/* Stats Grid */}

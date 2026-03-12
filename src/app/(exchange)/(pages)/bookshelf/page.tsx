@@ -41,7 +41,7 @@ export default async function BookshelfPage() {
           <FOLWatermark variant="vesica" size="md" color="#C75B2A" />
         </div>
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-14">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-8 py-14">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-center">
             {/* Left: text */}
             <div>
@@ -135,7 +135,7 @@ export default async function BookshelfPage() {
       </section>
 
       {/* ── CONTENT ── */}
-      <div className="max-w-[1200px] mx-auto px-8 py-10">
+      <div className="max-w-[1080px] mx-auto px-8 py-10">
         <BookshelfClient books={books} />
       </div>
     </div>

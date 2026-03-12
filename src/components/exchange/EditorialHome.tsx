@@ -116,7 +116,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
         <FOLDepthLayer position="top-right" size={700} opacity={0.07} />
         <FOLDepthLayer position="bottom-left" size={500} opacity={0.04} />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-6 sm:px-8 py-14 lg:py-20">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-6 sm:px-8 py-14 lg:py-20">
           <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
             {/* Left — editorial content */}
             <div className="flex-1 min-w-0 max-w-xl">
@@ -206,7 +206,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
          ══════════════════════════════════════════════════════════════ */}
       <FOLSectionDivider />
 
-      <section className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-8">
+      <section className="max-w-[1080px] mx-auto px-6 sm:px-8 pb-8">
         <div className="text-center mb-10">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">The Guide</p>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-brand-text mb-3">Open any door</h2>
@@ -262,7 +262,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
       <section className="relative overflow-hidden py-8">
         <FOLDepthLayer position="top-left" size={400} opacity={0.04} />
 
-        <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
+        <div className="max-w-[1080px] mx-auto px-6 sm:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-1">The Wire</p>
@@ -335,7 +335,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
          ══════════════════════════════════════════════════════════════ */}
       <FOLSectionDivider />
 
-      <section className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-6">
+      <section className="max-w-[1080px] mx-auto px-6 sm:px-8 pb-6">
         <div className="text-center mb-8">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">Start Here</p>
           <h2 className="font-display text-2xl font-bold text-brand-text">What brought you here today?</h2>
@@ -390,7 +390,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
          ══════════════════════════════════════════════════════════════ */}
       <FOLSectionDivider />
 
-      <div className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-4 space-y-4">
+      <div className="max-w-[1080px] mx-auto px-6 sm:px-8 pb-4 space-y-4">
         <FeaturedPromo variant="banner" />
         <GoodThingsWidget variant="banner" />
       </div>
@@ -398,7 +398,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
       {/* ══════════════════════════════════════════════════════════════
           MOBILE COMPASS CTA (shown only on mobile, replaces hidden desktop compass)
          ══════════════════════════════════════════════════════════════ */}
-      <div className="lg:hidden max-w-[1200px] mx-auto px-6 sm:px-8 py-6">
+      <div className="lg:hidden max-w-[1080px] mx-auto px-6 sm:px-8 py-6">
         <Link href="/compass" className="block relative overflow-hidden border border-brand-accent/20 p-6 group" style={{ background: 'linear-gradient(135deg, #f4f5f7, #dde1e8)' }}>
           <div className="absolute top-2 right-2 w-24 h-24 opacity-[0.1]">
             <GradientFOL variant="seed" spinDur={30} colorDur={8} />

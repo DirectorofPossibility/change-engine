@@ -64,7 +64,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
     const thing = things[Math.floor(Math.random() * 3)]
     return (
       <div className="bg-brand-bg-alt text-brand-text py-3 px-4 border-t border-brand-border">
-        <div className="max-w-[1200px] mx-auto flex items-center gap-3 text-sm">
+        <div className="max-w-[1080px] mx-auto flex items-center gap-3 text-sm">
           <FlowerOfLifeIcon size={14} color="#4a2870" />
           <span className="font-display font-bold text-brand-text flex-shrink-0">Three Good Things</span>
           <span className={'text-brand-muted truncate transition-opacity duration-300 italic ' + (fade ? 'opacity-100' : 'opacity-0')}>&ldquo;{thing}&rdquo;</span>

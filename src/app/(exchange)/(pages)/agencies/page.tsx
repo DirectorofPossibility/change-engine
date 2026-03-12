@@ -36,7 +36,7 @@ export default async function AgenciesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="metatron" gradientColor="#6a4e10" title="Government Agencies" subtitle="Federal, state, and local agencies serving Houston and Harris County." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Breadcrumb items={[{ label: 'Agencies' }]} />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
           <div>

@@ -33,7 +33,7 @@ export default async function FAQPage() {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <PageHero variant="sacred" sacredPattern="seed" gradientColor="#4a2870" title="Frequently Asked Questions" subtitle="Quick answers to the most common questions about civic participation, services, and how to use the Change Engine." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'FAQ' }]} />
         {Object.entries(grouped).map(function ([category, items]) {
           return (

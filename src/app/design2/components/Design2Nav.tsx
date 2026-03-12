@@ -77,7 +77,7 @@ export function Design2Nav({ election }: Design2NavProps) {
 
       {/* Top nav */}
       <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(247,242,234,0.95)', backdropFilter: 'blur(12px)', borderColor: '#E2DDD5' }}>
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between" style={{ height: 56 }}>
+        <div className="max-w-[1080px] mx-auto px-6 flex items-center justify-between" style={{ height: 56 }}>
           {/* Brand */}
           <Link href="/design2" className="flex items-center gap-2.5">
             <FlowerOfLifeIcon size={28} color="#C75B2A" />

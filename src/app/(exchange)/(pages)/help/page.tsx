@@ -52,7 +52,7 @@ export default async function HelpPage() {
         intro={PAGE_INTROS.availableResources}
       />
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={[{ label: 'Available Resources' }]} />
         <HelpCrisisBanner />
 

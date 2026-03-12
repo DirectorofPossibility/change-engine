@@ -13,7 +13,7 @@ export function D2Breadcrumb({ crumbs }: D2BreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="max-w-[1200px] mx-auto px-8 py-3"
+      className="max-w-[1080px] mx-auto px-8 py-3"
     >
       <ol className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light">
         <li>

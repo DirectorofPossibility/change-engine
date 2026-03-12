@@ -46,7 +46,7 @@ export async function Footer() {
         })}
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-6 py-12">
+      <div className="max-w-[1080px] mx-auto px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
@@ -123,7 +123,7 @@ export async function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="max-w-[1080px] mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-brand-muted-light">
             &copy; {new Date().getFullYear()} The Change Lab
           </p>

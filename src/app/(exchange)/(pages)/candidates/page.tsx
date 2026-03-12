@@ -24,7 +24,7 @@ export default async function CandidatesPage() {
   return (
     <div>
       <PageHero variant="sacred" sacredPattern="seed" gradientColor="#1a6b56" title="Candidates" subtitle="Get to know the candidates running for office in Houston and Harris County." />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <Breadcrumb items={[{ label: 'Elections', href: '/elections' }, { label: 'Candidates' }]} />
         <div className="space-y-4 mt-4">
           {(candidates || []).map(function (c) {
