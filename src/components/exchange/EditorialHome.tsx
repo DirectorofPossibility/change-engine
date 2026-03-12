@@ -34,8 +34,8 @@ interface EditorialHomeProps {
 function getMvpSections(stats: EditorialHomeProps['stats'], organizations: number) {
   return [
     {
-      title: 'Services & Resources',
-      description: `Food banks, legal aid, shelters, health clinics — ${stats.services || 0} services mapped and searchable.`,
+      title: 'Where to Get Help',
+      description: `Food, legal aid, shelters, clinics — ${stats.services || 0} places that actually pick up the phone.`,
       href: '/services',
       icon: Heart,
       color: '#1b5e8a',
@@ -44,8 +44,8 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       image: '/images/editorial/health-worker.jpg',
     },
     {
-      title: 'Organizations',
-      description: `${organizations} nonprofits, foundations, and community groups. Every one is a doorway.`,
+      title: 'Who\u2019s Doing the Work',
+      description: `${organizations} orgs that didn\u2019t wait for permission. Find the ones in your corner of the city.`,
       href: '/organizations',
       icon: Building2,
       color: '#1a6b56',
@@ -54,8 +54,8 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       image: '/images/editorial/community-meeting.jpg',
     },
     {
-      title: 'Elected Officials',
-      description: 'City council to Congress. Who represents you, how to reach them, what they\'re working on.',
+      title: 'Who Runs This Town',
+      description: 'City council to Congress \u2014 every name, every office, every phone number. No excuses.',
       href: '/officials',
       icon: Shield,
       color: '#4a2870',
@@ -64,8 +64,8 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       image: '/images/editorial/civic-building.jpg',
     },
     {
-      title: 'Elections & Voting',
-      description: 'Upcoming elections, polling places, ballot items, candidates — your voice matters.',
+      title: 'Your Ballot, Your Call',
+      description: 'What\u2019s coming up, who\u2019s running, where to vote. Show up informed.',
       href: '/elections',
       icon: Vote,
       color: '#7a2018',
@@ -74,18 +74,18 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       image: '/images/editorial/polling-place.jpg',
     },
     {
-      title: 'News & Library',
-      description: `${stats.resources} articles covering policy, community, health, education — all written for real people.`,
+      title: 'The Wire',
+      description: `${stats.resources} stories about the Houston you don\u2019t hear about on the evening news.`,
       href: '/news',
       icon: Newspaper,
       color: '#1b5e8a',
       stat: String(stats.resources),
-      statLabel: 'articles',
+      statLabel: 'stories',
       image: '/images/editorial/person-reading.jpg',
     },
     {
-      title: 'Opportunities',
-      description: `Volunteer, intern, get involved. ${stats.opportunities || 0} ways to turn caring into action right now.`,
+      title: 'Ways to Plug In',
+      description: `${stats.opportunities || 0} volunteer gigs, events, and open doors. Caring is nice \u2014 showing up is better.`,
       href: '/opportunities',
       icon: Users,
       color: '#4a2870',
@@ -133,10 +133,10 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                 </span>
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted mb-3 max-w-lg">
-                Houston has everything — the organizations, the officials, the resources, the people doing the work.
+                The services exist. The officials have office hours. The neighbors are already organizing.
               </p>
               <p className="text-lg leading-relaxed text-brand-text font-medium mb-6 max-w-lg">
-                We mapped it all. Where do you want to start?
+                We just put it all in one place. What are you looking for?
               </p>
 
               {/* Search + ZIP inline */}
@@ -208,9 +208,9 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
 
       <section className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-8">
         <div className="text-center mb-10">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">The Exchange</p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-brand-text mb-3">What&apos;s here for you</h2>
-          <p className="text-brand-muted max-w-lg mx-auto">Everything mapped, classified, and connected. Pick a door.</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">The Guide</p>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-brand-text mb-3">Open any door</h2>
+          <p className="text-brand-muted max-w-lg mx-auto">Six ways into the city. Each one leads somewhere good.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -265,8 +265,8 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
         <div className="max-w-[1200px] mx-auto px-6 sm:px-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-1">The Pulse</p>
-              <h2 className="font-display text-2xl font-bold text-brand-text">What&apos;s happening in Houston</h2>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-1">The Wire</p>
+              <h2 className="font-display text-2xl font-bold text-brand-text">Fresh off the press</h2>
             </div>
             <FOLButton href="/news" variant="ghost">All News</FOLButton>
           </div>
@@ -337,15 +337,15 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
 
       <section className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-6">
         <div className="text-center mb-8">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">Choose Your Intent</p>
-          <h2 className="font-display text-2xl font-bold text-brand-text">4 ways to jump in</h2>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">Start Here</p>
+          <h2 className="font-display text-2xl font-bold text-brand-text">What brought you here today?</h2>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'I want to learn', question: 'How can I understand?', href: '/library', color: '#1b5e8a', icon: BookOpen },
-            { label: 'I want to help', question: 'How can I contribute?', href: '/opportunities', color: '#1a6b56', icon: Users },
-            { label: 'I need resources', question: 'What\'s available?', href: '/services', color: '#1b5e8a', icon: Heart },
-            { label: 'I want accountability', question: 'Who decides?', href: '/officials', color: '#4a2870', icon: Scale },
+            { label: 'I want to understand', question: 'Show me what\u2019s really going on', href: '/library', color: '#1b5e8a', icon: BookOpen },
+            { label: 'I want to help', question: 'Point me to the work', href: '/opportunities', color: '#1a6b56', icon: Users },
+            { label: 'I need something', question: 'What\u2019s out there for me?', href: '/services', color: '#1b5e8a', icon: Heart },
+            { label: 'I want answers', question: 'Who\u2019s making the calls?', href: '/officials', color: '#4a2870', icon: Scale },
           ].map(function (center) {
             const Icon = center.icon
             return (

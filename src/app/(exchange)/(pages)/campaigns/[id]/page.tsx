@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { Target, Users, Calendar, TrendingUp } from 'lucide-react'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 
@@ -35,53 +34,89 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
   const org = orgResult.data
 
   const progress = c.target_value && c.current_value ? Math.min(100, Math.round((Number(c.current_value) / Number(c.target_value)) * 100)) : null
+  const canonicalUrl = `https://www.changeengine.us/campaigns/${id}`
 
-  return (
-    <div>
-      <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <Breadcrumb items={[{ label: 'Campaigns', href: '/campaigns' }, { label: c.campaign_name }]} />
-          <div className="flex items-center gap-2 mt-4 mb-2">
-            <Target className="w-5 h-5 text-theme-bigger" />
-            {c.status && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{c.status}</span>}
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{c.campaign_name}</h1>
-          {c.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{c.description_5th_grade}</p>}
-        </div>
-        <div className="h-1" style={{ background: 'linear-gradient(90deg, #805ad5, transparent 60%)' }} />
-      </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {c.goal_description && (
-                <div className="bg-white border border-brand-border p-5">
-                  <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><TrendingUp className="w-4 h-4" />Goal</h2>
-                  <p className="text-sm text-brand-text leading-relaxed">{c.goal_description}</p>
-                  {progress !== null && (
-                    <div className="mt-4">
-                      <div className="flex justify-between text-xs text-brand-muted mb-1"><span>Progress</span><span>{progress}%</span></div>
-                      <div className="h-2 bg-brand-bg rounded-full overflow-hidden"><div className="h-full bg-brand-accent rounded-full" style={{ width: progress + '%' }} /></div>
-                    </div>
-                  )}
-                </div>
-              )}
-              <div className="bg-white border border-brand-border p-5">
-                <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Details</h2>
-                <div className="space-y-2 text-sm">
-                  {c.campaign_type && <div><span className="text-brand-muted">Type:</span> <span className="text-brand-text">{c.campaign_type}</span></div>}
-                  {c.participant_count && <div className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.participant_count} participants</span></div>}
-                  {c.start_date && <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.start_date}{c.end_date ? ` to ${c.end_date}` : ''}</span></div>}
-                  {org && <div className="pt-2 border-t border-brand-border mt-2"><span className="text-brand-muted">Led by </span><Link href={`/organizations/${org.org_id}`} className="text-brand-accent hover:underline">{org.org_name}</Link></div>}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <DetailWayfinder data={wayfinderData} currentType="campaign" currentId={id} userRole={userProfile?.role} />
-          </div>
-        </div>
+  // Build meta row with dates and participant count
+  const metaRow = (
+    <>
+      {c.start_date && (
+        <span className="flex items-center gap-1 text-sm text-brand-muted">
+          <Calendar className="w-3.5 h-3.5" />
+          {c.start_date}{c.end_date ? ` to ${c.end_date}` : ''}
+        </span>
+      )}
+      {c.participant_count && (
+        <span className="flex items-center gap-1 text-sm text-brand-muted">
+          <Users className="w-3.5 h-3.5" />
+          {c.participant_count} participants
+        </span>
+      )}
+    </>
+  )
+
+  // Build sidebar content
+  const sidebarContent = (
+    <div className="bg-white border border-brand-border p-5">
+      <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Details</h2>
+      <div className="space-y-2 text-sm">
+        {c.campaign_type && <div><span className="text-brand-muted">Type:</span> <span className="text-brand-text">{c.campaign_type}</span></div>}
+        {c.participant_count && <div className="flex items-center gap-1"><Users className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.participant_count} participants</span></div>}
+        {c.start_date && <div className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-text">{c.start_date}{c.end_date ? ` to ${c.end_date}` : ''}</span></div>}
+        {org && <div className="pt-2 border-t border-brand-border mt-2"><span className="text-brand-muted">Led by </span><Link href={`/organizations/${org.org_id}`} className="text-brand-accent hover:underline">{org.org_name}</Link></div>}
       </div>
     </div>
+  )
+
+  return (
+    <DetailPageLayout
+      breadcrumbs={[{ label: 'Campaigns', href: '/campaigns' }, { label: c.campaign_name }]}
+      eyebrow={{
+        text: c.status || 'Campaign',
+        bgColor: '#805ad5',
+      }}
+      eyebrowMeta={
+        c.campaign_type ? (
+          <span className="text-xs text-brand-muted">{c.campaign_type}</span>
+        ) : undefined
+      }
+      title={c.campaign_name}
+      subtitle={c.description_5th_grade || null}
+      metaRow={metaRow}
+      mastheadBorderTop="3px solid #805ad5"
+      actions={{
+        share: { title: c.campaign_name, url: canonicalUrl },
+      }}
+      themeColor="#805ad5"
+      wayfinderData={wayfinderData}
+      wayfinderType="campaign"
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      sidebar={sidebarContent}
+      feedbackType="campaign"
+      feedbackId={id}
+      feedbackName={c.campaign_name}
+      jsonLd={{
+        '@context': 'https://schema.org',
+        '@type': 'Campaign',
+        name: c.campaign_name,
+        url: canonicalUrl,
+      }}
+    >
+      {/* Main content — Goal card */}
+      {c.goal_description && (
+        <div className="bg-white border border-brand-border p-5 mb-6">
+          <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">
+            <TrendingUp className="w-4 h-4" />Goal
+          </h2>
+          <p className="text-sm text-brand-text leading-relaxed">{c.goal_description}</p>
+          {progress !== null && (
+            <div className="mt-4">
+              <div className="flex justify-between text-xs text-brand-muted mb-1"><span>Progress</span><span>{progress}%</span></div>
+              <div className="h-2 bg-brand-bg rounded-full overflow-hidden"><div className="h-full bg-brand-accent rounded-full" style={{ width: progress + '%' }} /></div>
+            </div>
+          )}
+        </div>
+      )}
+    </DetailPageLayout>
   )
 }

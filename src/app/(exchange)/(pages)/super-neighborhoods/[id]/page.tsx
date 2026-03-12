@@ -23,8 +23,7 @@ import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarker
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { getUIStrings } from '@/lib/i18n'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
@@ -133,58 +132,62 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
     zips = Array.from(new Set((zipJunctions ?? []).map(j => j.zip_code)))
   }
 
-  return (
-    <div className="max-w-[1080px] mx-auto px-6 py-6">
-      <Breadcrumb items={[{ label: t('superNeighborhoods.breadcrumb'), href: '/super-neighborhoods' }, { label: snName }]} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 items-start">
-      <div className="py-8 lg:pr-10 lg:border-r min-w-0" style={{ borderColor: '#dde1e8' }}>
-
-      <div className="flex items-center gap-3 mb-3">
-        <span
-          className="w-10 h-10 flex items-center justify-center text-white text-sm font-bold font-mono"
-          style={{ backgroundColor: '#0d1117' }}
-        >
-          {sn.sn_number}
-        </span>
-        <div>
-          <span className="font-mono uppercase tracking-[0.12em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>Super Neighborhood</span>
-          <h1 className="font-display leading-[1] tracking-tight" style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', fontWeight: 900, color: '#0d1117' }}>{snName}</h1>
+  const metaRow = (
+    <div className="flex flex-wrap gap-6">
+      {sn.population != null && (
+        <div className="flex items-center gap-2">
+          <Users size={16} style={{ color: '#1b5e8a' }} />
+          <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{sn.population.toLocaleString()}</span>
+          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.population')}</span>
         </div>
-      </div>
-
-      {/* ── Demographics ── */}
-      <div className="flex flex-wrap gap-6 mb-6 py-4" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-        {sn.population != null && (
-          <div className="flex items-center gap-2">
-            <Users size={16} style={{ color: '#1b5e8a' }} />
-            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{sn.population.toLocaleString()}</span>
-            <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.population')}</span>
-          </div>
-        )}
-        {sn.median_income != null && (
-          <div className="flex items-center gap-2">
-            <DollarSign size={16} style={{ color: '#1b5e8a' }} />
-            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${sn.median_income.toLocaleString()}</span>
-            <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.median_income')}</span>
-          </div>
-        )}
-        {neighborhoods.length > 0 && (
-          <div className="flex items-center gap-2">
-            <MapPin size={16} style={{ color: '#1b5e8a' }} />
-            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{neighborhoods.length}</span>
-            <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.neighborhoods')}</span>
-          </div>
-        )}
-      </div>
-
-      {/* ── Description ── */}
-      {snDescription && (
-        <section className="mb-8">
-          <p className="font-body leading-[1.85]" style={{ fontSize: '0.88rem', color: '#0d1117' }}>{snDescription}</p>
-        </section>
       )}
+      {sn.median_income != null && (
+        <div className="flex items-center gap-2">
+          <DollarSign size={16} style={{ color: '#1b5e8a' }} />
+          <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${sn.median_income.toLocaleString()}</span>
+          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.median_income')}</span>
+        </div>
+      )}
+      {neighborhoods.length > 0 && (
+        <div className="flex items-center gap-2">
+          <MapPin size={16} style={{ color: '#1b5e8a' }} />
+          <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{neighborhoods.length}</span>
+          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.neighborhoods')}</span>
+        </div>
+      )}
+    </div>
+  )
 
+  const eyebrowMeta = (
+    <span
+      className="w-10 h-10 flex items-center justify-center text-white text-sm font-bold font-mono"
+      style={{ backgroundColor: '#0d1117' }}
+    >
+      {sn.sn_number}
+    </span>
+  )
+
+  return (
+    <DetailPageLayout
+      breadcrumbs={[{ label: t('superNeighborhoods.breadcrumb'), href: '/super-neighborhoods' }, { label: snName }]}
+      eyebrow={{ text: 'Super Neighborhood' }}
+      eyebrowMeta={eyebrowMeta}
+      title={snName}
+      subtitle={snDescription || null}
+      metaRow={metaRow}
+      themeColor="#1b5e8a"
+      wayfinderData={wayfinderData}
+      wayfinderType={'super_neighborhood' as any}
+      wayfinderEntityId={sn.sn_id}
+      userRole={userProfile?.role}
+      feedbackType="super_neighborhood"
+      feedbackId={sn.sn_id}
+      feedbackName={snName}
+      actions={{
+        translate: { isTranslated: !!snTranslations[sn.sn_id], contentType: 'super_neighborhood', contentId: sn.sn_id },
+        share: { title: snName, url: `https://www.changeengine.us/super-neighborhoods/${id}` },
+      }}
+    >
       {/* ── Map ── */}
       <section className="mb-8">
         <span className="font-mono uppercase tracking-[0.2em] block mb-3" style={{ fontSize: '0.58rem', color: '#5c6474' }}>{t('superNeighborhoods.map')}</span>
@@ -285,11 +288,6 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
           </div>
         </section>
       )}
-      </div>
-      <aside className="py-8 lg:pl-10 flex flex-col gap-7">
-        <DetailWayfinder data={wayfinderData} currentType={'super_neighborhood' as any} currentId={sn.sn_id} userRole={userProfile?.role} />
-      </aside>
-      </div>
-    </div>
+    </DetailPageLayout>
   )
 }

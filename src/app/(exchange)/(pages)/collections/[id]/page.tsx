@@ -2,15 +2,13 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { THEMES } from '@/lib/constants'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { ExternalLink } from 'lucide-react'
 import Image from 'next/image'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 300
 
@@ -81,75 +79,86 @@ export default async function CollectionDetailPage({ params }: { params: Promise
     })
   }
 
+  const canonicalUrl = `https://www.changeengine.us/collections/${id}`
+  const collectionName = c.collection_name || 'Collection'
+  const subtitle = c.description_5th_grade || undefined
+
   return (
-    <div>
-      <IndexPageHero
-        color={color}
-        pattern="vesica"
-        title={c.collection_name}
-        subtitle={c.description_5th_grade || undefined}
-        stats={items.length > 0 ? [{ value: items.length, label: 'Resources' }] : undefined}
-      />
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Breadcrumb items={[{ label: 'Collections', href: '/collections' }, { label: c.collection_name }]} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          <div className="lg:col-span-2">
-            {items.length === 0 ? (
-              <div className="text-center py-16">
-                <FlowerOfLifeIcon size={40} color={color} className="mx-auto mb-3 opacity-30" />
-                <p className="text-brand-muted font-display italic">This collection is being curated. Check back soon.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {items.map(function (item) {
-                  const itemId = item.id || item.service_id || item.org_id
-                  const title = item.title_6th_grade || item.service_name || item.org_name || ''
-                  const summary = item.summary_6th_grade || item.description_5th_grade || ''
-                  const image = item.image_url || item.logo_url
-                  const href = item.id ? '/content/' + item.id
-                    : item.service_id ? '/services/' + item.service_id
-                    : item.org_id ? '/organizations/' + item.org_id
-                    : '#'
-                  const themeColor = item.pathway_primary ? (THEMES as any)[item.pathway_primary]?.color || color : color
-
-                  return (
-                    <Link
-                      key={itemId}
-                      href={href}
-                      className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
-                    >
-                      {image ? (
-                        <div className="h-36 overflow-hidden">
-                          <Image src={image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"  width={800} height={400} />
-                        </div>
-                      ) : (
-                        <div className="h-3" style={{ backgroundColor: themeColor }} />
-                      )}
-                      <div className="p-4">
-                        <h3 className="font-display font-bold text-brand-text text-sm leading-tight group-hover:text-brand-accent transition-colors line-clamp-2">
-                          {title}
-                        </h3>
-                        {summary && (
-                          <p className="text-xs text-brand-muted mt-1.5 line-clamp-3">{summary}</p>
-                        )}
-                        {item.source_url && (
-                          <div className="flex items-center gap-1 mt-2 text-[10px] text-brand-muted-light">
-                            <ExternalLink size={10} />
-                            <span className="truncate">{new URL(item.source_url).hostname.replace('www.', '')}</span>
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-            )}
-          </div>
-          <DetailWayfinder data={wayfinderData} currentType={'collection' as any} currentId={collectionId} userRole={userProfile?.role} />
+    <DetailPageLayout
+      breadcrumbs={[
+        { label: 'Collections', href: '/collections' },
+        { label: collectionName },
+      ]}
+      eyebrow={{ text: 'Collection', bgColor: color }}
+      title={collectionName}
+      subtitle={subtitle}
+      metaRow={
+        items.length > 0 ? (
+          <span className="text-sm text-brand-muted">{items.length} Resources</span>
+        ) : undefined
+      }
+      actions={{
+        share: { title: collectionName, url: canonicalUrl },
+      }}
+      themeColor={color}
+      wayfinderData={wayfinderData}
+      wayfinderType={'collection'}
+      wayfinderEntityId={collectionId}
+      userRole={userProfile?.role}
+      feedbackType="collection"
+      feedbackId={collectionId}
+      feedbackName={collectionName}
+    >
+      {items.length === 0 ? (
+        <div className="text-center py-16">
+          <FlowerOfLifeIcon size={40} color={color} className="mx-auto mb-3 opacity-30" />
+          <p className="text-brand-muted font-display italic">This collection is being curated. Check back soon.</p>
         </div>
-      </div>
-    </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {items.map(function (item) {
+            const itemId = item.id || item.service_id || item.org_id
+            const title = item.title_6th_grade || item.service_name || item.org_name || ''
+            const summary = item.summary_6th_grade || item.description_5th_grade || ''
+            const image = item.image_url || item.logo_url
+            const href = item.id ? '/content/' + item.id
+              : item.service_id ? '/services/' + item.service_id
+              : item.org_id ? '/organizations/' + item.org_id
+              : '#'
+            const themeColor = item.pathway_primary ? (THEMES as any)[item.pathway_primary]?.color || color : color
+
+            return (
+              <Link
+                key={itemId}
+                href={href}
+                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+              >
+                {image ? (
+                  <div className="h-36 overflow-hidden">
+                    <Image src={image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" width={800} height={400} />
+                  </div>
+                ) : (
+                  <div className="h-3" style={{ backgroundColor: themeColor }} />
+                )}
+                <div className="p-4">
+                  <h3 className="font-display font-bold text-brand-text text-sm leading-tight group-hover:text-brand-accent transition-colors line-clamp-2">
+                    {title}
+                  </h3>
+                  {summary && (
+                    <p className="text-xs text-brand-muted mt-1.5 line-clamp-3">{summary}</p>
+                  )}
+                  {item.source_url && (
+                    <div className="flex items-center gap-1 mt-2 text-[10px] text-brand-muted-light">
+                      <ExternalLink size={10} />
+                      <span className="truncate">{new URL(item.source_url).hostname.replace('www.', '')}</span>
+                    </div>
+                  )}
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      )}
+    </DetailPageLayout>
   )
 }

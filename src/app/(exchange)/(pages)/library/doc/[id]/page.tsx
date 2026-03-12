@@ -5,8 +5,7 @@ import { FileText, Download, MessageCircle, Tag } from 'lucide-react'
 import { getDocumentById, getRelatedDocuments } from '@/lib/data/library'
 import { THEMES } from '@/lib/constants'
 import { LibraryCard } from '@/components/exchange/LibraryCard'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { ArticleVoting } from './ArticleVoting'
@@ -57,148 +56,149 @@ export default async function DocumentDetailPage(
     { label: doc.title },
   ]
 
-  return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Breadcrumb items={breadcrumbs} />
+  const metaRow = (
+    <>
+      <span className="flex items-center gap-1.5 text-sm text-brand-muted">
+        <FileText size={14} />
+        {doc.page_count} pages
+      </span>
+      <span className="text-brand-border text-sm">|</span>
+      <span className="text-sm text-brand-muted">{fileSizeMB} MB</span>
+      {doc.published_at && (
+        <>
+          <span className="text-brand-border text-sm">|</span>
+          <span className="text-sm text-brand-muted">{new Date(doc.published_at).toLocaleDateString()}</span>
+        </>
+      )}
+    </>
+  )
 
-      {/* Pathway dots */}
-      {themeInfo.length > 0 && (
-        <div className="flex items-center gap-3 mb-4">
-          {themeInfo.map(function (theme) {
+  const eyebrowMeta = themeInfo.length > 0 ? (
+    <div className="flex items-center gap-3">
+      {themeInfo.map(function (theme) {
+        return (
+          <Link
+            key={theme.name}
+            href={'/library/category/' + theme.slug}
+            className="inline-flex items-center gap-1.5 text-xs text-brand-muted hover:text-brand-text transition-colors"
+          >
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
+            {theme.name}
+          </Link>
+        )
+      })}
+    </div>
+  ) : undefined
+
+  const sidebarContent = (
+    <>
+      {/* Actions */}
+      <div className="bg-white border border-brand-border p-5 space-y-3">
+        <a
+          href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kb-documents/${doc.file_path}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full py-2.5 border border-brand-border text-sm font-semibold text-brand-text hover:bg-gray-50 transition-colors"
+        >
+          <Download size={15} />
+          Download PDF
+        </a>
+
+        <Link
+          href={'/library/chat?doc=' + doc.id}
+          className="flex items-center justify-center gap-2 w-full py-2.5 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+        >
+          <MessageCircle size={15} />
+          Ask About This Document
+        </Link>
+      </div>
+
+      {/* Related documents */}
+      {related.length > 0 && (
+        <div>
+          <h3 className="font-display text-base font-bold text-brand-text mb-3">Related Research</h3>
+          <div className="space-y-3">
+            {related.slice(0, 4).map(function (rel) {
+              return (
+                <LibraryCard
+                  key={rel.id}
+                  id={rel.id}
+                  title={rel.title}
+                  summary={rel.summary}
+                  tags={rel.tags}
+                  theme_ids={rel.theme_ids}
+                  page_count={rel.page_count}
+                  published_at={rel.published_at}
+                />
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  )
+
+  return (
+    <DetailPageLayout
+      breadcrumbs={breadcrumbs}
+      eyebrow={{ text: 'Library', bgColor: primaryTheme.color }}
+      eyebrowMeta={eyebrowMeta}
+      title={doc.title}
+      subtitle={doc.summary}
+      metaRow={metaRow}
+      themeColor={primaryTheme.color}
+      wayfinderData={wayfinderData}
+      wayfinderType="kb_document"
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      sidebar={sidebarContent}
+      feedbackType="kb_document"
+      feedbackId={doc.id}
+      feedbackName={doc.title}
+      actions={{
+        share: { title: doc.title, url: `https://www.changeengine.us/library/doc/${id}` },
+      }}
+    >
+      {/* Key Takeaways */}
+      {doc.key_points.length > 0 && (
+        <div className="mb-8">
+          <h2 className="font-display text-lg font-bold text-brand-text mb-4">Key Takeaways</h2>
+          <div className="space-y-3">
+            {doc.key_points.map(function (point, i) {
+              return (
+                <div key={i} className="flex items-start gap-3">
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5"
+                    style={{ backgroundColor: primaryTheme.color }}
+                  >
+                    {i + 1}
+                  </div>
+                  <p className="text-brand-text leading-relaxed">{point}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Tags — compact */}
+      {doc.tags.length > 0 && (
+        <div className="flex flex-wrap items-center gap-1.5 mb-6">
+          <Tag size={12} className="text-brand-muted mr-1" />
+          {doc.tags.slice(0, 6).map(function (tag) {
             return (
-              <Link
-                key={theme.name}
-                href={'/library/category/' + theme.slug}
-                className="inline-flex items-center gap-1.5 text-xs text-brand-muted hover:text-brand-text transition-colors"
+              <span
+                key={tag}
+                className="px-2 py-0.5 rounded bg-brand-bg text-[11px] text-brand-muted"
               >
-                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                {theme.name}
-              </Link>
+                {tag}
+              </span>
             )
           })}
         </div>
       )}
 
-      <h1 className="font-display text-3xl font-bold text-brand-text leading-tight mb-3">
-        {doc.title}
-      </h1>
-
-      {/* Meta line */}
-      <div className="flex flex-wrap items-center gap-3 text-sm text-brand-muted mb-8">
-        <span className="flex items-center gap-1.5">
-          <FileText size={14} />
-          {doc.page_count} pages
-        </span>
-        <span className="text-brand-border">|</span>
-        <span>{fileSizeMB} MB</span>
-        {doc.published_at && (
-          <>
-            <span className="text-brand-border">|</span>
-            <span>{new Date(doc.published_at).toLocaleDateString()}</span>
-          </>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main content */}
-        <div className="lg:col-span-2">
-          {/* Summary */}
-          <div className="mb-8">
-            <p className="text-brand-text leading-relaxed text-[15px]">{doc.summary}</p>
-          </div>
-
-          {/* Key Takeaways */}
-          {doc.key_points.length > 0 && (
-            <div className="mb-8">
-              <h2 className="font-display text-lg font-bold text-brand-text mb-4">Key Takeaways</h2>
-              <div className="space-y-3">
-                {doc.key_points.map(function (point, i) {
-                  return (
-                    <div key={i} className="flex items-start gap-3">
-                      <div
-                        className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5"
-                        style={{ backgroundColor: primaryTheme.color }}
-                      >
-                        {i + 1}
-                      </div>
-                      <p className="text-brand-text leading-relaxed">{point}</p>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Tags — compact */}
-          {doc.tags.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5 mb-6">
-              <Tag size={12} className="text-brand-muted mr-1" />
-              {doc.tags.slice(0, 6).map(function (tag) {
-                return (
-                  <span
-                    key={tag}
-                    className="px-2 py-0.5 rounded bg-brand-bg text-[11px] text-brand-muted"
-                  >
-                    {tag}
-                  </span>
-                )
-              })}
-            </div>
-          )}
-
-          <ArticleVoting documentId={doc.id} />
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-5">
-          {/* Actions */}
-          <div className="bg-white border border-brand-border p-5 space-y-3">
-            <a
-              href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kb-documents/${doc.file_path}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-2.5 border border-brand-border text-sm font-semibold text-brand-text hover:bg-gray-50 transition-colors"
-            >
-              <Download size={15} />
-              Download PDF
-            </a>
-
-            <Link
-              href={'/library/chat?doc=' + doc.id}
-              className="flex items-center justify-center gap-2 w-full py-2.5 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-            >
-              <MessageCircle size={15} />
-              Ask About This Document
-            </Link>
-          </div>
-
-          {/* Related documents */}
-          {related.length > 0 && (
-            <div>
-              <h3 className="font-display text-base font-bold text-brand-text mb-3">Related Research</h3>
-              <div className="space-y-3">
-                {related.slice(0, 4).map(function (rel) {
-                  return (
-                    <LibraryCard
-                      key={rel.id}
-                      id={rel.id}
-                      title={rel.title}
-                      summary={rel.summary}
-                      tags={rel.tags}
-                      theme_ids={rel.theme_ids}
-                      page_count={rel.page_count}
-                      published_at={rel.published_at}
-                    />
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Wayfinder */}
-          <DetailWayfinder data={wayfinderData} currentType="kb_document" currentId={id} userRole={userProfile?.role} />
-        </div>
-      </div>
-    </div>
+      <ArticleVoting documentId={doc.id} />
+    </DetailPageLayout>
   )
 }

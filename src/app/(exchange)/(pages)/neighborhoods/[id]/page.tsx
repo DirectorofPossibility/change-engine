@@ -8,9 +8,8 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
 import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUIStrings } from '@/lib/i18n'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getUserProfile } from '@/lib/auth/roles'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 86400
 
@@ -73,76 +72,45 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
-  return (
-    <div className="max-w-[1080px] mx-auto px-6 py-6">
-      <Breadcrumb items={[{ label: 'Neighborhoods', href: '/neighborhoods' }, { label: hood.neighborhood_name }]} />
+  const eyebrowMeta = (
+    <span
+      className="font-mono uppercase tracking-[0.12em]"
+      style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
+    >
+      {hood.neighborhood_type && <>{hood.neighborhood_type} &middot; </>}
+      {hood.city && <>{hood.city}</>}
+      {hood.council_district && <> &middot; District {hood.council_district}</>}
+    </span>
+  )
 
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 items-start">
-      <div className="py-8 lg:pr-10 lg:border-r min-w-0" style={{ borderColor: '#dde1e8' }}>
-      <div className="flex items-center gap-2 mb-3">
-        <span
-          className="font-mono uppercase tracking-[0.12em] px-2 py-0.5"
-          style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
-        >
-          Neighborhood
-        </span>
-        <span
-          className="font-mono uppercase tracking-[0.12em]"
-          style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
-        >
-          {hood.neighborhood_type && <>{hood.neighborhood_type} &middot; </>}
-          {hood.city && <>{hood.city}</>}
-          {hood.council_district && <> &middot; District {hood.council_district}</>}
-        </span>
-      </div>
-      <h1
-        className="font-display leading-[1] tracking-tight mb-4"
-        style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, color: '#0d1117' }}
-      >
-        {hood.neighborhood_name}
-      </h1>
-
-      {/* Demographics */}
-      <div className="flex flex-wrap gap-6 mb-6 py-4" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-        {hood.population != null && (
-          <div className="flex items-center gap-2">
-            <Users size={16} style={{ color: '#1b5e8a' }} />
-            <div>
-              <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{hood.population.toLocaleString()}</span>
-              <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.population')}</span>
-            </div>
+  const metaRow = (
+    <div className="flex flex-wrap gap-6" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8', padding: '1rem 0' }}>
+      {hood.population != null && (
+        <div className="flex items-center gap-2">
+          <Users size={16} style={{ color: '#1b5e8a' }} />
+          <div>
+            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{hood.population.toLocaleString()}</span>
+            <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.population')}</span>
           </div>
-        )}
-        {hood.median_income != null && (
-          <div className="flex items-center gap-2">
-            <DollarSign size={16} style={{ color: '#1b5e8a' }} />
-            <div>
-              <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${hood.median_income.toLocaleString()}</span>
-              <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.median_income')}</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Description */}
-      {hood.description && (
-        <section className="mb-6">
-          <p className="font-body leading-[1.85]" style={{ fontSize: '0.88rem', color: '#0d1117' }}>{hood.description}</p>
-        </section>
+        </div>
       )}
+      {hood.median_income != null && (
+        <div className="flex items-center gap-2">
+          <DollarSign size={16} style={{ color: '#1b5e8a' }} />
+          <div>
+            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${hood.median_income.toLocaleString()}</span>
+            <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.median_income')}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 
-      {/* Neighborhood Map */}
-      <NeighborhoodMap
-        services={mapData.services}
-        votingLocations={mapData.votingLocations}
-        distributionSites={mapData.distributionSites}
-        organizations={mapData.organizations}
-        municipalServices={mapData.municipalServices}
-      />
-
+  const sidebarContent = (
+    <>
       {/* ZIP code lookup link */}
       {zips.length > 0 && (
-        <div className="p-4 mb-6" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
+        <div className="p-4" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
           <p className="font-mono" style={{ fontSize: '0.75rem', color: '#0d1117' }}>
             ZIP codes: {zips.join(', ')} &mdash;{' '}
             <Link href={'/officials/lookup'} className="hover:underline font-medium" style={{ color: '#1b5e8a' }}>
@@ -151,6 +119,41 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </p>
         </div>
       )}
+    </>
+  )
+
+  return (
+    <DetailPageLayout
+      breadcrumbs={[{ label: 'Neighborhoods', href: '/neighborhoods' }, { label: hood.neighborhood_name }]}
+      eyebrow={{ text: 'Neighborhood', bgColor: '#0d1117' }}
+      eyebrowMeta={eyebrowMeta}
+      title={hood.neighborhood_name}
+      subtitle={hood.description || null}
+      metaRow={metaRow}
+      themeColor="#1b5e8a"
+      wayfinderData={wayfinderData}
+      wayfinderType="neighborhood"
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      actions={{
+        translate: { isTranslated: false, contentType: 'neighborhood', contentId: id },
+        share: { title: hood.neighborhood_name, url: `https://www.changeengine.us/neighborhoods/${id}` },
+      }}
+      sidebar={sidebarContent}
+      feedbackType="neighborhood"
+      feedbackId={id}
+      feedbackName={hood.neighborhood_name}
+    >
+      {/* Neighborhood Map */}
+      <div className="mb-6">
+        <NeighborhoodMap
+          services={mapData.services}
+          votingLocations={mapData.votingLocations}
+          distributionSites={mapData.distributionSites}
+          organizations={mapData.organizations}
+          municipalServices={mapData.municipalServices}
+        />
+      </div>
 
       {/* Local services */}
       {services.length > 0 && (
@@ -182,11 +185,6 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </div>
         </section>
       )}
-      </div>
-      <aside className="py-8 lg:pl-10 flex flex-col gap-7">
-        <DetailWayfinder data={wayfinderData} currentType={'neighborhood' as any} currentId={id} userRole={userProfile?.role} />
-      </aside>
-      </div>
-    </div>
+    </DetailPageLayout>
   )
 }

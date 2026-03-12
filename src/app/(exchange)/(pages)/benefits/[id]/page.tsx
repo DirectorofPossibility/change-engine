@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { Heart, ExternalLink, FileText, DollarSign, Users, Clock, CheckCircle } from 'lucide-react'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+import { Heart, ExternalLink, FileText, DollarSign, Users, Clock } from 'lucide-react'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 
@@ -27,61 +26,66 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
   const wayfinderData = await getWayfinderContext('benefit', id, userProfile?.role)
 
   return (
-    <div>
-      <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <Breadcrumb items={[{ label: 'Benefits', href: '/benefits' }, { label: b.benefit_name }]} />
-          <div className="flex items-center gap-2 mt-4 mb-2">
-            <Heart className="w-5 h-5 text-theme-health" />
-            {b.benefit_type && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{b.benefit_type}</span>}
+    <DetailPageLayout
+      breadcrumbs={[{ label: 'Benefits', href: '/benefits' }, { label: b.benefit_name }]}
+      eyebrow={b.benefit_type ? { text: b.benefit_type } : undefined}
+      eyebrowMeta={
+        <Heart className="w-5 h-5" style={{ color: '#e53e3e' }} />
+      }
+      title={b.benefit_name}
+      subtitle={b.description_5th_grade}
+      themeColor="#e53e3e"
+      wayfinderData={wayfinderData}
+      wayfinderType="benefit"
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      feedbackType="benefit"
+      feedbackId={id}
+      feedbackName={b.benefit_name}
+      actions={{
+        share: { title: b.benefit_name, url: `https://www.changeengine.us/benefits/${id}` },
+      }}
+      metaRow={
+        b.application_url ? (
+          <a href={b.application_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
+            Apply Now <ExternalLink className="w-4 h-4" />
+          </a>
+        ) : undefined
+      }
+      sidebar={
+        <>
+          {/* No additional sidebar content beyond wayfinder + feedback */}
+        </>
+      }
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Eligibility */}
+        {b.eligibility_summary && (
+          <div className="bg-white border border-brand-border p-5">
+            <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
+            <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
+            {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
+            {b.household_types && <p className="text-sm text-brand-muted mt-1">Household types: {b.household_types}</p>}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{b.benefit_name}</h1>
-          {b.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{b.description_5th_grade}</p>}
-          {b.application_url && (
-            <a href={b.application_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-5 px-3.5 py-1.5 rounded text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
-              Apply Now <ExternalLink className="w-4 h-4" />
-            </a>
-          )}
-        </div>
-        <div className="h-1" style={{ background: 'linear-gradient(90deg, #e53e3e, transparent 60%)' }} />
-      </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Eligibility */}
-              {b.eligibility_summary && (
-                <div className="bg-white border border-brand-border p-5">
-                  <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
-                  <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
-                  {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
-                  {b.household_types && <p className="text-sm text-brand-muted mt-1">Household types: {b.household_types}</p>}
-                </div>
-              )}
-              {/* Benefit details */}
-              <div className="bg-white border border-brand-border p-5">
-                <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
-                <div className="space-y-2 text-sm">
-                  {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
-                  {b.renewal_frequency && <div><span className="text-brand-muted">Renewal:</span> <span className="text-brand-text">{b.renewal_frequency}</span></div>}
-                  {b.application_method && <div><span className="text-brand-muted">How to apply:</span> <span className="text-brand-text">{b.application_method}</span></div>}
-                  {b.processing_days && <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-muted">Processing:</span> <span className="text-brand-text">{b.processing_days} days</span></div>}
-                </div>
-              </div>
-              {/* Documentation */}
-              {b.documentation_needed && (
-                <div className="bg-white border border-brand-border p-5 md:col-span-2">
-                  <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
-                  <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="space-y-4">
-            <DetailWayfinder data={wayfinderData} currentType="benefit" currentId={id} userRole={userProfile?.role} />
+        )}
+        {/* Benefit details */}
+        <div className="bg-white border border-brand-border p-5">
+          <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
+          <div className="space-y-2 text-sm">
+            {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
+            {b.renewal_frequency && <div><span className="text-brand-muted">Renewal:</span> <span className="text-brand-text">{b.renewal_frequency}</span></div>}
+            {b.application_method && <div><span className="text-brand-muted">How to apply:</span> <span className="text-brand-text">{b.application_method}</span></div>}
+            {b.processing_days && <div className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-brand-muted" /><span className="text-brand-muted">Processing:</span> <span className="text-brand-text">{b.processing_days} days</span></div>}
           </div>
         </div>
+        {/* Documentation */}
+        {b.documentation_needed && (
+          <div className="bg-white border border-brand-border p-5 md:col-span-2">
+            <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
+            <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
+          </div>
+        )}
       </div>
-    </div>
+    </DetailPageLayout>
   )
 }

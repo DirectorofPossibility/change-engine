@@ -1,12 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
-import { User, Globe, Mail, Phone, ExternalLink } from 'lucide-react'
+import { User, Globe, Mail, Phone } from 'lucide-react'
 import Image from 'next/image'
 
 export const revalidate = 300
@@ -29,61 +27,74 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
   if (!c) notFound()
   const wayfinderData = await getWayfinderContext('candidate' as any, id, userProfile?.role)
 
+  const canonicalUrl = `https://www.changeengine.us/candidates/${id}`
+
   return (
-    <div>
-      <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <Breadcrumb items={[{ label: 'Candidates', href: '/candidates' }, { label: c.candidate_name }]} />
-          <div className="flex items-start gap-6 mt-4">
-            {c.photo_url ? (
-              <Image src={c.photo_url} alt="" className="w-24 h-24 object-cover flex-shrink-0"  width={800} height={96} />
-            ) : (
-              <div className="w-24 h-24 bg-brand-border flex items-center justify-center flex-shrink-0"><User className="w-10 h-10 text-brand-muted" /></div>
-            )}
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{c.candidate_name}</h1>
-              <p className="text-brand-muted mt-1">{c.office_sought}{c.district ? ` - ${c.district}` : ''}</p>
-              <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
-                {c.party && <span>{c.party}</span>}
-                {c.incumbent === 'true' && <span className="text-brand-accent font-medium">Incumbent</span>}
-              </div>
-            </div>
+    <DetailPageLayout
+      breadcrumbs={[{ label: 'Candidates', href: '/candidates' }, { label: c.candidate_name }]}
+      eyebrow={{
+        text: c.party || 'Candidate',
+        bgColor: '#0d1117',
+      }}
+      eyebrowMeta={
+        c.incumbent === 'true' ? (
+          <span className="text-xs font-medium text-brand-accent">Incumbent</span>
+        ) : undefined
+      }
+      title={c.candidate_name}
+      subtitle={`${c.office_sought}${c.district ? ` - ${c.district}` : ''}`}
+      heroImage={
+        c.photo_url ? (
+          <Image src={c.photo_url} alt="" className="w-24 h-24 object-cover" width={96} height={96} />
+        ) : (
+          <div className="w-24 h-24 bg-brand-border flex items-center justify-center">
+            <User className="w-10 h-10 text-brand-muted" />
+          </div>
+        )
+      }
+      actions={{
+        share: { title: `${c.candidate_name} — ${c.office_sought}`, url: canonicalUrl },
+      }}
+      themeColor="#1b5e8a"
+      wayfinderData={wayfinderData}
+      wayfinderType={'candidate' as any}
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      feedbackType="candidate"
+      feedbackId={id}
+      feedbackName={c.candidate_name}
+      jsonLd={{
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: c.candidate_name,
+        url: canonicalUrl,
+      }}
+    >
+      {/* Main content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {c.bio_summary && (
+          <div className="bg-white border border-brand-border p-5 md:col-span-2">
+            <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">About</h2>
+            <p className="text-sm text-brand-text leading-relaxed">{c.bio_summary}</p>
+          </div>
+        )}
+        <div className="bg-white border border-brand-border p-5">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Campaign</h2>
+          <div className="space-y-2 text-sm">
+            {c.campaign_website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={c.campaign_website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline">Campaign website</a></div>}
+            {c.campaign_email && <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-brand-muted" /><a href={`mailto:${c.campaign_email}`} className="text-brand-accent hover:underline">{c.campaign_email}</a></div>}
+            {c.campaign_phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><span className="text-brand-text">{c.campaign_phone}</span></div>}
+            {c.fundraising_total && <div><span className="text-brand-muted">Fundraising:</span> <span className="font-medium text-brand-text">{c.fundraising_total}</span></div>}
           </div>
         </div>
-      </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {c.bio_summary && (
-            <div className="bg-white border border-brand-border p-5 md:col-span-2">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">About</h2>
-              <p className="text-sm text-brand-text leading-relaxed">{c.bio_summary}</p>
-            </div>
-          )}
+        {(c.policy_positions || c.endorsements) && (
           <div className="bg-white border border-brand-border p-5">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Campaign</h2>
-            <div className="space-y-2 text-sm">
-              {c.campaign_website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={c.campaign_website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline">Campaign website</a></div>}
-              {c.campaign_email && <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-brand-muted" /><a href={`mailto:${c.campaign_email}`} className="text-brand-accent hover:underline">{c.campaign_email}</a></div>}
-              {c.campaign_phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><span className="text-brand-text">{c.campaign_phone}</span></div>}
-              {c.fundraising_total && <div><span className="text-brand-muted">Fundraising:</span> <span className="font-medium text-brand-text">{c.fundraising_total}</span></div>}
-            </div>
+            <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Positions & Endorsements</h2>
+            {c.policy_positions && <p className="text-sm text-brand-text leading-relaxed">{c.policy_positions}</p>}
+            {c.endorsements && <p className="text-sm text-brand-muted mt-2">{c.endorsements}</p>}
           </div>
-          {(c.policy_positions || c.endorsements) && (
-            <div className="bg-white border border-brand-border p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Positions & Endorsements</h2>
-              {c.policy_positions && <p className="text-sm text-brand-text leading-relaxed">{c.policy_positions}</p>}
-              {c.endorsements && <p className="text-sm text-brand-muted mt-2">{c.endorsements}</p>}
-            </div>
-          )}
-        </div>
-        </div>
-        <div>
-          <DetailWayfinder data={wayfinderData} currentType={'candidate' as any} currentId={id} userRole={userProfile?.role} />
-        </div>
-        </div>
+        )}
       </div>
-    </div>
+    </DetailPageLayout>
   )
 }

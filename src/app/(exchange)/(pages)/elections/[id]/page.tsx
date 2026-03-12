@@ -10,8 +10,7 @@ import { CandidateCard } from '@/components/exchange/CandidateCard'
 import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { VotingLocationCard } from '@/components/exchange/VotingLocationCard'
 import { VotingLocationsMap } from '@/components/exchange/VotingLocationsMap'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 
@@ -68,16 +67,47 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
   // Check if any candidates have vote_pct (results available)
   const hasResults = candidates.some(function (c) { return (c as any).vote_pct != null })
 
+  const canonicalUrl = `https://www.changeengine.us/elections/${id}`
+
+  // Build meta row with election date
+  const metaRow = election.election_date ? (
+    <span className="text-sm text-brand-muted">
+      {new Date(election.election_date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+    </span>
+  ) : undefined
+
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Breadcrumb items={[
+    <DetailPageLayout
+      breadcrumbs={[
         { label: 'Elections', href: '/elections' },
-        { label: election.election_name }
-      ]} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2">
-
+        { label: election.election_name },
+      ]}
+      eyebrow={{
+        text: election.election_type || 'Election',
+        bgColor: '#0d1117',
+      }}
+      title={election.election_name}
+      subtitle={election.description || null}
+      metaRow={metaRow}
+      actions={{
+        share: { title: election.election_name, url: canonicalUrl },
+      }}
+      themeColor="#805ad5"
+      wayfinderData={wayfinderData}
+      wayfinderType={'election' as any}
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      feedbackType="election"
+      feedbackId={id}
+      feedbackName={election.election_name}
+      jsonLd={{
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: election.election_name,
+        startDate: election.election_date,
+        url: canonicalUrl,
+      }}
+    >
       {/* Countdown banner */}
       <div className="mb-5">
         <ElectionCountdown
@@ -125,10 +155,6 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
             Register to Vote
           </Link>
         </div>
-      )}
-
-      {election.description && (
-        <p className="text-brand-muted mb-5">{election.description}</p>
       )}
 
       {/* Election Results (vote percentages) — shown for past elections with results */}
@@ -251,11 +277,6 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           </div>
         </section>
       )}
-      </div>
-      <div>
-        <DetailWayfinder data={wayfinderData} currentType={'election' as any} currentId={id} userRole={userProfile?.role} />
-      </div>
-      </div>
-    </div>
+    </DetailPageLayout>
   )
 }

@@ -1,10 +1,9 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 300
 
@@ -28,31 +27,38 @@ export default async function StoryDetailPage({ params }: { params: Promise<{ id
 
   const s = story as any
   const storyId = s.story_id || s.id
+  const storyTitle = s.title || s.story_title || 'Story'
 
   const userProfile = await getUserProfile()
   const wayfinderData = await getWayfinderContext('story' as any, storyId, userProfile?.role)
 
+  const canonicalUrl = `https://www.changeengine.us/stories/${id}`
+
   return (
-    <div>
-      <div className="bg-brand-bg border-b border-brand-border">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <Breadcrumb items={[{ label: 'Stories', href: '/stories' }, { label: s.title || s.story_title || 'Story' }]} />
-          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text mt-4">{s.title || s.story_title}</h1>
-          {s.person_name && <p className="text-brand-muted mt-2">{s.person_name}{s.neighborhood ? ` from ${s.neighborhood}` : ''}</p>}
-        </div>
+    <DetailPageLayout
+      breadcrumbs={[
+        { label: 'Stories', href: '/stories' },
+        { label: storyTitle },
+      ]}
+      eyebrow={{ text: 'Community Story' }}
+      title={storyTitle}
+      subtitle={s.person_name ? `${s.person_name}${s.neighborhood ? ` from ${s.neighborhood}` : ''}` : undefined}
+      actions={{
+        share: { title: storyTitle, url: canonicalUrl },
+      }}
+      wayfinderData={wayfinderData}
+      wayfinderType={'story'}
+      wayfinderEntityId={storyId}
+      userRole={userProfile?.role}
+      feedbackType="story"
+      feedbackId={storyId}
+      feedbackName={storyTitle}
+    >
+      <div className="prose prose-brand max-w-none text-brand-text leading-relaxed">
+        {(s.body || s.story_body || s.summary || s.story_summary || '').split('\n\n').map(function (p: string, i: number) {
+          return <p key={i}>{p}</p>
+        })}
       </div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <div className="prose prose-brand max-w-none text-brand-text leading-relaxed">
-              {(s.body || s.story_body || s.summary || s.story_summary || '').split('\n\n').map(function (p: string, i: number) {
-                return <p key={i}>{p}</p>
-              })}
-            </div>
-          </div>
-          <DetailWayfinder data={wayfinderData} currentType={'story' as any} currentId={storyId} userRole={userProfile?.role} />
-        </div>
-      </div>
-    </div>
+    </DetailPageLayout>
   )
 }

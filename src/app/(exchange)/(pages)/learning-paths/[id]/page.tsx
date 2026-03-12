@@ -2,11 +2,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { PageHero } from '@/components/exchange/PageHero'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { THEMES } from '@/lib/constants'
 import { BookOpen, Clock, Layers, ArrowRight } from 'lucide-react'
-import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 
@@ -55,112 +53,137 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
   ])
   const prerequisiteName = prereqResult.data?.path_name ?? null
 
-  return (
-    <div>
-      <PageHero
-        variant="gradient"
-        gradientColor={themeColor}
-        title={(path as any).path_name}
-        subtitle={(path as any).description_5th_grade || undefined}
-      />
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Breadcrumb items={[
-          { label: 'Learning Paths', href: '/learning-paths' },
-          { label: (path as any).path_name },
-        ]} />
+  const metaRow = (
+    <>
+      {(path as any).difficulty_level && (
+        <span className="flex items-center gap-1.5 text-sm text-brand-muted">
+          <Layers size={14} style={{ color: themeColor }} />
+          {(path as any).difficulty_level}
+        </span>
+      )}
+      {(path as any).estimated_minutes != null && (
+        <span className="flex items-center gap-1.5 text-sm text-brand-muted">
+          <Clock size={14} style={{ color: themeColor }} />
+          {(path as any).estimated_minutes} min
+        </span>
+      )}
+      {(path as any).module_count != null && (
+        <span className="flex items-center gap-1.5 text-sm text-brand-muted">
+          <BookOpen size={14} style={{ color: themeColor }} />
+          {(path as any).module_count} {(path as any).module_count === 1 ? 'module' : 'modules'}
+        </span>
+      )}
+    </>
+  )
 
-        <div className="flex flex-col lg:flex-row gap-6 mt-8">
-          {/* Main content */}
-          <div className="flex-1 min-w-0">
-            {/* Info cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {(path as any).difficulty_level && (
-                <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
-                    <Layers size={20} style={{ color: themeColor }} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-brand-muted uppercase tracking-wide font-medium">Difficulty</p>
-                    <p className="text-sm font-semibold text-brand-text">{(path as any).difficulty_level}</p>
-                  </div>
-                </div>
-              )}
-              {(path as any).estimated_minutes != null && (
-                <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
-                    <Clock size={20} style={{ color: themeColor }} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-brand-muted uppercase tracking-wide font-medium">Estimated Time</p>
-                    <p className="text-sm font-semibold text-brand-text">{(path as any).estimated_minutes} minutes</p>
-                  </div>
-                </div>
-              )}
-              {(path as any).module_count != null && (
-                <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
-                    <BookOpen size={20} style={{ color: themeColor }} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-brand-muted uppercase tracking-wide font-medium">Modules</p>
-                    <p className="text-sm font-semibold text-brand-text">
-                      {(path as any).module_count} {(path as any).module_count === 1 ? 'module' : 'modules'}
-                    </p>
-                  </div>
-                </div>
-              )}
+  const sidebarContent = (
+    <>
+      {/* Info cards */}
+      <div className="space-y-4">
+        {(path as any).difficulty_level && (
+          <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
+              <Layers size={20} style={{ color: themeColor }} />
             </div>
-
-            {/* Description prose */}
-            {(path as any).path_description && (
-              <div className="mt-8 bg-white border border-brand-border p-6">
-                <h2 className="text-xl font-display font-bold text-brand-text mb-3">About This Path</h2>
-                <div className="prose prose-sm max-w-none text-brand-text">
-                  <p>{(path as any).path_description}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Prerequisite path */}
-            {(path as any).prerequisite_path_id && prerequisiteName && (
-              <div className="mt-6 bg-white border border-brand-border p-5">
-                <h3 className="text-sm font-display font-semibold text-brand-text mb-2">Recommended First</h3>
-                <Link
-                  href={'/learning-paths/' + (path as any).prerequisite_path_id}
-                  className="flex items-center gap-2 text-sm font-medium hover:underline"
-                  style={{ color: themeColor }}
-                >
-                  <ArrowRight size={14} />
-                  {prerequisiteName}
-                </Link>
-              </div>
-            )}
-
-            {/* Theme / Pathway link */}
-            {theme && (
-              <div className="mt-6 bg-white border border-brand-border p-5">
-                <h3 className="text-sm font-display font-semibold text-brand-text mb-2">Pathway</h3>
-                <Link
-                  href={'/pathways/' + theme.slug}
-                  className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
-                  style={{ color: themeColor }}
-                >
-                  <span
-                    className="w-3 h-3 rounded-sm inline-block"
-                    style={{ backgroundColor: themeColor }}
-                  />
-                  {theme.name}
-                </Link>
-              </div>
-            )}
+            <div>
+              <p className="text-xs text-brand-muted uppercase tracking-wide font-medium">Difficulty</p>
+              <p className="text-sm font-semibold text-brand-text">{(path as any).difficulty_level}</p>
+            </div>
           </div>
-
-          {/* Wayfinder sidebar */}
-          <aside className="lg:w-80 shrink-0">
-            <DetailWayfinder data={wayfinderData} currentType="learning_path" currentId={id} userRole={userProfile?.role} />
-          </aside>
-        </div>
+        )}
+        {(path as any).estimated_minutes != null && (
+          <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
+              <Clock size={20} style={{ color: themeColor }} />
+            </div>
+            <div>
+              <p className="text-xs text-brand-muted uppercase tracking-wide font-medium">Estimated Time</p>
+              <p className="text-sm font-semibold text-brand-text">{(path as any).estimated_minutes} minutes</p>
+            </div>
+          </div>
+        )}
+        {(path as any).module_count != null && (
+          <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
+              <BookOpen size={20} style={{ color: themeColor }} />
+            </div>
+            <div>
+              <p className="text-xs text-brand-muted uppercase tracking-wide font-medium">Modules</p>
+              <p className="text-sm font-semibold text-brand-text">
+                {(path as any).module_count} {(path as any).module_count === 1 ? 'module' : 'modules'}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+
+      {/* Prerequisite path */}
+      {(path as any).prerequisite_path_id && prerequisiteName && (
+        <div className="bg-white border border-brand-border p-5">
+          <h3 className="text-sm font-display font-semibold text-brand-text mb-2">Recommended First</h3>
+          <Link
+            href={'/learning-paths/' + (path as any).prerequisite_path_id}
+            className="flex items-center gap-2 text-sm font-medium hover:underline"
+            style={{ color: themeColor }}
+          >
+            <ArrowRight size={14} />
+            {prerequisiteName}
+          </Link>
+        </div>
+      )}
+
+      {/* Theme / Pathway link */}
+      {theme && (
+        <div className="bg-white border border-brand-border p-5">
+          <h3 className="text-sm font-display font-semibold text-brand-text mb-2">Pathway</h3>
+          <Link
+            href={'/pathways/' + theme.slug}
+            className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
+            style={{ color: themeColor }}
+          >
+            <span
+              className="w-3 h-3 rounded-sm inline-block"
+              style={{ backgroundColor: themeColor }}
+            />
+            {theme.name}
+          </Link>
+        </div>
+      )}
+    </>
+  )
+
+  return (
+    <DetailPageLayout
+      breadcrumbs={[
+        { label: 'Learning Paths', href: '/learning-paths' },
+        { label: (path as any).path_name },
+      ]}
+      eyebrow={{ text: 'Learning Path', bgColor: themeColor }}
+      title={(path as any).path_name}
+      subtitle={(path as any).description_5th_grade || null}
+      metaRow={metaRow}
+      themeColor={themeColor}
+      wayfinderData={wayfinderData}
+      wayfinderType="learning_path"
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      sidebar={sidebarContent}
+      feedbackType="learning_path"
+      feedbackId={id}
+      feedbackName={(path as any).path_name}
+      actions={{
+        share: { title: (path as any).path_name, url: `https://www.changeengine.us/learning-paths/${id}` },
+      }}
+    >
+      {/* Description prose */}
+      {(path as any).path_description && (
+        <div className="bg-white border border-brand-border p-6">
+          <h2 className="text-xl font-display font-bold text-brand-text mb-3">About This Path</h2>
+          <div className="prose prose-sm max-w-none text-brand-text">
+            <p>{(path as any).path_description}</p>
+          </div>
+        </div>
+      )}
+    </DetailPageLayout>
   )
 }

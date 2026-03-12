@@ -185,7 +185,7 @@ export function DetailPageLayout({
                 data={wayfinderData}
                 currentType={wayfinderType}
                 currentId={wayfinderEntityId}
-                userRole={userRole}
+                userRole={userRole ?? undefined}
               />
             </div>
           </div>
@@ -211,7 +211,7 @@ export function DetailPageLayout({
                 data={wayfinderData}
                 currentType={wayfinderType}
                 currentId={wayfinderEntityId}
-                userRole={userRole}
+                userRole={userRole ?? undefined}
               />
             </div>
 
