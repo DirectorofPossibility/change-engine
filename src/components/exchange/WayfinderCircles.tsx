@@ -201,7 +201,7 @@ export function WayfinderCircles({
         viewBox={`0 0 ${VB_WIDTH} ${viewHeight}`}
         className="w-full"
         role="img"
-        aria-label="Community Exchange pathway navigation"
+        aria-label="Community Guide pathway navigation"
         style={pz.svgStyle}
       >
         {/* Bridge lines between connected pathways */}

@@ -114,7 +114,7 @@ export function CommunityGuide({ stats, latestContent, quote, promotions }: Comm
             className="font-mono text-[0.6rem] uppercase tracking-[0.08em] mb-5"
             style={{ color: 'rgba(255,255,255,0.4)' }}
           >
-            {t('pathway.edition_label')} &middot; {t('guide.masthead')} &middot; {t('pathway.edition_suffix')}
+            Houston, Texas &middot; {t('guide.masthead')} &middot; {t('guide.volume')}
           </p>
 
           {/* H1 */}

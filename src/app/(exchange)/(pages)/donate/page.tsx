@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/exchange/PageHero'
 import { FOLWatermark } from '@/components/exchange/FOLWatermark'
-import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 
 export const revalidate = 86400
 
@@ -141,7 +140,6 @@ export default function DonatePage() {
           <div className="absolute right-[-20px] bottom-[-20px] opacity-[0.04]">
             <FOLWatermark variant="flower" size="md" color="#C75B2A" />
           </div>
-          <FlowerOfLifeIcon size={32} className="mx-auto mb-3" />
           <p className="font-display text-lg font-bold text-brand-text">
             Civic infrastructure only works if someone maintains it.
           </p>

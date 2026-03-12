@@ -47,9 +47,9 @@ export default async function OfficialsPage() {
         pattern="metatron"
         titleKey="officials.title"
         subtitleKey="officials.subtitle"
-        intro="Democracy works when you know who represents you. Enter your ZIP code to find your elected officials at every level — from City Hall to the U.S. Capitol."
+        intro="The people making decisions about your city, your state, and your country. Look them up. Reach out."
         stats={[
-          { value: officials.length, label: 'Civic Leaders' },
+          { value: officials.length, label: 'Officials' },
           { value: federalCount, label: 'Federal' },
           { value: stateCount, label: 'State' },
           { value: localCount, label: 'Local' },

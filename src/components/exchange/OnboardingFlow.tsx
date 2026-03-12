@@ -147,7 +147,7 @@ export function OnboardingFlow() {
             <div className="flex items-center gap-3 mb-1">
               <Image src="/images/fol/flower-full.svg" alt="" className="w-8 h-8" style={{ filter: 'hue-rotate(-10deg) saturate(0.6)' }}  width={200} height={32} />
               <div>
-                <span className="block font-display text-lg font-bold text-brand-text leading-tight">Community Exchange</span>
+                <span className="block font-display text-lg font-bold text-brand-text leading-tight">Community Guide</span>
                 <span className="block font-mono text-[8px] font-bold uppercase tracking-widest text-brand-muted-light">Powered by The Change Lab</span>
               </div>
             </div>
@@ -200,7 +200,7 @@ export function OnboardingFlow() {
                 </div>
               </div>
               <h2 className="font-display text-2xl font-bold text-brand-text mb-2">
-                Welcome to Community Exchange
+                Welcome to Community Guide
               </h2>
               <p className="text-sm text-brand-muted mb-1 max-w-xs mx-auto">
                 Houston&apos;s civic life — officials, services, organizations, opportunities — all in one place.

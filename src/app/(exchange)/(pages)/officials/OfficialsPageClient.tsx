@@ -148,8 +148,8 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
     <div>
       {/* ZIP Search Bar */}
       <div className="bg-white p-6 mb-8" style={{ border: '2px solid #0d1117' }}>
-        <h2 className="font-display text-xl font-bold mb-2" style={{ color: '#0d1117' }}>Find Your Representatives</h2>
-        <p className="font-body text-sm mb-4" style={{ color: '#5c6474' }}>Enter your ZIP code to see who represents you at every level of government.</p>
+        <h2 className="font-display text-xl font-bold mb-2" style={{ color: '#0d1117' }}>Who Represents You?</h2>
+        <p className="font-body text-sm mb-4" style={{ color: '#5c6474' }}>Drop your ZIP code. We\u2019ll show you everyone from City Hall to the Capitol.</p>
         <form onSubmit={handleZipSearch} className="flex gap-3">
           <div className="relative flex-1 max-w-xs">
             <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#5c6474' }} />
@@ -181,7 +181,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
       {zipResults && (
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-2xl font-bold" style={{ color: '#0d1117' }}>Your Representatives</h2>
+            <h2 className="font-display text-2xl font-bold" style={{ color: '#0d1117' }}>Your Reps</h2>
             <button onClick={clearZipResults} className="text-sm hover:underline" style={{ color: '#1b5e8a' }}>
               Clear results
             </button>
@@ -230,7 +230,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
       )}
 
       {/* Full Officials Listing */}
-      <h2 className="relative font-display text-2xl font-bold mb-6" style={{ color: '#0d1117' }}>All Civic Leaders
+      <h2 className="relative font-display text-2xl font-bold mb-6" style={{ color: '#0d1117' }}>The Full Roster
         <TranslatedTooltip tip={TOOLTIPS.party_label} position="bottom" />
       </h2>
       <OfficialsClient officials={officials} levels={levels} translations={translations} linkedinProfiles={linkedinProfiles} />

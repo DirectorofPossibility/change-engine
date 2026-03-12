@@ -301,10 +301,6 @@ export function GoodThingsClient() {
         </div>
         <div className="h-1 bg-gradient-to-r from-[#e53e3e] via-[#38a169] to-[#805ad5]" />
         <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <div className="inline-flex items-center gap-2 mb-5">
-            <FlowerOfLifeIcon size={18} color="#C75B2A" />
-            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-brand-muted">{t('gt.community_practice')}</span>
-          </div>
           <p className="text-base text-brand-muted mb-3 max-w-xl mx-auto">
             {t('gt.hero_sub')}
           </p>

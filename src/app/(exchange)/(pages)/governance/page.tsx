@@ -107,10 +107,10 @@ export default async function GovernancePage() {
         color="#805ad5"
         pattern="metatron"
         title="Governance"
-        subtitle="Officials & policies at every level"
-        intro="From City Hall to the U.S. Capitol — see who represents Houston and the policies shaping your community."
+        subtitle="Who\u2019s in charge and what they\u2019re doing"
+        intro="From City Hall to the Capitol — the officials who represent Houston and the policies they\u2019re working on."
         stats={[
-          { value: allOfficials.length, label: 'Civic Leaders' },
+          { value: allOfficials.length, label: 'Officials' },
           { value: allPolicies.length, label: 'Policies Tracked' },
           { value: LEVELS.length, label: 'Levels of Government' },
         ]}

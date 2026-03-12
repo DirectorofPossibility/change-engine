@@ -237,7 +237,7 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
       {snPolicies.length > 0 && (
         <section className="mb-8">
           <span className="font-mono uppercase tracking-[0.2em] block mb-3" style={{ fontSize: '0.58rem', color: '#5c6474' }}>
-            Policies Affecting This Neighborhood
+            Policy Watch — This Neighborhood
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}>
             {snPolicies.slice(0, 6).map(function (p: any) {

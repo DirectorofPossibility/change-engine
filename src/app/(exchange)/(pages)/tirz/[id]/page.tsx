@@ -125,7 +125,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
               <p className="text-sm text-brand-text">
                 ZIP Codes: <strong>{zone.zip_codes}</strong> &mdash;{' '}
                 <Link href="/officials/lookup" className="text-brand-accent hover:underline font-medium">
-                  Find Your Representatives &rarr;
+                  Who represents this area? &rarr;
                 </Link>
               </p>
             </div>
@@ -136,7 +136,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
             <section className="mb-8">
               <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
                 <MapPin size={20} style={{ color: '#C75B2A' }} />
-                Civic Leaders Connected to This Zone
+                Officials Connected to This Zone
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {officials.slice(0, 8).map(function (official: any) {
