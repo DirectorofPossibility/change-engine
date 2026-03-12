@@ -228,38 +228,39 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       {/* ── MASTHEAD ── */}
       <section style={{ background: '#ffffff', borderBottom: '2px solid #0d1117' }}>
         <div className="max-w-[1200px] mx-auto px-8 py-8">
-          {/* Eyebrow row */}
-          <div className="flex items-center gap-3 mb-4">
-            <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
-              {themeEntry?.name || t('content.news')}
-            </span>
-            {(item as any).content_type && (
-              <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
-                {(item as any).content_type}
-                {item.pathway_primary && ' / ' + (themeEntry?.name || '')}
-              </span>
-            )}
-            {(item.source_org_name || item.source_domain) && (
-              orgInfo ? (
-                <Link href={'/organizations/' + orgInfo.org_id} className="font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline" style={{ color: '#5c6474' }}>
-                  {item.source_org_name || item.source_domain}
-                </Link>
-              ) : (
-                <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
-                  {item.source_org_name || item.source_domain}
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0">
+            {/* Left: Hero content (2/3) */}
+            <div className="pr-0 lg:pr-8">
+              {/* Eyebrow row */}
+              <div className="flex items-center gap-3 mb-4">
+                <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1" style={{ background: '#0d1117', color: '#ffffff' }}>
+                  {themeEntry?.name || t('content.news')}
                 </span>
-              )
-            )}
-            {isTranslated && (
-              <span className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] flex items-center gap-1" style={{ color: '#1b5e8a' }}>
-                <Globe size={11} /> {t('content.translated')}
-                <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
-              </span>
-            )}
-          </div>
+                {(item as any).content_type && (
+                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+                    {(item as any).content_type}
+                    {item.pathway_primary && ' / ' + (themeEntry?.name || '')}
+                  </span>
+                )}
+                {(item.source_org_name || item.source_domain) && (
+                  orgInfo ? (
+                    <Link href={'/organizations/' + orgInfo.org_id} className="font-mono uppercase tracking-[0.2em] text-[0.58rem] hover:underline" style={{ color: '#5c6474' }}>
+                      {item.source_org_name || item.source_domain}
+                    </Link>
+                  ) : (
+                    <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>
+                      {item.source_org_name || item.source_domain}
+                    </span>
+                  )
+                )}
+                {isTranslated && (
+                  <span className="relative font-mono uppercase tracking-[0.2em] text-[0.58rem] flex items-center gap-1" style={{ color: '#1b5e8a' }}>
+                    <Globe size={11} /> {t('content.translated')}
+                    <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
+                  </span>
+                )}
+              </div>
 
-          <div className="flex items-start justify-between gap-6">
-            <div className="flex-1">
               <h1 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.15] mb-3" style={{ color: '#0d1117', fontWeight: 900 }}>
                 {title}
               </h1>
@@ -269,20 +270,20 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </p>
               )}
+
+              {/* Image */}
+              {item.image_url && (
+                <div className="mt-4 overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
+                  <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
+                </div>
+              )}
             </div>
 
-            {/* Geo mark */}
-            <div className="hidden sm:flex items-center justify-center flex-shrink-0" style={{ width: 80, height: 80 }}>
-              <FlowerOfLife size={72} color={themeColor} opacity={0.15} />
+            {/* Right: Wayfinder (1/3) */}
+            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>
-
-          {/* Image */}
-          {item.image_url && (
-            <div className="mt-4 overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
-              <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
-            </div>
-          )}
         </div>
       </section>
 
@@ -507,8 +508,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
           {/* ── SIDEBAR ── */}
           <div className="pl-0 lg:pl-8 space-y-6 mt-8 lg:mt-0">
-            {/* Wayfinder */}
-            <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
+            {/* Wayfinder (mobile only — desktop version is in masthead) */}
+            <div className="lg:hidden">
+              <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
+            </div>
 
             {/* Topics & Focus Areas */}
             <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
