@@ -195,7 +195,7 @@ export const SF_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'sfSupervisorDistricts',
     label: 'Supervisor Districts',
     url: '/geo/sf/supervisor-districts.geojson',
-    color: '#38a169',
+    color: '#1a6b56',
     idProperty: 'DISTRICT',
     detailPath: null,
   },
@@ -203,7 +203,7 @@ export const SF_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'sfNeighborhoods',
     label: 'Neighborhoods',
     url: '/geo/sf/neighborhoods.geojson',
-    color: '#805ad5',
+    color: '#4a2870',
     idProperty: 'nhood',
     detailPath: null,
   },
@@ -211,7 +211,7 @@ export const SF_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'sfZipCodes',
     label: 'ZIP Codes',
     url: '/geo/sf/zip-codes.geojson',
-    color: '#319795',
+    color: '#1a5030',
     idProperty: 'zip_code',
     detailPath: null,
   },
@@ -219,7 +219,7 @@ export const SF_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     id: 'sfPoliceDistricts',
     label: 'Police Districts',
     url: '/geo/sf/police-districts.geojson',
-    color: '#e53e3e',
+    color: '#7a2018',
     idProperty: 'DISTRICT',
     detailPath: null,
   },
@@ -264,10 +264,10 @@ export const DEFAULT_LEVEL_COLOR = '#8B7E74'
 
 /** Urgency level → Tailwind classes + gradient hex. Used by LifeSituationCard, help page, etc. */
 export const URGENCY_COLORS: Record<string, { bg: string; border: string; text: string; gradientFrom: string; gradientTo: string }> = {
-  Critical: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', gradientFrom: '#e53e3e', gradientTo: '#c53030' },
-  High:     { bg: 'bg-orange-50', border: 'border-orange-300', text: 'text-orange-700', gradientFrom: '#dd6b20', gradientTo: '#c05621' },
-  Medium:   { bg: 'bg-yellow-50', border: 'border-yellow-300', text: 'text-yellow-700', gradientFrom: '#d69e2e', gradientTo: '#b7791f' },
-  Low:      { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-700', gradientFrom: '#38a169', gradientTo: '#2f855a' },
+  Critical: { bg: 'bg-red-50', border: 'border-red-300', text: 'text-red-700', gradientFrom: '#7a2018', gradientTo: '#5a1810' },
+  High:     { bg: 'bg-orange-50', border: 'border-orange-300', text: 'text-orange-700', gradientFrom: '#1e4d7a', gradientTo: '#163a5c' },
+  Medium:   { bg: 'bg-yellow-50', border: 'border-yellow-300', text: 'text-yellow-700', gradientFrom: '#4a2870', gradientTo: '#381e55' },
+  Low:      { bg: 'bg-green-50', border: 'border-green-300', text: 'text-green-700', gradientFrom: '#1a6b56', gradientTo: '#145242' },
 }
 
 /** Ordered urgency levels for rendering sections. */

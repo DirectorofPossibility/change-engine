@@ -99,16 +99,17 @@ export async function getMapMarkersForSuperNeighborhood(snId: string) {
     allZips = Array.from(new Set((zipJunctions ?? []).map(j => j.zip_code)))
   }
 
-  if (allZips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
+  if (allZips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [], municipalServices: [] }
 
-  const [services, votingLocations, distributionSites, organizations] = await Promise.all([
+  const [services, votingLocations, distributionSites, organizations, municipalServices] = await Promise.all([
     getServicesWithCoords(allZips),
     getVotingLocationsWithCoords(allZips),
     getDistributionSitesWithCoords(allZips),
     getOrganizationsWithCoords(),
+    getMunicipalServiceMarkers(),
   ])
 
-  return { services, votingLocations, distributionSites, organizations }
+  return { services, votingLocations, distributionSites, organizations, municipalServices }
 }
 
 // ── Map marker data ────────────────────────────────────────────────────
@@ -172,16 +173,17 @@ export async function getMapMarkersForNeighborhood(neighborhoodId: string) {
     .eq('neighborhood_id', neighborhoodId)
 
   const zips = (zipJunctions ?? []).map(j => j.zip_code)
-  if (zips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [] }
+  if (zips.length === 0) return { services: [], votingLocations: [], distributionSites: [], organizations: [], municipalServices: [] }
 
-  const [services, votingLocations, distributionSites, organizations] = await Promise.all([
+  const [services, votingLocations, distributionSites, organizations, municipalServices] = await Promise.all([
     getServicesWithCoords(zips),
     getVotingLocationsWithCoords(zips),
     getDistributionSitesWithCoords(zips),
     getOrganizationsWithCoords(),
+    getMunicipalServiceMarkers(),
   ])
 
-  return { services, votingLocations, distributionSites, organizations }
+  return { services, votingLocations, distributionSites, organizations, municipalServices }
 }
 
 // ── Service-Org-Geography connectivity ───────────────────────────────

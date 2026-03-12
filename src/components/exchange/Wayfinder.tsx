@@ -65,17 +65,17 @@ export function Wayfinder({
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-6 sm:gap-10">
               <div>
-                <span className="text-2xl font-serif font-bold text-brand-text">{totalResources.toLocaleString()}</span>
+                <span className="text-2xl font-display font-bold text-brand-text">{totalResources.toLocaleString()}</span>
                 <span className="text-xs text-brand-muted ml-1.5">{t('home.stats_resources')}</span>
               </div>
               <div className="h-8 w-px bg-brand-border" />
               <div>
-                <span className="text-2xl font-serif font-bold text-brand-text">{stats.officials.toLocaleString()}</span>
+                <span className="text-2xl font-display font-bold text-brand-text">{stats.officials.toLocaleString()}</span>
                 <span className="text-xs text-brand-muted ml-1.5">{t('home.stats_officials')}</span>
               </div>
               <div className="h-8 w-px bg-brand-border hidden sm:block" />
               <div className="hidden sm:block">
-                <span className="text-2xl font-serif font-bold text-brand-text">{organizations.toLocaleString()}</span>
+                <span className="text-2xl font-display font-bold text-brand-text">{organizations.toLocaleString()}</span>
                 <span className="text-xs text-brand-muted ml-1.5">{t('home.stats_organizations')}</span>
               </div>
             </div>
@@ -119,7 +119,7 @@ export function Wayfinder({
                   <div className="p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                      <h3 className="font-serif font-bold text-brand-text text-sm">{theme.name}</h3>
+                      <h3 className="font-display font-bold text-brand-text text-sm">{theme.name}</h3>
                     </div>
                     <p className="text-xs text-brand-muted leading-relaxed line-clamp-2 mb-3">
                       {theme.description.split('.')[0]}.

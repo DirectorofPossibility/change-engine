@@ -83,7 +83,7 @@ export function PoliciesPageClient({ policies, translations, initialLevel }: Pol
             value={search}
             onChange={function (e) { setSearch(e.target.value) }}
             placeholder="Search policies..."
-            className="w-full pl-9 pr-4 py-2.5 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+            className="w-full pl-9 pr-4 py-2.5 border border-brand-border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
           />
         </div>
         <div className="flex gap-2">
@@ -91,7 +91,7 @@ export function PoliciesPageClient({ policies, translations, initialLevel }: Pol
             <select
               value={levelFilter}
               onChange={function (e) { setLevelFilter(e.target.value) }}
-              className="px-3 py-2.5 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+              className="px-3 py-2.5 border border-brand-border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
             >
               {LEVELS.map(function (l) { return <option key={l} value={l}>{l === 'All' ? 'All Levels' : l}</option> })}
             </select>
@@ -100,7 +100,7 @@ export function PoliciesPageClient({ policies, translations, initialLevel }: Pol
           <select
             value={statusFilter}
             onChange={function (e) { setStatusFilter(e.target.value) }}
-            className="px-3 py-2.5 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
+            className="px-3 py-2.5 border border-brand-border text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20"
           >
             {STATUSES.map(function (s) { return <option key={s} value={s}>{s === 'All' ? 'All Statuses' : s}</option> })}
           </select>
@@ -121,7 +121,7 @@ export function PoliciesPageClient({ policies, translations, initialLevel }: Pol
         const color = LEVEL_COLORS[level] || DEFAULT_LEVEL_COLOR
         return (
           <section key={level} className="mb-10">
-            <h2 className="relative text-lg font-serif font-bold text-brand-text mb-4 flex items-center gap-2">
+            <h2 className="relative text-lg font-display font-bold text-brand-text mb-4 flex items-center gap-2">
               <Scale size={18} style={{ color }} />
               <span style={{ color }}>{level}</span>
               <span className="text-xs text-brand-muted font-normal">({items.length})</span>

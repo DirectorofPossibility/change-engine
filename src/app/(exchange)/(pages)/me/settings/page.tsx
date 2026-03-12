@@ -180,7 +180,7 @@ export default function SettingsPage() {
         <div className="h-8 w-32 bg-white/60 rounded animate-pulse mb-6" />
         <div className="space-y-4">
           {[0, 1, 2, 3].map(function (i) {
-            return <div key={i} className="h-16 bg-white/60 rounded-lg animate-pulse" />
+            return <div key={i} className="h-16 bg-white/60 animate-pulse" />
           })}
         </div>
       </div>
@@ -193,12 +193,12 @@ export default function SettingsPage() {
       <p className="text-sm text-brand-muted mb-8">Language, notifications, saved items, and account info — all in one place.</p>
 
       {message && (
-        <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg p-3 mb-4">
+        <div className="bg-green-50 border border-green-200 text-green-700 text-sm p-3 mb-4">
           {message}
         </div>
       )}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-3 mb-4">
           {error}
         </div>
       )}
@@ -217,7 +217,7 @@ export default function SettingsPage() {
             )}
           </div>
           <div>
-            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border rounded-lg text-sm font-medium text-brand-text hover:border-brand-accent transition-colors cursor-pointer">
+            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border text-sm font-medium text-brand-text hover:border-brand-accent transition-colors cursor-pointer">
               {uploadingAvatar ? 'Uploading...' : 'Change Picture'}
               <input
                 type="file"
@@ -243,7 +243,7 @@ export default function SettingsPage() {
             type="text"
             value={displayName}
             onChange={function (e) { setDisplayName(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
           />
         </div>
         <div>
@@ -253,7 +253,7 @@ export default function SettingsPage() {
             type="text"
             value={address}
             onChange={function (e) { setAddress(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
             placeholder="123 Main St, Houston, TX 77001"
           />
           <p className="text-xs text-brand-muted mt-1">Used to find your elected officials and local resources</p>
@@ -266,7 +266,7 @@ export default function SettingsPage() {
             maxLength={5}
             value={zipCode}
             onChange={function (e) { setZipCode(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
             placeholder="Auto-filled from address"
           />
         </div>
@@ -277,7 +277,7 @@ export default function SettingsPage() {
             id="language"
             value={language}
             onChange={function (e) { setLanguage(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent bg-white"
+            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent bg-white"
           >
             <option value="en">English</option>
             <option value="es">Español</option>
@@ -298,7 +298,7 @@ export default function SettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="px-6 py-2 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="px-6 py-2 bg-brand-accent text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save Profile'}
         </button>
@@ -316,14 +316,14 @@ export default function SettingsPage() {
             minLength={6}
             value={newPassword}
             onChange={function (e) { setNewPassword(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border rounded-lg text-sm focus:outline-none focus:border-brand-accent"
+            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
             placeholder="At least 6 characters"
           />
         </div>
         <button
           type="submit"
           disabled={saving}
-          className="px-6 py-2 bg-brand-text text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="px-6 py-2 bg-brand-text text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
         >
           {saving ? 'Updating...' : 'Update Password'}
         </button>

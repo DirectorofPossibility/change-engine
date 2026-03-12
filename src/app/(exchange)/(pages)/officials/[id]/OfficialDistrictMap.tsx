@@ -59,7 +59,7 @@ export function OfficialDistrictMap({ districtType, districtId }: OfficialDistri
         highlightLayerId={layer.id}
         highlightFeatureId={featureId}
         showLegend={false}
-        className="w-full h-[280px] rounded-xl"
+        className="w-full h-[280px]"
       />
     </div>
   )

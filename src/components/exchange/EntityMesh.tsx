@@ -21,7 +21,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
 
   return (
     <section className="mt-10 pt-8 border-t border-brand-border">
-      <h3 className="font-serif text-xl font-semibold mb-4">Connected Through the Community</h3>
+      <h3 className="font-display text-xl font-semibold mb-4">Connected Through the Community</h3>
 
       {/* Focus areas — comma-separated italic text */}
       {hasFocusAreas && (
@@ -55,7 +55,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
               <Link
                 key={c.id}
                 href={'/content/' + c.id}
-                className="block bg-white rounded-lg border border-brand-border p-4 hover:shadow-md transition-shadow"
+                className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
               >
                 <span className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">
                   {c.center || 'Resource'}
@@ -70,7 +70,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
               <Link
                 key={o.official_id}
                 href={'/officials/' + o.official_id}
-                className="block bg-white rounded-lg border border-brand-border p-4 hover:shadow-md transition-shadow"
+                className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
               >
                 <span className="text-[10px] uppercase tracking-wider text-teal-600 font-semibold">
                   {o.level || 'Official'}
@@ -86,7 +86,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
               <Link
                 key={p.policy_id}
                 href={'/policies/' + p.policy_id}
-                className="block bg-white rounded-lg border border-brand-border p-4 hover:shadow-md transition-shadow"
+                className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
               >
                 <span className="text-[10px] uppercase tracking-wider text-amber-600 font-semibold">
                   {p.status || 'Policy'}
@@ -101,7 +101,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
               <Link
                 key={s.service_id}
                 href={'/services/' + s.service_id}
-                className="block bg-white rounded-lg border border-brand-border p-4 hover:shadow-md transition-shadow"
+                className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
               >
                 <span className="text-[10px] uppercase tracking-wider text-green-600 font-semibold">
                   Service

@@ -11,7 +11,7 @@ export function FOLLoading({ message = 'Loading...', size = 48 }: FOLLoadingProp
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-4">
       <FOLSpinner size={size} />
-      <p className="text-sm text-brand-muted font-serif italic">{message}</p>
+      <p className="text-sm text-brand-muted font-body italic">{message}</p>
     </div>
   )
 }

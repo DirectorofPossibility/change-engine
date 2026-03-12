@@ -51,7 +51,7 @@ export function ChanceChatWidget() {
           </div>
           {/* Pulse ring removed — too distracting */}
           {/* Label */}
-          <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-text text-white text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
+          <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-text text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
             Chat with Chance
             <div className="absolute top-full right-4 w-2 h-2 bg-brand-text rotate-45 -mt-1" />
           </div>
@@ -67,7 +67,7 @@ export function ChanceChatWidget() {
         <button
           onClick={function () { setIsMinimized(false) }}
           aria-label="Open chat with Chance"
-          className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+          className="flex items-center gap-2 bg-brand-accent text-white px-4 py-2.5 shadow-lg hover:shadow-xl transition-shadow"
         >
           <MessageCircle size={16} />
           <span className="text-sm font-medium">Chance</span>
@@ -90,7 +90,7 @@ export function ChanceChatWidget() {
         sm:bottom-6 sm:right-6 sm:w-[400px] sm:h-[600px] sm:max-h-[80vh]
         inset-0 sm:inset-auto
         flex flex-col
-        bg-white sm:rounded-2xl sm:shadow-2xl sm:border sm:border-brand-border
+        bg-white sm: sm:shadow-2xl sm:border sm:border-brand-border
         overflow-hidden
         animate-in sm:animate-none"
       >
@@ -101,21 +101,21 @@ export function ChanceChatWidget() {
               <MessageCircle size={16} className="text-white" />
             </div>
             <div>
-              <h2 className="font-serif font-bold text-white text-sm">Chat with Chance</h2>
+              <h2 className="font-display font-bold text-white text-sm">Chat with Chance</h2>
               <p className="text-[10px] text-white/70">Your neighborhood guide</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={handleMinimize}
-              className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors hidden sm:block"
+              className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 transition-colors hidden sm:block"
               aria-label="Minimize"
             >
               <Minus size={16} />
             </button>
             <button
               onClick={handleClose}
-              className="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 transition-colors"
               aria-label="Close"
             >
               <X size={16} />

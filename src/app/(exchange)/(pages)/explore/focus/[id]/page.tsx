@@ -112,7 +112,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
           />
         )}
         {fa.is_bridging && (
-          <span className="text-xs px-2 py-0.5 rounded-lg border border-dashed border-brand-muted text-brand-muted font-medium">
+          <span className="text-xs px-2 py-0.5 border border-dashed border-brand-muted text-brand-muted font-medium">
             Bridging Area
           </span>
         )}
@@ -156,7 +156,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
           {opportunityMarkers.length > 0 && (
             <div>
               <h3 className="font-semibold text-brand-text mb-3">Opportunities Map</h3>
-              <ClusteredMap markers={opportunityMarkers} className="w-full h-[250px] rounded-xl" showLegend={false} />
+              <ClusteredMap markers={opportunityMarkers} className="w-full h-[250px]" showLegend={false} />
             </div>
           )}
 
@@ -220,7 +220,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <div className="space-y-2">
                 {foundations.map(function (f: any) {
                   return (
-                    <Link key={f.id} href="/foundations" className="block bg-white rounded-lg border border-brand-border p-3 hover:shadow-sm transition-all">
+                    <Link key={f.id} href="/foundations" className="block bg-white border border-brand-border p-3 hover:shadow-sm transition-all">
                       <div className="font-medium text-brand-text text-sm">{f.name}</div>
                       <div className="flex items-center gap-2 mt-1">
                         {f.assets && <span className="text-xs font-semibold text-brand-accent">{f.assets}</span>}

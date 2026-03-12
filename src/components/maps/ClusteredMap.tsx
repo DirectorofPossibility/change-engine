@@ -68,7 +68,7 @@ export function ClusteredMap({ markers, className, showLegend = true }: Clustere
 
   return (
     <div>
-      <HoustonMap className={className || 'w-full h-[400px] rounded-xl'}>
+      <HoustonMap className={className || 'w-full h-[400px]'}>
         <FitBounds markers={markers} />
         <ZoomReporter onZoomChange={handleZoom} />
         <MarkerClusterGroup

@@ -78,7 +78,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
       {/* Floating edit button */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 bg-brand-text text-white rounded-lg border-2 border-brand-text font-mono text-xs font-bold uppercase tracking-wider hover:bg-brand-accent transition-colors"
+        className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-3 bg-brand-text text-white border-2 border-brand-text font-mono text-xs font-bold uppercase tracking-wider hover:bg-brand-accent transition-colors"
        
       >
         <Pencil size={14} />
@@ -93,7 +93,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
             {/* Header */}
             <div className="sticky top-0 bg-brand-bg-alt border-b-2 border-brand-text px-5 py-4 flex items-center justify-between">
               <div>
-                <h2 className="font-serif text-lg font-bold text-brand-text">Edit Page</h2>
+                <h2 className="font-display text-lg font-bold text-brand-text">Edit Page</h2>
                 <p className="font-mono text-[10px] text-brand-muted uppercase tracking-wider">{entityType} / {entityId}</p>
               </div>
               <button onClick={() => setOpen(false)} className="p-1.5 rounded-md hover:bg-brand-border transition-colors">
@@ -115,13 +115,13 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
                         rows={4}
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent resize-y"
+                        className="w-full px-3 py-2 text-sm border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent resize-y"
                       />
                     ) : field.type === 'select' ? (
                       <select
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
+                        className="w-full px-3 py-2 text-sm border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
                       >
                         <option value="">--</option>
                         {(field.options || []).map(o => (
@@ -133,7 +133,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
                         type={field.type === 'number' ? 'number' : 'text'}
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: field.type === 'number' ? (e.target.value ? Number(e.target.value) : null) : e.target.value }))}
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
+                        className="w-full px-3 py-2 text-sm border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
                       />
                     )}
                   </div>
@@ -146,7 +146,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-lg font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 disabled:opacity-50 transition-opacity"
+                className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 disabled:opacity-50 transition-opacity"
               >
                 {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                 {saving ? 'Saving...' : 'Save Changes'}

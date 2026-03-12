@@ -153,7 +153,7 @@ export function DocumentUpload() {
         onDrop={handleDrop}
         onClick={function () { fileInputRef.current?.click() }}
         className={
-          'relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ' +
+          'relative border-2 border-dashed p-8 text-center cursor-pointer transition-colors ' +
           (isDragging
             ? 'border-brand-accent bg-brand-accent/5'
             : file
@@ -204,7 +204,7 @@ export function DocumentUpload() {
           value={title}
           onChange={function (e) { setTitle(e.target.value) }}
           placeholder={t('library.title_placeholder')}
-          className="w-full text-sm px-4 py-2.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+          className="w-full text-sm px-4 py-2.5 border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
         />
       </div>
 
@@ -219,19 +219,19 @@ export function DocumentUpload() {
           value={tags}
           onChange={function (e) { setTags(e.target.value) }}
           placeholder={t('library.tags_placeholder')}
-          className="w-full text-sm px-4 py-2.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+          className="w-full text-sm px-4 py-2.5 border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
         />
       </div>
 
       {/* Progress / result message */}
       {progress && !result && (
-        <div className="flex items-center gap-2 px-4 py-3 rounded-lg text-sm bg-blue-50 text-blue-700">
+        <div className="flex items-center gap-2 px-4 py-3 text-sm bg-blue-50 text-blue-700">
           <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
           {progress}
         </div>
       )}
       {result && (
-        <div className={'flex items-center gap-2 px-4 py-3 rounded-lg text-sm ' +
+        <div className={'flex items-center gap-2 px-4 py-3 text-sm ' +
           (result.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700')}>
           {result.success ? <Check size={16} /> : <X size={16} />}
           {result.message}
@@ -242,7 +242,7 @@ export function DocumentUpload() {
       <button
         type="submit"
         disabled={!file || isUploading}
-        className="w-full py-3 rounded-xl bg-brand-accent text-white font-semibold text-sm disabled:opacity-40 hover:opacity-90 transition-opacity"
+        className="w-full py-3 bg-brand-accent text-white font-semibold text-sm disabled:opacity-40 hover:opacity-90 transition-opacity"
       >
         {isUploading ? t('library.uploading') : t('library.upload_btn')}
       </button>

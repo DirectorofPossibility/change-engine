@@ -345,7 +345,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
     <div>
       <div className="flex items-center gap-2.5 mb-3">
         <span className="w-3.5 h-3.5 rounded" style={{ backgroundColor: pw.color }} />
-        <h3 className="font-serif font-bold text-xl text-brand-text">{pw.name}</h3>
+        <h3 className="font-display font-bold text-xl text-brand-text">{pw.name}</h3>
         <Link href={'/pathways/' + pw.slug}
           className="text-xs font-semibold ml-auto hover:underline" style={{ color: pw.color }}>
           Explore pathway
@@ -358,7 +358,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
           const count = pw.entityCounts[key as keyof typeof pw.entityCounts] || 0
           return (
             <Link key={key} href={meta.href}
-              className="bg-white rounded-lg border border-brand-border p-2.5 text-center hover:border-brand-accent transition-colors">
+              className="bg-white border border-brand-border p-2.5 text-center hover:border-brand-accent transition-colors">
               <p className="text-base font-bold" style={{ color: count > 0 ? meta.color : C.mutedLight }}>{count}</p>
               <p className="text-[9px] font-bold uppercase tracking-wider text-brand-muted">{meta.label}</p>
             </Link>
@@ -425,7 +425,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
 }) {
   return (
     <div>
-      <h3 className="font-serif font-bold text-xl text-brand-text mb-1">Civic Knowledge Graph</h3>
+      <h3 className="font-display font-bold text-xl text-brand-text mb-1">Civic Knowledge Graph</h3>
       <p className="text-sm text-brand-muted mb-4">
         Click a pathway to explore focus areas, entity connections, and bridges.
         {' '}{totalEntities.toLocaleString()} entities across {data.totals.focusAreas} focus areas.
@@ -442,7 +442,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
           { v: data.totals.focusAreas, l: 'Focus Areas', c: '#38a169' },
         ].map(function (s) {
           return (
-            <div key={s.l} className="bg-white rounded-lg border border-brand-border p-2 text-center">
+            <div key={s.l} className="bg-white border border-brand-border p-2 text-center">
               <p className="text-base font-bold" style={{ color: s.c }}>{s.v}</p>
               <p className="text-[9px] font-bold uppercase tracking-wider text-brand-muted">{s.l}</p>
             </div>
@@ -458,7 +458,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
           return (
             <button key={pw.id}
               onClick={function () { onSelect(pw.id) }}
-              className="flex items-center gap-2.5 w-full px-2 py-2 rounded-lg hover:bg-brand-bg-alt transition-colors text-left group">
+              className="flex items-center gap-2.5 w-full px-2 py-2 hover:bg-brand-bg-alt transition-colors text-left group">
               <span className="w-3 h-3 rounded" style={{ backgroundColor: pw.color }} />
               <span className="text-sm font-medium text-brand-text flex-1">{pw.name}</span>
               <span className="text-[10px] text-brand-muted">{pw.focusAreas.length} topics</span>

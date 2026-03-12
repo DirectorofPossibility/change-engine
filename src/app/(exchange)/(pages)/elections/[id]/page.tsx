@@ -113,7 +113,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
       {/* Register to vote CTA */}
       {canRegister && (
-        <div className="bg-brand-accent text-white rounded-xl p-6 text-center mb-5">
+        <div className="bg-brand-accent text-white p-6 text-center mb-5">
           <p className="text-lg font-bold mb-2">Make sure you&apos;re registered to vote!</p>
           <p className="text-sm mb-4 opacity-90">Registration deadline: {new Date(election.registration_deadline! + 'T00:00:00').toLocaleDateString()}</p>
           <Link
@@ -134,7 +134,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {/* Election Results (vote percentages) — shown for past elections with results */}
       {hasResults && (
         <section className="mb-6">
-          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">Election Results</h2>
+          <h2 className="text-xl font-bold font-display text-brand-text mb-4">Election Results</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Object.entries(candidateGroups).map(function ([office, cands]) {
               return (
@@ -163,7 +163,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {/* Candidates */}
       {Object.keys(candidateGroups).length > 0 && (
         <section className="mb-6">
-          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">Who&apos;s Running</h2>
+          <h2 className="text-xl font-bold font-display text-brand-text mb-4">Who&apos;s Running</h2>
           <div className="space-y-6">
             {Object.entries(candidateGroups).map(function ([office, cands]) {
               return (
@@ -198,7 +198,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {/* Ballot Items */}
       {ballotItems.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">What&apos;s on the Ballot</h2>
+          <h2 className="text-xl font-bold font-display text-brand-text mb-4">What&apos;s on the Ballot</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ballotItems.map(function (item) {
               return (
@@ -228,7 +228,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       {/* Voting Locations */}
       {votingLocations.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-xl font-bold font-serif text-brand-text mb-4">Where to Vote</h2>
+          <h2 className="text-xl font-bold font-display text-brand-text mb-4">Where to Vote</h2>
           <VotingLocationsMap locations={votingLocations} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {votingLocations.map(function (loc) {

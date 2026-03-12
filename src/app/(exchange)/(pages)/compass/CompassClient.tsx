@@ -174,11 +174,11 @@ export function CompassClient({
                   <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">
                     Your Community Portal
                   </p>
-                  <h1 className="text-2xl sm:text-3xl font-serif font-bold leading-tight">
+                  <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
                     Welcome to{' '}
                     <span className="text-brand-accent">{neighborhoodName}</span>
                   </h1>
-                  <p className="text-base text-brand-muted mt-1 font-serif italic">
+                  <p className="text-base text-brand-muted mt-1 font-display italic">
                     ZIP {zip}{councilDistrict ? ' \u2014 District ' + councilDistrict : ''}
                   </p>
                 </>
@@ -187,7 +187,7 @@ export function CompassClient({
                   <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">
                     Community Exchange
                   </p>
-                  <h1 className="text-2xl sm:text-3xl font-serif font-bold leading-tight">
+                  <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
                     Civic Compass
                   </h1>
                   <p className="text-sm text-brand-muted mt-2 max-w-xl leading-relaxed">
@@ -199,7 +199,7 @@ export function CompassClient({
 
             {/* ZIP input */}
             <div className="lg:flex-shrink-0 lg:w-[300px]">
-              <div className="bg-white rounded-xl border border-brand-border p-4">
+              <div className="bg-white border border-brand-border p-4">
                 <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mb-2">
                   {hasZip ? 'Change location' : 'Enter your address \u2014 street, city, zip'}
                 </p>
@@ -216,7 +216,7 @@ export function CompassClient({
 
           {/* Intent cards: "What do you need today?" */}
           <div className="mb-2">
-            <h2 className="font-serif text-lg sm:text-xl font-bold text-brand-text mb-4">
+            <h2 className="font-display text-lg sm:text-xl font-bold text-brand-text mb-4">
               What do you need today?
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -226,12 +226,12 @@ export function CompassClient({
                   <Link
                     key={intent.href}
                     href={intent.href}
-                    className="bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
+                    className="bg-white border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: intent.color }} />
                     <div className="flex items-start gap-3 pl-2">
                       <div
-                        className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                        className="w-9 h-9 flex items-center justify-center flex-shrink-0 mt-0.5"
                         style={{ backgroundColor: intent.color + '14' }}
                       >
                         <IconComp size={18} style={{ color: intent.color }} />
@@ -267,7 +267,7 @@ export function CompassClient({
             ═══════════════════════════════════════════════════════════ */}
         <section>
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-serif text-xl font-bold text-brand-text flex items-center gap-2">
+            <h2 className="font-display text-xl font-bold text-brand-text flex items-center gap-2">
               <Zap size={20} className="text-brand-accent" />
               Community Pulse
             </h2>
@@ -299,7 +299,7 @@ export function CompassClient({
                         style={{ backgroundColor: theme?.color || pill.color }}
                       />
 
-                      <div className="bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all">
+                      <div className="bg-white border border-brand-border p-4 hover:border-brand-text transition-all">
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
                           <span className="text-[10px] font-mono text-brand-muted">
                             {timeAgo(item.published_at)}
@@ -331,7 +331,7 @@ export function CompassClient({
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-brand-border p-8 text-center">
+            <div className="bg-white border border-brand-border p-8 text-center">
               <FileText size={28} className="mx-auto text-brand-muted-light mb-2" />
               <p className="text-sm text-brand-muted">No recent community updates yet. Check back soon.</p>
             </div>
@@ -344,7 +344,7 @@ export function CompassClient({
         {hasZip && zipOfficials.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-serif text-xl font-bold text-brand-text flex items-center gap-2">
+              <h2 className="font-display text-xl font-bold text-brand-text flex items-center gap-2">
                 <Building2 size={20} className="text-[#805ad5]" />
                 Your Representatives
               </h2>
@@ -362,7 +362,7 @@ export function CompassClient({
                   <Link
                     key={o.official_id}
                     href={'/officials/' + o.official_id}
-                    className="bg-white rounded-xl border border-brand-border p-3 hover:border-brand-text transition-all group relative overflow-hidden"
+                    className="bg-white border border-brand-border p-3 hover:border-brand-text transition-all group relative overflow-hidden"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: ringColor }} />
                     <div className="flex items-center gap-2.5 pl-2">
@@ -397,8 +397,8 @@ export function CompassClient({
             4. BY THE NUMBERS — Community Stats Row
             ═══════════════════════════════════════════════════════════ */}
         <section>
-          <div className="bg-white rounded-xl border border-brand-border p-5 sm:p-6">
-            <h2 className="font-serif text-lg font-bold text-brand-text mb-4">By the Numbers</h2>
+          <div className="bg-white border border-brand-border p-5 sm:p-6">
+            <h2 className="font-display text-lg font-bold text-brand-text mb-4">By the Numbers</h2>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-6">
               {[
                 { icon: BookOpen, label: 'Resources', value: stats?.resources || totalItems, color: '#C75B2A' },
@@ -412,12 +412,12 @@ export function CompassClient({
                 return (
                   <div key={stat.label} className="text-center">
                     <div
-                      className="w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-2"
+                      className="w-9 h-9 flex items-center justify-center mx-auto mb-2"
                       style={{ backgroundColor: stat.color + '14' }}
                     >
                       <StatIcon size={18} style={{ color: stat.color }} />
                     </div>
-                    <p className="text-xl sm:text-2xl font-serif font-bold" style={{ color: stat.color }}>
+                    <p className="text-xl sm:text-2xl font-display font-bold" style={{ color: stat.color }}>
                       {stat.value}
                     </p>
                     <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">
@@ -434,7 +434,7 @@ export function CompassClient({
             5. EXPLORE BY TOPIC — Pathway Grid
             ═══════════════════════════════════════════════════════════ */}
         <section>
-          <h2 className="font-serif text-xl font-bold text-brand-text mb-1">Explore by Topic</h2>
+          <h2 className="font-display text-xl font-bold text-brand-text mb-1">Explore by Topic</h2>
           <p className="text-sm text-brand-muted mb-4">Seven lenses on community life. Each pathway connects resources, services, officials, and news.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -445,7 +445,7 @@ export function CompassClient({
                 <Link
                   key={id}
                   href={'/pathways/' + theme.slug}
-                  className="bg-white rounded-xl border border-brand-border overflow-hidden hover:border-brand-text transition-all group relative"
+                  className="bg-white border border-brand-border overflow-hidden hover:border-brand-text transition-all group relative"
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: theme.color }} />
                   <div className="p-4 pl-5">
@@ -474,7 +474,7 @@ export function CompassClient({
             6. QUICK ACTIONS — Compact bottom bar
             ═══════════════════════════════════════════════════════════ */}
         <section>
-          <div className="bg-white rounded-xl border border-brand-border p-3 sm:p-4">
+          <div className="bg-white border border-brand-border p-3 sm:p-4">
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
               {[
                 { href: '/services', label: 'Find Services', icon: Heart, color: '#38a169' },
@@ -489,7 +489,7 @@ export function CompassClient({
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
                   >
                     <ActionIcon size={14} style={{ color: action.color }} className="flex-shrink-0" />
                     <span className="hidden sm:inline">{action.label}</span>
@@ -504,7 +504,7 @@ export function CompassClient({
             7. CRISIS HOTLINES — Small footer bar
             ═══════════════════════════════════════════════════════════ */}
         <section>
-          <div className="bg-brand-bg/80 rounded-xl border border-brand-border px-4 py-3">
+          <div className="bg-brand-bg/80 border border-brand-border px-4 py-3">
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-[11px] font-mono text-brand-muted">
               <span className="font-bold uppercase tracking-wider text-brand-muted-light">Need help now?</span>
               <span>Mental Health Crisis: <strong className="text-brand-text">988</strong></span>

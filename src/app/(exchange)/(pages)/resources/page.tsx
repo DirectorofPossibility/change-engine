@@ -77,25 +77,25 @@ export default async function ResourcesIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
                
               >
                 <div className="flex">
                   <div
-                    className="w-2 flex-shrink-0 rounded-l-xl"
+                    className="w-2 flex-shrink-0"
                     style={{ backgroundColor: section.color }}
                   />
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          className="w-10 h-10 flex items-center justify-center"
                           style={{ backgroundColor: section.color + '15' }}
                         >
                           <Icon size={20} style={{ color: section.color }} />
                         </div>
                         <div>
-                          <h2 className="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
+                          <h2 className="font-display text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                             {section.label}
                           </h2>
                           {count > 0 && (
@@ -118,7 +118,7 @@ export default async function ResourcesIndexPage() {
         </div>
 
         {/* Crisis quick-access */}
-        <div className="mt-8 p-5 bg-brand-bg rounded-xl border border-brand-border">
+        <div className="mt-8 p-5 bg-brand-bg border border-brand-border">
           <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-3">Immediate Support</p>
           <div className="flex flex-wrap gap-6 font-mono text-sm text-brand-muted">
             <span>Crisis Line: <strong className="text-brand-text">988</strong></span>
@@ -131,7 +131,7 @@ export default async function ResourcesIndexPage() {
         <div className="mt-10 text-center">
           <div className="inline-flex items-center gap-2 text-brand-muted-light">
             <FlowerOfLifeIcon size={20} color="#C75B2A" />
-            <p className="text-sm font-serif italic">
+            <p className="text-sm font-display italic">
               Everything here already exists. We just made it findable.
             </p>
           </div>

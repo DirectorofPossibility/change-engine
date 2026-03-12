@@ -24,7 +24,7 @@ export function HelpUrgencyHeader({ level }: HelpUrgencyHeaderProps) {
   if (!config) return null
 
   return (
-    <div className={`border rounded-lg px-4 py-2 mb-4 ${config.color}`}>
+    <div className={`border px-4 py-2 mb-4 ${config.color}`}>
       <h2 className="font-semibold">{t(config.key)}</h2>
     </div>
   )

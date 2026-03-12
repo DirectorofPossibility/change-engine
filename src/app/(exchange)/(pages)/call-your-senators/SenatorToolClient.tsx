@@ -330,7 +330,7 @@ export function SenatorToolClient() {
       {/* ── Hero ── */}
       <section className="max-w-[800px] mx-auto px-8 pt-16 pb-12 text-center border-b-2 border-brand-border">
         <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Most people think their voice doesn&apos;t matter. Most people are wrong.</p>
-        <h1 className="font-serif text-[clamp(2.5rem,5vw,3.5rem)] leading-[1.1] text-brand-text mb-5">
+        <h1 className="font-display text-[clamp(2.5rem,5vw,3.5rem)] leading-[1.1] text-brand-text mb-5">
           Call your senators. <span className="text-brand-accent">It works.</span>
         </h1>
         <p className="text-lg leading-relaxed text-brand-muted max-w-[560px] mx-auto mb-8">
@@ -342,13 +342,13 @@ export function SenatorToolClient() {
           That&apos;s it. That&apos;s the whole thing.
         </p>
         <div className="flex justify-center flex-wrap gap-3">
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border border-brand-border rounded-lg">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border border-brand-border">
             <Clock size={14} className="text-brand-muted" /> 90 seconds average
           </span>
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border border-brand-border rounded-lg">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border border-brand-border">
             <FileText size={14} className="text-brand-muted" /> Script provided
           </span>
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border border-brand-border rounded-lg">
+          <span className="inline-flex items-center gap-2 text-sm font-semibold text-brand-text bg-brand-bg px-5 py-3 border border-brand-border">
             <Check size={14} className="text-brand-muted" /> No experience needed
           </span>
         </div>
@@ -392,7 +392,7 @@ export function SenatorToolClient() {
         {/* Left: Content */}
         <article className="p-8 sm:p-12 lg:border-r-2 border-brand-border">
           <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-accent mb-3">What Congress Is Deciding</p>
-          <h2 className="font-serif text-2xl sm:text-3xl text-brand-text mb-5">{campaign.title}</h2>
+          <h2 className="font-display text-2xl sm:text-3xl text-brand-text mb-5">{campaign.title}</h2>
           <p className="text-base leading-relaxed text-brand-muted mb-5">{campaign.summary}</p>
           <a href={campaign.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-brand-text hover:underline">
             Follow this vote <ExternalLink size={14} />
@@ -400,7 +400,7 @@ export function SenatorToolClient() {
 
           {/* Impact Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 my-10">
-            <div className="border border-brand-border rounded-lg overflow-hidden">
+            <div className="border border-brand-border overflow-hidden">
               <div className="h-1.5 bg-brand-text" />
               <div className="p-6">
                 <h3 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-text mb-5">
@@ -418,7 +418,7 @@ export function SenatorToolClient() {
                 </ul>
               </div>
             </div>
-            <div className="border border-brand-border rounded-lg overflow-hidden">
+            <div className="border border-brand-border overflow-hidden">
               <div className="h-1.5 bg-brand-muted-light" />
               <div className="p-6">
                 <h3 className="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted mb-5">
@@ -439,14 +439,14 @@ export function SenatorToolClient() {
           </div>
 
           {/* FAQ */}
-          <div className="border border-brand-border rounded-lg p-7 mb-8">
+          <div className="border border-brand-border p-7 mb-8">
             <h3 className="flex items-center gap-3 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-text mb-6">
               <Users size={18} /> Who&apos;s Affected &amp; How
             </h3>
             {campaign.faq.map(function (item, i) {
               return (
                 <div key={i} className="py-5 border-b border-brand-border last:border-b-0">
-                  <p className="font-serif text-base font-bold text-brand-text mb-2">{item.q}</p>
+                  <p className="font-display text-base font-bold text-brand-text mb-2">{item.q}</p>
                   <p className="text-sm leading-relaxed text-brand-muted">{item.a}</p>
                 </div>
               )
@@ -454,14 +454,14 @@ export function SenatorToolClient() {
           </div>
 
           {/* Callout */}
-          <div className="border-l-4 border-brand-text bg-brand-bg rounded-r-lg px-6 py-5 mb-8">
+          <div className="border-l-4 border-brand-text bg-brand-bg px-6 py-5 mb-8">
             <p className="text-sm leading-relaxed text-brand-muted">
               <strong className="text-brand-text">Bottom line:</strong> {campaign.callout}
             </p>
           </div>
 
           {/* Other Issues */}
-          <div className="border border-brand-border rounded-lg p-7">
+          <div className="border border-brand-border p-7">
             <h3 className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Other Issues You Can Call About</h3>
             <div className="space-y-3">
               {campaignKeys.map(function (key) {
@@ -471,7 +471,7 @@ export function SenatorToolClient() {
                   <button
                     key={key}
                     onClick={function () { setCampaignId(key); setSelectedOption(null) }}
-                    className={'flex items-center gap-4 w-full text-left px-4 py-4 border-2 rounded-lg transition-colors ' + (isActive ? 'border-brand-text bg-white' : 'border-brand-border bg-white hover:border-brand-muted') + (c.urgent ? ' border-l-[5px] border-l-brand-accent' : '')}
+                    className={'flex items-center gap-4 w-full text-left px-4 py-4 border-2 transition-colors ' + (isActive ? 'border-brand-text bg-white' : 'border-brand-border bg-white hover:border-brand-muted') + (c.urgent ? ' border-l-[5px] border-l-brand-accent' : '')}
                   >
                     <span className={'font-mono text-[11px] font-bold min-w-[60px] ' + (c.urgent ? 'text-brand-accent' : 'text-brand-muted-light')}>{c.status}</span>
                     <span className="flex-1 text-sm font-semibold text-brand-text">{c.title}</span>
@@ -486,13 +486,13 @@ export function SenatorToolClient() {
         {/* Right: Action Panel */}
         <aside className="p-8 sm:p-10 bg-brand-bg">
           {/* Find Your Senators */}
-          <div className="bg-white border border-brand-border rounded-xl p-7 mb-6">
+          <div className="bg-white border border-brand-border p-7 mb-6">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-brand-bg flex items-center justify-center">
+              <div className="w-12 h-12 bg-brand-bg flex items-center justify-center">
                 <MapPin size={22} className="text-brand-text" />
               </div>
               <div>
-                <h3 className="font-serif text-lg text-brand-text">Find My Senators</h3>
+                <h3 className="font-display text-lg text-brand-text">Find My Senators</h3>
                 <p className="text-sm text-brand-muted">Enter your zip to get started</p>
               </div>
             </div>
@@ -505,7 +505,7 @@ export function SenatorToolClient() {
                 onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
                 placeholder="e.g. 77001"
                 maxLength={5}
-                className="w-full px-4 py-3.5 border border-brand-border rounded-lg text-base text-brand-text focus:border-brand-text focus:outline-none"
+                className="w-full px-4 py-3.5 border border-brand-border text-base text-brand-text focus:border-brand-text focus:outline-none"
               />
             </div>
             <div className="mb-4">
@@ -513,7 +513,7 @@ export function SenatorToolClient() {
               <select
                 value={stateCode}
                 onChange={function (e) { handleStateChange(e.target.value) }}
-                className="w-full px-4 py-3.5 border border-brand-border rounded-lg text-base text-brand-text focus:border-brand-text focus:outline-none bg-white appearance-none"
+                className="w-full px-4 py-3.5 border border-brand-border text-base text-brand-text focus:border-brand-text focus:outline-none bg-white appearance-none"
               >
                 <option value="">Select your state...</option>
                 {Object.keys(SENATORS).sort().map(function (s) {
@@ -526,19 +526,19 @@ export function SenatorToolClient() {
             {senators.map(function (s) {
               const called = calledSenators.includes(s.n)
               return (
-                <div key={s.n} className={'flex items-center justify-between flex-wrap gap-3 rounded-lg px-5 py-4 mt-3 border-2 ' + (called ? 'bg-brand-bg border-brand-border' : 'bg-white border-brand-border')}>
+                <div key={s.n} className={'flex items-center justify-between flex-wrap gap-3 px-5 py-4 mt-3 border-2 ' + (called ? 'bg-brand-bg border-brand-border' : 'bg-white border-brand-border')}>
                   <div>
                     <p className="text-base font-bold text-brand-text">{s.n}</p>
                     <p className="text-sm text-brand-muted tabular-nums">{formatPhone(s.ph)}</p>
                   </div>
                   {called ? (
-                    <span className="inline-flex items-center gap-2 bg-brand-border text-brand-muted text-sm font-semibold px-5 py-3 rounded-lg">
+                    <span className="inline-flex items-center gap-2 bg-brand-border text-brand-muted text-sm font-semibold px-5 py-3">
                       <Check size={16} /> Called
                     </span>
                   ) : (
                     <a
                       href={'tel:' + s.ph}
-                      className="inline-flex items-center gap-2 bg-brand-accent text-white text-sm font-bold px-6 py-3 rounded-lg hover:-translate-y-0.5 transition-transform"
+                      className="inline-flex items-center gap-2 bg-brand-accent text-white text-sm font-bold px-6 py-3 hover:-translate-y-0.5 transition-transform"
                       style={{ boxShadow: '0 4px 12px rgba(199,91,42,0.3)' }}
                     >
                       <Phone size={16} /> Call Now
@@ -551,8 +551,8 @@ export function SenatorToolClient() {
 
           {/* What to Expect */}
           {senators.length > 0 && (
-            <div className="bg-white border border-brand-border rounded-xl p-7 mb-6">
-              <div className="bg-brand-bg rounded-lg p-5">
+            <div className="bg-white border border-brand-border p-7 mb-6">
+              <div className="bg-brand-bg p-5">
                 <h4 className="flex items-center gap-2 text-sm font-bold text-brand-text mb-2">
                   <Info size={14} className="text-brand-muted" /> What to Expect
                 </h4>
@@ -564,18 +564,18 @@ export function SenatorToolClient() {
           )}
 
           {/* Call Script */}
-          <div className="bg-brand-bg-alt border border-brand-border rounded-xl p-7 mb-6">
+          <div className="bg-brand-bg-alt border border-brand-border p-7 mb-6">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-brand-accent/10 flex items-center justify-center">
+              <div className="w-12 h-12 bg-brand-accent/10 flex items-center justify-center">
                 <Phone size={22} className="text-brand-accent" />
               </div>
               <div>
-                <h3 className="font-serif text-lg text-brand-text">Your Call Script</h3>
+                <h3 className="font-display text-lg text-brand-text">Your Call Script</h3>
                 <p className="text-sm text-brand-muted">Tap to select your position</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-5 text-brand-text text-sm leading-relaxed whitespace-pre-line mb-4 border border-brand-border">
+            <div className="bg-white p-5 text-brand-text text-sm leading-relaxed whitespace-pre-line mb-4 border border-brand-border">
               {campaign.script.intro.replace('[ZIP]', zip || '[ZIP]')}
 
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mt-5 mb-3">Pick the one closest to your view:</p>
@@ -586,7 +586,7 @@ export function SenatorToolClient() {
                   <button
                     key={opt.id}
                     onClick={function () { setSelectedOption(opt.id) }}
-                    className={'block w-full text-left rounded-lg px-5 py-4 mb-3 border-2 transition-colors ' + (isSelected ? 'border-brand-accent bg-brand-accent/10' : 'border-brand-border bg-white hover:bg-brand-bg')}
+                    className={'block w-full text-left px-5 py-4 mb-3 border-2 transition-colors ' + (isSelected ? 'border-brand-accent bg-brand-accent/10' : 'border-brand-border bg-white hover:bg-brand-bg')}
                   >
                     <strong className="block text-brand-text text-sm font-bold mb-1">&ldquo;{opt.label}&rdquo;</strong>
                     <span className="text-brand-muted text-sm">{opt.text}</span>
@@ -599,20 +599,20 @@ export function SenatorToolClient() {
 
             <button
               onClick={handleCopyScript}
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-semibold rounded-lg transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-semibold transition-colors"
             >
               <Copy size={16} /> {copied ? 'Copied!' : 'Copy Script'}
             </button>
           </div>
 
           {/* Log Your Call */}
-          <div className="bg-white border border-brand-border rounded-xl p-7">
+          <div className="bg-white border border-brand-border p-7">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-brand-bg flex items-center justify-center">
+              <div className="w-12 h-12 bg-brand-bg flex items-center justify-center">
                 <PenLine size={22} className="text-brand-text" />
               </div>
               <div>
-                <h3 className="font-serif text-lg text-brand-text">Log Your Call</h3>
+                <h3 className="font-display text-lg text-brand-text">Log Your Call</h3>
                 <p className="text-sm text-brand-muted">Help us track momentum</p>
               </div>
             </div>
@@ -622,17 +622,17 @@ export function SenatorToolClient() {
                 <div className="w-14 h-14 rounded-full bg-brand-bg flex items-center justify-center mx-auto mb-4">
                   <Check size={28} className="text-brand-text" />
                 </div>
-                <h4 className="font-serif text-xl text-brand-text mb-2">Call Logged</h4>
+                <h4 className="font-display text-xl text-brand-text mb-2">Call Logged</h4>
                 <p className="text-sm text-brand-muted mb-6">
                   {uncalledSenators.length > 0 ? 'You have ' + uncalledSenators.length + ' more senator to call.' : 'Thank you for making your voice heard.'}
                 </p>
                 <div className="flex gap-3 justify-center flex-wrap">
                   {uncalledSenators.length > 0 && (
-                    <button onClick={handleCallNext} className="inline-flex items-center gap-2 bg-brand-text text-white text-sm font-bold px-6 py-3 rounded-lg">
+                    <button onClick={handleCallNext} className="inline-flex items-center gap-2 bg-brand-text text-white text-sm font-bold px-6 py-3">
                       <Phone size={14} /> Call Other Senator
                     </button>
                   )}
-                  <button onClick={handleShare} className="inline-flex items-center gap-2 bg-brand-border text-brand-text text-sm font-semibold px-6 py-3 rounded-lg">
+                  <button onClick={handleShare} className="inline-flex items-center gap-2 bg-brand-border text-brand-text text-sm font-semibold px-6 py-3">
                     <Share2 size={14} /> Share
                   </button>
                 </div>
@@ -644,7 +644,7 @@ export function SenatorToolClient() {
                   <select
                     value={logSenator}
                     onChange={function (e) { setLogSenator(e.target.value) }}
-                    className="w-full px-4 py-3.5 border border-brand-border rounded-lg text-base text-brand-text focus:border-brand-text focus:outline-none bg-white appearance-none"
+                    className="w-full px-4 py-3.5 border border-brand-border text-base text-brand-text focus:border-brand-text focus:outline-none bg-white appearance-none"
                   >
                     <option value="">Select senator...</option>
                     {uncalledSenators.map(function (s) {
@@ -657,7 +657,7 @@ export function SenatorToolClient() {
                   <select
                     value={logOutcome}
                     onChange={function (e) { setLogOutcome(e.target.value) }}
-                    className="w-full px-4 py-3.5 border border-brand-border rounded-lg text-base text-brand-text focus:border-brand-text focus:outline-none bg-white appearance-none"
+                    className="w-full px-4 py-3.5 border border-brand-border text-base text-brand-text focus:border-brand-text focus:outline-none bg-white appearance-none"
                   >
                     <option value="">Select outcome...</option>
                     <option value="spoke">Talked to a staffer</option>
@@ -667,7 +667,7 @@ export function SenatorToolClient() {
                 </div>
                 <button
                   onClick={handleLogCall}
-                  className="flex items-center justify-center gap-2 w-full py-4 bg-brand-text text-white text-base font-bold rounded-lg hover:bg-brand-accent transition-colors"
+                  className="flex items-center justify-center gap-2 w-full py-4 bg-brand-text text-white text-base font-bold hover:bg-brand-accent transition-colors"
                 >
                   <Check size={16} /> Log My Call
                 </button>
@@ -679,7 +679,7 @@ export function SenatorToolClient() {
 
       {/* ── Closing ── */}
       <section className="max-w-[800px] mx-auto px-8 py-12 text-center border-t-2 border-brand-border">
-        <p className="font-serif text-xl text-brand-muted italic">
+        <p className="font-display text-xl text-brand-muted italic">
           Democracy doesn&apos;t run on autopilot. It runs on people like you picking up the phone.
         </p>
       </section>
@@ -695,7 +695,7 @@ export function SenatorToolClient() {
               if (el) el.scrollIntoView({ behavior: 'smooth' })
             }
           }}
-          className="flex items-center justify-center gap-3 w-full py-4 bg-brand-accent text-white text-base font-bold rounded-lg"
+          className="flex items-center justify-center gap-3 w-full py-4 bg-brand-accent text-white text-base font-bold"
           style={{ boxShadow: '0 4px 12px rgba(199,91,42,0.3)' }}
         >
           <Phone size={18} /> {senators.length > 0 ? 'Call ' + senators[0].n : 'Find My Senators'}

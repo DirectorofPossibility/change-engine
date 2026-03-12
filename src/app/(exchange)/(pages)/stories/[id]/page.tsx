@@ -37,7 +37,7 @@ export default async function StoryDetailPage({ params }: { params: Promise<{ id
       <div className="bg-brand-bg border-b border-brand-border">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <Breadcrumb items={[{ label: 'Stories', href: '/stories' }, { label: s.title || s.story_title || 'Story' }]} />
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text mt-4">{s.title || s.story_title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text mt-4">{s.title || s.story_title}</h1>
           {s.person_name && <p className="text-brand-muted mt-2">{s.person_name}{s.neighborhood ? ` from ${s.neighborhood}` : ''}</p>}
         </div>
       </div>

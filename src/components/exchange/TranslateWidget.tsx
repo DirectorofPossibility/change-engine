@@ -31,7 +31,7 @@ export function TranslateWidget() {
     <div ref={ref} className="relative inline-flex">
       <button
         onClick={function () { setOpen(!open) }}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-brand-muted hover:text-brand-text bg-white/80 hover:bg-white border border-brand-border rounded-lg shadow-sm transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-brand-muted hover:text-brand-text bg-white/80 hover:bg-white border border-brand-border shadow-sm transition-colors"
         aria-label="Translate this page"
       >
         <Globe className="w-3.5 h-3.5" />
@@ -39,7 +39,7 @@ export function TranslateWidget() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 bg-white border border-brand-border rounded-lg shadow-lg overflow-hidden z-50 min-w-[140px]">
+        <div className="absolute right-0 top-full mt-1 bg-white border border-brand-border shadow-lg overflow-hidden z-50 min-w-[140px]">
           {LANGUAGES.map(function (lang) {
             const isActive = language === lang.code
             return (

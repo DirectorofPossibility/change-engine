@@ -90,7 +90,7 @@ export default function DonatePage() {
                 >
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
                   <div className="pl-3">
-                    <p className="font-serif font-bold text-brand-text">
+                    <p className="font-display font-bold text-brand-text">
                       {tier.amount} — {tier.label}.
                     </p>
                     <p className="text-sm text-brand-muted mt-1">{tier.desc}</p>
@@ -105,7 +105,7 @@ export default function DonatePage() {
             >
               <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
               <div className="pl-3">
-                <p className="font-serif font-bold text-brand-text">
+                <p className="font-display font-bold text-brand-text">
                   Your amount.
                 </p>
                 <p className="text-sm text-brand-muted mt-1">
@@ -142,7 +142,7 @@ export default function DonatePage() {
             <FOLWatermark variant="flower" size="md" color="#C75B2A" />
           </div>
           <FlowerOfLifeIcon size={32} className="mx-auto mb-3" />
-          <p className="font-serif text-lg font-bold text-brand-text">
+          <p className="font-display text-lg font-bold text-brand-text">
             Civic infrastructure only works if someone maintains it.
           </p>
           <p className="text-brand-muted mt-2">

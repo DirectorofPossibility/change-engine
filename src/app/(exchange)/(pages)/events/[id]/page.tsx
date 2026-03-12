@@ -84,7 +84,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             {event.is_free === 'true' && <span className="text-xs font-medium text-theme-money bg-theme-money/10 px-2 py-0.5 rounded">Free</span>}
             {event.is_virtual === 'true' && <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded flex items-center gap-1"><Video className="w-3 h-3" /> Virtual</span>}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{event.event_name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{event.event_name}</h1>
 
           {/* Quick date + time summary */}
           {startDate && (
@@ -125,7 +125,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <div className="space-y-6">
             {/* Description */}
             {event.description_5th_grade && (
-              <div className="bg-white rounded-lg border border-brand-border p-6">
+              <div className="bg-white border border-brand-border p-6">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">About This Event</h2>
                 <p className="text-brand-text leading-relaxed">{event.description_5th_grade}</p>
               </div>
@@ -133,7 +133,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
             {/* When & Where cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">When</h2>
                 <div className="space-y-2 text-sm">
                   {startDate && (
@@ -163,7 +163,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Where</h2>
                 <div className="space-y-2 text-sm">
                   {event.is_virtual === 'true' ? (
@@ -197,18 +197,18 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
             {/* Host Organization */}
             {org && (
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Hosted By</h2>
                 <div className="flex items-start gap-4">
                   {(org as any).logo_url ? (
-                    <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 rounded-lg object-contain bg-brand-bg border border-brand-border"  width={48} height={48} />
+                    <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 object-contain bg-brand-bg border border-brand-border"  width={48} height={48} />
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-brand-bg-alt border border-brand-border flex items-center justify-center">
+                    <div className="w-12 h-12 bg-brand-bg-alt border border-brand-border flex items-center justify-center">
                       <Building2 className="w-6 h-6 text-brand-muted" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <Link href={`/organizations/${org.org_id}`} className="text-lg font-serif font-bold text-brand-text hover:text-brand-accent transition-colors">
+                    <Link href={`/organizations/${org.org_id}`} className="text-lg font-display font-bold text-brand-text hover:text-brand-accent transition-colors">
                       {org.org_name}
                     </Link>
                     {(org as any).description_5th_grade && (
@@ -242,7 +242,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             )}
 
             {/* iCal subscription */}
-            <div className="bg-brand-bg-alt rounded-lg p-4 text-sm text-brand-muted flex items-center gap-3">
+            <div className="bg-brand-bg-alt p-4 text-sm text-brand-muted flex items-center gap-3">
               <CalendarPlus className="w-5 h-5 flex-shrink-0" />
               <div>
                 <span className="font-medium text-brand-text">Subscribe to our calendar</span>

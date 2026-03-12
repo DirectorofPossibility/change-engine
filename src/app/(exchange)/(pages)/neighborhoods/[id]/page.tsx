@@ -74,40 +74,60 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   const t = getUIStrings(lang)
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <Breadcrumb items={[{ label: 'Neighborhoods' }, { label: hood.neighborhood_name }]} />
+    <div className="max-w-[1080px] mx-auto px-6 py-6">
+      <Breadcrumb items={[{ label: 'Neighborhoods', href: '/neighborhoods' }, { label: hood.neighborhood_name }]} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className="lg:col-span-2">
-      <h1 className="text-3xl font-bold text-brand-text mb-2">{hood.neighborhood_name}</h1>
-      <div className="flex items-center gap-3 text-sm text-brand-muted mb-6">
-        {hood.neighborhood_type && <span>{hood.neighborhood_type}</span>}
-        {hood.city && <span><MapPin size={12} className="inline" /> {hood.city}</span>}
-        {hood.council_district && <span>Council District {hood.council_district}</span>}
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0 items-start">
+      <div className="py-8 lg:pr-10 lg:border-r min-w-0" style={{ borderColor: '#dde1e8' }}>
+      <div className="flex items-center gap-2 mb-3">
+        <span
+          className="font-mono uppercase tracking-[0.12em] px-2 py-0.5"
+          style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
+        >
+          Neighborhood
+        </span>
+        <span
+          className="font-mono uppercase tracking-[0.12em]"
+          style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
+        >
+          {hood.neighborhood_type && <>{hood.neighborhood_type} &middot; </>}
+          {hood.city && <>{hood.city}</>}
+          {hood.council_district && <> &middot; District {hood.council_district}</>}
+        </span>
       </div>
+      <h1
+        className="font-display leading-[1] tracking-tight mb-4"
+        style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, color: '#0d1117' }}
+      >
+        {hood.neighborhood_name}
+      </h1>
 
       {/* Demographics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
+      <div className="flex flex-wrap gap-6 mb-6 py-4" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
         {hood.population != null && (
-          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-            <Users size={20} className="mx-auto text-brand-accent mb-1" />
-            <div className="text-xl font-bold text-brand-text">{hood.population.toLocaleString()}</div>
-            <div className="text-xs text-brand-muted">{t('neighborhoods.population')}</div>
+          <div className="flex items-center gap-2">
+            <Users size={16} style={{ color: '#1b5e8a' }} />
+            <div>
+              <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{hood.population.toLocaleString()}</span>
+              <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.population')}</span>
+            </div>
           </div>
         )}
         {hood.median_income != null && (
-          <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
-            <DollarSign size={20} className="mx-auto text-brand-accent mb-1" />
-            <div className="text-xl font-bold text-brand-text">${hood.median_income.toLocaleString()}</div>
-            <div className="text-xs text-brand-muted">{t('neighborhoods.median_income')}</div>
+          <div className="flex items-center gap-2">
+            <DollarSign size={16} style={{ color: '#1b5e8a' }} />
+            <div>
+              <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${hood.median_income.toLocaleString()}</span>
+              <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.median_income')}</span>
+            </div>
           </div>
         )}
       </div>
 
       {/* Description */}
       {hood.description && (
-        <section className="mb-5">
-          <p className="text-brand-muted leading-relaxed">{hood.description}</p>
+        <section className="mb-6">
+          <p className="font-body leading-[1.85]" style={{ fontSize: '0.88rem', color: '#0d1117' }}>{hood.description}</p>
         </section>
       )}
 
@@ -117,14 +137,15 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
         votingLocations={mapData.votingLocations}
         distributionSites={mapData.distributionSites}
         organizations={mapData.organizations}
+        municipalServices={mapData.municipalServices}
       />
 
       {/* ZIP code lookup link */}
       {zips.length > 0 && (
-        <div className="bg-brand-accent/5 rounded-xl border border-brand-border p-4 mb-5">
-          <p className="text-sm text-brand-text">
+        <div className="p-4 mb-6" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
+          <p className="font-mono" style={{ fontSize: '0.75rem', color: '#0d1117' }}>
             ZIP codes: {zips.join(', ')} &mdash;{' '}
-            <Link href={'/officials/lookup'} className="text-brand-accent hover:underline font-medium">
+            <Link href={'/officials/lookup'} className="hover:underline font-medium" style={{ color: '#1b5e8a' }}>
               {t('neighborhoods.find_reps')} &rarr;
             </Link>
           </p>
@@ -134,21 +155,27 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
       {/* Local services */}
       {services.length > 0 && (
         <section>
-          <h2 className="text-xl font-bold text-brand-text mb-4">{t('neighborhoods.services_area')}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <span
+            className="font-mono uppercase tracking-[0.2em] block mb-3"
+            style={{ fontSize: '0.58rem', color: '#5c6474' }}
+          >
+            {t('neighborhoods.services_area')}
+          </span>
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-0"
+            style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}
+          >
             {services.map(function (svc) {
               return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id}>
-                  <ServiceCard
-                    name={serviceTranslations[svc.service_id]?.title || svc.service_name}
-                    description={serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
-                    phone={svc.phone}
-                    address={svc.address}
-                    city={svc.city}
-                    state={svc.state}
-                    zipCode={svc.zip_code}
-                    website={svc.website}
-                  />
+                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block p-4 bg-white transition-colors hover:bg-[#f4f5f7]" style={{ borderRight: '1.5px solid #dde1e8', borderBottom: '1.5px solid #dde1e8' }}>
+                  <h4 className="font-display line-clamp-2 mb-1" style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0d1117' }}>
+                    {serviceTranslations[svc.service_id]?.title || svc.service_name}
+                  </h4>
+                  {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
+                    <p className="font-body italic line-clamp-2" style={{ fontSize: '0.75rem', color: '#5c6474' }}>
+                      {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
+                    </p>
+                  )}
                 </Link>
               )
             })}
@@ -156,9 +183,9 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
         </section>
       )}
       </div>
-      <div>
+      <aside className="py-8 lg:pl-10 flex flex-col gap-7">
         <DetailWayfinder data={wayfinderData} currentType={'neighborhood' as any} currentId={id} userRole={userProfile?.role} />
-      </div>
+      </aside>
       </div>
     </div>
   )

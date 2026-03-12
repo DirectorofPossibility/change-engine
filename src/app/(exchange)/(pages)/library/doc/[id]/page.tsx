@@ -79,7 +79,7 @@ export default async function DocumentDetailPage(
         </div>
       )}
 
-      <h1 className="font-serif text-3xl font-bold text-brand-text leading-tight mb-3">
+      <h1 className="font-display text-3xl font-bold text-brand-text leading-tight mb-3">
         {doc.title}
       </h1>
 
@@ -110,7 +110,7 @@ export default async function DocumentDetailPage(
           {/* Key Takeaways */}
           {doc.key_points.length > 0 && (
             <div className="mb-8">
-              <h2 className="font-serif text-lg font-bold text-brand-text mb-4">Key Takeaways</h2>
+              <h2 className="font-display text-lg font-bold text-brand-text mb-4">Key Takeaways</h2>
               <div className="space-y-3">
                 {doc.key_points.map(function (point, i) {
                   return (
@@ -152,12 +152,12 @@ export default async function DocumentDetailPage(
         {/* Sidebar */}
         <div className="space-y-5">
           {/* Actions */}
-          <div className="bg-white rounded-xl border border-brand-border p-5 space-y-3">
+          <div className="bg-white border border-brand-border p-5 space-y-3">
             <a
               href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kb-documents/${doc.file_path}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg border border-brand-border text-sm font-semibold text-brand-text hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-2.5 border border-brand-border text-sm font-semibold text-brand-text hover:bg-gray-50 transition-colors"
             >
               <Download size={15} />
               Download PDF
@@ -165,7 +165,7 @@ export default async function DocumentDetailPage(
 
             <Link
               href={'/library/chat?doc=' + doc.id}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center gap-2 w-full py-2.5 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
             >
               <MessageCircle size={15} />
               Ask About This Document
@@ -175,7 +175,7 @@ export default async function DocumentDetailPage(
           {/* Related documents */}
           {related.length > 0 && (
             <div>
-              <h3 className="font-serif text-base font-bold text-brand-text mb-3">Related Research</h3>
+              <h3 className="font-display text-base font-bold text-brand-text mb-3">Related Research</h3>
               <div className="space-y-3">
                 {related.slice(0, 4).map(function (rel) {
                   return (

@@ -28,10 +28,10 @@ export function PathwayRibbons({ pathwayCounts }: PathwayRibbonsProps) {
       </div>
 
       <div className="text-center mb-6">
-        <h2 className="font-serif text-2xl font-bold tracking-tight text-brand-text mb-1">
+        <h2 className="font-display text-2xl font-bold tracking-tight text-brand-text mb-1">
           {t('home.seven_pathways')}
         </h2>
-        <p className="text-sm text-brand-muted font-serif italic">
+        <p className="text-sm text-brand-muted font-body italic">
           {t('home.pathways_subtitle')}
         </p>
       </div>
@@ -44,13 +44,13 @@ export function PathwayRibbons({ pathwayCounts }: PathwayRibbonsProps) {
             <Link
               key={id}
               href={'/pathways/' + theme.slug}
-              className="group flex-shrink-0 w-[240px] sm:w-auto snap-start bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group flex-shrink-0 w-[240px] sm:w-auto snap-start bg-white border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
               {/* Color accent bar */}
               <div className="h-1.5" style={{ backgroundColor: theme.color }} />
 
               <div className="p-4">
-                <h3 className="font-serif font-bold text-brand-text text-[15px] mb-1">
+                <h3 className="font-display font-bold text-brand-text text-[15px] mb-1">
                   {theme.name}
                 </h3>
                 <p className="text-xs text-brand-muted leading-relaxed line-clamp-2">

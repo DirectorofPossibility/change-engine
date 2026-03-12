@@ -22,7 +22,7 @@ export function BallotItemCard({
   const [showAgainst, setShowAgainst] = useState(false)
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-4">
+    <div className="bg-white border border-brand-border p-4">
       <div className="flex items-center gap-2 mb-2">
         {itemType && (
           <span className="text-xs uppercase tracking-wide font-semibold text-brand-muted">{itemType}</span>

@@ -21,13 +21,13 @@ import { ImageLightbox } from './ImageLightbox'
 
 /** Gradient color pairs keyed by pathway ID for placeholder card images. */
 const PATHWAY_GRADIENTS: Record<string, { from: string; to: string }> = {
-  THEME_01: { from: '#e53e3e', to: '#c53030' },
-  THEME_02: { from: '#dd6b20', to: '#c05621' },
-  THEME_03: { from: '#d69e2e', to: '#b7791f' },
-  THEME_04: { from: '#38a169', to: '#2f855a' },
-  THEME_05: { from: '#3182ce', to: '#2b6cb0' },
-  THEME_06: { from: '#319795', to: '#2c7a7b' },
-  THEME_07: { from: '#805ad5', to: '#6b46c1' },
+  THEME_01: { from: '#7a2018', to: '#5a1810' },
+  THEME_02: { from: '#1e4d7a', to: '#163a5c' },
+  THEME_03: { from: '#4a2870', to: '#381e54' },
+  THEME_04: { from: '#1a6b56', to: '#145242' },
+  THEME_05: { from: '#1b5e8a', to: '#144868' },
+  THEME_06: { from: '#1a5030', to: '#133d24' },
+  THEME_07: { from: '#4a2870', to: '#381e54' },
 }
 
 /** Default gradient used when no pathway is specified. */
@@ -77,8 +77,8 @@ export function ContentCard({
   const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-shadow cursor-pointer' }
-    : { href: href || '/content/' + id, className: 'block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-shadow' }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-shadow cursor-pointer' }
+    : { href: href || '/content/' + id, className: 'block bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-shadow' }
   return (
     <Wrapper {...wrapperProps as any}>
       {/* TODO: Replace with real Houston photography */}

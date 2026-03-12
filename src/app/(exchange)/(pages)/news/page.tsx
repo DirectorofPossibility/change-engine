@@ -228,7 +228,7 @@ export default async function NewsPage({
               {hero && (
                 <Link href={'/content/' + hero.id} className="lg:col-span-7 group">
                   {hasValidImage(hero) && (
-                    <div className="aspect-[16/9] rounded-lg overflow-hidden mb-4">
+                    <div className="aspect-[16/9] overflow-hidden mb-4">
                       <Image
                         src={hero.image_url!}
                         alt=""
@@ -276,11 +276,11 @@ export default async function NewsPage({
                         <Image
                           src={item.image_url!}
                           alt=""
-                          className="w-28 h-20 rounded-lg object-cover flex-shrink-0 group-hover:opacity-90 transition-opacity"
+                          className="w-28 h-20 object-cover flex-shrink-0 group-hover:opacity-90 transition-opacity"
                          width={800} height={80} />
                       ) : (
                         <div
-                          className="w-28 h-20 rounded-lg flex-shrink-0 flex items-center justify-center"
+                          className="w-28 h-20 flex-shrink-0 flex items-center justify-center"
                           style={{ backgroundColor: (theme?.color || '#1b5e8a') + '12' }}
                         >
                           {typeIcon(item.content_type)}
@@ -329,7 +329,7 @@ export default async function NewsPage({
                       {hasValidImage(section.items[0]) && (
                         <Link href={'/content/' + section.items[0].id} className="group block mb-5">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="aspect-[16/10] rounded-lg overflow-hidden">
+                            <div className="aspect-[16/10] overflow-hidden">
                               <Image
                                 src={section.items[0].image_url!}
                                 alt=""
@@ -372,7 +372,7 @@ export default async function NewsPage({
                             <Link
                               key={item.id}
                               href={'/content/' + item.id}
-                              className="group flex items-start gap-4 py-3 hover:bg-white/50 -mx-3 px-3 rounded-lg transition-colors"
+                              className="group flex items-start gap-4 py-3 hover:bg-white/50 -mx-3 px-3 transition-colors"
                             >
                               {hasValidImage(item) ? (
                                 <Image src={item.image_url!} alt="" className="w-20 h-14 rounded object-cover flex-shrink-0"  width={800} height={56} />

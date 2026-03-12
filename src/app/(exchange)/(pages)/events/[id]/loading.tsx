@@ -4,7 +4,7 @@ export default function Loading() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           <div className="flex gap-3 items-center">
-            <div className="h-14 w-14 bg-white/60 rounded-xl animate-pulse" />
+            <div className="h-14 w-14 bg-white/60 animate-pulse" />
             <div className="space-y-2">
               <div className="h-4 w-32 bg-white/60 rounded animate-pulse" />
               <div className="h-4 w-24 bg-white/60 rounded animate-pulse" />
@@ -18,8 +18,8 @@ export default function Loading() {
           </div>
         </div>
         <div className="space-y-4">
-          <div className="h-48 bg-white/60 rounded-xl animate-pulse" />
-          <div className="h-24 bg-white/60 rounded-xl animate-pulse" />
+          <div className="h-48 bg-white/60 animate-pulse" />
+          <div className="h-24 bg-white/60 animate-pulse" />
         </div>
       </div>
     </div>

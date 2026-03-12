@@ -94,7 +94,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             <div className="flex-1">
               <div className="flex items-center gap-5 mb-5">
                 <div
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0"
+                  className="w-20 h-20 flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: centerColor + '15', border: '2px solid ' + centerColor + '30' }}
                 >
                   <Icon size={48} color={centerColor} />
@@ -103,11 +103,11 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                   <p className="text-[10px] font-mono font-bold uppercase tracking-widest" style={{ color: centerColor }}>
                     Your Journey
                   </p>
-                  <h1 className="font-serif text-3xl sm:text-4xl font-bold text-brand-text">{config.name}</h1>
+                  <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-text">{config.name}</h1>
                 </div>
               </div>
 
-              <p className="text-lg font-serif italic mb-2" style={{ color: centerColor }}>
+              <p className="text-lg font-display italic mb-2" style={{ color: centerColor }}>
                 "{config.heroQuestion}"
               </p>
               <p className="text-brand-muted leading-relaxed max-w-2xl">
@@ -118,12 +118,12 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             {/* Right: quick actions + ZIP */}
             <div className="lg:w-[340px] flex-shrink-0 space-y-4">
               {/* ZIP personalization */}
-              <div className="bg-white rounded-xl border border-brand-border p-4" style={{ boxShadow: '3px 3px 0 ' + centerColor + '20' }}>
+              <div className="bg-white border border-brand-border p-4" style={{ boxShadow: '3px 3px 0 ' + centerColor + '20' }}>
                 <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted block mb-2">
                   Personalize Your View
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 flex items-center gap-2 px-3 py-2 border border-brand-border rounded-lg bg-brand-bg">
+                  <div className="flex-1 flex items-center gap-2 px-3 py-2 border border-brand-border bg-brand-bg">
                     <MapPin size={14} className="text-brand-muted" />
                     <input
                       type="text"
@@ -135,7 +135,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                   </div>
                   <Link
                     href={zipCode.length === 5 ? '/my-area?zip=' + zipCode : '#'}
-                    className="px-4 py-2 rounded-lg text-sm font-bold text-white transition-colors"
+                    className="px-4 py-2 text-sm font-bold text-white transition-colors"
                     style={{ backgroundColor: zipCode.length === 5 ? centerColor : '#ccc' }}
                   >
                     Go
@@ -150,7 +150,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                     <Link
                       key={action.label}
                       href={action.href}
-                      className="group flex items-center gap-2 px-3 py-2.5 bg-white rounded-xl border border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all duration-200"
+                      className="group flex items-center gap-2 px-3 py-2.5 bg-white border border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all duration-200"
                     >
                       <span className="w-1.5 h-6 rounded-sm flex-shrink-0 transition-all group-hover:w-2" style={{ backgroundColor: action.color }} />
                       <span className="text-xs font-semibold text-brand-text">{action.label}</span>
@@ -172,7 +172,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             ].map(function (stat) {
               return (
                 <div key={stat.label} className="text-center">
-                  <p className="text-xl sm:text-2xl font-serif font-bold" style={{ color: centerColor }}>
+                  <p className="text-xl sm:text-2xl font-display font-bold" style={{ color: centerColor }}>
                     {stat.value.toLocaleString()}
                   </p>
                   <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">
@@ -211,14 +211,14 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
 
             {/* Quote widget */}
             {quote && (
-              <div className="relative overflow-hidden rounded-xl border border-brand-border p-6 mt-6" style={{ background: centerColor + '06' }}>
+              <div className="relative overflow-hidden border border-brand-border p-6 mt-6" style={{ background: centerColor + '06' }}>
                 <Image
                   src={config.folImage}
                   alt="" aria-hidden="true"
                   className="absolute right-[-20px] top-[-20px] w-[100px] h-[100px] pointer-events-none opacity-[0.06]"
                  width={200} height={200} />
                 <blockquote className="relative z-10">
-                  <p className="font-serif text-lg italic text-brand-text leading-relaxed">
+                  <p className="font-display text-lg italic text-brand-text leading-relaxed">
                     "{quote.quote_text}"
                   </p>
                   {quote.attribution && (
@@ -234,14 +234,14 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
           {/* Sidebar */}
           <aside className="lg:w-[300px] flex-shrink-0 space-y-5">
             {/* Pathways */}
-            <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+            <div className="bg-white border border-brand-border overflow-hidden">
               <div className="relative p-4 border-b border-brand-border overflow-hidden">
                 <Image
                   src={config.folImage}
                   alt="" aria-hidden="true"
                   className="absolute right-[-10px] top-[-10px] w-[60px] h-[60px] pointer-events-none opacity-[0.06]"
                  width={200} height={200} />
-                <h3 className="font-serif text-base font-semibold text-brand-text">Explore Pathways</h3>
+                <h3 className="font-display text-base font-semibold text-brand-text">Explore Pathways</h3>
                 <p className="text-[11px] text-brand-muted mt-0.5">Seven dimensions of community life</p>
               </div>
               <div className="p-3 space-y-0.5">
@@ -264,9 +264,9 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             <FeaturedPromo variant="card" />
 
             {/* Other journeys */}
-            <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+            <div className="bg-white border border-brand-border overflow-hidden">
               <div className="p-4 border-b border-brand-border">
-                <h3 className="font-serif text-base font-semibold text-brand-text">Other Journeys</h3>
+                <h3 className="font-display text-base font-semibold text-brand-text">Other Journeys</h3>
                 <p className="text-[11px] text-brand-muted mt-0.5">Not quite your style? Try another path.</p>
               </div>
               <div className="p-3 space-y-1">
@@ -276,10 +276,10 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                     <Link
                       key={p.slug}
                       href={'/for/' + p.slug}
-                      className="group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-brand-bg transition-colors"
+                      className="group flex items-center gap-3 px-2 py-2 hover:bg-brand-bg transition-colors"
                     >
                       <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                        className="w-8 h-8 flex items-center justify-center flex-shrink-0"
                         style={{ backgroundColor: p.color + '15' }}
                       >
                         <OtherIcon size={18} color={p.color} />
@@ -296,7 +296,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             </div>
 
             {/* Help numbers */}
-            <div className="px-4 py-3 bg-brand-bg rounded-xl border border-brand-border">
+            <div className="px-4 py-3 bg-brand-bg border border-brand-border">
               <p className="text-[10px] font-mono font-bold text-brand-muted">
                 Need help? <span className="text-brand-text">211</span> / <span className="text-brand-text">311</span> / <span className="text-brand-text">988</span>
               </p>

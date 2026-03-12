@@ -17,7 +17,7 @@ export function HeroSearchInput() {
 
   return (
     <form onSubmit={handleSubmit}
-      className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text rounded-xl"
+      className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text"
      
     >
       <Search size={18} className="text-brand-accent flex-shrink-0" />
@@ -32,7 +32,7 @@ export function HeroSearchInput() {
       <button
         type="submit"
         disabled={query.trim().length < 2}
-        className="px-3 py-1.5 bg-brand-text text-white font-mono text-[11px] font-bold uppercase rounded-lg disabled:opacity-30 hover:bg-brand-accent transition-colors"
+        className="px-3 py-1.5 bg-brand-text text-white font-mono text-[11px] font-bold uppercase disabled:opacity-30 hover:bg-brand-accent transition-colors"
       >
         Search
       </button>

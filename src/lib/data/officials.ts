@@ -31,12 +31,10 @@ export async function getOfficialsByZip(zip: string) {
 
   if (!zipData) return null
 
-  // District IDs are normalized: TX-18 (federal), SD-13/HD-147 (state), A-K (city council)
   const districts = [
-    zipData.congressional_district,    // e.g. "TX-18"
-    zipData.state_senate_district,     // e.g. "SD-13"
-    zipData.state_house_district,      // e.g. "HD-147"
-    'TX-SEN',                          // Both US Senators
+    zipData.congressional_district,
+    zipData.state_senate_district,
+    zipData.state_house_district,
   ].filter(Boolean)
 
   // Look up city council district from neighborhoods table
@@ -50,6 +48,8 @@ export async function getOfficialsByZip(zip: string) {
   const councilDistrict = hoodRows?.[0]?.council_district || null
 
   let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+  // US Senators: Federal level with null district_id (statewide)
+  filterParts += ',and(level.eq.Federal,district_id.is.null)'
   if (councilDistrict) {
     filterParts += ',district_id.eq.' + councilDistrict
   }

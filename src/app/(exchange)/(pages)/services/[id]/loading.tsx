@@ -12,15 +12,15 @@ export default function Loading() {
             <div className="h-4 w-2/3 bg-white/60 rounded animate-pulse" />
           </div>
           <div className="grid grid-cols-2 gap-4 mt-8">
-            <div className="h-28 bg-white/60 rounded-xl animate-pulse" />
-            <div className="h-28 bg-white/60 rounded-xl animate-pulse" />
-            <div className="h-28 bg-white/60 rounded-xl animate-pulse" />
-            <div className="h-28 bg-white/60 rounded-xl animate-pulse" />
+            <div className="h-28 bg-white/60 animate-pulse" />
+            <div className="h-28 bg-white/60 animate-pulse" />
+            <div className="h-28 bg-white/60 animate-pulse" />
+            <div className="h-28 bg-white/60 animate-pulse" />
           </div>
         </div>
         <div className="space-y-4">
-          <div className="h-48 bg-white/60 rounded-xl animate-pulse" />
-          <div className="h-24 bg-white/60 rounded-xl animate-pulse" />
+          <div className="h-48 bg-white/60 animate-pulse" />
+          <div className="h-24 bg-white/60 animate-pulse" />
         </div>
       </div>
     </div>

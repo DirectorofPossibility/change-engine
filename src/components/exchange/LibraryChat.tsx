@@ -244,7 +244,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
   }
 
   return (
-    <div className="flex flex-col h-[650px] max-h-[85vh] bg-white rounded-xl border border-brand-border overflow-hidden">
+    <div className="flex flex-col h-[650px] max-h-[85vh] bg-white border border-brand-border overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b border-brand-border flex items-center justify-between bg-gradient-to-r from-brand-accent/5 to-transparent">
         <div className="flex items-center gap-2.5">
@@ -252,7 +252,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
             <MessageCircle size={16} className="text-brand-accent" />
           </div>
           <div>
-            <h2 className="font-serif font-bold text-brand-text text-sm">
+            <h2 className="font-display font-bold text-brand-text text-sm">
               {documentContext ? t('library.ask_about_doc') : t('chat.title')}
             </h2>
             <p className="text-[11px] text-brand-muted">{t('chat.subtitle')}</p>
@@ -276,7 +276,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
             <div className="w-14 h-14 rounded-full bg-brand-accent/10 flex items-center justify-center mb-4">
               <MessageCircle size={24} className="text-brand-accent" />
             </div>
-            <p className="text-brand-text font-serif text-lg font-bold mb-2">
+            <p className="text-brand-text font-display text-lg font-bold mb-2">
               {t('chat.welcome_title')}
             </p>
             <p className="text-brand-muted text-sm mb-6 max-w-md leading-relaxed">
@@ -289,7 +289,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
                     <button
                       key={q}
                       onClick={function () { handleSend(q) }}
-                      className="text-left text-sm px-3 py-2.5 rounded-lg border border-brand-border hover:border-brand-accent hover:bg-brand-accent/5 text-brand-muted hover:text-brand-text transition-colors"
+                      className="text-left text-sm px-3 py-2.5 border border-brand-border hover:border-brand-accent hover:bg-brand-accent/5 text-brand-muted hover:text-brand-text transition-colors"
                     >
                       {q}
                     </button>
@@ -308,8 +308,8 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
                 <div
                   className={
                     msg.role === 'user'
-                      ? 'max-w-[80%] bg-brand-accent text-white rounded-2xl rounded-br-md px-4 py-3 text-sm'
-                      : 'max-w-[85%] bg-gray-50 rounded-2xl rounded-bl-md px-4 py-3 text-sm text-brand-text'
+                      ? 'max-w-[80%] bg-brand-accent text-white rounded-br-md px-4 py-3 text-sm'
+                      : 'max-w-[85%] bg-gray-50 rounded-bl-md px-4 py-3 text-sm text-brand-text'
                   }
                 >
                   <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
@@ -333,7 +333,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
                             <Link
                               key={source.source_type + ':' + source.source_id}
                               href={source.link}
-                              className="flex items-start gap-2 px-2.5 py-2 rounded-lg border border-brand-border/50 hover:border-brand-accent/40 hover:bg-brand-accent/5 transition-colors group"
+                              className="flex items-start gap-2 px-2.5 py-2 border border-brand-border/50 hover:border-brand-accent/40 hover:bg-brand-accent/5 transition-colors group"
                             >
                               <Icon size={13} className="text-brand-muted group-hover:text-brand-accent mt-0.5 flex-shrink-0" />
                               <div className="min-w-0">
@@ -357,7 +357,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
         {/* Loading indicator (only when waiting for first token) */}
         {isLoading && messages.length > 0 && messages[messages.length - 1]?.role === 'assistant' && messages[messages.length - 1]?.content === '' && (
           <div className="flex justify-start">
-            <div className="bg-gray-50 rounded-2xl rounded-bl-md px-4 py-3">
+            <div className="bg-gray-50 rounded-bl-md px-4 py-3">
               <div className="flex items-center gap-2">
                 <div className="flex gap-1">
                   <div className="w-2 h-2 rounded-full bg-brand-accent/40 animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -383,12 +383,12 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
             onKeyDown={handleKeyDown}
             placeholder={t('chat.placeholder')}
             rows={1}
-            className="flex-1 resize-none text-sm px-4 py-2.5 border border-brand-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            className="flex-1 resize-none text-sm px-4 py-2.5 border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
           <button
             onClick={function () { handleSend() }}
             disabled={!input.trim() || isLoading}
-            className="p-2.5 rounded-xl bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0"
+            className="p-2.5 bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity flex-shrink-0"
             aria-label="Send message"
           >
             <Send size={16} />

@@ -19,7 +19,7 @@ export default function TermsPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <Breadcrumb items={[{ label: 'Terms of Use' }]} />
 
-      <h1 className="font-serif text-3xl md:text-4xl font-bold text-brand-text mt-6 mb-2">
+      <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-text mt-6 mb-2">
         Terms of Use
       </h1>
       <p className="text-sm text-brand-muted mb-8">Effective Date: March 4, 2026</p>
@@ -41,7 +41,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">1. Our Mission and Values</h2>
+          <h2 className="font-display text-xl font-semibold">1. Our Mission and Values</h2>
           <p>
             The Platforms exist to bridge divides and build community across Houston. We believe that
             diverse people need not vote the same way or share the same background to belong here.
@@ -84,7 +84,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">2. Eligibility</h2>
+          <h2 className="font-display text-xl font-semibold">2. Eligibility</h2>
           <p>
             You must be at least 13 years old to use our Platforms. If you are under 18, you may
             only use the Platforms with the involvement of a parent or legal guardian. By using the
@@ -93,7 +93,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">3. Account Registration</h2>
+          <h2 className="font-display text-xl font-semibold">3. Account Registration</h2>
           <p>
             Some features may require you to create an account. You agree to provide accurate and
             complete information, keep your login credentials secure, and notify us promptly of any
@@ -103,7 +103,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">4. License to Use the Platforms</h2>
+          <h2 className="font-display text-xl font-semibold">4. License to Use the Platforms</h2>
           <p>
             We grant you a <strong>limited, non-exclusive, non-transferable, revocable license</strong>{' '}
             to access and use the Platforms for personal, non-commercial, community-building
@@ -118,7 +118,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">5. User Contributions</h2>
+          <h2 className="font-display text-xl font-semibold">5. User Contributions</h2>
           <p>
             The Platforms may allow you to submit feedback, suggested edits, comments, or other
             content (&ldquo;User Contributions&rdquo;). By submitting a User Contribution, you
@@ -133,7 +133,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">6. Prohibited Uses</h2>
+          <h2 className="font-display text-xl font-semibold">6. Prohibited Uses</h2>
           <p>When using the Platforms, you agree not to:</p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Promote hate, discrimination, or harassment based on race, ethnicity, gender, religion, sexual orientation, disability, or any other protected characteristic</li>
@@ -148,7 +148,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">7. Third-Party Content and Links</h2>
+          <h2 className="font-display text-xl font-semibold">7. Third-Party Content and Links</h2>
           <p>
             The Platforms may contain links to third-party websites, resources, and services. We
             provide these links for informational purposes and do not endorse or assume
@@ -158,7 +158,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">8. Intellectual Property</h2>
+          <h2 className="font-display text-xl font-semibold">8. Intellectual Property</h2>
           <p>
             All content, design, graphics, trademarks, and other materials on the Platforms
             (excluding User Contributions) are the property of The Change Lab or its licensors and
@@ -168,7 +168,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">9. Privacy</h2>
+          <h2 className="font-display text-xl font-semibold">9. Privacy</h2>
           <p>
             Your use of the Platforms is also governed by our{' '}
             <a href="/privacy" className="text-brand-accent hover:underline">
@@ -180,7 +180,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">10. Disclaimers and Limitation of Liability</h2>
+          <h2 className="font-display text-xl font-semibold">10. Disclaimers and Limitation of Liability</h2>
 
           <h3 className="font-semibold text-lg mt-4">10.1 Disclaimer of Warranties</h3>
           <p>
@@ -207,7 +207,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">11. Indemnification</h2>
+          <h2 className="font-display text-xl font-semibold">11. Indemnification</h2>
           <p>
             You agree to indemnify and hold harmless The Change Lab, Impact Hub Houston, and their
             respective officers, directors, employees, and agents from any claims, liabilities,
@@ -217,7 +217,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">12. Termination</h2>
+          <h2 className="font-display text-xl font-semibold">12. Termination</h2>
           <p>
             We may suspend or terminate your access to the Platforms at our discretion, without
             notice, for conduct that we determine violates these Terms or is harmful to our
@@ -226,7 +226,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">13. Governing Law</h2>
+          <h2 className="font-display text-xl font-semibold">13. Governing Law</h2>
           <p>
             These Terms are governed by the laws of the State of Texas, without regard to conflict
             of law principles. Any disputes arising under these Terms shall be resolved in the
@@ -235,7 +235,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">14. Changes to These Terms</h2>
+          <h2 className="font-display text-xl font-semibold">14. Changes to These Terms</h2>
           <p>
             We may update these Terms from time to time. When we make significant changes, we will
             post the revised Terms on the Platforms with an updated effective date. Your continued
@@ -245,7 +245,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">15. Contact Us</h2>
+          <h2 className="font-display text-xl font-semibold">15. Contact Us</h2>
           <p>
             If you have questions or concerns about these Terms, please contact us:
           </p>

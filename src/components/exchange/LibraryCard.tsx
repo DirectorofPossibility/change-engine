@@ -38,7 +38,7 @@ export function LibraryCard({
 
   return (
     <Link href={'/library/doc/' + id} className="block group">
-      <article className="bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
+      <article className="bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
         {/* Color bar */}
         <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${primaryColor}, ${primaryColor}40)` }} />
 
@@ -61,7 +61,7 @@ export function LibraryCard({
           )}
 
           {/* Title */}
-          <h3 className="font-serif text-lg font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-2">
+          <h3 className="font-display text-lg font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-2">
             {title}
           </h3>
 

@@ -4,11 +4,11 @@ export default function Loading() {
       <div className="h-8 bg-brand-bg rounded w-72 mb-2" />
       <div className="h-4 bg-brand-bg rounded w-96 mb-8" />
 
-      <div className="h-32 bg-brand-bg rounded-xl mb-10" />
+      <div className="h-32 bg-brand-bg mb-10" />
 
       <div className="flex gap-3 mb-8">
-        <div className="h-12 bg-brand-bg rounded-lg w-64" />
-        <div className="h-12 bg-brand-bg rounded-lg w-40" />
+        <div className="h-12 bg-brand-bg w-64" />
+        <div className="h-12 bg-brand-bg w-40" />
       </div>
     </div>
   )

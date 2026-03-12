@@ -45,7 +45,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
             <Target className="w-5 h-5 text-theme-bigger" />
             {c.status && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{c.status}</span>}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{c.campaign_name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{c.campaign_name}</h1>
           {c.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{c.description_5th_grade}</p>}
         </div>
         <div className="h-1" style={{ background: 'linear-gradient(90deg, #805ad5, transparent 60%)' }} />
@@ -55,7 +55,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {c.goal_description && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white border border-brand-border p-5">
                   <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><TrendingUp className="w-4 h-4" />Goal</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{c.goal_description}</p>
                   {progress !== null && (
@@ -66,7 +66,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
                   )}
                 </div>
               )}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Details</h2>
                 <div className="space-y-2 text-sm">
                   {c.campaign_type && <div><span className="text-brand-muted">Type:</span> <span className="text-brand-text">{c.campaign_type}</span></div>}

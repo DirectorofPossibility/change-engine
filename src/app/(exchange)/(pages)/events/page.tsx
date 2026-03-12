@@ -44,10 +44,10 @@ export default async function EventsPage() {
   function EventCard({ e }: { e: any }) {
     const date = e.start_datetime ? new Date(e.start_datetime) : null
     return (
-      <Link href={`/events/${e.event_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+      <Link href={`/events/${e.event_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
         <div className="flex items-start gap-4">
           {date && (
-            <div className="flex-shrink-0 w-14 h-14 bg-brand-accent/10 rounded-lg flex flex-col items-center justify-center">
+            <div className="flex-shrink-0 w-14 h-14 bg-brand-accent/10 flex flex-col items-center justify-center">
               <span className="text-xs font-bold text-brand-accent uppercase">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
               <span className="text-lg font-bold text-brand-text leading-none">{date.getDate()}</span>
             </div>
@@ -77,13 +77,13 @@ export default async function EventsPage() {
           <div>
             {upcoming.length > 0 && (
               <div className="mb-10">
-                <h2 className="text-lg font-serif font-bold text-brand-text mb-4">Upcoming</h2>
+                <h2 className="text-lg font-display font-bold text-brand-text mb-4">Upcoming</h2>
                 <div className="space-y-3">{upcoming.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
               </div>
             )}
             {past.length > 0 && (
               <div>
-                <h2 className="text-lg font-serif font-bold text-brand-muted mb-4">Past Events</h2>
+                <h2 className="text-lg font-display font-bold text-brand-muted mb-4">Past Events</h2>
                 <div className="space-y-3 opacity-70">{past.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
               </div>
             )}

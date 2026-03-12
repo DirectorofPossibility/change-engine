@@ -54,7 +54,7 @@ export function PageHero({
         <Image src={backgroundImage!} alt="" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/70" />
         <div className="relative w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pb-8 sm:pb-12">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-white drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white drop-shadow-lg">
             {displayTitle}
           </h1>
           {displaySubtitle && (
@@ -77,11 +77,11 @@ export function PageHero({
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: gc }} />
             <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: gc, opacity: 0.4 }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-brand-text leading-tight">
             {displayTitle}
           </h1>
           {displaySubtitle && (
-            <p className="text-base sm:text-lg text-brand-muted mt-2 max-w-2xl font-serif italic">{displaySubtitle}</p>
+            <p className="text-base sm:text-lg text-brand-muted mt-2 max-w-2xl font-display italic">{displaySubtitle}</p>
           )}
           {displayIntro && (
             <p className="text-sm sm:text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
@@ -101,7 +101,7 @@ export function PageHero({
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-10">
             <div className="flex-1 min-w-0">
               {children && <div className="flex items-center gap-2 mb-4">{children}</div>}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-brand-text leading-tight">
                 {displayTitle}
               </h1>
               {displaySubtitle && (
@@ -117,7 +117,7 @@ export function PageHero({
                   href={sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-lg text-sm font-medium text-white transition-colors hover:opacity-90"
+                  className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
                   style={{ backgroundColor: gc }}
                 >
                   Visit source
@@ -127,7 +127,7 @@ export function PageHero({
             </div>
             {imageUrl && (
               <div className="mt-6 lg:mt-0 lg:flex-shrink-0 lg:w-80 xl:w-96">
-                <div className="rounded-lg overflow-hidden shadow-lg">
+                <div className=" overflow-hidden shadow-lg">
                   <ImageLightbox src={imageUrl} alt={displayTitle} className="w-full h-48 sm:h-56 lg:h-64 object-contain bg-brand-bg" />
                 </div>
               </div>
@@ -153,11 +153,11 @@ export function PageHero({
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: gc }} />
             <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: gc, opacity: 0.4 }} />
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-brand-text leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-brand-text leading-tight">
             {displayTitle}
           </h1>
           {displaySubtitle && (
-            <p className="text-lg text-brand-muted mt-3 font-serif italic max-w-2xl">{displaySubtitle}</p>
+            <p className="text-lg text-brand-muted mt-3 font-display italic max-w-2xl">{displaySubtitle}</p>
           )}
           {displayIntro && (
             <p className="text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>
@@ -174,11 +174,11 @@ export function PageHero({
     <section className="relative w-full overflow-hidden bg-brand-bg-alt border-b border-brand-border">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <div className="w-10 h-0.5 bg-brand-accent mb-5" />
-        <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-display font-bold text-brand-text leading-tight">
           {displayTitle}
         </h1>
         {displaySubtitle && (
-          <p className="text-lg text-brand-muted mt-2 font-serif italic">{displaySubtitle}</p>
+          <p className="text-lg text-brand-muted mt-2 font-display italic">{displaySubtitle}</p>
         )}
         {displayIntro && (
           <p className="text-base text-brand-muted mt-4 max-w-3xl leading-relaxed">{displayIntro}</p>

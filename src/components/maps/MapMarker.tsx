@@ -30,18 +30,18 @@ export interface MarkerData {
 }
 
 const MARKER_COLORS: Record<MarkerType, { background: string; border: string }> = {
-  service:      { background: '#3182ce', border: '#2c5282' },
-  voting:       { background: '#e53e3e', border: '#c53030' },
-  organization: { background: '#38a169', border: '#276749' },
-  distribution: { background: '#d69e2e', border: '#b7791f' },
-  opportunity:  { background: '#805ad5', border: '#6b46c1' },
-  park:         { background: '#38a169', border: '#276749' },
-  police:       { background: '#3182ce', border: '#2c5282' },
-  fire:         { background: '#e53e3e', border: '#c53030' },
-  school:       { background: '#dd6b20', border: '#c05621' },
-  medical:      { background: '#805ad5', border: '#6b46c1' },
-  library:      { background: '#d69e2e', border: '#b7791f' },
-  official:     { background: '#319795', border: '#285e61' },
+  service:      { background: '#1b5e8a', border: '#163a5c' },
+  voting:       { background: '#7a2018', border: '#5a1810' },
+  organization: { background: '#1a6b56', border: '#145242' },
+  distribution: { background: '#4a2870', border: '#381e55' },
+  opportunity:  { background: '#4a2870', border: '#381e55' },
+  park:         { background: '#1a6b56', border: '#145242' },
+  police:       { background: '#1b5e8a', border: '#163a5c' },
+  fire:         { background: '#7a2018', border: '#5a1810' },
+  school:       { background: '#1e4d7a', border: '#163a5c' },
+  medical:      { background: '#4a2870', border: '#381e55' },
+  library:      { background: '#1e4d7a', border: '#163a5c' },
+  official:     { background: '#1a5030', border: '#123d24' },
 }
 
 /**
@@ -93,17 +93,17 @@ export function MapMarker({ marker, onClick }: MapMarkerProps) {
     >
       <Popup>
         <div className="max-w-[240px] text-sm">
-          <h3 className="font-semibold text-brand-text mb-1">{marker.title}</h3>
+          <h3 className="font-semibold mb-1" style={{ color: '#0d1117' }}>{marker.title}</h3>
           {marker.address && (
-            <p className="text-xs text-brand-muted mb-1">{marker.address}</p>
+            <p className="text-xs mb-1" style={{ color: '#5c6474' }}>{marker.address}</p>
           )}
           {marker.phone && (
-            <p className="text-xs text-brand-muted mb-1">
-              <a href={'tel:' + marker.phone} className="text-brand-accent hover:underline">{marker.phone}</a>
+            <p className="text-xs mb-1" style={{ color: '#5c6474' }}>
+              <a href={'tel:' + marker.phone} className="hover:underline" style={{ color: '#1b5e8a' }}>{marker.phone}</a>
             </p>
           )}
           {marker.link && (
-            <Link href={marker.link} className="text-xs text-brand-accent hover:underline">
+            <Link href={marker.link} className="text-xs hover:underline" style={{ color: '#1b5e8a' }}>
               View details &rarr;
             </Link>
           )}

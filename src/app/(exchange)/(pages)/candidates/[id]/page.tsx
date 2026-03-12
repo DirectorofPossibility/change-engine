@@ -36,12 +36,12 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
           <Breadcrumb items={[{ label: 'Candidates', href: '/candidates' }, { label: c.candidate_name }]} />
           <div className="flex items-start gap-6 mt-4">
             {c.photo_url ? (
-              <Image src={c.photo_url} alt="" className="w-24 h-24 rounded-xl object-cover flex-shrink-0"  width={800} height={96} />
+              <Image src={c.photo_url} alt="" className="w-24 h-24 object-cover flex-shrink-0"  width={800} height={96} />
             ) : (
-              <div className="w-24 h-24 rounded-xl bg-brand-border flex items-center justify-center flex-shrink-0"><User className="w-10 h-10 text-brand-muted" /></div>
+              <div className="w-24 h-24 bg-brand-border flex items-center justify-center flex-shrink-0"><User className="w-10 h-10 text-brand-muted" /></div>
             )}
             <div>
-              <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{c.candidate_name}</h1>
+              <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{c.candidate_name}</h1>
               <p className="text-brand-muted mt-1">{c.office_sought}{c.district ? ` - ${c.district}` : ''}</p>
               <div className="flex items-center gap-3 mt-2 text-sm text-brand-muted">
                 {c.party && <span>{c.party}</span>}
@@ -56,12 +56,12 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
         <div className="lg:col-span-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {c.bio_summary && (
-            <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
+            <div className="bg-white border border-brand-border p-5 md:col-span-2">
               <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">About</h2>
               <p className="text-sm text-brand-text leading-relaxed">{c.bio_summary}</p>
             </div>
           )}
-          <div className="bg-white rounded-lg border border-brand-border p-5">
+          <div className="bg-white border border-brand-border p-5">
             <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Campaign</h2>
             <div className="space-y-2 text-sm">
               {c.campaign_website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={c.campaign_website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline">Campaign website</a></div>}
@@ -71,7 +71,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
             </div>
           </div>
           {(c.policy_positions || c.endorsements) && (
-            <div className="bg-white rounded-lg border border-brand-border p-5">
+            <div className="bg-white border border-brand-border p-5">
               <h2 className="text-sm font-bold uppercase tracking-wide text-brand-muted mb-3">Positions & Endorsements</h2>
               {c.policy_positions && <p className="text-sm text-brand-text leading-relaxed">{c.policy_positions}</p>}
               {c.endorsements && <p className="text-sm text-brand-muted mt-2">{c.endorsements}</p>}

@@ -76,10 +76,10 @@ export function CivicDashboardClient({ airQuality, alerts, bayouLevels }: CivicD
       <section>
         <h2 className="text-xl font-semibold text-brand-text mb-4">Air Quality</h2>
         {airQuality ? (
-          <div className="bg-white rounded-xl border border-brand-border p-6">
+          <div className="bg-white border border-brand-border p-6">
             <div className="flex items-start gap-6 flex-wrap">
               <div
-                className="flex flex-col items-center justify-center w-28 h-28 rounded-xl"
+                className="flex flex-col items-center justify-center w-28 h-28"
                 style={{ backgroundColor: getAqiInfo(airQuality.aqi).bgColor }}
               >
                 <span
@@ -119,7 +119,7 @@ export function CivicDashboardClient({ airQuality, alerts, bayouLevels }: CivicD
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-brand-border p-6">
+          <div className="bg-white border border-brand-border p-6">
             <p className="text-brand-muted">Air quality data unavailable</p>
           </div>
         )}
@@ -129,7 +129,7 @@ export function CivicDashboardClient({ airQuality, alerts, bayouLevels }: CivicD
       <section>
         <h2 className="text-xl font-semibold text-brand-text mb-4">Weather Alerts</h2>
         {alerts.length === 0 ? (
-          <div className="bg-white rounded-xl border border-brand-border p-6">
+          <div className="bg-white border border-brand-border p-6">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -143,7 +143,7 @@ export function CivicDashboardClient({ airQuality, alerts, bayouLevels }: CivicD
             {alerts.map(function (alert, index) {
               const isExpanded = expandedAlerts[index] || false
               return (
-                <div key={index} className="bg-white rounded-xl border border-brand-border p-6">
+                <div key={index} className="bg-white border border-brand-border p-6">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -190,7 +190,7 @@ export function CivicDashboardClient({ airQuality, alerts, bayouLevels }: CivicD
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {bayouLevels.map(function (gauge) {
             return (
-              <div key={gauge.siteId} className="bg-white rounded-xl border border-brand-border p-6">
+              <div key={gauge.siteId} className="bg-white border border-brand-border p-6">
                 <h3 className="text-sm font-semibold text-brand-text mb-3 min-h-[2.5rem]">
                   {gauge.name}
                 </h3>

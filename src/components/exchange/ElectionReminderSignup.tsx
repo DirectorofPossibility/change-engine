@@ -66,12 +66,12 @@ export default function ElectionReminderSignup() {
 
   if (status === 'success') {
     return (
-      <div className="rounded-xl border border-[#E5E0D8] bg-white p-6 sm:p-8 text-center">
+      <div className=" border border-[#E5E0D8] bg-white p-6 sm:p-8 text-center">
         <CheckCircle className="mx-auto mb-3 text-green-600" size={40} />
-        <h3 className="font-serif text-xl font-semibold text-[#2C2C2C] mb-2">
+        <h3 className="font-display text-xl font-semibold text-[#0d1117] mb-2">
           You&apos;re signed up!
         </h3>
-        <p className="text-[#2C2C2C]/70 text-sm">
+        <p className="text-[#0d1117]/70 text-sm">
           We&apos;ll remind you before important election dates so you never miss a deadline.
         </p>
       </div>
@@ -79,17 +79,17 @@ export default function ElectionReminderSignup() {
   }
 
   return (
-    <div className="rounded-xl border border-[#E5E0D8] bg-white p-6 sm:p-8">
+    <div className=" border border-[#E5E0D8] bg-white p-6 sm:p-8">
       <div className="flex items-center gap-3 mb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C75B2A]/10">
-          <Bell className="text-[#C75B2A]" size={20} />
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1b5e8a]/10">
+          <Bell className="text-[#1b5e8a]" size={20} />
         </div>
-        <h3 className="font-serif text-xl font-semibold text-[#2C2C2C]">
+        <h3 className="font-display text-xl font-semibold text-[#0d1117]">
           Get Election Reminders
         </h3>
       </div>
 
-      <p className="text-sm text-[#2C2C2C]/70 mb-5">
+      <p className="text-sm text-[#0d1117]/70 mb-5">
         Never miss a registration deadline or election day. We&apos;ll send you a heads-up before
         the dates that matter.
       </p>
@@ -97,8 +97,8 @@ export default function ElectionReminderSignup() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <div>
-          <label htmlFor="reminder-email" className="block text-sm font-medium text-[#2C2C2C] mb-1">
-            Email address <span className="text-[#C75B2A]">*</span>
+          <label htmlFor="reminder-email" className="block text-sm font-medium text-[#0d1117] mb-1">
+            Email address <span className="text-[#1b5e8a]">*</span>
           </label>
           <input
             id="reminder-email"
@@ -107,14 +107,14 @@ export default function ElectionReminderSignup() {
             placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border border-[#E5E0D8] bg-[#F5F1EB]/50 px-4 py-2.5 text-sm text-[#2C2C2C] placeholder:text-[#2C2C2C]/40 focus:border-[#C75B2A] focus:outline-none focus:ring-1 focus:ring-[#C75B2A]"
+            className="w-full border border-[#E5E0D8] bg-[#f4f5f7]/50 px-4 py-2.5 text-sm text-[#0d1117] placeholder:text-[#0d1117]/40 focus:border-[#1b5e8a] focus:outline-none focus:ring-1 focus:ring-[#1b5e8a]"
           />
         </div>
 
         {/* ZIP Code */}
         <div>
-          <label htmlFor="reminder-zip" className="block text-sm font-medium text-[#2C2C2C] mb-1">
-            ZIP code <span className="text-[#2C2C2C]/40 font-normal">(optional)</span>
+          <label htmlFor="reminder-zip" className="block text-sm font-medium text-[#0d1117] mb-1">
+            ZIP code <span className="text-[#0d1117]/40 font-normal">(optional)</span>
           </label>
           <input
             id="reminder-zip"
@@ -124,13 +124,13 @@ export default function ElectionReminderSignup() {
             placeholder="77001"
             value={zipCode}
             onChange={(e) => setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
-            className="w-full rounded-lg border border-[#E5E0D8] bg-[#F5F1EB]/50 px-4 py-2.5 text-sm text-[#2C2C2C] placeholder:text-[#2C2C2C]/40 focus:border-[#C75B2A] focus:outline-none focus:ring-1 focus:ring-[#C75B2A]"
+            className="w-full border border-[#E5E0D8] bg-[#f4f5f7]/50 px-4 py-2.5 text-sm text-[#0d1117] placeholder:text-[#0d1117]/40 focus:border-[#1b5e8a] focus:outline-none focus:ring-1 focus:ring-[#1b5e8a]"
           />
         </div>
 
         {/* Reminder types */}
         <fieldset>
-          <legend className="block text-sm font-medium text-[#2C2C2C] mb-2">
+          <legend className="block text-sm font-medium text-[#0d1117] mb-2">
             Remind me about
           </legend>
           <div className="space-y-2">
@@ -140,9 +140,9 @@ export default function ElectionReminderSignup() {
                   type="checkbox"
                   checked={types.has(key)}
                   onChange={() => toggleType(key)}
-                  className="h-4 w-4 rounded border-[#E5E0D8] text-[#C75B2A] focus:ring-[#C75B2A]"
+                  className="h-4 w-4 rounded border-[#E5E0D8] text-[#1b5e8a] focus:ring-[#1b5e8a]"
                 />
-                <span className="text-sm text-[#2C2C2C] group-hover:text-[#C75B2A] transition-colors">
+                <span className="text-sm text-[#0d1117] group-hover:text-[#1b5e8a] transition-colors">
                   {label}
                 </span>
               </label>
@@ -159,7 +159,7 @@ export default function ElectionReminderSignup() {
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="w-full rounded-lg bg-[#C75B2A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#B04E22] focus:outline-none focus:ring-2 focus:ring-[#C75B2A] focus:ring-offset-2 disabled:opacity-60 transition-colors"
+          className="w-full bg-[#1b5e8a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#B04E22] focus:outline-none focus:ring-2 focus:ring-[#1b5e8a] focus:ring-offset-2 disabled:opacity-60 transition-colors"
         >
           {status === 'loading' ? (
             <span className="flex items-center justify-center gap-2">

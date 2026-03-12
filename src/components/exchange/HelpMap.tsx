@@ -40,7 +40,7 @@ export function HelpMap({ services, opportunities }: HelpMapProps) {
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold text-brand-text mb-4">Nearby Resources</h2>
-      <ClusteredMap markers={markers} className="w-full h-[350px] rounded-xl" />
+      <ClusteredMap markers={markers} className="w-full h-[350px]" />
     </div>
   )
 }

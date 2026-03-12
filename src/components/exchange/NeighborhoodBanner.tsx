@@ -42,7 +42,7 @@ export function NeighborhoodWidget() {
   if (zip && !editing) {
     return (
       <div className="px-3 py-3">
-        <div className="bg-white rounded-lg px-3 py-2.5 border border-brand-border shadow-sm">
+        <div className="bg-white px-3 py-2.5 border border-brand-border shadow-sm">
           <div className="flex items-center gap-2 mb-0.5">
             <MapPin size={12} className="text-brand-accent flex-shrink-0" />
             <span className="text-xs font-bold text-brand-text/80 truncate">
@@ -91,7 +91,7 @@ export function NeighborhoodWidget() {
   // No location or editing — show input
   return (
     <div className="px-3 py-3">
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg px-3 py-2.5 border border-brand-border shadow-sm">
+      <form onSubmit={handleSubmit} className="bg-white px-3 py-2.5 border border-brand-border shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <MapPin size={12} className="text-brand-muted" />
           <span className="text-xs font-bold uppercase tracking-wider text-brand-muted/60">Your Location</span>

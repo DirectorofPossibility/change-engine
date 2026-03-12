@@ -14,7 +14,7 @@ export function TurnoutGauge({ turnoutPct, electionName }: TurnoutGaugeProps) {
   const rounded = Math.round(turnoutPct)
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-5">
+    <div className="bg-white border border-brand-border p-5">
       {electionName && (
         <p className="text-xs text-brand-muted mb-1">{electionName}</p>
       )}

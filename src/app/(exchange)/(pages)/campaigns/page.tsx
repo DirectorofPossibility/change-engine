@@ -31,7 +31,7 @@ export default async function CampaignsPage() {
             <div className="space-y-4">
               {(campaigns || []).map(function (c) {
                 return (
-                  <Link key={c.campaign_id} href={`/campaigns/${c.campaign_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+                  <Link key={c.campaign_id} href={`/campaigns/${c.campaign_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
                     <div className="flex items-start gap-3">
                       <Target className="w-5 h-5 text-theme-bigger mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">

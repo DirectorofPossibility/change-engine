@@ -206,7 +206,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
           value={query}
           onChange={function (e) { setQuery(e.target.value) }}
           placeholder="Search the knowledge base..."
-          className="w-full pl-9 pr-4 py-3 rounded-xl border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-colors"
+          className="w-full pl-9 pr-4 py-3 border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-colors"
         />
         {query && (
           <button
@@ -220,7 +220,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
 
       {/* View toggle + counts */}
       <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-1 bg-brand-bg rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-brand-bg p-1">
           <button
             onClick={function () { setView('browse') }}
             className={'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ' +
@@ -255,7 +255,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
       <div className="flex gap-2 flex-wrap mb-4">
         <button
           onClick={function () { setActiveType(null) }}
-          className={'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ' +
+          className={'px-3 py-1.5 text-xs font-medium transition-colors ' +
             (!activeType ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
         >
           All Types
@@ -269,7 +269,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
             <button
               key={type}
               onClick={function () { setActiveType(isActive ? null : type) }}
-              className={'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ' +
+              className={'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ' +
                 (isActive ? 'bg-brand-accent text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
             >
               <Icon size={12} />
@@ -284,7 +284,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
         <div className="flex gap-2 flex-wrap mb-6">
           <button
             onClick={function () { setActiveTheme(null) }}
-            className={'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ' +
+            className={'px-3 py-1.5 text-xs font-medium transition-colors ' +
               (!activeTheme ? 'bg-brand-text text-white' : 'bg-white border border-brand-border text-brand-muted hover:text-brand-text')}
           >
             All Pathways
@@ -295,7 +295,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
               <button
                 key={theme.id}
                 onClick={function () { setActiveTheme(isActive ? null : theme.id) }}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border"
+                className="px-3 py-1.5 text-xs font-medium transition-colors border"
                 style={isActive
                   ? { backgroundColor: theme.color, color: 'white', borderColor: theme.color }
                   : { borderColor: theme.color, color: theme.color }}
@@ -321,7 +321,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
             themeGroups.map(function (group) {
               const isExpanded = expandedThemes.has(group.theme.id)
               return (
-                <div key={group.theme.id} className="bg-white rounded-xl border border-brand-border overflow-hidden">
+                <div key={group.theme.id} className="bg-white border border-brand-border overflow-hidden">
                   <button
                     onClick={function () { toggleTheme(group.theme.id) }}
                     className="w-full flex items-center gap-3 p-4 hover:bg-brand-bg/50 transition-colors"
@@ -334,7 +334,7 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                       ? <ChevronDown size={16} className="text-brand-muted" />
                       : <ChevronRight size={16} className="text-brand-muted" />
                     }
-                    <span className="font-serif font-bold text-brand-text">{group.theme.name}</span>
+                    <span className="font-display font-bold text-brand-text">{group.theme.name}</span>
                     <span className="text-xs text-brand-muted ml-auto">{group.total} item{group.total !== 1 ? 's' : ''}</span>
                   </button>
 
@@ -423,13 +423,13 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                   <div key={letter} id={'kb-letter-' + letter} className="scroll-mt-20">
                     <button
                       onClick={function () { toggleLetter(letter) }}
-                      className="w-full flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-brand-bg transition-colors"
+                      className="w-full flex items-center gap-2 py-2 px-3 hover:bg-brand-bg transition-colors"
                     >
                       {isExpanded
                         ? <ChevronDown size={14} className="text-brand-muted" />
                         : <ChevronRight size={14} className="text-brand-muted" />
                       }
-                      <span className="text-lg font-serif font-bold text-brand-text">{letter}</span>
+                      <span className="text-lg font-display font-bold text-brand-text">{letter}</span>
                       <span className="text-xs text-brand-muted">({group.length})</span>
                     </button>
                     {isExpanded && (
@@ -459,10 +459,10 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                   <Link
                     key={item.id}
                     href={getItemHref(item)}
-                    className="group bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                    className="group bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
                   >
                     {item.image_url && (
-                      <div className="w-full h-28 rounded-lg overflow-hidden mb-3 bg-brand-bg">
+                      <div className="w-full h-28 overflow-hidden mb-3 bg-brand-bg">
                         <Image src={item.image_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                       </div>
                     )}
@@ -520,7 +520,7 @@ function renderItem(item: KBItem, themeMap: Record<string, KBTheme>) {
     <Link
       key={item.id}
       href={getItemHref(item)}
-      className="flex items-start gap-2.5 py-2 px-2 rounded-lg hover:bg-white hover:shadow-sm transition-all group/item"
+      className="flex items-start gap-2.5 py-2 px-2 hover:bg-white hover:shadow-sm transition-all group/item"
     >
       <Icon size={14} className="text-brand-muted mt-0.5 flex-shrink-0" />
       <div className="min-w-0 flex-1">

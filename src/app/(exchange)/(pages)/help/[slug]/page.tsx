@@ -84,7 +84,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
 
       {/* Crisis banner for Critical */}
       {isCritical && (
-        <div className="bg-red-50 border border-red-300 rounded-xl p-4 mb-6">
+        <div className="bg-red-50 border border-red-300 p-4 mb-6">
           <p className="text-sm text-red-700 font-semibold mb-1">Crisis Resources</p>
           <p className="text-sm text-red-600">
             Call <a href="tel:911" className="font-bold underline">911</a> for emergencies &bull;{' '}

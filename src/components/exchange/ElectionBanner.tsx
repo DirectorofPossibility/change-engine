@@ -73,7 +73,7 @@ export function ElectionBanner({ election }: { election: ElectionData | null }) 
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 flex-wrap min-w-0">
-            <span className="flex-shrink-0 bg-white/20 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wide uppercase flex items-center gap-1.5">
+            <span className="flex-shrink-0 bg-white/20 px-2.5 py-1 text-xs font-bold tracking-wide uppercase flex items-center gap-1.5">
               <Vote size={14} />
               {urgencyText}
             </span>
@@ -92,7 +92,7 @@ export function ElectionBanner({ election }: { election: ElectionData | null }) 
           <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
             <Link
               href={election.find_polling_url || '/polling-places'}
-              className="bg-white text-brand-text px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap"
+              className="bg-white text-brand-text px-4 py-2 text-sm font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap"
             >
               {t('election.find_polling')}
             </Link>
@@ -101,7 +101,7 @@ export function ElectionBanner({ election }: { election: ElectionData | null }) 
                 href={election.register_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:inline-flex bg-white/15 border border-white/30 px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
+                className="hidden sm:inline-flex bg-white/15 border border-white/30 px-3 py-2 text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
               >
                 Check Registration
               </a>
@@ -110,13 +110,13 @@ export function ElectionBanner({ election }: { election: ElectionData | null }) 
               href="https://www.harrisvotes.com/SampleBallot"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden lg:inline-flex bg-white/15 border border-white/30 px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
+              className="hidden lg:inline-flex bg-white/15 border border-white/30 px-3 py-2 text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
             >
               Sample Ballot
             </a>
             <Link
               href="/elections"
-              className="hidden sm:inline-flex bg-white/15 border border-white/30 px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
+              className="hidden sm:inline-flex bg-white/15 border border-white/30 px-3 py-2 text-sm font-medium hover:bg-white/25 transition-colors whitespace-nowrap"
             >
               {t('election.info')}
             </Link>

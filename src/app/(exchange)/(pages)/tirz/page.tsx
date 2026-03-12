@@ -61,13 +61,13 @@ export default async function TirzPage() {
                       <div className="p-4 flex-1">
                         <div className="flex items-center gap-3 mb-2">
                           <span
-                            className="w-9 h-9 rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                            className="w-9 h-9 flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
                             style={{ backgroundColor: '#C75B2A' }}
                           >
                             {zone.site_number}
                           </span>
                           <div className="min-w-0">
-                            <h3 className="font-serif text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors truncate">
+                            <h3 className="font-display text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors truncate">
                               {zone.name}
                             </h3>
                             <p className="text-[11px] font-mono text-brand-muted">
@@ -94,7 +94,7 @@ export default async function TirzPage() {
 
             {/* How TIRZ Works */}
             <div className="mt-10 border-t-2 border-brand-border pt-8">
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-4">
+              <h2 className="font-display text-2xl font-bold text-brand-text mb-4">
                 How TIRZ Zones Work
               </h2>
               <p className="text-sm leading-relaxed text-brand-muted max-w-2xl mb-6">
@@ -105,19 +105,19 @@ export default async function TirzPage() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-serif font-bold text-brand-text text-sm mb-1">Created by Council</p>
+                  <p className="font-display font-bold text-brand-text text-sm mb-1">Created by Council</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     City Council designates TIRZ zones to attract investment in areas that need it most.
                   </p>
                 </div>
                 <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-serif font-bold text-brand-text text-sm mb-1">Tax Increment Captured</p>
+                  <p className="font-display font-bold text-brand-text text-sm mb-1">Tax Increment Captured</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     Growth in property tax revenue stays in the zone instead of going to the general fund.
                   </p>
                 </div>
                 <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-serif font-bold text-brand-text text-sm mb-1">Reinvested Locally</p>
+                  <p className="font-display font-bold text-brand-text text-sm mb-1">Reinvested Locally</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     Funds go toward infrastructure, housing, parks, and development within the zone.
                   </p>

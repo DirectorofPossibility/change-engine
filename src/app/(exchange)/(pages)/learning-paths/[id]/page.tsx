@@ -75,8 +75,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
             {/* Info cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {(path as any).difficulty_level && (
-                <div className="bg-white rounded-lg border border-brand-border p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
+                <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
                     <Layers size={20} style={{ color: themeColor }} />
                   </div>
                   <div>
@@ -86,8 +86,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
                 </div>
               )}
               {(path as any).estimated_minutes != null && (
-                <div className="bg-white rounded-lg border border-brand-border p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
+                <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
                     <Clock size={20} style={{ color: themeColor }} />
                   </div>
                   <div>
@@ -97,8 +97,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
                 </div>
               )}
               {(path as any).module_count != null && (
-                <div className="bg-white rounded-lg border border-brand-border p-4 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
+                <div className="bg-white border border-brand-border p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: themeColor + '1A' }}>
                     <BookOpen size={20} style={{ color: themeColor }} />
                   </div>
                   <div>
@@ -113,8 +113,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
             {/* Description prose */}
             {(path as any).path_description && (
-              <div className="mt-8 bg-white rounded-lg border border-brand-border p-6">
-                <h2 className="text-xl font-serif font-bold text-brand-text mb-3">About This Path</h2>
+              <div className="mt-8 bg-white border border-brand-border p-6">
+                <h2 className="text-xl font-display font-bold text-brand-text mb-3">About This Path</h2>
                 <div className="prose prose-sm max-w-none text-brand-text">
                   <p>{(path as any).path_description}</p>
                 </div>
@@ -123,8 +123,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
             {/* Prerequisite path */}
             {(path as any).prerequisite_path_id && prerequisiteName && (
-              <div className="mt-6 bg-white rounded-lg border border-brand-border p-5">
-                <h3 className="text-sm font-serif font-semibold text-brand-text mb-2">Recommended First</h3>
+              <div className="mt-6 bg-white border border-brand-border p-5">
+                <h3 className="text-sm font-display font-semibold text-brand-text mb-2">Recommended First</h3>
                 <Link
                   href={'/learning-paths/' + (path as any).prerequisite_path_id}
                   className="flex items-center gap-2 text-sm font-medium hover:underline"
@@ -138,8 +138,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
             {/* Theme / Pathway link */}
             {theme && (
-              <div className="mt-6 bg-white rounded-lg border border-brand-border p-5">
-                <h3 className="text-sm font-serif font-semibold text-brand-text mb-2">Pathway</h3>
+              <div className="mt-6 bg-white border border-brand-border p-5">
+                <h3 className="text-sm font-display font-semibold text-brand-text mb-2">Pathway</h3>
                 <Link
                   href={'/pathways/' + theme.slug}
                   className="inline-flex items-center gap-2 text-sm font-medium hover:underline"

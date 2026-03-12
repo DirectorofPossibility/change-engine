@@ -19,7 +19,7 @@ export default function PrivacyPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <Breadcrumb items={[{ label: 'Privacy Policy' }]} />
 
-      <h1 className="font-serif text-3xl md:text-4xl font-bold text-brand-text mt-6 mb-2">
+      <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-text mt-6 mb-2">
         Privacy Policy
       </h1>
       <p className="text-sm text-brand-muted mb-8">Effective Date: March 4, 2026</p>
@@ -41,7 +41,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">1. Who We Are</h2>
+          <h2 className="font-display text-xl font-semibold">1. Who We Are</h2>
           <p>
             The Change Lab is a nonprofit initiative operating under the fiscal sponsorship of{' '}
             <strong>Impact Hub Houston</strong>, located at 4201 Main St., Suite L055-C, Houston,
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">2. Information We Collect</h2>
+          <h2 className="font-display text-xl font-semibold">2. Information We Collect</h2>
 
           <h3 className="font-semibold text-lg mt-4">Information You Provide</h3>
           <ul className="list-disc pl-6 space-y-1">
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">3. How We Use Your Information</h2>
+          <h2 className="font-display text-xl font-semibold">3. How We Use Your Information</h2>
           <ul className="list-disc pl-6 space-y-1">
             <li>Provide, maintain, and improve our programs, services, and platforms</li>
             <li>Personalize your experience, including language preferences and neighborhood-relevant content</li>
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">4. How We Share Your Information</h2>
+          <h2 className="font-display text-xl font-semibold">4. How We Share Your Information</h2>
           <p>
             <strong>We do not sell your personal information to third parties.</strong>
           </p>
@@ -104,7 +104,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">5. Data Security</h2>
+          <h2 className="font-display text-xl font-semibold">5. Data Security</h2>
           <p>We implement industry-standard measures to protect your information, including:</p>
           <ul className="list-disc pl-6 space-y-1">
             <li>Secure data transmission using SSL/TLS encryption</li>
@@ -120,7 +120,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">6. Your Rights and Choices</h2>
+          <h2 className="font-display text-xl font-semibold">6. Your Rights and Choices</h2>
           <p>You have the right to:</p>
           <ul className="list-disc pl-6 space-y-1">
             <li><strong>Access</strong> the personal information we hold about you</li>
@@ -139,7 +139,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">7. Cookies and Tracking</h2>
+          <h2 className="font-display text-xl font-semibold">7. Cookies and Tracking</h2>
           <p>
             We use cookies and similar technologies to remember your preferences (such as language
             selection), analyze traffic, and improve site performance. You can manage cookie
@@ -154,7 +154,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">8. Children&rsquo;s Privacy</h2>
+          <h2 className="font-display text-xl font-semibold">8. Children&rsquo;s Privacy</h2>
           <p>
             Our services are not directed to children under the age of 13. We do not knowingly
             collect personal information from children under 13. If you believe we have inadvertently
@@ -163,7 +163,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">9. Third-Party Links</h2>
+          <h2 className="font-display text-xl font-semibold">9. Third-Party Links</h2>
           <p>
             Our platforms may contain links to external websites, services, and resources. We are not
             responsible for the privacy practices or content of third-party sites. We encourage you
@@ -172,7 +172,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">10. Changes to This Policy</h2>
+          <h2 className="font-display text-xl font-semibold">10. Changes to This Policy</h2>
           <p>
             We may update this Privacy Policy from time to time. When we make significant changes, we
             will notify you by posting the updated policy on our platforms with a revised effective
@@ -182,7 +182,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="font-serif text-xl font-semibold">11. Contact Us</h2>
+          <h2 className="font-display text-xl font-semibold">11. Contact Us</h2>
           <p>
             If you have questions, concerns, or requests regarding this Privacy Policy or our data
             practices, please contact us:

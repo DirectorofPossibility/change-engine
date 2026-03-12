@@ -46,7 +46,7 @@ export function ImageLightbox({ src, alt, className }: ImageLightboxProps) {
           <Image
             src={src}
             alt={alt}
-            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl"
+            className="max-w-[90vw] max-h-[90vh] object-contain shadow-2xl"
             onClick={function (e) { e.stopPropagation() }}
            width={200} height={200} />
         </div>

@@ -70,8 +70,8 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
 
         <div className="mt-4 text-center sm:text-left">
           <span className="text-6xl block mb-3">{center.emoji}</span>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">{center.name}</h1>
-          <p className="text-base font-serif italic text-brand-muted mt-2">{center.question}</p>
+          <h1 className="text-3xl sm:text-4xl font-display font-bold text-brand-text">{center.name}</h1>
+          <p className="text-base font-display italic text-brand-muted mt-2">{center.question}</p>
           <div className="h-0.5 w-12 rounded-full mt-4 mx-auto sm:mx-0" style={{ backgroundColor: centerColor }} />
           <p className="text-sm text-brand-muted mt-3">{items.length} resources</p>
         </div>

@@ -22,7 +22,7 @@ export default async function KnowledgeGraphPage() {
       </div>
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <p className="text-sm font-semibold text-brand-accent mb-2">Everything in Houston civic life is connected. Nobody was showing you how.</p>
-        <h1 className="text-3xl font-serif font-bold text-brand-text mb-1">The Civic Knowledge Galaxy.</h1>
+        <h1 className="text-3xl font-display font-bold text-brand-text mb-1">The Civic Knowledge Galaxy.</h1>
         <p className="text-sm font-semibold text-brand-muted mb-3">Not a list. Not a directory. A living map of how it all fits together.</p>
         <div className="text-brand-muted max-w-2xl space-y-3 mb-6">
           <p>
@@ -32,7 +32,7 @@ export default async function KnowledgeGraphPage() {
           <p>We built a knowledge graph — 174 tables, 16 types of entities, updated every day — that maps all of it.</p>
         </div>
         <div className="max-w-2xl mb-6">
-          <h2 className="text-lg font-serif font-bold text-brand-text mb-3">What's Connected</h2>
+          <h2 className="text-lg font-display font-bold text-brand-text mb-3">What's Connected</h2>
           <ul className="space-y-2 text-brand-muted">
             <li className="flex items-start gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2 shrink-0" />

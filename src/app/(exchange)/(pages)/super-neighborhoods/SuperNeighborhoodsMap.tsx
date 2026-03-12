@@ -14,7 +14,7 @@ export function SuperNeighborhoodsMap() {
     <InteractiveMap
       layers={layers}
       defaultVisibleLayers={['superNeighborhoods']}
-      className="w-full h-[500px] rounded-xl"
+      className="w-full h-[500px]"
     />
   )
 }

@@ -91,7 +91,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
             value={query}
             onChange={function (e) { setQuery(e.target.value) }}
             placeholder="Search by title, author, or topic..."
-            className="w-full pl-12 pr-10 py-3.5 border-2 border-brand-text rounded-xl bg-white text-sm text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
+            className="w-full pl-12 pr-10 py-3.5 border-2 border-brand-text bg-white text-sm text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
            
           />
           {query && (
@@ -109,7 +109,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
               <button
                 key={g.theme.id}
                 onClick={function () { setActiveTheme(isActive ? null : g.theme.id) }}
-                className={'flex items-center gap-1.5 text-xs font-semibold px-3 py-2 border-2 rounded-lg transition-colors ' + (isActive ? 'border-brand-text bg-white' : 'border-brand-border bg-white hover:border-brand-muted')}
+                className={'flex items-center gap-1.5 text-xs font-semibold px-3 py-2 border-2 transition-colors ' + (isActive ? 'border-brand-text bg-white' : 'border-brand-border bg-white hover:border-brand-muted')}
               >
                 <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: g.theme.color }} />
                 {g.theme.name}
@@ -175,10 +175,10 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {themeGroups.map(function (g) {
                   return (
-                    <div key={g.theme.id} className="border border-brand-border rounded-lg overflow-hidden">
+                    <div key={g.theme.id} className="border border-brand-border overflow-hidden">
                       <div className="h-1.5" style={{ backgroundColor: g.theme.color }} />
                       <div className="p-5">
-                        <p className="font-serif text-sm font-bold text-brand-text mb-3">{g.theme.name}</p>
+                        <p className="font-display text-sm font-bold text-brand-text mb-3">{g.theme.name}</p>
                         <div className="space-y-2">
                           {g.books.slice(0, 4).map(function (book) {
                             return (
@@ -213,7 +213,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
 
   return (
     <article
-      className={'flex border-2 rounded-lg overflow-hidden hover:-translate-y-0.5 transition-all ' + (featured ? 'border-brand-text' : 'border-brand-border hover:border-brand-text')}
+      className={'flex border-2 overflow-hidden hover:-translate-y-0.5 transition-all ' + (featured ? 'border-brand-text' : 'border-brand-border hover:border-brand-text')}
       style={{ boxShadow: 'none' }}
     >
       {/* Book spine */}
@@ -256,7 +256,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
         </div>
 
         {/* Title + Author */}
-        <h3 className="font-serif text-sm text-brand-text leading-snug mb-0.5 line-clamp-2">
+        <h3 className="font-display text-sm text-brand-text leading-snug mb-0.5 line-clamp-2">
           {book.title}
         </h3>
         <p className="text-[11px] text-brand-muted font-medium mb-2">

@@ -13,7 +13,7 @@ export default function ComingSoonPage() {
         <div className="w-16 h-16 rounded-full bg-brand-accent/10 flex items-center justify-center mx-auto mb-6">
           <Sparkles size={28} className="text-brand-accent" />
         </div>
-        <h1 className="font-serif text-2xl font-bold text-brand-text mb-3">
+        <h1 className="font-display text-2xl font-bold text-brand-text mb-3">
           Coming Soon
         </h1>
         <p className="text-brand-muted mb-2">
@@ -27,14 +27,14 @@ export default function ComingSoonPage() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/compass"
-            className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:bg-brand-accent-hover transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white text-sm font-semibold hover:bg-brand-accent-hover transition-colors"
           >
             <ArrowLeft size={16} />
             Back to Compass
           </Link>
           <Link
             href="/search"
-            className="flex items-center gap-2 px-5 py-2.5 border border-brand-border rounded-lg text-sm font-medium text-brand-text hover:bg-white transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 border border-brand-border text-sm font-medium text-brand-text hover:bg-white transition-colors"
           >
             Search the platform
           </Link>

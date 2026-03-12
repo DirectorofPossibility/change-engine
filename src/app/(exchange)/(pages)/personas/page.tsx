@@ -84,7 +84,7 @@ export default function PersonasPage() {
       <Breadcrumb items={[{ label: 'Your Journey' }]} />
 
       <div className="mb-10 text-center">
-        <h1 className="font-serif text-3xl font-bold text-brand-text mb-3">Your Journey</h1>
+        <h1 className="font-display text-3xl font-bold text-brand-text mb-3">Your Journey</h1>
         <p className="text-brand-muted max-w-xl mx-auto">
           Everyone engages differently. Choose the path that fits where you are right now — you can always explore another.
         </p>
@@ -98,7 +98,7 @@ export default function PersonasPage() {
             <Link
               key={p.id}
               href={'/for/' + p.id}
-              className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="group bg-white border border-brand-border overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
               style={{ borderColor: undefined }}
             >
               {/* Color top bar */}
@@ -107,13 +107,13 @@ export default function PersonasPage() {
               {/* Header */}
               <div className="flex items-center gap-4 p-5 pb-3">
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-colors"
+                  className="w-14 h-14 flex items-center justify-center flex-shrink-0 transition-colors"
                   style={{ backgroundColor: centerColor + '15', border: '2px solid ' + centerColor + '25' }}
                 >
                   <p.Icon size={32} color={centerColor} />
                 </div>
                 <div>
-                  <h2 className="font-serif text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">{p.name}</h2>
+                  <h2 className="font-display text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">{p.name}</h2>
                   <p className="text-sm text-brand-muted italic">{p.tagline}</p>
                 </div>
               </div>
@@ -130,7 +130,7 @@ export default function PersonasPage() {
                     return (
                       <span
                         key={action}
-                        className="text-xs px-2.5 py-1 rounded-lg"
+                        className="text-xs px-2.5 py-1"
                         style={{ backgroundColor: centerColor + '12', color: centerColor }}
                       >
                         {action}

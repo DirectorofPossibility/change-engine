@@ -44,15 +44,15 @@ export default function SubmitResourcePage() {
         &larr; Back to My Dashboard
       </Link>
 
-      <div className="bg-white rounded-xl border border-brand-border p-6">
-        <h1 className="text-2xl font-bold text-brand-text mb-2 font-serif">Share a Resource</h1>
+      <div className="bg-white border border-brand-border p-6">
+        <h1 className="text-2xl font-bold text-brand-text mb-2 font-display">Share a Resource</h1>
         <p className="text-sm text-brand-muted mb-6">
           Know a great resource for the Houston community? Share the link and our
           team will review it for inclusion in the Community Exchange.
         </p>
 
         {result?.success ? (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+          <div className="bg-green-50 border border-green-200 p-4 mb-6">
             <p className="text-green-800 text-sm font-medium">{result.message}</p>
             <button
               onClick={() => setResult(null)}
@@ -74,7 +74,7 @@ export default function SubmitResourcePage() {
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://example.com/resource"
-                className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
               />
             </div>
 
@@ -88,12 +88,12 @@ export default function SubmitResourcePage() {
                 onChange={(e) => setNote(e.target.value)}
                 rows={3}
                 placeholder="Why is this resource helpful for the community?"
-                className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
+                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
               />
             </div>
 
             {result?.error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <div className="bg-red-50 border border-red-200 p-3">
                 <p className="text-red-700 text-sm">{result.error}</p>
               </div>
             )}
@@ -101,7 +101,7 @@ export default function SubmitResourcePage() {
             <button
               type="submit"
               disabled={submitting || !url.trim()}
-              className="w-full bg-brand-accent text-white py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+              className="w-full bg-brand-accent text-white py-2 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
             >
               {submitting ? 'Submitting...' : 'Submit Resource'}
             </button>

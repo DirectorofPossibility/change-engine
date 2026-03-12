@@ -62,7 +62,7 @@ export default async function ExplorePage() {
           <Breadcrumb items={[{ label: 'Explore' }]} />
           <div className="flex items-center gap-3 mt-4 mb-2">
             <div className="w-3 h-3 rounded-full bg-brand-accent" />
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-brand-text">Explore</h1>
+            <h1 className="text-3xl sm:text-4xl font-display font-bold text-brand-text">Explore</h1>
           </div>
           <p className="text-brand-muted max-w-2xl">
             Your launchpad for learning. Dive into articles, research, interactive visualizations, and focus areas across all seven pathways.
@@ -78,12 +78,12 @@ export default async function ExplorePage() {
             <div className="grid sm:grid-cols-3 gap-5 mb-14">
               <Link
                 href="/explore/knowledge-base"
-                className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+                className="group bg-white border border-brand-border p-6 hover:shadow-lg transition-shadow"
               >
-                <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+                <div className="w-11 h-11 bg-brand-accent/10 flex items-center justify-center mb-4">
                   <Layers size={20} className="text-brand-accent" />
                 </div>
-                <h2 className="font-serif font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
+                <h2 className="font-display font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
                   Knowledge Base
                 </h2>
                 <p className="text-sm text-brand-muted leading-relaxed mb-3">
@@ -98,12 +98,12 @@ export default async function ExplorePage() {
 
               <Link
                 href="/library"
-                className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+                className="group bg-white border border-brand-border p-6 hover:shadow-lg transition-shadow"
               >
-                <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+                <div className="w-11 h-11 bg-brand-accent/10 flex items-center justify-center mb-4">
                   <BookOpen size={20} className="text-brand-accent" />
                 </div>
-                <h2 className="font-serif font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
+                <h2 className="font-display font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
                   Research Library
                 </h2>
                 <p className="text-sm text-brand-muted leading-relaxed mb-3">
@@ -116,12 +116,12 @@ export default async function ExplorePage() {
 
               <Link
                 href="/knowledge-graph"
-                className="group bg-white rounded-xl border border-brand-border p-6 hover:shadow-lg transition-shadow"
+                className="group bg-white border border-brand-border p-6 hover:shadow-lg transition-shadow"
               >
-                <div className="w-11 h-11 rounded-lg bg-brand-accent/10 flex items-center justify-center mb-4">
+                <div className="w-11 h-11 bg-brand-accent/10 flex items-center justify-center mb-4">
                   <Sparkles size={20} className="text-brand-accent" />
                 </div>
-                <h2 className="font-serif font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
+                <h2 className="font-display font-bold text-brand-text text-lg mb-1 group-hover:text-brand-accent transition-colors">
                   Knowledge Galaxy
                 </h2>
                 <p className="text-sm text-brand-muted leading-relaxed mb-3">
@@ -135,14 +135,14 @@ export default async function ExplorePage() {
 
             {/* ── Quick pathway links ── */}
             <section className="mb-14">
-              <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-brand-muted mb-4 font-serif">Browse by Pathway</h2>
+              <h2 className="text-sm font-bold tracking-[0.12em] uppercase text-brand-muted mb-4 font-display">Browse by Pathway</h2>
               <div className="flex flex-wrap gap-3">
                 {themes.map(function (theme) {
                   return (
                     <Link
                       key={theme.id}
                       href={'/pathways/' + (THEMES as Record<string, { slug: string }>)[theme.id].slug}
-                      className="group flex items-center gap-2 px-4 py-2.5 bg-white rounded-xl border border-brand-border hover:shadow-md transition-shadow"
+                      className="group flex items-center gap-2 px-4 py-2.5 bg-white border border-brand-border hover:shadow-md transition-shadow"
                     >
                       <div
                         className="w-6 h-6 rounded-md flex items-center justify-center"
@@ -164,7 +164,7 @@ export default async function ExplorePage() {
 
             {/* ── Focus Area Explorer ── */}
             <section>
-              <h2 className="text-2xl font-serif font-bold text-brand-text mb-6">Focus Areas</h2>
+              <h2 className="text-2xl font-display font-bold text-brand-text mb-6">Focus Areas</h2>
               <ExploreFilterClient
                 themes={themes}
                 unthemedAreas={unthemed}

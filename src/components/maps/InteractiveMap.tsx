@@ -154,7 +154,7 @@ function InteractiveMapInner({
     <div>
       <div className="relative">
         <HoustonMap
-          className={className || 'w-full h-[450px] rounded-xl'}
+          className={className || 'w-full h-[450px]'}
           zoom={initialZoom}
           center={center}
         >

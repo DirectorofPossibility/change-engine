@@ -23,7 +23,7 @@ function NuggetCard({ nugget, color = '#8B7E74', readMoreLabel = 'Read more' }: 
   return (
     <Link
       href={nugget.link}
-      className="group block bg-white rounded-xl border border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+      className="group block bg-white border border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
     >
       <div className="flex">
         <div
@@ -35,7 +35,7 @@ function NuggetCard({ nugget, color = '#8B7E74', readMoreLabel = 'Read more' }: 
             <BookOpen size={12} />
             {nugget.documentTitle}
           </p>
-          <p className="text-sm text-brand-text leading-relaxed font-serif italic line-clamp-3">
+          <p className="text-sm text-brand-text leading-relaxed font-body italic line-clamp-3">
             &ldquo;{nugget.chunkExcerpt}&rdquo;
           </p>
           <div className="flex items-center justify-between mt-2">
@@ -85,13 +85,13 @@ export function LibraryNugget({ nuggets, variant, color = '#8B7E74', labels = {}
       <div className="my-6">
         <Link
           href={nugget.link}
-          className="group block bg-brand-bg/60 rounded-xl p-5 hover:bg-brand-bg transition-colors"
+          className="group block bg-brand-bg/60 p-5 hover:bg-brand-bg transition-colors"
         >
           <p className="text-xs text-brand-muted font-semibold uppercase tracking-wider mb-2 flex items-center gap-1.5">
             <BookOpen size={12} style={{ color }} />
             {fromThe}
           </p>
-          <p className="text-sm text-brand-text leading-relaxed font-serif italic">
+          <p className="text-sm text-brand-text leading-relaxed font-body italic">
             &ldquo;{nugget.chunkExcerpt}&rdquo;
           </p>
           <p className="text-xs text-brand-muted mt-2">
@@ -111,7 +111,7 @@ export function LibraryNugget({ nuggets, variant, color = '#8B7E74', labels = {}
     <section className="mt-10">
       <div className="flex items-center gap-2 mb-1">
         <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
-        <h3 className="font-serif text-lg font-bold text-brand-text">{heading}</h3>
+        <h3 className="font-display text-lg font-bold text-brand-text">{heading}</h3>
       </div>
       <div className="h-0.5 w-12 rounded-full mb-4" style={{ backgroundColor: color }} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">

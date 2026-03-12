@@ -21,7 +21,7 @@ export function PathwayCard({ name, color, slug, count, description }: PathwayCa
       <div className="p-5">
         <div className="flex items-center gap-2.5 mb-2">
           <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: color }} />
-          <h3 className="font-serif font-bold text-brand-text text-base">{name}</h3>
+          <h3 className="font-display font-bold text-brand-text text-base">{name}</h3>
         </div>
         {description && (
           <p className="text-sm text-brand-muted mb-3 line-clamp-2 leading-relaxed">{description}</p>

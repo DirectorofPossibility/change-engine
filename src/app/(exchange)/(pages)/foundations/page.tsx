@@ -71,7 +71,7 @@ export default async function FoundationsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
           <div>
             <div className="max-w-2xl mb-6 mt-6">
-              <h2 className="text-lg font-serif font-bold text-brand-text mb-3">What You Can Do</h2>
+              <h2 className="text-lg font-display font-bold text-brand-text mb-3">What You Can Do</h2>
               <ul className="space-y-2 text-brand-muted">
                 <li className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2 shrink-0" />

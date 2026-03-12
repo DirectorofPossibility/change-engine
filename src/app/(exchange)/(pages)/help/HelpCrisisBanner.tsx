@@ -15,7 +15,7 @@ export function HelpCrisisBanner() {
   const { t } = useTranslation()
 
   return (
-    <div className="bg-red-50 border border-red-300 rounded-xl p-4 mb-8">
+    <div className="bg-red-50 border border-red-300 p-4 mb-8">
       <p className="text-sm text-red-700 font-semibold mb-1">{t('help.emergency')}</p>
       <p className="text-sm text-red-600">
         <a href="tel:911" className="font-bold underline">{t('help.crisis_911')}</a> &bull;{' '}

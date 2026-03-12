@@ -69,7 +69,6 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
         zipData.congressional_district,
         zipData.state_senate_district,
         zipData.state_house_district,
-        'TX',
       ].filter(Boolean)
 
       // Look up city council district from neighborhoods
@@ -82,6 +81,8 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
       const councilDistrict = hoodRows?.[0]?.council_district || null
 
       let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+      // US Senators: Federal level with null district_id (statewide)
+      filterParts += ',and(level.eq.Federal,district_id.is.null)'
       // City: specific district + at-large + mayor
       if (councilDistrict) {
         filterParts += ',district_id.eq.' + councilDistrict
@@ -98,11 +99,31 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
         .order('official_name')
 
       const all = (matched ?? []) as ElectedOfficial[]
+
+      // Sort city officials: user's council district first, then at-large, then others
+      const cityOfficials = all.filter(function (o) { return o.level === 'City' })
+      const sortedCity = cityOfficials.sort(function (a, b) {
+        const aDistrict = (a as any).district_id
+        const bDistrict = (b as any).district_id
+        // Mayor (null district) first
+        if (aDistrict === null && bDistrict !== null) return -1
+        if (aDistrict !== null && bDistrict === null) return 1
+        // User's council district next
+        if (aDistrict === councilDistrict && bDistrict !== councilDistrict) return -1
+        if (aDistrict !== councilDistrict && bDistrict === councilDistrict) return 1
+        // At-large next
+        const aAtLarge = aDistrict && aDistrict.startsWith('AL')
+        const bAtLarge = bDistrict && bDistrict.startsWith('AL')
+        if (aAtLarge && !bAtLarge) return -1
+        if (!aAtLarge && bAtLarge) return 1
+        return (a.official_name || '').localeCompare(b.official_name || '')
+      })
+
       setZipResults({
         federal: all.filter(function (o) { return o.level === 'Federal' }),
         state: all.filter(function (o) { return o.level === 'State' }),
         county: all.filter(function (o) { return o.level === 'County' }),
-        city: all.filter(function (o) { return o.level === 'City' }),
+        city: sortedCity,
       })
     } catch {
       setError('Something went wrong. Please try again.')
@@ -126,18 +147,19 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
   return (
     <div>
       {/* ZIP Search Bar */}
-      <div className="bg-white rounded-xl border border-brand-border p-6 mb-8">
-        <h2 className="font-serif text-xl font-bold text-brand-text mb-2">Find Your Representatives</h2>
-        <p className="text-sm text-brand-muted mb-4">Enter your ZIP code to see who represents you at every level of government.</p>
+      <div className="bg-white p-6 mb-8" style={{ border: '2px solid #0d1117' }}>
+        <h2 className="font-display text-xl font-bold mb-2" style={{ color: '#0d1117' }}>Find Your Representatives</h2>
+        <p className="font-body text-sm mb-4" style={{ color: '#5c6474' }}>Enter your ZIP code to see who represents you at every level of government.</p>
         <form onSubmit={handleZipSearch} className="flex gap-3">
           <div className="relative flex-1 max-w-xs">
-            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
+            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: '#5c6474' }} />
             <input
               type="text"
               value={zip}
               onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
               placeholder="Enter ZIP code"
-              className="w-full pl-9 pr-4 py-3 border border-brand-border rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent"
+              className="w-full pl-9 pr-4 py-3 text-sm bg-white focus:outline-none font-mono"
+              style={{ border: '2px solid #0d1117' }}
               maxLength={5}
             />
             <TranslatedTooltip tip={TOOLTIPS.zip_lookup} position="bottom" />
@@ -145,21 +167,22 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
           <button
             type="submit"
             disabled={loading || zip.length !== 5}
-            className="px-6 py-3 bg-brand-accent text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+            className="px-6 py-3 text-white text-sm font-mono uppercase tracking-[0.08em] hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+            style={{ background: '#0d1117' }}
           >
             <Search size={16} />
             {loading ? 'Searching...' : 'Find'}
           </button>
         </form>
-        {error && <p className="text-red-600 text-sm mt-3">{error}</p>}
+        {error && <p className="text-sm mt-3" style={{ color: '#b03a2a' }}>{error}</p>}
       </div>
 
       {/* ZIP Results — "Your Representatives" */}
       {zipResults && (
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-serif text-2xl font-bold text-brand-text">Your Representatives</h2>
-            <button onClick={clearZipResults} className="text-sm text-brand-accent hover:underline">
+            <h2 className="font-display text-2xl font-bold" style={{ color: '#0d1117' }}>Your Representatives</h2>
+            <button onClick={clearZipResults} className="text-sm hover:underline" style={{ color: '#1b5e8a' }}>
               Clear results
             </button>
           </div>
@@ -169,7 +192,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
             if (group.length === 0) return null
             return (
               <div key={key} className="mb-6">
-                <h3 className="text-lg font-bold text-brand-text mb-3 flex items-center gap-2">
+                <h3 className="font-display text-lg font-bold mb-3 flex items-center gap-2" style={{ color: '#0d1117' }}>
                   <Icon size={20} /> {label}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -199,15 +222,15 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
 
           {zipResults.federal.length === 0 && zipResults.state.length === 0 &&
             zipResults.county.length === 0 && zipResults.city.length === 0 && (
-            <p className="text-brand-muted text-sm py-4">No officials found for this ZIP code.</p>
+            <p className="font-body text-sm py-4" style={{ color: '#5c6474' }}>No officials found for this ZIP code.</p>
           )}
 
-          <hr className="border-brand-border my-8" />
+          <hr className="my-8" style={{ borderColor: '#dde1e8' }} />
         </div>
       )}
 
       {/* Full Officials Listing */}
-      <h2 className="relative font-serif text-2xl font-bold text-brand-text mb-6">All Civic Leaders
+      <h2 className="relative font-display text-2xl font-bold mb-6" style={{ color: '#0d1117' }}>All Civic Leaders
         <TranslatedTooltip tip={TOOLTIPS.party_label} position="bottom" />
       </h2>
       <OfficialsClient officials={officials} levels={levels} translations={translations} linkedinProfiles={linkedinProfiles} />

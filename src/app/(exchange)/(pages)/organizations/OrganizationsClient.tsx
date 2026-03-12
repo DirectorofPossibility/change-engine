@@ -81,13 +81,13 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
             aria-label="Search organizations"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 rounded-lg border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+            className="w-full pl-8 pr-3 py-2 border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
           />
         </div>
         <select
           value={typeFilter || ''}
           onChange={e => setTypeFilter(e.target.value || null)}
-          className="px-2.5 py-2 rounded-lg border border-brand-border bg-white text-xs font-semibold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+          className="px-2.5 py-2 border border-brand-border bg-white text-xs font-semibold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
         >
           <option value="">All ({organizations.length})</option>
           {ORG_TYPES.filter(t => typeCounts[t.label]).map(t => (
@@ -109,7 +109,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
             <Link
               key={org.org_id}
               href={`/organizations/${org.org_id}`}
-              className="group relative bg-white rounded-lg border border-brand-border overflow-hidden flex items-start gap-3 p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150"
+              className="group relative bg-white border border-brand-border overflow-hidden flex items-start gap-3 p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150"
              
             >
               {/* Left color bar */}
@@ -123,7 +123,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                  width={48} height={40} />
               ) : (
                 <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0 ml-1" style={{ background: color + '12' }}>
-                  <span className="font-serif font-bold text-lg" style={{ color }}>
+                  <span className="font-display font-bold text-lg" style={{ color }}>
                     {org.org_name?.charAt(0) || '?'}
                   </span>
                 </div>
@@ -131,7 +131,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-serif font-bold text-[13px] text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-1">
+                  <h3 className="font-display font-bold text-[13px] text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-1">
                     {org.org_name}
                   </h3>
                   {org.is_verified === 'Yes' && (

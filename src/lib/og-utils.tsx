@@ -6,10 +6,10 @@
 export const OG_SIZE = { width: 1200, height: 630 }
 
 export const BRAND = {
-  accent: '#C75B2A',
-  bg: '#1A1A1A',
-  cream: '#FAF8F5',
-  muted: '#9B9590',
+  accent: '#1b5e8a',
+  bg: '#0d1117',
+  cream: '#f4f5f7',
+  muted: '#5c6474',
 }
 
 /** Truncate text to fit OG images */

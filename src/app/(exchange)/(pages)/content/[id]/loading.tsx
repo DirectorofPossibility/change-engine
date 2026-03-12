@@ -16,8 +16,8 @@ export default function ContentLoading() {
           </div>
         </div>
         <div className="space-y-4">
-          <div className="h-32 bg-white/60 rounded-xl animate-pulse" />
-          <div className="h-24 bg-white/60 rounded-xl animate-pulse" />
+          <div className="h-32 bg-white/60 animate-pulse" />
+          <div className="h-24 bg-white/60 animate-pulse" />
         </div>
       </div>
     </div>

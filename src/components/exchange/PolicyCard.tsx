@@ -48,7 +48,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
 
   return (
     <div
-      className="bg-white rounded-xl border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 group"
+      className="bg-white border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 group"
       style={{ boxShadow: '3px 3px 0 ' + levelColor + '20', ...(onSelect ? { cursor: 'pointer' } : {}) }}
       {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } } } : {})}
     >
@@ -81,7 +81,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
         )}
 
         {impactPreview && (
-          <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-2.5 py-1.5 mb-2 line-clamp-1 border border-amber-200">{impactPreview}</p>
+          <p className="text-xs text-amber-700 bg-amber-50 px-2.5 py-1.5 mb-2 line-clamp-1 border border-amber-200">{impactPreview}</p>
         )}
 
         <div className="flex items-center justify-between">

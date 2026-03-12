@@ -23,7 +23,7 @@ export function HomeMap({ markers }: HomeMapProps) {
         markers={markers}
         layers={homeLayers}
         defaultVisibleLayers={['superNeighborhoods']}
-        className="w-full h-[450px] rounded-xl"
+        className="w-full h-[450px]"
       />
     </section>
   )

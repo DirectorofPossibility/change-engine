@@ -130,7 +130,7 @@ export function LeftNav() {
       <div className="px-3 pb-2">
         <Link
           href="/search"
-          className="flex items-center gap-2 px-3 py-2 bg-white/60 border border-brand-border rounded-lg text-xs text-brand-muted hover:bg-white hover:text-brand-text transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-white/60 border border-brand-border text-xs text-brand-muted hover:bg-white hover:text-brand-text transition-colors"
         >
           <Search size={13} />
           {t('nav.search_placeholder')}
@@ -171,7 +171,7 @@ export function LeftNav() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className={`block px-2 py-1 rounded-lg text-xs font-medium transition-colors mb-0.5 ${
+                        className={`block px-2 py-1 text-xs font-medium transition-colors mb-0.5 ${
                           isActive
                             ? 'bg-white shadow-sm text-brand-text font-semibold'
                             : 'text-brand-text/60 hover:bg-white/60 hover:text-brand-text/80'
@@ -202,7 +202,7 @@ export function LeftNav() {
                   <Link
                     key={th.id}
                     href={href}
-                    className={`flex items-center gap-2.5 px-2 py-1.5 rounded-lg transition-colors mb-0.5 ${
+                    className={`flex items-center gap-2.5 px-2 py-1.5 transition-colors mb-0.5 ${
                       isActive ? 'bg-white shadow-sm' : 'hover:bg-white/60'
                     }`}
                   >
@@ -227,7 +227,7 @@ export function LeftNav() {
           href="https://app.betterunite.com/thechangelab#bnte_p_bwThbDPG"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-brand-accent hover:bg-white/60 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-brand-accent hover:bg-white/60 transition-colors"
         >
           <Heart size={14} className="fill-brand-accent" />
           {t('support.button')}

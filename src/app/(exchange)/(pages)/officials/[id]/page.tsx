@@ -182,7 +182,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
          ═══════════════════════════════════════════════════════════════════ */}
       <section
         className="relative"
-        style={{ borderBottom: '2px solid #0d1117', borderTop: `3px solid ${barColor}` }}
+        style={{ borderBottom: '2px solid #0d1117', borderTop: `3px solid ${barColor}`, borderLeft: '4px solid #b03a2a' }}
       >
         <div className="max-w-[1080px] mx-auto px-6 py-10 lg:py-14">
           {/* Breadcrumb */}
@@ -595,8 +595,9 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 >
                   {policies.map(function (p) {
                     const pt = policyTranslations[p.policy_id]
+                    const isActive = ['pending', 'introduced', 'in committee', 'active'].includes((p.status || '').toLowerCase())
                     return (
-                      <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
+                      <Link key={p.policy_id} href={'/policies/' + p.policy_id} style={isActive ? { borderLeft: '3px solid #b03a2a' } : undefined}>
                         <PolicyCard
                           name={p.title_6th_grade || p.policy_name}
                           summary={p.summary_6th_grade || p.summary_5th_grade}

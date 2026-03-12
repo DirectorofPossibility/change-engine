@@ -141,7 +141,7 @@ export function VotingDashboardClient({
           {/* Runoff callout — bridge to next section */}
           {runoffCandidates.length > 0 && nextElection && nextElection.election_type === 'Primary Runoff' && (
             <div className="bg-amber-50 border border-amber-200 rounded-card p-4">
-              <h4 className="font-semibold font-serif text-brand-text text-sm mb-1">
+              <h4 className="font-semibold font-display text-brand-text text-sm mb-1">
                 These races are heading to a runoff
               </h4>
               <p className="text-sm text-brand-muted mb-2">
@@ -151,7 +151,7 @@ export function VotingDashboardClient({
               <div className="flex flex-wrap gap-2">
                 {runoffCandidates.map(function (c) {
                   return (
-                    <span key={c.candidate_id} className="text-xs px-2 py-1 bg-white border border-brand-border rounded-lg text-brand-text">
+                    <span key={c.candidate_id} className="text-xs px-2 py-1 bg-white border border-brand-border text-brand-text">
                       {c.candidate_name} ({c.party?.charAt(0)}) — {c.office_sought}
                     </span>
                   )
@@ -539,7 +539,7 @@ export function VotingDashboardClient({
 
 function SectionHeading({ title, color }: { title: string; color: string }) {
   return (
-    <h2 className="text-xl font-bold font-serif text-brand-text flex items-center gap-2 mb-4">
+    <h2 className="text-xl font-bold font-display text-brand-text flex items-center gap-2 mb-4">
       <span className="w-1.5 h-6 rounded-full" style={{ backgroundColor: color }} />
       {title}
     </h2>

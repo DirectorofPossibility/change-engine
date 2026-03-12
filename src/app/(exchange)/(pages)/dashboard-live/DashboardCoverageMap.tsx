@@ -32,7 +32,7 @@ export function DashboardCoverageMap({ services }: DashboardCoverageMapProps) {
       <p className="text-sm text-brand-muted mb-4">
         {markers.length} services with verified locations across Houston
       </p>
-      <ClusteredMap markers={markers} showLegend={false} className="w-full h-[400px] rounded-xl" />
+      <ClusteredMap markers={markers} showLegend={false} className="w-full h-[400px]" />
     </div>
   )
 }

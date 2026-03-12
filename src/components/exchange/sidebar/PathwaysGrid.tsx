@@ -27,7 +27,7 @@ export function PathwaysGrid({ selectedPathway, pathwayCounts, onSelectPathway, 
 
   return (
     <div className="px-5">
-      <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
+      <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
         {t('sidebar.explore_houston')}
       </p>
       <div className="space-y-0.5">
@@ -39,13 +39,13 @@ export function PathwaysGrid({ selectedPathway, pathwayCounts, onSelectPathway, 
             <button
               key={id}
               onClick={function () { onSelectPathway(isActive ? null : id); onClose() }}
-              className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
+              className={'flex items-center gap-3 w-full px-3 py-2.5 text-sm transition-all duration-200 ' +
                 (isActive
                   ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
                   : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
             >
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200"
+                className="w-8 h-8 flex items-center justify-center flex-shrink-0 transition-transform duration-200"
                 style={{
                   backgroundColor: isActive ? theme.color + '20' : theme.color + '0C',
                   transform: isActive ? 'scale(1.05)' : 'scale(1)',

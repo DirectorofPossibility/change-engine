@@ -27,7 +27,7 @@ export default async function BallotPage() {
         <div className="space-y-4 mt-4">
           {(items || []).map(function (item) {
             return (
-              <div key={item.item_id} className="bg-white rounded-lg border border-brand-border p-5">
+              <div key={item.item_id} className="bg-white border border-brand-border p-5">
                 <div className="flex items-start gap-3">
                   <Scale className="w-5 h-5 text-theme-voice mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
@@ -43,13 +43,13 @@ export default async function BallotPage() {
                     {item.description_5th_grade && <p className="text-sm text-brand-muted mt-2 leading-relaxed">{item.description_5th_grade}</p>}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                       {item.for_argument && (
-                        <div className="bg-brand-success/5 rounded-lg p-3">
+                        <div className="bg-brand-success/5 p-3">
                           <div className="flex items-center gap-1.5 text-xs font-bold text-brand-success mb-1"><ThumbsUp className="w-3.5 h-3.5" />Arguments For</div>
                           <p className="text-xs text-brand-text leading-relaxed">{item.for_argument}</p>
                         </div>
                       )}
                       {item.against_argument && (
-                        <div className="bg-brand-danger/5 rounded-lg p-3">
+                        <div className="bg-brand-danger/5 p-3">
                           <div className="flex items-center gap-1.5 text-xs font-bold text-brand-danger mb-1"><ThumbsDown className="w-3.5 h-3.5" />Arguments Against</div>
                           <p className="text-xs text-brand-text leading-relaxed">{item.against_argument}</p>
                         </div>

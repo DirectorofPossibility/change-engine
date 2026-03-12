@@ -41,7 +41,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
           {/* Header */}
           <div className="flex items-center gap-3 mb-2">
             <span
-              className="w-12 h-12 rounded-lg flex items-center justify-center text-white text-lg font-bold"
+              className="w-12 h-12 flex items-center justify-center text-white text-lg font-bold"
               style={{ backgroundColor: '#C75B2A' }}
             >
               {zone.site_number}
@@ -54,25 +54,25 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 mb-8">
-            <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+            <div className="bg-white border border-brand-border p-4 text-center">
               <Building2 size={20} className="mx-auto mb-1" style={{ color: '#C75B2A' }} />
               <div className="text-lg font-bold text-brand-text">TIRZ-{zone.site_number}</div>
               <div className="text-xs text-brand-muted">Zone Number</div>
             </div>
             {zone.status && (
-              <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+              <div className="bg-white border border-brand-border p-4 text-center">
                 <div className="text-lg font-bold text-brand-text capitalize">{zone.status}</div>
                 <div className="text-xs text-brand-muted">Status</div>
               </div>
             )}
             {zone.year_established && (
-              <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+              <div className="bg-white border border-brand-border p-4 text-center">
                 <div className="text-lg font-bold text-brand-text">{zone.year_established}</div>
                 <div className="text-xs text-brand-muted">Established</div>
               </div>
             )}
             {zone.managing_entity && (
-              <div className="bg-white rounded-xl border border-brand-border p-4 text-center">
+              <div className="bg-white border border-brand-border p-4 text-center">
                 <div className="text-sm font-bold text-brand-text truncate">{zone.managing_entity}</div>
                 <div className="text-xs text-brand-muted">Managed By</div>
               </div>
@@ -93,7 +93,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                 href={zone.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-accent text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
               >
                 <ExternalLink size={14} />
                 Visit TIRZ Website
@@ -109,7 +109,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
           {/* Council Districts */}
           {zone.council_districts && (
-            <div className="bg-brand-accent/5 rounded-xl border border-brand-border p-4 mb-8">
+            <div className="bg-brand-accent/5 border border-brand-border p-4 mb-8">
               <p className="text-sm text-brand-text">
                 Overlapping Council Districts: <strong>{zone.council_districts}</strong> &mdash;{' '}
                 <Link href="/officials" className="text-brand-accent hover:underline font-medium">
@@ -121,7 +121,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
           {/* ZIP Codes */}
           {zone.zip_codes && (
-            <div className="bg-brand-bg rounded-xl border border-brand-border p-4 mb-8">
+            <div className="bg-brand-bg border border-brand-border p-4 mb-8">
               <p className="text-sm text-brand-text">
                 ZIP Codes: <strong>{zone.zip_codes}</strong> &mdash;{' '}
                 <Link href="/officials/lookup" className="text-brand-accent hover:underline font-medium">
@@ -144,7 +144,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     <Link
                       key={official.official_id}
                       href={'/officials/' + official.official_id}
-                      className="flex items-center gap-3 bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="flex items-center gap-3 bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
                     >
                       {official.photo_url ? (
                         <Image
@@ -184,10 +184,10 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     <Link
                       key={p.policy_id}
                       href={'/policies/' + p.policy_id}
-                      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        {p.level && <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{p.level}</span>}
+                        {p.level && <span className="text-xs px-2 py-0.5 bg-brand-bg text-brand-muted">{p.level}</span>}
                         {p.status && <span className="text-xs text-brand-muted">{p.status}</span>}
                       </div>
                       <h3 className="font-semibold text-brand-text text-sm line-clamp-2">{p.title_6th_grade || p.policy_name}</h3>
@@ -207,7 +207,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
             <div className="border border-brand-border rounded-[0.75rem] bg-white overflow-hidden">
               <div className="h-1.5" style={{ backgroundColor: '#C75B2A' }} />
               <div className="p-5">
-                <h3 className="font-serif text-sm font-bold text-brand-text mb-3">About TIRZ Zones</h3>
+                <h3 className="font-display text-sm font-bold text-brand-text mb-3">About TIRZ Zones</h3>
                 <p className="text-xs leading-relaxed text-brand-muted mb-3">
                   Tax Increment Reinvestment Zones are special districts created by Houston City Council.
                   Growth in property tax revenue within the zone is captured and reinvested locally.

@@ -21,7 +21,7 @@ export function HeroZipInput() {
 
   if (zip && neighborhood) {
     return (
-      <div className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text rounded-xl"
+      <div className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text"
        
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
@@ -37,7 +37,7 @@ export function HeroZipInput() {
 
   return (
     <form onSubmit={handleSubmit}
-      className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text rounded-xl"
+      className="flex items-center gap-3 flex-1 min-w-0 px-4 py-3 bg-white border-2 border-brand-text"
      
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2" className="flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
@@ -53,7 +53,7 @@ export function HeroZipInput() {
       <button
         type="submit"
         disabled={input.trim().length < 5 || isLoading}
-        className="px-3 py-1.5 bg-brand-text text-white font-mono text-[11px] font-bold uppercase rounded-lg disabled:opacity-30 hover:bg-brand-accent transition-colors flex-shrink-0"
+        className="px-3 py-1.5 bg-brand-text text-white font-mono text-[11px] font-bold uppercase disabled:opacity-30 hover:bg-brand-accent transition-colors flex-shrink-0"
       >
         Go
       </button>

@@ -73,7 +73,7 @@ export default async function OpenDataPage() {
 
         {/* Stats Grid */}
         <section className="mt-10">
-          <h2 className="font-serif text-2xl text-brand-text mb-6">Platform at a Glance</h2>
+          <h2 className="font-display text-2xl text-brand-text mb-6">Platform at a Glance</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {stats.map(function (stat) {
               return (
@@ -93,8 +93,8 @@ export default async function OpenDataPage() {
 
         {/* Data Sources */}
         <section className="mt-14">
-          <h2 className="font-serif text-2xl text-brand-text mb-6">Data Sources</h2>
-          <div className="bg-white border border-brand-border rounded-lg p-6">
+          <h2 className="font-display text-2xl text-brand-text mb-6">Data Sources</h2>
+          <div className="bg-white border border-brand-border p-6">
             <p className="text-sm text-brand-muted mb-4">
               The Community Exchange aggregates information from trusted public data sources to keep our community knowledge current and accurate.
             </p>
@@ -103,7 +103,7 @@ export default async function OpenDataPage() {
                 return (
                   <li key={source} className="flex items-center gap-3 text-brand-text">
                     <span
-                      className="w-2 h-2 rounded-lg flex-shrink-0"
+                      className="w-2 h-2 flex-shrink-0"
                       style={{ backgroundColor: '#319795' }}
                     />
                     <span className="text-sm">{source}</span>
@@ -116,8 +116,8 @@ export default async function OpenDataPage() {
 
         {/* 7 Pathways */}
         <section className="mt-14">
-          <h2 className="font-serif text-2xl text-brand-text mb-6">7 Pathways</h2>
-          <div className="bg-white border border-brand-border rounded-lg divide-y divide-brand-border">
+          <h2 className="font-display text-2xl text-brand-text mb-6">7 Pathways</h2>
+          <div className="bg-white border border-brand-border divide-y divide-brand-border">
             {themes.map(function (theme) {
               return (
                 <Link
@@ -126,7 +126,7 @@ export default async function OpenDataPage() {
                   className="flex items-center gap-3 px-5 py-4 hover:bg-brand-bg transition-colors"
                 >
                   <span
-                    className="w-3 h-3 rounded-lg flex-shrink-0"
+                    className="w-3 h-3 flex-shrink-0"
                     style={{ backgroundColor: theme.color }}
                   />
                   <span className="text-sm font-semibold text-brand-text">{theme.name}</span>

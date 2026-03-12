@@ -77,25 +77,25 @@ export default async function ActionIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
                
               >
                 <div className="flex">
                   <div
-                    className="w-2 flex-shrink-0 rounded-l-xl"
+                    className="w-2 flex-shrink-0"
                     style={{ backgroundColor: section.color }}
                   />
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          className="w-10 h-10 flex items-center justify-center"
                           style={{ backgroundColor: section.color + '15' }}
                         >
                           <Icon size={20} style={{ color: section.color }} />
                         </div>
                         <div>
-                          <h2 className="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
+                          <h2 className="font-display text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                             {section.label}
                           </h2>
                           {count > 0 && (
@@ -121,10 +121,10 @@ export default async function ActionIndexPage() {
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             href="/officials/lookup"
-            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-brand-border hover:border-brand-accent transition-colors"
+            className="flex items-center gap-3 p-4 bg-white border border-brand-border hover:border-brand-accent transition-colors"
            
           >
-            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+            <div className="w-8 h-8 bg-blue-50 flex items-center justify-center">
               <Users size={16} className="text-blue-600" />
             </div>
             <div>
@@ -134,10 +134,10 @@ export default async function ActionIndexPage() {
           </Link>
           <Link
             href="/call-your-senators"
-            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-brand-border hover:border-brand-accent transition-colors"
+            className="flex items-center gap-3 p-4 bg-white border border-brand-border hover:border-brand-accent transition-colors"
            
           >
-            <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+            <div className="w-8 h-8 bg-green-50 flex items-center justify-center">
               <span className="text-green-600 text-sm">&#9742;</span>
             </div>
             <div>
@@ -150,7 +150,7 @@ export default async function ActionIndexPage() {
         <div className="mt-10 text-center">
           <div className="inline-flex items-center gap-2 text-brand-muted-light">
             <FlowerOfLifeIcon size={20} color="#38a169" />
-            <p className="text-sm font-serif italic">
+            <p className="text-sm font-display italic">
               Democracy works when people show up.
             </p>
           </div>

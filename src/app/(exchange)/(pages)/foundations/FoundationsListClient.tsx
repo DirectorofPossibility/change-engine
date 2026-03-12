@@ -59,7 +59,7 @@ function FoundationCard({ f }: { f: Foundation }) {
   return (
     <Link
       href={`/foundations/${f.id}`}
-      className="group bg-white rounded-lg border border-brand-border hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden block"
+      className="group bg-white border border-brand-border hover:border-brand-text hover:-translate-y-px transition-all duration-150 overflow-hidden block"
      
     >
       {/* Left color bar */}
@@ -68,7 +68,7 @@ function FoundationCard({ f }: { f: Foundation }) {
         <div className="flex-1 p-4 min-w-0">
           <div className="flex items-start justify-between gap-3 mb-2">
             <div className="min-w-0">
-              <h3 className="text-sm font-serif font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors">
+              <h3 className="text-sm font-display font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors">
                 {f.name}
               </h3>
               <div className="flex items-center gap-2 mt-1">
@@ -134,7 +134,7 @@ function SpotlightCard({ f }: { f: Foundation }) {
   return (
     <Link
       href={`/foundations/${f.id}`}
-      className="group flex-shrink-0 w-[340px] bg-white rounded-lg border-2 border-brand-accent/20 hover:border-brand-accent hover:-translate-y-px transition-all duration-150 overflow-hidden block"
+      className="group flex-shrink-0 w-[340px] bg-white border-2 border-brand-accent/20 hover:border-brand-accent hover:-translate-y-px transition-all duration-150 overflow-hidden block"
      
     >
       {/* Accent top bar */}
@@ -142,7 +142,7 @@ function SpotlightCard({ f }: { f: Foundation }) {
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div>
-            <h3 className="text-base font-serif font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors">
+            <h3 className="text-base font-display font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors">
               {f.name}
             </h3>
             <div className="flex items-center gap-2 mt-1">
@@ -264,7 +264,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
         <section className="py-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-2 h-2 rounded-full bg-brand-accent" />
-            <h2 className="text-lg font-serif font-bold text-brand-text">Funder Spotlight</h2>
+            <h2 className="text-lg font-display font-bold text-brand-text">Funder Spotlight</h2>
             <div className="h-px flex-1 bg-brand-border" />
           </div>
           <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 scrollbar-hide">
@@ -287,7 +287,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
             placeholder="Search foundations..."
             value={q}
             onChange={e => setQ(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm rounded-lg bg-white border border-brand-border text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-brand-border text-brand-text placeholder:text-brand-muted-light focus:outline-none focus:border-brand-accent"
           />
         </div>
 
@@ -395,7 +395,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
               <section key={g.id} className="mb-8">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: g.color }} />
-                  <span className="text-sm font-serif font-bold" style={{ color: g.color }}>{g.name}</span>
+                  <span className="text-sm font-display font-bold" style={{ color: g.color }}>{g.name}</span>
                   <span className="text-xs text-brand-muted">({gf.length})</span>
                   <div className="h-px flex-1 bg-brand-border" />
                 </div>

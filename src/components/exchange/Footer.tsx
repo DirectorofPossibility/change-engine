@@ -52,7 +52,7 @@ export async function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <FlowerOfLifeIcon size={28} color="#C75B2A" />
-              <h3 className="font-serif text-lg text-brand-text font-semibold">
+              <h3 className="font-display text-lg text-brand-text font-semibold">
                 {t('footer.community_exchange')}
               </h3>
             </div>

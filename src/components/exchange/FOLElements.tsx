@@ -96,10 +96,10 @@ export function FOLButton({
   variant?: 'primary' | 'secondary' | 'ghost'
   className?: string
 }) {
-  const base = 'inline-flex items-center gap-2.5 font-serif font-bold transition-all duration-300 group'
+  const base = 'inline-flex items-center gap-2.5 font-display font-bold transition-all duration-300 group'
   const variants = {
-    primary: 'px-6 py-3 rounded-xl bg-brand-accent text-white hover:bg-brand-accent-hover hover:shadow-lg hover:-translate-y-0.5',
-    secondary: 'px-6 py-3 rounded-xl border border-brand-text bg-white text-brand-text hover:bg-brand-text hover:text-white hover:-translate-y-0.5',
+    primary: 'px-6 py-3 bg-brand-accent text-white hover:bg-brand-accent-hover hover:shadow-lg hover:-translate-y-0.5',
+    secondary: 'px-6 py-3 border border-brand-text bg-white text-brand-text hover:bg-brand-text hover:text-white hover:-translate-y-0.5',
     ghost: 'px-4 py-2 text-brand-accent hover:text-brand-accent-hover',
   }
 
@@ -182,7 +182,7 @@ export function FOLGlassCard({
 }) {
   const content = (
     <div
-      className={`relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group ${className}`}
+      className={`relative overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group ${className}`}
       style={{
         background: 'rgba(255,255,255,0.85)',
         backdropFilter: 'blur(12px)',

@@ -216,12 +216,12 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
   const firstOpenTier = priority.find(t => tierCounts[t] > 0) || 'understand'
 
   return (
-    <aside className="bg-white rounded-xl border border-brand-border lg:sticky lg:top-24">
+    <aside className="bg-white border border-brand-border lg:sticky lg:top-24">
       <WayfinderTracker entityType={currentType} entityId={currentId} />
 
       {/* Header */}
       <div className="p-4 border-b border-brand-border relative">
-        <h3 className="font-serif text-base font-semibold text-brand-text tracking-wide">
+        <h3 className="font-display text-base font-semibold text-brand-text tracking-wide">
           {t('wayfinder.title')}
         </h3>
         <WayfinderTooltipPos tipKey="wayfinder_panel" position="bottom" />
@@ -260,31 +260,31 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
                 <div className="flex flex-wrap gap-1.5 pl-10">
                   {org.donate_url && (
                     <a href={org.donate_url} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
+                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
                       <Gift size={11} /> {t('wayfinder.donate')}
                     </a>
                   )}
                   {org.volunteer_url && (
                     <a href={org.volunteer_url} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
                       <Heart size={11} /> {t('wayfinder.volunteer')}
                     </a>
                   )}
                   {org.newsletter_url && (
                     <a href={org.newsletter_url} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">
+                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">
                       <FileText size={11} /> {t('wayfinder.subscribe')}
                     </a>
                   )}
                   {org.phone && (
                     <a href={'tel:' + org.phone}
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors">
+                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors">
                       <Phone size={11} /> {t('wayfinder.call')}
                     </a>
                   )}
                   {org.website && (
                     <a href={org.website} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors">
+                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors">
                       <Globe size={11} /> {t('wayfinder.visit')}
                     </a>
                   )}
@@ -326,7 +326,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               if (!theme) return null
               return (
                 <Link key={themeId} href={'/pathways/' + theme.slug}
-                  className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-lg hover:opacity-80 transition-opacity"
+                  className="inline-flex items-center gap-1.5 text-xs px-2 py-1 hover:opacity-80 transition-opacity"
                   style={{ backgroundColor: theme.color + '15', color: theme.color }}>
                   <span className="w-1.5 h-4 rounded-sm" style={{ backgroundColor: theme.color }} />
                   {theme.name}

@@ -35,7 +35,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
             <Heart className="w-5 h-5 text-theme-health" />
             {b.benefit_type && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{b.benefit_type}</span>}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">{b.benefit_name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">{b.benefit_name}</h1>
           {b.description_5th_grade && <p className="text-brand-muted mt-3 max-w-2xl leading-relaxed">{b.description_5th_grade}</p>}
           {b.application_url && (
             <a href={b.application_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-5 px-3.5 py-1.5 rounded text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
@@ -51,7 +51,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Eligibility */}
               {b.eligibility_summary && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white border border-brand-border p-5">
                   <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><Users className="w-4 h-4" />Who Qualifies</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{b.eligibility_summary}</p>
                   {b.income_limit_description && <p className="text-sm text-brand-muted mt-2">Income limit: {b.income_limit_description}</p>}
@@ -59,7 +59,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
                 </div>
               )}
               {/* Benefit details */}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white border border-brand-border p-5">
                 <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><DollarSign className="w-4 h-4" />Benefit Details</h2>
                 <div className="space-y-2 text-sm">
                   {b.benefit_amount && <div><span className="text-brand-muted">Amount:</span> <span className="font-medium text-brand-text">{b.benefit_amount}</span></div>}
@@ -70,7 +70,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
               </div>
               {/* Documentation */}
               {b.documentation_needed && (
-                <div className="bg-white rounded-lg border border-brand-border p-5 md:col-span-2">
+                <div className="bg-white border border-brand-border p-5 md:col-span-2">
                   <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3"><FileText className="w-4 h-4" />Documentation Needed</h2>
                   <p className="text-sm text-brand-text leading-relaxed">{b.documentation_needed}</p>
                 </div>

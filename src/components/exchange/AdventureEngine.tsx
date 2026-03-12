@@ -718,18 +718,18 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
       </div>
 
       {/* Scene illustration */}
-      <div className="rounded-xl overflow-hidden mb-5 border border-brand-border">
+      <div className=" overflow-hidden mb-5 border border-brand-border">
         <SceneIllustration scene={node.scene} color={node.color || adventure.color} />
       </div>
 
       {/* Story text */}
-      <div className="bg-white rounded-xl border border-brand-border p-6">
-        <h2 className="font-serif text-xl font-bold text-brand-text mb-3">{node.title}</h2>
+      <div className="bg-white border border-brand-border p-6">
+        <h2 className="font-display text-xl font-bold text-brand-text mb-3">{node.title}</h2>
         <p className="text-sm text-brand-muted leading-relaxed whitespace-pre-line">{node.text}</p>
 
         {/* Factoid */}
         {node.factoid && (
-          <div className="mt-4 p-3 rounded-lg bg-brand-bg border border-brand-border">
+          <div className="mt-4 p-3 bg-brand-bg border border-brand-border">
             <div className="flex items-start gap-2">
               <BookOpen size={14} className="text-brand-accent flex-shrink-0 mt-0.5" />
               <p className="text-xs text-brand-muted leading-relaxed">{node.factoid}</p>
@@ -756,7 +756,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
           <div className="text-center mb-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-border bg-white">
               {node.endingType === 'great' ? <Star size={16} style={{ color: adventure.color }} /> : <CheckCircle2 size={16} style={{ color: adventure.color }} />}
-              <span className="text-sm font-serif font-bold text-brand-text">
+              <span className="text-sm font-display font-bold text-brand-text">
                 {node.endingType === 'great' ? 'Adventure Complete!' : node.endingType === 'good' ? 'Well Done' : 'Journey Complete'}
               </span>
             </div>
@@ -770,9 +770,9 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
                 { key: 'community', label: 'Community', emoji: '🤝' },
                 { key: 'knowledge', label: 'Knowledge', emoji: '📚' },
               ].map(s => (
-                <div key={s.key} className="bg-white rounded-lg border border-brand-border p-3 text-center">
+                <div key={s.key} className="bg-white border border-brand-border p-3 text-center">
                   <p className="text-lg mb-1">{s.emoji}</p>
-                  <p className="font-serif font-bold text-brand-text">{stats[s.key as keyof typeof stats]}</p>
+                  <p className="font-display font-bold text-brand-text">{stats[s.key as keyof typeof stats]}</p>
                   <p className="text-[10px] font-mono text-brand-muted uppercase tracking-wider">{s.label}</p>
                 </div>
               ))}
@@ -783,14 +783,14 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleRestart}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-brand-border bg-white text-sm font-medium text-brand-text hover:shadow-md transition-all"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-brand-border bg-white text-sm font-medium text-brand-text hover:shadow-md transition-all"
              
             >
               <RotateCcw size={14} /> Try a Different Path
             </button>
             <Link
               href="/adventures"
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white transition-all hover:opacity-90"
               style={{ backgroundColor: adventure.color, boxShadow: `3px 3px 0 ${adventure.color}40` }}
             >
               <Sparkles size={14} /> More Adventures
@@ -804,7 +804,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
               <button
                 key={i}
                 onClick={() => handleChoice(choice)}
-                className="w-full text-left px-5 py-4 rounded-xl border border-brand-border bg-white hover:shadow-md hover:translate-y-[-1px] transition-all group"
+                className="w-full text-left px-5 py-4 border border-brand-border bg-white hover:shadow-md hover:translate-y-[-1px] transition-all group"
                
               >
                 <div className="flex items-center gap-3">

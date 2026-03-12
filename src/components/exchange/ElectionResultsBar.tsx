@@ -35,7 +35,7 @@ export function ElectionResultsBar({ office, district, candidates }: ElectionRes
   })
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-5">
+    <div className="bg-white border border-brand-border p-5">
       <h4 className="font-semibold text-brand-text text-sm mb-1">{office}</h4>
       {district && (
         <p className="text-xs text-brand-muted mb-3">{district}</p>

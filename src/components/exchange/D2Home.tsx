@@ -15,7 +15,7 @@ const QUICK_ACCESS = [
     sub: 'Choose your own adventure',
     href: '/compass',
     image: '/images/editorial/community-meeting.jpg',
-    color: '#C75B2A',
+    color: '#1b5e8a',
     cta: true,
   },
   {
@@ -49,9 +49,9 @@ const QUICK_ACCESS = [
 ]
 
 const GAP_STATS = [
-  { pct: '90%', label: 'feel responsible to help their community', source: 'Citizens & Scholars 2024', color: '#C75B2A' },
+  { pct: '90%', label: 'feel responsible to help their community', source: 'Citizens & Scholars 2024', color: '#1b5e8a' },
   { pct: '37%', label: "don't know where to start", source: 'Citizens & Scholars 2024', color: '#c43c4c' },
-  { pct: '28%', label: 'actually volunteer', source: 'AmeriCorps 2024', color: '#38a169' },
+  { pct: '28%', label: 'actually volunteer', source: 'AmeriCorps 2024', color: '#1a6b56' },
 ]
 
 const CENTERS_DATA = Object.fromEntries(
@@ -91,7 +91,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <p className="text-sm text-brand-muted mb-2 max-w-lg">
                 Most people never show up. Not because they don&apos;t care. Because nobody showed them the way in.
               </p>
-              <h1 className="font-serif text-[clamp(2.5rem,5vw,4rem)] leading-[1.05] tracking-tight mb-4 text-brand-text">
+              <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] leading-[1.05] tracking-tight mb-4 text-brand-text">
                 This is the{' '}
                 <span className="text-brand-accent">way in.</span>
               </h1>
@@ -106,13 +106,13 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Link href="/compass" className="px-5 py-2.5 rounded-lg border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
+                <Link href="/compass" className="px-5 py-2.5 border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   Find my way in
                 </Link>
-                <Link href="/neighborhoods" className="px-5 py-2.5 rounded-lg border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
+                <Link href="/neighborhoods" className="px-5 py-2.5 border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   In my neighborhood
                 </Link>
-                <Link href="/calendar" className="px-5 py-2.5 rounded-lg border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
+                <Link href="/calendar" className="px-5 py-2.5 border border-brand-text bg-white text-sm font-bold hover:bg-brand-text hover:text-white transition-all">
                   What&apos;s happening now
                 </Link>
               </div>
@@ -120,7 +120,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               {/* Stats row */}
               <div className="flex items-center gap-6 mt-8">
                 <div>
-                  <span className="block text-[32px] font-black leading-none" style={{ color: '#C75B2A' }}>90%</span>
+                  <span className="block text-[32px] font-black leading-none" style={{ color: '#1b5e8a' }}>90%</span>
                   <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">feel responsible to help</span>
                 </div>
                 <div className="w-px h-8 bg-brand-border" />
@@ -130,7 +130,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 </div>
                 <div className="w-px h-8 bg-brand-border" />
                 <div>
-                  <span className="block text-[32px] font-black leading-none" style={{ color: '#38a169' }}>28%</span>
+                  <span className="block text-[32px] font-black leading-none" style={{ color: '#1a6b56' }}>28%</span>
                   <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">actually volunteer</span>
                 </div>
               </div>
@@ -140,27 +140,27 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
             <div className="hidden lg:block flex-1 min-w-0 max-w-[480px]">
               <div className="relative h-[400px]">
                 {/* 1 — back of the pile, peeking top-right */}
-                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
+                <div className="absolute overflow-hidden border border-brand-border"
                   style={{ width: '280px', height: '200px', top: '0', right: '0', transform: 'rotate(3deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 1 }}>
                   <Image src="/images/editorial/organizing.jpg" alt="Community organizing" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 2 — peeking bottom-right */}
-                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
+                <div className="absolute overflow-hidden border border-brand-border"
                   style={{ width: '240px', height: '170px', bottom: '0', right: '20px', transform: 'rotate(-2deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 2 }}>
                   <Image src="/images/editorial/cleanup.jpg" alt="Community cleanup" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 3 — large, anchors the pile center-left */}
-                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
+                <div className="absolute overflow-hidden border border-brand-border"
                   style={{ width: '300px', height: '220px', top: '20px', left: '0', transform: 'rotate(-1.5deg)', boxShadow: '4px 4px 0 #D5D0C8', zIndex: 3 }}>
                   <Image src="/images/editorial/community-meeting.jpg" alt="Community meeting" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 4 — overlaps center, tilted right */}
-                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
+                <div className="absolute overflow-hidden border border-brand-border"
                   style={{ width: '260px', height: '190px', top: '80px', right: '10px', transform: 'rotate(2deg)', boxShadow: '3px 5px 0 #D5D0C8', zIndex: 4 }}>
                   <Image src="/images/editorial/volunteers.jpg" alt="Volunteers" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
                 {/* 5 — top of the pile, bottom-left */}
-                <div className="absolute rounded-xl overflow-hidden border border-brand-border"
+                <div className="absolute overflow-hidden border border-brand-border"
                   style={{ width: '250px', height: '180px', bottom: '0', left: '10px', transform: 'rotate(1.5deg)', boxShadow: '3px 4px 0 #D5D0C8', zIndex: 5 }}>
                   <Image src="/images/editorial/neighbors-talking.jpg" alt="Neighbors talking" className="w-full h-full object-cover"  width={800} height={400} />
                 </div>
@@ -182,7 +182,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <Link
                 key={item.label}
                 href={item.href}
-                className={'relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 group border' + (item.cta ? ' col-span-2 md:col-span-1' : '')}
+                className={'relative overflow-hidden transition-all duration-300 hover:-translate-y-1 group border' + (item.cta ? ' col-span-2 md:col-span-1' : '')}
                 style={{ aspectRatio: '1', borderColor: item.color + '40', boxShadow: '3px 3px 0 ' + item.color + '25' }}
               >
                 {item.cta && (
@@ -200,7 +200,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, ' + item.color + ' 0%, ' + item.color + '99 35%, transparent 70%)' }} />
                 {/* Text */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 z-[2]">
-                  <span className="block font-serif text-lg font-bold text-white leading-tight" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
+                  <span className="block font-display text-lg font-bold text-white leading-tight" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>
                     {item.label}
                   </span>
                   <span className="block text-[11px] text-white/80 mt-0.5 leading-snug">
@@ -226,7 +226,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
               <Link
                 key={key}
                 href={'/centers/' + c.slug}
-                className="relative border rounded-xl overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
+                className="relative border overflow-hidden hover:-translate-y-1 transition-all duration-300 group"
                 style={{ borderColor: c.color + '50', boxShadow: '3px 3px 0 ' + c.color + '20' }}
               >
                 {/* Color header with icon */}
@@ -236,7 +236,7 @@ export function D2Home({ stats, organizations }: D2HomeProps) {
                     alt="" aria-hidden="true"
                     className="absolute w-[100px] h-[100px] opacity-[0.15] pointer-events-none"
                    width={200} height={200} />
-                  <span className="relative z-[1] font-serif text-xl font-bold text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{key}</span>
+                  <span className="relative z-[1] font-display text-xl font-bold text-white" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{key}</span>
                 </div>
                 {/* Body */}
                 <div className="p-4 bg-white">

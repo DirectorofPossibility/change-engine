@@ -31,9 +31,9 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
     <section className="mb-10">
       <div className="flex items-center gap-3 mb-1">
         <div className="w-10 h-0.5 rounded-full" style={{ backgroundColor: BRAND.accent }} />
-        <h2 className="font-serif text-2xl font-bold tracking-tight">{t('home.four_centers')}</h2>
+        <h2 className="font-display text-2xl font-bold tracking-tight">{t('home.four_centers')}</h2>
       </div>
-      <p className="text-sm text-brand-muted font-serif italic mb-4 ml-[52px]">
+      <p className="text-sm text-brand-muted font-body italic mb-4 ml-[52px]">
         {t('home.centers_subtitle')}
       </p>
 
@@ -46,7 +46,7 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
             <Link
               key={name}
               href={'/centers/' + center.slug}
-              className="group flex flex-col items-center text-center gap-4 p-7 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+              className="group flex flex-col items-center text-center gap-4 p-7 bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
             >
               {imgSrc && (
                 <Image
@@ -57,8 +57,8 @@ export function CentersGrid({ centerCounts }: CentersGridProps) {
                   className="transition-transform group-hover:scale-110"
                 />
               )}
-              <h3 className="font-serif text-xl font-bold text-brand-text">{t(CENTER_I18N[name])}</h3>
-              <p className="text-sm text-brand-muted italic font-serif">{center.question}</p>
+              <h3 className="font-display text-xl font-bold text-brand-text">{t(CENTER_I18N[name])}</h3>
+              <p className="text-sm text-brand-muted italic font-body">{center.question}</p>
               <div className="flex items-center gap-1.5 mt-auto">
                 <span className="text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: BRAND.accent }}>
                   {count} {t('home.stats_resources').toLowerCase()}

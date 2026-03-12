@@ -69,7 +69,7 @@ export default async function LiveDashboardPage() {
       </div>
 
       {/* Data sync note */}
-      <div className="mb-8 text-xs text-brand-muted-light bg-brand-bg rounded-lg px-4 py-3 border border-brand-border max-w-2xl">
+      <div className="mb-8 text-xs text-brand-muted-light bg-brand-bg px-4 py-3 border border-brand-border max-w-2xl">
         Data syncs every morning between 7 and 10 AM Central. Check back after 10 if something looks off.
       </div>
 

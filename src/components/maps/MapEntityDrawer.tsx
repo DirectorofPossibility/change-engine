@@ -101,9 +101,9 @@ export function MapEntityDrawer({ entity, onClose, onPathwayClick }: MapEntityDr
       />
 
       {/* Drawer panel */}
-      <div className="relative bg-white rounded-t-2xl shadow-2xl max-h-[40vh] overflow-y-auto">
+      <div className="relative bg-white shadow-2xl max-h-[40vh] overflow-y-auto">
         {/* Drag handle */}
-        <div className="sticky top-0 bg-white rounded-t-2xl pt-3 pb-2 px-6 flex justify-center z-10">
+        <div className="sticky top-0 bg-white pt-3 pb-2 px-6 flex justify-center z-10">
           <button
             onClick={handleClose}
             className="w-10 h-1 bg-brand-border rounded-full hover:bg-brand-muted transition-colors"
@@ -115,7 +115,7 @@ export function MapEntityDrawer({ entity, onClose, onPathwayClick }: MapEntityDr
           {/* Header: name + type badge + close */}
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <h3 className="font-serif text-lg font-bold text-brand-text truncate">
+              <h3 className="font-display text-lg font-bold text-brand-text truncate">
                 {entity.title}
               </h3>
               <span
@@ -127,7 +127,7 @@ export function MapEntityDrawer({ entity, onClose, onPathwayClick }: MapEntityDr
             </div>
             <button
               onClick={handleClose}
-              className="flex-shrink-0 p-1.5 rounded-lg hover:bg-brand-border/50 transition-colors"
+              className="flex-shrink-0 p-1.5 hover:bg-brand-border/50 transition-colors"
               aria-label="Close"
             >
               <X size={18} className="text-brand-muted" />
@@ -170,7 +170,7 @@ export function MapEntityDrawer({ entity, onClose, onPathwayClick }: MapEntityDr
                     <button
                       key={themeId}
                       onClick={function () { if (onPathwayClick) onPathwayClick(themeId) }}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all hover:shadow-sm hover:opacity-80"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium transition-all hover:shadow-sm hover:opacity-80"
                       style={{ backgroundColor: theme.color + '18', color: theme.color, border: '1px solid ' + theme.color + '30' }}
                     >
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: theme.color }} />

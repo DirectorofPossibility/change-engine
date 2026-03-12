@@ -71,7 +71,7 @@ export default async function LibraryPage() {
 
                 {/* Main image */}
                 <div
-                  className="absolute w-[260px] h-[180px] rounded-xl border-[3px] border-white overflow-hidden z-[2]"
+                  className="absolute w-[260px] h-[180px] border-[3px] border-white overflow-hidden z-[2]"
                   style={{ top: 10, left: 20, transform: 'rotate(-2deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
                 >
                   <Image src={BUCKET + '/person-reading.jpg'} alt="Person reading at a library" className="w-full h-full object-cover" width={800} height={400} />
@@ -79,7 +79,7 @@ export default async function LibraryPage() {
 
                 {/* Second image */}
                 <div
-                  className="absolute w-[180px] h-[130px] rounded-xl border-[3px] border-white overflow-hidden z-[1]"
+                  className="absolute w-[180px] h-[130px] border-[3px] border-white overflow-hidden z-[1]"
                   style={{ top: 150, left: -5, transform: 'rotate(3deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
                 >
                   <Image src={BUCKET + '/reading.jpg'} alt="Books and reading materials" className="w-full h-full object-cover" width={800} height={400} />
@@ -87,7 +87,7 @@ export default async function LibraryPage() {
 
                 {/* Third image */}
                 <div
-                  className="absolute w-[220px] h-[160px] rounded-xl border-[3px] border-white overflow-hidden z-[3]"
+                  className="absolute w-[220px] h-[160px] border-[3px] border-white overflow-hidden z-[3]"
                   style={{ top: 140, right: 0, transform: 'rotate(-1deg)', boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
                 >
                   <Image src={BUCKET + '/person-reading2.jpg'} alt="Studying and research" className="w-full h-full object-cover" width={800} height={400} />
@@ -95,7 +95,7 @@ export default async function LibraryPage() {
 
                 {/* Floating stat badge */}
                 <div
-                  className="absolute z-[5] bg-white/90 border border-rule rounded-xl px-3 py-2 font-mono text-[10px]"
+                  className="absolute z-[5] bg-white/90 border border-rule px-3 py-2 font-mono text-[10px]"
                   style={{ bottom: 15, left: 10, backdropFilter: 'blur(8px)' }}
                 >
                   <span className="block text-2xl font-black text-[#1b5e8a] leading-none">{documents.length}</span>

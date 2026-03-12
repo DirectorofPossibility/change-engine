@@ -18,7 +18,7 @@ interface SingleLocationMapProps {
 function SingleLocationMapInner({ marker }: SingleLocationMapProps) {
   return (
     <HoustonMap
-      className="w-full h-[250px] rounded-xl"
+      className="w-full h-[250px]"
       zoom={14}
       center={{ lat: marker.lat, lng: marker.lng }}
     >

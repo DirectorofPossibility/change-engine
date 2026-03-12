@@ -91,7 +91,7 @@ export default async function CentersIndexPage() {
       <Breadcrumb items={[{ label: 'Engagement' }]} />
 
       <div className="mb-10 text-center">
-        <h1 className="font-serif text-3xl font-bold text-brand-text mb-3">Layers of Engagement</h1>
+        <h1 className="font-display text-3xl font-bold text-brand-text mb-3">Layers of Engagement</h1>
         <p className="text-brand-muted max-w-xl mx-auto">
           Four concentric layers — from understanding to accountability. Every piece of content lives in one of these spaces.
         </p>
@@ -141,7 +141,7 @@ export default async function CentersIndexPage() {
                 <Link
                   key={name}
                   href={'/centers/' + config.slug}
-                  className="block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
+                  className="block bg-white border border-brand-border overflow-hidden hover:shadow-md transition-shadow group"
                 >
                   <div className="flex flex-col sm:flex-row">
                     {/* Color accent + icon */}
@@ -151,14 +151,14 @@ export default async function CentersIndexPage() {
                     >
                       <div className="text-center">
                         <Icon size={32} style={{ color }} className="mx-auto mb-2" />
-                        <div className="font-serif text-xl font-bold" style={{ color }}>{name}</div>
+                        <div className="font-display text-xl font-bold" style={{ color }}>{name}</div>
                         <div className="text-xs text-brand-muted mt-1">{count} resources</div>
                       </div>
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 p-5">
-                      <p className="text-sm font-serif italic text-brand-muted mb-2">{config.question}</p>
+                      <p className="text-sm font-display italic text-brand-muted mb-2">{config.question}</p>
                       <p className="text-sm text-brand-text leading-relaxed mb-3">{meta?.description}</p>
 
                       {/* What you'll find */}

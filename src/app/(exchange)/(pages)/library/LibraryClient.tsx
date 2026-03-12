@@ -179,8 +179,8 @@ export function LibraryClient({ documents }: LibraryClientProps) {
 
       {/* ── Search Bar — library terminal style ── */}
       <div className="max-w-2xl mx-auto mb-8 px-4">
-        <div className="relative rounded-lg border-2 shadow-lg" style={{ borderColor: '#5D3A1A', backgroundColor: '#FFFEF7' }}>
-          <div className="flex items-center gap-2 px-4 py-1.5 border-b rounded-t-lg" style={{ backgroundColor: '#5D3A1A' }}>
+        <div className="relative border-2 shadow-lg" style={{ borderColor: '#5D3A1A', backgroundColor: '#FFFEF7' }}>
+          <div className="flex items-center gap-2 px-4 py-1.5 border-b" style={{ backgroundColor: '#5D3A1A' }}>
             <Search size={12} className="text-amber-200" />
             <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-amber-200">Library Search Terminal</span>
           </div>
@@ -204,7 +204,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
         <div className="text-center mt-3">
           <Link href="/library/chat" className="inline-flex items-center gap-1.5 text-sm hover:underline transition-colors" style={{ color: '#B8860B' }}>
             <MessageCircle size={14} />
-            <span className="font-serif italic">Ask the Librarian (Chance)</span>
+            <span className="font-display italic">Ask the Librarian (Chance)</span>
           </Link>
         </div>
       </div>
@@ -212,7 +212,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
       {/* ── A-Z Card Catalog ── */}
       <div className="max-w-4xl mx-auto mb-8 px-4">
         <div className="text-center mb-3">
-          <span className="font-serif text-sm font-bold" style={{ color: '#5D3A1A' }}>Card Catalog</span>
+          <span className="font-display text-sm font-bold" style={{ color: '#5D3A1A' }}>Card Catalog</span>
         </div>
         <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
           {ALPHABET.map(function (letter) {
@@ -248,7 +248,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
                     }}
                   >
                     <span
-                      className="font-serif text-[10px] sm:text-xs font-bold leading-none"
+                      className="font-display text-[10px] sm:text-xs font-bold leading-none"
                       style={{ color: isActive ? '#FFFEF7' : '#5D3A1A' }}
                     >
                       {letter}
@@ -337,7 +337,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
       {isSearching && searchResults!.length === 0 && (
         <div className="text-center py-16 px-4">
           <BookOpen size={48} className="mx-auto mb-4" style={{ color: '#C4A882' }} />
-          <p className="font-serif text-lg mb-3" style={{ color: '#5D3A1A' }}>No volumes match your search.</p>
+          <p className="font-display text-lg mb-3" style={{ color: '#5D3A1A' }}>No volumes match your search.</p>
           <Link href="/library/chat" className="inline-flex items-center gap-1.5 text-sm hover:underline" style={{ color: '#B8860B' }}>
             <MessageCircle size={14} /> Ask Chance to help find what you need
           </Link>
@@ -361,7 +361,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
                     {/* Collection / shelf label */}
                     <div className="flex items-center gap-3 mb-3 mt-6">
                       <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: col.theme.color }} />
-                      <span className="font-serif text-base font-bold" style={{ color: '#5D3A1A' }}>
+                      <span className="font-display text-base font-bold" style={{ color: '#5D3A1A' }}>
                         {col.theme.name}
                       </span>
                       <span className="font-mono text-[10px] tracking-wide" style={{ color: '#8B7355' }}>
@@ -396,7 +396,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
       {/* ── LIST VIEW ── */}
       {viewMode === 'list' && !(isSearching && searchResults!.length === 0) && (
         <div className="max-w-4xl mx-auto px-4">
-          <div className="rounded-lg border overflow-hidden" style={{ borderColor: '#C4A882', backgroundColor: '#FFFEF7' }}>
+          <div className=" border overflow-hidden" style={{ borderColor: '#C4A882', backgroundColor: '#FFFEF7' }}>
             {/* Table header */}
             <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b font-mono text-[10px] font-bold uppercase tracking-widest" style={{ borderColor: '#C4A882', color: '#8B7355', backgroundColor: '#F5F1EB' }}>
               <div className="col-span-6 sm:col-span-5">Title</div>
@@ -516,7 +516,7 @@ function BookSpine({
             style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
           >
             <span
-              className="font-serif text-[9px] sm:text-[10px] font-bold text-white leading-tight text-center"
+              className="font-display text-[9px] sm:text-[10px] font-bold text-white leading-tight text-center"
               style={{
                 textShadow: '0 1px 2px rgba(0,0,0,0.5)',
                 maxHeight: '110px',
@@ -539,7 +539,7 @@ function BookSpine({
       {/* ── Hover tooltip / card ── */}
       {isHovered && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-64 sm:w-72 rounded-lg border-2 shadow-xl p-4 z-50 pointer-events-none"
+          className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 w-64 sm:w-72 border-2 shadow-xl p-4 z-50 pointer-events-none"
           style={{
             backgroundColor: '#FFFEF7',
             borderColor: '#5D3A1A',
@@ -560,7 +560,7 @@ function BookSpine({
               )
             })}
           </div>
-          <h4 className="font-serif text-sm font-bold leading-snug mb-1.5" style={{ color: '#5D3A1A' }}>
+          <h4 className="font-display text-sm font-bold leading-snug mb-1.5" style={{ color: '#5D3A1A' }}>
             {doc.title}
           </h4>
           <p className="text-xs leading-relaxed line-clamp-3 mb-2" style={{ color: '#6B5B4E' }}>
@@ -639,7 +639,7 @@ function CatalogCard({ doc }: { doc: LibraryDoc }) {
               </span>
             </div>
             <h3
-              className="font-serif text-sm font-bold leading-snug mb-2 group-hover:underline line-clamp-2"
+              className="font-display text-sm font-bold leading-snug mb-2 group-hover:underline line-clamp-2"
               style={{ color: '#2C1810' }}
             >
               {doc.title}
@@ -706,7 +706,7 @@ function ListRow({ doc, isEven }: { doc: LibraryDoc; isEven: boolean }) {
       >
         <div className="col-span-9 sm:col-span-5 flex items-center gap-2 min-w-0">
           <div className="w-1 h-6 rounded-sm flex-shrink-0" style={{ backgroundColor: primary?.color || '#3182ce' }} />
-          <span className="font-serif text-sm truncate group-hover:underline" style={{ color: '#2C1810' }}>
+          <span className="font-display text-sm truncate group-hover:underline" style={{ color: '#2C1810' }}>
             {doc.title}
           </span>
         </div>

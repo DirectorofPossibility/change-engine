@@ -93,7 +93,7 @@ export default async function CategoryPage(
             className="w-3 h-3 rounded-full flex-shrink-0"
             style={{ backgroundColor: theme.color }}
           />
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-brand-text">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-text">
             {theme.name}
           </h1>
         </div>
@@ -111,7 +111,7 @@ export default async function CategoryPage(
         <CategoryArticleList sections={sections} />
       ) : (
         <div className="text-center py-16">
-          <p className="text-brand-muted font-serif italic">
+          <p className="text-brand-muted font-display italic">
             No documents in this category yet.
           </p>
         </div>

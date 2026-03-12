@@ -25,7 +25,7 @@ export default function MobileBottomNav() {
               key={href}
               href={href}
               aria-label={label}
-              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-lg transition-colors ${
+              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 transition-colors ${
                 isActive ? 'text-brand-accent' : 'text-brand-muted'
               }`}
             >

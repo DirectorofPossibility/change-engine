@@ -155,7 +155,7 @@ export function CompassView({ pathwayCounts, bridges, preview }: CompassViewProp
             <div key={id}>
               <button
                 onClick={() => setActivePathway(isActive ? null : id)}
-                className={'group flex items-center w-full bg-white rounded-xl border transition-all duration-200 overflow-hidden ' +
+                className={'group flex items-center w-full bg-white border transition-all duration-200 overflow-hidden ' +
                   (isActive ? 'border-brand-border shadow-md' : 'border-brand-border hover:shadow-sm')}
               >
                 <div
@@ -190,9 +190,9 @@ export function CompassView({ pathwayCounts, bridges, preview }: CompassViewProp
         <div className="mt-6 transition-all duration-300">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: activeTheme.color }} />
-            <h3 className="font-serif text-lg font-bold text-brand-text">{activeTheme.name}</h3>
+            <h3 className="font-display text-lg font-bold text-brand-text">{activeTheme.name}</h3>
           </div>
-          <p className="text-sm text-brand-muted mb-4 font-serif italic">{activeTheme.description}</p>
+          <p className="text-sm text-brand-muted mb-4 font-body italic">{activeTheme.description}</p>
 
           {activeContent && activeContent.length > 0 ? (
             <div className="space-y-2">

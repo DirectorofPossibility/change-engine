@@ -27,7 +27,7 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
   const levelColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
 
   const cardContent = (
-    <div className="bg-white rounded-xl border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 group" style={{ boxShadow: '3px 3px 0 ' + levelColor + '20' }}>
+    <div className="bg-white border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 group" style={{ boxShadow: '3px 3px 0 ' + levelColor + '20' }}>
       {/* Level color bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: levelColor }} />
 
@@ -38,13 +38,13 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
             <Image
               src={photoUrl.replace(/^http:\/\//, 'https://')}
               alt={name}
-              className="w-[72px] h-[72px] rounded-xl object-cover object-top border border-brand-border group-hover:scale-105 transition-transform duration-300"
+              className="w-[72px] h-[72px] object-cover object-top border border-brand-border group-hover:scale-105 transition-transform duration-300"
               width={72}
               height={72}
             />
           ) : (
-            <div className="w-[72px] h-[72px] rounded-xl flex items-center justify-center border border-brand-border" style={{ backgroundColor: levelColor + '10' }}>
-              <span className="text-2xl font-serif font-bold" style={{ color: levelColor }}>{name.charAt(0)}</span>
+            <div className="w-[72px] h-[72px] flex items-center justify-center border border-brand-border" style={{ backgroundColor: levelColor + '10' }}>
+              <span className="text-2xl font-display font-bold" style={{ color: levelColor }}>{name.charAt(0)}</span>
             </div>
           )}
         </div>

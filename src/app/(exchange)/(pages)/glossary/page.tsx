@@ -41,11 +41,11 @@ export default async function GlossaryPage() {
         {letters.map(function (letter) {
           return (
             <div key={letter} id={`letter-${letter}`} className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-brand-text mb-4 border-b border-brand-border pb-2">{letter}</h2>
+              <h2 className="text-2xl font-display font-bold text-brand-text mb-4 border-b border-brand-border pb-2">{letter}</h2>
               <div className="space-y-4">
                 {(grouped[letter] || []).map(function (t) {
                   return (
-                    <div key={t.term_id} className="bg-white rounded-lg border border-brand-border p-4">
+                    <div key={t.term_id} className="bg-white border border-brand-border p-4">
                       <div className="flex items-start gap-3">
                         <BookOpen className="w-4 h-4 text-brand-accent mt-1 flex-shrink-0" />
                         <div>

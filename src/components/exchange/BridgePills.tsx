@@ -20,13 +20,13 @@ export function BridgePills({ bridges, currentColor }: BridgePillsProps) {
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm text-brand-muted font-serif italic">Connected to:</span>
+      <span className="text-sm text-brand-muted font-body italic">Connected to:</span>
       {bridges.map(function (b) {
         return (
           <Link
             key={b.themeId}
             href={'/pathways/' + b.slug}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
             style={{
               backgroundColor: b.color + '14',
               color: b.color,

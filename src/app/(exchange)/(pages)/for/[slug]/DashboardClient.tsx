@@ -139,12 +139,12 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0"
+              <div className="w-11 h-11 flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: config.color + '12', border: '1.5px solid ' + config.color + '25' }}>
                 <Icon size={28} color={config.color} />
               </div>
               <div className="min-w-0">
-                <h1 className="font-serif text-xl sm:text-2xl font-bold text-brand-text leading-tight">{config.name}</h1>
+                <h1 className="font-display text-xl sm:text-2xl font-bold text-brand-text leading-tight">{config.name}</h1>
                 <p className="text-xs text-brand-muted">{config.tagline}</p>
               </div>
             </div>
@@ -153,7 +153,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
               {config.quickActions.map(function (a) {
                 return (
                   <Link key={a.label} href={a.href}
-                    className="group flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg border border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all text-xs">
+                    className="group flex items-center gap-1.5 px-2.5 py-1.5 bg-white border border-brand-border hover:border-brand-accent hover:-translate-y-0.5 transition-all text-xs">
                     <span className="w-0.5 h-4 rounded-sm" style={{ backgroundColor: a.color }} />
                     <span className="font-medium text-brand-text">{a.label}</span>
                     {a.effort && <span className="text-[9px] text-brand-muted">{a.effort}</span>}
@@ -163,7 +163,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
               {config.externalLinks?.map(function (link) {
                 return (
                   <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
-                    className="group flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg border-2 hover:-translate-y-0.5 transition-all text-xs"
+                    className="group flex items-center gap-1.5 px-2.5 py-1.5 bg-white border-2 hover:-translate-y-0.5 transition-all text-xs"
                     style={{ borderColor: config.color }}>
                     <span className="font-bold" style={{ color: config.color }}>{link.label}</span>
                     <ExternalLink size={10} style={{ color: config.color }} />
@@ -220,7 +220,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
       {/* ── Dashboard body ── */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Center question as section header */}
-        <p className="text-sm font-serif italic mb-3" style={{ color: centerMeta.color }}>
+        <p className="text-sm font-display italic mb-3" style={{ color: centerMeta.color }}>
           {centerMeta.question}
         </p>
 
@@ -360,9 +360,9 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
             )}
 
             {/* Pathways */}
-            <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+            <div className="bg-white border border-brand-border overflow-hidden">
               <div className="px-3 py-2 border-b border-brand-border">
-                <h3 className="font-serif font-bold text-xs text-brand-text">Explore Pathways</h3>
+                <h3 className="font-display font-bold text-xs text-brand-text">Explore Pathways</h3>
               </div>
               <div className="p-2 space-y-px">
                 {pathways.map(function (pw) {
@@ -381,9 +381,9 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
             {/* Quote */}
             {quote && (
-              <div className="rounded-lg border border-brand-border px-3 py-3" style={{ background: config.color + '05' }}>
+              <div className=" border border-brand-border px-3 py-3" style={{ background: config.color + '05' }}>
                 <blockquote>
-                  <p className="font-serif text-xs italic text-brand-text leading-relaxed">"{quote.quote_text}"</p>
+                  <p className="font-display text-xs italic text-brand-text leading-relaxed">"{quote.quote_text}"</p>
                   {quote.attribution && (
                     <footer className="mt-1.5 text-[10px] font-semibold" style={{ color: config.color }}>
                       — {quote.attribution}
@@ -394,9 +394,9 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
             )}
 
             {/* Other journeys — very compact */}
-            <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+            <div className="bg-white border border-brand-border overflow-hidden">
               <div className="px-3 py-2 border-b border-brand-border">
-                <h3 className="font-serif font-bold text-xs text-brand-text">Other Journeys</h3>
+                <h3 className="font-display font-bold text-xs text-brand-text">Other Journeys</h3>
               </div>
               <div className="p-1.5 grid grid-cols-1 gap-px">
                 {OTHER_PERSONAS.filter(function (p) { return p.slug !== slug }).map(function (p) {
@@ -432,7 +432,7 @@ function ContentTypeSection({ type, items, typeInfo, centerColor }: {
 }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+    <div className="bg-white border border-brand-border overflow-hidden">
       <button onClick={function () { setOpen(!open) }}
         className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-brand-bg-alt/30 transition-colors">
         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: centerColor }} />
@@ -485,7 +485,7 @@ function EntityPanel({ title, items, color, seeAllHref, children }: {
 }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+    <div className="bg-white border border-brand-border overflow-hidden">
       <button onClick={function () { setOpen(!open) }}
         className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-brand-bg-alt/30 transition-colors">
         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
@@ -512,14 +512,14 @@ function SidebarCard({ title, icon, iconColor, seeAllHref, children }: {
   title: string; icon?: string; iconColor: string; seeAllHref?: string; children: React.ReactNode
 }) {
   return (
-    <div className="bg-white rounded-lg border border-brand-border overflow-hidden">
+    <div className="bg-white border border-brand-border overflow-hidden">
       <div className="px-3 py-2 border-b border-brand-border flex items-center gap-1.5">
         {icon && (
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={iconColor}>
             <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
           </svg>
         )}
-        <h3 className="font-serif font-bold text-xs text-brand-text">{title}</h3>
+        <h3 className="font-display font-bold text-xs text-brand-text">{title}</h3>
         {seeAllHref && <Link href={seeAllHref} className="text-[9px] text-brand-accent font-medium ml-auto">Browse</Link>}
       </div>
       <div className="divide-y divide-brand-border/40">

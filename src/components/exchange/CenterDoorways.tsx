@@ -30,10 +30,10 @@ export function CenterDoorways({ centerCounts }: CenterDoorwaysProps) {
   return (
     <section className="py-12">
       <div className="text-center mb-8">
-        <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-brand-text mb-2">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-brand-text mb-2">
           {t('home.choose_path')}
         </h2>
-        <p className="text-sm text-brand-muted font-serif italic">
+        <p className="text-sm text-brand-muted font-body italic">
           {t('home.choose_subtitle')}
         </p>
       </div>
@@ -71,12 +71,12 @@ export function CenterDoorways({ centerCounts }: CenterDoorwaysProps) {
               </div>
 
               {/* Center name */}
-              <h3 className="relative z-10 font-serif text-xl font-bold text-brand-text">
+              <h3 className="relative z-10 font-display text-xl font-bold text-brand-text">
                 {t(CENTER_I18N[name])}
               </h3>
 
               {/* Guiding question */}
-              <p className="relative z-10 text-sm text-brand-muted italic font-serif">
+              <p className="relative z-10 text-sm text-brand-muted italic font-body">
                 &ldquo;{center.question}&rdquo;
               </p>
 

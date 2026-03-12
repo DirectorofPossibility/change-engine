@@ -152,13 +152,13 @@ export default async function MyDashboardPage() {
         </div>
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-xl bg-brand-accent/20 flex items-center justify-center flex-shrink-0">
+            <div className="w-16 h-16 bg-brand-accent/20 flex items-center justify-center flex-shrink-0">
               <FlowerOfLifeIcon size={36} />
             </div>
             <div>
-              <h1 className="text-2xl font-serif font-bold">Welcome back, {displayName}</h1>
+              <h1 className="text-2xl font-display font-bold">Welcome back, {displayName}</h1>
               <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-brand-muted">
-                <span className="relative px-2 py-0.5 rounded-lg bg-brand-bg-alt text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted">
+                <span className="relative px-2 py-0.5 bg-brand-bg-alt text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted">
                   {roleLabel}
                   <WayfinderTooltipPos tipKey="role_badge" position="bottom" />
                 </span>
@@ -168,14 +168,14 @@ export default async function MyDashboardPage() {
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-3">
-                <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
+                <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border text-sm text-brand-text hover:bg-brand-border/50 transition-all">
                   Edit Settings
                 </Link>
-                <Link href="/compass" className="inline-block px-4 py-2 bg-brand-accent rounded-xl text-sm text-white font-semibold hover:bg-brand-accent-hover transition-all">
+                <Link href="/compass" className="inline-block px-4 py-2 bg-brand-accent text-sm text-white font-semibold hover:bg-brand-accent-hover transition-all">
                   My Compass
                 </Link>
                 {['admin', 'partner', 'neighbor'].includes(currentRole) && (
-                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border rounded-xl text-sm text-brand-text hover:bg-brand-border/50 transition-all">
+                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border text-sm text-brand-text hover:bg-brand-border/50 transition-all">
                     Go to Dashboard
                   </Link>
                 )}
@@ -192,9 +192,9 @@ export default async function MyDashboardPage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Learning Progress */}
             <section>
-              <h2 className="font-serif text-lg font-bold text-brand-text mb-4">My Learning Paths</h2>
+              <h2 className="font-display text-lg font-bold text-brand-text mb-4">My Learning Paths</h2>
               {Object.keys(pathProgress).length === 0 ? (
-                <div className="bg-white rounded-xl border border-brand-border p-6 text-center">
+                <div className="bg-white border border-brand-border p-6 text-center">
                   <p className="text-brand-muted mb-3">You haven&apos;t started any learning paths yet.</p>
                   <Link href="/learn" className="text-sm text-brand-accent hover:underline">Browse learning paths &rarr;</Link>
                 </div>
@@ -203,7 +203,7 @@ export default async function MyDashboardPage() {
                   {Object.entries(pathProgress).map(function ([pathId, prog]) {
                     const pct = prog.total > 0 ? Math.round((prog.completed / prog.total) * 100) : 0
                     return (
-                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all">
+                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block bg-white border border-brand-border p-4 hover:border-brand-text transition-all">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-semibold text-brand-text text-sm">{pathNames[pathId] || pathId}</h3>
                           <span className="text-xs text-brand-muted">{prog.completed}/{prog.total} modules</span>
@@ -222,7 +222,7 @@ export default async function MyDashboardPage() {
             {representatives.length > 0 && (
               <section>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-serif text-lg font-bold text-brand-text">Your Representatives</h2>
+                  <h2 className="font-display text-lg font-bold text-brand-text">Your Representatives</h2>
                   <Link href="/officials" className="text-xs text-brand-accent hover:underline">View all &rarr;</Link>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -235,10 +235,10 @@ export default async function MyDashboardPage() {
                       <Link
                         key={rep.official_id}
                         href={'/officials/' + rep.official_id}
-                        className="group flex items-center gap-3 bg-white rounded-xl border border-brand-border p-3 hover:border-brand-text transition-all"
+                        className="group flex items-center gap-3 bg-white border border-brand-border p-3 hover:border-brand-text transition-all"
                        
                       >
-                        <div className="w-10 h-10 rounded-lg flex-shrink-0 overflow-hidden bg-brand-bg">
+                        <div className="w-10 h-10 flex-shrink-0 overflow-hidden bg-brand-bg">
                           {rep.photo_url ? (
                             <Image src={rep.photo_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
                           ) : (
@@ -269,13 +269,13 @@ export default async function MyDashboardPage() {
 
             {/* Recent Activity */}
             <section>
-              <h2 className="font-serif text-lg font-bold text-brand-text mb-4">Recent Activity</h2>
+              <h2 className="font-display text-lg font-bold text-brand-text mb-4">Recent Activity</h2>
               {(!actions || actions.length === 0) ? (
-                <div className="bg-white rounded-xl border border-brand-border p-6 text-center">
+                <div className="bg-white border border-brand-border p-6 text-center">
                   <p className="text-brand-muted">No activity yet. Start by exploring content and taking action!</p>
                 </div>
               ) : (
-                <div className="bg-white rounded-xl border border-brand-border divide-y divide-brand-border overflow-hidden">
+                <div className="bg-white border border-brand-border divide-y divide-brand-border overflow-hidden">
                   {actions.map(function (a) {
                     return (
                       <div key={a.action_log_id} className="p-3 flex items-center justify-between">
@@ -305,11 +305,11 @@ export default async function MyDashboardPage() {
           <div className="space-y-6">
             {/* Badges */}
             <section>
-              <h2 className="relative font-serif text-lg font-bold text-brand-text mb-4">My Badges
+              <h2 className="relative font-display text-lg font-bold text-brand-text mb-4">My Badges
                 <WayfinderTooltipPos tipKey="badges" position="bottom" />
               </h2>
               {(!userBadges || userBadges.length === 0) ? (
-                <div className="bg-white rounded-xl border border-brand-border p-6 text-center">
+                <div className="bg-white border border-brand-border p-6 text-center">
                   <p className="text-sm text-brand-muted">Complete learning paths and take action to earn badges!</p>
                 </div>
               ) : (
@@ -317,7 +317,7 @@ export default async function MyDashboardPage() {
                   {userBadges.map(function (ub) {
                     const detail = badgeDetails.find(function (b) { return b.badge_id === ub.badge_id })
                     return (
-                      <div key={ub.user_badge_id} className="bg-white rounded-xl border border-brand-border p-3 text-center">
+                      <div key={ub.user_badge_id} className="bg-white border border-brand-border p-3 text-center">
                         <div
                           className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-white text-lg"
                           style={{ backgroundColor: detail?.color || '#C75B2A' }}
@@ -338,13 +338,13 @@ export default async function MyDashboardPage() {
             {/* Account upgrades */}
             {currentRole === 'neighbor' && (
               <section>
-                <h2 className="relative font-serif text-lg font-bold text-brand-text mb-4">Upgrade Your Account
+                <h2 className="relative font-display text-lg font-bold text-brand-text mb-4">Upgrade Your Account
                   <WayfinderTooltipPos tipKey="neighbor_vs_partner" position="bottom" />
                 </h2>
-                <div className="bg-white rounded-xl border-2 border-brand-accent/30 p-4 relative overflow-hidden">
+                <div className="bg-white border-2 border-brand-accent/30 p-4 relative overflow-hidden">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
                   <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mb-1 pl-2">Community Partner</p>
-                  <p className="text-lg font-serif font-bold text-brand-text pl-2">$100<span className="text-sm font-normal text-brand-muted"> - $5,000/yr</span></p>
+                  <p className="text-lg font-display font-bold text-brand-text pl-2">$100<span className="text-sm font-normal text-brand-muted"> - $5,000/yr</span></p>
                   <ul className="mt-2 pl-2 space-y-1 text-[12px] text-brand-muted">
                     <li>Verified organizational profile</li>
                     <li>Post events and guides</li>
@@ -360,13 +360,13 @@ export default async function MyDashboardPage() {
             <RoleRequestCard currentRole={currentRole} />
 
             {/* Donate */}
-            <div className="bg-white rounded-xl border border-brand-border p-4 text-center relative overflow-hidden">
+            <div className="bg-white border border-brand-border p-4 text-center relative overflow-hidden">
               <FlowerOfLifeIcon size={28} className="mx-auto mb-2" />
-              <p className="font-serif text-sm font-bold text-brand-text mb-1">Support the Exchange</p>
+              <p className="font-display text-sm font-bold text-brand-text mb-1">Support the Exchange</p>
               <p className="text-[11px] text-brand-muted mb-3">Help keep Houston connected. Every dollar strengthens civic infrastructure for all.</p>
               <Link
                 href="/donate"
-                className="inline-block px-5 py-2 bg-brand-accent text-white rounded-xl text-sm font-semibold hover:bg-brand-accent-hover transition-colors"
+                className="inline-block px-5 py-2 bg-brand-accent text-white text-sm font-semibold hover:bg-brand-accent-hover transition-colors"
               >
                 Make a Donation
               </Link>
@@ -374,24 +374,24 @@ export default async function MyDashboardPage() {
 
             {/* Quick links */}
             <section>
-              <h2 className="font-serif text-lg font-bold text-brand-text mb-4">Quick Links</h2>
+              <h2 className="font-display text-lg font-bold text-brand-text mb-4">Quick Links</h2>
               <div className="space-y-2">
-                <Link href="/compass" className="block bg-white rounded-xl border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                <Link href="/compass" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
                   My Community Compass
                 </Link>
-                <Link href="/learn" className="block bg-white rounded-xl border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                <Link href="/learn" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
                   Browse Learning Paths
                 </Link>
-                <Link href="/officials" className="block bg-white rounded-xl border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                <Link href="/officials" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
                   Find My Representatives
                 </Link>
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
-                  <Link href="/dashboard/tools-guides" className="block bg-white rounded-xl border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                  <Link href="/dashboard/tools-guides" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
                     Tools &amp; Guides
                   </Link>
                 )}
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
-                  <Link href="/me/submit" className="block bg-brand-accent/5 rounded-xl border-2 border-brand-accent/20 p-3 text-sm text-brand-accent hover:bg-brand-accent/10 transition-all">
+                  <Link href="/me/submit" className="block bg-brand-accent/5 border-2 border-brand-accent/20 p-3 text-sm text-brand-accent hover:bg-brand-accent/10 transition-all">
                     Share a Resource
                   </Link>
                 )}

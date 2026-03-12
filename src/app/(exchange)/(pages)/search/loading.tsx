@@ -7,12 +7,12 @@ export default function SearchLoading() {
       </div>
       <div className="flex gap-2 mb-6">
         {[0, 1, 2, 3, 4].map(function (i) {
-          return <div key={i} className="h-8 w-24 bg-white/60 rounded-lg animate-pulse" />
+          return <div key={i} className="h-8 w-24 bg-white/60 animate-pulse" />
         })}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[0, 1, 2, 3, 4, 5].map(function (i) {
-          return <div key={i} className="h-40 bg-white/60 rounded-xl animate-pulse" />
+          return <div key={i} className="h-40 bg-white/60 animate-pulse" />
         })}
       </div>
     </div>

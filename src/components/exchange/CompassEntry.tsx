@@ -62,7 +62,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
             <Link
               key={key}
               href={'/pathways?center=' + (center?.slug || key.toLowerCase())}
-              className="group relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+              className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-1"
               onMouseEnter={function () { setHoveredKey(key) }}
               onMouseLeave={function () { setHoveredKey(null) }}
               style={{
@@ -99,7 +99,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                     Chapter: {key}
                   </span>
                   {count > 0 && (
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg" style={{ backgroundColor: color + '20', color: color }}>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5" style={{ backgroundColor: color + '20', color: color }}>
                       {count} resources
                     </span>
                   )}
@@ -107,7 +107,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
 
                 {/* Center name */}
                 <h3
-                  className="font-serif text-xl font-bold mb-2 transition-colors"
+                  className="font-display text-xl font-bold mb-2 transition-colors"
                   style={{ color: isHovered ? color : '#1A1A1A' }}
                 >
                   {key} Center

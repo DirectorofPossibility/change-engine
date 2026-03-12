@@ -97,26 +97,26 @@ export default async function PathwaysPage() {
             <section key={themeId} className="mb-8 first:mt-0">
               {/* Pathway color band header */}
               <div
-                className="rounded-xl overflow-hidden mb-6"
+                className=" overflow-hidden mb-6"
                 style={{ borderLeft: `5px solid ${theme.color}` }}
               >
-                <div className="bg-white border border-brand-border border-l-0 rounded-r-xl px-6 py-5">
+                <div className="bg-white border border-brand-border border-l-0 px-6 py-5">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div>
                       <Link
                         href={'/pathways/' + theme.slug}
-                        className="font-serif font-bold text-2xl sm:text-3xl text-brand-text hover:underline decoration-2 underline-offset-4"
+                        className="font-display font-bold text-2xl sm:text-3xl text-brand-text hover:underline decoration-2 underline-offset-4"
                         style={{ textDecorationColor: theme.color }}
                       >
                         {theme.name}
                       </Link>
-                      <p className="text-sm text-brand-muted leading-relaxed mt-1 max-w-xl font-serif italic">
+                      <p className="text-sm text-brand-muted leading-relaxed mt-1 max-w-xl font-display italic">
                         {theme.description}
                       </p>
                     </div>
                     <Link
                       href={'/pathways/' + theme.slug}
-                      className="text-sm font-medium px-4 py-2 rounded-lg border border-brand-border hover:shadow-sm transition-shadow flex-shrink-0"
+                      className="text-sm font-medium px-4 py-2 border border-brand-border hover:shadow-sm transition-shadow flex-shrink-0"
                       style={{ color: theme.color }}
                     >
                       Explore {theme.name} &rarr;
@@ -133,7 +133,7 @@ export default async function PathwaysPage() {
                   {hero && (
                     <Link
                       href={'/content/' + hero.id}
-                      className="group block bg-white rounded-xl border border-brand-border overflow-hidden card-lift mb-4"
+                      className="group block bg-white border border-brand-border overflow-hidden card-lift mb-4"
                     >
                       {hero.image_url && (
                         <div className="aspect-[16/9] overflow-hidden">
@@ -155,7 +155,7 @@ export default async function PathwaysPage() {
                             <span className="text-[10px] text-brand-muted">{hero.source_domain}</span>
                           )}
                         </div>
-                        <h3 className="font-serif font-bold text-brand-text text-lg leading-snug group-hover:underline">
+                        <h3 className="font-display font-bold text-brand-text text-lg leading-snug group-hover:underline">
                           {hero.title}
                         </h3>
                         {hero.summary && (
@@ -173,7 +173,7 @@ export default async function PathwaysPage() {
                           <Link
                             key={item.id}
                             href={'/content/' + item.id}
-                            className="group bg-white rounded-lg border border-brand-border overflow-hidden card-lift"
+                            className="group bg-white border border-brand-border overflow-hidden card-lift"
                           >
                             {item.image_url && (
                               <div className="aspect-[16/9] overflow-hidden">
@@ -184,7 +184,7 @@ export default async function PathwaysPage() {
                               <span className="text-[9px] font-bold uppercase tracking-wider" style={{ color: theme.color }}>
                                 {item.content_type}
                               </span>
-                              <h4 className="font-serif font-semibold text-sm text-brand-text leading-snug mt-0.5 line-clamp-2 group-hover:underline">
+                              <h4 className="font-display font-semibold text-sm text-brand-text leading-snug mt-0.5 line-clamp-2 group-hover:underline">
                                 {item.title}
                               </h4>
                             </div>
@@ -198,23 +198,23 @@ export default async function PathwaysPage() {
                 {/* ── Right: Integrated data sidebar ── */}
                 <div className={`lg:w-[380px] flex-shrink-0 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                   {/* Entity counts grid */}
-                  <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
+                  <div className="bg-white border border-brand-border p-4 mb-3">
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
                       <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">What You Will Find</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 mb-3">
-                      <div className="text-center py-2 rounded-lg" style={{ backgroundColor: theme.color + '0A' }}>
-                        <p className="text-xl font-serif font-bold" style={{ color: theme.color }}>{data.totalContent}</p>
+                      <div className="text-center py-2" style={{ backgroundColor: theme.color + '0A' }}>
+                        <p className="text-xl font-display font-bold" style={{ color: theme.color }}>{data.totalContent}</p>
                         <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Content</p>
                       </div>
                       {Object.entries(data.entityCounts).map(function ([key, count]) {
                         if (count === 0) return null
                         const info = ENTITY_ICONS[key]
                         return (
-                          <div key={key} className="text-center py-2 rounded-lg" style={{ backgroundColor: theme.color + '0A' }}>
-                            <p className="text-xl font-serif font-bold" style={{ color: theme.color }}>{count}</p>
+                          <div key={key} className="text-center py-2" style={{ backgroundColor: theme.color + '0A' }}>
+                            <p className="text-xl font-display font-bold" style={{ color: theme.color }}>{count}</p>
                             <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{info?.label || key}</p>
                           </div>
                         )
@@ -230,7 +230,7 @@ export default async function PathwaysPage() {
                             <Link
                               key={type}
                               href={'/news?pathway=' + themeId + '&type=' + type}
-                              className="inline-flex items-center gap-1 text-xs bg-brand-bg-alt rounded-lg px-2 py-1 hover:shadow-sm transition-shadow"
+                              className="inline-flex items-center gap-1 text-xs bg-brand-bg-alt px-2 py-1 hover:shadow-sm transition-shadow"
                             >
                               <span className="font-medium text-brand-text">{count}</span>
                               <span className="text-brand-muted">{CONTENT_TYPE_LABELS[type] || type}</span>
@@ -242,7 +242,7 @@ export default async function PathwaysPage() {
 
                   {/* Focus area topics */}
                   {topFocusAreas.length > 0 && (
-                    <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
+                    <div className="bg-white border border-brand-border p-4 mb-3">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
                         <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Topics</span>
@@ -254,7 +254,7 @@ export default async function PathwaysPage() {
                             <Link
                               key={fa.focus_id}
                               href={'/explore/focus/' + fa.focus_id}
-                              className="group inline-flex items-center gap-1.5 text-xs border border-brand-border rounded-lg px-2.5 py-1.5 hover:border-transparent hover:shadow-sm transition-all"
+                              className="group inline-flex items-center gap-1.5 text-xs border border-brand-border px-2.5 py-1.5 hover:border-transparent hover:shadow-sm transition-all"
                             >
                               <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                               <span className="text-brand-text group-hover:underline">{fa.focus_area_name}</span>
@@ -276,7 +276,7 @@ export default async function PathwaysPage() {
 
                   {/* Learning paths + guides */}
                   {(data.learningPaths.length > 0 || data.guides.length > 0) && (
-                    <div className="bg-white rounded-xl border border-brand-border p-4 mb-3">
+                    <div className="bg-white border border-brand-border p-4 mb-3">
                       <div className="flex items-center gap-2 mb-3">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.color }} />
                         <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Keep Learning</span>
@@ -287,9 +287,9 @@ export default async function PathwaysPage() {
                             <Link
                               key={lp.path_id}
                               href={'/learning/' + lp.path_id}
-                              className="group flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-brand-bg-alt transition-colors"
+                              className="group flex items-start gap-3 p-2 -mx-2 hover:bg-brand-bg-alt transition-colors"
                             >
-                              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: theme.color + '14' }}>
+                              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: theme.color + '14' }}>
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={theme.color}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
                                 </svg>
@@ -308,9 +308,9 @@ export default async function PathwaysPage() {
                             <Link
                               key={g.guide_id}
                               href={'/guides/' + g.slug}
-                              className="group flex items-start gap-3 p-2 -mx-2 rounded-lg hover:bg-brand-bg-alt transition-colors"
+                              className="group flex items-start gap-3 p-2 -mx-2 hover:bg-brand-bg-alt transition-colors"
                             >
-                              <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: theme.color + '14' }}>
+                              <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: theme.color + '14' }}>
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={theme.color}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                                 </svg>
@@ -350,7 +350,7 @@ export default async function PathwaysPage() {
                   {/* Explore CTA */}
                   <Link
                     href={'/pathways/' + theme.slug}
-                    className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:shadow-lg"
+                    className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-white transition-all hover:shadow-lg"
                     style={{ backgroundColor: theme.color }}
                   >
                     Explore {theme.name}
@@ -367,8 +367,8 @@ export default async function PathwaysPage() {
         {/* ── Cross-Pathway Connections ── */}
         {bridges.length > 0 && (
           <section className="py-8 border-t border-brand-border">
-            <h2 className="text-xl font-serif font-bold text-brand-text mb-1">How Pathways Connect</h2>
-            <p className="text-sm text-brand-muted mb-5 font-serif italic">
+            <h2 className="text-xl font-display font-bold text-brand-text mb-1">How Pathways Connect</h2>
+            <p className="text-sm text-brand-muted mb-5 font-display italic">
               Community issues do not live in silos. These pathways share content, services, and focus areas.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -379,7 +379,7 @@ export default async function PathwaysPage() {
                 return (
                   <div
                     key={b[0] + '|' + b[1]}
-                    className="flex items-center gap-3 bg-white rounded-xl border border-brand-border p-3"
+                    className="flex items-center gap-3 bg-white border border-brand-border p-3"
                   >
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ backgroundColor: themeA.color }} />

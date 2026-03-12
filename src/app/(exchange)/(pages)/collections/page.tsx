@@ -42,7 +42,7 @@ export default async function CollectionsPage() {
             {items.length === 0 ? (
               <div className="text-center py-16">
                 <FlowerOfLifeIcon size={40} color="#C75B2A" className="mx-auto mb-3 opacity-30" />
-                <p className="text-brand-muted font-serif italic">Collections are being curated. Check back soon.</p>
+                <p className="text-brand-muted font-display italic">Collections are being curated. Check back soon.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -54,12 +54,12 @@ export default async function CollectionsPage() {
                     <Link
                       key={c.collection_id || c.id}
                       href={'/collections/' + (c.collection_id || c.id)}
-                      className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                      className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
                      
                     >
                       <div className="h-2" style={{ backgroundColor: color }} />
                       <div className="p-5">
-                        <h3 className="font-serif font-bold text-brand-text text-base leading-tight group-hover:text-brand-accent transition-colors">
+                        <h3 className="font-display font-bold text-brand-text text-base leading-tight group-hover:text-brand-accent transition-colors">
                           {c.collection_name || c.title}
                         </h3>
                         {(c.description_5th_grade || c.description || c.summary) && (

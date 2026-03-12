@@ -34,7 +34,7 @@ export default async function NeighborhoodsPage() {
   return (
     <div>
       <IndexPageHero
-        color="#d69e2e"
+        color="#4a2870"
         pattern="flower"
         title="Houston Neighborhoods"
         subtitle="Every corner of Houston, mapped and connected"
@@ -60,12 +60,12 @@ export default async function NeighborhoodsPage() {
                   <Link
                     key={n.neighborhood_id}
                     href={'/neighborhoods/' + n.neighborhood_id}
-                    className="bg-white rounded-xl border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
+                    className="bg-white border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
                    
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#d69e2e] group-hover:w-1.5 transition-all" />
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#4a2870] group-hover:w-1.5 transition-all" />
                     <div className="flex items-start gap-2 pl-2">
-                      <MapPin className="w-4 h-4 text-[#d69e2e] mt-0.5 flex-shrink-0" />
+                      <MapPin className="w-4 h-4 text-[#4a2870] mt-0.5 flex-shrink-0" />
                       <div>
                         <h3 className="font-semibold text-sm text-brand-text group-hover:text-brand-accent transition-colors">{n.neighborhood_name}</h3>
                         {n.super_neighborhood_id && snMap[n.super_neighborhood_id] && (
@@ -83,12 +83,12 @@ export default async function NeighborhoodsPage() {
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="neighborhoods"
-                color="#d69e2e"
+                color="#4a2870"
                 related={[
-                  { label: 'Geography Map', href: '/geography', color: '#d69e2e' },
-                  { label: 'Services Near You', href: '/services', color: '#38a169' },
-                  { label: 'Officials', href: '/officials', color: '#805ad5' },
-                  { label: 'Organizations', href: '/organizations', color: '#dd6b20' },
+                  { label: 'Geography Map', href: '/geography', color: '#4a2870' },
+                  { label: 'Services Near You', href: '/services', color: '#1a6b56' },
+                  { label: 'Officials', href: '/officials', color: '#4a2870' },
+                  { label: 'Organizations', href: '/organizations', color: '#1e4d7a' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>

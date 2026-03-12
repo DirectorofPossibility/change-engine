@@ -19,7 +19,7 @@ export function SuperNeighborhoodDetailMap({ markers, snId }: SuperNeighborhoodD
       defaultVisibleLayers={['superNeighborhoods']}
       highlightLayerId="superNeighborhoods"
       highlightFeatureId={snId}
-      className="w-full h-[450px] rounded-xl"
+      className="w-full h-[450px]"
     />
   )
 }

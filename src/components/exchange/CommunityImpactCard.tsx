@@ -14,7 +14,7 @@ interface CommunityImpactCardProps {
 
 export function CommunityImpactCard({ summary, heading }: CommunityImpactCardProps) {
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+    <div className="bg-amber-50 border border-amber-200 p-5">
       <div className="flex items-center gap-2 mb-2">
         <Heart size={16} className="text-brand-accent" />
         <h4 className="font-semibold text-brand-text text-sm">

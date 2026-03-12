@@ -49,7 +49,7 @@ export function ActionBar(props: ActionBarProps) {
             href={href}
             target={isExternal ? '_blank' : undefined}
             rel={isExternal ? 'noopener noreferrer' : undefined}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-white bg-brand-accent hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-brand-accent hover:opacity-90 transition-opacity"
           >
             {action.icon}
             {action.label}

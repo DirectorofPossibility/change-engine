@@ -151,8 +151,13 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_policy" />
 
-      {/* Masthead */}
-      <header style={{ background: '#ffffff', borderTop: `3px solid ${levelColor_hex}`, borderBottom: '2px solid #0d1117' }}>
+      {/* Masthead — civic red left border for active policies */}
+      <header style={{
+        background: '#ffffff',
+        borderTop: `3px solid ${levelColor_hex}`,
+        borderBottom: '2px solid #0d1117',
+        borderLeft: ['pending', 'introduced', 'in committee', 'active'].includes((policy.status || '').toLowerCase()) ? '4px solid #b03a2a' : 'none',
+      }}>
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Breadcrumb items={[
             { label: t('policy.policies'), href: '/policies' },

@@ -110,7 +110,7 @@ export function WayfinderSidebar({
       {/* Location anchor */}
       <div className="px-5 pt-5 pb-2">
         <Link href="/" className="block group" onClick={function () { onSelectPathway(null); closeMobile() }}>
-          <span className="block font-serif text-sm tracking-[0.08em] text-brand-muted" style={{ fontVariant: 'small-caps' }}>
+          <span className="block font-display text-sm tracking-[0.08em] text-brand-muted" style={{ fontVariant: 'small-caps' }}>
             {t('home.location')}
           </span>
         </Link>
@@ -146,10 +146,10 @@ export function WayfinderSidebar({
               aria-label="ZIP code"
               maxLength={5}
               disabled={isLoading}
-              className="flex-1 text-sm px-3 py-1.5 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+              className="flex-1 text-sm px-3 py-1.5 border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
             />
             <button type="submit" disabled={zipInput.length !== 5 || isLoading}
-              className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
+              className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
               {t('sidebar.go')}
             </button>
           </form>
@@ -166,7 +166,7 @@ export function WayfinderSidebar({
             onChange={function (e) { setSearchQuery(e.target.value) }}
             placeholder={t('nav.search_placeholder')}
             aria-label="Search"
-            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
         </form>
       </div>
@@ -175,7 +175,7 @@ export function WayfinderSidebar({
       <div className="px-4 pt-2">
         <button
           onClick={function () { onSelectPathway(null); closeMobile() }}
-          className={'flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm transition-colors ' +
+          className={'flex items-center gap-2 w-full px-3 py-2 text-sm transition-colors ' +
             (isHome
               ? 'bg-brand-accent/[0.08] font-bold text-brand-text'
               : 'text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04]')}
@@ -201,7 +201,7 @@ export function WayfinderSidebar({
       <div className="px-5">
         <button
           onClick={function () { setDiscoverOpen(!discoverOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.your_guide')}
@@ -214,7 +214,7 @@ export function WayfinderSidebar({
                   key={item.label}
                   href={item.href}
                   onClick={closeMobile}
-                  className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+                  className="flex items-center gap-2.5 w-full px-3 py-2 text-sm text-brand-muted font-medium hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
                 >
                   <item.icon size={15} style={{ color: BRAND.accent }} />
                   {t(item.label)}
@@ -229,7 +229,7 @@ export function WayfinderSidebar({
 
       {/* 7 Pathways */}
       <div className="px-5">
-        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-serif">
+        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
           {t('sidebar.explore_houston')}
         </p>
         <div className="space-y-0.5">
@@ -241,13 +241,13 @@ export function WayfinderSidebar({
               <button
                 key={id}
                 onClick={function () { onSelectPathway(isActive ? null : id); closeMobile() }}
-                className={'flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ' +
+                className={'flex items-center gap-3 w-full px-3 py-2.5 text-sm transition-all duration-200 ' +
                   (isActive
                     ? 'bg-white shadow-sm font-bold text-brand-text ring-1 ring-brand-border'
                     : 'text-brand-muted font-medium hover:text-brand-text hover:bg-white/60')}
               >
                 <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200"
+                  className="w-8 h-8 flex items-center justify-center flex-shrink-0 transition-transform duration-200"
                   style={{
                     backgroundColor: isActive ? theme.color + '20' : theme.color + '0C',
                     transform: isActive ? 'scale(1.05)' : 'scale(1)',
@@ -272,7 +272,7 @@ export function WayfinderSidebar({
         <Link
           href="/elections"
           onClick={closeMobile}
-          className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
+          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-brand-muted font-semibold hover:text-brand-text hover:bg-brand-accent/[0.04] transition-colors"
         >
           <Vote size={16} style={{ color: BRAND.accent }} />
           {t('sidebar.elections')}
@@ -285,7 +285,7 @@ export function WayfinderSidebar({
       <div className="px-5">
         <button
           onClick={function () { setTopicsOpen(!topicsOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {topicsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.topics')} ({topics.length})
@@ -328,7 +328,7 @@ export function WayfinderSidebar({
       <button
         type="button"
         onClick={function () { setMobileOpen(true) }}
-        className="md:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-white shadow-md border border-brand-border text-brand-text hover:bg-gray-50 transition-colors"
+        className="md:hidden fixed top-3 left-3 z-50 p-2 bg-white shadow-md border border-brand-border text-brand-text hover:bg-gray-50 transition-colors"
         aria-label="Open navigation"
       >
         <Menu size={22} />

@@ -18,7 +18,7 @@ const SECTIONS = [
     label: 'Neighborhoods',
     description: 'Discover what is happening in your part of Houston — officials, services, organizations, and resources mapped to where you live.',
     icon: MapPin,
-    color: '#d69e2e',
+    color: '#4a2870',
     countKey: 'neighborhoods',
   },
   {
@@ -26,7 +26,7 @@ const SECTIONS = [
     label: 'Organizations',
     description: 'Nonprofits, civic groups, faith communities, and service providers already doing the work in Houston.',
     icon: Building2,
-    color: '#dd6b20',
+    color: '#1e4d7a',
     countKey: 'organizations',
   },
   {
@@ -34,7 +34,7 @@ const SECTIONS = [
     label: 'Foundations',
     description: 'Philanthropic organizations funding programs and initiatives across the region.',
     icon: Heart,
-    color: '#e53e3e',
+    color: '#7a2018',
     countKey: 'foundations',
   },
   {
@@ -42,7 +42,7 @@ const SECTIONS = [
     label: 'Events & Calendar',
     description: 'Community events, public meetings, volunteer days, and civic gatherings happening near you.',
     icon: CalendarDays,
-    color: '#3182ce',
+    color: '#1b5e8a',
     countKey: 'events',
   },
 ]
@@ -67,7 +67,7 @@ export default async function CommunityIndexPage() {
   return (
     <div>
       <IndexPageHero
-        color="#805ad5"
+        color="#4a2870"
         pattern="flower"
         title="Community"
         subtitle="The people, places, and organizations that make Houston what it is."
@@ -87,25 +87,25 @@ export default async function CommunityIndexPage() {
               <Link
                 key={section.href}
                 href={section.href}
-                className="group bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg transition-all"
+                className="group bg-white border border-brand-border overflow-hidden hover:shadow-lg transition-all"
                
               >
                 <div className="flex">
                   <div
-                    className="w-2 flex-shrink-0 rounded-l-xl"
+                    className="w-2 flex-shrink-0"
                     style={{ backgroundColor: section.color }}
                   />
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
                         <div
-                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          className="w-10 h-10 flex items-center justify-center"
                           style={{ backgroundColor: section.color + '15' }}
                         >
                           <Icon size={20} style={{ color: section.color }} />
                         </div>
                         <div>
-                          <h2 className="font-serif text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
+                          <h2 className="font-display text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                             {section.label}
                           </h2>
                           {count > 0 && (
@@ -130,8 +130,8 @@ export default async function CommunityIndexPage() {
         {/* Community callout */}
         <div className="mt-10 text-center">
           <div className="inline-flex items-center gap-2 text-brand-muted-light">
-            <FlowerOfLifeIcon size={20} color="#805ad5" />
-            <p className="text-sm font-serif italic">
+            <FlowerOfLifeIcon size={20} color="#4a2870" />
+            <p className="text-sm font-display italic">
               Community is not a place — it is the connections between people.
             </p>
           </div>

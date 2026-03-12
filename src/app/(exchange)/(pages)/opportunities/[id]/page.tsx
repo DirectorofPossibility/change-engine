@@ -137,10 +137,10 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
           <div className="flex items-start gap-5 mt-4">
             {org?.logo_url && (
-              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 rounded-lg object-contain bg-white border border-brand-border flex-shrink-0"  width={48} height={64} />
+              <Image src={org.logo_url} alt={org.org_name} className="w-16 h-16 object-contain bg-white border border-brand-border flex-shrink-0"  width={48} height={64} />
             )}
             <div className="min-w-0">
-              <h1 className="font-serif text-[clamp(1.8rem,4vw,2.5rem)] leading-tight text-brand-text mb-2">{displayName}</h1>
+              <h1 className="font-display text-[clamp(1.8rem,4vw,2.5rem)] leading-tight text-brand-text mb-2">{displayName}</h1>
               {org && (
                 <Link href={'/organizations/' + org.org_id} className="text-brand-accent hover:underline text-sm inline-block mb-2">
                   {org.org_name}
@@ -176,7 +176,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
           {/* ── Main column ── */}
           <div className="space-y-5">
             {/* Quick details card */}
-            <div className="bg-white rounded-xl border border-brand-border p-5 flex flex-wrap gap-4">
+            <div className="bg-white border border-brand-border p-5 flex flex-wrap gap-4">
               {timeCommitmentName && (
                 <span className="flex items-center gap-2 text-sm text-brand-muted">
                   <Clock size={16} style={{ color: themeColor }} /> {timeCommitmentName}
@@ -267,13 +267,13 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
             {org && (
               <Link
                 href={'/organizations/' + org.org_id}
-                className="block border border-brand-border rounded-xl overflow-hidden hover:shadow-lg transition-all"
+                className="block border border-brand-border overflow-hidden hover:shadow-lg transition-all"
                              >
                 <div className="flex">
                   <div className="w-2 flex-shrink-0" style={{ backgroundColor: themeColor }} />
                   <div className="p-4">
                     <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">Organization</p>
-                    <p className="font-serif font-bold text-brand-text">{org.org_name}</p>
+                    <p className="font-display font-bold text-brand-text">{org.org_name}</p>
                     {org.website && (
                       <span className="text-xs text-brand-accent mt-1 inline-block">Visit website</span>
                     )}

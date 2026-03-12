@@ -44,7 +44,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
             <Building2 className="w-6 h-6 text-brand-accent" />
             {agency.jurisdiction && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{agency.jurisdiction}</span>}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brand-text">
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-brand-text">
             {agency.agency_name}
             {agency.agency_acronym && <span className="ml-3 text-xl text-brand-muted font-normal">({agency.agency_acronym})</span>}
           </h1>
@@ -57,7 +57,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Contact card */}
-              <div className="bg-white rounded-lg border border-brand-border p-5">
+              <div className="bg-white border border-brand-border p-5">
                 <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</h2>
                 <div className="space-y-3 text-sm">
                   {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
@@ -67,7 +67,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               </div>
               {/* Services */}
               {services && services.length > 0 && (
-                <div className="bg-white rounded-lg border border-brand-border p-5">
+                <div className="bg-white border border-brand-border p-5">
                   <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Services Provided</h2>
                   <div className="space-y-2">
                     {services.map(function (s: any) {

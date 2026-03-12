@@ -70,9 +70,9 @@ export default async function MyNeighborhoodPage({
         />
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <Breadcrumb items={[{ label: 'My Neighborhood' }]} />
-          <div className="bg-white rounded-xl border border-brand-border p-8 text-center max-w-lg mx-auto">
+          <div className="bg-white border border-brand-border p-8 text-center max-w-lg mx-auto">
             <MapPin size={32} className="mx-auto text-brand-muted mb-3" />
-            <h2 className="text-lg font-serif font-bold text-brand-text mb-2">
+            <h2 className="text-lg font-display font-bold text-brand-text mb-2">
               Neighborhood Not Found
             </h2>
             <p className="text-sm text-brand-muted mb-4">

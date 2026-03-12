@@ -155,7 +155,7 @@ export default async function SearchPage({
         {results.organizations.map(function (org) {
           const t = orgTranslations[org.org_id]
           return (
-            <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
+            <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow">
               <h4 className="font-semibold text-brand-text text-sm mb-1">{t?.title || org.org_name}</h4>
               {(t?.summary || org.description_5th_grade) && (
                 <p className="text-xs text-brand-muted line-clamp-2">{t?.summary || org.description_5th_grade}</p>
@@ -209,7 +209,7 @@ export default async function SearchPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.resources.map(function (r: any) {
           return (
-            <div key={r.resource_id} className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow">
+            <div key={r.resource_id} className="bg-white border border-brand-border p-4 hover:shadow-md transition-shadow">
               <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{r.resource_name}</h4>
               {r.description_5th_grade && (
                 <p className="text-xs text-brand-muted line-clamp-2 mb-2">{r.description_5th_grade}</p>
@@ -263,8 +263,8 @@ export default async function SearchPage({
             </div>
             {searchPathways.length > 0 && (
               <aside className="lg:w-72 shrink-0">
-                <div className="bg-white rounded-xl border border-brand-border p-4 lg:sticky lg:top-24">
-                  <h3 className="font-serif text-sm font-semibold text-brand-text mb-1">Pathways in Results</h3>
+                <div className="bg-white border border-brand-border p-4 lg:sticky lg:top-24">
+                  <h3 className="font-display text-sm font-semibold text-brand-text mb-1">Pathways in Results</h3>
                   <p className="text-[10px] text-brand-muted mb-2">{searchPathways.length} of 7 pathways represented</p>
                   <CompactCircleGraph activePathways={searchPathways} accentColor="#C75B2A" />
                   <div className="space-y-1.5 mt-2">

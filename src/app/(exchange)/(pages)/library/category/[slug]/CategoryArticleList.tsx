@@ -32,7 +32,7 @@ export function CategoryArticleList({ sections }: CategoryArticleListProps) {
         return (
           <section key={section.centerName}>
             <div className="mb-4">
-              <h2 className="font-serif text-xl font-bold text-brand-text">
+              <h2 className="font-display text-xl font-bold text-brand-text">
                 {section.centerName}
               </h2>
               <p className="text-sm text-brand-muted italic">{section.centerQuestion}</p>
@@ -44,9 +44,9 @@ export function CategoryArticleList({ sections }: CategoryArticleListProps) {
                   <Link
                     key={article.id}
                     href={'/library/doc/' + article.id}
-                    className="group block bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                    className="group block bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
                   >
-                    <h3 className="font-serif text-base font-bold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-1">
+                    <h3 className="font-display text-base font-bold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-1">
                       {article.title}
                     </h3>
                     {article.summary && (

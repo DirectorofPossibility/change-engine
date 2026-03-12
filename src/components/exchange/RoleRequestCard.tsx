@@ -78,7 +78,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
 
       {/* Pending request */}
       {hasPending && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-3">
+        <div className="bg-yellow-50 border border-yellow-200 p-4 mb-3">
           <p className="text-sm text-yellow-800 font-medium">Your partner request is under review</p>
           {requests.filter(function (r) { return r.status === 'pending' }).map(function (r) {
             return (
@@ -97,7 +97,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
         <div className="space-y-2 mb-3">
           {requests.filter(function (r) { return r.status !== 'pending' }).slice(0, 3).map(function (r) {
             return (
-              <div key={r.id} className={`rounded-lg border p-3 text-sm ${
+              <div key={r.id} className={` border p-3 text-sm ${
                 r.status === 'approved'
                   ? 'bg-green-50 border-green-200 text-green-800'
                   : 'bg-red-50 border-red-200 text-red-800'
@@ -118,7 +118,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
       {!hasPending && !showForm && (
         <button
           onClick={function () { setShowForm(true) }}
-          className="block w-full bg-green-50 rounded-lg border border-green-200 p-3 text-sm text-green-700 hover:bg-green-100 text-left"
+          className="block w-full bg-green-50 border border-green-200 p-3 text-sm text-green-700 hover:bg-green-100 text-left"
         >
           <span className="font-medium">Partner with us</span>
           <span className="block text-xs text-green-600 mt-0.5">Represent your organization on the Community Exchange</span>
@@ -127,7 +127,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
 
       {/* Request form */}
       {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-brand-border p-4 space-y-3">
+        <form onSubmit={handleSubmit} className="bg-white border border-brand-border p-4 space-y-3">
           <h3 className="text-sm font-semibold text-brand-text">
             Request Community Partner access
           </h3>
@@ -139,7 +139,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
               required
               value={orgName}
               onChange={function (e) { setOrgName(e.target.value) }}
-              className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+              className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
               placeholder="Your organization"
             />
           </div>
@@ -152,7 +152,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
               value={reason}
               onChange={function (e) { setReason(e.target.value) }}
               rows={2}
-              className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
+              className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 resize-none"
               placeholder="Tell us about your organization and how you'd like to contribute"
             />
           </div>
@@ -164,7 +164,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-50"
+              className="px-4 py-2 bg-brand-accent text-white text-sm font-medium hover:opacity-90 disabled:opacity-50"
             >
               {submitting ? 'Submitting...' : 'Submit Request'}
             </button>

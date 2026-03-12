@@ -82,7 +82,7 @@ export default function CivicScorecard() {
 
   if (!mounted) {
     return (
-      <div className="rounded-2xl border border-[#E5E1DB] bg-white p-6 animate-pulse">
+      <div className=" border border-[#E5E1DB] bg-white p-6 animate-pulse">
         <div className="h-6 w-48 rounded bg-[#E5E1DB]" />
         <div className="mt-4 h-32 rounded bg-[#E5E1DB]" />
       </div>
@@ -94,7 +94,7 @@ export default function CivicScorecard() {
   const allDone = completed === total
 
   return (
-    <section className="rounded-2xl border border-[#E5E1DB] bg-white p-6 sm:p-8">
+    <section className=" border border-[#E5E1DB] bg-white p-6 sm:p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mb-6">
         <ProgressRing completed={completed} total={total} />
@@ -105,7 +105,7 @@ export default function CivicScorecard() {
             ) : (
               <Award className="h-5 w-5 text-[#E8723A]" />
             )}
-            <h2 className="font-serif text-xl font-semibold text-[#1A1A1A]">
+            <h2 className="font-display text-xl font-semibold text-[#1A1A1A]">
               Civic Scorecard
             </h2>
           </div>
@@ -120,7 +120,7 @@ export default function CivicScorecard() {
         {checklist.map((item) => (
           <li key={item.action}>
             {item.completed ? (
-              <div className="flex items-start gap-3 rounded-xl px-3 py-2.5 bg-green-50/60">
+              <div className="flex items-start gap-3 px-3 py-2.5 bg-green-50/60">
                 <CheckCircle2 className="h-5 w-5 text-[#2D8659] mt-0.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <span className="text-sm font-medium text-[#1A1A1A]">
@@ -136,7 +136,7 @@ export default function CivicScorecard() {
             ) : (
               <Link
                 href={item.href}
-                className="flex items-start gap-3 rounded-xl px-3 py-2.5 hover:bg-[#FAFAF8] transition-colors group"
+                className="flex items-start gap-3 px-3 py-2.5 hover:bg-[#FAFAF8] transition-colors group"
               >
                 <Circle className="h-5 w-5 text-[#E5E1DB] group-hover:text-[#E8723A] mt-0.5 flex-shrink-0 transition-colors" />
                 <div className="flex-1 min-w-0">

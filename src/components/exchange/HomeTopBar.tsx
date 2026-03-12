@@ -40,7 +40,7 @@ export function HomeTopBar({ liveCount }: { liveCount?: number }) {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-3 flex items-center gap-4 flex-wrap sm:flex-nowrap">
         {/* Left: Location anchor */}
         <Link href="/" className="shrink-0 group">
-          <span className="font-serif text-sm tracking-[0.08em] text-brand-muted hover:text-brand-text transition-colors" style={{ fontVariant: 'small-caps' }}>
+          <span className="font-display text-sm tracking-[0.08em] text-brand-muted hover:text-brand-text transition-colors" style={{ fontVariant: 'small-caps' }}>
             {t('home.location')}
           </span>
         </Link>
@@ -54,7 +54,7 @@ export function HomeTopBar({ liveCount }: { liveCount?: number }) {
             onChange={function (e) { setSearchQuery(e.target.value) }}
             placeholder={t('nav.search_placeholder')}
             aria-label="Search"
-            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+            className="w-full pl-9 pr-3 py-1.5 text-sm border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
         </form>
 
@@ -85,10 +85,10 @@ export function HomeTopBar({ liveCount }: { liveCount?: number }) {
                 aria-label="ZIP code"
                 maxLength={5}
                 disabled={isLoading}
-                className="w-20 text-sm px-2 py-1 border border-brand-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
+                className="w-20 text-sm px-2 py-1 border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
               />
               <button type="submit" disabled={zipInput.length !== 5 || isLoading}
-                className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
+                className="text-xs font-bold uppercase tracking-wider px-2 py-1 bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
                 {t('sidebar.go')}
               </button>
             </form>

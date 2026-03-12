@@ -170,14 +170,14 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
             href={registerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-accent text-white font-semibold text-sm hover:bg-brand-accent-hover transition-colors shadow-card"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold text-sm hover:bg-brand-accent-hover transition-colors shadow-card"
           >
             <UserCheck size={18} />
             Register to Vote
             <ExternalLink size={14} />
           </a>
         ) : (
-          <span className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-accent text-white font-semibold text-sm">
+          <span className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold text-sm">
             <UserCheck size={18} />
             Register to Vote
           </span>
@@ -189,14 +189,14 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
             href={findPollingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-success text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-card"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-success text-white font-semibold text-sm hover:opacity-90 transition-opacity shadow-card"
           >
             <MapPin size={18} />
             Find Early Voting Locations
             <ExternalLink size={14} />
           </a>
         ) : (
-          <span className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-success text-white font-semibold text-sm">
+          <span className="inline-flex items-center gap-2 px-6 py-3 bg-brand-success text-white font-semibold text-sm">
             <MapPin size={18} />
             Early Voting Is Open
           </span>
@@ -208,14 +208,14 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
             href={findPollingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition-colors shadow-card animate-pulse"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition-colors shadow-card animate-pulse"
           >
             <Vote size={18} />
             Find Your Polling Place
             <ExternalLink size={14} />
           </a>
         ) : (
-          <span className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-red-600 text-white font-semibold text-sm animate-pulse">
+          <span className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold text-sm animate-pulse">
             <Vote size={18} />
             It&apos;s Election Day!
           </span>
@@ -223,7 +223,7 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
 
       case 'post-election':
         return (
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-bg-alt text-brand-muted font-medium text-sm">
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-brand-bg-alt text-brand-muted font-medium text-sm">
             <CheckCircle2 size={16} />
             Election Complete
           </span>
@@ -235,7 +235,7 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
             href={findPollingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-accent text-white font-semibold text-sm hover:bg-brand-accent-hover transition-colors shadow-card"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold text-sm hover:bg-brand-accent-hover transition-colors shadow-card"
           >
             <MapPin size={18} />
             Find Your Polling Place
@@ -246,7 +246,7 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border shadow-card overflow-hidden">
+    <div className="bg-white border border-brand-border shadow-card overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 bg-brand-bg border-b border-brand-border">
         <div className="flex items-center gap-3">

@@ -16,7 +16,7 @@ export default function ChatPage() {
       <Breadcrumb items={[{ label: 'Chat with Chance' }]} />
 
       <div className="relative mb-6">
-        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-text">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-brand-text">
           Chat with Chance
         </h1>
         <WayfinderTooltipPos tipKey="chat_with_chance" position="bottom" />

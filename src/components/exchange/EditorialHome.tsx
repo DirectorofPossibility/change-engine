@@ -38,7 +38,7 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       description: `Food banks, legal aid, shelters, health clinics — ${stats.services || 0} services mapped and searchable.`,
       href: '/services',
       icon: Heart,
-      color: '#C75B2A',
+      color: '#1b5e8a',
       stat: String(stats.services || 0),
       statLabel: 'services',
       image: '/images/editorial/health-worker.jpg',
@@ -48,7 +48,7 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       description: `${organizations} nonprofits, foundations, and community groups. Every one is a doorway.`,
       href: '/organizations',
       icon: Building2,
-      color: '#38a169',
+      color: '#1a6b56',
       stat: String(organizations),
       statLabel: 'organizations',
       image: '/images/editorial/community-meeting.jpg',
@@ -58,7 +58,7 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       description: 'City council to Congress. Who represents you, how to reach them, what they\'re working on.',
       href: '/officials',
       icon: Shield,
-      color: '#805ad5',
+      color: '#4a2870',
       stat: String(stats.officials),
       statLabel: 'officials',
       image: '/images/editorial/civic-building.jpg',
@@ -68,7 +68,7 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       description: 'Upcoming elections, polling places, ballot items, candidates — your voice matters.',
       href: '/elections',
       icon: Vote,
-      color: '#e53e3e',
+      color: '#7a2018',
       stat: String(stats.elections || 8),
       statLabel: 'elections tracked',
       image: '/images/editorial/polling-place.jpg',
@@ -78,7 +78,7 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       description: `${stats.resources} articles covering policy, community, health, education — all written for real people.`,
       href: '/news',
       icon: Newspaper,
-      color: '#3182ce',
+      color: '#1b5e8a',
       stat: String(stats.resources),
       statLabel: 'articles',
       image: '/images/editorial/person-reading.jpg',
@@ -88,7 +88,7 @@ function getMvpSections(stats: EditorialHomeProps['stats'], organizations: numbe
       description: `Volunteer, intern, get involved. ${stats.opportunities || 0} ways to turn caring into action right now.`,
       href: '/opportunities',
       icon: Users,
-      color: '#d69e2e',
+      color: '#4a2870',
       stat: String(stats.opportunities || 0),
       statLabel: 'opportunities',
       image: '/images/editorial/volunteers.jpg',
@@ -123,12 +123,12 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-3">
                 Community Exchange — Houston, Texas
               </p>
-              <h1 className="font-serif text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-tight mb-5 text-brand-text">
+              <h1 className="font-display text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-tight mb-5 text-brand-text">
                 This is the{' '}
                 <span className="relative inline-block">
                   <span className="text-brand-accent">way in.</span>
                   <svg className="absolute -bottom-1 left-0 w-full" height="6" viewBox="0 0 200 6" fill="none" preserveAspectRatio="none">
-                    <path d="M0 5c50-4 150-4 200 0" stroke="#C75B2A" strokeWidth="2" opacity="0.4" />
+                    <path d="M0 5c50-4 150-4 200 0" stroke="#1b5e8a" strokeWidth="2" opacity="0.4" />
                   </svg>
                 </span>
               </h1>
@@ -149,11 +149,11 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
 
               {/* Stats row with FOL backgrounds */}
               <div className="flex items-center gap-8">
-                <FOLStat value={totalResources.toLocaleString()} label="total resources" color="#C75B2A" />
+                <FOLStat value={totalResources.toLocaleString()} label="total resources" color="#1b5e8a" />
                 <div className="w-px h-10 bg-brand-border" />
-                <FOLStat value={organizations} label="organizations" color="#38a169" />
+                <FOLStat value={organizations} label="organizations" color="#1a6b56" />
                 <div className="w-px h-10 bg-brand-border" />
-                <FOLStat value={stats.officials} label="officials" color="#805ad5" />
+                <FOLStat value={stats.officials} label="officials" color="#4a2870" />
               </div>
             </div>
 
@@ -167,13 +167,13 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                   </div>
                 </div>
                 {/* Compass entry card */}
-                <div className="relative bg-white/80 rounded-2xl border border-brand-border p-8 shadow-offset-lg group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300" style={{ backdropFilter: 'blur(8px)' }}>
+                <div className="relative bg-white/80 border border-brand-border p-8 shadow-offset-lg group-hover:shadow-xl group-hover:-translate-y-1 transition-all duration-300" style={{ backdropFilter: 'blur(8px)' }}>
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: '#C75B2A' }}>
+                    <div className="w-10 h-10 flex items-center justify-center" style={{ background: '#1b5e8a' }}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36z" /></svg>
                     </div>
                     <div>
-                      <span className="block font-serif text-xl font-bold text-brand-text">Civic Compass</span>
+                      <span className="block font-display text-xl font-bold text-brand-text">Civic Compass</span>
                       <span className="block text-xs text-brand-muted">Chart your own course</span>
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                   </p>
                   {/* Mini pathway dots */}
                   <div className="flex items-center gap-2 mb-4">
-                    {['#e53e3e', '#dd6b20', '#d69e2e', '#38a169', '#3182ce', '#319795', '#805ad5'].map(function (c, i) {
+                    {['#7a2018', '#1e4d7a', '#4a2870', '#1a6b56', '#1b5e8a', '#1a5030', '#4a2870'].map(function (c, i) {
                       return (
                         <div key={i} className="w-4 h-4 rounded-full border-2 group-hover:scale-110 transition-transform" style={{ borderColor: c, background: c + '20' }}>
                           <div className="w-full h-full rounded-full animate-pulse" style={{ background: c + '30', animationDelay: `${i * 0.3}s` }} />
@@ -209,7 +209,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
       <section className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-8">
         <div className="text-center mb-10">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">The Exchange</p>
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-brand-text mb-3">What&apos;s here for you</h2>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-brand-text mb-3">What&apos;s here for you</h2>
           <p className="text-brand-muted max-w-lg mx-auto">Everything mapped, classified, and connected. Pick a door.</p>
         </div>
 
@@ -219,7 +219,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
             return (
               <FOLGlassCard key={section.href} href={section.href} accentColor={section.color}>
                 {/* Image header */}
-                <div className="relative h-36 overflow-hidden rounded-t-2xl">
+                <div className="relative h-36 overflow-hidden">
                   <Image
                     src={section.image}
                     alt={section.title}
@@ -233,13 +233,13 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-white/80">{section.statLabel}</span>
                   </div>
                   {/* Icon */}
-                  <div className="absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>
+                  <div className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(4px)' }}>
                     <Icon size={16} color="white" />
                   </div>
                 </div>
                 {/* Body */}
                 <div className="p-5">
-                  <h3 className="font-serif text-lg font-bold text-brand-text mb-2 flex items-center gap-2">
+                  <h3 className="font-display text-lg font-bold text-brand-text mb-2 flex items-center gap-2">
                     <FOLBullet size={14} color={section.color} />
                     {section.title}
                   </h3>
@@ -266,7 +266,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
           <div className="flex items-center justify-between mb-6">
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-1">The Pulse</p>
-              <h2 className="font-serif text-2xl font-bold text-brand-text">What&apos;s happening in Houston</h2>
+              <h2 className="font-display text-2xl font-bold text-brand-text">What&apos;s happening in Houston</h2>
             </div>
             <FOLButton href="/news" variant="ghost">All News</FOLButton>
           </div>
@@ -277,20 +277,20 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
             {latestContent.length > 0 && (
               <Link
                 href={'/content/' + (latestContent[0] as any).id}
-                className="lg:col-span-2 relative rounded-2xl overflow-hidden group border border-brand-border hover:-translate-y-1 transition-all duration-300"
+                className="lg:col-span-2 relative overflow-hidden group border border-brand-border hover:-translate-y-1 transition-all duration-300"
                 style={{ minHeight: '320px', boxShadow: '3px 3px 0 #D5D0C8' }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/60 to-transparent z-[1]" />
                 {(latestContent[0] as any).hero_image_url ? (
                   <Image src={(latestContent[0] as any).hero_image_url} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #3182ce 0%, #805ad5 100%)' }} />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1b5e8a 0%, #4a2870 100%)' }} />
                 )}
                 <div className="absolute bottom-0 left-0 right-0 p-6 z-[2]">
                   <span className="inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider text-white/80 bg-white/10 mb-2">
                     {(latestContent[0] as any).center || 'Learning'}
                   </span>
-                  <h3 className="font-serif text-2xl font-bold text-white mb-2 line-clamp-2">
+                  <h3 className="font-display text-2xl font-bold text-white mb-2 line-clamp-2">
                     {(latestContent[0] as any).title_6th_grade || 'Latest from the Exchange'}
                   </h3>
                   <p className="text-sm text-white/70 line-clamp-2">
@@ -307,14 +307,14 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                   <Link
                     key={item.id}
                     href={'/content/' + item.id}
-                    className="flex gap-3 p-3 rounded-xl border border-brand-border bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
+                    className="flex gap-3 p-3 border border-brand-border bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group"
                   >
-                    <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-brand-bg-alt">
+                    <div className="flex-shrink-0 w-16 h-16 overflow-hidden bg-brand-bg-alt">
                       {item.hero_image_url ? (
                         <Image src={item.hero_image_url} alt="" width={64} height={64} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <FOLBullet size={20} color="#3182ce" />
+                          <FOLBullet size={20} color="#1b5e8a" />
                         </div>
                       )}
                     </div>
@@ -338,21 +338,21 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
       <section className="max-w-[1200px] mx-auto px-6 sm:px-8 pb-6">
         <div className="text-center mb-8">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-2">Choose Your Intent</p>
-          <h2 className="font-serif text-2xl font-bold text-brand-text">4 ways to jump in</h2>
+          <h2 className="font-display text-2xl font-bold text-brand-text">4 ways to jump in</h2>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: 'I want to learn', question: 'How can I understand?', href: '/library', color: '#3182ce', icon: BookOpen },
-            { label: 'I want to help', question: 'How can I contribute?', href: '/opportunities', color: '#38a169', icon: Users },
-            { label: 'I need resources', question: 'What\'s available?', href: '/services', color: '#C75B2A', icon: Heart },
-            { label: 'I want accountability', question: 'Who decides?', href: '/officials', color: '#805ad5', icon: Scale },
+            { label: 'I want to learn', question: 'How can I understand?', href: '/library', color: '#1b5e8a', icon: BookOpen },
+            { label: 'I want to help', question: 'How can I contribute?', href: '/opportunities', color: '#1a6b56', icon: Users },
+            { label: 'I need resources', question: 'What\'s available?', href: '/services', color: '#1b5e8a', icon: Heart },
+            { label: 'I want accountability', question: 'Who decides?', href: '/officials', color: '#4a2870', icon: Scale },
           ].map(function (center) {
             const Icon = center.icon
             return (
               <Link
                 key={center.href}
                 href={center.href}
-                className="relative rounded-2xl overflow-hidden border group hover:-translate-y-1 transition-all duration-300"
+                className="relative overflow-hidden border group hover:-translate-y-1 transition-all duration-300"
                 style={{ borderColor: center.color + '30', boxShadow: `3px 3px 0 ${center.color}15` }}
               >
                 {/* Color header with FOL */}
@@ -370,7 +370,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
                     </div>
                   </div>
                   <Icon size={24} color="white" className="relative z-[1] mb-1" />
-                  <span className="relative z-[1] font-serif text-base font-bold text-white text-center" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{center.label}</span>
+                  <span className="relative z-[1] font-display text-base font-bold text-white text-center" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.2)' }}>{center.label}</span>
                 </div>
                 {/* Body */}
                 <div className="p-4 bg-white">
@@ -399,16 +399,16 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
           MOBILE COMPASS CTA (shown only on mobile, replaces hidden desktop compass)
          ══════════════════════════════════════════════════════════════ */}
       <div className="lg:hidden max-w-[1200px] mx-auto px-6 sm:px-8 py-6">
-        <Link href="/compass" className="block relative rounded-2xl overflow-hidden border border-brand-accent/20 p-6 group" style={{ background: 'linear-gradient(135deg, #FAF8F5, #EDE8E0)', boxShadow: '3px 3px 0 #C75B2A20' }}>
+        <Link href="/compass" className="block relative overflow-hidden border border-brand-accent/20 p-6 group" style={{ background: 'linear-gradient(135deg, #FAF8F5, #EDE8E0)', boxShadow: '3px 3px 0 #1b5e8a20' }}>
           <div className="absolute top-2 right-2 w-24 h-24 opacity-[0.1]">
             <GradientFOL variant="seed" spinDur={30} colorDur={8} />
           </div>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-brand-accent">
+            <div className="w-12 h-12 flex items-center justify-center bg-brand-accent">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36z" /></svg>
             </div>
             <div>
-              <span className="block font-serif text-lg font-bold text-brand-text">Open the Civic Compass</span>
+              <span className="block font-display text-lg font-bold text-brand-text">Open the Civic Compass</span>
               <span className="block text-xs text-brand-muted">7 pathways to explore &middot; Choose your own adventure</span>
             </div>
             <ArrowRight size={20} className="text-brand-accent ml-auto group-hover:translate-x-1 transition-transform" />

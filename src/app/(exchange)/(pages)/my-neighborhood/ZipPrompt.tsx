@@ -39,12 +39,12 @@ export function ZipPrompt() {
             placeholder="Enter your ZIP code"
             value={zip}
             onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
-            className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-brand-border bg-white text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+            className="w-full pl-9 pr-4 py-2.5 border border-brand-border bg-white text-brand-text text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
           />
         </div>
         <button
           type="submit"
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-brand-accent text-white text-sm font-medium hover:opacity-90 transition-opacity"
+          className="flex items-center gap-1.5 px-4 py-2.5 bg-brand-accent text-white text-sm font-medium hover:opacity-90 transition-opacity"
         >
           Go <ArrowRight size={14} />
         </button>

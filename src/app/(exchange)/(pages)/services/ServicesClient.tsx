@@ -159,14 +159,14 @@ export function ServicesClient({ services, translations = {}, categories, initia
           placeholder="ZIP code"
           value={zipFilter}
           onChange={(e) => setZipFilter(e.target.value)}
-          className="border border-brand-border rounded-lg px-3 py-2 text-sm w-28"
+          className="border border-brand-border px-3 py-2 text-sm w-28"
           maxLength={5}
         />
         <span className="text-sm text-brand-muted self-center whitespace-nowrap">
           {filtered.length} services
         </span>
         {hasLocations && (
-          <div className="flex gap-1 ml-auto bg-brand-bg rounded-lg p-1">
+          <div className="flex gap-1 ml-auto bg-brand-bg p-1">
             <button
               onClick={() => setView('directory')}
               className={'px-3 py-1.5 rounded-md text-sm font-medium transition-colors ' + (view === 'directory' ? 'bg-white text-brand-text shadow-sm' : 'text-brand-muted hover:text-brand-text')}
@@ -187,7 +187,7 @@ export function ServicesClient({ services, translations = {}, categories, initia
 
       {view === 'map' ? (
         markers.length > 0 ? (
-          <ClusteredMap markers={markers} showLegend={false} className="w-full h-[500px] rounded-xl" />
+          <ClusteredMap markers={markers} showLegend={false} className="w-full h-[500px]" />
         ) : (
           <p className="text-center text-brand-muted py-12">No services with location data found.</p>
         )
@@ -201,7 +201,7 @@ export function ServicesClient({ services, translations = {}, categories, initia
                 <button
                   key={cat.id}
                   onClick={() => scrollToCategory(cat.id)}
-                  className={'w-full text-left px-2.5 py-1.5 rounded-lg text-sm transition-colors flex items-center gap-2 ' +
+                  className={'w-full text-left px-2.5 py-1.5 text-sm transition-colors flex items-center gap-2 ' +
                     (activeCategory === cat.id ? 'bg-white shadow-sm font-semibold text-brand-text' : 'text-brand-muted hover:text-brand-text hover:bg-white/60')}
                 >
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
@@ -230,11 +230,11 @@ export function ServicesClient({ services, translations = {}, categories, initia
                     className="w-full group"
                   >
                     <div className="flex items-center gap-3 py-3 border-b-2" style={{ borderColor: color }}>
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '15' }}>
+                      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '15' }}>
                         <Phone size={16} style={{ color }} />
                       </div>
                       <div className="text-left flex-1 min-w-0">
-                        <h2 className="font-serif text-lg font-bold text-brand-text leading-tight">
+                        <h2 className="font-display text-lg font-bold text-brand-text leading-tight">
                           {catInfo?.name ?? catId}
                         </h2>
                         <p className="text-xs text-brand-muted">{catInfo?.description} &middot; {items.length} services</p>

@@ -24,11 +24,11 @@ export default async function GeographyPage({
       <div className="flex items-center justify-between mb-3">
         <div>
           <Breadcrumb items={[{ label: 'Map View' }]} />
-          <h1 className="font-serif text-xl font-bold text-brand-text mt-1">Explore your community</h1>
+          <h1 className="font-display text-xl font-bold text-brand-text mt-1">Explore your community</h1>
         </div>
       </div>
 
-      <Suspense fallback={<div className="w-full h-[650px] rounded-2xl bg-brand-border/30 animate-pulse" />}>
+      <Suspense fallback={<div className="w-full h-[650px] bg-brand-border/30 animate-pulse" />}>
         <GeographyClient
           superNeighborhoods={superNeighborhoods}
           initialZip={params.zip}

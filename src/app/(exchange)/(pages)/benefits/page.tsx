@@ -31,7 +31,7 @@ export default async function BenefitsPage() {
             <div className="space-y-4">
               {(benefits || []).map(function (b) {
                 return (
-                  <Link key={b.benefit_id} href={`/benefits/${b.benefit_id}`} className="block bg-white rounded-lg border border-brand-border p-5 hover:shadow-md transition-shadow">
+                  <Link key={b.benefit_id} href={`/benefits/${b.benefit_id}`} className="block bg-white border border-brand-border p-5 hover:shadow-md transition-shadow">
                     <div className="flex items-start gap-3">
                       <Heart className="w-5 h-5 text-theme-health mt-0.5 flex-shrink-0" />
                       <div className="flex-1 min-w-0">

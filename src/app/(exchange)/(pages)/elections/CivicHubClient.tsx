@@ -119,7 +119,7 @@ export function CivicHubClient({
               key={tab.level}
               onClick={function () { handleTabChange(tab.level) }}
               className={
-                'inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ' +
+                'inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all ' +
                 (isActive
                   ? 'text-white shadow-md'
                   : 'bg-white border-2 hover:shadow-sm')
@@ -276,7 +276,7 @@ export function CivicHubClient({
                       <Link
                         key={e.election_id}
                         href={'/elections/' + e.election_id}
-                        className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow"
+                        className="bg-white border border-brand-border p-5 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <h4 className="font-semibold text-brand-text">{e.election_name}</h4>
@@ -313,7 +313,7 @@ export function CivicHubClient({
                       <Link
                         key={e.election_id}
                         href={'/elections/' + e.election_id}
-                        className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow opacity-75"
+                        className="bg-white border border-brand-border p-5 hover:shadow-md transition-shadow opacity-75"
                       >
                         <h4 className="font-semibold text-brand-text mb-1">{e.election_name}</h4>
                         {e.election_type && (

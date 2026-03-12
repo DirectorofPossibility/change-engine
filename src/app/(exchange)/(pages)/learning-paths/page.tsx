@@ -48,15 +48,15 @@ export default async function LearningPathsPage() {
                     <Link
                       key={path.path_id}
                       href={'/learning-paths/' + path.path_id}
-                      className="bg-white rounded-lg border border-brand-border p-5 card-chunky flex hover:shadow-md transition-shadow"
+                      className="bg-white border border-brand-border p-5 card-chunky flex hover:shadow-md transition-shadow"
                     >
                       {/* Theme color bar */}
                       <div
-                        className="w-1.5 rounded-lg shrink-0 mr-4"
+                        className="w-1.5 shrink-0 mr-4"
                         style={{ backgroundColor: themeColor }}
                       />
                       <div className="min-w-0 flex-1">
-                        <h2 className="font-serif font-semibold text-brand-text text-lg mb-1">
+                        <h2 className="font-display font-semibold text-brand-text text-lg mb-1">
                           {path.path_name}
                         </h2>
                         {path.description_5th_grade && (
@@ -66,7 +66,7 @@ export default async function LearningPathsPage() {
                         )}
                         <div className="flex items-center gap-3 text-xs text-brand-muted flex-wrap">
                           {path.difficulty_level && (
-                            <span className="bg-brand-bg-alt px-2 py-0.5 rounded-lg font-medium">
+                            <span className="bg-brand-bg-alt px-2 py-0.5 font-medium">
                               {path.difficulty_level}
                             </span>
                           )}

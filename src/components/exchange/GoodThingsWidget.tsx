@@ -17,7 +17,7 @@ interface GoodThingEntry {
   created_at: string
 }
 
-const THING_COLORS = ['#38a169', '#3182ce', '#805ad5']
+const THING_COLORS = ['#1a6b56', '#1b5e8a', '#4a2870']
 
 /**
  * Three Good Things widget — branded, auto-cycling through random entries.
@@ -65,13 +65,13 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
     return (
       <div className="bg-brand-bg-alt text-brand-text py-3 px-4 border-t border-brand-border">
         <div className="max-w-[1200px] mx-auto flex items-center gap-3 text-sm">
-          <FlowerOfLifeIcon size={14} color="#d69e2e" />
-          <span className="font-serif font-bold text-brand-text flex-shrink-0">Three Good Things</span>
+          <FlowerOfLifeIcon size={14} color="#4a2870" />
+          <span className="font-display font-bold text-brand-text flex-shrink-0">Three Good Things</span>
           <span className={'text-brand-muted truncate transition-opacity duration-300 italic ' + (fade ? 'opacity-100' : 'opacity-0')}>&ldquo;{thing}&rdquo;</span>
           {attribution && <span className="text-brand-muted-light text-xs flex-shrink-0">&mdash; {attribution}</span>}
           <Link
             href="/goodthings"
-            className="ml-auto flex-shrink-0 px-3 py-1 rounded-lg bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"
+            className="ml-auto flex-shrink-0 px-3 py-1 bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"
           >
             Share yours
           </Link>
@@ -82,10 +82,10 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
 
   if (variant === 'inline') {
     return (
-      <div className={'bg-brand-bg rounded-xl border border-brand-border p-4 transition-all duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
+      <div className={'bg-brand-bg border border-brand-border p-4 transition-all duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
         <div className="flex items-center gap-2 mb-3">
-          <FlowerOfLifeIcon size={16} color="#d69e2e" />
-          <span className="font-serif font-bold text-sm text-brand-text">Three Good Things</span>
+          <FlowerOfLifeIcon size={16} color="#4a2870" />
+          <span className="font-display font-bold text-sm text-brand-text">Three Good Things</span>
         </div>
         {things.map(function (t, i) {
           return (
@@ -104,7 +104,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
           </div>
           <Link
             href="/goodthings"
-            className="px-3 py-1 rounded-lg bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"
+            className="px-3 py-1 bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"
           >
             Share yours
           </Link>
@@ -115,12 +115,12 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
 
   // card variant (for sidebar / homepage)
   return (
-    <div className={'bg-white rounded-xl border border-brand-border p-4 relative overflow-hidden transition-opacity duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#38a169] via-[#3182ce] to-[#805ad5]" />
+    <div className={'bg-white border border-brand-border p-4 relative overflow-hidden transition-opacity duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#1a6b56] via-[#1b5e8a] to-[#4a2870]" />
       <div className="pl-3">
         <div className="flex items-center gap-2 mb-3">
-          <FlowerOfLifeIcon size={16} color="#d69e2e" />
-          <span className="font-serif font-bold text-sm text-brand-text">Three Good Things</span>
+          <FlowerOfLifeIcon size={16} color="#4a2870" />
+          <span className="font-display font-bold text-sm text-brand-text">Three Good Things</span>
         </div>
         {things.map(function (t, i) {
           return (
@@ -138,7 +138,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
           </div>
           <Link
             href="/goodthings"
-            className="px-3 py-1 rounded-lg bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"
+            className="px-3 py-1 bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"
           >
             Share yours
           </Link>

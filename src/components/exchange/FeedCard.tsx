@@ -29,7 +29,7 @@ interface FeedCardProps {
 }
 
 const DEFAULT_ACCENT = '#8B7E74'
-const TEAL = '#319795'
+const TEAL = '#1a5030'
 
 const CENTER_ICONS: Record<string, typeof BookOpen> = {
   Learning: BookOpen,
@@ -39,21 +39,21 @@ const CENTER_ICONS: Record<string, typeof BookOpen> = {
 }
 
 const GRADIENT_PAIRS: Record<string, [string, string]> = {
-  THEME_01: ['#e53e3e', '#c53030'],
-  THEME_02: ['#dd6b20', '#c05621'],
-  THEME_03: ['#d69e2e', '#b7791f'],
-  THEME_04: ['#38a169', '#2f855a'],
-  THEME_05: ['#3182ce', '#2b6cb0'],
-  THEME_06: ['#319795', '#2c7a7b'],
-  THEME_07: ['#805ad5', '#6b46c1'],
+  THEME_01: ['#7a2018', '#5a1810'],
+  THEME_02: ['#1e4d7a', '#163a5c'],
+  THEME_03: ['#4a2870', '#381e54'],
+  THEME_04: ['#1a6b56', '#145242'],
+  THEME_05: ['#1b5e8a', '#144868'],
+  THEME_06: ['#1a5030', '#133d24'],
+  THEME_07: ['#4a2870', '#381e54'],
 }
 
 function policyAccentColor(status?: string): string {
   if (!status) return DEFAULT_ACCENT
   const s = status.toLowerCase()
-  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return '#38a169'
-  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return '#d69e2e'
-  if (s === 'failed' || s === 'vetoed' || s === 'dead') return '#e53e3e'
+  if (s === 'active' || s === 'passed' || s === 'enacted' || s === 'signed') return '#1a6b56'
+  if (s === 'proposed' || s === 'pending' || s === 'introduced' || s === 'in committee') return '#4a2870'
+  if (s === 'failed' || s === 'vetoed' || s === 'dead') return '#7a2018'
   return DEFAULT_ACCENT
 }
 
@@ -158,7 +158,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
 
   // List variant
   return (
-    <div className="group flex bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
+    <div className="group flex bg-white border border-brand-border overflow-hidden card-lift">
       {item.imageUrl && (
         <div className="w-28 sm:w-36 flex-shrink-0 overflow-hidden">
           <ImageLightbox
@@ -195,7 +195,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
 function OfficialCard({ item, t }: { item: FeedItem; t: (key: string) => string }) {
   const initials = getInitials(item.title)
   return (
-    <div className="group bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
+    <div className="group bg-white border border-brand-border overflow-hidden card-lift">
       <div className="p-4 flex items-center gap-4">
         <div className="w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: TEAL + '18' }}>
           <span className="text-lg font-bold" style={{ color: TEAL }}>{initials}</span>
@@ -216,7 +216,7 @@ function OfficialCard({ item, t }: { item: FeedItem; t: (key: string) => string 
 function PolicyCard({ item, t }: { item: FeedItem; t: (key: string) => string }) {
   const accent = policyAccentColor(item.status)
   return (
-    <div className="group bg-white rounded-xl border border-brand-border overflow-hidden card-lift">
+    <div className="group bg-white border border-brand-border overflow-hidden card-lift">
       <div className="p-4" style={{ borderLeft: `4px solid ${accent}` }}>
         <div className="flex items-center gap-2 mb-2">
           <Scale size={14} style={{ color: accent }} />

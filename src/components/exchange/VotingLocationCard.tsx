@@ -21,11 +21,11 @@ export function VotingLocationCard({
   const fullAddress = [address, city].filter(Boolean).join(', ')
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-4">
+    <div className="bg-white border border-brand-border p-4">
       <div className="flex items-center gap-2 mb-2">
         <h4 className="font-semibold text-brand-text text-sm">{name}</h4>
         {locationType && (
-          <span className="text-xs px-2 py-0.5 rounded-lg bg-brand-bg text-brand-muted">{locationType}</span>
+          <span className="text-xs px-2 py-0.5 bg-brand-bg text-brand-muted">{locationType}</span>
         )}
       </div>
       {fullAddress && (

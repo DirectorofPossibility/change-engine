@@ -36,7 +36,7 @@ export function D2Hero({
       </div>
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-8 py-14">
-        <h1 className="font-serif text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight mb-3 text-brand-text">
+        <h1 className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight mb-3 text-brand-text">
           {title}
           {handAccent && (
             <span className="font-hand text-[1.15em] font-bold text-brand-accent"> {handAccent}</span>

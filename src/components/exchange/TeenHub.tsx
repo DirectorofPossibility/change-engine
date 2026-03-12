@@ -139,7 +139,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           {/* Glitch-style label */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-white/5 border border-white/10 mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 mb-8">
             <Zap className="w-4 h-4 text-yellow-400" />
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">Teen Hub</span>
           </div>
@@ -161,7 +161,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
             <a
               href="#vibes"
-              className="group relative px-8 py-4 rounded-2xl text-base font-bold text-white overflow-hidden transition-transform hover:scale-105"
+              className="group relative px-8 py-4 text-base font-bold text-white overflow-hidden transition-transform hover:scale-105"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 transition-all" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-400 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -171,7 +171,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
             </a>
             <a
               href="#missions"
-              className="px-8 py-4 rounded-2xl text-base font-bold text-white/70 border-2 border-white/10 hover:border-white/30 hover:text-white transition-all"
+              className="px-8 py-4 text-base font-bold text-white/70 border-2 border-white/10 hover:border-white/30 hover:text-white transition-all"
             >
               Browse Missions
             </a>
@@ -230,7 +230,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
                 <button
                   key={vibe.id}
                   onClick={() => setSelectedVibe(active ? null : vibe.id)}
-                  className={'group relative rounded-2xl p-6 text-left transition-all duration-300 overflow-hidden border-2 ' +
+                  className={'group relative p-6 text-left transition-all duration-300 overflow-hidden border-2 ' +
                     (active
                       ? 'border-white/30 scale-[1.02] shadow-2xl'
                       : 'border-white/5 hover:border-white/15 hover:scale-[1.01]'
@@ -245,7 +245,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
 
                   <div className="relative">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300"
+                      className="w-12 h-12 flex items-center justify-center mb-4 transition-all duration-300"
                       style={{ backgroundColor: active ? vibe.color + '30' : vibe.color + '12' }}
                     >
                       <Icon className="w-6 h-6 transition-colors" style={{ color: vibe.color }} />
@@ -296,7 +296,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
             ].map(tier => (
               <div
                 key={tier.label}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10"
+                className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10"
               >
                 <tier.icon className="w-4 h-4" style={{ color: tier.color }} />
                 <span className="text-sm font-bold text-white">{tier.label}</span>
@@ -323,7 +323,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
             <div className="mt-8 text-center">
               <Link
                 href="/news"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
               >
                 See all missions <ArrowRight className="w-4 h-4" />
               </Link>
@@ -386,7 +386,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               <Link
                 key={item.id}
                 href={item.href}
-                className="group relative rounded-2xl overflow-hidden border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
+                className="group relative overflow-hidden border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
               >
                 {item.imageUrl && (
                   <div className="aspect-[16/9] overflow-hidden">
@@ -413,7 +413,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
           <div className="mt-8 text-center">
             <Link
               href="/news"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
             >
               All stories <ArrowRight className="w-4 h-4" />
             </Link>
@@ -444,13 +444,13 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               <Link
                 key={org.id}
                 href={org.href}
-                className="group relative rounded-2xl p-6 border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
+                className="group relative p-6 border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
               >
                 <div className="flex items-start gap-4">
                   {org.logoUrl ? (
-                    <Image src={org.logoUrl} alt={org.name + ' logo'} className="w-10 h-10 rounded-xl object-contain bg-white/10 p-1 flex-shrink-0"  width={48} height={40} />
+                    <Image src={org.logoUrl} alt={org.name + ' logo'} className="w-10 h-10 object-contain bg-white/10 p-1 flex-shrink-0"  width={48} height={40} />
                   ) : (
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-black text-white/40">{org.name.charAt(0)}</span>
                     </div>
                   )}
@@ -469,7 +469,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
           <div className="mt-8 text-center">
             <Link
               href="/organizations"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
             >
               All organizations <ArrowRight className="w-4 h-4" />
             </Link>
@@ -503,12 +503,12 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
                   <Link
                     key={event.id}
                     href={event.href}
-                    className="group relative rounded-2xl p-6 border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
+                    className="group relative p-6 border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
                   >
                     <div className="flex items-start gap-4">
                       {/* Date block */}
                       {date && (
-                        <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex flex-col items-center justify-center border border-white/5">
+                        <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-orange-500/20 to-red-500/20 flex flex-col items-center justify-center border border-white/5">
                           <span className="text-[10px] font-bold uppercase text-orange-400">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
                           <span className="text-xl font-black text-white leading-none">{date.getDate()}</span>
                         </div>
@@ -540,7 +540,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
             <div className="mt-8 text-center">
               <Link
                 href="/calendar"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
               >
                 Full calendar <ArrowRight className="w-4 h-4" />
               </Link>
@@ -573,9 +573,9 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
                 <Link
                   key={service.id}
                   href={service.href}
-                  className="group flex items-start gap-4 rounded-2xl p-5 border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
+                  className="group flex items-start gap-4 p-5 border-2 border-white/5 hover:border-white/15 transition-all duration-300 bg-white/[0.02] hover:bg-white/[0.04]"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center flex-shrink-0">
                     <Heart className="w-5 h-5 text-teal-400" />
                   </div>
                   <div className="min-w-0">
@@ -589,7 +589,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
             <div className="mt-8 text-center">
               <Link
                 href="/services"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white/60 border border-white/10 hover:border-white/25 hover:text-white transition-all"
               >
                 All services <ArrowRight className="w-4 h-4" />
               </Link>
@@ -629,7 +629,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               <Link
                 key={p.slug}
                 href={`/pathways/${p.slug}`}
-                className="group relative flex items-center gap-4 rounded-2xl p-5 border-2 border-white/5 hover:border-white/15 transition-all duration-300 overflow-hidden"
+                className="group relative flex items-center gap-4 p-5 border-2 border-white/5 hover:border-white/15 transition-all duration-300 overflow-hidden"
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `linear-gradient(135deg, ${p.color}08, ${p.color}03)` }} />
                 <div
@@ -669,7 +669,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
             <a
               href="#vibes"
-              className="group relative px-8 py-4 rounded-2xl text-base font-bold text-white overflow-hidden transition-transform hover:scale-105"
+              className="group relative px-8 py-4 text-base font-bold text-white overflow-hidden transition-transform hover:scale-105"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500" />
               <span className="relative flex items-center gap-2">
@@ -678,7 +678,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
             </a>
             <Link
               href="/chat"
-              className="px-8 py-4 rounded-2xl text-base font-bold text-white/60 border-2 border-white/10 hover:border-white/25 hover:text-white transition-all"
+              className="px-8 py-4 text-base font-bold text-white/60 border-2 border-white/10 hover:border-white/25 hover:text-white transition-all"
             >
               Talk to Chance (AI)
             </Link>
@@ -734,7 +734,7 @@ function MissionCard({ mission, index, isHovered, onHover }: {
   return (
     <Link
       href={mission.href}
-      className={'group relative rounded-2xl overflow-hidden border-2 transition-all duration-300 ' +
+      className={'group relative overflow-hidden border-2 transition-all duration-300 ' +
         (isHovered ? 'border-white/20 scale-[1.02] shadow-2xl' : 'border-white/5 hover:border-white/15')
       }
       onMouseEnter={() => onHover(mission.id)}
@@ -747,7 +747,7 @@ function MissionCard({ mission, index, isHovered, onHover }: {
         {/* Header row */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: cat.border + '15' }}>
+            <div className="w-7 h-7 flex items-center justify-center" style={{ backgroundColor: cat.border + '15' }}>
               <Icon className="w-3.5 h-3.5" style={{ color: cat.border }} />
             </div>
             <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: cat.border }}>{cat.label}</span>

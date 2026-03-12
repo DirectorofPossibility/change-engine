@@ -55,7 +55,7 @@ function EntityCard({ item }: { item: ShelfItem }) {
   return (
     <Link
       href={href}
-      className="group flex-shrink-0 w-[260px] sm:w-[280px] bg-white rounded-xl border border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+      className="group flex-shrink-0 w-[260px] sm:w-[280px] bg-white border border-brand-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
     >
       {/* Color top bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: item.color || '#8B7E74' }} />
@@ -104,7 +104,7 @@ export function ContentShelf({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           {iconPath && (
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ backgroundColor: color + '14' }}>
+            <div className="w-9 h-9 flex items-center justify-center" style={{ backgroundColor: color + '14' }}>
               <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={color}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
               </svg>
@@ -116,7 +116,7 @@ export function ContentShelf({
               <span className="text-xs text-brand-muted tabular-nums">{items.length}</span>
             </div>
             {question && (
-              <p className="text-xs font-serif italic text-brand-muted mt-0.5">{question}</p>
+              <p className="text-xs font-body italic text-brand-muted mt-0.5">{question}</p>
             )}
           </div>
         </div>

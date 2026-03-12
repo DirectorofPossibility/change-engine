@@ -1,17 +1,18 @@
 'use client'
 
 import { ClusteredMap } from '@/components/maps/dynamic'
-import type { MarkerData } from '@/components/maps/MapMarker'
-import type { ServiceWithOrg } from '@/lib/types/exchange'
+import type { MarkerData, MarkerType } from '@/components/maps/MapMarker'
+import type { ServiceWithOrg, MapMarkerData } from '@/lib/types/exchange'
 
 interface NeighborhoodMapProps {
   services: ServiceWithOrg[]
   votingLocations: Array<{ location_id: string; location_name: string; latitude: number | null; longitude: number | null; address: string | null; city: string | null }>
   distributionSites: Array<{ site_id: string; site_name: string; latitude: number | null; longitude: number | null; address: string | null; city: string | null }>
   organizations: Array<{ org_id: string; org_name: string; latitude: number | null; longitude: number | null; address: string | null; city: string | null }>
+  municipalServices?: MapMarkerData[]
 }
 
-export function NeighborhoodMap({ services, votingLocations, distributionSites, organizations }: NeighborhoodMapProps) {
+export function NeighborhoodMap({ services, votingLocations, distributionSites, organizations, municipalServices }: NeighborhoodMapProps) {
   const markers: MarkerData[] = [
     ...services
       .filter(s => s.latitude != null && s.longitude != null)
@@ -56,14 +57,31 @@ export function NeighborhoodMap({ services, votingLocations, distributionSites, 
         address: [o.address, o.city].filter(Boolean).join(', '),
         link: '/organizations/' + o.org_id,
       })),
+    ...(municipalServices ?? []).map(m => ({
+      id: 'muni-' + m.id,
+      lat: m.lat,
+      lng: m.lng,
+      title: m.title,
+      type: (m.type || 'service') as MarkerType,
+      address: m.address,
+      phone: m.phone,
+      link: m.link,
+    })),
   ]
 
   if (markers.length === 0) return null
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-bold text-brand-text mb-4">Neighborhood Map</h2>
-      <ClusteredMap markers={markers} className="w-full h-[400px] rounded-xl" />
+      <span
+        className="font-mono uppercase tracking-[0.2em] block mb-3"
+        style={{ fontSize: '0.58rem', color: '#5c6474' }}
+      >
+        Neighborhood Map
+      </span>
+      <div style={{ border: '1px solid #dde1e8' }}>
+        <ClusteredMap markers={markers} className="w-full h-[400px]" />
+      </div>
     </div>
   )
 }

@@ -23,7 +23,7 @@ export function TranslatePageButton({ isTranslated, contentType, contentId }: Tr
   // Already translated by cron
   if (status === 'done') {
     return (
-      <div className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+      <div className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 px-3 py-1.5">
         <Globe size={13} />
         {t('wayfinder.translated')}
       </div>
@@ -54,7 +54,7 @@ export function TranslatePageButton({ isTranslated, contentType, contentId }: Tr
     <button
       onClick={handleTranslate}
       disabled={status === 'loading'}
-      className="flex items-center gap-1.5 text-xs text-brand-accent bg-brand-bg px-3 py-1.5 rounded-lg hover:bg-brand-bg-alt transition-colors disabled:opacity-50"
+      className="flex items-center gap-1.5 text-xs text-brand-accent bg-brand-bg px-3 py-1.5 hover:bg-brand-bg-alt transition-colors disabled:opacity-50"
     >
       <Globe size={13} className={status === 'loading' ? 'animate-spin' : ''} />
       {status === 'loading' ? t('wayfinder.translating') : t('wayfinder.translate_page')}

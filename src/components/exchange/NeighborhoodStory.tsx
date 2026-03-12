@@ -52,12 +52,12 @@ function StorySection({
     <section className="mb-10">
       <div className="flex items-center gap-3 mb-4">
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center text-white"
+          className="w-9 h-9 flex items-center justify-center text-white"
           style={{ backgroundColor: color }}
         >
           {icon}
         </div>
-        <h2 className="text-xl font-serif font-bold text-brand-text">{title}</h2>
+        <h2 className="text-xl font-display font-bold text-brand-text">{title}</h2>
       </div>
       {children}
     </section>
@@ -194,10 +194,10 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                         <Link
                           key={official.official_id}
                           href={'/officials/' + official.official_id}
-                          className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all flex items-start gap-3"
+                          className="bg-white border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all flex items-start gap-3"
                         >
                           <div
-                            className="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                            className="w-10 h-10 flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
                             style={{ backgroundColor: levelColor }}
                           >
                             {(official.official_name || '?')[0]}
@@ -246,7 +246,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                 return (
                   <div
                     key={cat.category}
-                    className="flex items-center gap-2.5 bg-white rounded-lg border border-brand-border px-3 py-2.5"
+                    className="flex items-center gap-2.5 bg-white border border-brand-border px-3 py-2.5"
                   >
                     <span className="text-brand-accent">{getCategoryIcon(cat.category)}</span>
                     <div className="min-w-0">
@@ -269,7 +269,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     <Link
                       key={svc.service_id}
                       href={'/services/' + svc.service_id}
-                      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
+                      className="bg-white border border-brand-border p-4 hover:shadow-md hover:border-brand-accent/30 transition-all"
                     >
                       <h4 className="font-semibold text-brand-text text-sm line-clamp-2">
                         {svc.service_name}
@@ -328,7 +328,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     <Link
                       key={policy.policy_id}
                       href={'/policies/' + policy.policy_id}
-                      className="bg-white rounded-xl border border-brand-border p-4 hover:shadow-md transition-shadow"
+                      className="bg-white border border-brand-border p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         {policy.level && (
@@ -375,7 +375,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     <Link
                       key={item.id}
                       href={'/content/' + item.id}
-                      className="flex items-start gap-3 bg-white rounded-xl border border-brand-border p-3 hover:shadow-md transition-shadow"
+                      className="flex items-start gap-3 bg-white border border-brand-border p-3 hover:shadow-md transition-shadow"
                     >
                       <div
                         className="w-1.5 h-10 rounded-full flex-shrink-0 mt-0.5"
@@ -419,7 +419,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                 <div
                   key={i}
                   className={
-                    'bg-white rounded-xl border p-4 ' +
+                    'bg-white border p-4 ' +
                     (isUrgent ? 'border-brand-accent/40 shadow-sm' : 'border-brand-border')
                   }
                 >
@@ -440,7 +440,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                     </div>
                     {days > 0 && (
                       <div className={
-                        'text-center px-3 py-1.5 rounded-lg ' +
+                        'text-center px-3 py-1.5 ' +
                         (isUrgent ? 'bg-brand-accent/10 text-brand-accent' : 'bg-brand-bg text-brand-muted')
                       }>
                         <div className="text-lg font-bold leading-none">{days}</div>
@@ -452,13 +452,13 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                   {/* Key dates */}
                   <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                     {election.registration_deadline && (
-                      <div className="bg-brand-bg rounded-lg px-3 py-2">
+                      <div className="bg-brand-bg px-3 py-2">
                         <p className="font-semibold text-brand-text">Registration Deadline</p>
                         <p className="text-brand-muted">{formatDate(election.registration_deadline)}</p>
                       </div>
                     )}
                     {election.early_voting_start && (
-                      <div className="bg-brand-bg rounded-lg px-3 py-2">
+                      <div className="bg-brand-bg px-3 py-2">
                         <p className="font-semibold text-brand-text">Early Voting</p>
                         <p className="text-brand-muted">
                           {formatDate(election.early_voting_start)}
@@ -471,7 +471,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                         href={election.find_polling_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-brand-accent/5 rounded-lg px-3 py-2 hover:bg-brand-accent/10 transition-colors flex items-center gap-1.5"
+                        className="bg-brand-accent/5 px-3 py-2 hover:bg-brand-accent/10 transition-colors flex items-center gap-1.5"
                       >
                         <MapPin size={12} className="text-brand-accent" />
                         <span className="font-semibold text-brand-accent">Find Polling Places</span>
@@ -495,7 +495,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
             })}
           </div>
         ) : (
-          <div className="bg-white rounded-xl border border-brand-border p-5 text-center">
+          <div className="bg-white border border-brand-border p-5 text-center">
             <Vote size={28} className="mx-auto text-brand-muted mb-2" />
             <p className="text-sm text-brand-muted">No upcoming elections at this time.</p>
             <p className="text-xs text-brand-muted mt-1">Check back closer to election season.</p>
@@ -535,7 +535,7 @@ function StatCard({
   color: string
 }) {
   return (
-    <div className="bg-white rounded-xl border border-brand-border p-3 text-center">
+    <div className="bg-white border border-brand-border p-3 text-center">
       <div className="flex justify-center mb-1" style={{ color }}>{icon}</div>
       <div className="text-lg font-bold text-brand-text leading-tight">{value}</div>
       <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">

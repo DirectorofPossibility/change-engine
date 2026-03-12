@@ -102,6 +102,64 @@ export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps
   )
 }
 
+// Human-readable labels for known route segments
+const ROUTE_LABELS: Record<string, string> = {
+  explore: 'Explore',
+  focus: 'Focus Area',
+  officials: 'Officials',
+  services: 'Services',
+  organizations: 'Organizations',
+  policies: 'Policies',
+  neighborhoods: 'Neighborhoods',
+  'super-neighborhoods': 'Super Neighborhoods',
+  opportunities: 'Opportunities',
+  elections: 'Elections',
+  content: 'Content',
+  pathways: 'Pathways',
+  community: 'Community',
+  learning: 'Learning',
+  'learning-paths': 'Learning Paths',
+  about: 'About',
+  search: 'Search',
+  library: 'Library',
+  doc: 'Document',
+  category: 'Category',
+  governance: 'Governance',
+  districts: 'Districts',
+  lookup: 'Find Your Reps',
+  calendar: 'Calendar',
+  events: 'Events',
+  help: 'Resources',
+  news: 'News',
+  foundations: 'Foundations',
+  stories: 'Stories',
+  guides: 'Guides',
+  candidates: 'Candidates',
+  agencies: 'Agencies',
+  tirz: 'TIRZ Zones',
+  collections: 'Collections',
+  benefits: 'Benefits',
+  campaigns: 'Campaigns',
+  adventures: 'Adventures',
+  centers: 'Centers',
+  compass: 'Compass',
+  glossary: 'Glossary',
+  faq: 'FAQ',
+  'my-neighborhood': 'My Neighborhood',
+  'my-area': 'My Area',
+  'municipal-services': 'City Services',
+  'call-your-senators': 'Call Your Senators',
+  geography: 'Geography',
+  'knowledge-graph': 'Knowledge Graph',
+  bookshelf: 'Bookshelf',
+  chat: 'Chat',
+  for: 'For You',
+  data: 'Data',
+  action: 'Take Action',
+  donate: 'Donate',
+  'coming-soon': 'Coming Soon',
+}
+
 function generateCrumbs(pathname: string | null, guideLabel = 'Guide'): WayfinderCrumb[] {
   if (!pathname) return [{ label: guideLabel, href: '/', here: true }]
 
@@ -111,7 +169,12 @@ function generateCrumbs(pathname: string | null, guideLabel = 'Guide'): Wayfinde
   let path = ''
   segments.forEach((seg, i) => {
     path += '/' + seg
-    const label = seg
+
+    // Skip raw IDs — the page's own Breadcrumb handles entity names
+    // Matches: UUIDs, PREFIX_xxx (FA_055, OFF_abc, SN_12, SVC_xxx), pure numeric, hex hashes
+    if (/^[0-9a-f]{8}-|^[A-Z]{1,}_[0-9a-zA-Z]|^\d+$|^[0-9a-f]{12,}$/.test(seg)) return
+
+    const label = ROUTE_LABELS[seg] || seg
       .replace(/-/g, ' ')
       .replace(/\b\w/g, c => c.toUpperCase())
     crumbs.push({

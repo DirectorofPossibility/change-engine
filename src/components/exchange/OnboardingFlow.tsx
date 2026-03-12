@@ -9,10 +9,10 @@ import Image from 'next/image'
 import { GradientFOL } from './GradientFOL'
 
 const PERSONAS = [
-  { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', color: '#d69e2e', fol: '/images/fol/seed-of-life.svg' },
-  { slug: 'learner', label: 'Learn', desc: 'I want to understand what\'s happening.', color: '#3182ce', fol: '/images/fol/vesica-piscis.svg' },
-  { slug: 'builder', label: 'Take Action', desc: 'I want to volunteer or contribute.', color: '#38a169', fol: '/images/fol/tripod-of-life.svg' },
-  { slug: 'watchdog', label: 'Hold Accountable', desc: 'I want to follow who makes decisions.', color: '#805ad5', fol: '/images/fol/metatrons-cube.svg' },
+  { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', color: '#4a2870', fol: '/images/fol/seed-of-life.svg' },
+  { slug: 'learner', label: 'Learn', desc: 'I want to understand what\'s happening.', color: '#1b5e8a', fol: '/images/fol/vesica-piscis.svg' },
+  { slug: 'builder', label: 'Take Action', desc: 'I want to volunteer or contribute.', color: '#1a6b56', fol: '/images/fol/tripod-of-life.svg' },
+  { slug: 'watchdog', label: 'Hold Accountable', desc: 'I want to follow who makes decisions.', color: '#4a2870', fol: '/images/fol/metatrons-cube.svg' },
 ]
 
 const PATHWAY_OPTIONS = Object.entries(THEMES).map(function ([id, t]) {
@@ -119,7 +119,7 @@ export function OnboardingFlow() {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30 backdrop-blur-sm">
       <div
-        className="relative w-full max-w-lg mx-4 overflow-hidden rounded-2xl border border-brand-border animate-fade-up"
+        className="relative w-full max-w-lg mx-4 overflow-hidden border border-brand-border animate-fade-up"
        
       >
         {/* ── Branded header ── */}
@@ -134,20 +134,20 @@ export function OnboardingFlow() {
 
           {/* Spectrum bar at top */}
           <div className="flex h-1">
-            <div className="flex-1" style={{ background: '#e53e3e' }} />
-            <div className="flex-1" style={{ background: '#dd6b20' }} />
-            <div className="flex-1" style={{ background: '#d69e2e' }} />
-            <div className="flex-1" style={{ background: '#38a169' }} />
-            <div className="flex-1" style={{ background: '#3182ce' }} />
-            <div className="flex-1" style={{ background: '#319795' }} />
-            <div className="flex-1" style={{ background: '#805ad5' }} />
+            <div className="flex-1" style={{ background: '#7a2018' }} />
+            <div className="flex-1" style={{ background: '#1e4d7a' }} />
+            <div className="flex-1" style={{ background: '#4a2870' }} />
+            <div className="flex-1" style={{ background: '#1a6b56' }} />
+            <div className="flex-1" style={{ background: '#1b5e8a' }} />
+            <div className="flex-1" style={{ background: '#1a5030' }} />
+            <div className="flex-1" style={{ background: '#4a2870' }} />
           </div>
 
           <div className="relative z-10 px-6 pt-5 pb-4">
             <div className="flex items-center gap-3 mb-1">
               <Image src="/images/fol/flower-full.svg" alt="" className="w-8 h-8" style={{ filter: 'hue-rotate(-10deg) saturate(0.6)' }}  width={200} height={32} />
               <div>
-                <span className="block font-serif text-lg font-bold text-brand-text leading-tight">Community Exchange</span>
+                <span className="block font-display text-lg font-bold text-brand-text leading-tight">Community Exchange</span>
                 <span className="block font-mono text-[8px] font-bold uppercase tracking-widest text-brand-muted-light">Powered by The Change Lab</span>
               </div>
             </div>
@@ -163,7 +163,7 @@ export function OnboardingFlow() {
                     className="h-1 rounded-full transition-all duration-500"
                     style={{
                       width: active ? '40px' : '16px',
-                      backgroundColor: active ? '#C75B2A' : done ? '#38a169' : '#E2DDD5',
+                      backgroundColor: active ? '#1b5e8a' : done ? '#1a6b56' : '#E2DDD5',
                     }}
                   />
                 )
@@ -193,13 +193,13 @@ export function OnboardingFlow() {
                   <GradientFOL variant="full" spinDur={30} colorDur={8} />
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="1.5">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1b5e8a" strokeWidth="1.5">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                 </div>
               </div>
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
+              <h2 className="font-display text-2xl font-bold text-brand-text mb-2">
                 Welcome to Community Exchange
               </h2>
               <p className="text-sm text-brand-muted mb-1 max-w-xs mx-auto">
@@ -210,8 +210,8 @@ export function OnboardingFlow() {
               </p>
               <button
                 onClick={handleGetStarted}
-                className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm rounded-xl hover:brightness-110 transition-all"
-                style={{ boxShadow: '3px 3px 0 #C75B2A30' }}
+                className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm hover:brightness-110 transition-all"
+                style={{ boxShadow: '3px 3px 0 #1b5e8a30' }}
               >
                 Get started
               </button>
@@ -221,7 +221,7 @@ export function OnboardingFlow() {
           {/* ── Step 1: Address ── */}
           {step === 'address' && (
             <div className="text-center">
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
+              <h2 className="font-display text-2xl font-bold text-brand-text mb-2">
                 Where are you?
               </h2>
               <p className="text-sm text-brand-muted mb-5 max-w-sm mx-auto">
@@ -229,13 +229,13 @@ export function OnboardingFlow() {
               </p>
               <form onSubmit={handleAddressSubmit} className="max-w-sm mx-auto">
                 <div
-                  className="flex items-center gap-2 border-2 rounded-xl px-4 py-3 bg-white mb-2 transition-colors"
+                  className="flex items-center gap-2 border-2 px-4 py-3 bg-white mb-2 transition-colors"
                   style={{
                     borderColor: error ? '#C53030' : '#1A1A1A',
                     
                   }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C75B2A" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1b5e8a" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z" /><circle cx="12" cy="10" r="3" /></svg>
                   <input
                     type="text"
                     value={input}
@@ -252,7 +252,7 @@ export function OnboardingFlow() {
                 <button
                   type="submit"
                   disabled={input.trim().length < 3 || isLoading}
-                  className="w-full py-3 bg-brand-text text-white font-semibold text-sm rounded-xl disabled:opacity-30 hover:bg-brand-accent transition-colors"
+                  className="w-full py-3 bg-brand-text text-white font-semibold text-sm disabled:opacity-30 hover:bg-brand-accent transition-colors"
                  
                 >
                   {isLoading ? 'Looking up...' : 'Find my community'}
@@ -275,7 +275,7 @@ export function OnboardingFlow() {
                   {neighborhood?.neighborhood_name || ('ZIP ' + zip)}
                 </p>
               )}
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
+              <h2 className="font-display text-2xl font-bold text-brand-text mb-2">
                 What brings you here?
               </h2>
               <p className="text-sm text-brand-muted mb-4">
@@ -287,7 +287,7 @@ export function OnboardingFlow() {
                     <button
                       key={p.slug}
                       onClick={function () { handlePersonaSelect(p.slug) }}
-                      className="relative text-left border border-brand-border rounded-xl p-4 overflow-hidden hover:border-brand-accent hover:-translate-y-0.5 transition-all group"
+                      className="relative text-left border border-brand-border p-4 overflow-hidden hover:border-brand-accent hover:-translate-y-0.5 transition-all group"
                      
                     >
                       {/* FOL watermark per card */}
@@ -312,7 +312,7 @@ export function OnboardingFlow() {
           {/* ── Step 3: Interests ── */}
           {step === 'interests' && (
             <div className="text-center">
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-2">
+              <h2 className="font-display text-2xl font-bold text-brand-text mb-2">
                 What do you care about?
               </h2>
               <p className="text-sm text-brand-muted mb-4">
@@ -325,7 +325,7 @@ export function OnboardingFlow() {
                     <button
                       key={pw.id}
                       onClick={function () { toggleInterest(pw.id) }}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all text-sm font-medium"
+                      className="flex items-center gap-2 px-4 py-2 border-2 transition-all text-sm font-medium"
                       style={{
                         borderColor: selected ? pw.color : '#E2DDD5',
                         backgroundColor: selected ? pw.color + '12' : 'white',
@@ -347,8 +347,8 @@ export function OnboardingFlow() {
               </div>
               <button
                 onClick={handleFinish}
-                className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm rounded-xl hover:brightness-110 transition-all"
-                style={{ boxShadow: '3px 3px 0 #C75B2A30' }}
+                className="w-full max-w-xs mx-auto py-3 bg-brand-accent text-white font-semibold text-sm hover:brightness-110 transition-all"
+                style={{ boxShadow: '3px 3px 0 #1b5e8a30' }}
               >
                 Show me my community
               </button>
@@ -358,13 +358,13 @@ export function OnboardingFlow() {
 
         {/* Bottom spectrum bar */}
         <div className="flex h-0.5">
-          <div className="flex-1" style={{ background: '#e53e3e' }} />
-          <div className="flex-1" style={{ background: '#dd6b20' }} />
-          <div className="flex-1" style={{ background: '#d69e2e' }} />
-          <div className="flex-1" style={{ background: '#38a169' }} />
-          <div className="flex-1" style={{ background: '#3182ce' }} />
-          <div className="flex-1" style={{ background: '#319795' }} />
-          <div className="flex-1" style={{ background: '#805ad5' }} />
+          <div className="flex-1" style={{ background: '#7a2018' }} />
+          <div className="flex-1" style={{ background: '#1e4d7a' }} />
+          <div className="flex-1" style={{ background: '#4a2870' }} />
+          <div className="flex-1" style={{ background: '#1a6b56' }} />
+          <div className="flex-1" style={{ background: '#1b5e8a' }} />
+          <div className="flex-1" style={{ background: '#1a5030' }} />
+          <div className="flex-1" style={{ background: '#4a2870' }} />
         </div>
       </div>
     </div>

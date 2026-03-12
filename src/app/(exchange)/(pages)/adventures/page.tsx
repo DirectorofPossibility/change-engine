@@ -51,7 +51,7 @@ export default function AdventuresPage() {
                   <Link
                     key={adventure.slug}
                     href={'/adventures/' + adventure.slug}
-                    className="group block bg-white rounded-xl border border-brand-border overflow-hidden hover:shadow-lg hover:translate-y-[-2px] transition-all"
+                    className="group block bg-white border border-brand-border overflow-hidden hover:shadow-lg hover:translate-y-[-2px] transition-all"
                    
                   >
                     <div className="flex">
@@ -59,13 +59,13 @@ export default function AdventuresPage() {
                       <div className="flex-1 p-6">
                         <div className="flex items-start gap-4">
                           <div
-                            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                            className="w-12 h-12 flex items-center justify-center flex-shrink-0"
                             style={{ backgroundColor: adventure.color + '15' }}
                           >
                             <Icon size={22} style={{ color: adventure.color }} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h2 className="font-serif text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">
+                            <h2 className="font-display text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                               {adventure.title}
                             </h2>
                             <p className="text-xs font-medium mt-0.5" style={{ color: adventure.color }}>
@@ -96,7 +96,7 @@ export default function AdventuresPage() {
 
             {/* How it works */}
             <div className="mt-10 border-t-2 border-brand-border pt-8">
-              <h2 className="font-serif text-xl font-bold text-brand-text mb-4">How Community Adventures Work</h2>
+              <h2 className="font-display text-xl font-bold text-brand-text mb-4">How Community Adventures Work</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                   { step: '1', title: 'Read the Scene', desc: 'Each scene puts you in a real civic situation with illustrated context.' },
@@ -104,11 +104,11 @@ export default function AdventuresPage() {
                   { step: '3', title: 'Learn & Connect', desc: 'Scenes include real facts and links to explore topics further on The Change Engine.' },
                 ].map(function (item) {
                   return (
-                    <div key={item.step} className="bg-white rounded-xl border border-brand-border p-5">
+                    <div key={item.step} className="bg-white border border-brand-border p-5">
                       <div className="w-8 h-8 rounded-full bg-brand-accent/10 flex items-center justify-center mb-3">
                         <span className="text-sm font-bold text-brand-accent">{item.step}</span>
                       </div>
-                      <h3 className="font-serif font-bold text-brand-text text-sm mb-1">{item.title}</h3>
+                      <h3 className="font-display font-bold text-brand-text text-sm mb-1">{item.title}</h3>
                       <p className="text-xs text-brand-muted leading-relaxed">{item.desc}</p>
                     </div>
                   )

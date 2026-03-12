@@ -31,7 +31,7 @@ export function LearningPathCard({ name, description, themeId, difficulty, modul
 
   return (
     <div
-      className="bg-white rounded-xl border border-brand-border p-5 hover:shadow-md transition-shadow"
+      className="bg-white border border-brand-border p-5 hover:shadow-md transition-shadow"
       {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, style: { cursor: 'pointer' } } : {})}
     >
       <div className="flex items-center gap-2 mb-3">

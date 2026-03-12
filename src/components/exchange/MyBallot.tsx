@@ -198,12 +198,12 @@ export function MyBallot({ candidates, electionName, electionDate }: MyBallotPro
     : ''
 
   return (
-    <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+    <div className="bg-white border border-brand-border overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-brand-accent/10 to-brand-accent/5 px-5 py-4 border-b border-brand-border">
         <div className="flex items-center gap-2 mb-1">
           <Vote size={18} className="text-brand-accent" />
-          <h3 className="font-serif font-bold text-brand-text text-lg">Your Ballot</h3>
+          <h3 className="font-display font-bold text-brand-text text-lg">Your Ballot</h3>
         </div>
         <p className="text-sm text-brand-muted">
           {electionName} {formattedDate ? ' \u2014 ' + formattedDate : ''}
@@ -227,13 +227,13 @@ export function MyBallot({ candidates, electionName, electionDate }: MyBallotPro
                 value={addressInput}
                 onChange={function (e) { setAddressInput(e.target.value) }}
                 placeholder="Enter your address or ZIP code"
-                className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-brand-border bg-white text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent text-sm"
+                className="w-full pl-9 pr-4 py-2.5 border border-brand-border bg-white text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent text-sm"
               />
             </div>
             <button
               type="submit"
               disabled={addressInput.trim().length < 5 || isLoading}
-              className="px-4 py-2.5 rounded-lg bg-brand-accent text-white text-sm font-medium hover:bg-brand-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-brand-accent text-white text-sm font-medium hover:bg-brand-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
             >
               {isLoading ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -247,7 +247,7 @@ export function MyBallot({ candidates, electionName, electionDate }: MyBallotPro
 
         {/* Active location indicator */}
         {hasLocation && address && (
-          <div className="flex items-center justify-between bg-brand-accent/5 rounded-lg px-3 py-2 mb-4">
+          <div className="flex items-center justify-between bg-brand-accent/5 px-3 py-2 mb-4">
             <p className="text-sm text-brand-text">
               <MapPin size={13} className="inline -mt-0.5 mr-1 text-brand-accent" />
               Showing ballot for <strong>{address}</strong>
@@ -311,7 +311,7 @@ export function MyBallot({ candidates, electionName, electionDate }: MyBallotPro
                     return (
                       <div
                         key={office}
-                        className="border border-brand-border rounded-lg overflow-hidden"
+                        className="border border-brand-border overflow-hidden"
                       >
                         {/* Race header */}
                         <div className="bg-gray-50 px-4 py-2.5 flex items-center justify-between">

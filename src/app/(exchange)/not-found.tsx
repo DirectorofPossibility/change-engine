@@ -10,16 +10,16 @@ export default function NotFound() {
           We couldn&apos;t find what you&apos;re looking for. Here are some places to start:
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/help" className="px-4 py-2 bg-brand-accent text-white rounded-lg text-sm hover:opacity-90 transition-opacity">
+          <Link href="/help" className="px-4 py-2 bg-brand-accent text-white text-sm hover:opacity-90 transition-opacity">
             Available Resources
           </Link>
-          <Link href="/services" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg transition-colors">
+          <Link href="/services" className="px-4 py-2 bg-white border border-brand-border text-sm text-brand-text hover:bg-brand-bg transition-colors">
             Find Services
           </Link>
-          <Link href="/pathways" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg transition-colors">
+          <Link href="/pathways" className="px-4 py-2 bg-white border border-brand-border text-sm text-brand-text hover:bg-brand-bg transition-colors">
             Browse Pathways
           </Link>
-          <Link href="/officials/lookup" className="px-4 py-2 bg-white border border-brand-border rounded-lg text-sm text-brand-text hover:bg-brand-bg transition-colors">
+          <Link href="/officials/lookup" className="px-4 py-2 bg-white border border-brand-border text-sm text-brand-text hover:bg-brand-bg transition-colors">
             Find My Reps
           </Link>
         </div>

@@ -198,16 +198,16 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
         {/* Nav */}
         <div className="flex items-center gap-2">
-          <button onClick={navigatePrev} className="p-1.5 rounded-lg hover:bg-brand-bg transition-colors">
+          <button onClick={navigatePrev} className="p-1.5 hover:bg-brand-bg transition-colors">
             <ChevronLeft size={18} className="text-brand-muted" />
           </button>
-          <button onClick={goToToday} className="px-3 py-1 text-xs font-medium text-brand-accent hover:bg-brand-accent/5 rounded-lg transition-colors">
+          <button onClick={goToToday} className="px-3 py-1 text-xs font-medium text-brand-accent hover:bg-brand-accent/5 transition-colors">
             Today
           </button>
-          <button onClick={navigateNext} className="p-1.5 rounded-lg hover:bg-brand-bg transition-colors">
+          <button onClick={navigateNext} className="p-1.5 hover:bg-brand-bg transition-colors">
             <ChevronRight size={18} className="text-brand-muted" />
           </button>
-          <h2 className="text-lg font-serif font-bold text-brand-text ml-2">
+          <h2 className="text-lg font-display font-bold text-brand-text ml-2">
             {view === 'month' && formatMonthYear(currentDate)}
             {view === 'week' && formatDayHeader(getWeekStart(currentDate)) + ' - ' + formatDayHeader(addDays(getWeekStart(currentDate), 6))}
             {view === '3day' && formatDayHeader(currentDate) + ' - ' + formatDayHeader(addDays(currentDate, 2))}
@@ -216,7 +216,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
         </div>
 
         {/* View toggle */}
-        <div className="flex items-center gap-1 bg-brand-bg rounded-lg p-1 sm:ml-auto">
+        <div className="flex items-center gap-1 bg-brand-bg p-1 sm:ml-auto">
           {(['day', '3day', 'week', 'month'] as ViewMode[]).map(function (v) {
             const labels: Record<ViewMode, string> = { day: 'Day', '3day': '3 Day', week: 'Week', month: 'Month' }
             return (
@@ -243,7 +243,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
             <button
               key={key}
               onClick={function () { toggleCategory(key) }}
-              className={'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ' +
+              className={'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border transition-colors ' +
                 (active ? cfg.bgClass + ' ' + cfg.textClass + ' border-transparent' : 'bg-white text-brand-muted border-brand-border opacity-50')}
             >
               <Icon size={12} />
@@ -259,7 +259,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted self-center mr-1">Type</span>
           <button
             onClick={function () { setActiveEventType(null) }}
-            className={'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors border ' +
+            className={'px-2.5 py-1 text-[11px] font-medium transition-colors border ' +
               (!activeEventType ? 'bg-brand-text text-white border-brand-text' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
           >
             All
@@ -270,7 +270,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
               <button
                 key={type}
                 onClick={function () { setActiveEventType(active ? null : type) }}
-                className={'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors border ' +
+                className={'px-2.5 py-1 text-[11px] font-medium transition-colors border ' +
                   (active ? 'bg-brand-accent text-white border-brand-accent' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
               >
                 {type} ({count})
@@ -284,7 +284,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           onClick={function () { setActivePathway(null) }}
-          className={'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ' +
+          className={'px-3 py-1.5 text-xs font-medium transition-colors border ' +
             (!activePathway ? 'bg-brand-text text-white border-brand-text' : 'bg-white text-brand-muted border-brand-border hover:border-brand-text')}
         >
           All Pathways
@@ -295,7 +295,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
             <button
               key={theme.id}
               onClick={function () { setActivePathway(active ? null : theme.id) }}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border"
+              className="px-3 py-1.5 text-xs font-medium transition-colors border"
               style={active
                 ? { backgroundColor: theme.color, color: 'white', borderColor: theme.color }
                 : { borderColor: theme.color, color: theme.color }}
@@ -311,7 +311,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
 
       {/* ── Month View ── */}
       {view === 'month' && (
-        <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+        <div className="bg-white border border-brand-border overflow-hidden">
           {/* Day headers */}
           <div className="grid grid-cols-7 border-b border-brand-border">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(function (d) {
@@ -373,7 +373,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
 
       {/* ── Week / 3-Day View ── */}
       {(view === 'week' || view === '3day') && (
-        <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+        <div className="bg-white border border-brand-border overflow-hidden">
           <div className={'grid ' + (view === 'week' ? 'grid-cols-7' : 'grid-cols-3')}>
             {visibleDays.map(function (day, i) {
               const isToday = isSameDay(day, today)
@@ -401,7 +401,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                         <button
                           key={item.id}
                           onClick={function () { setSelectedEvent(item) }}
-                          className="w-full text-left p-2 rounded-lg border transition-shadow hover:shadow-sm"
+                          className="w-full text-left p-2 border transition-shadow hover:shadow-sm"
                           style={{ borderColor: cfg.color + '40', backgroundColor: cfg.color + '08' }}
                         >
                           <div className="flex items-center gap-1 mb-0.5">
@@ -428,7 +428,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
 
       {/* ── Day View ── */}
       {view === 'day' && (
-        <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+        <div className="bg-white border border-brand-border overflow-hidden">
           <div className={'text-center py-3 border-b border-brand-border ' + (isSameDay(currentDate, today) ? 'bg-brand-accent/10' : 'bg-brand-bg/50')}>
             <div className="text-sm text-brand-muted">
               {currentDate.toLocaleDateString('en-US', { weekday: 'long' })}
@@ -455,7 +455,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
       {/* ── Event Detail Modal ── */}
       {selectedEvent && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={function () { setSelectedEvent(null) }}>
-          <div className="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl" onClick={function (e) { e.stopPropagation() }}>
+          <div className="bg-white max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl" onClick={function (e) { e.stopPropagation() }}>
             <EventDetail event={selectedEvent} themes={themes} onClose={function () { setSelectedEvent(null) }} />
           </div>
         </div>
@@ -501,7 +501,7 @@ function renderEventCard(item: CalendarItem, themes: ThemeInfo[], onClick: () =>
   return (
     <div
       key={item.id}
-      className="flex gap-4 bg-white rounded-xl border border-brand-border p-4 hover:shadow-sm transition-shadow cursor-pointer"
+      className="flex gap-4 bg-white border border-brand-border p-4 hover:shadow-sm transition-shadow cursor-pointer"
       onClick={onClick}
     >
       {dateInfo && (
@@ -626,7 +626,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
               </span>
             )}
           </div>
-          <h2 className="text-xl font-serif font-bold text-brand-text">{event.title}</h2>
+          <h2 className="text-xl font-display font-bold text-brand-text">{event.title}</h2>
         </div>
         <button onClick={onClose} className="p-1 rounded hover:bg-brand-bg">
           <X size={18} className="text-brand-muted" />
@@ -685,7 +685,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
 
         {/* Description */}
         {event.description && (
-          <div className="bg-brand-bg rounded-lg p-4">
+          <div className="bg-brand-bg p-4">
             <p className="text-sm text-brand-text leading-relaxed">{event.description}</p>
           </div>
         )}
@@ -697,7 +697,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
               href={event.registrationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 text-center py-2.5 rounded-lg bg-brand-accent text-white text-sm font-medium hover:bg-brand-accent/90 transition-colors"
+              className="flex-1 text-center py-2.5 bg-brand-accent text-white text-sm font-medium hover:bg-brand-accent/90 transition-colors"
             >
               Register
             </a>
@@ -705,7 +705,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
           {event.detailHref && (
             <Link
               href={event.detailHref}
-              className="flex-1 text-center py-2.5 rounded-lg border border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
+              className="flex-1 text-center py-2.5 border border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
               onClick={function (e) { e.stopPropagation() }}
             >
               Full Details
@@ -716,7 +716,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
               href={event.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 text-center py-2.5 rounded-lg border border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
+              className="flex-1 text-center py-2.5 border border-brand-border text-brand-text text-sm font-medium hover:bg-brand-bg transition-colors"
             >
               View Source
             </a>

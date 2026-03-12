@@ -17,7 +17,7 @@ export function TopicsSection({ topics, topicsOpen, onToggle, onTopicClick }: To
     <div className="px-5">
       <button
         onClick={onToggle}
-        className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-serif"
+        className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
       >
         {topicsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         {t('sidebar.topics')} ({topics.length})

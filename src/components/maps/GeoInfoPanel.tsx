@@ -40,7 +40,7 @@ export function GeoInfoPanel({
   const medianIncome = properties.MEDIAN_INCOME as number | undefined
 
   return (
-    <div className="bg-white rounded-lg shadow-lg border border-brand-border p-4 mt-3">
+    <div className="bg-white shadow-lg border border-brand-border p-4 mt-3">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           <span

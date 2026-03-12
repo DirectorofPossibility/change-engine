@@ -11,13 +11,13 @@ export function GuideNavigation({ prev, next }: GuideNavProps) {
       {prev ? (
         <Link href={'/guides/' + prev.slug} className="group">
           <span className="text-xs text-brand-muted block mb-1">Previous guide</span>
-          <span className="font-serif font-medium text-brand-text group-hover:text-brand-accent transition-colors">{prev.title}</span>
+          <span className="font-display font-medium text-brand-text group-hover:text-brand-accent transition-colors">{prev.title}</span>
         </Link>
       ) : <div />}
       {next ? (
         <Link href={'/guides/' + next.slug} className="text-right group">
           <span className="text-xs text-brand-muted block mb-1">Next guide</span>
-          <span className="font-serif font-medium text-brand-text group-hover:text-brand-accent transition-colors">{next.title}</span>
+          <span className="font-display font-medium text-brand-text group-hover:text-brand-accent transition-colors">{next.title}</span>
         </Link>
       ) : <div />}
     </div>

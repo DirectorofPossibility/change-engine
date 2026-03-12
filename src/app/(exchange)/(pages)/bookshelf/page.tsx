@@ -46,7 +46,7 @@ export default async function BookshelfPage() {
             {/* Left: text */}
             <div>
               <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-3">Community Bookshelf</p>
-              <h1 className="font-serif text-[clamp(2.2rem,4.5vw,3.2rem)] leading-[1.1] text-brand-text mb-4">
+              <h1 className="font-display text-[clamp(2.2rem,4.5vw,3.2rem)] leading-[1.1] text-brand-text mb-4">
                 Read. <span className="font-hand text-[1.15em] font-bold text-[#805ad5]">Reflect.</span> Act.
               </h1>
               <p className="text-lg leading-relaxed text-brand-muted max-w-lg mb-6">

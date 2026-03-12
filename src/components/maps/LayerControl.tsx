@@ -21,7 +21,7 @@ export function LayerControl({ layers, onToggle }: LayerControlProps) {
 
   return (
     <div className="absolute top-3 right-3 z-10">
-      <div className="bg-white rounded-lg shadow-lg border border-brand-border overflow-hidden">
+      <div className="bg-white shadow-lg border border-brand-border overflow-hidden">
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-brand-text hover:bg-gray-50"

@@ -17,7 +17,7 @@ const DISTRICT_TYPES = [
     title: 'City Council',
     description: 'Houston is divided into 11 council districts plus 5 at-large positions. Your council member is your closest connection to city government.',
     icon: Building2,
-    color: '#C75B2A',
+    color: '#1b5e8a',
     href: '/officials',
     level: 'City',
   },
@@ -25,7 +25,7 @@ const DISTRICT_TYPES = [
     title: 'Congressional Districts',
     description: 'Houston spans multiple U.S. congressional districts. Your representative carries your voice to Washington.',
     icon: Landmark,
-    color: '#805ad5',
+    color: '#4a2870',
     href: '/officials',
     level: 'Federal',
   },
@@ -33,7 +33,7 @@ const DISTRICT_TYPES = [
     title: 'State House Districts',
     description: 'Texas House representatives serve districts of roughly 190,000 people. They shape state law, budgets, and education policy.',
     icon: Scale,
-    color: '#3182ce',
+    color: '#1b5e8a',
     href: '/officials',
     level: 'State',
   },
@@ -41,7 +41,7 @@ const DISTRICT_TYPES = [
     title: 'State Senate Districts',
     description: 'Texas Senators represent larger districts and confirm gubernatorial appointments, pass legislation, and set state priorities.',
     icon: Flag,
-    color: '#319795',
+    color: '#1a5030',
     href: '/officials',
     level: 'State',
   },
@@ -49,7 +49,7 @@ const DISTRICT_TYPES = [
     title: 'County Precincts',
     description: 'Harris County Commissioners Court oversees county roads, flood control, public health, and a multi-billion dollar budget.',
     icon: Users,
-    color: '#d69e2e',
+    color: '#4a2870',
     href: '/officials',
     level: 'County',
   },
@@ -57,7 +57,7 @@ const DISTRICT_TYPES = [
     title: 'HISD Trustee Districts',
     description: 'Houston Independent School District trustees govern the largest school district in Texas, serving over 180,000 students.',
     icon: GraduationCap,
-    color: '#38a169',
+    color: '#1a6b56',
     href: '/officials',
     level: 'City',
   },
@@ -65,7 +65,7 @@ const DISTRICT_TYPES = [
     title: 'TIRZ Zones',
     description: 'Tax Increment Reinvestment Zones capture property tax growth and reinvest it locally — funding infrastructure, housing, and development.',
     icon: TrendingUp,
-    color: '#C75B2A',
+    color: '#1b5e8a',
     href: '/tirz',
     level: 'City',
   },
@@ -75,7 +75,7 @@ export default function DistrictsPage() {
   return (
     <div>
       <IndexPageHero
-        color="#805ad5"
+        color="#4a2870"
         pattern="metatron"
         title="Every District. Every Representative. Mapped."
         subtitle="You live in more districts than you think."
@@ -99,17 +99,17 @@ export default function DistrictsPage() {
               className="border border-brand-border rounded-[0.75rem] bg-white overflow-hidden mb-8"
              
             >
-              <div className="h-1.5" style={{ backgroundColor: '#805ad5' }} />
+              <div className="h-1.5" style={{ backgroundColor: '#4a2870' }} />
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4">
                   <div
-                    className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: '#805ad515' }}
+                    className="w-12 h-12 flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: '#4a287015' }}
                   >
-                    <MapPin size={24} style={{ color: '#805ad5' }} />
+                    <MapPin size={24} style={{ color: '#4a2870' }} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h2 className="font-serif text-xl font-bold text-brand-text mb-2">
+                    <h2 className="font-display text-xl font-bold text-brand-text mb-2">
                       Find Your Districts
                     </h2>
                     <p className="text-sm leading-relaxed text-brand-muted mb-4">
@@ -118,7 +118,7 @@ export default function DistrictsPage() {
                     </p>
                     <Link
                       href="/officials/lookup"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                     >
                       <MapPin size={16} />
                       Look Up Your Address
@@ -150,12 +150,12 @@ export default function DistrictsPage() {
                       <div className="p-5 flex-1">
                         <div className="flex items-center gap-3 mb-3">
                           <div
-                            className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                            className="w-10 h-10 flex items-center justify-center flex-shrink-0"
                             style={{ backgroundColor: district.color + '15' }}
                           >
                             <Icon size={20} style={{ color: district.color }} />
                           </div>
-                          <h3 className="font-serif text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">
+                          <h3 className="font-display text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">
                             {district.title}
                           </h3>
                         </div>
@@ -175,7 +175,7 @@ export default function DistrictsPage() {
 
             {/* How Districts Work */}
             <div className="mt-10 border-t-2 border-brand-border pt-8">
-              <h2 className="font-serif text-2xl font-bold text-brand-text mb-4">
+              <h2 className="font-display text-2xl font-bold text-brand-text mb-4">
                 How Districts Work
               </h2>
               <p className="text-sm leading-relaxed text-brand-muted max-w-2xl mb-6">
@@ -186,19 +186,19 @@ export default function DistrictsPage() {
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-serif font-bold text-brand-text text-sm mb-1">Local</p>
+                  <p className="font-display font-bold text-brand-text text-sm mb-1">Local</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     City council and county commissioners handle roads, parks, public safety, and local budgets.
                   </p>
                 </div>
                 <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-serif font-bold text-brand-text text-sm mb-1">State</p>
+                  <p className="font-display font-bold text-brand-text text-sm mb-1">State</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     State house and senate members shape education, healthcare, criminal justice, and state taxes.
                   </p>
                 </div>
                 <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-serif font-bold text-brand-text text-sm mb-1">Federal</p>
+                  <p className="font-display font-bold text-brand-text text-sm mb-1">Federal</p>
                   <p className="text-[12px] leading-relaxed text-brand-muted">
                     Congressional representatives and senators set national policy, defense, immigration, and federal funding.
                   </p>
@@ -212,13 +212,13 @@ export default function DistrictsPage() {
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="districts"
-                color="#805ad5"
+                color="#4a2870"
                 related={[
-                  { label: 'Officials Directory', href: '/officials', color: '#805ad5' },
-                  { label: 'Look Up Your Address', href: '/officials/lookup', color: '#C75B2A' },
-                  { label: 'Governance Overview', href: '/governance', color: '#3182ce' },
-                  { label: 'Elections', href: '/elections', color: '#38a169' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
+                  { label: 'Officials Directory', href: '/officials', color: '#4a2870' },
+                  { label: 'Look Up Your Address', href: '/officials/lookup', color: '#1b5e8a' },
+                  { label: 'Governance Overview', href: '/governance', color: '#1b5e8a' },
+                  { label: 'Elections', href: '/elections', color: '#1a6b56' },
+                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
                 ]}
               />
             </div>

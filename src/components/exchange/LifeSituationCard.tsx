@@ -47,8 +47,8 @@ export function LifeSituationCard({ name, slug, description, urgency, iconName, 
 
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: `block rounded-xl border overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${colors.bg} ${colors.border}` }
-    : { href: '/help/' + (slug || ''), className: `block rounded-xl border overflow-hidden hover:shadow-md transition-shadow ${colors.bg} ${colors.border}` }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: `block border overflow-hidden hover:shadow-md transition-shadow cursor-pointer ${colors.bg} ${colors.border}` }
+    : { href: '/help/' + (slug || ''), className: `block border overflow-hidden hover:shadow-md transition-shadow ${colors.bg} ${colors.border}` }
 
   return (
     <Wrapper {...wrapperProps as any}>

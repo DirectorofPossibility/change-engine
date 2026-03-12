@@ -55,7 +55,7 @@ export function ImpactMetrics({ stats }: ImpactMetricsProps) {
 
   return (
     <section className="mb-14">
-      <h2 className="font-serif text-lg font-semibold text-center text-brand-muted mb-6">
+      <h2 className="font-display text-lg font-semibold text-center text-brand-muted mb-6">
         {t('home.community_glance')}
       </h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
@@ -72,9 +72,9 @@ function MetricCard({ target, icon: Icon, label, href }: { target: number; icon:
 
   return (
     <div ref={ref}>
-      <Link href={href} className="flex flex-col items-center gap-2 p-6 rounded-2xl bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer h-full">
+      <Link href={href} className="flex flex-col items-center gap-2 p-6 bg-white border border-brand-border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer h-full">
         <Icon size={24} style={{ color: BRAND.accent }} strokeWidth={1.5} />
-        <span className="font-serif text-5xl font-bold tracking-tight" style={{ color: BRAND.text }}>
+        <span className="font-display text-5xl font-bold tracking-tight" style={{ color: BRAND.text }}>
           {value.toLocaleString()}
         </span>
         <span className="text-xs font-semibold text-brand-muted uppercase tracking-wider">

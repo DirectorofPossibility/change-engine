@@ -152,7 +152,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
 
       {/* Badge award notification */}
       {pathCompleted && badgeName && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-center">
+        <div className="bg-green-50 border border-green-200 p-4 mb-6 text-center">
           <p className="text-green-700 font-semibold">You earned the &ldquo;{badgeName}&rdquo; badge!</p>
           <p className="text-green-600 text-sm mt-1">Check your dashboard to see all your badges.</p>
         </div>
@@ -181,7 +181,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
                 {status === 'completed' ? <CheckCircle2 size={18} /> : index + 1}
               </div>
               {/* Module content */}
-              <div className={'bg-white rounded-xl border p-4 ' + (status === 'completed' ? 'border-green-200' : 'border-brand-border')}>
+              <div className={'bg-white border p-4 ' + (status === 'completed' ? 'border-green-200' : 'border-brand-border')}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <h4 className="font-semibold text-brand-text mb-1">{mod.name}</h4>
@@ -208,7 +208,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
                       <button
                         onClick={function () { handleStartModule(mod.moduleId) }}
                         disabled={isUpdating}
-                        className="px-3 py-1.5 bg-brand-accent text-white rounded-lg text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1"
+                        className="px-3 py-1.5 bg-brand-accent text-white text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1"
                       >
                         <Play size={12} />
                         {isUpdating ? 'Starting...' : 'Start'}
@@ -218,7 +218,7 @@ export function ModuleProgressTimeline({ modules, pathId, userId, initialProgres
                       <button
                         onClick={function () { handleCompleteModule(mod.moduleId) }}
                         disabled={isUpdating}
-                        className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1"
+                        className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-1"
                       >
                         <CheckCircle2 size={12} />
                         {isUpdating ? 'Saving...' : 'Complete'}

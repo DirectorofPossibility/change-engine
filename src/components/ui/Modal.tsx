@@ -75,9 +75,9 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
         aria-label={title || 'Dialog'}
         tabIndex={-1}
         onKeyDown={handleKeyDown}
-        className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto outline-none"
+        className="relative bg-white shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto outline-none"
       >
-        <div className="sticky top-0 bg-white border-b border-brand-border px-6 py-4 flex items-center justify-between rounded-t-lg">
+        <div className="sticky top-0 bg-white border-b border-brand-border px-6 py-4 flex items-center justify-between">
           {title && <h2 className="text-lg font-semibold">{title}</h2>}
           <button onClick={onClose} aria-label="Close dialog" className="text-brand-muted hover:text-brand-text text-xl">
             &times;

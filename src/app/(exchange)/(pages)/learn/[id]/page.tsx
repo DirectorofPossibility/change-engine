@@ -192,12 +192,12 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         <div className="flex items-center gap-3 flex-wrap mb-3">
           {path.theme_id && <ThemePill themeId={path.theme_id} size="sm" />}
           {path.difficulty_level && (
-            <span className={'text-xs px-2.5 py-1 rounded-lg font-medium ' + (DIFF_COLORS[path.difficulty_level] || 'bg-gray-100 text-gray-700')}>
+            <span className={'text-xs px-2.5 py-1 font-medium ' + (DIFF_COLORS[path.difficulty_level] || 'bg-gray-100 text-gray-700')}>
               {path.difficulty_level}
             </span>
           )}
         </div>
-        <h1 className="text-3xl font-bold text-brand-text font-serif mb-3">{pathName}</h1>
+        <h1 className="text-3xl font-bold text-brand-text font-display mb-3">{pathName}</h1>
         {pathDescription && (
           <p className="text-brand-muted mb-4 max-w-2xl text-lg">{pathDescription}</p>
         )}
@@ -222,7 +222,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         <div className="lg:col-span-2">
           {/* Prerequisite */}
           {prerequisitePath && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+            <div className="bg-yellow-50 border border-yellow-200 p-4 mb-6">
               <p className="text-sm text-yellow-700">
                 Before starting this path, complete:{' '}
                 <Link href={'/learn/' + ((prerequisitePath as any).slug || prerequisitePath.path_id)} className="font-semibold underline">{prerequisitePath.path_name}</Link>
@@ -232,7 +232,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Sign-up CTA for non-logged-in users */}
           {!user && timelineModules.length > 0 && (
-            <div className="bg-brand-accent/5 border border-brand-accent/20 rounded-xl p-4 mb-6">
+            <div className="bg-brand-accent/5 border border-brand-accent/20 p-4 mb-6">
               <p className="text-sm text-brand-text">
                 <Link href="/signup" className="text-brand-accent font-semibold hover:underline">{t('learn.create_account')}</Link>
                 {' '}{t('learn.signup_cta')}
@@ -243,7 +243,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           {/* Module Timeline */}
           {timelineModules.length > 0 && (
             <section className="mb-6">
-              <h2 className="relative text-xl font-bold text-brand-text font-serif mb-6">{t('learn.modules_heading')}
+              <h2 className="relative text-xl font-bold text-brand-text font-display mb-6">{t('learn.modules_heading')}
                 <TranslatedTooltip tip={TOOLTIPS.quiz_indicator} position="bottom" />
               </h2>
               {user ? (
@@ -264,7 +264,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           {/* Badge */}
           {badge && (
             <section className="mb-6">
-              <h2 className="text-xl font-bold text-brand-text font-serif mb-4">{t('learn.badge_earned')}</h2>
+              <h2 className="text-xl font-bold text-brand-text font-display mb-4">{t('learn.badge_earned')}</h2>
               <div className="max-w-md">
                 <BadgeCard
                   name={badge.badge_name}
@@ -282,7 +282,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
             {prevPath ? (
               <Link href={'/learn/' + (prevPath.slug || prevPath.path_id)} className="group">
                 <span className="text-xs text-brand-muted block mb-1">{t('learn.previous_path')}</span>
-                <span className="font-serif font-medium text-brand-text group-hover:text-brand-accent transition-colors">
+                <span className="font-display font-medium text-brand-text group-hover:text-brand-accent transition-colors">
                   {prevPath.path_name}
                 </span>
               </Link>
@@ -290,7 +290,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
             {nextPath ? (
               <Link href={'/learn/' + (nextPath.slug || nextPath.path_id)} className="text-right group">
                 <span className="text-xs text-brand-muted block mb-1">{t('learn.next_path')}</span>
-                <span className="font-serif font-medium text-brand-text group-hover:text-brand-accent transition-colors">
+                <span className="font-display font-medium text-brand-text group-hover:text-brand-accent transition-colors">
                   {nextPath.path_name}
                 </span>
               </Link>
@@ -303,16 +303,16 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <DetailWayfinder data={wayfinderData} currentType="learning_path" currentId={pathId} userRole={userProfile?.role} />
           {/* Focus Areas */}
           {focusAreas.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_focus')}</h3>
+            <div className="bg-white border border-brand-border p-4">
+              <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.related_focus')}</h3>
               <FocusAreaPills focusAreas={focusAreas} />
             </div>
           )}
 
           {/* SDG Badges */}
           {sdgIds.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.sdg')}</h3>
+            <div className="bg-white border border-brand-border p-4">
+              <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.sdg')}</h3>
               <div className="flex flex-wrap gap-2">
                 {sdgIds.map(sid => {
                   const sdg = sdgMap[sid as string]
@@ -332,8 +332,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* SDOH Badges */}
           {sdohCodes.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.sdoh')}</h3>
+            <div className="bg-white border border-brand-border p-4">
+              <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.sdoh')}</h3>
               <div className="flex flex-wrap gap-2">
                 {sdohCodes.map(code => {
                   const sdoh = sdohMap[code as string]
@@ -353,11 +353,11 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Related Opportunities */}
           {opportunities.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_opportunities')}</h3>
+            <div className="bg-white border border-brand-border p-4">
+              <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.related_opportunities')}</h3>
               <div className="space-y-2">
                 {opportunities.slice(0, 4).map(o => (
-                  <div key={o.opportunity_id} className="p-3 bg-brand-bg rounded-lg">
+                  <div key={o.opportunity_id} className="p-3 bg-brand-bg">
                     <div className="font-medium text-sm text-brand-text">{o.opportunity_name}</div>
                     {o.start_date && (
                       <div className="text-xs text-brand-muted mt-1">
@@ -378,11 +378,11 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
           {/* Related Policies */}
           {policies.length > 0 && (
-            <div className="bg-white rounded-xl border border-brand-border p-4">
-              <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_policies')}</h3>
+            <div className="bg-white border border-brand-border p-4">
+              <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.related_policies')}</h3>
               <div className="space-y-2">
                 {policies.slice(0, 4).map(p => (
-                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-3 bg-brand-bg rounded-lg hover:shadow-sm transition-shadow">
+                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-3 bg-brand-bg hover:shadow-sm transition-shadow">
                     <div className="font-medium text-sm text-brand-text">{p.policy_name}</div>
                     <div className="flex items-center gap-2 mt-1">
                       {p.status && <span className="text-xs text-brand-muted">{p.status}</span>}
@@ -395,8 +395,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           )}
 
           {/* Related Guides */}
-          <div className="bg-white rounded-xl border border-brand-border p-4">
-            <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.related_guides')}</h3>
+          <div className="bg-white border border-brand-border p-4">
+            <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.related_guides')}</h3>
             <Link href="/guides" className="flex items-center gap-2 text-sm text-brand-accent hover:underline">
               <BookOpen size={14} />
               {t('learn.browse_guides')}
@@ -405,8 +405,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           </div>
 
           {/* All Learning Paths */}
-          <div className="bg-white rounded-xl border border-brand-border p-4">
-            <h3 className="text-sm font-semibold text-brand-text mb-3 font-serif">{t('learn.more_paths')}</h3>
+          <div className="bg-white border border-brand-border p-4">
+            <h3 className="text-sm font-semibold text-brand-text mb-3 font-display">{t('learn.more_paths')}</h3>
             <div className="space-y-2">
               {allPaths.filter(p => p.path_id !== pathId).slice(0, 5).map(p => (
                 <Link key={p.path_id} href={'/learn/' + (p.slug || p.path_id)} className="block text-sm text-brand-text hover:text-brand-accent transition-colors">

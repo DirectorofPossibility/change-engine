@@ -234,7 +234,7 @@ export function WayfinderCircles({
                     textAnchor="middle"
                     fill={BRAND.muted}
                     fontSize={10}
-                    className="font-serif transition-all duration-300 ease-out"
+                    className="font-display transition-all duration-300 ease-out"
                   >
                     {sharedCount}
                   </text>
@@ -336,7 +336,7 @@ export function WayfinderCircles({
                 fill={node.color}
                 fontSize={compact ? 12 : isSelected ? 22 : 18}
                 fontWeight="600"
-                className="font-serif transition-all duration-300 ease-out pointer-events-none"
+                className="font-display transition-all duration-300 ease-out pointer-events-none"
               >
                 {node.count}
               </text>
@@ -350,7 +350,7 @@ export function WayfinderCircles({
                   fill={BRAND.text}
                   fontSize={compact ? 11 : isSelected ? 15 : 13}
                   fontWeight={isSelected ? '600' : '400'}
-                  className="font-serif transition-all duration-300 ease-out pointer-events-none"
+                  className="font-display transition-all duration-300 ease-out pointer-events-none"
                 >
                   {node.name}
                 </text>
@@ -392,7 +392,7 @@ function StatItem({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col items-center">
       <span
-        className="text-3xl sm:text-4xl font-semibold font-serif leading-none"
+        className="text-3xl sm:text-4xl font-semibold font-display leading-none"
         style={{ color: BRAND.accent }}
       >
         {value.toLocaleString()}

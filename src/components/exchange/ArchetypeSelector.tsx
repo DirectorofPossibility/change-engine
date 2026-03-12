@@ -93,7 +93,7 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
           <button
             key={a.id}
             onClick={function () { handleSelect(a.id) }}
-            className="group text-left p-4 rounded-lg border-2 transition-all hover:-translate-y-0.5"
+            className="group text-left p-4 border-2 transition-all hover:-translate-y-0.5"
             style={{
               borderColor: isActive ? '#C75B2A' : '#E2DDD5',
               backgroundColor: isActive ? '#C75B2A08' : '#FFFFFF',
@@ -102,7 +102,7 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
           >
             <div className="flex items-center gap-2 mb-1.5">
               <a.Icon size={20} color={isActive ? '#C75B2A' : '#9B9590'} />
-              <span className="font-serif font-bold text-sm text-brand-text">{a.name}</span>
+              <span className="font-display font-bold text-sm text-brand-text">{a.name}</span>
             </div>
             <p className="text-[11px] text-brand-muted leading-relaxed">{a.desc}</p>
             {isActive && (

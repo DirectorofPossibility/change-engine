@@ -42,7 +42,7 @@ export function AuthButton() {
     return (
       <Link
         href="/login"
-        className="text-xs text-brand-text hover:text-brand-accent transition-colors px-2 py-1 border border-brand-border rounded-lg"
+        className="text-xs text-brand-text hover:text-brand-accent transition-colors px-2 py-1 border border-brand-border"
       >
         Sign In
       </Link>
@@ -61,7 +61,7 @@ export function AuthButton() {
         {initial}
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg border border-brand-border shadow-lg py-1 z-50">
+        <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-brand-border shadow-lg py-1 z-50">
           <p className="px-3 py-2 text-xs text-brand-muted truncate border-b border-brand-border">
             {user.email}
           </p>

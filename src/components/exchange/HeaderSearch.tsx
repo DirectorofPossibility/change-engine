@@ -97,7 +97,7 @@ export function HeaderSearch() {
     return (
       <button
         onClick={function () { setExpanded(true) }}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand-border bg-white/60 hover:bg-white text-brand-muted text-xs transition-all hover:border-brand-accent/30"
+        className="flex items-center gap-2 px-3 py-1.5 border border-brand-border bg-white/60 hover:bg-white text-brand-muted text-xs transition-all hover:border-brand-accent/30"
         aria-label="Search"
       >
         <Search size={14} />
@@ -109,7 +109,7 @@ export function HeaderSearch() {
   return (
     <div ref={containerRef} className="relative">
       <form onSubmit={handleSubmit} className="flex items-center">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-brand-accent/40 bg-white shadow-sm" style={{ minWidth: '280px' }}>
+        <div className="flex items-center gap-2 px-3 py-1.5 border border-brand-accent/40 bg-white shadow-sm" style={{ minWidth: '280px' }}>
           <Search size={14} className="text-brand-accent flex-shrink-0" />
           <input
             ref={inputRef}
@@ -129,7 +129,7 @@ export function HeaderSearch() {
 
       {/* Quick results dropdown */}
       {(results.length > 0 || loading) && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white rounded-xl border border-brand-border shadow-lg z-50 overflow-hidden" style={{ backdropFilter: 'blur(12px)' }}>
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-brand-border shadow-lg z-50 overflow-hidden" style={{ backdropFilter: 'blur(12px)' }}>
           {loading && results.length === 0 && (
             <div className="px-4 py-3 text-xs text-brand-muted">Searching...</div>
           )}

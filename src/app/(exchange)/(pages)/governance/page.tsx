@@ -131,13 +131,13 @@ export default async function GovernancePage() {
                 <section key={level.key}>
                   {/* Level header */}
                   <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: level.color + '14' }}>
+                    <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: level.color + '14' }}>
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={level.color}>
                         <path strokeLinecap="round" strokeLinejoin="round" d={level.icon} />
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-xl font-serif font-bold text-brand-text">{level.label}</h2>
+                      <h2 className="text-xl font-display font-bold text-brand-text">{level.label}</h2>
                       <p className="text-xs text-brand-muted">
                         {lvlOfficials.length} official{lvlOfficials.length !== 1 ? 's' : ''}
                         {lvlPolicies.length > 0 ? ` · ${lvlPolicies.length} recent polic${lvlPolicies.length !== 1 ? 'ies' : 'y'}` : ''}
@@ -155,7 +155,7 @@ export default async function GovernancePage() {
                             <Link
                               key={o.official_id}
                               href={'/officials/' + o.official_id}
-                              className="group flex-shrink-0 w-[160px] bg-white rounded-xl border border-brand-border hover:-translate-y-1 transition-all duration-200 overflow-hidden"
+                              className="group flex-shrink-0 w-[160px] bg-white border border-brand-border hover:-translate-y-1 transition-all duration-200 overflow-hidden"
                               style={{ boxShadow: '3px 3px 0 ' + level.color + '20' }}
                             >
                               {/* Photo or color header */}
@@ -169,7 +169,7 @@ export default async function GovernancePage() {
                                 </div>
                               ) : (
                                 <div className="h-[60px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, ' + level.color + ' 0%, ' + level.color + 'cc 100%)' }}>
-                                  <span className="text-white/50 text-2xl font-serif font-bold">{o.official_name.charAt(0)}</span>
+                                  <span className="text-white/50 text-2xl font-display font-bold">{o.official_name.charAt(0)}</span>
                                 </div>
                               )}
                               <div className="p-3">
@@ -190,7 +190,7 @@ export default async function GovernancePage() {
                   {lvlPolicies.length > 0 && (
                     <div>
                       <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-3">What they're working on</p>
-                      <div className="bg-white rounded-xl border border-brand-border overflow-hidden">
+                      <div className="bg-white border border-brand-border overflow-hidden">
                         <div className="divide-y divide-brand-border">
                           {lvlPolicies.map(function (p) {
                             const displayTitle = p.title_6th_grade || p.policy_name

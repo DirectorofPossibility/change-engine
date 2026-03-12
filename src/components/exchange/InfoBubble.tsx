@@ -109,8 +109,8 @@ export function InfoBubble({ id, text, position = 'bottom', align = 'start', acc
           className={'absolute z-50 animate-fade-up ' + arrowMap[position]}
           style={{ maxWidth: 300, minWidth: 200 }}
         >
-          <div className="bg-white rounded-xl shadow-lg border border-brand-border p-3.5 relative">
-            <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl" style={{ background: accent }} />
+          <div className="bg-white shadow-lg border border-brand-border p-3.5 relative">
+            <div className="absolute top-0 left-0 right-0 h-1" style={{ background: accent }} />
             <div className="flex gap-2.5 items-start pt-1">
               <Info size={14} className="flex-shrink-0 mt-0.5" style={{ color: accent }} />
               <p className="text-[13px] leading-relaxed text-brand-text flex-1">{text}</p>

@@ -46,11 +46,11 @@ function SectionHeader({ icon: Icon, title, count, color }: {
 }) {
   return (
     <div className="flex items-center gap-3 mb-4">
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: color + '14' }}>
+      <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: color + '14' }}>
         <Icon size={20} style={{ color }} />
       </div>
       <div>
-        <h2 className="font-serif font-bold text-brand-text text-lg">{title}</h2>
+        <h2 className="font-display font-bold text-brand-text text-lg">{title}</h2>
         {count !== undefined && count > 0 && (
           <p className="text-xs text-brand-muted">{count} found for your area</p>
         )}
@@ -71,7 +71,7 @@ function OfficialCard({ official }: { official: any }) {
   return (
     <Link
       href={'/officials/' + official.official_id}
-      className="group flex items-start gap-3 p-3 rounded-lg border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
+      className="group flex items-start gap-3 p-3 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all"
     >
       <div className="w-1 h-12 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
       <div className="flex-1 min-w-0">
@@ -101,7 +101,7 @@ function PolicyCard({ policy }: { policy: any }) {
   return (
     <Link
       href={'/policies/' + policy.policy_id}
-      className="group block p-3 rounded-lg border border-brand-border bg-white hover:shadow-sm transition-all"
+      className="group block p-3 border border-brand-border bg-white hover:shadow-sm transition-all"
     >
       <div className="flex items-start gap-2">
         <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: color }} />
@@ -126,7 +126,7 @@ function ServiceCard({ service }: { service: any }) {
   return (
     <Link
       href={'/services/' + service.service_id}
-      className="group block p-3 rounded-lg border border-brand-border bg-white hover:shadow-sm transition-all"
+      className="group block p-3 border border-brand-border bg-white hover:shadow-sm transition-all"
     >
       <p className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
         {service.service_name}
@@ -151,7 +151,7 @@ function ContentCard({ item, translation }: { item: any, translation?: { title?:
   return (
     <Link
       href={'/content/' + item.id}
-      className="group block p-3 rounded-lg border border-brand-border bg-white hover:shadow-sm transition-all"
+      className="group block p-3 border border-brand-border bg-white hover:shadow-sm transition-all"
     >
       <p className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
         {title}
@@ -230,11 +230,11 @@ export function MyAreaClient({
   const sections: Record<string, React.ReactNode> = {
     pathways: (
       <section key="pathways" className="mb-10">
-        <div className="bg-white rounded-xl border border-brand-border p-5">
+        <div className="bg-white border border-brand-border p-5">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <CompactCircleGraph activePathways={activePathways} accentColor="#C75B2A" />
             <div className="flex-1">
-              <h2 className="font-serif font-bold text-brand-text text-lg mb-2">Your Pathways</h2>
+              <h2 className="font-display font-bold text-brand-text text-lg mb-2">Your Pathways</h2>
               <p className="text-xs text-brand-muted mb-3">
                 {activePathways.length > 0
                   ? activePathways.length + ' pathways are active in your area'
@@ -263,8 +263,8 @@ export function MyAreaClient({
         </div>
 
         {/* Archetype selector */}
-        <div className="bg-white rounded-xl border border-brand-border p-5 mt-4">
-          <h2 className="font-serif font-bold text-brand-text text-lg mb-1">Your Journey</h2>
+        <div className="bg-white border border-brand-border p-5 mt-4">
+          <h2 className="font-display font-bold text-brand-text text-lg mb-1">Your Journey</h2>
           <p className="text-xs text-brand-muted mb-4">Choose how you explore the community. This personalizes the order of sections below.</p>
           <ArchetypeSelector />
         </div>
@@ -378,7 +378,7 @@ export function MyAreaClient({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {municipalGroups.map(function (group) {
             return (
-              <div key={group.label} className="bg-white rounded-lg border border-brand-border p-4">
+              <div key={group.label} className="bg-white border border-brand-border p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <group.icon size={16} className="text-brand-muted" />
                   <h3 className="text-sm font-bold text-brand-text">{group.label}</h3>
@@ -417,16 +417,16 @@ export function MyAreaClient({
       <section key="action" className="mb-10">
         <SectionHeader icon={Briefcase} title="What You Can Do" count={undefined} color="#E8723A" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Link href="/opportunities" className="group block p-5 rounded-lg border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
-            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Volunteer</h3>
+          <Link href="/opportunities" className="group block p-5 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+            <h3 className="font-display font-bold text-brand-text group-hover:text-brand-accent transition-colors">Volunteer</h3>
             <p className="text-xs text-brand-muted mt-1">Find opportunities to give your time and skills</p>
           </Link>
-          <Link href="/organizations" className="group block p-5 rounded-lg border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
-            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Organizations</h3>
+          <Link href="/organizations" className="group block p-5 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+            <h3 className="font-display font-bold text-brand-text group-hover:text-brand-accent transition-colors">Organizations</h3>
             <p className="text-xs text-brand-muted mt-1">Connect with groups working in your community</p>
           </Link>
-          <Link href="/foundations" className="group block p-5 rounded-lg border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
-            <h3 className="font-serif font-bold text-brand-text group-hover:text-brand-accent transition-colors">Foundations</h3>
+          <Link href="/foundations" className="group block p-5 border border-brand-border bg-white hover:shadow-sm hover:-translate-y-0.5 transition-all">
+            <h3 className="font-display font-bold text-brand-text group-hover:text-brand-accent transition-colors">Foundations</h3>
             <p className="text-xs text-brand-muted mt-1">Explore funding and grantmaking in your focus areas</p>
           </Link>
         </div>
@@ -438,20 +438,20 @@ export function MyAreaClient({
     <div className="mt-6">
       {/* Summary strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-        <div className="bg-white rounded-lg border border-brand-border p-4 text-center">
-          <p className="text-2xl font-serif font-bold text-brand-text">{totalOfficials}</p>
+        <div className="bg-white border border-brand-border p-4 text-center">
+          <p className="text-2xl font-display font-bold text-brand-text">{totalOfficials}</p>
           <p className="text-xs text-brand-muted mt-1">Representatives</p>
         </div>
-        <div className="bg-white rounded-lg border border-brand-border p-4 text-center">
-          <p className="text-2xl font-serif font-bold text-brand-text">{totalPolicies}</p>
+        <div className="bg-white border border-brand-border p-4 text-center">
+          <p className="text-2xl font-display font-bold text-brand-text">{totalPolicies}</p>
           <p className="text-xs text-brand-muted mt-1">Active Policies</p>
         </div>
-        <div className="bg-white rounded-lg border border-brand-border p-4 text-center">
-          <p className="text-2xl font-serif font-bold text-brand-text">{services.length}</p>
+        <div className="bg-white border border-brand-border p-4 text-center">
+          <p className="text-2xl font-display font-bold text-brand-text">{services.length}</p>
           <p className="text-xs text-brand-muted mt-1">Nearby Services</p>
         </div>
-        <div className="bg-white rounded-lg border border-brand-border p-4 text-center">
-          <p className="text-2xl font-serif font-bold text-brand-text">{neighborhoodContent.length}</p>
+        <div className="bg-white border border-brand-border p-4 text-center">
+          <p className="text-2xl font-display font-bold text-brand-text">{neighborhoodContent.length}</p>
           <p className="text-xs text-brand-muted mt-1">Local Updates</p>
         </div>
       </div>

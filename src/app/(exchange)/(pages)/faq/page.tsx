@@ -38,11 +38,11 @@ export default async function FAQPage() {
         {Object.entries(grouped).map(function ([category, items]) {
           return (
             <div key={category} className="mb-10">
-              <h2 className="text-lg font-serif font-bold text-brand-text mb-4 border-b border-brand-border pb-2">{category}</h2>
+              <h2 className="text-lg font-display font-bold text-brand-text mb-4 border-b border-brand-border pb-2">{category}</h2>
               <div className="space-y-3">
                 {(items || []).map(function (f) {
                   return (
-                    <details key={f.faq_id} className="bg-white rounded-lg border border-brand-border group">
+                    <details key={f.faq_id} className="bg-white border border-brand-border group">
                       <summary className="px-5 py-4 cursor-pointer font-semibold text-brand-text hover:text-brand-accent transition-colors list-none flex items-center justify-between">
                         <span>{f.question}</span>
                         <span className="text-brand-muted group-open:rotate-180 transition-transform ml-3 flex-shrink-0">
