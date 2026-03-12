@@ -17,6 +17,7 @@ import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
+import { ShareButtons } from '@/components/exchange/ShareButtons'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
@@ -141,6 +142,13 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SpiralTracker action="view_service" />
 
+      <div className="max-w-[1080px] mx-auto px-6 pt-4">
+        <Breadcrumb items={[
+          { label: t('detail.all_services'), href: '/services' },
+          { label: displayName || t('detail.service') },
+        ]} />
+      </div>
+
       {/* ═══════════════════════════════════════════════════════════════════
           RESOURCE MASTHEAD
          ═══════════════════════════════════════════════════════════════════ */}
@@ -149,24 +157,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         style={{ borderBottom: '2px solid #0d1117' }}
       >
         <div className="max-w-[1080px] mx-auto px-6 py-10 lg:py-14">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-3">
-            <span
-              className="font-mono uppercase tracking-[0.12em] px-2 py-0.5"
-              style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
-            >
-              {t('detail.service')}
-            </span>
-            <span
-              className="font-mono uppercase tracking-[0.12em]"
-              style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
-            >
-              {themeName && <>{themeName} &middot; </>}{t('detail.community_resource')}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr]">
+            {/* Left column — eyebrow, title, org, buttons */}
             <div>
+              {/* Eyebrow */}
+              <div className="flex items-center gap-2 mb-3">
+                <span
+                  className="font-mono uppercase tracking-[0.12em] px-2 py-0.5"
+                  style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
+                >
+                  {t('detail.service')}
+                </span>
+                <span
+                  className="font-mono uppercase tracking-[0.12em]"
+                  style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
+                >
+                  {themeName && <>{themeName} &middot; </>}{t('detail.community_resource')}
+                </span>
+              </div>
+
               {/* Title */}
               <h1
                 className="font-display leading-[1] tracking-tight mb-3"
@@ -179,87 +188,26 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 {displayName}
               </h1>
 
-              {/* Description */}
-              {displayDesc && (
-                <p
-                  className="font-body italic leading-relaxed mb-5 max-w-[580px]"
-                  style={{ fontSize: '0.95rem', color: '#5c6474' }}
+              {/* Org attribution */}
+              {org && (
+                <Link
+                  href={'/organizations/' + org.org_id}
+                  className="font-body text-sm hover:underline mb-4 inline-block"
+                  style={{ color: '#5c6474' }}
                 >
-                  {displayDesc}
-                </p>
+                  {org.org_name}
+                </Link>
               )}
 
-              {/* Quick facts */}
-              <div className="flex flex-wrap gap-4">
-                {service.phone && (
-                  <a
-                    href={'tel:' + service.phone}
-                    className="flex items-center gap-2"
-                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: themeColor }} />
-                    <Phone size={12} />
-                    <strong style={{ color: '#0d1117' }}>{service.phone}</strong>
-                  </a>
-                )}
-                {fullAddress && (
-                  <span
-                    className="flex items-center gap-2"
-                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: themeColor }} />
-                    <MapPin size={12} />
-                    <strong style={{ color: '#0d1117' }}>{fullAddress}</strong>
-                  </span>
-                )}
-                {service.hours && (
-                  <span
-                    className="flex items-center gap-2"
-                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: themeColor }} />
-                    <Clock size={12} />
-                    <strong style={{ color: '#0d1117' }}>{service.hours}</strong>
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3 mt-4">
+              <div className="flex flex-wrap items-center gap-3 mt-2">
                 <TranslatePageButton isTranslated={!!translatedName} contentType="services_211" contentId={service.service_id} />
-                {service.airs_code && (
-                  <span
-                    className="font-mono uppercase tracking-[0.08em]"
-                    style={{ fontSize: '0.52rem', color: '#5c6474', border: '1px solid #dde1e8', padding: '2px 8px' }}
-                  >
-                    AIRS: {service.airs_code}
-                  </span>
-                )}
+                <ShareButtons compact />
               </div>
             </div>
 
-            {/* Geo mark + CTA */}
-            <div className="flex flex-col items-end gap-3">
-              <Geo type={geoType} color={themeColor} size={80} opacity={0.35} />
-              {service.website && (
-                <a
-                  href={service.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block font-mono uppercase tracking-[0.1em] text-center transition-opacity hover:opacity-80"
-                  style={{ fontSize: '0.68rem', background: themeColor, color: '#ffffff', padding: '0.7rem 1.25rem' }}
-                >
-                  {t('detail.get_services')}
-                </a>
-              )}
-              {service.phone && (
-                <a
-                  href={'tel:' + service.phone}
-                  className="block font-mono uppercase tracking-[0.1em] text-center"
-                  style={{ fontSize: '0.62rem', color: '#5c6474' }}
-                >
-                  {service.phone}
-                </a>
-              )}
+            {/* Right column — wayfinder (desktop only) */}
+            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>
         </div>
@@ -330,63 +278,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </>
             )}
 
-            {/* Contact block */}
-            <div className="mb-8 space-y-3">
-              <span
-                className="font-mono uppercase tracking-[0.2em] block mb-3"
-                style={{ fontSize: '0.58rem', color: '#5c6474' }}
-              >
-                {t('detail.contact')}
-              </span>
-              {service.phone && (
-                <a
-                  href={'tel:' + service.phone}
-                  className="flex items-center gap-2 hover:underline"
-                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
-                >
-                  <Phone size={15} /> {service.phone}
-                </a>
-              )}
-              {service.website && (
-                <a
-                  href={service.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:underline"
-                  style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
-                >
-                  <Globe size={15} /> {t('detail.website')}
-                </a>
-              )}
-              {fullAddress && (
-                <p className="flex items-center gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
-                  <MapPin size={15} className="shrink-0" /> {fullAddress}
-                </p>
-              )}
-              {service.hours && (
-                <p className="flex items-center gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
-                  <Clock size={15} /> {service.hours}
-                </p>
-              )}
-            </div>
-
-            {/* Location Map */}
-            {(service as any).latitude != null && (service as any).longitude != null && (
-              <div className="mb-8" style={{ border: '1px solid #dde1e8' }}>
-                <SingleLocationMap
-                  marker={{
-                    id: service.service_id,
-                    lat: (service as any).latitude as number,
-                    lng: (service as any).longitude as number,
-                    title: service.service_name,
-                    type: 'service',
-                    address: fullAddress || null,
-                    phone: service.phone,
-                  }}
-                />
-              </div>
-            )}
-
             {/* Detail fields */}
             {(service.eligibility || service.fees || service.languages) && (
               <div className="mb-8">
@@ -428,6 +319,65 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
+            {/* Contact & Location */}
+            <div className="mb-8">
+              <span
+                className="font-mono uppercase tracking-[0.2em] block mb-3"
+                style={{ fontSize: '0.58rem', color: '#5c6474' }}
+              >
+                {t('detail.contact')}
+              </span>
+              <div className="space-y-3">
+                {service.phone && (
+                  <a
+                    href={'tel:' + service.phone}
+                    className="flex items-center gap-2 hover:underline"
+                    style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                  >
+                    <Phone size={15} /> {service.phone}
+                  </a>
+                )}
+                {service.website && (
+                  <a
+                    href={service.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:underline"
+                    style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
+                  >
+                    <Globe size={15} /> {t('detail.website')}
+                  </a>
+                )}
+                {fullAddress && (
+                  <p className="flex items-center gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
+                    <MapPin size={15} className="shrink-0" /> {fullAddress}
+                  </p>
+                )}
+                {service.hours && (
+                  <p className="flex items-center gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
+                    <Clock size={15} /> {service.hours}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Location Map */}
+            {(service as any).latitude != null && (service as any).longitude != null && (
+              <div className="mb-8" style={{ border: '1px solid #dde1e8' }}>
+                <SingleLocationMap
+                  marker={{
+                    id: service.service_id,
+                    lat: (service as any).latitude as number,
+                    lng: (service as any).longitude as number,
+                    title: service.service_name,
+                    type: 'service',
+                    address: fullAddress || null,
+                    phone: service.phone,
+                  }}
+                />
+              </div>
+            )}
+
             {/* Parent Organization */}
             {org && (
               <div className="mb-8">
@@ -465,8 +415,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
           {/* ── Sidebar ── */}
           <aside className="py-10 lg:pl-10 flex flex-col gap-7">
-            {/* Wayfinder */}
-            <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
+            {/* Wayfinder — mobile only (desktop version is in masthead) */}
+            <div className="lg:hidden">
+              <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
+            </div>
 
             {/* Library nuggets */}
             {libraryNuggets.length > 0 && (

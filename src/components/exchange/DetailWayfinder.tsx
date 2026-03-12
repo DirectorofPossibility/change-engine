@@ -196,7 +196,8 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
     data.officials.length + data.policies.length +
     data.foundations.length + data.organizations.length
 
-  if (totalEntities === 0 && data.focusAreas.length === 0) return null
+  // Always render the wayfinder shell — even with no connections, the header
+  // and org anchors provide useful navigation context for the visitor.
 
   const understandCount = newsContent.length + data.libraryNuggets.length
   const involvedCount = data.opportunities.length + data.services.length + eventContent.length
