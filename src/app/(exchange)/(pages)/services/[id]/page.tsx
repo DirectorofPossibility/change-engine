@@ -205,8 +205,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
 
-            {/* Right column — wayfinder (desktop only) */}
-            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+            {/* Right column — wayfinder + FOL (desktop only) */}
+            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <Geo type={geoType} color={themeColor} size={192} opacity={0.15} />
               <DetailWayfinder data={wayfinderData} currentType="service" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>

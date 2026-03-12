@@ -22,6 +22,7 @@ import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { ShareButtons } from '@/components/exchange/ShareButtons'
+import { FlowerOfLife } from '@/components/geo/sacred'
 import { policyJsonLd } from '@/lib/jsonld'
 
 function statusColor(status: string | null): { dotColor: string; textColor: string } {
@@ -237,8 +238,9 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               </div>
             </div>
 
-            {/* Right: Wayfinder (1/3) */}
-            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+            {/* Right: Wayfinder + FOL (1/3) */}
+            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <FlowerOfLife size={192} color={levelColor_hex} opacity={0.15} />
               <DetailWayfinder data={wayfinderData} currentType="policy" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>

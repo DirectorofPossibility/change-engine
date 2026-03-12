@@ -312,8 +312,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               )}
             </div>
 
-            {/* Right: Wayfinder (1/3) */}
-            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+            {/* Right: Wayfinder + FOL (1/3) */}
+            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <FlowerOfLife size={192} color={themeColor} opacity={0.15} />
               <DetailWayfinder data={wayfinderData} currentType="content" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>

@@ -13,6 +13,7 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { ShareButtons } from '@/components/exchange/ShareButtons'
 import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { THEMES } from '@/lib/constants'
+import { FlowerOfLife } from '@/components/geo/sacred'
 import Image from 'next/image'
 
 export const revalidate = 86400
@@ -178,8 +179,9 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               </div>
             </div>
 
-            {/* Right: Wayfinder (1/3) */}
-            <div className="hidden lg:flex lg:items-start lg:justify-end lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+            {/* Right: Wayfinder + FOL (1/3) */}
+            <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8" style={{ borderLeft: '1px solid #dde1e8' }}>
+              <FlowerOfLife size={192} color={themeColor} opacity={0.15} />
               <DetailWayfinder data={wayfinderData} currentType="opportunity" currentId={id} userRole={userProfile?.role} />
             </div>
           </div>
