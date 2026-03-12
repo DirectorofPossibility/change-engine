@@ -81,20 +81,28 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(exchangeUrl)
   }
 
-  // Protect dashboard routes
-  if (pathname.startsWith('/dashboard') && !user) {
+  // Beta gate — unauthenticated users can only see splash + auth pages
+  const PUBLIC_PATHS = [
+    '/',
+    '/login',
+    '/signup',
+    '/reset-password',
+    '/about',
+    '/privacy',
+    '/terms',
+    '/accessibility',
+    '/contact',
+    '/account-locked',
+    '/coming-soon',
+  ]
+  const isPublicPath = PUBLIC_PATHS.includes(pathname)
+    || pathname.startsWith('/auth/')
+
+  if (!user && !isPublicPath) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/login'
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
-  }
-
-  // Protect user profile routes
-  if (pathname.startsWith('/me') && !user) {
-    const meLoginUrl = request.nextUrl.clone()
-    meLoginUrl.pathname = '/login'
-    meLoginUrl.searchParams.set('redirect', pathname)
-    return NextResponse.redirect(meLoginUrl)
   }
 
   // Check account status and role for authenticated users
