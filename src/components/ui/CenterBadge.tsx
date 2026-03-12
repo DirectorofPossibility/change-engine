@@ -40,8 +40,9 @@ export function CenterBadge({ center, showQuestion = false, linkable = true }: C
   )
 
   if (linkable) {
+    const slug = CENTERS[center]?.slug || center.toLowerCase()
     return (
-      <Link href={'/search?q=' + encodeURIComponent(center)} className="hover:text-brand-accent transition-colors">
+      <Link href={'/centers/' + slug} className="hover:text-brand-accent transition-colors">
         {inner}
       </Link>
     )

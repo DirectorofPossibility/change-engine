@@ -261,6 +261,66 @@ export function CommunityGuide({ stats, latestContent, quote, promotions, upcomi
       )}
 
       {/* ═══════════════════════════════════════════════════════════════════
+          SECTION 3B -- ENGAGEMENT LADDER (4 Centers)
+         ═══════════════════════════════════════════════════════════════════ */}
+      <section style={{ borderTop: `1.5px solid ${RULE}` }}>
+        <div className="max-w-[1100px] mx-auto px-6 py-14">
+          <p
+            className="font-mono uppercase tracking-[0.08em] mb-3"
+            style={{ fontSize: '0.62rem', color: DIM }}
+          >
+            How do you want to engage?
+          </p>
+          <h2
+            className="font-display mb-10"
+            style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.8rem)', fontWeight: 900, color: INK }}
+          >
+            Four ways in
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
+            {([
+              { name: 'Learning', slug: 'learning', question: 'How can I understand?', color: '#4a2870' },
+              { name: 'Action', slug: 'action', question: 'How can I help?', color: '#7a2018' },
+              { name: 'Resource', slug: 'resources', question: "What's available to me?", color: '#6a4e10' },
+              { name: 'Accountability', slug: 'accountability', question: 'Who makes decisions?', color: '#1a3460' },
+            ]).map(function (center) {
+              return (
+                <Link
+                  key={center.name}
+                  href={'/centers/' + center.slug}
+                  className="group flex flex-col p-6 transition-colors hover:bg-white"
+                  style={{
+                    border: `1px solid ${RULE}`,
+                    borderTop: `3px solid ${center.color}`,
+                  }}
+                >
+                  <p
+                    className="font-display mb-2"
+                    style={{ fontSize: '1.15rem', fontWeight: 700, color: INK }}
+                  >
+                    {center.name}
+                  </p>
+                  <p
+                    className="font-body italic text-sm mb-4"
+                    style={{ color: DIM }}
+                  >
+                    {center.question}
+                  </p>
+                  <span
+                    className="font-mono uppercase tracking-[0.08em] mt-auto inline-flex items-center gap-1 group-hover:gap-2 transition-all"
+                    style={{ fontSize: '0.6rem', color: center.color, fontWeight: 600 }}
+                  >
+                    {t('guide.explore')} <ArrowRight size={12} />
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
           SECTION 4 -- PATHWAY GRID
          ═══════════════════════════════════════════════════════════════════ */}
       <section style={{ borderTop: `1.5px solid ${RULE}` }}>

@@ -6,6 +6,7 @@ import { cookies } from 'next/headers'
 import { getUIStrings } from '@/lib/i18n'
 import { THEMES, LANGUAGES } from '@/lib/constants'
 import { ThemePill } from '@/components/ui/ThemePill'
+import { CenterBadge } from '@/components/ui/CenterBadge'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
@@ -276,9 +277,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           </>
         }
         metaRow={
-          item.published_at ? (
+          (item.published_at || item.last_updated) ? (
             <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#8a929e' }}>
-              {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              {item.published_at && new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              {item.last_updated && item.published_at && item.last_updated !== item.published_at && (
+                <> &middot; Updated {new Date(item.last_updated).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</>
+              )}
             </span>
           ) : undefined
         }
@@ -318,6 +322,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   <div className="flex items-center justify-between text-sm">
                     <span style={{ color: '#5c6474' }}>{t('content.pathway')}</span>
                     <ThemePill themeId={item.pathway_primary} size="sm" />
+                  </div>
+                )}
+                {item.center && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span style={{ color: '#5c6474' }}>Center</span>
+                    <CenterBadge center={item.center} />
                   </div>
                 )}
                 {focusAreas.length > 0 && (
