@@ -403,16 +403,19 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           <span className="font-mono text-[.58rem] tracking-[0.2em] uppercase text-[#5c6474] block mb-4">
             Topic index
           </span>
-          <div className="flex flex-wrap gap-2">
-            {themeFocusAreas.map(fa => (
+          <div className="space-y-0">
+            {themeFocusAreas.map((fa, i) => (
               <Link
                 key={fa.focus_id}
                 href={'/explore/focus/' + fa.focus_id}
-                className="inline-flex items-center gap-2 px-3 py-2 bg-white transition-colors hover:bg-[#f4f5f7]"
-                style={{ border: '1px solid #dde1e8' }}
+                className="group flex items-center gap-3 py-3 transition-colors hover:bg-[#f4f5f7] -mx-2 px-2"
+                style={{ borderBottom: i < themeFocusAreas.length - 1 ? '1px solid #f0f1f3' : undefined }}
               >
-                <span className="w-2 h-2 flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                <span className="font-body text-[.82rem] font-medium text-[#0d1117]">{fa.focus_area_name}</span>
+                <span className="w-1 h-4 flex-shrink-0" style={{ backgroundColor: theme.color }} />
+                <span className="font-body text-[.84rem] font-medium text-[#0d1117] group-hover:underline">{fa.focus_area_name}</span>
+                {fa.description && (
+                  <span className="font-body text-[.75rem] italic text-[#5c6474] hidden sm:inline">&mdash; {fa.description}</span>
+                )}
               </Link>
             ))}
           </div>
