@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Calendar, Clock, MapPin, Users, ExternalLink } from 'lucide-react'
@@ -13,28 +13,41 @@ import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 86400
 
+const OPP_ID_RE = /^OPP_\d+$/i
+
+async function resolveOpportunity(supabase: any, idOrSlug: string) {
+  if (OPP_ID_RE.test(idOrSlug)) {
+    const { data } = await supabase.from('opportunities').select('*').eq('opportunity_id', idOrSlug).single()
+    return data
+  }
+  const { data } = await supabase.from('opportunities').select('*').eq('slug', idOrSlug).single()
+  return data
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const supabase = await createClient()
-  const { data } = await supabase.from('opportunities').select('opportunity_name, description_5th_grade').eq('opportunity_id', id).single()
+  const data = await resolveOpportunity(supabase, id)
   if (!data) return { title: 'Not Found' }
   return {
     title: data.opportunity_name,
-    description: data.description_5th_grade || 'Opportunity on the Change Engine.',
+    description: data.description_5th_grade || 'Opportunity on Change Engine.',
   }
 }
 
 export default async function OpportunityDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+  const { id: idOrSlug } = await params
   const supabase = await createClient()
 
-  const { data: opportunity } = await supabase
-    .from('opportunities')
-    .select('*')
-    .eq('opportunity_id', id)
-    .single()
-
+  const opportunity = await resolveOpportunity(supabase, idOrSlug)
   if (!opportunity) notFound()
+
+  // Redirect raw IDs to slug for clean URLs
+  if (OPP_ID_RE.test(idOrSlug) && opportunity.slug) {
+    redirect('/opportunities/' + opportunity.slug)
+  }
+
+  const id = opportunity.opportunity_id
 
   // Get parent org if linked
   let org: { org_id: string; org_name: string; logo_url: string | null; website: string | null } | null = null
@@ -79,7 +92,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   // Skills from comma-separated skill_ids on the opportunity row
   let skills: Array<{ skill_id: string; skill_name: string }> = []
   if (opportunity.skill_ids) {
-    const skillIdList = opportunity.skill_ids.split(',').map((s) => s.trim()).filter(Boolean)
+    const skillIdList = opportunity.skill_ids.split(',').map((s: string) => s.trim()).filter(Boolean)
     if (skillIdList.length > 0) {
       const { data: skillData } = await supabase
         .from('skills')
@@ -167,7 +180,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         }
         actions={{
           translate: { isTranslated: !!translation?.title, contentType: 'opportunities', contentId: id },
-          share: { title: displayName || undefined, via: org?.org_name || undefined, url: 'https://www.changeengine.us/opportunities/' + id },
+          share: { title: displayName || undefined, via: org?.org_name || undefined, url: 'https://www.changeengine.us/opportunities/' + (opportunity.slug || id) },
         }}
         themeColor={themeColor}
         wayfinderData={wayfinderData}
