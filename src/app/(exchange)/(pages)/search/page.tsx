@@ -17,7 +17,8 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { PAGE_INTROS, CENTER_COLORS, THEMES } from '@/lib/constants'
-import { searchAll } from '@/lib/data/search'
+import { searchAll, searchByTaxonomy } from '@/lib/data/search'
+import type { TaxonomyFilter } from '@/lib/data/search'
 import { PageHero } from '@/components/exchange/PageHero'
 import { HeroSearchInput } from '@/components/exchange/HeroSearchInput'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
@@ -36,10 +37,11 @@ export const revalidate = 300
 
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {
-  const { q } = await searchParams
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string; label?: string }> }): Promise<Metadata> {
+  const { q, label } = await searchParams
+  const title = label || (q ? 'Search: ' + q : 'Search')
   return {
-    title: q ? 'Search: ' + q : 'Search',
+    title,
     description: 'Search across all content, services, officials, and resources in the Change Engine.',
   }
 }
@@ -47,11 +49,27 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>
+  searchParams: Promise<{ q?: string; sdg?: string; sdoh?: string; gov_level?: string; action_type?: string; time?: string; label?: string }>
 }) {
-  const { q } = await searchParams
-  const query = q || ''
-  const results = query ? await searchAll(query) : { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
+  const params = await searchParams
+  const query = params.q || ''
+  const label = params.label || ''
+
+  // Check for taxonomy filters (from wayfinder taxonomy links)
+  const taxFilter: TaxonomyFilter = {}
+  if (params.sdg) taxFilter.sdg = params.sdg
+  if (params.sdoh) taxFilter.sdoh = params.sdoh
+  if (params.gov_level) taxFilter.gov_level = params.gov_level
+  if (params.action_type) taxFilter.action_type = params.action_type
+  if (params.time) taxFilter.time = params.time
+  const hasTaxFilter = Object.keys(taxFilter).length > 0
+
+  const emptyResults = { content: [], officials: [], services: [], organizations: [], policies: [], situations: [], resources: [], paths: [] }
+  const results = hasTaxFilter
+    ? await searchByTaxonomy(taxFilter)
+    : query
+      ? await searchAll(query)
+      : emptyResults
   const totalCount = results.content.length + results.officials.length + results.services.length + results.organizations.length + results.policies.length + results.situations.length + results.resources.length + results.paths.length
 
   // ── Translations (non-English users) ──
@@ -254,7 +272,7 @@ export default async function SearchPage({
         <div className="mb-6 max-w-2xl">
           <HeroSearchInput />
         </div>
-        <SearchResultsHeader query={query} totalCount={totalCount} />
+        <SearchResultsHeader query={label || query} totalCount={totalCount} />
 
         {totalCount > 0 && (
           <div className="flex flex-col lg:flex-row gap-6">

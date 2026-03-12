@@ -108,7 +108,7 @@ function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<Wayfin
           <div className="flex flex-wrap gap-1">
             {taxonomy.sdgs.map(function (s) {
               return (
-                <Link key={s.sdg_id} href={'/search?q=' + encodeURIComponent(s.sdg_name)}
+                <Link key={s.sdg_id} href={'/search?sdg=' + encodeURIComponent(s.sdg_id) + '&label=' + encodeURIComponent(s.sdg_name)}
                   className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
                   style={{ backgroundColor: s.sdg_color || '#4C9F38' }}>
                   {s.sdg_number}. {s.sdg_name}
@@ -121,7 +121,7 @@ function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<Wayfin
       {taxonomy.sdohDomain && (
         <div>
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.health_determinant')}</div>
-          <Link href={'/search?q=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_name)} className="text-xs text-brand-accent hover:underline">
+          <Link href={'/search?sdoh=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_code) + '&label=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_name)} className="text-xs text-brand-accent hover:underline">
             {taxonomy.sdohDomain.sdoh_name}
           </Link>
         </div>
@@ -129,7 +129,7 @@ function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<Wayfin
       {taxonomy.govLevel && (
         <div>
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.government_level')}</div>
-          <Link href={'/search?q=' + encodeURIComponent(taxonomy.govLevel.gov_level_name)} className="text-xs text-brand-accent hover:underline">
+          <Link href={'/search?gov_level=' + encodeURIComponent(taxonomy.govLevel.gov_level_id) + '&label=' + encodeURIComponent(taxonomy.govLevel.gov_level_name)} className="text-xs text-brand-accent hover:underline">
             {taxonomy.govLevel.gov_level_name}
           </Link>
         </div>
@@ -140,7 +140,7 @@ function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<Wayfin
           <div className="flex flex-wrap gap-1">
             {taxonomy.actionTypes.map(function (at) {
               return (
-                <Link key={at.action_type_id} href={'/search?q=' + encodeURIComponent(at.action_type_name)}
+                <Link key={at.action_type_id} href={'/search?action_type=' + encodeURIComponent(at.action_type_id) + '&label=' + encodeURIComponent(at.action_type_name)}
                   className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline">
                   {at.action_type_name}
                 </Link>
@@ -152,7 +152,7 @@ function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<Wayfin
       {taxonomy.timeCommitment && (
         <div>
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.time_commitment')}</div>
-          <Link href={'/search?q=' + encodeURIComponent(taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{taxonomy.timeCommitment.time_name}</Link>
+          <Link href={'/search?time=' + encodeURIComponent(taxonomy.timeCommitment.time_id) + '&label=' + encodeURIComponent(taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{taxonomy.timeCommitment.time_name}</Link>
         </div>
       )}
       {(userRole === 'admin' || userRole === 'partner') && (
