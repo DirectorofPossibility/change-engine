@@ -53,8 +53,21 @@ export async function middleware(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
-  // Feature flag gate — redirect disabled routes to /coming-soon
-  if (!isRouteEnabled(pathname) && pathname !== '/coming-soon') {
+  // Look up profile for authenticated users (needed for role checks + feature flag bypass)
+  let profileData: { account_status?: string; role?: string } | null = null
+  if (user) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('account_status, role')
+      .eq('auth_id', user.id)
+      .single()
+    profileData = profile as { account_status?: string; role?: string } | null
+  }
+
+  const isAdmin = profileData?.role === 'admin'
+
+  // Feature flag gate — admins bypass, others redirect to /coming-soon
+  if (!isAdmin && !isRouteEnabled(pathname) && pathname !== '/coming-soon') {
     const comingSoonUrl = request.nextUrl.clone()
     comingSoonUrl.pathname = '/coming-soon'
     comingSoonUrl.search = ''
@@ -86,13 +99,6 @@ export async function middleware(request: NextRequest) {
 
   // Check account status and role for authenticated users
   if (user && !pathname.startsWith('/account-locked')) {
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('account_status, role')
-      .eq('auth_id', user.id)
-      .single()
-
-    const profileData = profile as { account_status?: string; role?: string } | null
     if (profileData?.account_status === 'locked') {
       const lockedUrl = request.nextUrl.clone()
       lockedUrl.pathname = '/account-locked'
