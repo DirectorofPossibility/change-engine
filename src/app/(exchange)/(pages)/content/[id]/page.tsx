@@ -20,7 +20,6 @@ import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
-import { PathwayContextBar } from '@/components/exchange/PathwayContextBar'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
@@ -224,7 +223,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           ...(themeEntry ? [{ label: themeEntry.name, href: '/pathways/' + themeSlug }] : []),
           { label: title || 'Content' },
         ]} />
-        <PathwayContextBar activePathways={item.pathway_primary ? [item.pathway_primary] : []} showLabels />
       </div>
 
       {/* ── MASTHEAD ── */}
