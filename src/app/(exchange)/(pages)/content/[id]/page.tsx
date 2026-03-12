@@ -14,7 +14,7 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
-import { ExternalLink, Globe, Sparkles, ArrowRight } from 'lucide-react'
+import { ExternalLink, Globe, ArrowRight } from 'lucide-react'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
@@ -233,7 +233,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const jsonLd = articleJsonLd(item as any)
 
   return (
-    <div style={{ background: '#f4f5f7' }}>
+    <>
       <SpiralTracker action="read_article" pathway={item.pathway_primary || undefined} />
 
       <DetailPageLayout
@@ -256,29 +256,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         }
         title={title}
         heroImage={
-          <>
-            {item.image_url ? (
-              <div className="overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
-                <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
-              </div>
-            ) : (
-              <FolFallback pathway={item.pathway_primary} height="h-40" />
-            )}
-            {/* Summary — directly under image */}
-            {summary && (
-              <div className="mt-4">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Sparkles size={11} style={{ color: '#1b5e8a' }} />
-                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>{t('content.summary')}</span>
-                  <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
-                </div>
-                <p className="font-body text-[15px] leading-relaxed" style={{ color: '#5c6474' }}>
-                  {summary}
-                </p>
-              </div>
-            )}
-          </>
+          item.image_url ? (
+            <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
+          ) : (
+            <FolFallback pathway={item.pathway_primary} height="h-56" />
+          )
         }
+        subtitle={summary}
         metaRow={
           (item.published_at || item.last_updated) ? (
             <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#8a929e' }}>
@@ -304,7 +288,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         jsonLd={jsonLd}
         footer={
           libraryNuggets.length > 0 ? (
-            <div className="max-w-[1200px] mx-auto px-8">
+            <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8">
               <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} />
             </div>
           ) : undefined
@@ -519,8 +503,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         {/* Break It Down */}
         <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
 
-        {/* Deep link CTA — concierge handoff to the actual resource */}
-        {item.source_url && (
+        {/* Deep link CTA — shown after body content */}
+        {item.source_url && bodyBlocks.length > 0 && (
           <div className="mt-6 p-5 flex items-center justify-between gap-4" style={{ border: `2px solid ${themeColor}`, background: '#ffffff' }}>
             <div>
               <p className="font-mono uppercase tracking-[0.08em] text-[0.56rem] mb-1" style={{ color: '#5c6474' }}>
@@ -636,6 +620,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           { key: 'is_active', label: 'Active', type: 'select', value: String((item as any).is_active), options: ['true', 'false'] },
         ] as EditField[]}
       />
-    </div>
+    </>
   )
 }

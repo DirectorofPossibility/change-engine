@@ -71,7 +71,7 @@ interface DetailPageLayoutProps {
 }
 
 export function DetailPageLayout({
-  bgColor = '#f4f5f7',
+  bgColor = '#ffffff',
   breadcrumbs,
   eyebrow,
   eyebrowMeta,
@@ -101,132 +101,123 @@ export function DetailPageLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
+      {/* ── HERO IMAGE — full bleed ── */}
+      {heroImage && (
+        <div className="w-full">
+          {heroImage}
+        </div>
+      )}
+
       {/* ── MASTHEAD ── */}
       <header style={{
         background: '#ffffff',
-        borderBottom: '2px solid #0d1117',
         borderTop: mastheadBorderTop || 'none',
         borderLeft: mastheadBorderLeft || 'none',
       }}>
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
           {breadcrumbs && breadcrumbs.length > 0 && (
             <div className="mb-4">
               <Breadcrumb items={breadcrumbs} />
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0">
-            {/* Left: Hero content (2/3) */}
-            <div className="pr-0 lg:pr-8">
-              {/* Eyebrow */}
-              {(eyebrow || eyebrowMeta) && (
-                <div className="flex items-center gap-3 mb-4 flex-wrap">
-                  {eyebrow && (
-                    <span
-                      className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1"
-                      style={{
-                        background: eyebrow.bgColor || '#0d1117',
-                        color: eyebrow.textColor || '#ffffff',
-                      }}
-                    >
-                      {eyebrow.text}
-                    </span>
-                  )}
-                  {eyebrowMeta}
-                </div>
+          {/* Eyebrow + meta */}
+          {(eyebrow || eyebrowMeta) && (
+            <div className="flex items-center gap-3 mb-4 flex-wrap">
+              {eyebrow && (
+                <span
+                  className="font-mono uppercase tracking-[0.2em] text-[0.58rem] px-3 py-1"
+                  style={{
+                    background: eyebrow.bgColor || '#0d1117',
+                    color: eyebrow.textColor || '#ffffff',
+                  }}
+                >
+                  {eyebrow.text}
+                </span>
               )}
-
-              {/* Title */}
-              <h1
-                className="font-display leading-[1.15] mb-3"
-                style={{ fontSize: 'clamp(1.6rem, 4vw, 2.8rem)', color: '#0d1117', fontWeight: 900 }}
-              >
-                {title}
-              </h1>
-
-              {/* Subtitle */}
-              {subtitle && (
-                <p className="font-body leading-relaxed mb-4" style={{ color: '#5c6474', fontSize: '1.05rem' }}>
-                  {subtitle}
-                </p>
-              )}
-
-              {/* Meta row + Actions */}
-              <div className="flex items-center gap-3 flex-wrap mb-4">
-                {metaRow}
-                {actions?.translate && (
-                  <TranslatePageButton
-                    isTranslated={actions.translate.isTranslated}
-                    contentType={actions.translate.contentType}
-                    contentId={actions.translate.contentId}
-                  />
-                )}
-                {actions?.share && (
-                  <ShareButtons
-                    title={actions.share.title}
-                    via={actions.share.via}
-                    url={actions.share.url}
-                    compact
-                  />
-                )}
-              </div>
-
-              {/* Hero image */}
-              {heroImage}
+              {eyebrowMeta}
             </div>
+          )}
 
-            {/* Right: FOL + Wayfinder (1/3) */}
-            <div
-              className="hidden lg:flex lg:flex-col lg:items-center lg:gap-6 lg:pl-8"
-              style={{ borderLeft: '1px solid #dde1e8' }}
+          {/* Title */}
+          <h1
+            className="font-display leading-[1.1] mb-4"
+            style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3rem)', color: '#0d1117', fontWeight: 900 }}
+          >
+            {title}
+          </h1>
+
+          {/* Subtitle — rendered as a pull quote, not a metadata block */}
+          {subtitle && (
+            <p
+              className="font-body italic leading-relaxed mb-4"
+              style={{ color: '#5c6474', fontSize: '1.1rem', borderLeft: `3px solid ${themeColor}`, paddingLeft: '1rem' }}
             >
-              <FlowerOfLife size={192} color={themeColor} opacity={0.15} />
-              <DetailWayfinder
-                data={wayfinderData}
-                currentType={wayfinderType}
-                currentId={wayfinderEntityId}
-                userRole={userRole ?? undefined}
+              {subtitle}
+            </p>
+          )}
+
+          {/* Meta row + Actions */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {metaRow}
+            {actions?.translate && (
+              <TranslatePageButton
+                isTranslated={actions.translate.isTranslated}
+                contentType={actions.translate.contentType}
+                contentId={actions.translate.contentId}
               />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* ── BODY: 2-column grid ── */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-0">
-          {/* Main content column */}
-          <div className="pr-0 lg:pr-8" style={{ borderRight: 'none' }}>
-            <style>{`@media (min-width: 1024px) { .detail-main { border-right: 1px solid #dde1e8; padding-right: 2rem; } }`}</style>
-            <div className="detail-main">
-              {children}
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="pl-0 lg:pl-8 space-y-6 mt-8 lg:mt-0">
-            {/* Wayfinder (mobile only — desktop is in masthead) */}
-            <div className="lg:hidden">
-              <DetailWayfinder
-                data={wayfinderData}
-                currentType={wayfinderType}
-                currentId={wayfinderEntityId}
-                userRole={userRole ?? undefined}
-              />
-            </div>
-
-            {sidebar}
-
-            {/* Feedback */}
-            {feedbackType && feedbackId && (
-              <FeedbackLoop
-                entityType={feedbackType}
-                entityId={feedbackId}
-                entityName={feedbackName || ''}
+            )}
+            {actions?.share && (
+              <ShareButtons
+                title={actions.share.title}
+                via={actions.share.via}
+                url={actions.share.url}
+                compact
               />
             )}
           </div>
         </div>
+      </header>
+
+      {/* ── Thin color rule — editorial section divider ── */}
+      <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div style={{ height: 2, background: themeColor, opacity: 0.3 }} />
+      </div>
+
+      {/* ── BODY ── */}
+      <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Main content — single column, readable width */}
+        <div className="mb-10">
+          {children}
+        </div>
+
+        {/* Sidebar content — rendered below main on all viewports */}
+        {sidebar && (
+          <div className="space-y-6 pt-8" style={{ borderTop: '1px solid #dde1e8' }}>
+            {sidebar}
+          </div>
+        )}
+
+        {/* Wayfinder — contextual, at the bottom */}
+        <div className="mt-8 pt-6" style={{ borderTop: '1px solid #dde1e8' }}>
+          <DetailWayfinder
+            data={wayfinderData}
+            currentType={wayfinderType}
+            currentId={wayfinderEntityId}
+            userRole={userRole ?? undefined}
+          />
+        </div>
+
+        {/* Feedback */}
+        {feedbackType && feedbackId && (
+          <div className="mt-6">
+            <FeedbackLoop
+              entityType={feedbackType}
+              entityId={feedbackId}
+              entityName={feedbackName || ''}
+            />
+          </div>
+        )}
       </div>
 
       {/* Footer sections */}
