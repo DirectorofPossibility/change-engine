@@ -1,13 +1,11 @@
 /**
- * @fileoverview Homepage for The Change Engine Change Engine.
+ * @fileoverview Homepage — The Community Exchange.
  *
- * Community Guide -- a civic & social onramp for the general public.
- * Three pillars: Find Help (211), Who's Responsible, Get Involved.
+ * Culture guide to Houston civic life. Fetches stats, news, quote,
+ * promotions, and upcoming events for the CommunityGuide component.
  *
- * @datasource Supabase tables: content_published, services_211, elected_officials,
- *   organizations, policies, quotes, promotions
- * @caching ISR with `revalidate = 600` (10 minutes)
  * @route GET /exchange
+ * @caching ISR with revalidate = 600 (10 minutes)
  */
 
 import type { Metadata } from 'next'
@@ -17,20 +15,22 @@ import {
   getRandomQuote,
   getActivePromotions,
 } from '@/lib/data/exchange'
+import { getNewsFeed } from '@/lib/data/content'
 import { getUpcomingEvents } from '@/lib/data/events'
 import { CommunityGuide } from '@/components/exchange/CommunityGuide'
 
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Community Guide -- Houston, Texas | The Change Engine',
-  description: 'Your guide to Houston -- find services, know who represents you, and get involved in your community. Powered by The Change Engine.',
+  title: 'Community Exchange — Houston, Texas | The Change Engine',
+  description: 'Your culture guide to Houston — find services, know who represents you, and get involved in your community.',
 }
 
 export default async function ExchangeHomePage() {
-  const [stats, latestContent, quote, promotions, upcomingEvents] = await Promise.all([
+  const [stats, latestContent, newsFeed, quote, promotions, upcomingEvents] = await Promise.all([
     getExchangeStats(),
     getLatestContent(6),
+    getNewsFeed(undefined, 5),
     getRandomQuote(),
     getActivePromotions(undefined, 3),
     getUpcomingEvents(5),
@@ -39,13 +39,17 @@ export default async function ExchangeHomePage() {
   return (
     <CommunityGuide
       stats={{
-        resources: stats.resources || 0,
+        resources: (stats.resources || 0) + (stats.services || 0) + (stats.organizations || 0),
         services: stats.services || 0,
         officials: stats.officials || 0,
         policies: stats.policies || 0,
         organizations: stats.organizations || 0,
+        opportunities: stats.opportunities || 0,
+        elections: stats.elections || 0,
+        newsCount: stats.resources || 0,
       }}
       latestContent={latestContent}
+      newsFeed={newsFeed}
       quote={quote}
       promotions={promotions}
       upcomingEvents={upcomingEvents}
