@@ -45,15 +45,8 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
 
   return (
     <div>
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/resources" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#d69e2e' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#d69e2e' }} />
-          Resource Center
-        </Link>
-      </div>
       <IndexPageHero
-        color="#38a169"
-        pattern="flower"
+        color="#1a6b56"
         titleKey="services.title"
         subtitleKey="services.subtitle"
         intro="Houston has a deep network of services dedicated to your well-being. Browse by category, search by name, or switch to map view."
@@ -82,12 +75,12 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="services"
-                color="#38a169"
+                color="#1a6b56"
                 related={[
-                  { label: 'Organizations', href: '/organizations', color: '#dd6b20' },
-                  { label: 'Opportunities', href: '/opportunities', color: '#38a169' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
-                  { label: 'Available Resources', href: '/help', color: '#e53e3e' },
+                  { label: 'Organizations', href: '/organizations', color: '#1e4d7a' },
+                  { label: 'Opportunities', href: '/opportunities', color: '#1a5030' },
+                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
+                  { label: 'Available Resources', href: '/help', color: '#7a2018' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>

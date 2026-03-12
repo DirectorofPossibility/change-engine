@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslation } from '@/lib/use-translation'
-import { GradientFOL } from './GradientFOL'
+import { FlowerOfLife } from '@/components/geo/sacred'
 
 interface StatItem {
   value: string | number
@@ -22,37 +22,54 @@ interface IndexPageHeroProps {
 
 export function IndexPageHero({
   titleKey, title, subtitleKey, subtitle, intro,
-  color, stats, pattern = 'flower', children,
+  color, stats, children,
 }: IndexPageHeroProps) {
   const { t } = useTranslation()
   const displayTitle = titleKey ? t(titleKey) : (title ?? '')
   const displaySubtitle = subtitleKey ? t(subtitleKey) : subtitle
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-bg">
-      {/* Animated gradient FOL background */}
-      <div className="absolute -top-16 -right-16 w-[320px] h-[320px] opacity-[0.07]">
-        <GradientFOL variant={pattern === 'seed' || pattern === 'vesica' ? 'seed' : 'full'} spinDur={120} colorDur={16} />
+    <section
+      className="relative w-full overflow-hidden"
+      style={{ borderBottom: '2px solid #0d1117' }}
+    >
+      {/* Geo background element */}
+      <div className="absolute top-4 right-4 opacity-[0.06] pointer-events-none">
+        <FlowerOfLife color={color} size={200} />
       </div>
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: color }} />
-              <div className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: color, opacity: 0.4 }} />
+            <div className="flex items-center gap-2.5 mb-3">
+              <span className="block w-6 h-px" style={{ background: color }} />
+              <span
+                className="font-mono text-[0.58rem] uppercase tracking-[0.2em]"
+                style={{ color: '#5c6474' }}
+              >
+                Community Exchange
+              </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold leading-tight text-brand-text">
+            <h1
+              className="font-display leading-tight mb-2"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0d1117' }}
+            >
               {displayTitle}
             </h1>
             {displaySubtitle && (
-              <p className="text-base sm:text-lg text-brand-muted mt-2 max-w-2xl font-serif italic">
+              <p
+                className="font-body italic mt-2 max-w-2xl"
+                style={{ fontSize: '1rem', color: '#5c6474', lineHeight: 1.6 }}
+              >
                 {displaySubtitle}
               </p>
             )}
             {intro && (
-              <p className="text-sm sm:text-base text-brand-muted-light mt-3 max-w-3xl leading-relaxed">
+              <p
+                className="font-body mt-3 max-w-3xl leading-relaxed"
+                style={{ fontSize: '0.88rem', color: '#5c6474' }}
+              >
                 {intro}
               </p>
             )}
@@ -66,20 +83,31 @@ export function IndexPageHero({
         </div>
 
         {stats && stats.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-brand-border flex flex-wrap items-center gap-5 sm:gap-8">
+          <div
+            className="mt-6 pt-4 flex flex-wrap items-center gap-6"
+            style={{ borderTop: '1.5px solid #dde1e8' }}
+          >
             {stats.map(function (stat, i) {
               return (
-                <div key={i} className="text-center">
-                  <p className="text-xl sm:text-2xl font-serif font-bold" style={{ color }}>{stat.value}</p>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">{stat.label}</p>
+                <div key={i}>
+                  <span
+                    className="font-display block leading-none mb-1"
+                    style={{ fontSize: '1.6rem', fontWeight: 900, color }}
+                  >
+                    {typeof stat.value === 'number' ? stat.value.toLocaleString() : stat.value}
+                  </span>
+                  <span
+                    className="font-mono block uppercase tracking-[0.08em]"
+                    style={{ fontSize: '0.52rem', color: '#5c6474' }}
+                  >
+                    {stat.label}
+                  </span>
                 </div>
               )
             })}
           </div>
         )}
       </div>
-
-      <div className="h-1" style={{ background: `linear-gradient(90deg, ${color}, transparent 60%)` }} />
     </section>
   )
 }

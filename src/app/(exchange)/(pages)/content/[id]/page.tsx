@@ -14,7 +14,7 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
-import { ExternalLink, Globe, Sparkles } from 'lucide-react'
+import { ExternalLink, Globe, Sparkles, ArrowRight } from 'lucide-react'
 import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { FeedbackLoop } from '@/components/exchange/FeedbackLoop'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -27,6 +27,7 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { ShareButtons } from '@/components/exchange/ShareButtons'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
+import { FlowerOfLife } from '@/components/geo/sacred'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -206,7 +207,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const summary = translatedSummary || item.summary_6th_grade
   const themeSlug = resolveThemeSlug(item.pathway_primary)
   const themeEntry = item.pathway_primary ? (THEMES as Record<string, { name: string; color: string; slug: string }>)[item.pathway_primary] : null
-  const themeColor = themeEntry?.color || '#C75B2A'
+  const themeColor = themeEntry?.color || '#1b5e8a'
 
   const bodyText = sanitizeBody(translatedBody || item.body || '')
   const bodyBlocks = bodyText.split(/\n\n+/).map(function (b) { return b.trim() }).filter(Boolean)
@@ -259,15 +260,24 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             )}
           </div>
 
-          <h1 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.15] mb-3" style={{ color: '#0d1117', fontWeight: 900 }}>
-            {title}
-          </h1>
+          <div className="flex items-start justify-between gap-6">
+            <div className="flex-1">
+              <h1 className="font-display text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.15] mb-3" style={{ color: '#0d1117', fontWeight: 900 }}>
+                {title}
+              </h1>
 
-          {item.published_at && (
-            <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-5" style={{ color: '#8a929e' }}>
-              {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </p>
-          )}
+              {item.published_at && (
+                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-5" style={{ color: '#8a929e' }}>
+                  {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+              )}
+            </div>
+
+            {/* Geo mark */}
+            <div className="hidden sm:flex items-center justify-center flex-shrink-0" style={{ width: 80, height: 80 }}>
+              <FlowerOfLife size={72} color={themeColor} opacity={0.15} />
+            </div>
+          </div>
 
           {/* Image */}
           {item.image_url && (
@@ -369,6 +379,23 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                       </ul>
                     )
                   }
+                  // Drop cap on first regular paragraph
+                  const isFirstParagraph = i === bodyBlocks.findIndex(function (b) { return b && !b.startsWith('## ') && !b.match(/^[-\u2022*] /m) })
+                  if (isFirstParagraph && block.length > 40) {
+                    const firstChar = block.charAt(0)
+                    const rest = block.slice(1)
+                    return (
+                      <p key={i} className="font-body leading-relaxed" style={{ color: '#0d1117' }}>
+                        <span
+                          className="font-display float-left leading-[0.8] mr-2 mt-1"
+                          style={{ fontSize: '3.5rem', fontWeight: 900, color: themeColor }}
+                        >
+                          {firstChar}
+                        </span>
+                        {rest}
+                      </p>
+                    )
+                  }
                   if (block.match(/\*\*[^*]+\*\*/)) {
                     const parts = block.split(/(\*\*[^*]+\*\*)/)
                     return (
@@ -431,6 +458,42 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
                 <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>Related</p>
                 <RelatedContent items={related} />
+              </div>
+            )}
+
+            {/* Also part of these destinations */}
+            {focusAreas.length > 0 && (
+              <div className="mt-8 pt-6" style={{ borderTop: '1.5px solid #dde1e8' }}>
+                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-4" style={{ color: '#5c6474' }}>
+                  {t('content.also_part_of') || 'Also part of these destinations'}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+                  {focusAreas.slice(0, 4).map(function (fa: any) {
+                    const faTheme = fa.theme_id ? (THEMES as Record<string, { color: string }>)[fa.theme_id] : null
+                    const faColor = faTheme?.color || themeColor
+                    return (
+                      <Link
+                        key={fa.focus_id}
+                        href={'/explore/focus/' + fa.focus_id}
+                        className="group flex items-center gap-3 p-4 transition-colors hover:bg-white"
+                        style={{ border: '1px solid #dde1e8' }}
+                      >
+                        <FlowerOfLife size={28} color={faColor} opacity={0.6} />
+                        <div>
+                          <span className="font-body text-[.88rem] font-semibold block" style={{ color: '#0d1117' }}>
+                            {fa.focus_area_name}
+                          </span>
+                          {fa.theme_id && (THEMES as Record<string, { name: string }>)[fa.theme_id] && (
+                            <span className="font-mono uppercase tracking-[0.08em] text-[0.52rem]" style={{ color: faColor }}>
+                              {(THEMES as Record<string, { name: string }>)[fa.theme_id].name}
+                            </span>
+                          )}
+                        </div>
+                        <ArrowRight size={14} className="ml-auto text-faint group-hover:text-blue transition-colors" />
+                      </Link>
+                    )
+                  })}
+                </div>
               </div>
             )}
 
@@ -499,8 +562,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
             {/* Hero Quote in sidebar */}
             {heroQuote && (
-              <div className="p-4" style={{ borderLeft: '2px solid #0d1117', background: '#ffffff' }}>
-                <blockquote className="text-base font-display italic leading-relaxed" style={{ color: '#0d1117' }}>
+              <div className="p-4" style={{ borderLeft: `3px solid ${themeColor}`, background: '#ffffff' }}>
+                <blockquote className="font-body italic text-[1.05rem] leading-relaxed" style={{ color: '#0d1117' }}>
                   &ldquo;{heroQuote}&rdquo;
                 </blockquote>
               </div>

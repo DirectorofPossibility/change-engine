@@ -30,7 +30,7 @@ function levelBarColor(level: string | null): string {
 }
 
 const FOCUS_DOT_COLORS = [
-  '#3182ce', '#38a169', '#805ad5', '#dd6b20', '#319795', '#e53e3e',
+  '#1b5e8a', '#1a6b56', '#4a2870', '#6a4e10', '#1a5030', '#7a2018',
 ]
 
 export const revalidate = 86400

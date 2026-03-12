@@ -143,19 +143,19 @@ export default async function NewsPage({
   }
 
   return (
-    <div className="bg-brand-bg min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Masthead */}
-      <div className="border-b border-brand-text">
+      <div className="border-b border-rule">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
           <Breadcrumb items={[{ label: 'News Stand' }]} />
-          <Link href="/centers/learning" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#3182ce' }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#3182ce' }} />
+          <Link href="/centers/learning" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1b5e8a' }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1b5e8a' }} />
             Learning Center
           </Link>
-          <h1 className="font-serif text-5xl sm:text-6xl font-bold text-brand-text tracking-tight mt-2">
+          <h1 className="font-display text-5xl sm:text-6xl font-bold text-ink tracking-tight mt-2">
             The News Stand
           </h1>
-          <p className="text-sm text-brand-muted mt-2 font-serif italic">{today}</p>
+          <p className="text-sm text-dim mt-2 font-body italic">{today}</p>
           <div className="flex justify-center mt-3">
             <div className="flex h-1 w-48 rounded overflow-hidden">
               {Object.values(THEMES).map(function (theme) {
@@ -167,7 +167,7 @@ export default async function NewsPage({
       </div>
 
       {/* Filter bar */}
-      <div className="border-b border-brand-border bg-white/60 backdrop-blur-sm sticky top-0 z-20">
+      <div className="border-b border-rule bg-white/60 backdrop-blur-sm sticky top-0 z-20">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="relative flex flex-wrap items-center gap-2">
             <WayfinderTooltipPos tipKey="content_type_badge" position="bottom" />
@@ -182,14 +182,14 @@ export default async function NewsPage({
                   href={href}
                   className={'text-xs px-3 py-1.5 font-medium transition-colors ' +
                     (active
-                      ? 'text-brand-text border-b border-brand-text'
-                      : 'text-brand-muted hover:text-brand-text')}
+                      ? 'text-ink border-b border-rule'
+                      : 'text-dim hover:text-ink')}
                 >
                   {ct.label}
                 </Link>
               )
             })}
-            <span className="w-px h-4 bg-brand-border mx-1" />
+            <span className="w-px h-4 bg-rule mx-1" />
             {themeEntries.map(function ([id, theme]) {
               const active = pathway === id
               const href = '/news?pathway=' + id + (type ? '&type=' + type : '')
@@ -197,7 +197,7 @@ export default async function NewsPage({
                 <Link
                   key={id}
                   href={active ? '/news' + (type ? '?type=' + type : '') : href}
-                  className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-brand-text"
+                  className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-ink"
                   style={active ? { color: theme.color } : { color: '#6B6560' }}
                 >
                   <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color, opacity: active ? 1 : 0.5 }} />
@@ -206,7 +206,7 @@ export default async function NewsPage({
               )
             })}
             {pathway && (
-              <Link href={'/news' + (type ? '?type=' + type : '')} className="text-[10px] text-brand-muted hover:text-brand-text ml-1">clear</Link>
+              <Link href={'/news' + (type ? '?type=' + type : '')} className="text-[10px] text-dim hover:text-ink ml-1">clear</Link>
             )}
           </div>
         </div>
@@ -216,13 +216,13 @@ export default async function NewsPage({
 
         {items.length === 0 ? (
           <div className="text-center py-24">
-            <FileText size={48} className="mx-auto text-brand-muted mb-4" />
-            <p className="font-serif text-xl text-brand-muted">No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
+            <FileText size={48} className="mx-auto text-dim mb-4" />
+            <p className="font-display text-xl text-dim">No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
           </div>
         ) : (
           <>
             {/* ABOVE THE FOLD: Hero + Secondary */}
-            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-brand-text">
+            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-rule">
               <WayfinderTooltipPos tipKey="source_attribution_card" position="bottom" />
               {/* Hero story */}
               {hero && (
@@ -243,23 +243,23 @@ export default async function NewsPage({
                       </span>
                     )}
                     {hero.content_type && hero.content_type !== 'article' && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-dim">
                         {hero.content_type}
                       </span>
                     )}
                     {isPastEvent(hero) && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-muted/10 text-brand-muted">Past</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-dim/10 text-dim">Past</span>
                     )}
                   </div>
-                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-brand-text leading-tight group-hover:text-brand-accent transition-colors">
+                  <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight group-hover:text-brand-accent transition-colors">
                     {hero.title_6th_grade}
                   </h2>
                   {hero.summary_6th_grade && (
-                    <p className="text-brand-muted mt-3 text-base leading-relaxed line-clamp-3">
+                    <p className="text-dim mt-3 text-base leading-relaxed line-clamp-3">
                       {hero.summary_6th_grade}
                     </p>
                   )}
-                  <div className="flex items-center gap-3 mt-3 text-xs text-brand-muted">
+                  <div className="flex items-center gap-3 mt-3 text-xs text-dim">
                     {hero.source_domain && <span className="font-medium">{hero.source_domain}</span>}
                     <span>{formatDate(hero.published_at)}</span>
                   </div>
@@ -267,7 +267,7 @@ export default async function NewsPage({
               )}
 
               {/* Secondary stories */}
-              <div className="lg:col-span-5 flex flex-col divide-y divide-brand-border">
+              <div className="lg:col-span-5 flex flex-col divide-y divide-rule">
                 {secondary.map(function (item, idx) {
                   const theme = getTheme(item)
                   return (
@@ -281,7 +281,7 @@ export default async function NewsPage({
                       ) : (
                         <div
                           className="w-28 h-20 rounded-lg flex-shrink-0 flex items-center justify-center"
-                          style={{ backgroundColor: (theme?.color || '#C75B2A') + '12' }}
+                          style={{ backgroundColor: (theme?.color || '#1b5e8a') + '12' }}
                         >
                           {typeIcon(item.content_type)}
                         </div>
@@ -294,13 +294,13 @@ export default async function NewsPage({
                             </span>
                           )}
                           {isPastEvent(item) && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-muted/10 text-brand-muted">Past</span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-dim/10 text-dim">Past</span>
                           )}
                         </div>
-                        <h3 className="font-serif text-lg font-bold text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-3">
+                        <h3 className="font-display text-lg font-bold text-ink leading-snug group-hover:text-brand-accent transition-colors line-clamp-3">
                           {item.title_6th_grade}
                         </h3>
-                        <div className="flex items-center gap-2 mt-1.5 text-[11px] text-brand-muted">
+                        <div className="flex items-center gap-2 mt-1.5 text-[11px] text-dim">
                           {item.source_domain && <span>{item.source_domain}</span>}
                           <span>{shortDate(item.published_at)}</span>
                         </div>
@@ -319,10 +319,10 @@ export default async function NewsPage({
                   return (
                     <section key={section.type} className="mb-10">
                       {/* Section header */}
-                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-brand-text">
-                        <span className="text-brand-muted">{typeIcon(section.type)}</span>
-                        <h2 className="font-serif text-xl font-bold text-brand-text">{section.label}</h2>
-                        <span className="text-xs text-brand-muted">{section.items.length}</span>
+                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-rule">
+                        <span className="text-dim">{typeIcon(section.type)}</span>
+                        <h2 className="font-display text-xl font-bold text-ink">{section.label}</h2>
+                        <span className="text-xs text-dim">{section.items.length}</span>
                       </div>
 
                       {/* First item large if it has an image */}
@@ -344,18 +344,18 @@ export default async function NewsPage({
                                   </span>
                                 )}
                                 {isPastEvent(section.items[0]) && (
-                                  <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand-muted/10 text-brand-muted">Past</span>
+                                  <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-dim/10 text-dim">Past</span>
                                 )}
                               </div>
-                              <h3 className="font-serif text-xl font-bold text-brand-text leading-snug mt-1 group-hover:text-brand-accent transition-colors">
+                              <h3 className="font-display text-xl font-bold text-ink leading-snug mt-1 group-hover:text-brand-accent transition-colors">
                                 {section.items[0].title_6th_grade}
                               </h3>
                               {section.items[0].summary_6th_grade && (
-                                <p className="text-sm text-brand-muted mt-2 line-clamp-3 leading-relaxed">
+                                <p className="text-sm text-dim mt-2 line-clamp-3 leading-relaxed">
                                   {section.items[0].summary_6th_grade}
                                 </p>
                               )}
-                              <div className="flex items-center gap-2 mt-2 text-[11px] text-brand-muted">
+                              <div className="flex items-center gap-2 mt-2 text-[11px] text-dim">
                                 {section.items[0].source_domain && <span className="font-medium">{section.items[0].source_domain}</span>}
                                 <span>{shortDate(section.items[0].published_at)}</span>
                               </div>
@@ -365,7 +365,7 @@ export default async function NewsPage({
                       )}
 
                       {/* Remaining items */}
-                      <div className="divide-y divide-brand-border/60">
+                      <div className="divide-y divide-rule/60">
                         {section.items.slice(hasValidImage(section.items[0]) ? 1 : 0).map(function (item) {
                           const theme = getTheme(item)
                           return (
@@ -379,27 +379,27 @@ export default async function NewsPage({
                               ) : (
                                 <div
                                   className="w-20 h-14 rounded flex-shrink-0 flex items-center justify-center"
-                                  style={{ backgroundColor: (theme?.color || '#C75B2A') + '10' }}
+                                  style={{ backgroundColor: (theme?.color || '#1b5e8a') + '10' }}
                                 >
                                   {typeIcon(item.content_type)}
                                 </div>
                               )}
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-serif text-base font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2 leading-snug">
+                                <h3 className="font-display text-base font-semibold text-ink group-hover:text-brand-accent transition-colors line-clamp-2 leading-snug">
                                   {item.title_6th_grade}
                                 </h3>
-                                <div className="flex items-center gap-2 mt-1 text-[11px] text-brand-muted">
+                                <div className="flex items-center gap-2 mt-1 text-[11px] text-dim">
                                   {theme && (
                                     <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
                                   )}
                                   {item.source_domain && <span>{item.source_domain}</span>}
                                   <span>{shortDate(item.published_at)}</span>
                                   {isPastEvent(item) && (
-                                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-brand-muted/10">Past</span>
+                                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-dim/10">Past</span>
                                   )}
                                 </div>
                               </div>
-                              <ArrowRight size={14} className="text-brand-muted/30 group-hover:text-brand-accent flex-shrink-0 mt-1 transition-colors" />
+                              <ArrowRight size={14} className="text-dim/30 group-hover:text-brand-accent flex-shrink-0 mt-1 transition-colors" />
                             </Link>
                           )
                         })}
@@ -414,7 +414,7 @@ export default async function NewsPage({
                 <div className="sticky top-24 space-y-4">
                   <IndexWayfinder
                     currentPage="news"
-                    color="#319795"
+                    color="#1a5030"
                     related={[
                       { label: 'Library', href: '/library' },
                       { label: 'Events', href: '/calendar' },

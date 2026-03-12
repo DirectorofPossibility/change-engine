@@ -30,7 +30,7 @@ export default async function ElectionsPage({
   return (
     <div>
       <IndexPageHero
-        color="#e53e3e"
+        color="#7a2018"
         pattern="seed"
         titleKey="elections.title"
         subtitleKey="elections.subtitle"
@@ -66,13 +66,13 @@ export default async function ElectionsPage({
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="elections"
-                color="#e53e3e"
+                color="#7a2018"
                 related={[
-                  { label: 'My Neighborhood', href: '/my-neighborhood', color: '#38a169' },
-                  { label: 'Call Your Senators', href: '/call-your-senators', color: '#e53e3e' },
-                  { label: 'Officials', href: '/officials', color: '#805ad5' },
-                  { label: 'Policies', href: '/policies', color: '#3182ce' },
-                  { label: 'Polling Places', href: '/polling-places', color: '#38a169' },
+                  { label: 'My Neighborhood', href: '/my-neighborhood', color: '#1a6b56' },
+                  { label: 'Call Your Senators', href: '/call-your-senators', color: '#7a2018' },
+                  { label: 'Officials', href: '/officials', color: '#4a2870' },
+                  { label: 'Policies', href: '/policies', color: '#1b5e8a' },
+                  { label: 'Polling Places', href: '/polling-places', color: '#1a6b56' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>

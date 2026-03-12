@@ -264,8 +264,14 @@ const en: Record<string, string> = {
   'action.call': 'Call',
   'action.attend': 'Attend',
 
-  // Neighborhood banner
+  // Neighborhood
   'neighborhood.council_district': 'Council District',
+  'neighborhood.near_you': 'Near you',
+  'neighborhood.change': 'Change',
+  'neighborhood.prompt': "What's happening near you?",
+  'neighborhood.set_zip': 'Set your neighborhood',
+  'neighborhood.enter_zip': 'Enter your ZIP code to see what\u2019s happening near you.',
+  'neighborhood.invalid_zip': 'Enter a 5-digit ZIP code',
 
   // Map
   'map.houston_glance': 'Houston at a Glance',
@@ -1042,6 +1048,7 @@ const en: Record<string, string> = {
   'ui.tips_off': 'Tips off',
   'ui.turn_tips_on': 'Turn on tips',
   'ui.turn_tips_off': 'Turn off tips',
+  'ui.clear': 'Clear',
   'ui.search_placeholder': 'Search resources, services, news...',
   'ui.search_button': 'Search',
   'ui.three_good_things': 'Three Good Things',
@@ -1137,6 +1144,7 @@ const en: Record<string, string> = {
   'content.video': 'Video',
   'content.article': 'Article',
   'content.at_a_glance': 'At a glance',
+  'content.also_part_of': 'Also part of these destinations',
   'content.pathway': 'Pathway',
   'content.take_action': 'Take action',
   'content.visit': 'Visit',
@@ -1399,8 +1407,14 @@ const es: Record<string, string> = {
   'action.call': 'Llamar',
   'action.attend': 'Asistir',
 
-  // Neighborhood banner
+  // Neighborhood
   'neighborhood.council_district': 'Distrito del Concejo',
+  'neighborhood.near_you': 'Cerca de ti',
+  'neighborhood.change': 'Cambiar',
+  'neighborhood.prompt': '\u00bfQu\u00e9 est\u00e1 pasando cerca de ti?',
+  'neighborhood.set_zip': 'Establece tu vecindario',
+  'neighborhood.enter_zip': 'Ingresa tu c\u00f3digo postal para ver qu\u00e9 est\u00e1 pasando cerca de ti.',
+  'neighborhood.invalid_zip': 'Ingresa un c\u00f3digo postal de 5 d\u00edgitos',
 
   // Map
   'map.houston_glance': 'Houston de un Vistazo',
@@ -2177,6 +2191,7 @@ const es: Record<string, string> = {
   'ui.tips_off': 'Tips desactivados',
   'ui.turn_tips_on': 'Activar tips',
   'ui.turn_tips_off': 'Desactivar tips',
+  'ui.clear': 'Borrar',
   'ui.search_placeholder': 'Buscar recursos, servicios, noticias...',
   'ui.search_button': 'Buscar',
   'ui.three_good_things': 'Tres Cosas Buenas',
@@ -2272,6 +2287,7 @@ const es: Record<string, string> = {
   'content.video': 'Video',
   'content.article': 'Artículo',
   'content.at_a_glance': 'De un vistazo',
+  'content.also_part_of': 'También parte de estos destinos',
   'content.pathway': 'Camino',
   'content.take_action': 'Actúa',
   'content.visit': 'Visitar',
@@ -2534,11 +2550,17 @@ const vi: Record<string, string> = {
   'action.call': 'Gọi',
   'action.attend': 'Tham Dự',
 
-  // Neighborhood banner
-  'neighborhood.council_district': 'Quận Hội Đồng',
+  // Neighborhood
+  'neighborhood.council_district': 'Qu\u1eadn H\u1ed9i \u0110\u1ed3ng',
+  'neighborhood.near_you': 'G\u1ea7n b\u1ea1n',
+  'neighborhood.change': 'Thay \u0111\u1ed5i',
+  'neighborhood.prompt': 'C\u00f3 g\u00ec \u0111ang x\u1ea3y ra g\u1ea7n b\u1ea1n?',
+  'neighborhood.set_zip': '\u0110\u1eb7t khu ph\u1ed1 c\u1ee7a b\u1ea1n',
+  'neighborhood.enter_zip': 'Nh\u1eadp m\u00e3 ZIP c\u1ee7a b\u1ea1n \u0111\u1ec3 xem c\u00f3 g\u00ec \u0111ang x\u1ea3y ra g\u1ea7n b\u1ea1n.',
+  'neighborhood.invalid_zip': 'Nh\u1eadp m\u00e3 ZIP 5 ch\u1eef s\u1ed1',
 
   // Map
-  'map.houston_glance': 'Houston Một Cái Nhìn',
+  'map.houston_glance': 'Houston M\u1ed9t C\u00e1i Nh\u00ecn',
 
   // ZIP input
   'zip.enter': 'Mã bưu điện',
@@ -3312,6 +3334,7 @@ const vi: Record<string, string> = {
   'ui.tips_off': 'Mẹo tắt',
   'ui.turn_tips_on': 'Bật mẹo',
   'ui.turn_tips_off': 'Tắt mẹo',
+  'ui.clear': 'Xóa',
   'ui.search_placeholder': 'Tìm tài nguyên, dịch vụ, tin tức...',
   'ui.search_button': 'Tìm kiếm',
   'ui.three_good_things': 'Ba Điều Tốt Đẹp',
@@ -3407,6 +3430,7 @@ const vi: Record<string, string> = {
   'content.video': 'Video',
   'content.article': 'Bài viết',
   'content.at_a_glance': 'Tổng quan',
+  'content.also_part_of': 'Cũng thuộc các điểm đến này',
   'content.pathway': 'Lộ trình',
   'content.take_action': 'Hành động',
   'content.visit': 'Truy cập',

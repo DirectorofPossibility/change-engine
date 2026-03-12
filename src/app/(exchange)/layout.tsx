@@ -23,6 +23,7 @@ import { TranslateBar } from '@/components/exchange/TranslateBar'
 import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
 import { TickerTape } from '@/components/exchange/TickerTape'
 import { Wayfinder } from '@/components/layout/Wayfinder'
+import { NeighborhoodBar } from '@/components/layout/NeighborhoodBar'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -68,6 +69,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           </a>
           <D2Nav />
           <Wayfinder />
+          <NeighborhoodBar />
           <TranslateBar />
           <main id="main-content" className="flex-1">
             {children}

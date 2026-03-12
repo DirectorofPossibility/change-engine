@@ -21,6 +21,8 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { ShareButtons } from '@/components/exchange/ShareButtons'
 import Image from 'next/image'
 import { organizationJsonLd } from '@/lib/jsonld'
+import { FlowerOfLife } from '@/components/geo/sacred'
+import { THEMES } from '@/lib/constants'
 
 export const revalidate = 86400
 
@@ -33,69 +35,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     title: data.org_name,
     description: data.description_5th_grade || 'Details on the Community Exchange.',
   }
-}
-
-/** Sacred geometry SVG pattern for hero headers — Flower of Life derivative */
-function FOLHeroPattern({ color = '#805ad5' }: { color?: string }) {
-  const r = 32
-  const cx = 200, cy = 120
-  const angles = [0, 60, 120, 180, 240, 300]
-  return (
-    <svg className="absolute right-0 top-0 w-full h-full opacity-[0.06] pointer-events-none" viewBox="0 0 600 300" fill="none" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
-      {/* Center seed */}
-      <circle cx={cx} cy={cy} r={r} stroke={color} strokeWidth="1" />
-      {angles.map(function (deg) {
-        const rad = (deg * Math.PI) / 180
-        return <circle key={'i' + deg} cx={cx + r * Math.cos(rad)} cy={cy + r * Math.sin(rad)} r={r} stroke={color} strokeWidth="0.8" />
-      })}
-      {/* Outer ring */}
-      {[30, 90, 150, 210, 270, 330].map(function (deg) {
-        const rad = (deg * Math.PI) / 180
-        const outerR = r * 1.732
-        return <circle key={'o' + deg} cx={cx + outerR * Math.cos(rad)} cy={cy + outerR * Math.sin(rad)} r={r} stroke={color} strokeWidth="0.5" />
-      })}
-      <circle cx={cx} cy={cy} r={r * 2.2} stroke={color} strokeWidth="0.4" />
-      <circle cx={cx} cy={cy} r={r * 3} stroke={color} strokeWidth="0.3" opacity="0.5" />
-      {/* Right bloom */}
-      <circle cx={450} cy={150} r={50} stroke={color} strokeWidth="0.4" opacity="0.3" />
-      {angles.map(function (deg) {
-        const rad = (deg * Math.PI) / 180
-        return <circle key={'r' + deg} cx={450 + 50 * Math.cos(rad)} cy={150 + 50 * Math.sin(rad)} r={50} stroke={color} strokeWidth="0.3" opacity="0.2" />
-      })}
-    </svg>
-  )
-}
-
-/** Tiny FOL seed icon for decorative inline use */
-function FOLSeed({ color = '#C75B2A', size = 20 }: { color?: string; size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="2 2 16 16" fill="none" className="inline-block" aria-hidden="true">
-      <circle cx="10" cy="10" r="4" stroke={color} strokeWidth="1.2" opacity="0.8" />
-      {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
-        const rad = (deg * Math.PI) / 180
-        return <circle key={i} cx={10 + 4 * Math.cos(rad)} cy={10 + 4 * Math.sin(rad)} r="4" stroke={color} strokeWidth="0.7" opacity="0.35" />
-      })}
-    </svg>
-  )
-}
-
-/** FOL-backed stat block */
-function OrgStat({ value, label, color = '#C75B2A' }: { value: string | number; label: string; color?: string }) {
-  return (
-    <div className="relative text-center p-5 rounded-2xl bg-white border border-brand-border overflow-hidden group hover:shadow-md transition-shadow">
-      <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] group-hover:opacity-[0.08] transition-opacity pointer-events-none">
-        <svg width="80" height="80" viewBox="2 2 16 16" fill="none" style={{ animation: 'fol-spin 40s linear infinite' }}>
-          <circle cx="10" cy="10" r="4" stroke={color} strokeWidth="1.5" />
-          {[0, 60, 120, 180, 240, 300].map(function (deg, i) {
-            const rad = (deg * Math.PI) / 180
-            return <circle key={i} cx={10 + 4 * Math.cos(rad)} cy={10 + 4 * Math.sin(rad)} r="4" stroke={color} strokeWidth="1" />
-          })}
-        </svg>
-      </div>
-      <span className="relative block text-2xl font-black leading-none" style={{ color }}>{value}</span>
-      <span className="relative block font-mono text-[9px] font-bold uppercase tracking-wider text-brand-muted mt-1.5">{label}</span>
-    </div>
-  )
 }
 
 export default async function OrganizationDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -179,12 +118,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   const jsonLd = organizationJsonLd(org as any)
 
-  // Determine accent color based on org type
-  const accentColor = org.org_type === 'Community Partner' ? '#805ad5'
-    : org.org_type === 'Foundation/Grantmaker' ? '#3182ce'
-    : org.org_type === 'Government Agency' ? '#38a169'
-    : org.org_type === 'Educational Institution' ? '#d69e2e'
-    : '#C75B2A'
+  // Resolve theme color from org's pathway junctions
+  const { data: orgThemes } = await supabase.from('organization_pathways').select('theme_id').eq('org_id', id)
+  const orgThemeId = orgThemes && orgThemes.length > 0 ? orgThemes[0].theme_id : null
+  const themeEntry = orgThemeId ? (THEMES as Record<string, { color: string; name: string }>)[orgThemeId] : null
+  const accentColor = themeEntry?.color || '#1b5e8a'
 
   const childCount = (services?.length || 0) + (content?.length || 0) + (opportunities?.length || 0)
 
@@ -270,12 +208,14 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               </div>
             </div>
 
-            {/* Logo on right */}
-            {org.logo_url && (
-              <div className="flex-shrink-0 hidden sm:block">
+            {/* Logo / Geo mark on right */}
+            <div className="flex-shrink-0 hidden sm:flex flex-col items-center gap-3">
+              {org.logo_url ? (
                 <Image src={org.logo_url} alt={org.org_name} className="object-contain" style={{ border: '1px solid #dde1e8' }} width={96} height={96} />
-              </div>
-            )}
+              ) : (
+                <FlowerOfLife size={80} color={accentColor} opacity={0.2} />
+              )}
+            </div>
           </div>
         </div>
       </header>

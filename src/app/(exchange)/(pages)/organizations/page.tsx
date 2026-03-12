@@ -30,7 +30,7 @@ export default async function OrganizationsPage() {
   return (
     <div>
       <IndexPageHero
-        color="#dd6b20"
+        color="#1e4d7a"
         pattern="seed"
         titleKey="organizations.title"
         subtitleKey="organizations.subtitle"
@@ -52,12 +52,12 @@ export default async function OrganizationsPage() {
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="organizations"
-                color="#dd6b20"
+                color="#1e4d7a"
                 related={[
-                  { label: 'Services', href: '/services', color: '#38a169' },
-                  { label: 'Foundations', href: '/foundations', color: '#805ad5' },
-                  { label: 'Opportunities', href: '/opportunities', color: '#38a169' },
-                  { label: 'Community Partners', href: '/partners', color: '#C75B2A' },
+                  { label: 'Services', href: '/services', color: '#1a6b56' },
+                  { label: 'Foundations', href: '/foundations', color: '#4a2870' },
+                  { label: 'Opportunities', href: '/opportunities', color: '#1a6b56' },
+                  { label: 'Community Partners', href: '/partners', color: '#1b5e8a' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>

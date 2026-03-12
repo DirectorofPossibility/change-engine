@@ -1,25 +1,11 @@
 'use client'
 
-/**
- * IndexWayfinder — Contextual sidebar for index/listing pages.
- *
- * Psychology:
- * - Progressive disclosure: collapsed sections reduce overwhelm
- * - Social proof: counts show activity ("12 new this week")
- * - Cross-pollination: related sections invite exploration
- * - Anchoring: current section highlighted, related sections below
- *
- * On mobile: renders as horizontal scrollable pills + collapsible sections.
- * On desktop: sticky sidebar with pathway links + related sections.
- */
-
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { THEMES } from '@/lib/constants'
-import { FOLWatermark } from './FOLWatermark'
+import { FlowerOfLife } from '@/components/geo/sacred'
 import { useTranslation } from '@/lib/use-translation'
-import Image from 'next/image'
 
 interface RelatedSection {
   label: string
@@ -29,13 +15,9 @@ interface RelatedSection {
 }
 
 interface IndexWayfinderProps {
-  /** Current page identifier for highlighting */
   currentPage: string
-  /** Related cross-links to show */
   related?: RelatedSection[]
-  /** Whether to show pathways section */
   showPathways?: boolean
-  /** Accent color */
   color?: string
 }
 
@@ -44,45 +26,45 @@ const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
 })
 
 const CROSS_LINKS = [
-  { i18nKey: 'wayfinder.nav_services', href: '/services', color: '#C75B2A' },
-  { i18nKey: 'wayfinder.nav_organizations', href: '/organizations', color: '#dd6b20' },
-  { i18nKey: 'wayfinder.nav_officials', href: '/officials', color: '#805ad5' },
-  { i18nKey: 'wayfinder.nav_policies', href: '/policies', color: '#3182ce' },
-  { i18nKey: 'wayfinder.nav_opportunities', href: '/opportunities', color: '#38a169' },
-  { i18nKey: 'wayfinder.nav_news', href: '/news', color: '#319795' },
-  { i18nKey: 'wayfinder.nav_library', href: '/library', color: '#d69e2e' },
-  { i18nKey: 'wayfinder.nav_neighborhoods', href: '/neighborhoods', color: '#e53e3e' },
+  { i18nKey: 'wayfinder.nav_services', href: '/services', color: '#1b5e8a' },
+  { i18nKey: 'wayfinder.nav_organizations', href: '/organizations', color: '#1a6b56' },
+  { i18nKey: 'wayfinder.nav_officials', href: '/officials', color: '#4a2870' },
+  { i18nKey: 'wayfinder.nav_policies', href: '/policies', color: '#7a2018' },
+  { i18nKey: 'wayfinder.nav_opportunities', href: '/opportunities', color: '#1a5030' },
+  { i18nKey: 'wayfinder.nav_news', href: '/news', color: '#6a4e10' },
+  { i18nKey: 'wayfinder.nav_library', href: '/library', color: '#1e4d7a' },
+  { i18nKey: 'wayfinder.nav_neighborhoods', href: '/neighborhoods', color: '#1a3460' },
 ]
 
 export function IndexWayfinder({
   currentPage,
   related,
   showPathways = true,
-  color = '#C75B2A',
+  color = '#1b5e8a',
 }: IndexWayfinderProps) {
   const { t } = useTranslation()
   const [pathwaysOpen, setPathwaysOpen] = useState(true)
   const [exploreOpen, setExploreOpen] = useState(true)
 
   return (
-    <aside className="bg-white rounded-xl border border-brand-border overflow-hidden">
-      {/* Header with FOL */}
-      <div className="relative p-4 border-b border-brand-border overflow-hidden">
-        <div className="absolute right-[-10px] top-[-10px] opacity-[0.06]">
-          <FOLWatermark variant="seed" size="sm" color={color} />
+    <aside style={{ border: '1.5px solid #dde1e8' }}>
+      {/* Header */}
+      <div className="relative p-4 overflow-hidden" style={{ borderBottom: '1px solid #dde1e8' }}>
+        <div className="absolute right-2 top-2 opacity-[0.06] pointer-events-none">
+          <FlowerOfLife color={color} size={60} />
         </div>
-        <h3 className="font-serif text-base font-semibold text-brand-text">{t('wayfinder.explore_more')}</h3>
-        <p className="text-[11px] text-brand-muted mt-0.5">{t('wayfinder.discover_connected')}</p>
+        <h3 className="font-display text-base font-bold" style={{ color: '#0d1117' }}>{t('wayfinder.explore_more')}</h3>
+        <p className="font-mono text-[0.52rem] uppercase tracking-[0.08em] mt-1" style={{ color: '#8a929e' }}>{t('wayfinder.discover_connected')}</p>
       </div>
 
       {/* Explore — other sections */}
-      <div className="border-b border-brand-border">
+      <div style={{ borderBottom: '1px solid #dde1e8' }}>
         <button
           onClick={function () { setExploreOpen(!exploreOpen) }}
-          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-brand-bg/50 transition-colors"
+          className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-paper transition-colors"
         >
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.discover')}</span>
-          {exploreOpen ? <ChevronDown size={14} className="text-brand-muted" /> : <ChevronRight size={14} className="text-brand-muted" />}
+          <span className="font-mono text-[0.52rem] uppercase tracking-[0.08em]" style={{ color: '#8a929e' }}>{t('wayfinder.discover')}</span>
+          {exploreOpen ? <ChevronDown size={14} style={{ color: '#8a929e' }} /> : <ChevronRight size={14} style={{ color: '#8a929e' }} />}
         </button>
         {exploreOpen && (
           <div className="px-4 pb-3 space-y-0.5">
@@ -91,9 +73,10 @@ export function IndexWayfinder({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
+                  className="flex items-center gap-2.5 px-2 py-1.5 font-body text-[0.82rem] transition-colors hover:text-blue"
+                  style={{ color: '#0d1117' }}
                 >
-                  <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: link.color }} />
+                  <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: link.color }} />
                   {t(link.i18nKey)}
                 </Link>
               )
@@ -102,15 +85,15 @@ export function IndexWayfinder({
         )}
       </div>
 
-      {/* Pathways — collapsible */}
+      {/* Pathways */}
       {showPathways && (
-        <div className="border-b border-brand-border">
+        <div style={{ borderBottom: '1px solid #dde1e8' }}>
           <button
             onClick={function () { setPathwaysOpen(!pathwaysOpen) }}
-            className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-brand-bg/50 transition-colors"
+            className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-paper transition-colors"
           >
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.topics')}</span>
-            {pathwaysOpen ? <ChevronDown size={14} className="text-brand-muted" /> : <ChevronRight size={14} className="text-brand-muted" />}
+            <span className="font-mono text-[0.52rem] uppercase tracking-[0.08em]" style={{ color: '#8a929e' }}>{t('wayfinder.topics')}</span>
+            {pathwaysOpen ? <ChevronDown size={14} style={{ color: '#8a929e' }} /> : <ChevronRight size={14} style={{ color: '#8a929e' }} />}
           </button>
           {pathwaysOpen && (
             <div className="px-4 pb-3 space-y-0.5">
@@ -119,9 +102,10 @@ export function IndexWayfinder({
                   <Link
                     key={pw.id}
                     href={'/pathways/' + pw.slug}
-                    className="flex items-center gap-2.5 px-2 py-1.5 rounded-md text-[13px] font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
+                    className="flex items-center gap-2.5 px-2 py-1.5 font-body text-[0.82rem] transition-colors hover:text-blue"
+                    style={{ color: '#0d1117' }}
                   >
-                    <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: pw.color }} />
+                    <FlowerOfLife color={pw.color} size={16} className="flex-shrink-0" />
                     {pw.name}
                   </Link>
                 )
@@ -131,23 +115,24 @@ export function IndexWayfinder({
         </div>
       )}
 
-      {/* Related items if provided */}
+      {/* Related items */}
       {related && related.length > 0 && (
         <div className="p-4 space-y-1.5">
-          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-2">{t('wayfinder.related')}</p>
+          <p className="font-mono text-[0.52rem] uppercase tracking-[0.08em] mb-2" style={{ color: '#8a929e' }}>{t('wayfinder.related')}</p>
           {related.map(function (item) {
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center justify-between px-2 py-1.5 rounded-md text-[13px] font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
+                className="flex items-center justify-between px-2 py-1.5 font-body text-[0.82rem] transition-colors hover:text-blue"
+                style={{ color: '#0d1117' }}
               >
                 <span className="flex items-center gap-2">
-                  {item.color && <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: item.color }} />}
+                  {item.color && <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: item.color }} />}
                   {item.label}
                 </span>
                 {item.count !== undefined && (
-                  <span className="text-[10px] font-mono text-brand-muted">{item.count}</span>
+                  <span className="font-mono text-[0.52rem]" style={{ color: '#8a929e' }}>{item.count}</span>
                 )}
               </Link>
             )
@@ -155,16 +140,10 @@ export function IndexWayfinder({
         </div>
       )}
 
-      {/* FOL accent + support line */}
-      <div className="px-4 py-3 bg-brand-bg/50 border-t border-brand-border relative overflow-hidden">
-        <Image
-          src="/images/fol/seed-of-life.svg"
-          alt=""
-          aria-hidden="true"
-          className="absolute right-[-20px] top-[-20px] w-[80px] h-[80px] pointer-events-none opacity-[0.06]"
-         width={200} height={200} />
-        <p className="text-[10px] font-mono text-brand-muted relative z-10">
-          {t('wayfinder.need_help')} <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
+      {/* Support line */}
+      <div className="px-4 py-3" style={{ borderTop: '1px solid #dde1e8', background: '#f4f5f7' }}>
+        <p className="font-mono text-[0.52rem]" style={{ color: '#8a929e' }}>
+          {t('wayfinder.need_help')} <strong style={{ color: '#0d1117' }}>211</strong> / <strong style={{ color: '#0d1117' }}>311</strong> / <strong style={{ color: '#0d1117' }}>988</strong>
         </p>
       </div>
     </aside>

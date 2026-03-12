@@ -37,13 +37,13 @@ export default async function OfficialsPage() {
   return (
     <div>
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#805ad5' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#805ad5' }} />
+        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#4a2870' }}>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#4a2870' }} />
           Accountability Center
         </Link>
       </div>
       <IndexPageHero
-        color="#805ad5"
+        color="#4a2870"
         pattern="metatron"
         titleKey="officials.title"
         subtitleKey="officials.subtitle"
@@ -75,12 +75,12 @@ export default async function OfficialsPage() {
             <div className="sticky top-24">
               <IndexWayfinder
                 currentPage="officials"
-                color="#805ad5"
+                color="#4a2870"
                 related={[
-                  { label: 'Governance Overview', href: '/governance', color: '#805ad5' },
-                  { label: 'Policies & Legislation', href: '/policies', color: '#3182ce' },
-                  { label: 'Elections', href: '/elections', color: '#38a169' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#d69e2e' },
+                  { label: 'Governance Overview', href: '/governance', color: '#4a2870' },
+                  { label: 'Policies & Legislation', href: '/policies', color: '#1b5e8a' },
+                  { label: 'Elections', href: '/elections', color: '#1a6b56' },
+                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
                 ]}
               />
               <div className="mt-4"><FeaturedPromo variant="card" /></div>
