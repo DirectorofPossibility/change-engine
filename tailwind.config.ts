@@ -35,6 +35,12 @@ const config: Config = {
         action:     '#dc2626',
         resource:   '#16a34a',
         accountability: '#9333ea',
+        // Dashboard sidebar
+        sidebar: {
+          bg: '#0d1117',
+          hover: '#161b22',
+          active: '#1c2333',
+        },
         // Legacy aliases for components that still reference brand.*
         brand: {
           bg: '#ffffff',
