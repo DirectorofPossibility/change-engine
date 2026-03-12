@@ -539,7 +539,8 @@ export async function getWayfinderContext(
       : Promise.resolve({ data: [] }),
     relOrgIds.length > 0
       ? supabase.from('organizations')
-          .select('org_id, org_name, description_5th_grade, logo_url, website, phone, donate_url, volunteer_url, newsletter_url, org_type')
+          .select('org_id, org_name, description_5th_grade, logo_url, website, phone, donate_url, volunteer_url, newsletter_url, org_type, city, state')
+          .not('org_type', 'eq', 'Foundation/Grantmaker')
           .in('org_id', relOrgIds)
       : Promise.resolve({ data: [] }),
     relOppIds.length > 0
@@ -566,7 +567,12 @@ export async function getWayfinderContext(
     foundations: ((relFoundations.data ?? []) as any[]).map((f: any) => ({
       foundation_id: f.id, name: f.name, description: f.mission || null, website: f.website_url || null,
     })),
-    organizations: (relOrgs.data ?? []) as any[],
+    organizations: ((relOrgs.data ?? []) as any[]).sort((a: any, b: any) => {
+      // Local orgs (TX) first, then orgs with any location, then no-location orgs last
+      const aLocal = a.state === 'TX' ? 2 : (a.city || a.state) ? 1 : 0
+      const bLocal = b.state === 'TX' ? 2 : (b.city || b.state) ? 1 : 0
+      return bLocal - aLocal
+    }),
     taxonomy,
   }
 }
