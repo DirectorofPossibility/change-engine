@@ -62,7 +62,7 @@ export function D2Footer() {
                   <span className="block font-display text-xl font-bold text-ink leading-tight">
                     {t('brand.name')}
                   </span>
-                  <span className="block font-mono text-[.5rem] uppercase tracking-[0.15em] text-faint">
+                  <span className="block font-mono text-[11px] uppercase tracking-[0.15em] text-faint">
                     {t('brand.powered_by')}
                   </span>
                 </div>
@@ -77,7 +77,7 @@ export function D2Footer() {
 
             {/* Discover */}
             <div>
-              <p className="font-mono text-[.56rem] uppercase tracking-[0.2em] text-faint mb-3">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint mb-3">
                 {t('d2footer.discover')}
               </p>
               <div className="space-y-1">
@@ -97,7 +97,7 @@ export function D2Footer() {
 
             {/* Learn */}
             <div>
-              <p className="font-mono text-[.56rem] uppercase tracking-[0.2em] text-faint mb-3">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint mb-3">
                 {t('d2footer.learn')}
               </p>
               <div className="space-y-1">
@@ -117,7 +117,7 @@ export function D2Footer() {
 
             {/* Act */}
             <div>
-              <p className="font-mono text-[.56rem] uppercase tracking-[0.2em] text-faint mb-3">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint mb-3">
                 {t('d2footer.act')}
               </p>
               <div className="space-y-1">
@@ -137,7 +137,7 @@ export function D2Footer() {
 
             {/* About */}
             <div>
-              <p className="font-mono text-[.56rem] uppercase tracking-[0.2em] text-faint mb-3">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-faint mb-3">
                 {t('d2footer.about')}
               </p>
               <div className="space-y-1">
@@ -164,7 +164,7 @@ export function D2Footer() {
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-4 pt-4 border-t border-rule flex flex-wrap items-center justify-between gap-4 font-mono text-[.56rem] uppercase tracking-[0.06em] text-faint">
+          <div className="mt-4 pt-4 border-t border-rule flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.06em] text-faint">
             <p>&copy; {new Date().getFullYear()} {t('brand.copyright')}</p>
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:text-blue transition-colors">{t('d2footer.privacy')}</Link>
@@ -176,16 +176,16 @@ export function D2Footer() {
           </div>
 
           {/* Closing */}
-          <p className="mt-3 text-center font-mono text-[.5rem] uppercase tracking-[0.1em] text-faint">
+          <p className="mt-3 text-center font-mono text-[11px] uppercase tracking-[0.1em] text-faint">
             {t('brand.built_in')}
           </p>
 
           {/* Crisis line */}
-          <div className="mt-3 pt-3 border-t border-rule flex justify-center gap-4 font-mono text-[.56rem] text-faint">
-            <span>{t('d2nav.crisis')}: <strong className="text-ink">988</strong></span>
-            <span>{t('d2nav.city_services')}: <strong className="text-ink">311</strong></span>
-            <span>{t('d2nav.social_services')}: <strong className="text-ink">211</strong></span>
-            <span>{t('d2nav.dv_hotline')}: <strong className="text-ink">713-528-2121</strong></span>
+          <div className="mt-3 pt-3 border-t border-rule flex justify-center gap-4 font-mono text-[11px] text-faint">
+            <span>{t('d2nav.crisis')}: <strong className="text-sm font-bold text-ink">988</strong></span>
+            <span>{t('d2nav.city_services')}: <strong className="text-sm font-bold text-ink">311</strong></span>
+            <span>{t('d2nav.social_services')}: <strong className="text-sm font-bold text-ink">211</strong></span>
+            <span>{t('d2nav.dv_hotline')}: <strong className="text-sm font-bold text-ink">713-528-2121</strong></span>
           </div>
         </div>
       </footer>

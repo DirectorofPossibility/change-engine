@@ -144,7 +144,7 @@ export function D2Nav() {
               {t('nav.change_engine')}
             </span>
             <span
-              className="font-mono text-[.52rem] uppercase tracking-[0.14em] text-dim border border-rule px-1.5 py-0.5"
+              className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim border border-rule px-1.5 py-0.5"
             >
               {t('nav.edition')}
             </span>
@@ -155,20 +155,20 @@ export function D2Nav() {
             <div className="hidden md:flex items-center gap-6">
               <Link
                 href="/pathways"
-                className="font-mono text-[.68rem] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
+                className="font-mono text-[12px] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
               >
                 {t('nav.regions')}
               </Link>
               <Link
                 href="/search"
-                className="font-mono text-[.68rem] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
+                className="font-mono text-[12px] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
               >
                 {t('nav.routes')}
               </Link>
             </div>
             <Link
               href="/compass"
-              className="hidden md:block font-mono text-[.68rem] uppercase tracking-[0.08em] bg-ink text-white px-4 py-2 hover:bg-blue transition-colors"
+              className="hidden md:block font-mono text-xs uppercase tracking-wide bg-ink text-white px-4 py-2 hover:bg-blue transition-colors"
             >
               {t('nav.find_my_way')}
             </Link>
@@ -238,7 +238,7 @@ export function D2Nav() {
               <details className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
                     {t('d2nav.your_journey')}
                   </span>
                 </summary>
@@ -256,7 +256,7 @@ export function D2Nav() {
                     <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                       <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                       <span
-                        className="font-mono text-[.62rem] uppercase tracking-[0.08em] group-open:text-blue transition-colors"
+                        className="font-mono text-[11px] uppercase tracking-[0.08em] group-open:text-blue transition-colors"
                         style={{ color: isActive ? '#1b5e8a' : '#8a929e' }}
                       >
                         {center.label}
@@ -265,7 +265,7 @@ export function D2Nav() {
                     <div className="pb-3 space-y-0.5">
                       <Link
                         href={center.href}
-                        className="block pl-5 py-1.5 font-mono text-[.62rem] uppercase tracking-[0.06em] text-dim hover:text-blue transition-colors"
+                        className="block pl-5 py-1.5 font-mono text-[11px] uppercase tracking-[0.06em] text-dim hover:text-blue transition-colors"
                         onClick={closeDrawer}
                       >
                         {t('d2nav.view_all')} &rarr;
@@ -293,7 +293,7 @@ export function D2Nav() {
               <details open className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
                     {t('d2nav.topics')}
                   </span>
                 </summary>
@@ -318,7 +318,7 @@ export function D2Nav() {
               <details className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
                     {t('d2nav.discover')}
                   </span>
                 </summary>
@@ -342,7 +342,7 @@ export function D2Nav() {
               <div className="pt-3">
                 <Link
                   href="/me"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-ink text-white font-mono text-[.62rem] uppercase tracking-[0.08em] hover:bg-blue transition-colors"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-ink text-white font-mono text-[11px] uppercase tracking-[0.08em] hover:bg-blue transition-colors"
                   onClick={closeDrawer}
                 >
                   {t('d2nav.my_account')}
@@ -358,11 +358,11 @@ export function D2Nav() {
               <details className="group">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
                     {t('d2nav.support')}
                   </span>
                 </summary>
-                <div className="pb-3 font-mono text-[.62rem] text-dim space-y-1 pl-5">
+                <div className="pb-3 font-mono text-[11px] text-dim space-y-1 pl-5">
                   <p>{t('d2nav.crisis')}: <strong className="text-ink">988</strong></p>
                   <p>{t('d2nav.city_services')}: <strong className="text-ink">311</strong></p>
                   <p>{t('d2nav.social_services')}: <strong className="text-ink">211</strong></p>

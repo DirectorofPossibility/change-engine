@@ -12,8 +12,6 @@ interface WayfinderCrumb {
 
 interface WayfinderProps {
   crumbs?: WayfinderCrumb[]
-  trailLevel?: number
-  trailLabel?: string
 }
 
 /**
@@ -23,13 +21,12 @@ interface WayfinderProps {
  * If no crumbs are passed, it reads the current pathname to build
  * a basic breadcrumb trail automatically.
  */
-export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps) {
+export function Wayfinder({ crumbs }: WayfinderProps) {
   const pathname = usePathname()
   const { t } = useTranslation()
 
   // Auto-generate crumbs from pathname if none provided
   const breadcrumbs = crumbs ?? generateCrumbs(pathname, t('wayfinder.guide'))
-  const label = trailLabel ?? t('wayfinder.trail_depth') ?? 'Trail depth'
 
   return (
     <div className="bg-ink" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -37,7 +34,6 @@ export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps
         {/* Breadcrumb strip */}
         <div
           className="flex items-center flex-1 min-w-0 overflow-x-auto scrollbar-hide"
-          style={{ borderRight: '1px solid rgba(255,255,255,0.08)' }}
         >
           {breadcrumbs.map((crumb, i) => (
             <span key={i} className="flex items-center">
@@ -77,26 +73,6 @@ export function Wayfinder({ crumbs, trailLevel = 0, trailLabel }: WayfinderProps
           ))}
         </div>
 
-        {/* Trail level indicator */}
-        <div className="flex items-center gap-2 px-4 py-[0.7rem]">
-          <span
-            className="font-mono text-[.65rem] uppercase tracking-[0.12em] whitespace-nowrap"
-            style={{ color: 'rgba(255,255,255,0.25)' }}
-          >
-            {label}
-          </span>
-          <div className="flex gap-[3px]">
-            {[1, 2, 3, 4, 5].map(i => (
-              <div
-                key={i}
-                className="w-[7px] h-[7px] rounded-full"
-                style={{
-                  background: i <= trailLevel ? '#7ec8e3' : 'rgba(255,255,255,0.15)',
-                }}
-              />
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   )

@@ -10,6 +10,7 @@ interface TickerTapeProps {
     election_date: string
     find_polling_url: string | null
   } | null
+  className?: string
 }
 
 /**
@@ -17,7 +18,7 @@ interface TickerTapeProps {
  * Shows election countdown and other time-sensitive announcements.
  * Good Things content has been moved to the GoodThingsWidget.
  */
-export function TickerTape({ election }: TickerTapeProps) {
+export function TickerTape({ election, className }: TickerTapeProps) {
   const { t } = useTranslation()
 
   // Build election ticker item
@@ -38,7 +39,7 @@ export function TickerTape({ election }: TickerTapeProps) {
   if (!electionItem) return null
 
   return (
-    <div className="bg-brand-bg-alt border-y border-brand-border overflow-hidden relative">
+    <div className={`bg-brand-bg-alt border-y border-brand-border overflow-hidden relative${className ? ' ' + className : ''}`}>
       <div className="flex items-center">
         {/* Label */}
         <div className="flex-shrink-0 bg-brand-bg-alt z-10 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border">

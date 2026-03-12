@@ -46,19 +46,19 @@ export function ElectionCountdown({
         <div>
           <h3 className="font-display text-lg font-bold text-ink">{electionName}</h3>
           {electionType && (
-            <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint">{electionType}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint">{electionType}</span>
           )}
         </div>
         {days != null && days > 0 && (
           <div className="text-right">
             <span className="font-display text-3xl font-bold text-blue">{days}</span>
-            <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-dim ml-1.5">{t('countdown.days_until')}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-dim ml-1.5">{t('countdown.days_until')}</span>
           </div>
         )}
       </div>
 
       <div className="px-5 py-3">
-        <p className={'font-mono text-[.68rem] uppercase tracking-[0.06em] mb-3 ' + status.color}>{status.label}</p>
+        <p className={'font-mono text-[12px] uppercase tracking-[0.06em] mb-3 ' + status.color}>{status.label}</p>
 
         <div className="space-y-1.5 font-body text-[.85rem]">
           {electionDate && (

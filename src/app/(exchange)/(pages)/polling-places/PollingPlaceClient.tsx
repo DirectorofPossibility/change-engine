@@ -134,7 +134,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
         <button
           type="submit"
           disabled={loading || zip.length !== 5}
-          className="px-6 py-3 bg-ink text-white font-mono text-[.68rem] uppercase tracking-[0.08em] hover:bg-blue transition-colors disabled:opacity-50"
+          className="px-6 py-3 bg-ink text-white font-mono text-[12px] uppercase tracking-[0.08em] hover:bg-blue transition-colors disabled:opacity-50"
         >
           {loading ? t('ui.searching') || 'Searching...' : t('polling.find_button') || 'Find My Polling Place'}
         </button>
@@ -149,14 +149,14 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
             <div className="border-2 border-ink bg-paper px-5 py-4">
               <div className="flex items-center gap-2 mb-2">
                 <MapPin size={16} className="text-blue" />
-                <span className="font-mono text-[.68rem] uppercase tracking-[0.08em] text-ink font-semibold">
+                <span className="font-mono text-[12px] uppercase tracking-[0.08em] text-ink font-semibold">
                   {t('polling.your_districts') || 'Your Districts'}
                 </span>
                 {results.districtInfo.city && (
                   <span className="font-body text-[.82rem] text-dim">{results.districtInfo.city}</span>
                 )}
               </div>
-              <div className="flex flex-wrap gap-4 font-mono text-[.68rem] text-dim">
+              <div className="flex flex-wrap gap-4 font-mono text-[12px] text-dim">
                 {results.districtInfo.congressional_district && (
                   <span>Congressional: <strong className="text-ink">{results.districtInfo.congressional_district}</strong></span>
                 )}
@@ -178,7 +178,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
                 <button
                   key={filter}
                   onClick={function () { setLocationTypeFilter(filter) }}
-                  className={'px-4 py-1.5 font-mono text-[.62rem] uppercase tracking-[0.08em] border transition-colors '
+                  className={'px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] border transition-colors '
                     + (isActive
                       ? 'bg-ink text-white border-ink'
                       : 'bg-white text-dim border-rule hover:border-ink hover:text-ink'
@@ -190,7 +190,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
             })}
             <button
               onClick={function () { setAccessibilityFilter(!accessibilityFilter) }}
-              className={'px-4 py-1.5 font-mono text-[.62rem] uppercase tracking-[0.08em] border transition-colors '
+              className={'px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.08em] border transition-colors '
                 + (accessibilityFilter
                   ? 'bg-ink text-white border-ink'
                   : 'bg-white text-dim border-rule hover:border-ink hover:text-ink'
@@ -201,7 +201,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
           </div>
 
           {/* Results count */}
-          <p className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint">
+          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint">
             {filtered.length} {t('polling.places_found') || 'polling place'}{filtered.length !== 1 ? 's' : ''} {t('ui.found') || 'found'}
           </p>
 
@@ -228,7 +228,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
                         href={'https://www.google.com/maps/search/?api=1&query=' + loc.latitude + ',' + loc.longitude}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1 font-mono text-[.62rem] uppercase tracking-[0.06em] text-blue hover:text-ink transition-colors px-4 pb-3"
+                        className="flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.06em] text-blue hover:text-ink transition-colors px-4 pb-3"
                       >
                         <ExternalLink size={12} /> View on Map
                       </a>
@@ -244,7 +244,7 @@ export function PollingPlaceClient({ activeElection }: PollingPlaceClientProps) 
                 href="https://www.votetexas.gov/voting/where.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-[.68rem] uppercase tracking-[0.06em] text-blue hover:text-ink transition-colors"
+                className="font-mono text-[12px] uppercase tracking-[0.06em] text-blue hover:text-ink transition-colors"
               >
                 Check votetexas.gov &rarr;
               </a>

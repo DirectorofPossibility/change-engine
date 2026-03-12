@@ -1,129 +1,47 @@
 'use client'
 
-/**
- * CompassClient — Intent-based community discovery hub.
- *
- * Structure:
- * 1. Hero — Neighborhood welcome + ZIP input + intent cards
- * 2. Community Pulse — Live vertical timeline feed
- * 3. Your Representatives — Tight 4-column grid (if ZIP set)
- * 4. By the Numbers — Single elegant stats row
- * 5. Explore by Topic — 7-card pathway grid
- * 6. Quick Actions — Compact bottom bar
- * 7. Crisis footer bar
- */
-
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
-  MapPin, ChevronRight, Phone, Heart, Building2, ArrowRight,
-  BookOpen, Vote, Compass, CalendarHeart, Library, Users,
-  FileText, Scale, Briefcase, Leaf, Globe, Zap,
+  Heart, Users, MapPin, Scale, Briefcase, Leaf, Globe,
+  ArrowRight, ArrowLeft, Phone, ExternalLink, Calendar,
+  Settings2,
 } from 'lucide-react'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import { ZipInput } from '@/components/exchange/ZipInput'
 import { THEMES } from '@/lib/constants'
-import { GradientFOL } from '@/components/exchange/GradientFOL'
-import type { CompassPreviewData } from '@/lib/types/exchange'
+import { FlowerOfLife } from '@/components/geo/sacred'
+
+/* ── Design Tokens (matches content detail pages) ── */
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const PARCHMENT_LIGHT = '#F8F4EC'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
+/* ── Types ── */
 
 interface CompassClientProps {
+  onboardingComplete: boolean
   zip?: string
-  stats: any
-  pathwayCounts: Record<string, number>
-  centerCounts: Record<string, number>
-  bridges: Array<[string, string, number]>
-  preview: CompassPreviewData
-  recentNews: any[]
-  nearbyServices: any[]
-  nearbyOrgs: any[]
-  zipOfficials: any[]
-  upcomingEvents: any[]
+  selectedThemes: string[]
+  archetype?: string
   themeColors: string[]
+  councilMember: any | null
+  nearbyServices: any[]
+  topPolicy: any | null
+  nextEvent: any | null
+  featuredContent: any | null
+  recentNews: any[]
 }
 
-const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string; description: string }][]
-
-/* ── Intent cards ───────────────────────────────────────────────── */
-
-const INTENTS = [
-  {
-    label: 'Find help or services',
-    description: 'Browse nearby clinics, food banks, legal aid, and more.',
-    href: '/services',
-    color: '#7a2018',
-    Icon: Heart,
-  },
-  {
-    label: 'See who represents me',
-    description: 'Your elected officials from City Hall to Congress.',
-    href: '/officials',
-    color: '#1a3460',
-    Icon: Building2,
-  },
-  {
-    label: 'Learn about upcoming votes',
-    description: 'Elections, deadlines, and where to cast your ballot.',
-    href: '/elections',
-    color: '#1a6b56',
-    Icon: Vote,
-  },
-  {
-    label: 'Explore my neighborhood',
-    description: 'Maps, districts, and what is happening around you.',
-    href: '/my-neighborhood',
-    color: '#4a2870',
-    Icon: Compass,
-  },
-  {
-    label: 'Find volunteer opportunities',
-    description: 'Ways to give back and get involved locally.',
-    href: '/events',
-    color: '#6a4e10',
-    Icon: CalendarHeart,
-  },
-  {
-    label: 'Read the latest research',
-    description: 'News, policy briefs, and community analysis.',
-    href: '/library',
-    color: '#1a5030',
-    Icon: Library,
-  },
-] as const
-
-/* ── Helpers ────────────────────────────────────────────────────── */
-
-function timeAgo(dateStr: string | null) {
-  if (!dateStr) return ''
-  const diff = Date.now() - new Date(dateStr).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'Just now'
-  if (mins < 60) return mins + 'm ago'
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return hours + 'h ago'
-  const days = Math.floor(hours / 24)
-  if (days === 1) return 'Yesterday'
-  if (days < 7) return days + 'd ago'
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
-function categoryPill(item: any): { label: string; color: string } {
-  if (item.content_type === 'event' || item.content_type === 'opportunity') return { label: 'Event', color: '#6a4e10' }
-  if (item.content_type === 'policy' || item.content_type === 'legislation') return { label: 'Policy', color: '#1a3460' }
-  if (item.content_type === 'service') return { label: 'Service', color: '#7a2018' }
-  return { label: 'News', color: '#C75B2A' }
-}
-
-/* ── Pathway descriptions (short) ───────────────────────────────── */
-
-const PATHWAY_SHORT: Record<string, string> = {
-  THEME_01: 'Clinics, mental health, nutrition, and wellness.',
-  THEME_02: 'Schools, childcare, youth, and family safety.',
-  THEME_03: 'Housing, parks, libraries, and local initiatives.',
-  THEME_04: 'Voting, advocacy, organizing, and civic power.',
-  THEME_05: 'Jobs, benefits, credit, and small business.',
-  THEME_06: 'Climate, energy, air quality, and green programs.',
-  THEME_07: 'Bridging, dialogue, inclusion, and community trust.',
-}
+/* ── Constants ── */
 
 const PATHWAY_ICONS: Record<string, typeof Heart> = {
   THEME_01: Heart,
@@ -135,387 +53,625 @@ const PATHWAY_ICONS: Record<string, typeof Heart> = {
   THEME_07: Globe,
 }
 
-/* ── Component ──────────────────────────────────────────────────── */
+const ARCHETYPES = [
+  {
+    id: 'neighbor',
+    label: 'Neighbor',
+    description: 'I want to know what is happening around me and how to get help when I need it.',
+    color: '#4a2870',
+  },
+  {
+    id: 'advocate',
+    label: 'Advocate',
+    description: 'I want to hold leaders accountable and push for change on the issues I care about.',
+    color: '#7a2018',
+  },
+  {
+    id: 'researcher',
+    label: 'Researcher',
+    description: 'I want to understand the data, the policies, and the systems that shape Houston.',
+    color: '#1e4d7a',
+  },
+  {
+    id: 'partner',
+    label: 'Partner',
+    description: 'I run a program or organization and want to connect with the broader ecosystem.',
+    color: '#1a6b56',
+  },
+]
+
+const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string; description: string }][]
+
+/* ── Component ── */
 
 export function CompassClient({
-  zip, stats, pathwayCounts, centerCounts, bridges, preview,
-  recentNews, nearbyServices, nearbyOrgs, zipOfficials, upcomingEvents, themeColors,
+  onboardingComplete,
+  zip,
+  selectedThemes: savedThemes,
+  archetype: savedArchetype,
+  themeColors,
+  councilMember,
+  nearbyServices,
+  topPolicy,
+  nextEvent,
+  featuredContent,
+  recentNews,
 }: CompassClientProps) {
-  const { neighborhood, councilDistrict } = useNeighborhood()
+  const router = useRouter()
+  const { neighborhood } = useNeighborhood()
+  const neighborhoodName = neighborhood?.neighborhood_name || null
 
-  const hasZip = !!zip
-  const neighborhoodName = neighborhood?.neighborhood_name || (hasZip ? 'Your Area' : null)
-  const totalItems = Object.values(pathwayCounts).reduce(function (sum, n) { return sum + n }, 0)
+  // Onboarding state
+  const [step, setStep] = useState(1)
+  const [pickedThemes, setPickedThemes] = useState<string[]>(savedThemes)
+  const [pickedArchetype, setPickedArchetype] = useState<string>(savedArchetype || '')
+  const [saving, setSaving] = useState(false)
 
-  return (
-    <div className="relative bg-brand-bg min-h-screen">
+  // If editing preferences from guide view
+  const [editing, setEditing] = useState(false)
+  const showOnboarding = !onboardingComplete || editing
 
-      {/* ═══════════════════════════════════════════════════════════
-          1. HERO — Welcome + ZIP + Intent Cards
-          ═══════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        {/* Animated gradient FOL — background watermark */}
-        <div className="absolute -top-8 -right-12 w-[280px] h-[280px] opacity-[0.06] pointer-events-none">
-          <GradientFOL variant="full" spinDur={90} colorDur={14} />
+  function toggleTheme(id: string) {
+    setPickedThemes(prev => {
+      if (prev.includes(id)) return prev.filter(t => t !== id)
+      if (prev.length >= 3) return prev
+      return [...prev, id]
+    })
+  }
+
+  async function savePreferences() {
+    setSaving(true)
+    await fetch('/api/compass-preferences', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ themes: pickedThemes, archetype: pickedArchetype }),
+    })
+    setSaving(false)
+    setEditing(false)
+    router.refresh()
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     ONBOARDING FLOW
+     ═══════════════════════════════════════════════════════════ */
+  if (showOnboarding) {
+    return (
+      <div style={{ background: PARCHMENT, minHeight: '100vh' }}>
+        {/* Top color bar */}
+        <div className="flex h-[3px]">
+          {themeColors.map((c, i) => <div key={i} className="flex-1" style={{ background: c }} />)}
         </div>
-        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
-          {/* Top row: welcome + ZIP */}
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-8">
-            <div className="flex-1">
-              {/* Spectrum bar */}
-              <div className="flex h-1 rounded-full overflow-hidden mb-5 max-w-[180px]">
-                {themeColors.map(function (color, i) {
-                  return <div key={i} className="flex-1" style={{ backgroundColor: color }} />
-                })}
-              </div>
 
-              {neighborhoodName ? (
-                <>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">
-                    Your Community Portal
-                  </p>
-                  <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
-                    Welcome to{' '}
-                    <span className="text-brand-accent">{neighborhoodName}</span>
-                  </h1>
-                  <p className="text-base text-brand-muted mt-1 font-display italic">
-                    ZIP {zip}{councilDistrict ? ' \u2014 District ' + councilDistrict : ''}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted-light mb-2">
-                    Change Engine
-                  </p>
-                  <h1 className="text-2xl sm:text-3xl font-display font-bold leading-tight">
-                    Civic Compass
-                  </h1>
-                  <p className="text-sm text-brand-muted mt-2 max-w-xl leading-relaxed">
-                    Enter your address to unlock a personalized view of every official, service, and resource in your community.
-                  </p>
-                </>
-              )}
-            </div>
-
-            {/* ZIP input */}
-            <div className="lg:flex-shrink-0 lg:w-[300px]">
-              <div className="bg-white border border-brand-border p-4">
-                <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mb-2">
-                  {hasZip ? 'Change location' : 'Enter your address \u2014 street, city, zip'}
-                </p>
-                <ZipInput />
-                {!hasZip && (
-                  <p className="text-[11px] text-brand-muted mt-2">Enter your address above to find your representatives.</p>
-                )}
-                {hasZip && zipOfficials.length === 0 && nearbyServices.length === 0 && (
-                  <p className="text-[11px] text-red-600 mt-2">We couldn&rsquo;t find that address. Try adding your zip code.</p>
+        <div className="max-w-[640px] mx-auto px-4 sm:px-6 py-12">
+          {/* Step indicator */}
+          <div className="flex items-center gap-3 mb-8">
+            {[1, 2, 3].map(s => (
+              <div key={s} className="flex items-center gap-2">
+                <div
+                  className="w-6 h-6 flex items-center justify-center text-xs font-bold"
+                  style={{
+                    fontFamily: MONO,
+                    background: step >= s ? INK : 'transparent',
+                    color: step >= s ? PARCHMENT : MUTED,
+                    border: `1px solid ${step >= s ? INK : MUTED}`,
+                  }}
+                >
+                  {s}
+                </div>
+                {s < 3 && (
+                  <div className="w-8 h-px" style={{ background: step > s ? INK : RULE_COLOR }} />
                 )}
               </div>
-            </div>
+            ))}
+            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED, marginLeft: 8 }}>
+              Step {step} of 3
+            </span>
           </div>
 
-          {/* Intent cards: "What do you need today?" */}
-          <div className="mb-2">
-            <h2 className="font-display text-lg sm:text-xl font-bold text-brand-text mb-4">
-              What do you need today?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {INTENTS.map(function (intent) {
-                const IconComp = intent.Icon
-                return (
-                  <Link
-                    key={intent.href}
-                    href={intent.href}
-                    className="bg-white border border-brand-border p-4 hover:border-brand-text transition-all group relative overflow-hidden"
-                  >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: intent.color }} />
-                    <div className="flex items-start gap-3 pl-2">
-                      <div
-                        className="w-9 h-9 flex items-center justify-center flex-shrink-0 mt-0.5"
-                        style={{ backgroundColor: intent.color + '14' }}
-                      >
-                        <IconComp size={18} style={{ color: intent.color }} />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
-                          {intent.label}
-                        </p>
-                        <p className="text-[12px] text-brand-muted mt-0.5 leading-snug">
-                          {intent.description}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          </div>
-        </div>
+          {/* ── STEP 1: What's on your mind? ── */}
+          {step === 1 && (
+            <div>
+              <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, color: INK, marginBottom: 8 }}>
+                What&rsquo;s on your mind?
+              </h1>
+              <p style={{ fontFamily: SERIF, fontSize: 16, lineHeight: 1.7, color: MUTED, marginBottom: 32 }}>
+                Every community is a web of connected issues. Pick up to three threads that matter most to you right now.
+              </p>
 
-        {/* Bottom color bar */}
-        <div className="flex h-1">
-          {themeColors.map(function (color, i) {
-            return <div key={i} className="flex-1" style={{ backgroundColor: color }} />
-          })}
-        </div>
-      </section>
-
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-
-        {/* ═══════════════════════════════════════════════════════════
-            2. COMMUNITY PULSE — Vertical Timeline Feed
-            ═══════════════════════════════════════════════════════════ */}
-        <section>
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="font-display text-xl font-bold text-brand-text flex items-center gap-2">
-              <Zap size={20} className="text-brand-accent" />
-              Community Pulse
-            </h2>
-            {recentNews.length > 0 && (
-              <Link href="/news" className="text-sm text-brand-accent hover:underline flex items-center gap-1">
-                All news <ChevronRight size={14} />
-              </Link>
-            )}
-          </div>
-
-          {recentNews.length > 0 ? (
-            <div className="relative pl-6 sm:pl-8">
-              {/* Vertical line */}
-              <div className="absolute left-2.5 sm:left-3.5 top-2 bottom-2 w-px bg-brand-border" />
-
-              <div className="space-y-4">
-                {recentNews.slice(0, 8).map(function (item: any) {
-                  const pill = categoryPill(item)
-                  const theme = item.pathway_primary ? (THEMES as any)[item.pathway_primary] : null
+              <div className="grid grid-cols-1 gap-3">
+                {themeEntries.map(([id, theme]) => {
+                  const Icon = PATHWAY_ICONS[id] || Heart
+                  const selected = pickedThemes.includes(id)
                   return (
-                    <Link
-                      key={item.id}
-                      href={'/content/' + item.id}
-                      className="block relative group"
+                    <button
+                      key={id}
+                      onClick={() => toggleTheme(id)}
+                      className="text-left p-4 transition-all"
+                      style={{
+                        background: selected ? '#ffffff' : PARCHMENT_LIGHT,
+                        border: selected ? `2px solid ${theme.color}` : `1px solid ${RULE_COLOR}`,
+                        cursor: pickedThemes.length >= 3 && !selected ? 'not-allowed' : 'pointer',
+                        opacity: pickedThemes.length >= 3 && !selected ? 0.5 : 1,
+                      }}
                     >
-                      {/* Dot */}
-                      <div
-                        className="absolute -left-6 sm:-left-8 top-2.5 w-2.5 h-2.5 rounded-full border-2 border-white ring-1 ring-brand-border group-hover:ring-brand-accent transition-all"
-                        style={{ backgroundColor: theme?.color || pill.color }}
-                      />
-
-                      <div className="bg-white border border-brand-border p-4 hover:border-brand-text transition-all">
-                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                          <span className="text-[10px] font-mono text-brand-muted">
-                            {timeAgo(item.published_at)}
-                          </span>
-                          <span
-                            className="text-[10px] font-mono font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full"
-                            style={{ backgroundColor: pill.color + '14', color: pill.color }}
-                          >
-                            {pill.label}
-                          </span>
-                          {item.source_domain && (
-                            <span className="text-[10px] font-mono text-brand-muted">
-                              {item.source_domain}
-                            </span>
-                          )}
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-10 h-10 flex items-center justify-center flex-shrink-0"
+                          style={{ background: selected ? theme.color : theme.color + '18' }}
+                        >
+                          <Icon size={20} style={{ color: selected ? '#fff' : theme.color }} />
                         </div>
-                        <h3 className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors line-clamp-2">
-                          {item.title_6th_grade || item.title}
-                        </h3>
-                        {item.summary_6th_grade && (
-                          <p className="text-[12px] text-brand-muted mt-1 line-clamp-1 leading-snug">
-                            {item.summary_6th_grade}
-                          </p>
+                        <div className="min-w-0">
+                          <span className="block font-semibold" style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>
+                            {theme.name}
+                          </span>
+                          <span className="block mt-0.5" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED, lineHeight: 1.5 }}>
+                            {theme.description.split('.')[0]}.
+                          </span>
+                        </div>
+                        {selected && (
+                          <span className="ml-auto flex-shrink-0 w-5 h-5 flex items-center justify-center" style={{ background: theme.color }}>
+                            <span style={{ color: '#fff', fontSize: 14, fontWeight: 700 }}>&check;</span>
+                          </span>
                         )}
                       </div>
-                    </Link>
+                    </button>
                   )
                 })}
               </div>
-            </div>
-          ) : (
-            <div className="bg-white border border-brand-border p-8 text-center">
-              <FileText size={28} className="mx-auto text-brand-muted-light mb-2" />
-              <p className="text-sm text-brand-muted">No recent community updates yet. Check back soon.</p>
+
+              <div className="mt-8 flex justify-end">
+                <button
+                  onClick={() => setStep(2)}
+                  disabled={pickedThemes.length === 0}
+                  className="inline-flex items-center gap-2 px-6 py-3 transition-opacity"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: 12,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    fontWeight: 600,
+                    background: pickedThemes.length > 0 ? INK : MUTED,
+                    color: '#fff',
+                    opacity: pickedThemes.length === 0 ? 0.4 : 1,
+                    cursor: pickedThemes.length === 0 ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  Continue <ArrowRight size={14} />
+                </button>
+              </div>
             </div>
           )}
-        </section>
 
-        {/* ═══════════════════════════════════════════════════════════
-            3. YOUR REPRESENTATIVES (if ZIP set)
-            ═══════════════════════════════════════════════════════════ */}
-        {hasZip && zipOfficials.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-display text-xl font-bold text-brand-text flex items-center gap-2">
-                <Building2 size={20} className="text-[#1a3460]" />
-                Your Representatives
-              </h2>
-              <Link href="/officials" className="text-sm text-brand-accent hover:underline flex items-center gap-1">
-                See all representatives <ChevronRight size={14} />
-              </Link>
+          {/* ── STEP 2: Where are you? ── */}
+          {step === 2 && (
+            <div>
+              <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, color: INK, marginBottom: 8 }}>
+                Where are you?
+              </h1>
+              <p style={{ fontFamily: SERIF, fontSize: 16, lineHeight: 1.7, color: MUTED, marginBottom: 32 }}>
+                Your ZIP code unlocks what&rsquo;s happening right where you live &mdash; who represents you, what services are nearby, and what policies affect your neighborhood.
+              </p>
+
+              <div className="p-6" style={{ background: '#fff', border: `1px solid ${RULE_COLOR}` }}>
+                {neighborhoodName && (
+                  <p className="mb-3" style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>
+                    Currently set to <strong style={{ color: CLAY }}>{neighborhoodName}</strong>
+                    {zip && <span style={{ color: MUTED }}> (ZIP {zip})</span>}
+                  </p>
+                )}
+                <ZipInput />
+                {!zip && !neighborhoodName && (
+                  <p className="mt-3" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>
+                    Enter your address or ZIP code above. You can skip this and add it later.
+                  </p>
+                )}
+              </div>
+
+              <div className="mt-8 flex items-center justify-between">
+                <button
+                  onClick={() => setStep(1)}
+                  className="inline-flex items-center gap-2 px-4 py-3 transition-colors"
+                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}
+                >
+                  <ArrowLeft size={14} /> Back
+                </button>
+                <button
+                  onClick={() => setStep(3)}
+                  className="inline-flex items-center gap-2 px-6 py-3 transition-opacity"
+                  style={{
+                    fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase',
+                    fontWeight: 600, background: INK, color: '#fff',
+                  }}
+                >
+                  Continue <ArrowRight size={14} />
+                </button>
+              </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {zipOfficials.slice(0, 8).map(function (o: any) {
-                const levelColors: Record<string, string> = { Federal: '#1a3460', State: '#6a4e10', County: '#7a2018', City: '#1e4d7a' }
-                const ringColor = levelColors[o.level] || '#5A6178'
-                const partyColors: Record<string, string> = { Republican: '#1a6b56', Democrat: '#6a4e10', Independent: '#7a2018' }
-                const partyDot = partyColors[o.party] || '#9ca3af'
-                return (
-                  <Link
-                    key={o.official_id}
-                    href={'/officials/' + o.official_id}
-                    className="bg-white border border-brand-border p-3 hover:border-brand-text transition-all group relative overflow-hidden"
-                  >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: ringColor }} />
-                    <div className="flex items-center gap-2.5 pl-2">
-                      <div className="w-10 h-10 rounded-full flex-shrink-0 p-[2px]" style={{ backgroundColor: ringColor }}>
-                        {o.photo_url ? (
-                          <Image src={o.photo_url} alt="" className="w-full h-full rounded-full object-cover ring-2 ring-white" width={80} height={80} />
-                        ) : (
-                          <div className="w-full h-full rounded-full bg-brand-bg flex items-center justify-center ring-2 ring-white">
-                            <span className="text-sm font-bold text-brand-muted">{o.official_name?.charAt(0)}</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors truncate">
-                          {o.official_name}
-                        </p>
-                        <p className="text-[10px] text-brand-muted truncate">{o.title}</p>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: partyDot }} />
-                          <p className="text-[10px] font-mono font-bold uppercase" style={{ color: ringColor }}>{o.level}</p>
+          )}
+
+          {/* ── STEP 3: How do you engage? ── */}
+          {step === 3 && (
+            <div>
+              <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, color: INK, marginBottom: 8 }}>
+                How do you like to engage?
+              </h1>
+              <p style={{ fontFamily: SERIF, fontSize: 16, lineHeight: 1.7, color: MUTED, marginBottom: 32 }}>
+                There&rsquo;s no wrong answer. This just helps us show you the right starting points.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {ARCHETYPES.map(arch => {
+                  const selected = pickedArchetype === arch.id
+                  return (
+                    <button
+                      key={arch.id}
+                      onClick={() => setPickedArchetype(arch.id)}
+                      className="text-left p-5 transition-all"
+                      style={{
+                        background: selected ? '#fff' : PARCHMENT_LIGHT,
+                        border: selected ? `2px solid ${arch.color}` : `1px solid ${RULE_COLOR}`,
+                      }}
+                    >
+                      <div className="flex items-start gap-3">
+                        <FlowerOfLife size={28} color={selected ? arch.color : MUTED} opacity={selected ? 1 : 0.4} />
+                        <div>
+                          <span className="block font-semibold" style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>
+                            {arch.label}
+                          </span>
+                          <span className="block mt-1" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED, lineHeight: 1.5 }}>
+                            {arch.description}
+                          </span>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                )
-              })}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="mt-8 flex items-center justify-between">
+                <button
+                  onClick={() => setStep(2)}
+                  className="inline-flex items-center gap-2 px-4 py-3 transition-colors"
+                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}
+                >
+                  <ArrowLeft size={14} /> Back
+                </button>
+                <button
+                  onClick={savePreferences}
+                  disabled={saving}
+                  className="inline-flex items-center gap-2 px-6 py-3 transition-opacity"
+                  style={{
+                    fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase',
+                    fontWeight: 600, background: CLAY, color: '#fff',
+                    opacity: saving ? 0.6 : 1,
+                  }}
+                >
+                  {saving ? 'Building your guide...' : 'See my guide'} <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     PERSONALIZED GUIDE
+     ═══════════════════════════════════════════════════════════ */
+
+  const greeting = (() => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good morning'
+    if (hour < 17) return 'Good afternoon'
+    return 'Good evening'
+  })()
+
+  const selectedThemeEntries = themeEntries.filter(([id]) => savedThemes.includes(id))
+
+  return (
+    <div>
+      {/* ── HEADER ── */}
+      <section style={{ background: PARCHMENT }}>
+        {/* Spectrum bar — only selected themes */}
+        <div className="flex h-[3px]">
+          {selectedThemeEntries.map(([id, theme]) => (
+            <div key={id} className="flex-1" style={{ background: theme.color }} />
+          ))}
+        </div>
+
+        <div className="max-w-[740px] mx-auto px-4 sm:px-6 pt-8 pb-6">
+          <div className="flex items-center justify-between mb-4">
+            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              Your Community Briefing
+            </span>
+            <button
+              onClick={() => { setEditing(true); setStep(1) }}
+              className="inline-flex items-center gap-1.5 transition-colors hover:opacity-70"
+              style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: CLAY }}
+            >
+              <Settings2 size={12} /> Edit preferences
+            </button>
+          </div>
+
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(26px, 4vw, 40px)', fontWeight: 400, color: INK, lineHeight: 1.15 }}>
+            {greeting}, {neighborhoodName || 'Houston'}
+          </h1>
+
+          {zip && (
+            <p className="mt-2" style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: 15, color: MUTED }}>
+              ZIP {zip}{neighborhoodName ? ' — ' + neighborhoodName : ''}
+            </p>
+          )}
+
+          {/* Selected pathways as inline tags */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            {selectedThemeEntries.map(([id, theme]) => (
+              <span
+                key={id}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1"
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', color: theme.color, border: `1px solid ${theme.color}40` }}
+              >
+                <span className="w-2 h-2" style={{ background: theme.color }} />
+                {theme.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Thin rule ── */}
+      <div className="max-w-[740px] mx-auto px-4 sm:px-6">
+        <div style={{ height: 1, background: RULE_COLOR }} />
+      </div>
+
+      {/* ── GUIDE SECTIONS ── */}
+      <div className="max-w-[740px] mx-auto px-4 sm:px-6 py-8 space-y-10">
+
+        {/* ── YOUR COUNCIL MEMBER ── */}
+        {councilMember && (
+          <section>
+            <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              Your Council Member
+            </p>
+            <Link
+              href={'/officials/' + councilMember.official_id}
+              className="flex items-center gap-4 p-5 transition-colors group"
+              style={{ background: '#fff', border: `1px solid ${RULE_COLOR}` }}
+            >
+              <div className="w-14 h-14 flex-shrink-0 overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+                {councilMember.photo_url ? (
+                  <Image src={councilMember.photo_url} alt="" width={56} height={56} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center" style={{ fontFamily: SERIF, fontWeight: 700, fontSize: 20, color: MUTED }}>
+                    {councilMember.official_name?.charAt(0)}
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0">
+                <span className="block group-hover:underline" style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 600, color: INK }}>
+                  {councilMember.official_name}
+                </span>
+                <span className="block mt-0.5" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', color: MUTED }}>
+                  {[councilMember.title, councilMember.party].filter(Boolean).join(' · ')}
+                </span>
+              </div>
+              <ArrowRight size={16} className="ml-auto flex-shrink-0" style={{ color: MUTED }} />
+            </Link>
+          </section>
+        )}
+
+        {/* ── NEAR YOU: Services ── */}
+        {nearbyServices.length > 0 && (
+          <section>
+            <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              Near You
+            </p>
+            <div className="space-y-0" style={{ border: `1px solid ${RULE_COLOR}` }}>
+              {nearbyServices.map((svc: any, i: number) => (
+                <Link
+                  key={svc.service_id}
+                  href={'/services/' + svc.service_id}
+                  className="block p-4 transition-colors group"
+                  style={{
+                    background: '#fff',
+                    borderTop: i > 0 ? `1px solid ${RULE_COLOR}` : undefined,
+                  }}
+                >
+                  <span className="block group-hover:underline" style={{ fontFamily: SERIF, fontSize: 15, fontWeight: 600, color: INK }}>
+                    {svc.service_name}
+                  </span>
+                  {svc.description_5th_grade && (
+                    <span className="block mt-1 line-clamp-2" style={{ fontFamily: SERIF, fontSize: 13, lineHeight: 1.6, color: MUTED }}>
+                      {svc.description_5th_grade}
+                    </span>
+                  )}
+                  <div className="flex items-center gap-3 mt-2" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                    {svc.org_name && <span>{svc.org_name}</span>}
+                    {svc.phone && (
+                      <span className="inline-flex items-center gap-1">
+                        <Phone size={10} /> {svc.phone}
+                      </span>
+                    )}
+                    {svc.city && <span>{svc.city}</span>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-2 text-right">
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-1 transition-colors hover:opacity-70"
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: CLAY }}
+              >
+                All services <ArrowRight size={12} />
+              </Link>
             </div>
           </section>
         )}
 
-        {/* ═══════════════════════════════════════════════════════════
-            4. BY THE NUMBERS — Community Stats Row
-            ═══════════════════════════════════════════════════════════ */}
-        <section>
-          <div className="bg-white border border-brand-border p-5 sm:p-6">
-            <h2 className="font-display text-lg font-bold text-brand-text mb-4">By the Numbers</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 sm:gap-6">
-              {[
-                { icon: BookOpen, label: 'Resources', value: stats?.resources || totalItems, color: '#C75B2A' },
-                { icon: Building2, label: 'Officials', value: stats?.officials || 0, color: '#1a3460' },
-                { icon: Heart, label: 'Services', value: stats?.services || 0, color: '#7a2018' },
-                { icon: Users, label: 'Organizations', value: stats?.organizations || 0, color: '#1e4d7a' },
-                { icon: Vote, label: 'Elections', value: upcomingEvents.length || 4, color: '#1a6b56' },
-                { icon: Compass, label: 'Pathways', value: 7, color: '#6a4e10' },
-              ].map(function (stat) {
-                const StatIcon = stat.icon
-                return (
-                  <div key={stat.label} className="text-center">
-                    <div
-                      className="w-9 h-9 flex items-center justify-center mx-auto mb-2"
-                      style={{ backgroundColor: stat.color + '14' }}
-                    >
-                      <StatIcon size={18} style={{ color: stat.color }} />
-                    </div>
-                    <p className="text-xl sm:text-2xl font-display font-bold" style={{ color: stat.color }}>
-                      {stat.value}
-                    </p>
-                    <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted-light mt-0.5">
-                      {stat.label}
-                    </p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+        {/* ── A POLICY THAT AFFECTS YOU ── */}
+        {topPolicy && (
+          <section>
+            <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              A Policy That Affects You
+            </p>
+            <Link
+              href={'/policies/' + topPolicy.policy_id}
+              className="block p-5 transition-colors group"
+              style={{ background: '#fff', borderLeft: `3px solid ${CLAY}`, border: `1px solid ${RULE_COLOR}`, borderLeftWidth: 3, borderLeftColor: CLAY }}
+            >
+              <span className="block group-hover:underline" style={{ fontFamily: SERIF, fontSize: 17, fontWeight: 600, color: INK }}>
+                {topPolicy.title_6th_grade || topPolicy.policy_name}
+              </span>
+              {topPolicy.summary_5th_grade && (
+                <span className="block mt-2 line-clamp-3" style={{ fontFamily: SERIF, fontSize: 14, lineHeight: 1.7, color: MUTED }}>
+                  {topPolicy.summary_5th_grade}
+                </span>
+              )}
+              <div className="flex items-center gap-3 mt-3" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                {topPolicy.level && <span className="uppercase">{topPolicy.level}</span>}
+                {topPolicy.status && <span>&middot; {topPolicy.status}</span>}
+                {topPolicy.bill_number && <span>&middot; {topPolicy.bill_number}</span>}
+              </div>
+            </Link>
+          </section>
+        )}
 
-        {/* ═══════════════════════════════════════════════════════════
-            5. EXPLORE BY TOPIC — Pathway Grid
-            ═══════════════════════════════════════════════════════════ */}
-        <section>
-          <h2 className="font-display text-xl font-bold text-brand-text mb-1">Explore by Topic</h2>
-          <p className="text-sm text-brand-muted mb-4">Seven lenses on community life. Each pathway connects resources, services, officials, and news.</p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            {themeEntries.map(function ([id, theme]) {
-              const count = pathwayCounts[id] || 0
-              const PathwayIcon = PATHWAY_ICONS[id] || BookOpen
-              return (
-                <Link
-                  key={id}
-                  href={'/pathways/' + theme.slug}
-                  className="bg-white border border-brand-border overflow-hidden hover:border-brand-text transition-all group relative"
+        {/* ── COMING UP ── */}
+        {nextEvent && (
+          <section>
+            <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              Coming Up
+            </p>
+            <div className="p-5" style={{ background: '#fff', border: `1px solid ${RULE_COLOR}` }}>
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-12 h-12 flex items-center justify-center flex-shrink-0"
+                  style={{ background: PARCHMENT_WARM }}
                 >
-                  <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all" style={{ backgroundColor: theme.color }} />
-                  <div className="p-4 pl-5">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <PathwayIcon size={16} style={{ color: theme.color }} />
-                      <h3 className="text-sm font-semibold text-brand-text group-hover:text-brand-accent transition-colors">
-                        {theme.name}
-                      </h3>
-                      {count > 0 && (
-                        <span className="ml-auto text-[10px] font-mono text-brand-muted bg-brand-bg px-1.5 py-0.5 rounded-full">
-                          {count}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[12px] text-brand-muted leading-snug">
-                      {PATHWAY_SHORT[id] || theme.description}
-                    </p>
+                  <Calendar size={20} style={{ color: CLAY }} />
+                </div>
+                <div className="min-w-0">
+                  <span className="block" style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 600, color: INK }}>
+                    {nextEvent.opportunity_name}
+                  </span>
+                  {nextEvent.start_date && (
+                    <span className="block mt-1" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                      {new Date(nextEvent.start_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                      {nextEvent.city && <> &middot; {nextEvent.city}</>}
+                    </span>
+                  )}
+                  {nextEvent.description_5th_grade && (
+                    <span className="block mt-2 line-clamp-2" style={{ fontFamily: SERIF, fontSize: 13, lineHeight: 1.6, color: MUTED }}>
+                      {nextEvent.description_5th_grade}
+                    </span>
+                  )}
+                  <div className="flex items-center gap-3 mt-3">
+                    <Link
+                      href={'/opportunities/' + nextEvent.opportunity_id}
+                      className="inline-flex items-center gap-1 transition-colors hover:opacity-70"
+                      style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: CLAY }}
+                    >
+                      Details <ArrowRight size={12} />
+                    </Link>
+                    {nextEvent.registration_url && (
+                      <a
+                        href={nextEvent.registration_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 transition-colors hover:opacity-70"
+                        style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: CLAY }}
+                      >
+                        Register <ExternalLink size={10} />
+                      </a>
+                    )}
                   </div>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
-        {/* ═══════════════════════════════════════════════════════════
-            6. QUICK ACTIONS — Compact bottom bar
-            ═══════════════════════════════════════════════════════════ */}
-        <section>
-          <div className="bg-white border border-brand-border p-3 sm:p-4">
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-              {[
-                { href: '/services', label: 'Find Services', icon: Heart, color: '#7a2018' },
-                { href: '/officials', label: 'Representatives', icon: Building2, color: '#1a3460' },
-                { href: '/elections', label: 'Elections & Voting', icon: Vote, color: '#1a6b56' },
-                { href: '/library', label: 'Research Library', icon: BookOpen, color: '#6a4e10' },
-                { href: '/chat', label: 'Ask Chance', icon: Zap, color: '#1a5030' },
-                { href: '/call-your-senators', label: 'Call Your Senators', icon: Phone, color: '#1e4d7a' },
-              ].map(function (action) {
-                const ActionIcon = action.icon
-                return (
-                  <Link
-                    key={action.href}
-                    href={action.href}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-brand-text hover:bg-brand-bg hover:text-brand-accent transition-colors"
+        {/* ── FROM YOUR PATHWAYS ── */}
+        {featuredContent && (
+          <section>
+            <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              From Your Pathways
+            </p>
+            <Link
+              href={'/content/' + (featuredContent.slug || featuredContent.id)}
+              className="block group"
+              style={{ background: '#fff', border: `1px solid ${RULE_COLOR}` }}
+            >
+              {featuredContent.image_url && (
+                <div className="w-full h-48 overflow-hidden" style={{ borderBottom: `1px solid ${RULE_COLOR}` }}>
+                  <img src={featuredContent.image_url} alt="" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="p-5">
+                {featuredContent.pathway_primary && THEMES[featuredContent.pathway_primary as keyof typeof THEMES] && (
+                  <span
+                    className="block mb-2"
+                    style={{
+                      fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase',
+                      color: THEMES[featuredContent.pathway_primary as keyof typeof THEMES].color,
+                    }}
                   >
-                    <ActionIcon size={14} style={{ color: action.color }} className="flex-shrink-0" />
-                    <span className="hidden sm:inline">{action.label}</span>
-                  </Link>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+                    {THEMES[featuredContent.pathway_primary as keyof typeof THEMES].name}
+                  </span>
+                )}
+                <span className="block group-hover:underline" style={{ fontFamily: SERIF, fontSize: 18, fontWeight: 600, color: INK, lineHeight: 1.3 }}>
+                  {featuredContent.title_6th_grade}
+                </span>
+                {featuredContent.summary_6th_grade && (
+                  <span className="block mt-2 line-clamp-3" style={{ fontFamily: SERIF, fontSize: 14, lineHeight: 1.7, color: MUTED }}>
+                    {featuredContent.summary_6th_grade}
+                  </span>
+                )}
+                <div className="flex items-center gap-3 mt-3" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                  {featuredContent.source_org_name && <span>{featuredContent.source_org_name}</span>}
+                  {featuredContent.published_at && (
+                    <span>{new Date(featuredContent.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          </section>
+        )}
 
-        {/* ═══════════════════════════════════════════════════════════
-            7. CRISIS HOTLINES — Small footer bar
-            ═══════════════════════════════════════════════════════════ */}
-        <section>
-          <div className="bg-brand-bg/80 border border-brand-border px-4 py-3">
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-[11px] font-mono text-brand-muted">
-              <span className="font-bold uppercase tracking-wider text-brand-muted-light">Need help now?</span>
-              <span>Mental Health Crisis: <strong className="text-brand-text">988</strong></span>
-              <span>City Services: <strong className="text-brand-text">311</strong></span>
-              <span>Social Services: <strong className="text-brand-text">211</strong></span>
-              <span>DV Hotline: <strong className="text-brand-text">713-528-2121</strong></span>
-            </div>
-          </div>
-        </section>
-
+        {/* ── Empty state if nothing personalized ── */}
+        {!councilMember && nearbyServices.length === 0 && !topPolicy && !featuredContent && (
+          <section className="text-center py-8">
+            <FlowerOfLife size={48} color={CLAY} opacity={0.3} />
+            <p className="mt-4" style={{ fontFamily: SERIF, fontSize: 16, color: MUTED }}>
+              We&rsquo;re building your guide. Try adding a ZIP code to see what&rsquo;s happening near you.
+            </p>
+            <button
+              onClick={() => { setEditing(true); setStep(2) }}
+              className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 transition-opacity hover:opacity-80"
+              style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, background: CLAY, color: '#fff' }}
+            >
+              Add your ZIP <ArrowRight size={14} />
+            </button>
+          </section>
+        )}
       </div>
+
+      {/* ── FOOTER CODA ── */}
+      <section style={{ background: PARCHMENT, borderTop: `1px solid ${RULE_COLOR}` }}>
+        <div className="max-w-[740px] mx-auto px-4 sm:px-6 py-6">
+          {/* Crisis hotlines */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+            <span className="font-bold uppercase tracking-wider" style={{ color: INK }}>Need help now?</span>
+            <span>Crisis: <strong style={{ color: INK }}>988</strong></span>
+            <span>City: <strong style={{ color: INK }}>311</strong></span>
+            <span>Social Services: <strong style={{ color: INK }}>211</strong></span>
+            <span>DV Hotline: <strong style={{ color: INK }}>713-528-2121</strong></span>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

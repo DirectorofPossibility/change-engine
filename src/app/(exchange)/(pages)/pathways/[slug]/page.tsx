@@ -167,7 +167,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
           {/* Inside this section + connected pathways */}
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span className="font-mono text-[.58rem] tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,255,.35)' }}>
+            <span className="font-mono text-[11px] tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,255,.35)' }}>
               {totalStories} stories &middot; {totalEntities} resources
               {newsCount > 0 && <> &middot; {newsCount} in the wire</>}
             </span>
@@ -177,7 +177,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                   <Link
                     key={b.targetThemeId}
                     href={'/pathways/' + b.targetSlug}
-                    className="inline-flex items-center gap-1.5 font-mono text-[.58rem] uppercase tracking-[0.08em] hover:underline"
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
                     style={{ color: 'rgba(255,255,255,.45)' }}
                   >
                     <span className="block w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
@@ -212,12 +212,12 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               )}
               <div className="flex items-center gap-3 mb-3">
                 <span
-                  className="font-mono text-[.52rem] tracking-[0.12em] uppercase px-2 py-0.5"
+                  className="font-mono text-[11px] tracking-[0.12em] uppercase px-2 py-0.5"
                   style={{ background: theme.color, color: '#fff' }}
                 >
                   {leadStory.center || 'Feature'}
                 </span>
-                <span className="font-mono text-[.52rem] tracking-[0.12em] uppercase" style={{ color: '#5c6474' }}>
+                <span className="font-mono text-[11px] tracking-[0.12em] uppercase" style={{ color: '#5c6474' }}>
                   {fmtDate(leadStory.published_at)}
                   {leadStory.source_domain && <> &middot; {leadStory.source_domain}</>}
                 </span>
@@ -238,7 +238,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               </p>
               <Link
                 href={'/content/' + leadStory.id}
-                className="inline-flex items-center gap-1.5 font-mono text-[.65rem] uppercase tracking-[0.08em] hover:underline"
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
                 style={{ color: theme.color, fontWeight: 600 }}
               >
                 {t('card.read_more')} <ArrowRight size={12} />
@@ -263,7 +263,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                        <span className="font-mono text-[.5rem] tracking-[0.1em] uppercase" style={{ color: '#5c6474' }}>
+                        <span className="font-mono text-[11px] tracking-[0.1em] uppercase" style={{ color: '#5c6474' }}>
                           {c.center || 'Feature'} &middot; {fmtDate(c.published_at)}
                         </span>
                       </div>
@@ -400,7 +400,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
          ═══════════════════════════════════════════════════════════════════ */}
       {themeFocusAreas.length > 0 && (
         <section className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
-          <span className="font-mono text-[.58rem] tracking-[0.2em] uppercase text-[#5c6474] block mb-4">
+          <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5c6474] block mb-4">
             Topic index
           </span>
           <div className="space-y-0">
@@ -429,7 +429,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         <section className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 size={14} style={{ color: theme.color }} />
-            <span className="font-mono text-[.58rem] tracking-[0.2em] uppercase text-[#5c6474]">
+            <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5c6474]">
               See the data
             </span>
           </div>
@@ -445,7 +445,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
               >
                 <ExternalLink size={12} style={{ color: theme.color }} />
                 <span className="font-body text-[.84rem] font-medium text-[#0d1117] group-hover:underline">{ref.label}</span>
-                <span className="font-mono text-[.5rem] tracking-[0.08em] uppercase text-[#8a929e]">{ref.source}</span>
+                <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-[#8a929e]">{ref.source}</span>
               </a>
             ))}
           </div>
@@ -468,7 +468,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         <section style={{ backgroundColor: theme.color + '08', borderBottom: '1.5px solid #dde1e8' }}>
           <div className="max-w-[1080px] mx-auto px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <span className="font-mono text-[.58rem] tracking-[0.2em] uppercase text-[#5c6474] block mb-1">
+              <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5c6474] block mb-1">
                 The wire
               </span>
               <p className="font-body text-[.88rem]" style={{ color: '#0d1117' }}>
@@ -477,7 +477,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             </div>
             <Link
               href={'/news?pathway=' + theme.id}
-              className="inline-flex items-center gap-2 font-mono text-[.65rem] uppercase tracking-[0.08em] hover:underline flex-shrink-0"
+              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline flex-shrink-0"
               style={{ color: theme.color, fontWeight: 600 }}
             >
               Read the latest <ArrowRight size={12} />
@@ -507,7 +507,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <Link
             href="/pathways"
-            className="font-mono text-[.62rem] uppercase tracking-[0.08em] hover:underline"
+            className="font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
             style={{ color: '#5c6474' }}
           >
             &larr; All sections
@@ -516,7 +516,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             <Link
               key={b.targetThemeId}
               href={'/pathways/' + b.targetSlug}
-              className="inline-flex items-center gap-1.5 font-mono text-[.58rem] uppercase tracking-[0.08em] hover:underline"
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
               style={{ color: b.targetColor }}
             >
               <span className="w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
@@ -555,7 +555,7 @@ function DeskBlock({ icon, label, color, themeColor, borderRight, borderBottom, 
         <div className="w-6 h-6 flex items-center justify-center" style={{ backgroundColor: color + '18', color }}>
           {icon}
         </div>
-        <span className="font-mono text-[.58rem] tracking-[0.12em] uppercase" style={{ color: '#5c6474' }}>
+        <span className="font-mono text-[11px] tracking-[0.12em] uppercase" style={{ color: '#5c6474' }}>
           {label}
         </span>
       </div>
@@ -593,7 +593,7 @@ function DeskItem({ href, title, meta, color, typeLabel }: {
           {title}
         </h4>
         {meta && (
-          <span className="font-mono text-[.52rem] tracking-[0.05em] uppercase text-[#5c6474] mt-0.5 block">
+          <span className="font-mono text-[11px] tracking-[0.05em] uppercase text-[#5c6474] mt-0.5 block">
             {meta}
           </span>
         )}

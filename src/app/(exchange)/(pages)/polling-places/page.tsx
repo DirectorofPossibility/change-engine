@@ -38,7 +38,7 @@ export default async function PollingPlacesPage() {
           <div className="absolute top-4 right-4 opacity-[0.06]">
             <FlowerOfLife color="#ffffff" size={180} />
           </div>
-          <span className="inline-block font-mono text-[.62rem] uppercase tracking-[0.12em] text-teal border border-teal/30 px-2.5 py-1 mb-4">
+          <span className="inline-block font-mono text-[11px] uppercase tracking-[0.12em] text-teal border border-teal/30 px-2.5 py-1 mb-4">
             {t('polling.hook')}
           </span>
           <h1 className="font-display text-3xl sm:text-[2.5rem] font-bold text-white leading-tight mb-3">
@@ -77,7 +77,7 @@ export default async function PollingPlacesPage() {
             {/* Quick links */}
             <div className="border-2 border-ink">
               <div className="border-b border-rule px-5 py-3">
-                <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint">
+                <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint">
                   {t('detail.helpful_links')}
                 </span>
               </div>
@@ -111,10 +111,10 @@ export default async function PollingPlacesPage() {
 
             {/* Support numbers */}
             <div className="border-t border-rule pt-4">
-              <span className="font-mono text-[.62rem] uppercase tracking-[0.08em] text-faint block mb-2">
+              <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint block mb-2">
                 {t('d2nav.support')}
               </span>
-              <div className="space-y-1 font-mono text-[.68rem] text-dim">
+              <div className="space-y-1 font-mono text-[12px] text-dim">
                 <p>Harris County Elections: <strong className="text-ink">713-755-6965</strong></p>
                 <p>TX SOS Voter Hotline: <strong className="text-ink">1-800-252-8683</strong></p>
               </div>

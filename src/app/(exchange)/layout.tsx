@@ -71,11 +71,11 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           <Wayfinder />
           <NeighborhoodBar />
           <TranslateBar />
-          <main id="main-content" className="flex-1">
+          <main id="main-content" className="flex-1 pb-14">
             {children}
           </main>
-          <TickerTape election={nextElection} />
           <D2Footer />
+          <TickerTape election={nextElection} className="ticker-banner" />
           <OnboardingLoader />
           <ChanceChatWidget />
         </div>
