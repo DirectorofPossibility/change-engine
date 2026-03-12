@@ -92,6 +92,39 @@ export async function getPipelineFlowStats() {
   }
 }
 
+// ── Entity counts (object type overview) ──────────────────────────────
+
+/** Count of records in each major entity table — for the dashboard "at a glance" grid. */
+export async function getEntityCounts(): Promise<{ label: string; table: string; count: number }[]> {
+  const supabase = await createClient()
+  const [content, officials, policies, services, organizations, opportunities, focusAreas, learningPaths, neighborhoods, foundations, campaigns] = await Promise.all([
+    supabase.from('content_published').select('*', { count: 'exact', head: true }),
+    supabase.from('elected_officials').select('*', { count: 'exact', head: true }),
+    supabase.from('policies').select('*', { count: 'exact', head: true }),
+    supabase.from('services_211').select('*', { count: 'exact', head: true }),
+    supabase.from('organizations').select('*', { count: 'exact', head: true }),
+    supabase.from('opportunities').select('*', { count: 'exact', head: true }),
+    supabase.from('focus_areas').select('*', { count: 'exact', head: true }),
+    supabase.from('learning_paths').select('*', { count: 'exact', head: true }),
+    supabase.from('neighborhoods').select('*', { count: 'exact', head: true }),
+    supabase.from('foundations').select('*', { count: 'exact', head: true }),
+    supabase.from('campaigns').select('*', { count: 'exact', head: true }),
+  ])
+  return [
+    { label: 'Published Content', table: 'content_published', count: content.count ?? 0 },
+    { label: 'Elected Officials', table: 'elected_officials', count: officials.count ?? 0 },
+    { label: 'Policies', table: 'policies', count: policies.count ?? 0 },
+    { label: 'Services (211)', table: 'services_211', count: services.count ?? 0 },
+    { label: 'Organizations', table: 'organizations', count: organizations.count ?? 0 },
+    { label: 'Opportunities', table: 'opportunities', count: opportunities.count ?? 0 },
+    { label: 'Focus Areas', table: 'focus_areas', count: focusAreas.count ?? 0 },
+    { label: 'Learning Paths', table: 'learning_paths', count: learningPaths.count ?? 0 },
+    { label: 'Neighborhoods', table: 'neighborhoods', count: neighborhoods.count ?? 0 },
+    { label: 'Foundations', table: 'foundations', count: foundations.count ?? 0 },
+    { label: 'Campaigns', table: 'campaigns', count: campaigns.count ?? 0 },
+  ]
+}
+
 // ── Content distribution ───────────────────────────────────────────────
 
 /** Content count by pathway (THEME_01..THEME_07) for the dashboard bar chart. */

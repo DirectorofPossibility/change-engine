@@ -15,8 +15,8 @@
  * @route GET /dashboard
  */
 
-import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog } from '@/lib/data/dashboard'
-import { Inbox, Search, CheckCircle, Globe } from 'lucide-react'
+import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog, getEntityCounts } from '@/lib/data/dashboard'
+import { Inbox, Search, CheckCircle, Globe, Database } from 'lucide-react'
 import { StatsCard } from '@/components/ui/StatsCard'
 import { PipelineFlow } from '@/components/ui/PipelineFlow'
 import { ThemePill } from '@/components/ui/ThemePill'
@@ -25,12 +25,13 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { CRON_JOBS } from '@/lib/types/dashboard'
 
 export default async function DashboardPage() {
-  const [stats, breakdown, byPathway, byCenter, activity] = await Promise.all([
+  const [stats, breakdown, byPathway, byCenter, activity, entityCounts] = await Promise.all([
     getPipelineStats(),
     getReviewStatusBreakdown(),
     getContentByPathway(),
     getContentByCenter(),
     getIngestionLog(10),
+    getEntityCounts(),
   ])
 
   return (
@@ -43,6 +44,27 @@ export default async function DashboardPage() {
         <StatsCard label="Needs Review" value={stats.needsReview} icon={<Search size={28} />} />
         <StatsCard label="Published" value={stats.published} icon={<CheckCircle size={28} />} />
         <StatsCard label="Translated" value={stats.translated} icon={<Globe size={28} />} />
+      </div>
+
+      {/* ── Entity Counts ── */}
+      <div className="bg-white rounded-lg shadow-sm border border-brand-border p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Database size={16} className="text-brand-muted" />
+          <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wide">Object Types</h3>
+          <span className="text-xs text-brand-muted ml-auto">
+            {entityCounts.reduce((sum, e) => sum + e.count, 0).toLocaleString()} total records
+          </span>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {entityCounts
+            .sort((a, b) => b.count - a.count)
+            .map((entity) => (
+              <div key={entity.table} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3">
+                <span className="text-sm font-medium truncate mr-2">{entity.label}</span>
+                <span className="text-lg font-bold text-brand-accent tabular-nums">{entity.count.toLocaleString()}</span>
+              </div>
+            ))}
+        </div>
       </div>
 
       {/* ── Pipeline Flow ── */}
