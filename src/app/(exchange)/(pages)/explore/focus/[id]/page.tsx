@@ -6,6 +6,8 @@ import {
   getFoundationsByFocusArea,
   getSDGMap, getSDOHMap, getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
+import { getRelatedServices } from '@/lib/data/services'
+import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { SDGBadge } from '@/components/ui/SDGBadge'
@@ -16,6 +18,8 @@ import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { ClusteredMap } from '@/components/maps/dynamic'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { FolFallback } from '@/components/ui/FolFallback'
+import { Phone, Search, ArrowRight } from 'lucide-react'
 
 export const revalidate = 3600
 
@@ -35,14 +39,30 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
   if (areas.length === 0) notFound()
   const fa = areas[0]
 
-  const [content, opportunities, policies, foundations, sdgMap, sdohMap] = await Promise.all([
+  const [content, opportunities, policies, foundations, services, sdgMap, sdohMap] = await Promise.all([
     getContentByFocusArea(id),
     getRelatedOpportunities([id]),
     getRelatedPolicies([id]),
     getFoundationsByFocusArea(fa.focus_area_name),
+    getRelatedServices([id]),
     fa.sdg_id ? getSDGMap() : Promise.resolve({} as Record<string, { sdg_number: number; sdg_name: string; sdg_color: string | null }>),
     fa.sdoh_code ? getSDOHMap() : Promise.resolve({} as Record<string, { sdoh_name: string; sdoh_description: string | null }>),
   ])
+
+  // Sibling focus areas (same theme, different ID) for discovery
+  let siblingFocusAreas: Array<{ focus_id: string; focus_area_name: string }> = []
+  if (fa.theme_id) {
+    const supabase = await createClient()
+    const { data: siblings } = await supabase
+      .from('focus_areas')
+      .select('focus_id, focus_area_name')
+      .eq('theme_id', fa.theme_id)
+      .neq('focus_id', id)
+      .limit(8)
+    siblingFocusAreas = siblings || []
+  }
+
+  const isEmpty = content.length === 0 && opportunities.length === 0 && policies.length === 0 && services.length === 0
 
   // Fetch translations for content if non-English
   const langId = await getLangId()
@@ -74,8 +94,10 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
   // Theme info
   let themeSlug: string | null = null
+  let themeColor = '#1b5e8a'
   if (fa.theme_id && THEMES[fa.theme_id as keyof typeof THEMES]) {
     themeSlug = THEMES[fa.theme_id as keyof typeof THEMES].slug
+    themeColor = THEMES[fa.theme_id as keyof typeof THEMES].color
   }
 
   return (
@@ -118,10 +140,52 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
         )}
       </div>
 
+      {/* Empty state — make the page useful even with no linked content */}
+      {isEmpty && (
+        <div className="mb-10">
+          <FolFallback pathway={fa.theme_id || null} height="h-28" className="mb-6" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* 211 direct CTA */}
+            <a
+              href="tel:211"
+              className="flex items-center gap-3 p-4 bg-white border border-brand-border hover:border-ink transition-colors"
+            >
+              <Phone size={20} style={{ color: themeColor }} />
+              <div>
+                <p className="text-sm font-semibold text-brand-text">Call 211</p>
+                <p className="text-xs text-brand-muted">Free referrals for {fa.focus_area_name.toLowerCase()} resources</p>
+              </div>
+            </a>
+            {/* Search CTA */}
+            <Link
+              href={'/search?q=' + encodeURIComponent(fa.focus_area_name)}
+              className="flex items-center gap-3 p-4 bg-white border border-brand-border hover:border-ink transition-colors"
+            >
+              <Search size={20} style={{ color: themeColor }} />
+              <div>
+                <p className="text-sm font-semibold text-brand-text">Search the platform</p>
+                <p className="text-xs text-brand-muted">Find &ldquo;{fa.focus_area_name}&rdquo; across all content</p>
+              </div>
+            </Link>
+            {/* Services CTA */}
+            <Link
+              href="/services"
+              className="flex items-center gap-3 p-4 bg-white border border-brand-border hover:border-ink transition-colors"
+            >
+              <ArrowRight size={20} style={{ color: themeColor }} />
+              <div>
+                <p className="text-sm font-semibold text-brand-text">Browse Services</p>
+                <p className="text-xs text-brand-muted">Explore Houston&apos;s 211 service directory</p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main: Related Resources */}
         <div className="lg:col-span-2">
-          {content.length > 0 ? (
+          {content.length > 0 && (
             <>
               <h2 className="text-xl font-bold text-brand-text mb-4">Related Resources</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -145,8 +209,54 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
                 })}
               </div>
             </>
-          ) : (
-            <p className="text-brand-muted py-8">No resources found for this focus area yet.</p>
+          )}
+
+          {/* Services — always show if available */}
+          {services.length > 0 && (
+            <div className={content.length > 0 ? 'mt-8' : ''}>
+              <h2 className="text-xl font-bold text-brand-text mb-4">Services</h2>
+              <div className="space-y-0 border border-brand-border divide-y divide-brand-border">
+                {services.slice(0, 8).map(function (svc: any) {
+                  return (
+                    <Link
+                      key={svc.service_id || svc.id}
+                      href={'/services/' + (svc.service_id || svc.id)}
+                      className="block p-4 bg-white hover:bg-brand-bg transition-colors"
+                    >
+                      <p className="text-sm font-semibold text-brand-text">{svc.service_name}</p>
+                      {svc.description_5th_grade && (
+                        <p className="text-xs text-brand-muted mt-1 line-clamp-2">{svc.description_5th_grade}</p>
+                      )}
+                      {(svc.phone || svc.city) && (
+                        <p className="text-xs text-brand-muted mt-1">
+                          {[svc.city, svc.phone].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Sibling focus areas — always show for discovery */}
+          {siblingFocusAreas.length > 0 && (
+            <div className="mt-8">
+              <h2 className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>Related Focus Areas</h2>
+              <div className="flex flex-wrap gap-2">
+                {siblingFocusAreas.map(function (sib) {
+                  return (
+                    <Link
+                      key={sib.focus_id}
+                      href={'/explore/focus/' + sib.focus_id}
+                      className="text-xs px-3 py-1.5 bg-white border border-brand-border hover:border-ink transition-colors"
+                    >
+                      {sib.focus_area_name}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
           )}
         </div>
 
