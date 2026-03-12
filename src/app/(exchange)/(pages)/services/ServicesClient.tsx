@@ -12,20 +12,20 @@ import { List, Map as MapIcon, Phone, ChevronDown, ChevronRight } from 'lucide-r
 
 // Category display config: icon colors for the phone book tabs
 const CAT_COLORS: Record<string, string> = {
-  Food: '#38a169',
-  Housing: '#3182ce',
-  Money: '#d69e2e',
-  Healthcare: '#e53e3e',
-  Legal: '#805ad5',
-  Jobs: '#dd6b20',
-  Education: '#319795',
+  Food: '#7a2018',
+  Housing: '#6a4e10',
+  Money: '#4a2870',
+  Healthcare: '#1a6b56',
+  Legal: '#1a3460',
+  Jobs: '#1e4d7a',
+  Education: '#1a5030',
   Family: '#d53f8c',
   Seniors: '#718096',
-  Disability: '#3182ce',
+  Disability: '#6a4e10',
   Veterans: '#2d3748',
-  Crisis: '#e53e3e',
-  Transportation: '#dd6b20',
-  Utilities: '#d69e2e',
+  Crisis: '#1a6b56',
+  Transportation: '#1e4d7a',
+  Utilities: '#4a2870',
 }
 
 interface CategoryInfo {
