@@ -23,6 +23,7 @@ import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { ShareButtons } from '@/components/exchange/ShareButtons'
+import { TranslatePageButton } from '@/components/exchange/TranslatePageButton'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
@@ -129,6 +130,25 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     focusAreaIds.length > 0 ? getRelatedPolicies(focusAreaIds) : Promise.resolve([]),
     getLibraryNuggets(pathwayThemeIds, focusAreaIds, 3),
   ])
+
+  // Officials connected to related policies (sponsors, committee members)
+  let responsibleOfficials: Array<{ official_id: string; official_name: string; title: string | null; party: string | null; level: string | null; photo_url: string | null }> = []
+  if (policies.length > 0) {
+    const policyIds = policies.map((p: any) => p.policy_id)
+    const { data: officialJunctions } = await supabase
+      .from('policy_officials')
+      .select('official_id')
+      .in('policy_id', policyIds)
+    if (officialJunctions && officialJunctions.length > 0) {
+      const officialIds = Array.from(new Set(officialJunctions.map(j => j.official_id)))
+      const { data: officials } = await supabase
+        .from('elected_officials')
+        .select('official_id, official_name, title, party, level, photo_url')
+        .in('official_id', officialIds)
+        .limit(8)
+      responsibleOfficials = officials || []
+    }
+  }
 
   // Cross-references from AI classification
   let crossRefIds: string[] = []
@@ -259,16 +279,35 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 {title}
               </h1>
 
-              {item.published_at && (
-                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-5" style={{ color: '#8a929e' }}>
-                  {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-              )}
+              {/* Date + Language + Share */}
+              <div className="flex items-center gap-3 flex-wrap mb-4">
+                {item.published_at && (
+                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#8a929e' }}>
+                    {new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </span>
+                )}
+                <TranslatePageButton isTranslated={isTranslated} contentType="content_published" contentId={item.inbox_id || id} />
+                <ShareButtons title={title || undefined} compact />
+              </div>
 
               {/* Image */}
               {item.image_url && (
-                <div className="mt-4 overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
+                <div className="overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
                   <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
+                </div>
+              )}
+
+              {/* Summary — directly under image */}
+              {summary && (
+                <div className="mt-4">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Sparkles size={11} style={{ color: '#1b5e8a' }} />
+                    <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>{t('content.summary')}</span>
+                    <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
+                  </div>
+                  <p className="font-body text-[15px] leading-relaxed" style={{ color: '#5c6474' }}>
+                    {summary}
+                  </p>
                 </div>
               )}
             </div>
@@ -289,24 +328,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             <style>{`@media (min-width: 1024px) { .editorial-main { border-right: 1px solid #dde1e8; padding-right: 2rem; } }`}</style>
             <div className="editorial-main">
 
-            {/* Summary */}
-            {summary && (
-              <div className="mb-6">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Sparkles size={11} style={{ color: '#1b5e8a' }} />
-                  <span className="font-mono uppercase tracking-[0.2em] text-[0.58rem]" style={{ color: '#5c6474' }}>{t('content.summary')}</span>
-                  <WayfinderTooltipPos tipKey="ai_summary_badge" position="bottom" />
-                </div>
-                <p className="font-body text-[15px] leading-relaxed max-w-2xl" style={{ color: '#5c6474' }}>
-                  {summary}
-                </p>
-              </div>
-            )}
-
-            {/* Share row */}
-            <div className="flex items-center gap-4 flex-wrap mb-6 pb-6" style={{ borderBottom: '1px solid #dde1e8' }}>
-              <ShareButtons title={title || undefined} compact />
-            </div>
 
             {/* Video embed */}
             {(item as any).video_url && (() => {
@@ -517,6 +538,36 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
             </div>
+
+            {/* Who Is Responsible */}
+            {responsibleOfficials.length > 0 && (
+              <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
+                <p className="font-mono uppercase tracking-[0.2em] text-[0.58rem] mb-3" style={{ color: '#5c6474' }}>Who Is Responsible</p>
+                <div className="space-y-3">
+                  {responsibleOfficials.slice(0, 5).map(function (o) {
+                    return (
+                      <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-3 group">
+                        <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0" style={{ background: '#dde1e8' }}>
+                          {o.photo_url ? (
+                            <img src={o.photo_url} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center font-display font-bold text-xs" style={{ color: '#5c6474' }}>
+                              {o.official_name?.charAt(0) || '?'}
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <span className="block text-sm font-medium group-hover:underline truncate" style={{ color: '#0d1117' }}>{o.official_name}</span>
+                          <span className="block text-[0.65rem] truncate" style={{ color: '#8a929e' }}>
+                            {[o.title, o.party, o.level].filter(Boolean).join(' · ')}
+                          </span>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Take Action */}
             {(opportunities.length > 0 || policies.length > 0) && (
