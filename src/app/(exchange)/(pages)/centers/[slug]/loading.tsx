@@ -1,12 +1,33 @@
 export default function Loading() {
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="space-y-6">
-        <div className="h-8 w-1/2 bg-white/60 rounded animate-pulse" />
-        <div className="h-4 w-1/3 bg-white/60 rounded animate-pulse" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          {[0, 1, 2, 3, 4, 5].map(function (i) {
-            return <div key={i} className="h-48 bg-white/60 animate-pulse" />
+    <div>
+      {/* Hero skeleton */}
+      <div style={{ background: '#F5F0E8', minHeight: 420 }}>
+        <div style={{ height: 3, background: '#C4663A' }} />
+        <div className="max-w-[1000px] mx-auto px-6 py-16 md:py-24">
+          <div className="h-3 w-40 animate-pulse" style={{ background: 'rgba(196,102,58,0.15)' }} />
+          <div className="h-3 w-32 mt-8 animate-pulse" style={{ background: 'rgba(196,102,58,0.15)' }} />
+          <div className="h-12 w-80 mt-4 animate-pulse" style={{ background: 'rgba(196,102,58,0.12)' }} />
+          <div className="h-5 w-64 mt-4 animate-pulse" style={{ background: 'rgba(196,102,58,0.1)' }} />
+          <div className="h-16 w-96 mt-6 animate-pulse" style={{ background: 'rgba(196,102,58,0.08)' }} />
+          <div className="mt-8" style={{ width: 60, height: 2, background: 'rgba(196,102,58,0.2)' }} />
+        </div>
+      </div>
+
+      {/* Content skeleton */}
+      <div className="max-w-[1100px] mx-auto px-6 py-12">
+        <div className="space-y-10">
+          {[0, 1, 2].map(function (i) {
+            return (
+              <div key={i}>
+                <div className="h-3 w-40 mb-4 animate-pulse" style={{ background: 'rgba(196,102,58,0.12)' }} />
+                <div className="flex gap-4 overflow-hidden">
+                  {[0, 1, 2, 3].map(function (j) {
+                    return <div key={j} className="flex-shrink-0 w-[280px] h-52 animate-pulse" style={{ background: '#F5F0E8' }} />
+                  })}
+                </div>
+              </div>
+            )
           })}
         </div>
       </div>

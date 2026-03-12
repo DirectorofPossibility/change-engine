@@ -1,215 +1,300 @@
+/**
+ * @fileoverview Centers index — the four doorways into the Exchange.
+ *
+ * Editorial culture-guide design: parchment palette, Georgia serif,
+ * Courier New mono, sacred geometry motifs. Each center is a chapter
+ * doorway with guiding question, description, resource count,
+ * and top pathways.
+ *
+ * @route GET /centers
+ * @caching ISR with revalidate = 3600 (1 hour)
+ */
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { CENTERS, CENTER_COLORS, THEMES } from '@/lib/constants'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import {
-  UnderstandIcon, InvolveIcon, DeeperIcon, FlowerOfLifeIcon,
-} from '@/components/exchange/FlowerIcons'
-import { BookOpen, Heart, Gift, Scale } from 'lucide-react'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import Image from 'next/image'
+
+// ── Design tokens (locked — matches CommunityGuide.tsx) ─────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const PARCHMENT_LIGHT = '#F8F4EC'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
+// ── Center metadata ─────────────────────────────────────────────────────
+
+const CENTER_META: Record<string, {
+  motif: string
+  tagline: string
+  description: string
+  bg: string
+}> = {
+  Learning: {
+    motif: '/images/fol/vesica-piscis.svg',
+    tagline: 'Knowledge is the first step.',
+    description: 'Understand what is happening in your community. Read research, explore data, and learn how issues connect to your daily life.',
+    bg: PARCHMENT_LIGHT,
+  },
+  Resource: {
+    motif: '/images/fol/seed-of-life.svg',
+    tagline: 'Your community has resources waiting.',
+    description: 'Access what you need. Find services, benefits, hotlines, and organizations that provide direct support.',
+    bg: PARCHMENT_WARM,
+  },
+  Action: {
+    motif: '/images/fol/tripod-of-life.svg',
+    tagline: 'Your energy can change things.',
+    description: 'Put your energy into motion. Volunteer, attend events, sign petitions, join campaigns, and organize with your neighbors.',
+    bg: '#F0EBE1',
+  },
+  Accountability: {
+    motif: '/images/fol/metatrons-cube.svg',
+    tagline: 'Follow the trail.',
+    description: 'Know who makes decisions and how to influence them. Track officials, follow policy, and show up at public meetings.',
+    bg: PARCHMENT,
+  },
+}
 
 export const metadata: Metadata = {
-  title: 'Layers of Engagement | Change Engine',
-  description: 'Four ways to engage with your community: Learning, Action, Resource, and Accountability.',
+  title: 'The Four Centers — Community Exchange | The Change Engine',
+  description: 'Four doorways into Houston civic life: Learning, Resource, Action, and Accountability. Each center answers a different question about your community.',
 }
 
 export const revalidate = 3600
 
-const LAYER_META: Record<string, {
-  icon: typeof BookOpen
-  description: string
-  examples: string[]
-}> = {
-  Learning: {
-    icon: BookOpen,
-    description: 'Understand what is happening in your community. Read research, explore data, and learn how issues connect to your daily life.',
-    examples: ['Articles', 'Reports', 'Courses', 'Videos', 'Research Library'],
-  },
-  Action: {
-    icon: Heart,
-    description: 'Put your energy into motion. Volunteer, attend events, sign petitions, join campaigns, and organize with your neighbors.',
-    examples: ['Events', 'Volunteer Opportunities', 'Campaigns', 'Petitions'],
-  },
-  Resource: {
-    icon: Gift,
-    description: 'Access what you need. Find services, benefits, hotlines, and organizations that provide direct support.',
-    examples: ['211 Services', 'Benefits', 'Hotlines', 'Organizations'],
-  },
-  Accountability: {
-    icon: Scale,
-    description: 'Know who makes decisions and how to influence them. Track officials, follow policy, and show up at public meetings.',
-    examples: ['Elected Officials', 'Policies', 'Civic Calendar', 'Voting Guides'],
-  },
-}
-
 export default async function CentersIndexPage() {
   const supabase = await createClient()
 
-  // Single query: fetch center, pathway, and image_url for all active content
   const centerNames = Object.keys(CENTERS)
   const { data: allContent } = await supabase
     .from('content_published')
-    .select('center, pathway_primary, image_url')
+    .select('center, pathway_primary')
     .eq('is_active', true)
 
-  // Compute counts, sample images, and pathway breakdown in one pass
+  // Compute counts and top pathways
   const counts: Record<string, number> = {}
-  const sampleImages: Record<string, string | null> = {}
   const pwCountsByCenter: Record<string, Record<string, number>> = {}
 
   for (const row of (allContent ?? [])) {
     const c = row.center || 'Learning'
     counts[c] = (counts[c] || 0) + 1
-
-    if (row.image_url && !sampleImages[c]) {
-      sampleImages[c] = row.image_url
-    }
-
     if (row.pathway_primary) {
       if (!pwCountsByCenter[c]) pwCountsByCenter[c] = {}
       pwCountsByCenter[c][row.pathway_primary] = (pwCountsByCenter[c][row.pathway_primary] || 0) + 1
     }
   }
 
-  const pathwayBreakdown: Record<string, Array<{ id: string; name: string; color: string; count: number }>> = {}
+  const topPathways: Record<string, Array<{ id: string; name: string; color: string; count: number }>> = {}
   for (const name of centerNames) {
     const pwCounts = pwCountsByCenter[name] || {}
-    pathwayBreakdown[name] = Object.entries(pwCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 4)
-      .map(([id, count]) => {
+    topPathways[name] = Object.entries(pwCounts)
+      .sort(function (a, b) { return b[1] - a[1] })
+      .slice(0, 5)
+      .map(function ([id, count]) {
         const theme = (THEMES as Record<string, { name: string; color: string }>)[id]
         return { id, name: theme?.name || id, color: theme?.color || '#8B7E74', count }
       })
   }
 
+  const totalResources = Object.values(counts).reduce(function (a, b) { return a + b }, 0)
+
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Breadcrumb items={[{ label: 'Engagement' }]} />
+    <div style={{ background: '#ffffff' }}>
 
-      <div className="mb-10 text-center">
-        <h1 className="font-display text-3xl font-bold text-brand-text mb-3">Layers of Engagement</h1>
-        <p className="text-brand-muted max-w-xl mx-auto">
-          Four concentric layers — from understanding to accountability. Every piece of content lives in one of these spaces.
-        </p>
-      </div>
+      {/* ═══════════════════════════════════════════════════════════════════
+          HERO — Title + philosophy
+          ═══════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: PARCHMENT }}
+      >
+        {/* FOL watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+          <Image
+            src="/images/fol/flower-full.svg"
+            alt=""
+            width={500}
+            height={500}
+            className="opacity-[0.05]"
+          />
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
-        <div>
-          {/* Visual — concentric rings hint */}
-          <div className="flex justify-center mb-10">
-            <div className="relative">
-              {centerNames.map(function (name, i) {
-                const color = CENTER_COLORS[name] || '#8B7E74'
-                const size = 180 - i * 30
-                return (
-                  <div
-                    key={name}
-                    className="absolute rounded-full border-2"
-                    style={{
-                      width: size,
-                      height: size,
-                      borderColor: color,
-                      opacity: 0.2 + i * 0.15,
-                      top: (180 - size) / 2,
-                      left: (180 - size) / 2,
-                    }}
-                  />
-                )
-              })}
-              <div className="w-[180px] h-[180px] flex items-center justify-center">
-                <FlowerOfLifeIcon size={60} />
+        {/* Top rule */}
+        <div style={{ height: 3, background: CLAY }} />
+
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-20 text-center">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb">
+            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <Link href="/exchange" className="hover:underline" style={{ color: MUTED }}>
+                The Exchange
+              </Link>
+              <span style={{ color: MUTED }}> / </span>
+              <span style={{ color: CLAY }}>Centers</span>
+            </p>
+          </nav>
+
+          <h1
+            className="mt-8"
+            style={{ fontFamily: SERIF, fontSize: 'clamp(30px, 5vw, 48px)', color: INK, lineHeight: 1.15 }}
+          >
+            Four doorways in.
+          </h1>
+
+          <p
+            className="mt-5 mx-auto"
+            style={{ fontFamily: SERIF, fontSize: 'clamp(15px, 2vw, 18px)', color: MUTED, lineHeight: 1.7, maxWidth: 520 }}
+          >
+            Every piece of content in the Exchange lives in one of four centers.
+            Each answers a different question about your community.
+          </p>
+
+          <p
+            className="mt-5"
+            style={{ fontFamily: MONO, fontSize: 12, color: CLAY, letterSpacing: '0.06em' }}
+          >
+            {totalResources} resources across {centerNames.length} centers
+          </p>
+
+          {/* Rule */}
+          <div className="mx-auto mt-8" style={{ width: 60, height: 2, background: CLAY }} />
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          THE FOUR CENTERS — Full-width doorway cards
+          ═══════════════════════════════════════════════════════════════ */}
+      <section>
+        {centerNames.map(function (name, i) {
+          const config = CENTERS[name]
+          const meta = CENTER_META[name]
+          const color = CENTER_COLORS[name] || '#8B7E74'
+          const count = counts[name] || 0
+          const pathways = topPathways[name] || []
+          if (!meta) return null
+
+          const isEven = i % 2 === 0
+
+          return (
+            <Link
+              key={name}
+              href={'/centers/' + config.slug}
+              className="group block relative overflow-hidden transition-all"
+              style={{
+                background: meta.bg,
+                borderBottom: `1px solid ${RULE_COLOR}`,
+              }}
+            >
+              {/* Color accent bar on left */}
+              <div
+                className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 transition-all"
+                style={{ background: color }}
+              />
+
+              {/* Sacred geometry motif */}
+              <div
+                className="absolute pointer-events-none opacity-[0.06]"
+                aria-hidden="true"
+                style={{
+                  right: isEven ? -40 : undefined,
+                  left: isEven ? undefined : -40,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <Image src={meta.motif} alt="" width={320} height={320} />
               </div>
-            </div>
-          </div>
 
-          {/* Center cards */}
-          <div className="space-y-6">
-            {centerNames.map(function (name, i) {
-              const config = CENTERS[name]
-              const color = CENTER_COLORS[name] || '#8B7E74'
-              const meta = LAYER_META[name]
-              const Icon = meta?.icon || BookOpen
-              const count = counts[name] || 0
-              const pathways = pathwayBreakdown[name] || []
-              const image = sampleImages[name]
+              <div className="relative z-10 max-w-[1000px] mx-auto px-8 md:px-12 py-14 md:py-16">
+                <div className={`grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 items-start ${isEven ? '' : 'md:grid-cols-[280px_1fr]'}`}>
+                  {/* Main content */}
+                  <div className={isEven ? 'order-1' : 'order-1 md:order-2'}>
+                    {/* Label */}
+                    <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color, textTransform: 'uppercase', marginBottom: 12 }}>
+                      Chapter {i + 1} &middot; {count} resources
+                    </p>
 
-              return (
-                <Link
-                  key={name}
-                  href={'/centers/' + config.slug}
-                  className="block bg-white border border-brand-border overflow-hidden hover:border-ink transition-shadow group"
-                >
-                  <div className="flex flex-col sm:flex-row">
-                    {/* Color accent + icon */}
-                    <div
-                      className="sm:w-48 flex-shrink-0 flex items-center justify-center p-6"
-                      style={{ backgroundColor: color + '10' }}
+                    {/* Center name as headline */}
+                    <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(26px, 3.5vw, 36px)', color: INK, lineHeight: 1.15, marginBottom: 8 }}>
+                      {name} Center
+                    </h2>
+
+                    {/* Guiding question */}
+                    <p style={{ fontFamily: SERIF, fontSize: 18, fontStyle: 'italic', color: MUTED, marginBottom: 16 }}>
+                      {config.question}
+                    </p>
+
+                    {/* Description */}
+                    <p style={{ fontFamily: SERIF, fontSize: 15, color: INK, lineHeight: 1.7, opacity: 0.85, maxWidth: 480 }}>
+                      {meta.description}
+                    </p>
+
+                    {/* CTA */}
+                    <span
+                      className="inline-block mt-6 group-hover:text-[#a8522e] transition-colors"
+                      style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
                     >
-                      <div className="text-center">
-                        <Icon size={32} style={{ color }} className="mx-auto mb-2" />
-                        <div className="font-display text-xl font-bold" style={{ color }}>{name}</div>
-                        <div className="text-xs text-brand-muted mt-1">{count} resources</div>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 p-5">
-                      <p className="text-sm font-display italic text-brand-muted mb-2">{config.question}</p>
-                      <p className="text-sm text-brand-text leading-relaxed mb-3">{meta?.description}</p>
-
-                      {/* What you'll find */}
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        {(meta?.examples || []).map(function (ex) {
-                          return (
-                            <span
-                              key={ex}
-                              className="text-[11px] px-2 py-0.5 rounded"
-                              style={{ backgroundColor: color + '12', color }}
-                            >
-                              {ex}
-                            </span>
-                          )
-                        })}
-                      </div>
-
-                      {/* Top pathways */}
-                      {pathways.length > 0 && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] text-brand-muted">Top pathways:</span>
-                          {pathways.map(function (pw) {
-                            return (
-                              <span key={pw.id} className="flex items-center gap-1 text-[10px] text-brand-muted">
-                                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: pw.color }} />
-                                {pw.name}
-                              </span>
-                            )
-                          })}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Preview image */}
-                    {image && (
-                      <div className="hidden md:block w-36 flex-shrink-0">
-                        <Image src={image} alt="" className="w-full h-full object-cover"  width={800} height={400} />
-                      </div>
-                    )}
+                      Turn to chapter &rarr;
+                    </span>
                   </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-        <div className="hidden lg:block">
-          <div className="sticky top-24 space-y-4">
-            <IndexWayfinder currentPage="centers" related={[{label:'Topics',href:'/pathways'},{label:'Explore',href:'/explore'},{label:'Collections',href:'/collections'}]} color="#C75B2A" />
-            <FeaturedPromo variant="card" />
-          </div>
-        </div>
+
+                  {/* Pathway breakdown */}
+                  <div className={`${isEven ? 'order-2' : 'order-2 md:order-1'} hidden md:block`}>
+                    <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase', marginBottom: 12 }}>
+                      Top pathways
+                    </p>
+
+                    <div className="space-y-0">
+                      {pathways.map(function (pw) {
+                        return (
+                          <div
+                            key={pw.id}
+                            className="flex items-center gap-2 py-2"
+                            style={{ borderBottom: `1px solid ${RULE_COLOR}` }}
+                          >
+                            <span className="w-2 h-2 flex-shrink-0" style={{ background: pw.color }} />
+                            <span className="flex-1" style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                              {pw.name}
+                            </span>
+                            <span style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+                              {pw.count}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    {/* Tagline */}
+                    <p className="mt-4" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+                      {meta.tagline}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )
+        })}
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          FOOTER CODA
+          ═══════════════════════════════════════════════════════════════ */}
+      <div className="text-center py-10" style={{ background: PARCHMENT_WARM }}>
+        <Link
+          href="/exchange"
+          className="hover:underline"
+          style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+        >
+          &larr; Back to The Community Exchange
+        </Link>
       </div>
     </div>
   )
