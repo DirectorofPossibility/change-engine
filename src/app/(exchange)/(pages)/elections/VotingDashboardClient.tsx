@@ -3,8 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { useTranslation } from '@/lib/use-translation'
-import { LanguageSwitcher } from '@/components/exchange/LanguageSwitcher'
+import Image from 'next/image'
 import { ElectionResultsBar } from '@/components/exchange/ElectionResultsBar'
 import { TurnoutGauge } from '@/components/exchange/TurnoutGauge'
 import { CivicTimeline } from '@/components/exchange/CivicTimeline'
@@ -13,13 +12,16 @@ import { BallotItemCard } from '@/components/exchange/BallotItemCard'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { ElectionTimeline } from '@/components/exchange/ElectionTimeline'
 import { MyBallot } from '@/components/exchange/MyBallot'
-import CivicScorecard from '@/components/exchange/CivicScorecard'
-import ElectionReminderSignup from '@/components/exchange/ElectionReminderSignup'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
-import { MapPin, ExternalLink, ChevronRight, BookOpen, ClipboardCheck, Mail, Users } from 'lucide-react'
-import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
-import { TOOLTIPS } from '@/lib/tooltips'
-import Image from 'next/image'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 interface VotingDashboardClientProps {
   pastElections: any[]
@@ -29,7 +31,12 @@ interface VotingDashboardClientProps {
   recentBallotItems: any[]
   upcomingCandidates: any[]
   upcomingBallotItems: any[]
-  officials: any[]
+  officialsByLevel: {
+    federal: any[]
+    state: any[]
+    county: any[]
+    city: any[]
+  }
   relatedContent: any[]
   zip?: string
 }
@@ -42,11 +49,10 @@ export function VotingDashboardClient({
   recentBallotItems,
   upcomingCandidates,
   upcomingBallotItems,
-  officials,
+  officialsByLevel,
   relatedContent,
   zip: initialZip,
 }: VotingDashboardClientProps) {
-  const { t } = useTranslation()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [zipInput, setZipInput] = useState(initialZip || '')
@@ -64,19 +70,14 @@ export function VotingDashboardClient({
     return groups
   }, [recentCandidates])
 
-  const officialsByLevel = useMemo(function () {
-    const groups: Record<string, any[]> = { Federal: [], State: [], County: [], City: [] }
-    officials.forEach(function (o) {
-      const level = o.level || 'Other'
-      if (!groups[level]) groups[level] = []
-      groups[level].push(o)
-    })
-    return groups
-  }, [officials])
-
   const runoffCandidates = useMemo(function () {
     return recentCandidates.filter(function (c) { return c.advanced_to_runoff === 'Yes' })
   }, [recentCandidates])
+
+  const totalOfficials = officialsByLevel.federal.length +
+    officialsByLevel.state.length +
+    officialsByLevel.county.length +
+    officialsByLevel.city.length
 
   function handleZipSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -92,82 +93,76 @@ export function VotingDashboardClient({
     router.push('/elections')
   }
 
+  const levelOrder: Array<{ key: keyof typeof officialsByLevel; label: string }> = [
+    { key: 'federal', label: 'Federal' },
+    { key: 'state', label: 'State' },
+    { key: 'county', label: 'County' },
+    { key: 'city', label: 'City' },
+  ]
+
   return (
-    <div className="space-y-8">
-      {/* ── Language toggle ── */}
-      <div className="flex justify-end">
-        <LanguageSwitcher />
-      </div>
+    <div>
 
-      {/* ═══════════════════════════════════════════════════
-          SECTION 1: What Just Happened
-          ═══════════════════════════════════════════════════ */}
-      {recentElection && (
+      {/* ════════════════════════════════════════════════════════
+          CHAPTER 1: What's Next — the most urgent thing first
+          ════════════════════════════════════════════════════════ */}
+      {nextElection && (
         <section>
-          <SectionHeading
-            title={recentElection.election_name + ' Results'}
-            color="#1a6b56"
-          />
+          <ChapterHeading number="I" title="What's Coming Up" />
 
-          {/* Turnout + Community Impact side by side */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {recentElection.turnout_pct != null && (
-              <TurnoutGauge
-                turnoutPct={recentElection.turnout_pct}
-                electionName={recentElection.election_name}
+          <div className="mt-6">
+            <Link href={'/elections/' + nextElection.election_id}>
+              <ElectionCountdown
+                electionName={nextElection.election_name}
+                electionDate={nextElection.election_date}
+                earlyVotingStart={nextElection.early_voting_start}
+                earlyVotingEnd={nextElection.early_voting_end}
+                registrationDeadline={nextElection.registration_deadline}
+                electionType={nextElection.election_type}
               />
-            )}
-            {recentElection.community_impact_summary && (
-              <CommunityImpactCard summary={recentElection.community_impact_summary} />
-            )}
+            </Link>
           </div>
 
-          {/* Race results */}
-          {Object.keys(candidateGroups).length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {Object.entries(candidateGroups).map(function ([office, cands]) {
-                return (
-                  <ElectionResultsBar
-                    key={office}
-                    office={office}
-                    district={cands[0]?.district}
-                    candidates={cands}
-                  />
-                )
-              })}
+          {/* Timeline */}
+          <div className="mt-6">
+            <ElectionTimeline
+              electionName={nextElection.election_name}
+              electionDate={nextElection.election_date}
+              registrationDeadline={nextElection.registration_deadline}
+              earlyVotingStart={nextElection.early_voting_start}
+              earlyVotingEnd={nextElection.early_voting_end}
+              pollsOpen={nextElection.polls_open}
+              pollsClose={nextElection.polls_close}
+              registerUrl={nextElection.register_url || 'https://www.votetexas.gov/register-to-vote/'}
+              findPollingUrl={nextElection.find_polling_url || 'https://www.harrisvotes.com/Polling-Locations'}
+            />
+          </div>
+
+          {nextElection.community_impact_summary && (
+            <div className="mt-6">
+              <CommunityImpactCard summary={nextElection.community_impact_summary} />
             </div>
           )}
 
-          {/* Runoff callout — bridge to next section */}
-          {runoffCandidates.length > 0 && nextElection && nextElection.election_type === 'Primary Runoff' && (
-            <div className="bg-amber-50 border border-amber-200 rounded-card p-4">
-              <h4 className="font-semibold font-display text-brand-text text-sm mb-1">
-                These races are heading to a runoff
-              </h4>
-              <p className="text-sm text-brand-muted mb-2">
-                No candidate won a majority, so voters will decide again on{' '}
-                {nextElection.election_date && new Date(nextElection.election_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.
+          {/* What's on Your Ballot */}
+          {upcomingCandidates.length > 0 && (
+            <div className="mt-8">
+              <MyBallot
+                candidates={upcomingCandidates}
+                electionName={nextElection.election_name}
+                electionDate={nextElection.election_date}
+              />
+            </div>
+          )}
+
+          {/* Upcoming ballot items */}
+          {upcomingBallotItems.length > 0 && (
+            <div className="mt-8">
+              <p className="mb-4" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+                Propositions on the Ballot
               </p>
-              <div className="flex flex-wrap gap-2">
-                {runoffCandidates.map(function (c) {
-                  return (
-                    <span key={c.candidate_id} className="text-xs px-2 py-1 bg-white border border-brand-border text-brand-text">
-                      {c.candidate_name} ({c.party?.charAt(0)}) — {c.office_sought}
-                    </span>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Propositions */}
-          {recentBallotItems.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wider mb-3">
-                Propositions on the ballot
-              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {recentBallotItems.map(function (item) {
+                {upcomingBallotItems.map(function (item) {
                   return (
                     <BallotItemCard
                       key={item.item_id}
@@ -186,199 +181,139 @@ export function VotingDashboardClient({
             </div>
           )}
 
-          <div className="mt-3">
-            <Link
-              href={'/elections/' + recentElection.election_id}
-              className="inline-flex items-center gap-1 text-sm text-brand-accent hover:underline"
+          {/* Other upcoming elections */}
+          {upcomingElections.length > 1 && (
+            <div className="mt-8">
+              <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+                Also on the calendar
+              </p>
+              <div className="space-y-3">
+                {upcomingElections.slice(1).map(function (election) {
+                  return (
+                    <Link
+                      key={election.election_id}
+                      href={'/elections/' + election.election_id}
+                      className="block p-4 hover:bg-[#EDE7D8] transition-colors"
+                      style={{ border: '1px solid ' + RULE_COLOR }}
+                    >
+                      <div className="flex items-baseline justify-between gap-4">
+                        <p style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>
+                          {election.election_name}
+                        </p>
+                        <p style={{ fontFamily: MONO, fontSize: 12, color: MUTED, whiteSpace: 'nowrap' }}>
+                          {election.election_date && new Date(election.election_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        </p>
+                      </div>
+                      {election.election_type && (
+                        <p className="mt-1" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+                          {election.election_type}
+                        </p>
+                      )}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Registration + vote-by-mail CTAs */}
+          {nextElection.registration_deadline && (
+            <div className="mt-8 p-6" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+              <p style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>
+                Registration deadline:{' '}
+                <strong>{new Date(nextElection.registration_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong>
+              </p>
+              <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+                Make sure you're ready to vote.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a
+                  href="https://www.votetexas.gov/register-to-vote/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 text-white transition-opacity hover:opacity-90"
+                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
+                >
+                  Check Your Registration
+                </a>
+                <a
+                  href="https://www.votetexas.gov/voting/vote-by-mail.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 transition-colors hover:bg-[#F5F0E8]"
+                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', color: INK, border: '1px solid ' + RULE_COLOR }}
+                >
+                  Vote by Mail
+                </a>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {!nextElection && (
+        <section>
+          <ChapterHeading number="I" title="What's Coming Up" />
+          <p className="mt-4" style={{ fontFamily: SERIF, fontSize: 15, color: MUTED }}>
+            No upcoming elections scheduled right now. Check back soon — and make sure you're registered so you're ready when the next one is announced.
+          </p>
+          <div className="mt-4">
+            <a
+              href="https://www.votetexas.gov/register-to-vote/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 text-white transition-opacity hover:opacity-90 inline-block"
+              style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
             >
-              Full election details <ChevronRight size={14} />
-            </Link>
+              Check Your Registration
+            </a>
           </div>
         </section>
       )}
 
-      {/* ═══════════════════════════════════════════════════
-          SECTION 2: What's Next (countdown + timeline + ballot + register)
-          ═══════════════════════════════════════════════════ */}
+      {/* Section rule */}
+      <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+
+      {/* ════════════════════════════════════════════════════════
+          CHAPTER 2: Who Represents You
+          ════════════════════════════════════════════════════════ */}
       <section>
-        <SectionHeading title="What's Next" color="#6a4e10" />
+        <ChapterHeading number="II" title="Who Represents You" />
 
-        {nextElection ? (
-          <div className="space-y-4">
-            {/* Countdown card */}
-            <div className="relative">
-              <Link href={'/elections/' + nextElection.election_id}>
-                <ElectionCountdown
-                  electionName={nextElection.election_name}
-                  electionDate={nextElection.election_date}
-                  earlyVotingStart={nextElection.early_voting_start}
-                  earlyVotingEnd={nextElection.early_voting_end}
-                  registrationDeadline={nextElection.registration_deadline}
-                  electionType={nextElection.election_type}
-                />
-              </Link>
-              <TranslatedTooltip tip={TOOLTIPS.election_countdown} position="bottom" />
-            </div>
+        <p className="mt-3 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 15, lineHeight: 1.7, color: MUTED }}>
+          {initialZip
+            ? 'These are the elected officials who represent your area. Contact them about the issues that matter to you.'
+            : 'Enter your ZIP code to find the officials who represent you at every level of government — from city hall to the U.S. Capitol.'
+          }
+        </p>
 
-            {/* Visual deadline timeline */}
-            <ElectionTimeline
-              electionName={nextElection.election_name}
-              electionDate={nextElection.election_date}
-              registrationDeadline={nextElection.registration_deadline}
-              earlyVotingStart={nextElection.early_voting_start}
-              earlyVotingEnd={nextElection.early_voting_end}
-              pollsOpen={nextElection.polls_open}
-              pollsClose={nextElection.polls_close}
-              registerUrl={nextElection.register_url || 'https://www.votetexas.gov/register-to-vote/'}
-              findPollingUrl={nextElection.find_polling_url || 'https://www.harrisvotes.com/Polling-Locations'}
-            />
-
-            {nextElection.community_impact_summary && (
-              <CommunityImpactCard summary={nextElection.community_impact_summary} />
-            )}
-
-            {/* What's on Your Ballot — personalized */}
-            {upcomingCandidates.length > 0 && (
-              <MyBallot
-                candidates={upcomingCandidates}
-                electionName={nextElection.election_name}
-                electionDate={nextElection.election_date}
-              />
-            )}
-
-            {/* Upcoming ballot items */}
-            {(upcomingBallotItems.length > 0 || upcomingCandidates.length > 0) && (
-              <div>
-                <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wider mb-3">
-                  On the ballot
-                </h3>
-                {upcomingCandidates.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                    {Object.entries(
-                      upcomingCandidates.reduce(function (acc: Record<string, any[]>, c: any) {
-                        const key = c.office_sought || 'Other'
-                        if (!acc[key]) acc[key] = []
-                        acc[key].push(c)
-                        return acc
-                      }, {} as Record<string, any[]>)
-                    ).map(function ([office, cands]) {
-                      return (
-                        <ElectionResultsBar
-                          key={office}
-                          office={office}
-                          district={(cands as any[])[0]?.district}
-                          candidates={cands as any[]}
-                        />
-                      )
-                    })}
-                  </div>
-                )}
-                {upcomingBallotItems.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {upcomingBallotItems.map(function (item) {
-                      return (
-                        <BallotItemCard
-                          key={item.item_id}
-                          name={item.item_name}
-                          itemType={item.item_type}
-                          description={item.description_5th_grade || item.description}
-                          forArgument={item.for_argument}
-                          againstArgument={item.against_argument}
-                          fiscalImpact={item.fiscal_impact}
-                          passed={item.passed}
-                          voteForPct={item.vote_for_pct}
-                        />
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Registration + vote-by-mail CTAs — inline, no emojis */}
-            {nextElection.registration_deadline && (
-              <div className="relative bg-brand-accent/5 border border-brand-accent/20 rounded-card p-5">
-                <TranslatedTooltip tip={TOOLTIPS.registration_deadline} position="bottom" />
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-brand-text">
-                      Registration deadline:{' '}
-                      <strong>{new Date(nextElection.registration_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong>
-                    </p>
-                    <p className="text-xs text-brand-muted mt-0.5">Make sure you're ready to vote.</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <a
-                      href="https://www.votetexas.gov/register-to-vote/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-brand-accent text-white rounded-card text-sm font-medium hover:bg-brand-accent/90 transition-colors"
-                    >
-                      <ClipboardCheck size={14} />
-                      Check your registration
-                    </a>
-                    <a
-                      href="https://www.votetexas.gov/voting/vote-by-mail.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border text-brand-text rounded-card text-sm font-medium hover:border-ink transition-colors"
-                    >
-                      <Mail size={14} />
-                      Vote by mail
-                    </a>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <p className="text-brand-muted text-sm py-4">No upcoming elections scheduled right now. Check back soon.</p>
-        )}
-
-        {/* Civic Timeline */}
-        {civicEvents.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wider mb-3">
-              Key dates ahead
-            </h3>
-            <CivicTimeline events={civicEvents} />
-          </div>
-        )}
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          SECTION 3: Who Represents You (with ZIP input integrated)
-          ═══════════════════════════════════════════════════ */}
-      <section>
-        <SectionHeading title="Who Represents You" color="#1a3460" />
-
-        {/* ZIP input — warm and integrated */}
-        <form onSubmit={handleZipSubmit} className="flex items-center gap-3 max-w-md mb-6">
-          <div className="relative flex-1">
-            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted" />
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={5}
-              value={zipInput}
-              onChange={function (e) { setZipInput(e.target.value.replace(/\D/g, '')) }}
-              placeholder="Enter your ZIP code"
-              className="w-full pl-9 pr-4 py-2.5 rounded-card border border-brand-border bg-white text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent text-sm"
-            />
-          </div>
+        {/* ZIP input */}
+        <form onSubmit={handleZipSubmit} className="mt-6 flex items-center gap-3 max-w-md">
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={5}
+            value={zipInput}
+            onChange={function (e) { setZipInput(e.target.value.replace(/\D/g, '')) }}
+            placeholder="Your ZIP code"
+            className="flex-1 px-4 py-3 focus:outline-none"
+            style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: '1px solid ' + RULE_COLOR }}
+          />
           <button
             type="submit"
             disabled={zipInput.length !== 5}
-            className="px-4 py-2.5 rounded-card bg-brand-accent text-white text-sm font-medium hover:bg-brand-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-5 py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-40"
+            style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
           >
-            Find my reps
+            Find My Reps
           </button>
           {initialZip && (
             <button
               type="button"
               onClick={handleZipClear}
-              className="text-sm text-brand-muted hover:text-brand-accent"
+              className="hover:underline"
+              style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}
             >
               Clear
             </button>
@@ -386,20 +321,29 @@ export function VotingDashboardClient({
         </form>
 
         {initialZip && (
-          <p className="text-sm text-brand-muted mb-4">
-            Showing representatives for <strong className="text-brand-text">{initialZip}</strong>
+          <p className="mt-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', color: MUTED, textTransform: 'uppercase' }}>
+            Showing results for {initialZip}
           </p>
         )}
 
-        {officials.length > 0 ? (
-          <div className="space-y-5">
-            {Object.entries(officialsByLevel).map(function ([level, levelOfficials]) {
-              if (levelOfficials.length === 0) return null
+        {totalOfficials > 0 ? (
+          <div className="mt-8 space-y-8">
+            {levelOrder.map(function ({ key, label }) {
+              const officials = officialsByLevel[key]
+              if (officials.length === 0) return null
               return (
-                <div key={level}>
-                  <h3 className="text-sm font-semibold text-brand-muted uppercase tracking-wider mb-3">{level}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {levelOfficials.map(function (o) {
+                <div key={key}>
+                  <div className="flex items-baseline gap-3 mb-4">
+                    <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: CLAY, textTransform: 'uppercase' }}>
+                      {label}
+                    </p>
+                    <div className="flex-1" style={{ height: 1, background: RULE_COLOR }} />
+                    <p style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                      {officials.length}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {officials.map(function (o: any) {
                       return (
                         <OfficialCard
                           key={o.official_id}
@@ -419,129 +363,299 @@ export function VotingDashboardClient({
                 </div>
               )
             })}
-            <div className="text-center pt-2">
-              <Link href="/officials" className="text-sm text-brand-accent hover:underline">
-                See all elected officials <ChevronRight size={14} className="inline" />
+            <div className="pt-2">
+              <Link href="/officials" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}>
+                See all elected officials &rarr;
               </Link>
             </div>
           </div>
+        ) : !initialZip ? (
+          <div className="mt-8 relative p-8 text-center" style={{ border: '1px dashed ' + RULE_COLOR }}>
+            <Image src="/images/fol/vesica-piscis.svg" alt="" width={80} height={80} className="opacity-[0.06] mx-auto mb-4" />
+            <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED }}>
+              Enter your ZIP code above to see who represents you.
+            </p>
+          </div>
         ) : (
-          <div className="bg-white rounded-card border border-brand-border p-6 text-center">
-            <MapPin size={20} className="mx-auto text-brand-muted mb-2" />
-            <p className="text-brand-muted text-sm">Enter your ZIP code above to see who represents you at every level of government.</p>
+          <div className="mt-8 p-6" style={{ border: '1px solid ' + RULE_COLOR }}>
+            <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED }}>
+              We couldn't find officials for that ZIP code. Try a different one, or browse the full list.
+            </p>
+            <Link href="/officials" className="mt-2 inline-block hover:underline" style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}>
+              Browse all officials &rarr;
+            </Link>
           </div>
         )}
       </section>
 
-      {/* ═══════════════════════════════════════════════════
-          SECTION 4: Related Reading (if we have content)
-          ═══════════════════════════════════════════════════ */}
+      {/* Section rule */}
+      <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+
+      {/* ════════════════════════════════════════════════════════
+          CHAPTER 3: How to Participate — practical resources
+          ════════════════════════════════════════════════════════ */}
+      <section>
+        <ChapterHeading number="III" title="How to Participate" />
+
+        <p className="mt-3 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 15, lineHeight: 1.7, color: MUTED }}>
+          Voting is one of the most direct ways to shape your community. Here's what you need.
+        </p>
+
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ResourceLink
+            href="https://www.votetexas.gov/register-to-vote/"
+            external
+            label="Register to Vote"
+            description="Check your status or register for the first time"
+            mono="votetexas.gov"
+          />
+          <ResourceLink
+            href="https://www.harrisvotes.com/Polling-Locations"
+            external
+            label="Find Your Polling Place"
+            description="Locate early voting and Election Day polling sites"
+            mono="harrisvotes.com"
+          />
+          <ResourceLink
+            href="https://www.votetexas.gov/voting/vote-by-mail.html"
+            external
+            label="Vote by Mail"
+            description="See if you qualify and request a mail-in ballot"
+            mono="votetexas.gov"
+          />
+          <ResourceLink
+            href="/officials"
+            label="Contact Your Representatives"
+            description="Make your voice heard on the issues you care about"
+            mono="changeengine.us"
+          />
+          <ResourceLink
+            href="/call-your-senators"
+            label="Call Your Senators"
+            description="A quick guide to reaching your U.S. Senators by phone"
+            mono="changeengine.us"
+          />
+          <ResourceLink
+            href="https://www.harrisvotes.com/VoterBallotSearch"
+            external
+            label="Sample Ballot Lookup"
+            description="Preview what's on your ballot before you head to the polls"
+            mono="harrisvotes.com"
+          />
+        </div>
+      </section>
+
+      {/* Section rule */}
+      <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+
+      {/* ════════════════════════════════════════════════════════
+          CHAPTER 4: Key Dates — civic calendar
+          ════════════════════════════════════════════════════════ */}
+      {civicEvents.length > 0 && (
+        <>
+          <section>
+            <ChapterHeading number="IV" title="Key Dates" />
+            <p className="mt-3 mb-6 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 15, lineHeight: 1.7, color: MUTED }}>
+              Council meetings, registration deadlines, early voting windows — the dates that matter for civic life in Houston.
+            </p>
+            <CivicTimeline events={civicEvents} />
+          </section>
+          <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+        </>
+      )}
+
+      {/* ════════════════════════════════════════════════════════
+          CHAPTER 5: What Just Happened — recent election results
+          ════════════════════════════════════════════════════════ */}
+      {recentElection && (
+        <>
+          <section>
+            <ChapterHeading number={civicEvents.length > 0 ? 'V' : 'IV'} title={recentElection.election_name + ' Results'} />
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+              {recentElection.turnout_pct != null && (
+                <TurnoutGauge
+                  turnoutPct={recentElection.turnout_pct}
+                  electionName={recentElection.election_name}
+                />
+              )}
+              {recentElection.community_impact_summary && (
+                <CommunityImpactCard summary={recentElection.community_impact_summary} />
+              )}
+            </div>
+
+            {/* Race results */}
+            {Object.keys(candidateGroups).length > 0 && (
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {Object.entries(candidateGroups).map(function ([office, cands]) {
+                  return (
+                    <ElectionResultsBar
+                      key={office}
+                      office={office}
+                      district={cands[0]?.district}
+                      candidates={cands}
+                    />
+                  )
+                })}
+              </div>
+            )}
+
+            {/* Runoff callout */}
+            {runoffCandidates.length > 0 && nextElection && nextElection.election_type === 'Primary Runoff' && (
+              <div className="mt-6 p-5" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+                <p style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 'bold', color: INK }}>
+                  These races are heading to a runoff
+                </p>
+                <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+                  No candidate won a majority. Voters will decide again on{' '}
+                  {nextElection.election_date && new Date(nextElection.election_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.
+                </p>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {runoffCandidates.map(function (c) {
+                    return (
+                      <span
+                        key={c.candidate_id}
+                        className="px-3 py-1"
+                        style={{ fontFamily: MONO, fontSize: 11, color: INK, background: '#ffffff', border: '1px solid ' + RULE_COLOR }}
+                      >
+                        {c.candidate_name} ({c.party?.charAt(0)}) — {c.office_sought}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Propositions */}
+            {recentBallotItems.length > 0 && (
+              <div className="mt-6">
+                <p className="mb-4" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+                  Propositions
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {recentBallotItems.map(function (item) {
+                    return (
+                      <BallotItemCard
+                        key={item.item_id}
+                        name={item.item_name}
+                        itemType={item.item_type}
+                        description={item.description_5th_grade || item.description}
+                        forArgument={item.for_argument}
+                        againstArgument={item.against_argument}
+                        fiscalImpact={item.fiscal_impact}
+                        passed={item.passed}
+                        voteForPct={item.vote_for_pct}
+                      />
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-4">
+              <Link
+                href={'/elections/' + recentElection.election_id}
+                className="hover:underline"
+                style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+              >
+                Full election details &rarr;
+              </Link>
+            </div>
+          </section>
+          <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+        </>
+      )}
+
+      {/* ════════════════════════════════════════════════════════
+          Related Reading
+          ════════════════════════════════════════════════════════ */}
       {relatedContent.length > 0 && (
         <section>
-          <SectionHeading title="Related Reading" color="#E8723A" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ChapterHeading number="" title="Related Reading" />
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {relatedContent.map(function (item) {
               return (
                 <Link
                   key={item.id}
                   href={'/content/' + item.id}
-                  className="bg-white rounded-card border border-brand-border overflow-hidden hover:border-ink transition-shadow group"
+                  className="block p-4 transition-colors hover:bg-[#EDE7D8]"
+                  style={{ border: '1px solid ' + RULE_COLOR }}
                 >
                   {item.image_url && (
-                    <div className="h-32 overflow-hidden">
+                    <div className="h-32 overflow-hidden mb-3 -mx-4 -mt-4" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
                       <Image
                         src={item.image_url}
                         alt=""
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                       width={800} height={400} />
+                        className="w-full h-full object-cover"
+                        width={400}
+                        height={200}
+                      />
                     </div>
                   )}
-                  <div className="p-4">
-                    <h4 className="font-semibold text-sm text-brand-text leading-snug mb-1 line-clamp-2">
-                      {item.title_6th_grade}
-                    </h4>
-                    {item.summary_6th_grade && (
-                      <p className="text-xs text-brand-muted line-clamp-2">{item.summary_6th_grade}</p>
-                    )}
-                  </div>
+                  <p style={{ fontFamily: SERIF, fontSize: 15, color: INK, lineHeight: 1.4 }} className="line-clamp-2">
+                    {item.title_6th_grade}
+                  </p>
+                  {item.summary_6th_grade && (
+                    <p className="mt-1 line-clamp-2" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>
+                      {item.summary_6th_grade}
+                    </p>
+                  )}
                 </Link>
               )
             })}
           </div>
         </section>
       )}
-
-      {/* ═══════════════════════════════════════════════════
-          SECTION 5: Your Civic Journey + Get Reminders
-          ═══════════════════════════════════════════════════ */}
-      <section>
-        <SectionHeading title="Your Civic Journey" color="#7a2018" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CivicScorecard />
-          <ElectionReminderSignup />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════
-          Quick Action Links (replaces the old emoji cards)
-          ═══════════════════════════════════════════════════ */}
-      <section className="border-t border-brand-border pt-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <a
-            href="https://www.votetexas.gov/register-to-vote/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:border-ink transition-colors"
-          >
-            <div className="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center flex-shrink-0">
-              <ClipboardCheck size={18} className="text-brand-accent" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-brand-text text-sm">Register to vote</h4>
-              <p className="text-xs text-brand-muted">Check your status or register for the first time</p>
-            </div>
-          </a>
-
-          <a
-            href="https://www.votetexas.gov/voting/vote-by-mail.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:border-ink transition-colors"
-          >
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
-              <Mail size={18} className="text-blue-600" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-brand-text text-sm">Vote by mail</h4>
-              <p className="text-xs text-brand-muted">See if you qualify and request a ballot</p>
-            </div>
-          </a>
-
-          <Link
-            href="/officials"
-            className="flex items-center gap-3 bg-white rounded-card border border-brand-border p-4 hover:border-ink transition-colors"
-          >
-            <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-              <Users size={18} className="text-green-600" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-brand-text text-sm">Contact your representatives</h4>
-              <p className="text-xs text-brand-muted">Make your voice heard on the issues you care about</p>
-            </div>
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }
 
-/* ── Section heading with accent bar ── */
+/* ── Chapter heading with roman numeral ── */
 
-function SectionHeading({ title, color }: { title: string; color: string }) {
+function ChapterHeading({ number, title }: { number: string; title: string }) {
   return (
-    <h2 className="text-xl font-bold font-display text-brand-text flex items-center gap-2 mb-4">
-      <span className="w-1.5 h-6 rounded-full" style={{ backgroundColor: color }} />
-      {title}
-    </h2>
+    <div>
+      {number && (
+        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase', marginBottom: 6 }}>
+          Chapter {number}
+        </p>
+      )}
+      <h2 style={{ fontFamily: SERIF, fontSize: 28, lineHeight: 1.15, color: INK }}>
+        {title}
+      </h2>
+    </div>
+  )
+}
+
+/* ── Resource link card ── */
+
+function ResourceLink({
+  href,
+  external,
+  label,
+  description,
+  mono,
+}: {
+  href: string
+  external?: boolean
+  label: string
+  description: string
+  mono: string
+}) {
+  const Tag = external ? 'a' : Link
+  const extraProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {}
+  return (
+    <Tag
+      href={href}
+      {...extraProps as any}
+      className="block p-5 transition-colors hover:bg-[#EDE7D8]"
+      style={{ border: '1px solid ' + RULE_COLOR }}
+    >
+      <p style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>{label}</p>
+      <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>{description}</p>
+      <p className="mt-2" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.06em', color: CLAY, textTransform: 'uppercase' }}>
+        {mono} {external ? ' \u2197' : ''}
+      </p>
+    </Tag>
   )
 }

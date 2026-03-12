@@ -409,5 +409,10 @@ export interface ElectionDashboardData {
   recentBallotItems: BallotItem[]
   upcomingCandidates: Candidate[]
   upcomingBallotItems: BallotItem[]
-  officials: ElectedOfficial[]
+  officialsByLevel: {
+    federal: ElectedOfficial[]
+    state: ElectedOfficial[]
+    county: ElectedOfficial[]
+    city: ElectedOfficial[]
+  }
 }

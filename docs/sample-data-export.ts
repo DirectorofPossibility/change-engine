@@ -342,7 +342,7 @@ export const sampleElectionDashboard: ElectionDashboardData = {
       updated_at: '2026-03-01T00:00:00Z',
     } as any,
   ],
-  officials: sampleOfficials as any[],
+  officialsByLevel: { federal: sampleOfficials as any[], state: [], county: [], city: [] },
 }
 
 // ── Wayfinder Context (braided connections) ─────────────────────────

@@ -1,4 +1,52 @@
 import { createClient } from '@/lib/supabase/server'
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+/** Lookup officials for a ZIP code via district mapping — used by election dashboard. */
+async function getOfficialsByZipForElections(supabase: SupabaseClient, zip: string) {
+  const { data: zipData } = await supabase
+    .from('zip_codes')
+    .select('*')
+    .eq('zip_code', parseInt(zip))
+    .single()
+
+  if (!zipData) return { federal: [], state: [], county: [], city: [] }
+
+  const districts = [
+    zipData.congressional_district,
+    zipData.state_senate_district,
+    zipData.state_house_district,
+  ].filter(Boolean)
+
+  const { data: hoodRows } = await supabase
+    .from('neighborhoods')
+    .select('council_district')
+    .like('zip_codes', '%' + zip + '%')
+    .not('council_district', 'is', null)
+    .limit(1)
+
+  const councilDistrict = hoodRows?.[0]?.council_district || null
+
+  let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
+  filterParts += ',and(level.eq.Federal,district_id.is.null)'
+  if (councilDistrict) filterParts += ',district_id.eq.' + councilDistrict
+  filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
+  if (zipData.county_id) filterParts += ',counties_served.like.%' + zipData.county_id + '%'
+
+  const { data: officials } = await supabase
+    .from('elected_officials')
+    .select('*')
+    .or(filterParts)
+    .order('official_name')
+
+  const all = officials ?? []
+  return {
+    federal: all.filter(function (o) { return o.level === 'Federal' }),
+    state: all.filter(function (o) { return o.level === 'State' }),
+    county: all.filter(function (o) { return o.level === 'County' }),
+    city: all.filter(function (o) { return o.level === 'City' }),
+  }
+}
+
 /** Fetch the next upcoming active election, or null if none. */
 export async function getNextElection(): Promise<{
   election_name: string
@@ -86,11 +134,11 @@ export async function getElectionDashboard(zip?: string) {
       : Promise.resolve({ data: [] as any[] }),
   ])
 
-  // Fetch officials (if ZIP) and related content in parallel
-  const [officialsRes, { data: relatedContent }] = await Promise.all([
+  // Fetch officials (filtered by ZIP via district lookup) and related content in parallel
+  const [officialsByZip, { data: relatedContent }] = await Promise.all([
     zip
-      ? supabase.from('elected_officials').select('*').order('official_name')
-      : Promise.resolve({ data: [] as any[] }),
+      ? getOfficialsByZipForElections(supabase, zip)
+      : Promise.resolve({ federal: [], state: [], county: [], city: [] }),
     supabase
       .from('content_published')
       .select('id, title_6th_grade, summary_6th_grade, image_url, source_url, published_at')
@@ -98,7 +146,6 @@ export async function getElectionDashboard(zip?: string) {
       .order('published_at', { ascending: false })
       .limit(6),
   ])
-  const officials = officialsRes.data ?? []
 
   return {
     pastElections: pastElections ?? [],
@@ -108,7 +155,7 @@ export async function getElectionDashboard(zip?: string) {
     recentBallotItems: recentBallotItems ?? [],
     upcomingCandidates: upcomingCandidates ?? [],
     upcomingBallotItems: upcomingBallotItems ?? [],
-    officials,
+    officialsByLevel: officialsByZip,
     relatedContent: relatedContent ?? [],
   }
 }
