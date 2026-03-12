@@ -425,13 +425,7 @@ export default async function CenterPage({ params }: { params: Promise<{ slug: s
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="group block py-4 px-5 transition-all"
-                  style={{
-                    background: '#ffffff',
-                    border: `1px solid ${RULE_COLOR}`,
-                  }}
-                  onMouseEnter={function (e) { (e.currentTarget as HTMLElement).style.borderColor = CLAY }}
-                  onMouseLeave={function (e) { (e.currentTarget as HTMLElement).style.borderColor = RULE_COLOR }}
+                  className="group block py-4 px-5 transition-all bg-white border border-[rgba(196,102,58,0.3)] hover:border-[#C4663A]"
                 >
                   <span
                     className="block group-hover:underline"

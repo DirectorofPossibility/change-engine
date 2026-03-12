@@ -202,17 +202,13 @@ export default async function DocumentDetailPage(
               href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 transition-all bg-white border border-[rgba(196,102,58,0.3)] hover:border-[#C4663A]"
               style={{
                 fontFamily: MONO,
                 fontSize: 13,
                 letterSpacing: '0.04em',
                 color: INK,
-                background: '#ffffff',
-                border: `1px solid ${RULE_COLOR}`,
               }}
-              onMouseEnter={function (e) { (e.currentTarget as HTMLElement).style.borderColor = CLAY }}
-              onMouseLeave={function (e) { (e.currentTarget as HTMLElement).style.borderColor = RULE_COLOR }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -224,15 +220,12 @@ export default async function DocumentDetailPage(
 
             <Link
               href={'/library/chat?doc=' + doc.id}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 text-white transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 text-white transition-all bg-[#C4663A] hover:bg-[#a8522e]"
               style={{
                 fontFamily: MONO,
                 fontSize: 13,
                 letterSpacing: '0.04em',
-                background: CLAY,
               }}
-              onMouseEnter={function (e) { (e.currentTarget as HTMLElement).style.background = '#a8522e' }}
-              onMouseLeave={function (e) { (e.currentTarget as HTMLElement).style.background = CLAY }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -355,13 +348,7 @@ export default async function DocumentDetailPage(
                   <Link
                     key={rel.id}
                     href={'/library/doc/' + rel.id}
-                    className="group block p-6 transition-all"
-                    style={{
-                      background: '#ffffff',
-                      border: `1px solid ${RULE_COLOR}`,
-                    }}
-                    onMouseEnter={function (e) { (e.currentTarget as HTMLElement).style.borderColor = CLAY }}
-                    onMouseLeave={function (e) { (e.currentTarget as HTMLElement).style.borderColor = RULE_COLOR }}
+                    className="group block p-6 transition-all bg-white border border-[rgba(196,102,58,0.3)] hover:border-[#C4663A]"
                   >
                     {/* Theme indicators */}
                     {relThemes.length > 0 && (
