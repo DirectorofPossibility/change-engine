@@ -121,7 +121,7 @@ export function RoleRequestCard({ currentRole }: { currentRole: string }) {
           className="block w-full bg-green-50 border border-green-200 p-3 text-sm text-green-700 hover:bg-green-100 text-left"
         >
           <span className="font-medium">Partner with us</span>
-          <span className="block text-xs text-green-600 mt-0.5">Represent your organization on the Community Guide</span>
+          <span className="block text-xs text-green-600 mt-0.5">Represent your organization on The Change Engine</span>
         </button>
       )}
 

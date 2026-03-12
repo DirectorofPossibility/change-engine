@@ -317,7 +317,7 @@ const en: Record<string, string> = {
   'wayfinder.this_week': 'this week',
   'wayfinder.connected_to': 'Also in',
   'wayfinder.pathway_desc': 'resources across services, policy, civic life & more',
-  'wayfinder.footer': 'The Community Guide — a publication of The Change Lab',
+  'wayfinder.footer': 'The Change Engine — a project of The Change Lab',
 
   // Life situations
   'life.food_access': 'Food Access',
@@ -369,7 +369,7 @@ const en: Record<string, string> = {
   'discover.foundations': 'Foundations',
 
   // Guide page
-  'guide.masthead': 'The Community Guide',
+  'guide.masthead': 'The Change Engine',
   'guide.tagline': 'Your Neighborhood Field Guide',
   'guide.volume': 'Vol. I',
   'guide.spotlight': 'The Lead',
@@ -639,7 +639,7 @@ const en: Record<string, string> = {
   'wayfinder.nav_neighborhoods': 'Neighborhoods',
 
   // Community Guide (homepage)
-  'guide.label': 'The Houston Field Guide',
+  'guide.label': 'The Change Engine',
   'guide.houston': 'Houston, Texas',
   'guide.title': 'The Neighborhood Guide to Houston',
   'guide.subtitle': 'Who runs your city, what\u2019s available in your neighborhood, and how to get involved. All in one place.',
@@ -694,22 +694,22 @@ const en: Record<string, string> = {
   'guide.explore_deeper': 'Go Deeper',
   'guide.explore_deeper_desc': 'Everything connects through 7 sections of civic life',
   'guide.open_compass': 'Open the Compass',
-  'guide.powered_by': 'A publication of The Change Lab',
+  'guide.powered_by': 'A project of The Change Lab',
 
   // About / Design 1
-  'about.powered_by': 'A publication of The Change Lab',
-  'about.hero': 'About The Community Guide',
-  'about.intro': 'Most people want to be part of something. They just don\u2019t know where to start. That\u2019s not a motivation problem. It\u2019s a navigation problem. So we made a guide.',
+  'about.powered_by': 'A project of The Change Lab',
+  'about.hero': 'About The Change Engine',
+  'about.intro': 'Most people want to be part of something. They just don\u2019t know where to start. That\u2019s not a motivation problem. It\u2019s a navigation problem. And it\u2019s what The Change Engine was built to solve.',
   'about.what_we_do': 'What We Do',
-  'about.what_we_do_text': 'The Change Lab is a Houston-based practice that helps people find their place in the community \u2014 and actually show up. We publish tools and programs that make community life easier to step into.',
-  'about.exchange_title': 'The Community Guide',
-  'about.exchange_p1': 'The Community Guide is our main publication. It connects people to the civic and community life already happening around them \u2014 local organizations, opportunities to act, and other people who give a damn.',
+  'about.what_we_do_text': 'The Change Lab is a Houston-based practice that helps people find their place in the community \u2014 and actually show up. We build tools and programs that make community life easier to step into.',
+  'about.exchange_title': 'The Change Engine',
+  'about.exchange_p1': 'The Change Engine is our main platform. It connects people to the civic and community life already happening around them \u2014 local organizations, opportunities to act, and other people who give a damn.',
   'about.exchange_p2': 'Browse the sections, drop your ZIP code, or just start reading. Move at your own pace \u2014 learn, plug into local activity, or take direct action on something that matters to you.',
   'about.exchange_p3': 'It\u2019s not for activists. It\u2019s for everyone else.',
   'about.club_title': 'The Greater Houston Civic and Social Club',
-  'about.club_text': 'The guide has a real-life counterpart. The Civic and Social Club brings Houstonians together in person \u2014 across the 18-county region, across class lines, across the rural-urban divide. People meet, share a meal, and figure out what they have in common.',
+  'about.club_text': 'The platform has a real-life counterpart. The Civic and Social Club brings Houstonians together in person \u2014 across the 18-county region, across class lines, across the rural-urban divide. People meet, share a meal, and figure out what they have in common.',
   'about.why_title': 'Why This Exists',
-  'about.why_text': 'Seven in ten Americans say they want to get involved but don\u2019t know how. We take that at face value. This guide is built for them \u2014 not to convince people to care, but to meet them where they already do.',
+  'about.why_text': 'Seven in ten Americans say they want to get involved but don\u2019t know how. We take that at face value. The Change Engine is built for them \u2014 not to convince people to care, but to meet them where they already do.',
   'about.where_title': 'Where We\u2019re Headed',
   'about.goal_1': '25,000 Houstonians in year one',
   'about.goal_2': 'Expansion across Texas',
@@ -722,12 +722,12 @@ const en: Record<string, string> = {
   'about.contact': 'Get in touch',
 
   // Brand
-  'brand.name': 'Community Guide',
-  'brand.subtitle': 'The Community Guide',
+  'brand.name': 'The Change Engine',
+  'brand.subtitle': 'The Change Engine',
   'brand.the_change_lab': 'The Change Lab',
-  'brand.powered_by': 'A publication of The Change Lab',
+  'brand.powered_by': 'A project of The Change Lab',
   'brand.tagline': 'Your neighborhood field guide.',
-  'brand.description': 'The Community Guide is a neighborhood field guide to Houston, published by The Change Lab. We connect residents to the officials, services, orgs, and opportunities that already exist — in their language, at their level, in their neighborhood.',
+  'brand.description': 'The Change Engine is a neighborhood field guide to Houston, built by The Change Lab. We connect residents to the officials, services, orgs, and opportunities that already exist — in their language, at their level, in their neighborhood.',
   'brand.mission': 'We didn\'t build anything new. We just made what already exists findable.',
   'brand.copyright': 'The Change Lab. Fiscally sponsored by Impact Hub Houston, a 501(c)(3).',
   'brand.built_in': 'Made in Houston. For Houston.',
@@ -871,7 +871,7 @@ const en: Record<string, string> = {
   'gt.days_ago': 'd ago',
 
   // Footer
-  'footer.community_exchange': 'The Community Guide',
+  'footer.community_exchange': 'The Change Engine',
   'footer.description': 'Your neighborhood field guide to Houston — connecting residents with the services, officials, and opportunities that already exist in their community.',
   'footer.navigate': 'Navigate',
   'footer.connect': 'Connect',

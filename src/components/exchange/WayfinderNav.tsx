@@ -52,11 +52,11 @@ export function WayfinderNav() {
           <Link
             href="/"
             className="flex items-center gap-2 shrink-0 group"
-            title="Back to Community Guide"
+            title="Back to The Change Engine"
           >
             <ChevronLeft size={16} className="text-brand-muted group-hover:text-brand-accent transition-colors" />
             <span className="font-display text-base font-bold tracking-tight" style={{ color: BRAND.accent }}>
-              Community Guide
+              The Change Engine
             </span>
           </Link>
 
