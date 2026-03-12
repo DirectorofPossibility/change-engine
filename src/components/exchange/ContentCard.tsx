@@ -17,7 +17,7 @@ import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { useTranslation } from '@/lib/use-translation'
 import { FocusAreaPills } from './FocusAreaPills'
-import { ImageLightbox } from './ImageLightbox'
+import Image from 'next/image'
 import { FolFallback } from '@/components/ui/FolFallback'
 
 interface ContentCardProps {
@@ -69,11 +69,13 @@ export function ContentCard({
     <Wrapper {...wrapperProps as any}>
       {/* TODO: Replace with real Houston photography */}
       {imageUrl ? (
-        <div className="w-full h-40 relative">
-          <ImageLightbox
+        <div className="w-full h-40 relative bg-brand-bg">
+          <Image
             src={imageUrl}
             alt={displayTitle}
-            className="w-full h-full object-contain bg-brand-bg"
+            width={400}
+            height={200}
+            className="w-full h-full object-contain"
           />
         </div>
       ) : (
