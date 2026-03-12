@@ -18,20 +18,7 @@ import { CenterBadge } from '@/components/ui/CenterBadge'
 import { useTranslation } from '@/lib/use-translation'
 import { FocusAreaPills } from './FocusAreaPills'
 import { ImageLightbox } from './ImageLightbox'
-
-/** Gradient color pairs keyed by pathway ID for placeholder card images. */
-const PATHWAY_GRADIENTS: Record<string, { from: string; to: string }> = {
-  THEME_01: { from: '#7a2018', to: '#5a1810' },
-  THEME_02: { from: '#1e4d7a', to: '#163a5c' },
-  THEME_03: { from: '#4a2870', to: '#381e54' },
-  THEME_04: { from: '#1a6b56', to: '#145242' },
-  THEME_05: { from: '#1b5e8a', to: '#144868' },
-  THEME_06: { from: '#1a5030', to: '#133d24' },
-  THEME_07: { from: '#4a2870', to: '#381e54' },
-}
-
-/** Default gradient used when no pathway is specified. */
-const DEFAULT_GRADIENT = { from: '#9B9590', to: '#6B6560' }
+import { FolFallback } from '@/components/ui/FolFallback'
 
 interface ContentCardProps {
   id: string
@@ -74,7 +61,6 @@ export function ContentCard({
   const { t } = useTranslation()
   const displayTitle = translatedTitle || title
   const displaySummary = translatedSummary || summary
-  const gradient = (pathway && PATHWAY_GRADIENTS[pathway]) || DEFAULT_GRADIENT
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
     ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-brand-border overflow-hidden hover:border-ink transition-colors cursor-pointer' }
@@ -91,32 +77,7 @@ export function ContentCard({
           />
         </div>
       ) : (
-        <div
-          className="w-full h-32 relative overflow-hidden"
-          style={{ background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})` }}
-        >
-          {/* Subtle skyline silhouette pattern */}
-          <svg
-            className="absolute bottom-0 left-0 w-full opacity-10"
-            viewBox="0 0 400 80"
-            preserveAspectRatio="none"
-            fill="white"
-          >
-            <rect x="20" y="30" width="18" height="50"/>
-            <rect x="45" y="20" width="15" height="60"/>
-            <rect x="65" y="35" width="12" height="45"/>
-            <rect x="100" y="10" width="22" height="70"/>
-            <rect x="130" y="15" width="20" height="65"/>
-            <rect x="155" y="5" width="25" height="75"/>
-            <rect x="185" y="0" width="28" height="80"/>
-            <rect x="220" y="8" width="22" height="72"/>
-            <rect x="250" y="18" width="20" height="62"/>
-            <rect x="280" y="25" width="18" height="55"/>
-            <rect x="310" y="30" width="20" height="50"/>
-            <rect x="340" y="40" width="15" height="40"/>
-            <rect x="360" y="35" width="18" height="45"/>
-          </svg>
-        </div>
+        <FolFallback pathway={pathway} />
       )}
       <div className="p-5">
       <div className="flex items-center gap-2 mb-3">

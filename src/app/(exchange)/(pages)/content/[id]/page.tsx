@@ -25,6 +25,7 @@ import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -256,10 +257,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         title={title}
         heroImage={
           <>
-            {item.image_url && (
+            {item.image_url ? (
               <div className="overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
-                <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} />
+                <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
               </div>
+            ) : (
+              <FolFallback pathway={item.pathway_primary} height="h-40" />
             )}
             {/* Summary — directly under image */}
             {summary && (

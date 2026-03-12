@@ -5,6 +5,7 @@ import { ChevronRight, BookOpen, Zap, Package, Scale } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
 import { CENTER_COLORS } from '@/lib/constants'
 import { ImageLightbox } from './ImageLightbox'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 export interface FeedItem {
   type: 'resource' | 'official' | 'policy' | 'service'
@@ -99,18 +100,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
               className="w-full h-full object-contain bg-brand-bg group-hover:scale-105 transition-transform duration-500"
             />
           ) : (
-            <div
-              className="w-full h-full"
-              style={{ background: `linear-gradient(135deg, ${accent}20, ${accent}40)` }}
-            >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
-                  <circle cx="32" cy="32" r="30" fill={accent} opacity={0.15} />
-                  <circle cx="32" cy="32" r="20" fill={accent} opacity={0.2} />
-                  <circle cx="32" cy="32" r="10" fill={accent} opacity={0.3} />
-                </svg>
-              </div>
-            </div>
+            <FolFallback height="h-full" />
           )}
           {/* Gradient overlay at bottom */}
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
