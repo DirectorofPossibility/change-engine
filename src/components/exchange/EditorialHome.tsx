@@ -121,7 +121,7 @@ export function EditorialHome({ stats, organizations, latestContent }: Editorial
             {/* Left — editorial content */}
             <div className="flex-1 min-w-0 max-w-xl">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-brand-accent mb-3">
-                The Change Engine — Houston, Texas
+                Change Engine — Houston, Texas
               </p>
               <h1 className="font-display text-[clamp(2.2rem,5vw,3.8rem)] leading-[1.05] tracking-tight mb-5 text-brand-text">
                 This is the{' '}

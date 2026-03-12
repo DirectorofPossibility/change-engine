@@ -47,7 +47,7 @@ export function IndexPageHero({
                 className="font-mono text-[0.58rem] uppercase tracking-[0.2em]"
                 style={{ color: '#5c6474' }}
               >
-                The Change Engine
+                Change Engine
               </span>
             </div>
 

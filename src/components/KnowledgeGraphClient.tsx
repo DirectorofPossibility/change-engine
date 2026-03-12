@@ -1937,7 +1937,7 @@ export default function KnowledgeGraphClient() {
       })()}
 
       <div style={{ padding: "14px 28px", borderTop: "1px solid #f5f1eb", display: "flex", justifyContent: "space-between", color: "#9a918a", fontSize: 11 }}>
-        <span>The Change Engine — A project of The Change Lab</span>
+        <span>Change Engine — A project of The Change Lab</span>
         <span>Houston, TX · ~{TOTAL_DIMS}D mesh · v5</span>
       </div>
     </div>
