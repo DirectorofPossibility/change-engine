@@ -9,15 +9,42 @@ import {
 import { getRelatedServices } from '@/lib/data/services'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { ClusteredMap } from '@/components/maps/dynamic'
 import type { MarkerData } from '@/components/maps/MapMarker'
+import { Geo } from '@/components/geo/sacred'
+import { FocusTrail, LEVEL_META } from '@/components/templates/FocusTrail'
+import type { TrailLevel, TrailEntry } from '@/components/templates/FocusTrail'
+import { SectionHeader } from '@/components/templates/SectionHeader'
 
 export const revalidate = 3600
 
+// Map focus area name patterns to geo types
+const FOCUS_GEO: Record<string, string> = {
+  mental: 'vesica_piscis',
+  food: 'flower_of_life',
+  healthcare: 'compass_rose',
+  maternal: 'nested_circles',
+  substance: 'outward_spiral',
+  disability: 'hub_and_spokes',
+  oral: 'six_petal_rose',
+  environment: 'torus',
+  education: 'seed_of_life',
+  housing: 'hex_grid',
+  job: 'golden_spiral',
+  transit: 'concentric_rings',
+  safety: 'metatron_cube',
+}
+
+function focusGeo(name: string): string {
+  const lower = name.toLowerCase()
+  for (const [key, geo] of Object.entries(FOCUS_GEO)) {
+    if (lower.includes(key)) return geo
+  }
+  return 'seed_of_life'
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -45,7 +72,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
     fa.sdoh_code ? getSDOHMap() : Promise.resolve({} as Record<string, { sdoh_name: string; sdoh_description: string | null }>),
   ])
 
-  // Sibling focus areas for discovery
+  // Sibling focus areas
   let siblingFocusAreas: Array<{ focus_id: string; focus_area_name: string }> = []
   if (fa.theme_id) {
     const supabase = await createClient()
@@ -98,496 +125,418 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
     themeColor = THEMES[fa.theme_id as keyof typeof THEMES].color
   }
 
-  // SDG + SDOH info
+  // SDG + SDOH
   const sdg = fa.sdg_id ? sdgMap[fa.sdg_id] : null
   const sdoh = fa.sdoh_code ? sdohMap[fa.sdoh_code] : null
 
-  // Sort content by date (newest first)
+  // Sort content by trail_level then date
   const sortedContent = [...content].sort(function (a, b) {
+    const la = (a as any).trail_level || 1
+    const lb = (b as any).trail_level || 1
+    if (la !== lb) return la - lb
     const da = a.published_at ? new Date(a.published_at).getTime() : 0
     const db = b.published_at ? new Date(b.published_at).getTime() : 0
     return db - da
   })
 
-  // Split: first 4 visible, rest behind disclosure
-  const contentPreview = sortedContent.slice(0, 4)
-  const contentRest = sortedContent.slice(4)
-  const servicesPreview = services.slice(0, 4)
-  const servicesRest = services.slice(4)
-  const opportunitiesPreview = opportunities.slice(0, 3)
-  const opportunitiesRest = opportunities.slice(3)
-  const policiesPreview = policies.slice(0, 3)
-  const policiesRest = policies.slice(3)
+  // Build trail levels from content + opportunities + services + policies
+  const trailLevels: TrailLevel[] = []
 
-  // Section counts for the table of contents
-  const sections: Array<{ label: string; count: number; anchor: string }> = []
-  if (content.length > 0) sections.push({ label: 'Articles & Guides', count: content.length, anchor: 'articles' })
-  if (services.length > 0) sections.push({ label: 'Services', count: services.length, anchor: 'services' })
-  if (opportunities.length > 0) sections.push({ label: 'Opportunities', count: opportunities.length, anchor: 'opportunities' })
-  if (policies.length > 0) sections.push({ label: 'Policies & Legislation', count: policies.length, anchor: 'policies' })
-  if (foundations.length > 0) sections.push({ label: 'Foundations', count: foundations.length, anchor: 'foundations' })
+  // Level 1: Articles, explainers, data — "Before You Go"
+  const level1Content = sortedContent.filter(function (c) {
+    const tl = (c as any).trail_level
+    const ct = (c as any).content_type || ''
+    return tl === 1 || (!tl && ['news', 'article', 'report', 'data', 'video', 'explainer', 'podcast'].includes(ct))
+  })
+  if (level1Content.length > 0) {
+    trailLevels.push({
+      level: 1,
+      totalCount: level1Content.length,
+      entries: level1Content.slice(0, 3).map(function (c): TrailEntry {
+        return {
+          id: c.id,
+          href: '/content/' + c.id,
+          title: c.title_6th_grade || 'Untitled',
+          type: (c as any).content_type || 'Article',
+          meta: c.source_org_name || undefined,
+        }
+      }),
+    })
+  }
+
+  // Level 2: Guides, tools — "Packing List"
+  const level2Content = sortedContent.filter(function (c) {
+    const tl = (c as any).trail_level
+    const ct = (c as any).content_type || ''
+    return tl === 2 || (!tl && ['guide', 'tool', 'course', 'diy_kit', 'book'].includes(ct))
+  })
+  if (level2Content.length > 0) {
+    trailLevels.push({
+      level: 2,
+      totalCount: level2Content.length,
+      entries: level2Content.slice(0, 3).map(function (c): TrailEntry {
+        return {
+          id: c.id,
+          href: '/content/' + c.id,
+          title: c.title_6th_grade || 'Untitled',
+          type: (c as any).content_type || 'Guide',
+          meta: c.source_org_name || undefined,
+        }
+      }),
+    })
+  }
+
+  // Level 3: Events, opportunities — "Day Trips"
+  if (opportunities.length > 0) {
+    trailLevels.push({
+      level: 3,
+      totalCount: opportunities.length,
+      entries: opportunities.slice(0, 3).map(function (o): TrailEntry {
+        return {
+          id: o.opportunity_id,
+          href: '/opportunities/' + o.opportunity_id,
+          title: o.opportunity_name,
+          type: o.is_virtual ? 'Virtual Event' : 'In-Person',
+          meta: [o.city, o.start_date ? new Date(o.start_date).toLocaleDateString() : ''].filter(Boolean).join(' \u00b7 '),
+        }
+      }),
+    })
+  }
+
+  // Level 4: Organizations & services — "Local Guides"
+  if (services.length > 0) {
+    trailLevels.push({
+      level: 4,
+      totalCount: services.length,
+      entries: services.slice(0, 3).map(function (svc: any): TrailEntry {
+        return {
+          id: svc.service_id || svc.id,
+          href: '/services/' + (svc.service_id || svc.id),
+          title: svc.service_name,
+          type: 'Service',
+          meta: [svc.city, svc.phone].filter(Boolean).join(' \u00b7 '),
+        }
+      }),
+    })
+  }
+
+  // Level 5: Policies — "The Deep Journey"
+  if (policies.length > 0) {
+    trailLevels.push({
+      level: 5,
+      totalCount: policies.length,
+      entries: policies.slice(0, 3).map(function (p): TrailEntry {
+        return {
+          id: p.policy_id,
+          href: '/policies/' + p.policy_id,
+          title: p.title_6th_grade || p.policy_name,
+          type: p.bill_number ? p.bill_number : 'Policy',
+          meta: [p.level, p.status].filter(Boolean).join(' \u00b7 '),
+        }
+      }),
+    })
+  }
+
+  // Remaining content that didn't fit levels 1-2
+  const usedIds = new Set([
+    ...level1Content.map(c => c.id),
+    ...level2Content.map(c => c.id),
+  ])
+  const remainingContent = sortedContent.filter(c => !usedIds.has(c.id))
+
+  // Compute trail depth (how many levels have content)
+  const trailDepth = trailLevels.length
+
+  const geoType = focusGeo(fa.focus_area_name)
 
   return (
-    <div className="bg-paper min-h-screen">
-      {/* ── Hero ── */}
-      <div className="relative overflow-hidden bg-paper">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+    <div className="min-h-screen bg-white">
+
+      {/* ═══ DARK GRADIENT FOCUS MASTHEAD ═══ */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          background: `linear-gradient(158deg, ${darken(themeColor)} 0%, ${themeColor} 100%)`,
+          padding: '3rem 1.5rem 2.5rem',
+        }}
+      >
+        {/* Background geo */}
+        <div
+          className="absolute pointer-events-none animate-[spin_90s_linear_infinite]"
+          style={{
+            top: '50%', right: '-40px',
+            transform: 'translateY(-50%)',
+            width: '300px', height: '300px', opacity: 0.12,
+          }}
+        >
+          <Geo type={geoType} size={300} color="#ffffff" opacity={0.6} />
         </div>
 
-        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-20">
-          {/* Pathway breadcrumb */}
-          <div className="flex items-center gap-2 mb-6">
-            {fa.theme_id && themeSlug && (
-              <Link
-                href={'/explore/theme/' + themeSlug}
-                className="hover:underline"
-                style={{ fontSize: 11, letterSpacing: '0.1em', color: themeColor, textTransform: 'uppercase' }}
-              >
-                {themeName}
-              </Link>
-            )}
-            {!fa.theme_id && (
-              <span style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase' }}>
-                Focus Area
-              </span>
-            )}
+        <div className="max-w-[1080px] mx-auto relative z-[2]">
+          {/* Region link */}
+          {themeName && (
+            <Link
+              href={'/pathways/' + (themeSlug || '')}
+              className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] hover:underline mb-4 block"
+              style={{ color: 'rgba(255,255,255,0.5)' }}
+            >
+              {themeName} &middot; Region
+            </Link>
+          )}
+
+          {/* Headline with geo mark */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-[50px] h-[50px] flex-shrink-0 opacity-[0.6]">
+              <Geo type={geoType} size={50} color="#ffffff" />
+            </div>
+            <h1
+              className="font-display font-black text-white leading-[0.95] tracking-[-0.02em]"
+              style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
+            >
+              {fa.focus_area_name}
+            </h1>
           </div>
 
-          <h1 style={{ fontSize: 40, lineHeight: 1.1,  }}>
-            {fa.focus_area_name}
-          </h1>
-
+          {/* Deck */}
           {fa.description && (
-            <p className="mt-4 max-w-[600px]" style={{ fontSize: 17, lineHeight: 1.7, color: "#5c6474" }}>
+            <p
+              className="font-body italic text-[0.92rem] leading-[1.7] max-w-[560px] mb-5"
+              style={{ color: 'rgba(255,255,255,0.6)' }}
+            >
               {fa.description}
             </p>
           )}
 
-          {/* Metadata tags */}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
+          {/* Metadata pills */}
+          <div className="flex flex-wrap items-center gap-2">
             {sdg && (
               <span
-                className="px-3 py-1"
-                style={{ fontSize: 10, letterSpacing: '0.06em', color: sdg.sdg_color || '#5c6474', border: '1px solid ' + (sdg.sdg_color || '#dde1e8'), textTransform: 'uppercase' }}
+                className="font-mono text-[0.6rem] uppercase tracking-[0.08em] px-2.5 py-1"
+                style={{ color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.2)' }}
               >
-                SDG {sdg.sdg_number}: {sdg.sdg_name}
+                SDG {sdg.sdg_number}
               </span>
             )}
             {sdoh && (
               <span
-                className="px-3 py-1"
-                style={{ fontSize: 10, letterSpacing: '0.06em', color: "#5c6474", border: '1px solid #dde1e8', textTransform: 'uppercase' }}
+                className="font-mono text-[0.6rem] uppercase tracking-[0.08em] px-2.5 py-1"
+                style={{ color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.2)' }}
               >
                 SDOH: {sdoh.sdoh_name}
               </span>
             )}
-            {fa.is_bridging && (
-              <span
-                className="px-3 py-1"
-                style={{ fontSize: 10, letterSpacing: '0.06em', color: "#5c6474", border: '1px dashed ' + '#dde1e8', textTransform: 'uppercase' }}
-              >
-                Bridging Area
-              </span>
-            )}
+            <span
+              className="font-mono text-[0.6rem] uppercase tracking-[0.08em] px-2.5 py-1"
+              style={{ color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.2)' }}
+            >
+              {trailDepth} of 5 levels
+            </span>
+          </div>
+
+          {/* Trail depth dots */}
+          <div className="flex items-center gap-2 mt-4">
+            <span className="font-mono text-[0.6rem] uppercase tracking-[0.1em]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Trail depth
+            </span>
+            <div className="flex gap-[3px]">
+              {[1,2,3,4,5].map(function (n) {
+                const isLit = trailLevels.some(l => l.level === n)
+                return (
+                  <span
+                    key={n}
+                    className="w-[6px] h-[6px]"
+                    style={{ background: isLit ? '#ffffff' : 'rgba(255,255,255,0.2)' }}
+                  />
+                )
+              })}
+            </div>
           </div>
         </div>
-
-        <div style={{ height: 1, background: '#dde1e8' }} />
       </div>
 
-      {/* ── Breadcrumb ── */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: 11, letterSpacing: '0.06em', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/explore" className="hover:underline" style={{ color: "#1b5e8a" }}>Explore</Link>
-          <span className="mx-2">/</span>
-          <span>{fa.focus_area_name}</span>
-        </nav>
-      </div>
-
-      <div className="max-w-[900px] mx-auto px-6 py-10">
-
-        {/* ── Table of Contents — progressive disclosure starts here ── */}
-        {sections.length > 0 && (
-          <nav className="mb-10 p-5" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
-            <p className="mb-3" style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase' }}>
-              What's here
-            </p>
-            <div className="space-y-1.5">
-              {sections.map(function (s) {
+      {/* ═══ WAYFINDER BREADCRUMB ═══ */}
+      <div className="border-b-2 border-ink">
+        <div className="max-w-[1080px] mx-auto px-6 py-3 flex items-center justify-between">
+          <nav className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim">
+            <Link href="/guide" className="hover:text-blue transition-colors">Guide</Link>
+            <span className="mx-1.5 text-faint">&rsaquo;</span>
+            {themeName && (
+              <>
+                <Link href={'/pathways/' + (themeSlug || '')} className="hover:text-blue transition-colors">{themeName}</Link>
+                <span className="mx-1.5 text-faint">&rsaquo;</span>
+              </>
+            )}
+            <span className="text-blue">{fa.focus_area_name}</span>
+          </nav>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[0.6rem] text-faint uppercase tracking-[0.1em]">Trail depth</span>
+            <div className="flex gap-[2.5px]">
+              {[1,2,3,4,5].map(function (n) {
+                const isLit = trailLevels.some(l => l.level === n)
                 return (
-                  <a
-                    key={s.anchor}
-                    href={'#' + s.anchor}
-                    className="flex items-baseline gap-2 group"
-                  >
-                    <span className="flex-1 truncate" style={{ fontSize: 15,  }}>
-                      {s.label}
-                    </span>
-                    <span className="flex-1 border-b border-dotted" style={{ borderColor: '#dde1e8' }} />
-                    <span style={{ fontSize: 12, color: "#5c6474" }}>
-                      {s.count}
-                    </span>
-                  </a>
+                  <span
+                    key={n}
+                    className="w-[5px] h-[5px]"
+                    style={{ background: isLit ? themeColor : '#dde1e8' }}
+                  />
                 )
               })}
-            </div>
-          </nav>
-        )}
-
-        {/* ── Empty state ── */}
-        {isEmpty && (
-          <div className="mb-10 text-center py-12">
-            <Image src="/images/fol/vesica-piscis.svg" alt="" width={80} height={80} className="opacity-[0.08] mx-auto mb-6" />
-            <p style={{ fontSize: 18,  }}>
-              We're building out resources for {fa.focus_area_name}.
-            </p>
-            <p className="mt-2 max-w-md mx-auto" style={{ fontSize: 14, color: "#5c6474" }}>
-              In the meantime, try these starting points:
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <a
-                href="tel:211"
-                className="px-5 py-2.5 text-white transition-opacity hover:opacity-90"
-                style={{ fontSize: 12, letterSpacing: '0.04em', background: '#1b5e8a' }}
-              >
-                Call 211
-              </a>
-              <Link
-                href={'/search?q=' + encodeURIComponent(fa.focus_area_name)}
-                className="px-5 py-2.5 transition-colors hover:bg-[#f4f5f7]"
-                style={{ fontSize: 12, letterSpacing: '0.04em', border: '1px solid #dde1e8' }}
-              >
-                Search "{fa.focus_area_name}"
-              </Link>
-              <Link
-                href="/services"
-                className="px-5 py-2.5 transition-colors hover:bg-[#f4f5f7]"
-                style={{ fontSize: 12, letterSpacing: '0.04em', border: '1px solid #dde1e8' }}
-              >
-                Browse Services
-              </Link>
             </div>
           </div>
-        )}
+        </div>
+      </div>
 
-        {/* ── Articles & Guides ── */}
-        {content.length > 0 && (
-          <section id="articles" className="scroll-mt-8">
-            <SectionHeader label="Articles & Guides" count={content.length} />
-            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {contentPreview.map(function (c) {
-                const t = c.inbox_id ? contentTranslations[c.inbox_id] : undefined
-                return (
-                  <ContentCard
-                    key={c.id}
-                    id={c.id}
-                    title={c.title_6th_grade}
-                    summary={c.summary_6th_grade}
-                    pathway={c.pathway_primary}
-                    center={c.center}
-                    sourceUrl={c.source_url}
-                    publishedAt={c.published_at}
-                    imageUrl={c.image_url ?? null}
-                    translatedTitle={t?.title}
-                    translatedSummary={t?.summary}
-                  />
-                )
-              })}
-            </div>
-            {contentRest.length > 0 && (
-              <details className="mt-4 group">
-                <summary
-                  className="cursor-pointer list-none hover:underline"
-                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
+      {/* ═══ FIVE-LEVEL TRAIL ═══ */}
+      {trailLevels.length > 0 ? (
+        <FocusTrail
+          levels={trailLevels}
+          themeColor={themeColor}
+          focusName={fa.focus_area_name}
+        />
+      ) : (
+        /* Empty state */
+        <div className="max-w-[1080px] mx-auto px-6 py-16 text-center">
+          <div className="w-[80px] h-[80px] mx-auto mb-6 opacity-[0.15]">
+            <Geo type={geoType} size={80} color={themeColor} />
+          </div>
+          <p className="font-display text-[1.2rem] font-bold text-ink mb-2">
+            We&apos;re building out resources for {fa.focus_area_name}.
+          </p>
+          <p className="font-body text-[0.85rem] text-dim max-w-md mx-auto mb-6">
+            In the meantime, try these starting points:
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <a
+              href="tel:211"
+              className="font-mono text-[0.6875rem] uppercase tracking-[0.08em] font-semibold px-5 py-2.5 bg-ink text-white hover:opacity-90 transition-opacity"
+            >
+              Call 211
+            </a>
+            <Link
+              href={'/search?q=' + encodeURIComponent(fa.focus_area_name)}
+              className="font-mono text-[0.6875rem] uppercase tracking-[0.08em] px-5 py-2.5 border border-rule hover:bg-paper transition-colors"
+            >
+              Search &ldquo;{fa.focus_area_name}&rdquo;
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ REMAINING ARTICLES (not in trail levels) ═══ */}
+      {remainingContent.length > 0 && (
+        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t-2 border-ink">
+          <SectionHeader
+            kicker="More resources"
+            heading="All"
+            headingEm="Articles"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {remainingContent.slice(0, 6).map(function (c) {
+              const t = c.inbox_id ? contentTranslations[c.inbox_id] : undefined
+              return (
+                <ContentCard
+                  key={c.id}
+                  id={c.id}
+                  title={c.title_6th_grade}
+                  summary={c.summary_6th_grade}
+                  pathway={c.pathway_primary}
+                  center={c.center}
+                  sourceUrl={c.source_url}
+                  publishedAt={c.published_at}
+                  imageUrl={c.image_url ?? null}
+                  translatedTitle={t?.title}
+                  translatedSummary={t?.summary}
+                />
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* ═══ OPPORTUNITY MAP ═══ */}
+      {opportunityMarkers.length > 0 && (
+        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+          <SectionHeader
+            kicker="Near you"
+            heading="Opportunities"
+            headingEm="Map"
+          />
+          <div style={{ border: '1.5px solid var(--color-rule, #dde1e8)' }}>
+            <ClusteredMap markers={opportunityMarkers} className="w-full h-[280px]" showLegend={false} />
+          </div>
+        </section>
+      )}
+
+      {/* ═══ FOUNDATIONS ═══ */}
+      {foundations.length > 0 && (
+        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+          <SectionHeader
+            kicker="Funders"
+            heading="Foundations"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 border border-rule" style={{ borderWidth: '1.5px' }}>
+            {foundations.map(function (f: any) {
+              return (
+                <Link
+                  key={f.id}
+                  href="/foundations"
+                  className="p-5 border-b border-r border-rule hover:bg-paper transition-colors"
+                  style={{ borderWidth: '1.5px' }}
                 >
-                  <span className="group-open:hidden">Show {contentRest.length} more articles &darr;</span>
-                  <span className="hidden group-open:inline">Show fewer &uarr;</span>
-                </summary>
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {contentRest.map(function (c) {
-                    const t = c.inbox_id ? contentTranslations[c.inbox_id] : undefined
-                    return (
-                      <ContentCard
-                        key={c.id}
-                        id={c.id}
-                        title={c.title_6th_grade}
-                        summary={c.summary_6th_grade}
-                        pathway={c.pathway_primary}
-                        center={c.center}
-                        sourceUrl={c.source_url}
-                        publishedAt={c.published_at}
-                        imageUrl={c.image_url ?? null}
-                        translatedTitle={t?.title}
-                        translatedSummary={t?.summary}
-                      />
-                    )
-                  })}
-                </div>
-              </details>
-            )}
-
-            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
-          </section>
-        )}
-
-        {/* ── Services ── */}
-        {services.length > 0 && (
-          <section id="services" className="scroll-mt-8">
-            <SectionHeader label="Services" count={services.length} />
-            <div className="mt-5 divide-y" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-              {servicesPreview.map(function (svc: any) {
-                return (
-                  <Link
-                    key={svc.service_id || svc.id}
-                    href={'/services/' + (svc.service_id || svc.id)}
-                    className="block py-4 px-4 transition-colors hover:bg-[#f4f5f7]"
-                    style={{ borderColor: '#dde1e8' }}
-                  >
-                    <p style={{ fontSize: 15,  }}>{svc.service_name}</p>
-                    {svc.description_5th_grade && (
-                      <p className="mt-1 line-clamp-2" style={{ fontSize: 13, color: "#5c6474" }}>
-                        {svc.description_5th_grade}
-                      </p>
+                  <span className="font-display text-[0.88rem] font-bold text-ink block">{f.name}</span>
+                  <div className="flex items-center gap-3 mt-1">
+                    {f.assets && (
+                      <span className="font-mono text-[0.6875rem] text-blue">{f.assets}</span>
                     )}
-                    {(svc.phone || svc.city) && (
-                      <p className="mt-1" style={{ fontSize: 11, color: "#5c6474" }}>
-                        {[svc.city, svc.phone].filter(Boolean).join(' \u00b7 ')}
-                      </p>
+                    {f.annual_giving && (
+                      <span className="font-mono text-[0.6875rem] text-dim">{f.annual_giving}/yr</span>
                     )}
-                  </Link>
-                )
-              })}
-            </div>
-            {servicesRest.length > 0 && (
-              <details className="mt-3 group">
-                <summary
-                  className="cursor-pointer list-none hover:underline"
-                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* ═══ RELATED FOCUS AREAS ═══ */}
+      {siblingFocusAreas.length > 0 && (
+        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t-2 border-ink">
+          <SectionHeader
+            kicker="Also in this region"
+            heading="Related"
+            headingEm="Destinations"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border border-rule" style={{ borderWidth: '1.5px' }}>
+            {siblingFocusAreas.map(function (sib) {
+              return (
+                <Link
+                  key={sib.focus_id}
+                  href={'/explore/focus/' + sib.focus_id}
+                  className="group p-5 border-b border-r border-rule hover:bg-paper transition-colors"
+                  style={{ borderWidth: '1.5px' }}
                 >
-                  <span className="group-open:hidden">Show {servicesRest.length} more services &darr;</span>
-                  <span className="hidden group-open:inline">Show fewer &uarr;</span>
-                </summary>
-                <div className="mt-3 divide-y" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
-                  {servicesRest.map(function (svc: any) {
-                    return (
-                      <Link
-                        key={svc.service_id || svc.id}
-                        href={'/services/' + (svc.service_id || svc.id)}
-                        className="block py-4 px-4 transition-colors hover:bg-[#f4f5f7]"
-                        style={{ borderColor: '#dde1e8' }}
-                      >
-                        <p style={{ fontSize: 15,  }}>{svc.service_name}</p>
-                        {svc.description_5th_grade && (
-                          <p className="mt-1 line-clamp-2" style={{ fontSize: 13, color: "#5c6474" }}>
-                            {svc.description_5th_grade}
-                          </p>
-                        )}
-                        {(svc.phone || svc.city) && (
-                          <p className="mt-1" style={{ fontSize: 11, color: "#5c6474" }}>
-                            {[svc.city, svc.phone].filter(Boolean).join(' \u00b7 ')}
-                          </p>
-                        )}
-                      </Link>
-                    )
-                  })}
-                </div>
-              </details>
-            )}
-
-            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
-          </section>
-        )}
-
-        {/* ── Opportunities ── */}
-        {opportunities.length > 0 && (
-          <section id="opportunities" className="scroll-mt-8">
-            <SectionHeader label="Opportunities" count={opportunities.length} />
-
-            {opportunityMarkers.length > 0 && (
-              <div className="mt-5 mb-4" style={{ border: '1px solid #dde1e8' }}>
-                <ClusteredMap markers={opportunityMarkers} className="w-full h-[250px]" showLegend={false} />
-              </div>
-            )}
-
-            <div className="mt-5 space-y-3">
-              {opportunitiesPreview.map(function (o) {
-                const ot = opportunityTranslations[o.opportunity_id]
-                return (
-                  <OpportunityCard
-                    key={o.opportunity_id}
-                    name={o.opportunity_name}
-                    description={o.description_5th_grade}
-                    startDate={o.start_date}
-                    endDate={o.end_date}
-                    address={o.address}
-                    city={o.city}
-                    isVirtual={o.is_virtual}
-                    registrationUrl={o.registration_url}
-                    spotsAvailable={o.spots_available}
-                    translatedName={ot?.title}
-                    translatedDescription={ot?.summary}
-                  />
-                )
-              })}
-            </div>
-            {opportunitiesRest.length > 0 && (
-              <details className="mt-3 group">
-                <summary
-                  className="cursor-pointer list-none hover:underline"
-                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
-                >
-                  <span className="group-open:hidden">Show {opportunitiesRest.length} more opportunities &darr;</span>
-                  <span className="hidden group-open:inline">Show fewer &uarr;</span>
-                </summary>
-                <div className="mt-3 space-y-3">
-                  {opportunitiesRest.map(function (o) {
-                    const ot = opportunityTranslations[o.opportunity_id]
-                    return (
-                      <OpportunityCard
-                        key={o.opportunity_id}
-                        name={o.opportunity_name}
-                        description={o.description_5th_grade}
-                        startDate={o.start_date}
-                        endDate={o.end_date}
-                        address={o.address}
-                        city={o.city}
-                        isVirtual={o.is_virtual}
-                        registrationUrl={o.registration_url}
-                        spotsAvailable={o.spots_available}
-                        translatedName={ot?.title}
-                        translatedDescription={ot?.summary}
-                      />
-                    )
-                  })}
-                </div>
-              </details>
-            )}
-
-            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
-          </section>
-        )}
-
-        {/* ── Policies & Legislation ── */}
-        {policies.length > 0 && (
-          <section id="policies" className="scroll-mt-8">
-            <SectionHeader label="Policies & Legislation" count={policies.length} />
-            <div className="mt-5 space-y-3">
-              {policiesPreview.map(function (p) {
-                const pt = policyTranslations[p.policy_id]
-                return (
-                  <PolicyCard
-                    key={p.policy_id}
-                    name={p.title_6th_grade || p.policy_name}
-                    summary={p.summary_6th_grade || p.summary_5th_grade}
-                    billNumber={p.bill_number}
-                    status={p.status}
-                    level={p.level}
-                    sourceUrl={p.source_url}
-                    translatedName={pt?.title}
-                    translatedSummary={pt?.summary}
-                  />
-                )
-              })}
-            </div>
-            {policiesRest.length > 0 && (
-              <details className="mt-3 group">
-                <summary
-                  className="cursor-pointer list-none hover:underline"
-                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
-                >
-                  <span className="group-open:hidden">Show {policiesRest.length} more policies &darr;</span>
-                  <span className="hidden group-open:inline">Show fewer &uarr;</span>
-                </summary>
-                <div className="mt-3 space-y-3">
-                  {policiesRest.map(function (p) {
-                    const pt = policyTranslations[p.policy_id]
-                    return (
-                      <PolicyCard
-                        key={p.policy_id}
-                        name={p.title_6th_grade || p.policy_name}
-                        summary={p.summary_6th_grade || p.summary_5th_grade}
-                        billNumber={p.bill_number}
-                        status={p.status}
-                        level={p.level}
-                        sourceUrl={p.source_url}
-                        translatedName={pt?.title}
-                        translatedSummary={pt?.summary}
-                      />
-                    )
-                  })}
-                </div>
-              </details>
-            )}
-
-            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
-          </section>
-        )}
-
-        {/* ── Foundations ── */}
-        {foundations.length > 0 && (
-          <section id="foundations" className="scroll-mt-8">
-            <SectionHeader label="Foundations" count={foundations.length} />
-            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {foundations.map(function (f: any) {
-                return (
-                  <Link
-                    key={f.id}
-                    href="/foundations"
-                    className="block p-4 transition-colors hover:bg-[#f4f5f7]"
-                    style={{ border: '1px solid #dde1e8' }}
-                  >
-                    <p style={{ fontSize: 15,  }}>{f.name}</p>
-                    <div className="flex items-center gap-3 mt-1">
-                      {f.assets && (
-                        <span style={{ fontSize: 11, color: "#1b5e8a" }}>{f.assets}</span>
-                      )}
-                      {f.annual_giving && (
-                        <span style={{ fontSize: 11, color: "#5c6474" }}>{f.annual_giving}/yr</span>
-                      )}
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-
-            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
-          </section>
-        )}
-
-        {/* ── Related Focus Areas ── */}
-        {siblingFocusAreas.length > 0 && (
-          <section className="scroll-mt-8">
-            <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 12 }}>
-              Related Focus Areas
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {siblingFocusAreas.map(function (sib) {
-                return (
-                  <Link
-                    key={sib.focus_id}
-                    href={'/explore/focus/' + sib.focus_id}
-                    className="px-4 py-2 transition-colors hover:bg-[#f4f5f7]"
-                    style={{ fontSize: 14, border: '1px solid #dde1e8' }}
-                  >
+                  <div className="w-[28px] h-[28px] mb-2 opacity-[0.3] group-hover:opacity-[0.5] transition-opacity">
+                    <Geo type={focusGeo(sib.focus_area_name)} size={28} color={themeColor} />
+                  </div>
+                  <span className="font-display text-[0.82rem] font-bold text-ink group-hover:text-blue transition-colors block">
                     {sib.focus_area_name}
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
-        {/* ── Footer ── */}
-        <div className="mt-12" style={{ height: 1, background: '#dde1e8' }} />
-        <div className="py-8 flex flex-wrap gap-6">
-          <Link href="/explore" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
+      {/* ═══ FOOTER CODA ═══ */}
+      <div className="border-t border-rule" style={{ borderWidth: '1.5px' }}>
+        <div className="max-w-[1080px] mx-auto px-6 py-8 flex flex-wrap gap-6">
+          <Link href="/explore" className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim hover:text-blue transition-colors">
             &larr; Back to Explore
           </Link>
           {themeSlug && (
-            <Link href={'/explore/theme/' + themeSlug} className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
+            <Link href={'/pathways/' + themeSlug} className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim hover:text-blue transition-colors">
               &larr; Back to {themeName}
             </Link>
           )}
@@ -597,16 +546,10 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
   )
 }
 
-/* ── Section header with count ── */
-
-function SectionHeader({ label, count }: { label: string; count: number }) {
-  return (
-    <div className="flex items-baseline gap-3">
-      <h2 style={{ fontSize: 24,  }}>{label}</h2>
-      <div className="flex-1" style={{ height: 1, background: '#dde1e8' }} />
-      <span style={{ fontSize: 12, color: "#5c6474" }}>
-        {count} {count === 1 ? 'item' : 'items'}
-      </span>
-    </div>
-  )
+// Simple color helper
+function darken(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `#${Math.max(0, Math.floor(r * 0.3)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(g * 0.3)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(b * 0.3)).toString(16).padStart(2, '0')}`
 }

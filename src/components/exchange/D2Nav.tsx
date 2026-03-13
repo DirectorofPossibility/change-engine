@@ -169,7 +169,7 @@ export function D2Nav() {
             </div>
             <Link
               href="/compass"
-              className="hidden md:block font-mono text-xs uppercase tracking-wide bg-clay text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
+              className="hidden md:block font-mono text-xs uppercase tracking-wide bg-ink text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
               style={{ fontWeight: 600, letterSpacing: '0.08em', fontSize: '0.7rem' }}
             >
               {t('nav.find_my_way')}
@@ -344,7 +344,7 @@ export function D2Nav() {
               <div className="pt-3">
                 <Link
                   href="/me"
-                  className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-clay text-white font-mono uppercase hover:opacity-90 transition-opacity"
+                  className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-ink text-white font-mono uppercase hover:opacity-90 transition-opacity"
                   style={{ fontWeight: 600, letterSpacing: '0.08em', fontSize: '0.7rem' }}
                   onClick={closeDrawer}
                 >

@@ -247,81 +247,87 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ── HERO SECTION ── */}
-      <section className="bg-paper">
-        {/* Top color bar */}
+      {/* ── RESOURCE MASTHEAD — white, with type pill + geo mark ── */}
+      <section className="bg-white border-b-2 border-ink">
+        {/* Top color accent */}
         <div style={{ height: 3, background: themeColor }} />
 
         <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
           {/* Breadcrumb */}
-          <nav className="mb-5" style={{ fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: "#5c6474" }}>
-            <Link href="/explore" className="hover:text-[#1b5e8a] transition-colors">The Exchange</Link>
+          <nav className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim mb-5">
+            <Link href="/guide" className="hover:text-blue transition-colors">Guide</Link>
             {themeEntry && (
               <>
-                <span className="mx-1.5">/</span>
-                <Link href={'/explore/pathway/' + (themeSlug || '')} className="hover:text-[#1b5e8a] transition-colors">{themeEntry.name}</Link>
+                <span className="mx-1.5 text-faint">&rsaquo;</span>
+                <Link href={'/pathways/' + (themeSlug || '')} className="hover:text-blue transition-colors">{themeEntry.name}</Link>
               </>
             )}
             {(item as any).content_type && (
               <>
-                <span className="mx-1.5">/</span>
-                <span>{(item as any).content_type}</span>
+                <span className="mx-1.5 text-faint">&rsaquo;</span>
+                <span className="text-blue">{(item as any).content_type}</span>
               </>
             )}
           </nav>
 
-          {/* Content type label + translation indicator */}
+          {/* Type pill + geo mark row */}
           <div className="flex items-center gap-3 mb-4">
+            {/* Geo mark */}
+            <FlowerOfLife size={28} color={themeColor} opacity={0.5} className="flex-shrink-0" />
+
+            {/* Type pill */}
             {(item as any).content_type && (
-              <span style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>
+              <span
+                className="font-mono text-[0.6rem] uppercase tracking-[0.14em] px-3 py-1"
+                style={{ color: themeColor, border: `1.5px solid ${themeColor}` }}
+              >
                 {(item as any).content_type}
-                {item.pathway_primary && themeEntry && (
-                  <span style={{ color: "#1b5e8a" }}> &middot; {themeEntry.name}</span>
-                )}
               </span>
             )}
+
+            {/* Theme name */}
+            {themeEntry && (
+              <span className="font-mono text-[0.6875rem] uppercase tracking-[0.1em]" style={{ color: themeColor }}>
+                {themeEntry.name}
+              </span>
+            )}
+
+            {/* Translation indicator */}
             {isTranslated && (
-              <span className="relative flex items-center gap-1" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#1b5e8a" }}>
+              <span className="relative flex items-center gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-blue">
                 <Globe size={11} /> {t('content.translated')}
                 <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
               </span>
             )}
           </div>
 
-          {/* Theme indicators as colored dots */}
-          {themeEntry && (
-            <div className="flex items-center gap-2 mb-4">
-              <span style={{ width: 8, height: 8, background: themeColor, display: 'inline-block' }} />
-              <span style={{ fontSize: '0.6875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: themeColor }}>{themeEntry.name}</span>
-            </div>
-          )}
-
           {/* Title */}
-          <h1 style={{
-                        fontSize: 'clamp(26px, 4vw, 44px)',
-            fontWeight: 400,
-            lineHeight: 1.15,
-                        marginBottom: summary ? '0.75rem' : '1rem',
-          }}>
+          <h1
+            className="font-display font-black leading-[1.1] tracking-[-0.02em] text-ink"
+            style={{
+              fontSize: 'clamp(26px, 4vw, 42px)',
+              marginBottom: summary ? '0.75rem' : '1rem',
+            }}
+          >
             {title}
           </h1>
 
-          {/* Summary */}
+          {/* Summary / deck */}
           {summary && (
-            <p style={{
-                            fontStyle: 'italic',
-              fontSize: 'clamp(15px, 2vw, 19px)',
-              lineHeight: 1.6,
-              color: "#5c6474",
-              marginBottom: '1rem',
-              maxWidth: 740,
-            }}>
+            <p
+              className="font-body italic leading-[1.7] max-w-[700px]"
+              style={{
+                fontSize: 'clamp(15px, 2vw, 18px)',
+                color: '#5c6474',
+                marginBottom: '1rem',
+              }}
+            >
               {summary}
             </p>
           )}
 
           {/* Metadata strip */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1" style={{ fontSize: '0.6875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#5c6474" }}>
+          <div className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim flex flex-wrap items-center gap-x-3 gap-y-1">
             {item.published_at && (
               <span>{new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             )}
@@ -344,7 +350,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
           {/* Hero image */}
           {item.image_url && (
-            <div className="mt-6" style={{ border: '1px solid #dde1e8' }}>
+            <div className="mt-6" style={{ border: '1.5px solid #dde1e8' }}>
               <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
             </div>
           )}
@@ -540,9 +546,29 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* ── RIGHT COLUMN: Sidebar ── */}
             <aside className="w-full lg:w-[340px] flex-shrink-0 space-y-5">
 
+              {/* Trail Position */}
+              <div className="p-5" style={{ background: '#f4f5f7', border: '1.5px solid #dde1e8' }}>
+                <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-dim block mb-3">Trail Position</span>
+                <div className="flex items-center gap-2 mb-3">
+                  {[1,2,3,4,5].map(function (n) {
+                    const isActive = n <= ((item as any).trail_level || 1)
+                    return (
+                      <span
+                        key={n}
+                        className="w-[6px] h-[6px]"
+                        style={{ background: isActive ? themeColor : '#dde1e8' }}
+                      />
+                    )
+                  })}
+                  <span className="font-mono text-[0.6rem] text-faint ml-1">
+                    Level {(item as any).trail_level || 1} of 5
+                  </span>
+                </div>
+              </div>
+
               {/* At a Glance */}
-              <div className="p-5" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
-                <p className="mb-3" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.at_a_glance')}</p>
+              <div className="p-5" style={{ background: '#f4f5f7', border: '1.5px solid #dde1e8' }}>
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-dim mb-3">{t('content.at_a_glance')}</p>
                 <div className="space-y-2.5">
                   {orgInfo && (
                     <div className="flex items-center justify-between text-sm">
@@ -637,11 +663,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         </div>
       </section>
 
-      {/* ── RELATED CONTENT ── */}
+      {/* ── RELATED CONTENT — dog-ear cards ── */}
       {related && related.length > 0 && (
-        <section className="bg-paper">
+        <section className="bg-paper border-t-2 border-ink">
           <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
-            <p className="mb-5" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>Related</p>
+            <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-dim block mb-1">Related</span>
+            <h2 className="font-display text-[1.5rem] font-bold tracking-[-0.015em] mb-6">More to explore</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {related.map(function (r: any) {
                 const rTheme = r.pathway_primary ? (THEMES as Record<string, { name: string; color: string }>)[r.pathway_primary] : null
@@ -650,11 +677,20 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   <Link
                     key={r.id}
                     href={'/content/' + r.id}
-                    className="block group transition-colors"
-                    style={{ background: '#ffffff', border: '1px solid #dde1e8' }}
+                    className="block group relative transition-colors hover:bg-paper"
+                    style={{ background: '#ffffff', border: '1.5px solid #dde1e8' }}
                   >
+                    {/* Dog-ear triangle */}
+                    <span
+                      className="absolute top-0 right-0 w-0 h-0 pointer-events-none"
+                      style={{
+                        borderStyle: 'solid',
+                        borderWidth: '0 14px 14px 0',
+                        borderColor: 'transparent #dde1e8 transparent transparent',
+                      }}
+                    />
                     {r.image_url ? (
-                      <div className="w-full h-36 overflow-hidden" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
+                      <div className="w-full h-36 overflow-hidden" style={{ borderBottom: '1.5px solid #dde1e8' }}>
                         <img src={r.image_url} alt="" className="w-full h-full object-cover" />
                       </div>
                     ) : (
@@ -662,13 +698,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     )}
                     <div className="p-4">
                       {rTheme && (
-                        <span className="block mb-1.5" style={{ fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: rColor }}>{rTheme.name}</span>
+                        <span className="font-mono text-[0.55rem] uppercase tracking-[0.14em] text-dim block mb-1.5">{rTheme.name}</span>
                       )}
-                      <span className="block group-hover:underline" style={{ fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600 }}>
+                      <span className="font-display text-[0.85rem] font-bold leading-[1.3] block group-hover:underline mb-1">
                         {r.title_6th_grade}
                       </span>
                       {r.summary_6th_grade && (
-                        <span className="block mt-1.5 line-clamp-2" style={{ fontSize: '0.8rem', lineHeight: 1.5, color: "#5c6474" }}>
+                        <span className="font-body text-[0.78rem] text-dim leading-relaxed block line-clamp-2">
                           {r.summary_6th_grade}
                         </span>
                       )}
