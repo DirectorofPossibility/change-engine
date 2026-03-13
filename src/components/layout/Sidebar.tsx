@@ -9,7 +9,7 @@ import {
   Languages, Wrench, Users, BookOpen, HelpCircle,
   Briefcase, CalendarDays, Building2, Globe,
   Compass, BookMarked, Quote, Library,
-  ChevronDown, Scale, Megaphone,
+  ChevronDown, Scale, Megaphone, MapPin,
   Tag, Network, Linkedin, CircleDot, Map,
   Layers, Activity, SlidersHorizontal,
 } from 'lucide-react'
@@ -87,6 +87,7 @@ const ADMIN_GROUPS: NavGroup[] = [
     items: [
       { href: '/dashboard/tools-guides', label: 'Tools & Guides', icon: BookMarked },
       { href: '/dashboard/manual', label: 'User Manual', icon: HelpCircle },
+      { href: '/dashboard/sitemap', label: 'Sitemap & Wireframe', icon: MapPin },
     ],
   },
 ]
