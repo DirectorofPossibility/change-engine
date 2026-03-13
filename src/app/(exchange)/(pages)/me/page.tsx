@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { RoleRequestCard } from '@/components/exchange/RoleRequestCard'
 import { SubmissionTracker } from '@/components/exchange/SubmissionTracker'
 import { SpiralProgress } from '@/components/exchange/SpiralProgress'
+import { RedoOnboarding } from '@/components/exchange/RedoOnboarding'
 
 export const dynamic = 'force-dynamic'
 
@@ -176,6 +177,9 @@ export default async function MyDashboardPage() {
                     Go to Dashboard
                   </Link>
                 )}
+              </div>
+              <div className="mt-3">
+                <RedoOnboarding />
               </div>
             </div>
           </div>

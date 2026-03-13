@@ -44,19 +44,19 @@ export function ServiceCard({ serviceId, name, orgName, orgId, description, phon
   const displayDesc = translatedDescription || description
 
   const card = (
-    <div className="bg-white border border-brand-border p-5 hover:border-ink transition-shadow h-full">
-      <h3 className="font-semibold text-brand-text mb-1 line-clamp-2">{displayName}</h3>
+    <div className="bg-white border border-rule p-5 hover:border-ink transition-colors h-full">
+      <h3 className="font-semibold text-ink mb-1 line-clamp-2">{displayName}</h3>
       {orgName && orgId ? (
-        <Link href={'/organizations/' + orgId} className="text-xs text-brand-accent hover:underline mb-2 block" onClick={function (e) { e.stopPropagation() }}>
+        <Link href={'/organizations/' + orgId} className="text-xs text-blue hover:underline mb-2 block" onClick={function (e) { e.stopPropagation() }}>
           {orgName}
         </Link>
       ) : orgName ? (
-        <p className="text-xs text-brand-muted mb-2">{orgName}</p>
+        <p className="text-xs text-muted mb-2">{orgName}</p>
       ) : null}
-      {displayDesc && <p className="text-sm text-brand-muted mb-3 line-clamp-2">{displayDesc}</p>}
+      {displayDesc && <p className="text-sm text-muted mb-3 line-clamp-2">{displayDesc}</p>}
       <div className="space-y-1.5">
         {phone && (
-          <a href={`tel:${phone}`} className="flex items-center gap-2 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={`tel:${phone}`} className="flex items-center gap-2 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Phone size={14} /> {phone}
           </a>
         )}
@@ -65,14 +65,14 @@ export function ServiceCard({ serviceId, name, orgName, orgId, description, phon
             href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-xs text-brand-accent hover:underline"
+            className="flex items-center gap-2 text-xs text-blue hover:underline"
             onClick={function (e) { e.stopPropagation() }}
           >
             <MapPin size={14} className="shrink-0" /> {fullAddress}
           </a>
         )}
         {website && (
-          <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Globe size={14} /> {t('card.website')}
           </a>
         )}

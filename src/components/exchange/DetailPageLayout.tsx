@@ -114,7 +114,7 @@ export function DetailPageLayout({
         borderTop: mastheadBorderTop || 'none',
         borderLeft: mastheadBorderLeft || 'none',
       }}>
-        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+        <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
           {breadcrumbs && breadcrumbs.length > 0 && (
             <div className="mb-4">
               <Breadcrumb items={breadcrumbs} />
@@ -180,12 +180,12 @@ export function DetailPageLayout({
       </header>
 
       {/* ── Thin color rule — editorial section divider ── */}
-      <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8">
         <div style={{ height: 2, background: themeColor, opacity: 0.3 }} />
       </div>
 
       {/* ── BODY ── */}
-      <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Main content — single column, readable width */}
         <div className="mb-10">
           {children}

@@ -435,6 +435,56 @@ aside .text-\[11px\] {
   }
 }
 
+/* ─────────────────────────────────────────────
+   PRINT STYLES — Clean output for civic content
+   ───────────────────────────────────────────── */
+
+@media print {
+  /* Hide chrome */
+  nav.sticky,
+  .ticker-banner,
+  aside,
+  footer,
+  [role="dialog"],
+  button[aria-label="Back to top"],
+  button[aria-label="Open menu"] {
+    display: none !important;
+  }
+
+  /* Full-width content */
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+
+  main {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Show link URLs */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+
+  /* Avoid page breaks inside cards */
+  .card-lift, article, section {
+    break-inside: avoid;
+  }
+
+  /* Remove decorative elements */
+  .spectrum-bar,
+  .theme-gradient-bar,
+  .animate-fade-up,
+  .animate-pulse {
+    display: none !important;
+  }
+}
+
+
 /* Skip link */
 .sr-only:focus {
   position: fixed;

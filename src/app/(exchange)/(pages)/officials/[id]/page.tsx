@@ -8,12 +8,15 @@ import { Mail, Phone, Globe, MapPin, Calendar, Linkedin } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
+import { getRelatedServices } from '@/lib/data/services'
 import { getUserProfile } from '@/lib/auth/roles'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { OfficialDistrictMap } from './OfficialDistrictMap'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import Image from 'next/image'
 import { personJsonLd } from '@/lib/jsonld'
 
@@ -113,7 +116,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   const pIds = (policies || []).map(function (p) { return p.policy_id })
 
-  const [districtZipResult, translationResults, wayfinderData, quote] = await Promise.all([
+  const [districtZipResult, translationResults, wayfinderData, quote, relatedServicesResult] = await Promise.all([
     districtZipColumn && official.district_id
       ? supabase.from('zip_codes').select('zip_code').eq(districtZipColumn, official.district_id).limit(50)
       : Promise.resolve({ data: [] as any[] }),
@@ -125,8 +128,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       : Promise.resolve([{}, {}] as [Record<string, any>, Record<string, any>]),
     getWayfinderContext('official', id, userProfile?.role),
     getRandomQuote(),
+    focusAreaIds.length > 0 ? getRelatedServices(focusAreaIds) : Promise.resolve([]),
   ])
 
+  const relatedServices = relatedServicesResult.slice(0, 4)
   const districtZips = (districtZipResult.data ?? []).map((z: any) => z.zip_code)
 
   const related = (wayfinderData.content ?? []).slice(0, 4).map(c => ({
@@ -154,91 +159,87 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   const jsonLd = personJsonLd({ ...official, photo_url: profile?.photo_url || null, bio_short: profile?.bio_short || null } as any)
 
-  return (
-    <div className="bg-paper min-h-screen">
-      <SpiralTracker action="view_official" />
-      {jsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+  const subtitleParts = [displayTitle, official.jurisdiction].filter(Boolean)
+
+  const eyebrowMetaItems = (
+    <div className="flex flex-wrap items-center gap-3">
+      {official.party && (
+        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+          {official.party}
+        </span>
       )}
+      {official.term_end && (
+        <span className="flex items-center gap-1 font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+          <Calendar size={12} /> {t('official.term_ends')} {new Date(official.term_end).toLocaleDateString()}
+        </span>
+      )}
+      {official.district_id && (
+        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+          District {official.district_id}
+        </span>
+      )}
+    </div>
+  )
 
-      {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
-        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
-            The Change Engine
-          </p>
-          <div className="flex items-start gap-6 mt-4">
-            {photoUrl && (
-              <Image
-                src={photoUrl}
-                alt={official.official_name}
-                className="object-cover flex-shrink-0"
-                style={{ border: '1px solid #dde1e8' }}
-                width={120}
-                height={120}
-              />
-            )}
-            <div>
-              <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15 }}>
-                {official.official_name}
-              </h1>
-              {(displayTitle || official.jurisdiction) && (
-                <p style={{ fontSize: '1.05rem', color: "#5c6474", marginTop: '0.5rem' }}>
-                  {[displayTitle, official.jurisdiction].filter(Boolean).join(', ')}
-                </p>
-              )}
-              <div className="flex flex-wrap gap-4 mt-4">
-                {official.party && (
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
-                    {official.party}
-                  </span>
-                )}
-                {official.level && (
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
-                    {official.level}
-                  </span>
-                )}
-                {official.term_end && (
-                  <span className="flex items-center gap-1" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
-                    <Calendar size={12} /> {t('official.term_ends')} {new Date(official.term_end).toLocaleDateString()}
-                  </span>
-                )}
-                {official.district_id && (
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
-                    District {official.district_id}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  const heroImageNode = photoUrl ? (
+    <Image
+      src={photoUrl}
+      alt={official.official_name}
+      className="object-cover flex-shrink-0 border border-rule"
+      width={120}
+      height={120}
+    />
+  ) : undefined
 
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/officials" className="hover:underline" style={{ color: "#1b5e8a" }}>Officials</Link>
-          <span className="mx-2">/</span>
-          <span>{official.official_name}</span>
-        </nav>
-      </div>
+  const footerNode = (
+    <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div className="mb-6 h-px bg-rule" />
+      <Link href="/officials" className="italic text-blue text-[0.95rem] hover:underline">
+        Back to Officials
+      </Link>
+    </div>
+  )
 
-      {/* Main content */}
-      <div className="max-w-[900px] mx-auto px-6 py-8">
+  return (
+    <>
+      <DetailPageLayout
+        bgColor="#ffffff"
+        breadcrumbs={[
+          { label: 'Officials', href: '/officials' },
+          { label: official.official_name },
+        ]}
+        eyebrow={official.level ? { text: official.level } : undefined}
+        eyebrowMeta={eyebrowMetaItems}
+        title={official.official_name}
+        subtitle={subtitleParts.length > 0 ? subtitleParts.join(', ') : null}
+        heroImage={heroImageNode}
+        themeColor="#1b5e8a"
+        wayfinderData={wayfinderData}
+        wayfinderType="official"
+        wayfinderEntityId={id}
+        userRole={userProfile?.role}
+        feedbackType="official"
+        feedbackId={official.official_id}
+        feedbackName={official.official_name}
+        jsonLd={jsonLd || undefined}
+        footer={footerNode}
+        sidebar={
+          <>
+            <FeaturedPromo variant="card" />
+            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor="#1b5e8a" />}
+          </>
+        }
+      >
+        <SpiralTracker action="view_official" />
 
         {/* About */}
         {bio && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.about')}</h2>
+              <h2 className="text-2xl">{t('detail.about')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            <p className="text-[0.95rem] leading-relaxed">
               {bio}
             </p>
           </section>
@@ -247,44 +248,44 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {/* Contact */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.contact')}</h2>
+            <h2 className="text-2xl">{t('detail.contact')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+          <div className="h-px border-b border-dotted border-rule mb-4" />
           <div className="space-y-3">
             {(profile?.phone_office || official.office_phone) && (
-              <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
+              <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-2 text-[0.9rem] text-blue hover:underline">
                 <Phone size={15} /> {profile?.phone_office || official.office_phone}
               </a>
             )}
             {official.email && (
-              <a href={'mailto:' + official.email} className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
+              <a href={'mailto:' + official.email} className="flex items-center gap-2 text-[0.9rem] text-blue hover:underline">
                 <Mail size={15} /> {official.email}
               </a>
             )}
             {official.website && (
-              <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
+              <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[0.9rem] text-blue hover:underline">
                 <Globe size={15} /> {t('detail.website')}
               </a>
             )}
             {profile?.social_linkedin && (
-              <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
+              <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[0.9rem] text-blue hover:underline">
                 <Linkedin size={15} /> {t('official.linkedin')}
               </a>
             )}
             {profile?.address_office && (
-              <div className="flex items-start gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
+              <div className="flex items-start gap-2 text-[0.9rem] text-muted">
                 <MapPin size={15} className="shrink-0 mt-0.5" />
                 <div>
-                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.office')}</span>
+                  <span className="block font-mono text-[0.6875rem] uppercase tracking-wider text-muted">{t('official.office')}</span>
                   {profile.address_office}
                 </div>
               </div>
             )}
             {profile?.address_district && (
-              <div className="flex items-start gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
+              <div className="flex items-start gap-2 text-[0.9rem] text-muted">
                 <MapPin size={15} className="shrink-0 mt-0.5" />
                 <div>
-                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.district_office')}</span>
+                  <span className="block font-mono text-[0.6875rem] uppercase tracking-wider text-muted">{t('official.district_office')}</span>
                   {profile.address_district}
                 </div>
               </div>
@@ -296,14 +297,14 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {counties.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.counties')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{counties.length}</span>
+              <h2 className="text-2xl">{t('official.counties')}</h2>
+              <span className="text-xs text-muted">{counties.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             <div className="space-y-1">
               {counties.map(function (c) {
                 return (
-                  <p key={c.county_id} style={{ fontSize: '0.9rem',  }}>{c.county_name}</p>
+                  <p key={c.county_id} className="text-[0.9rem]">{c.county_name}</p>
                 )
               })}
             </div>
@@ -314,32 +315,32 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {(official.district_type || official.district_id) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.district')}</h2>
+              <h2 className="text-2xl">{t('official.district')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             <div className="flex items-center gap-6 mb-3">
               {official.district_type && (
                 <div>
-                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.type')}</span>
-                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{official.district_type}</p>
+                  <span className="block font-mono text-[0.6875rem] uppercase tracking-wider text-muted">{t('official.type')}</span>
+                  <p className="text-[0.9rem] font-semibold">{official.district_type}</p>
                 </div>
               )}
               {official.district_id && (
                 <div>
-                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.id')}</span>
-                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{official.district_id}</p>
+                  <span className="block font-mono text-[0.6875rem] uppercase tracking-wider text-muted">{t('official.id')}</span>
+                  <p className="text-[0.9rem] font-semibold">{official.district_id}</p>
                 </div>
               )}
             </div>
             {districtZips.length > 0 && (
               <div>
-                <span className="flex items-center gap-1 mb-2" style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>
+                <span className="flex items-center gap-1 mb-2 font-mono text-[0.6875rem] uppercase tracking-wider text-muted">
                   <MapPin size={11} /> {t('official.zip_codes')}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {districtZips.map(function (z) {
                     return (
-                      <span key={z} style={{ fontSize: '0.7rem', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }}>
+                      <span key={z} className="text-xs text-muted border border-rule px-2 py-0.5">
                         {String(z).padStart(5, '0')}
                       </span>
                     )
@@ -352,26 +353,26 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
         {/* District Map */}
         {(official.district_type || official.district_id) && (
-          <div className="mb-10" style={{ border: '1px solid #dde1e8' }}>
+          <div className="mb-10 border border-rule">
             <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
           </div>
         )}
 
-        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
+        <div className="my-10 h-px bg-rule" />
 
         {/* Focus Areas */}
         {focusAreas.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.focus_areas')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{focusAreas.length}</span>
+              <h2 className="text-2xl">{t('official.focus_areas')}</h2>
+              <span className="text-xs text-muted">{focusAreas.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             <div>
               {focusAreas.map(function (fa, i) {
                 const dotColor = FOCUS_DOT_COLORS[i % FOCUS_DOT_COLORS.length]
                 return (
-                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 hover:underline" style={{ fontSize: '0.9rem',  }}>
+                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 text-[0.9rem] hover:underline">
                     <span className="w-2 h-2 flex-shrink-0" style={{ background: dotColor }} />
                     <span>{fa.focus_area_name}</span>
                   </Link>
@@ -385,22 +386,22 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {committeeList.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.committees')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{committeeList.length}</span>
+              <h2 className="text-2xl">{t('official.committees')}</h2>
+              <span className="text-xs text-muted">{committeeList.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             {committeeList.slice(0, 4).map(function (c, i) {
               return (
-                <div key={i} className="py-3" style={{ borderBottom: i < Math.min(committeeList.length, 4) - 1 ? '1px solid ' + '#dde1e8' : 'none' }}>
+                <div key={i} className={`py-3 ${i < Math.min(committeeList.length, 4) - 1 ? 'border-b border-rule' : ''}`}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{c.committee_name}</p>
+                      <p className="text-[0.9rem] font-semibold">{c.committee_name}</p>
                       {c.chamber && (
-                        <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{c.chamber}</span>
+                        <span className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted">{c.chamber}</span>
                       )}
                     </div>
                     {c.role && (
-                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0d1117', color: '#fff', padding: '2px 8px' }}>
+                      <span className="font-mono text-[0.6875rem] uppercase tracking-wider bg-ink text-white px-2 py-0.5">
                         {c.role}
                       </span>
                     )}
@@ -410,21 +411,21 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
             })}
             {committeeList.length > 4 && (
               <details className="mt-2">
-                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary className="italic text-blue text-[0.9rem] cursor-pointer">
                   See {committeeList.length - 4} more committees
                 </summary>
                 {committeeList.slice(4).map(function (c, i) {
                   return (
-                    <div key={i + 4} className="py-3" style={{ borderBottom: i < committeeList.length - 5 ? '1px solid ' + '#dde1e8' : 'none' }}>
+                    <div key={i + 4} className={`py-3 ${i < committeeList.length - 5 ? 'border-b border-rule' : ''}`}>
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{c.committee_name}</p>
+                          <p className="text-[0.9rem] font-semibold">{c.committee_name}</p>
                           {c.chamber && (
-                            <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{c.chamber}</span>
+                            <span className="font-mono text-[0.6875rem] uppercase tracking-wider text-muted">{c.chamber}</span>
                           )}
                         </div>
                         {c.role && (
-                          <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0d1117', color: '#fff', padding: '2px 8px' }}>
+                          <span className="font-mono text-[0.6875rem] uppercase tracking-wider bg-ink text-white px-2 py-0.5">
                             {c.role}
                           </span>
                         )}
@@ -441,24 +442,24 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {voteList.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.recent_votes')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{voteList.length}</span>
+              <h2 className="text-2xl">{t('official.recent_votes')}</h2>
+              <span className="text-xs text-muted">{voteList.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             {voteList.slice(0, 4).map(function (v, i) {
               const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : '#5c6474'
               const inner = (
-                <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < Math.min(voteList.length, 4) - 1 ? '1px solid ' + '#dde1e8' : 'none' }}>
+                <div className={`flex items-center justify-between gap-3 py-3 ${i < Math.min(voteList.length, 4) - 1 ? 'border-b border-rule' : ''}`}>
                   <div className="min-w-0">
-                    <p className="truncate" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>
+                    <p className="truncate text-[0.9rem] font-semibold">
                       {v.bill_number || t('official.vote')}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      {v.chamber && <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', color: "#5c6474" }}>{v.chamber}</span>}
-                      {v.vote_date && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                      {v.chamber && <span className="font-mono text-[0.6875rem] uppercase text-muted">{v.chamber}</span>}
+                      {v.vote_date && <span className="text-[0.6875rem] text-muted">{new Date(v.vote_date).toLocaleDateString()}</span>}
                     </div>
                   </div>
-                  <span className="flex-shrink-0" style={{ fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>
+                  <span className="flex-shrink-0 text-xs uppercase font-bold" style={{ color: voteColor }}>
                     {v.vote}
                   </span>
                 </div>
@@ -471,21 +472,21 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
             })}
             {voteList.length > 4 && (
               <details className="mt-2">
-                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary className="italic text-blue text-[0.9rem] cursor-pointer">
                   See {voteList.length - 4} more votes
                 </summary>
                 {voteList.slice(4).map(function (v, i) {
                   const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : '#5c6474'
                   const inner = (
-                    <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < voteList.length - 5 ? '1px solid ' + '#dde1e8' : 'none' }}>
+                    <div className={`flex items-center justify-between gap-3 py-3 ${i < voteList.length - 5 ? 'border-b border-rule' : ''}`}>
                       <div className="min-w-0">
-                        <p className="truncate" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{v.bill_number || t('official.vote')}</p>
+                        <p className="truncate text-[0.9rem] font-semibold">{v.bill_number || t('official.vote')}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          {v.chamber && <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', color: "#5c6474" }}>{v.chamber}</span>}
-                          {v.vote_date && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                          {v.chamber && <span className="font-mono text-[0.6875rem] uppercase text-muted">{v.chamber}</span>}
+                          {v.vote_date && <span className="text-[0.6875rem] text-muted">{new Date(v.vote_date).toLocaleDateString()}</span>}
                         </div>
                       </div>
-                      <span className="flex-shrink-0" style={{ fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>{v.vote}</span>
+                      <span className="flex-shrink-0 text-xs uppercase font-bold" style={{ color: voteColor }}>{v.vote}</span>
                     </div>
                   )
                   return v.policy_id ? (
@@ -499,17 +500,17 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           </section>
         )}
 
-        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
+        <div className="my-10 h-px bg-rule" />
 
         {/* Policies */}
         {policies && policies.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.policies')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{policies.length}</span>
+              <h2 className="text-2xl">{t('official.policies')}</h2>
+              <span className="text-xs text-muted">{policies.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1px solid ' + '#dde1e8', borderTop: '1px solid #dde1e8' }}>
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 border-l border-t border-rule">
               {policies.map(function (p) {
                 const pt = policyTranslations[p.policy_id]
                 return (
@@ -532,6 +533,27 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           </section>
         )}
 
+        {/* Related Services */}
+        {relatedServices.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 className="text-2xl">Related Services</h2>
+              <span className="font-mono text-micro uppercase tracking-wider text-muted">{relatedServices.length}</span>
+            </div>
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            {relatedServices.map(function (svc: any) {
+              return (
+                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
+                  <h4 className="text-[0.9rem] font-semibold line-clamp-2">{svc.service_name}</h4>
+                  {svc.description_5th_grade && (
+                    <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
+                  )}
+                </Link>
+              )
+            })}
+          </section>
+        )}
+
         {/* Related Content */}
         {related.length > 0 && (
           <section className="mb-10">
@@ -539,19 +561,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           </section>
         )}
 
-        {/* Quote */}
-        {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
-      <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/officials" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
-          Back to Officials
-        </Link>
-      </div>
+      </DetailPageLayout>
 
       <AdminEditPanel
         entityType="elected_officials"
@@ -570,6 +580,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           { key: 'government_level', label: 'Government Level', type: 'select', value: (official as any).government_level, options: ['federal', 'state', 'county', 'city'] },
         ] as EditField[]}
       />
-    </div>
+    </>
   )
 }

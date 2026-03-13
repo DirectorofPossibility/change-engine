@@ -764,7 +764,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
 
           {/* Stats summary */}
           {totalStats > 0 && (
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
               {[
                 { key: 'civic', label: 'Civic Action', emoji: '🏛' },
                 { key: 'community', label: 'Community', emoji: '🤝' },

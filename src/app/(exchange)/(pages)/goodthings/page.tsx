@@ -19,21 +19,21 @@ export default function GoodThingsPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-20">
-          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
+          <p className="text-blue uppercase" style={{ fontSize: 11, letterSpacing: '0.12em' }}>
             The Change Engine
           </p>
           <h1 className="mt-4" style={{ fontSize: 40, lineHeight: 1.1,  }}>
             Three Good Things
           </h1>
-          <p className="mt-4 max-w-[560px]" style={{ fontSize: 17, lineHeight: 1.7, color: "#5c6474" }}>
+          <p className="mt-4 max-w-[560px] text-muted" style={{ fontSize: 17, lineHeight: 1.7 }}>
             Every day. Real stories from Houston. Because the news isn't only bad.
           </p>
         </div>
-        <div style={{ height: 1, background: '#dde1e8' }} />
+        <div className="h-px bg-rule" />
       </div>
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: 11, letterSpacing: '0.06em', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
+        <nav className="text-muted" style={{ fontSize: 11, letterSpacing: '0.06em' }}>
+          <Link href="/" className="hover:underline text-blue">Home</Link>
           <span className="mx-2">/</span>
           <span>Three Good Things</span>
         </nav>
@@ -42,9 +42,9 @@ export default function GoodThingsPage() {
         <GoodThingsClient />
       </div>
       <div className="max-w-[900px] mx-auto px-6">
-        <div style={{ height: 1, background: '#dde1e8' }} />
+        <div className="h-px bg-rule" />
         <div className="py-8">
-          <Link href="/" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline italic text-muted" style={{ fontSize: 13 }}>
             &larr; Back to Home
           </Link>
         </div>

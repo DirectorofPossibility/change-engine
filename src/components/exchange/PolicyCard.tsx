@@ -48,7 +48,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
 
   return (
     <div
-      className="bg-white border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:border-ink transition-all duration-200 group"
+      className="bg-white border border-rule overflow-hidden hover:-translate-y-0.5 hover:border-ink transition-all duration-200 group"
       style={{ ...(onSelect ? { cursor: 'pointer' } : {}) }}
       {...(onSelect ? { role: 'button', tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent<HTMLDivElement>) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } } } : {})}
     >
@@ -59,7 +59,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
         {/* Top row: bill number + status + recency */}
         <div className="flex items-center gap-2 mb-2">
           {billNumber && (
-            <span className="text-[11px] font-mono font-medium text-brand-muted bg-brand-bg px-1.5 py-0.5 rounded">{billNumber}</span>
+            <span className="text-[11px] font-mono font-medium text-muted bg-paper px-1.5 py-0.5 rounded">{billNumber}</span>
           )}
           {status && (
             <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: statusDotColor(status) }}>
@@ -68,16 +68,16 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
             </span>
           )}
           {recency && (
-            <span className="ml-auto text-[10px] font-mono font-bold text-brand-accent bg-brand-accent/10 px-1.5 py-0.5 rounded">
+            <span className="ml-auto text-[10px] font-mono font-bold text-blue bg-blue/10 px-1.5 py-0.5 rounded">
               {recency}
             </span>
           )}
         </div>
 
-        <h4 className="font-bold text-brand-text text-sm mb-1.5 line-clamp-2 leading-snug group-hover:text-brand-accent transition-colors">{displayName}</h4>
+        <h4 className="font-bold text-ink text-sm mb-1.5 line-clamp-2 leading-snug group-hover:text-blue transition-colors">{displayName}</h4>
 
         {displaySummary && (
-          <p className="text-xs text-brand-muted mb-2 line-clamp-2 leading-relaxed">{displaySummary}</p>
+          <p className="text-xs text-muted mb-2 line-clamp-2 leading-relaxed">{displaySummary}</p>
         )}
 
         {impactPreview && (
@@ -94,7 +94,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
           <div className="flex items-center gap-3">
             <Link
               href="/officials/lookup"
-              className="text-xs text-brand-muted hover:text-brand-accent hover:underline font-medium"
+              className="text-xs text-muted hover:text-blue hover:underline font-medium"
               onClick={function (e) { e.stopPropagation() }}
             >
               {t('card.contact_rep') || 'Contact your rep'}
@@ -104,7 +104,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
                 href={sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-brand-accent hover:underline font-medium"
+                className="text-xs text-blue hover:underline font-medium"
                 onClick={function (e) { e.stopPropagation() }}
               >
                 {t('card.view_source')} &rarr;

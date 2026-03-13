@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { getUIStrings } from '@/lib/i18n'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
@@ -10,7 +9,9 @@ import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { getLangId, fetchTranslationsForTable, getPolicyFocusAreas, getPolicyGeography, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import { getRelatedServices } from '@/lib/data/services'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { PolicyImpactSection } from '@/components/exchange/PolicyImpactSection'
@@ -19,6 +20,7 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { policyJsonLd } from '@/lib/jsonld'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 
 function statusColor(status: string | null): { dotColor: string; textColor: string } {
@@ -121,107 +123,123 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
   }
 
   const userProfile = await getUserProfile()
-  const [wayfinderData, quote] = await Promise.all([
+  const focusAreaIds = focusAreas.map(fa => fa.focus_id)
+  const [wayfinderData, quote, relatedServices] = await Promise.all([
     getWayfinderContext('policy', id, userProfile?.role),
     getRandomQuote(),
+    focusAreaIds.length > 0 ? getRelatedServices(focusAreaIds) : Promise.resolve([]),
   ])
 
+  const displayRelatedServices = relatedServices.slice(0, 4)
   const jsonLd = policyJsonLd(policy as any)
 
-  return (
-    <div className="bg-paper min-h-screen">
-      <SpiralTracker action="view_policy" />
-      {jsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+  const levelColor = LEVEL_COLORS[policy.level || ''] || DEFAULT_LEVEL_COLOR
+
+  /* Eyebrow: level pill */
+  const eyebrow = policy.level
+    ? { text: policy.level, bgColor: levelColor, textColor: '#ffffff' }
+    : undefined
+
+  /* Eyebrow meta: type + status */
+  const eyebrowMeta = (
+    <span className="inline-flex items-center gap-3">
+      {policy.policy_type && (
+        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">{policy.policy_type}</span>
       )}
+      {policy.status && (
+        <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
+          <span className="inline-block shrink-0" style={{ width: 7, height: 7, background: sc.dotColor }} />
+          <span className="font-mono text-[0.65rem] uppercase tracking-wider">{policy.status}</span>
+        </span>
+      )}
+    </span>
+  )
 
-      {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
-        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
-            The Change Engine
-          </p>
-          <div className="flex flex-wrap items-center gap-3 mt-3">
-            {policy.level && (
-              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#5c6474" }}>{policy.level}</span>
-            )}
-            {policy.policy_type && (
-              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#5c6474" }}>{policy.policy_type}</span>
-            )}
-            {policy.status && (
-              <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
-                <span style={{ width: 7, height: 7, background: sc.dotColor, display: 'inline-block', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{policy.status}</span>
-              </span>
-            )}
-          </div>
-          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
-            {displayName}
-          </h1>
-          {displaySummary && (
-            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
-              {displaySummary}
-            </p>
-          )}
-          <div className="flex flex-wrap gap-4 mt-4">
-            {policy.bill_number && (
-              <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{policy.bill_number}</span>
-            )}
-            {policy.source_url && (
-              <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#1b5e8a" }}>
-                <ExternalLink size={10} /> Source
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
+  /* Meta row: bill number + source link */
+  const metaRow = (
+    <span className="inline-flex items-center gap-4">
+      {policy.bill_number && (
+        <span className="text-xs text-muted">{policy.bill_number}</span>
+      )}
+      {policy.source_url && (
+        <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.65rem] uppercase tracking-wider text-blue">
+          <ExternalLink size={10} /> Source
+        </a>
+      )}
+    </span>
+  )
 
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/policies" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('policy.policies')}</Link>
-          <span className="mx-2">/</span>
-          <span>{displayName}</span>
-        </nav>
-      </div>
+  /* Footer: back link */
+  const footerContent = (
+    <div className="max-w-[900px] mx-auto px-6 pb-12">
+      <div className="mb-6 border-t border-rule" />
+      <Link href="/policies" className="italic text-blue text-[0.95rem] hover:underline">
+        Back to Policies
+      </Link>
+    </div>
+  )
 
-      {/* Main content */}
-      <div className="max-w-[900px] mx-auto px-6 py-8">
+  return (
+    <>
+      <DetailPageLayout
+        breadcrumbs={[
+          { label: 'Home', href: '/' },
+          { label: t('policy.policies'), href: '/policies' },
+          { label: displayName },
+        ]}
+        eyebrow={eyebrow}
+        eyebrowMeta={eyebrowMeta}
+        title={displayName}
+        subtitle={displaySummary}
+        metaRow={metaRow}
+        themeColor={levelColor}
+        wayfinderData={wayfinderData}
+        wayfinderType="policy"
+        wayfinderEntityId={id}
+        userRole={userProfile?.role}
+        footer={footerContent}
+        feedbackType="policy"
+        feedbackId={id}
+        feedbackName={displayName}
+        jsonLd={jsonLd || undefined}
+        sidebar={
+          <>
+            <FeaturedPromo variant="card" />
+            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={levelColor} />}
+          </>
+        }
+      >
+        <SpiralTracker action="view_policy" />
 
         {/* Quick Facts */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.quick_facts')}</h2>
+            <h2 className="text-2xl">{t('policy.quick_facts')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-          <div className="space-y-2" style={{ fontSize: '0.875rem' }}>
+          <div className="border-b border-dotted border-rule mb-4" />
+          <div className="space-y-2 text-sm">
             {policy.level && (
               <div className="flex justify-between">
-                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.level')}</span>
-                <span style={{ fontWeight: 600,  }}>{policy.level}</span>
+                <span className="text-xs text-muted">{t('policy.level')}</span>
+                <span className="font-semibold">{policy.level}</span>
               </div>
             )}
             {policy.status && (
               <div className="flex justify-between">
-                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.status')}</span>
-                <span style={{ fontWeight: 600, color: sc.textColor }}>{policy.status}</span>
+                <span className="text-xs text-muted">{t('policy.status')}</span>
+                <span className="font-semibold" style={{ color: sc.textColor }}>{policy.status}</span>
               </div>
             )}
             {policy.introduced_date && (
               <div className="flex justify-between">
-                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.introduced')}</span>
-                <span style={{  }}>{new Date(policy.introduced_date).toLocaleDateString()}</span>
+                <span className="text-xs text-muted">{t('policy.introduced')}</span>
+                <span>{new Date(policy.introduced_date).toLocaleDateString()}</span>
               </div>
             )}
             {policy.data_source && (
               <div className="flex justify-between">
-                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.source')}</span>
-                <span style={{ textTransform: 'capitalize' }}>{policy.data_source.replace(/_/g, ' ')}</span>
+                <span className="text-xs text-muted">{t('policy.source')}</span>
+                <span className="capitalize">{policy.data_source.replace(/_/g, ' ')}</span>
               </div>
             )}
           </div>
@@ -231,10 +249,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {displaySummary && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.what_it_does')}</h2>
+              <h2 className="text-2xl">{t('policy.what_it_does')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <p style={{ fontSize: '1rem', lineHeight: 1.7 }}>{displaySummary}</p>
+            <div className="border-b border-dotted border-rule mb-4" />
+            <p className="text-base leading-relaxed">{displaySummary}</p>
           </section>
         )}
 
@@ -246,16 +264,16 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {/* AI Break It Down */}
         <BreakItDown title={displayName} summary={displaySummary} type="policy" />
 
-        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
+        <div className="my-10 h-px bg-rule" />
 
         {/* Focus areas */}
         {focusAreas.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.topics')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{focusAreas.length}</span>
+              <h2 className="text-2xl">{t('policy.topics')}</h2>
+              <span className="font-mono text-micro uppercase tracking-wider text-muted">{focusAreas.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="border-b border-dotted border-rule mb-4" />
             <FocusAreaPills focusAreas={focusAreas} />
           </section>
         )}
@@ -264,18 +282,18 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {geography.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.where_applies')}</h2>
+              <h2 className="text-2xl">{t('policy.where_applies')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="border-b border-dotted border-rule mb-4" />
             <div className="space-y-3">
               {Object.entries(geoByType).map(function ([geoType, ids]) {
                 return (
                   <div key={geoType}>
-                    <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: "#5c6474" }}>{formatGeoType(geoType)}</span>
+                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">{formatGeoType(geoType)}</span>
                     <div className="flex flex-wrap gap-1.5 mt-1">
                       {ids.map(function (gid) {
                         return (
-                          <span key={gid} style={{ fontSize: '0.75rem', background: "#f4f5f7", padding: '2px 8px', border: '1px solid #dde1e8', display: 'inline-block' }}>
+                          <span key={gid} className="text-xs bg-faint border border-rule inline-block px-2 py-0.5">
                             {gid}
                           </span>
                         )
@@ -291,27 +309,27 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {/* Timeline */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.timeline')}</h2>
+            <h2 className="text-2xl">{t('policy.timeline')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+          <div className="border-b border-dotted border-rule mb-4" />
           <div>
             {policy.introduced_date && (
-              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
-                <span style={{ width: 8, height: 8, background: '#1b5e8a', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+              <div className="flex items-start gap-4 py-4 border-b border-rule">
+                <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: '#1b5e8a', marginTop: 5 }} />
                 <div>
-                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{t('policy.introduced')}</p>
-                  <p style={{ fontSize: '0.85rem', color: "#5c6474" }}>{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p className="text-[0.9rem] font-semibold">{t('policy.introduced')}</p>
+                  <p className="text-sm text-muted">{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
               </div>
             )}
             {policy.last_action && (
-              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
-                <span style={{ width: 8, height: 8, background: sc.dotColor, marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+              <div className="flex items-start gap-4 py-4 border-b border-rule">
+                <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: sc.dotColor, marginTop: 5 }} />
                 <div>
-                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{t('policy.latest_action')}</p>
-                  <p style={{ fontSize: '0.85rem', color: "#5c6474" }}>{policy.last_action}</p>
+                  <p className="text-[0.9rem] font-semibold">{t('policy.latest_action')}</p>
+                  <p className="text-sm text-muted">{policy.last_action}</p>
                   {policy.last_action_date && (
-                    <p style={{ fontSize: '0.7rem', color: "#5c6474", marginTop: '0.25rem' }}>
+                    <p className="font-mono text-micro uppercase tracking-wider text-muted mt-1">
                       {new Date(policy.last_action_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                   )}
@@ -320,10 +338,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             )}
             {policy.source_url && (
               <div className="flex items-start gap-4 py-4">
-                <span style={{ width: 8, height: 8, background: '#dde1e8', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+                <span className="inline-block shrink-0 bg-rule" style={{ width: 8, height: 8, marginTop: 5 }} />
                 <div>
-                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{t('policy.source')}</p>
-                  <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.85rem', color: "#1b5e8a" }}>
+                  <p className="text-[0.9rem] font-semibold">{t('policy.source')}</p>
+                  <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline text-sm text-blue">
                     View on {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'source'} <ExternalLink size={12} />
                   </a>
                 </div>
@@ -332,16 +350,16 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           </div>
         </section>
 
-        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
+        <div className="my-10 h-px bg-rule" />
 
         {/* Decision Makers */}
         {officials.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.leaders_connected')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{officials.length}</span>
+              <h2 className="text-2xl">{t('policy.leaders_connected')}</h2>
+              <span className="font-mono text-micro uppercase tracking-wider text-muted">{officials.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="border-b border-dotted border-rule mb-4" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {officials.map(function (o) {
                 const ot = officialTranslations[o.official_id]
@@ -365,19 +383,40 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           </section>
         )}
 
+        {/* Related Services */}
+        {displayRelatedServices.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 className="text-2xl">Related Services</h2>
+              <span className="font-mono text-micro uppercase tracking-wider text-muted">{displayRelatedServices.length}</span>
+            </div>
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            {displayRelatedServices.map(function (svc: any) {
+              return (
+                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
+                  <h4 className="text-[0.9rem] font-semibold line-clamp-2">{svc.service_name}</h4>
+                  {svc.description_5th_grade && (
+                    <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
+                  )}
+                </Link>
+              )
+            })}
+          </section>
+        )}
+
         {/* Related Policies */}
         {related && related.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.related_policies')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{related.length}</span>
+              <h2 className="text-2xl">{t('policy.related_policies')}</h2>
+              <span className="font-mono text-micro uppercase tracking-wider text-muted">{related.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="border-b border-dotted border-rule mb-4" />
             <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
               {related.map(function (p, i) {
                 const rpt = relatedPolicyTranslations[p.policy_id]
                 return (
-                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} style={{ display: 'block', padding: '1rem', borderBottom: '1px solid #dde1e8', borderRight: i % 2 === 0 ? '1px solid ' + '#dde1e8' : 'none' }}>
+                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-4 border-b border-rule" style={{ borderRight: i % 2 === 0 ? '1px solid #dde1e8' : 'none' }}>
                     <PolicyCard
                       name={p.title_6th_grade || p.policy_name}
                       summary={p.summary_6th_grade || p.summary_5th_grade}
@@ -397,19 +436,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           </section>
         )}
 
-        {/* Quote */}
-        {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
-      <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/policies" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
-          Back to Policies
-        </Link>
-      </div>
+      </DetailPageLayout>
 
       <AdminEditPanel
         entityType="policies"
@@ -426,6 +453,6 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           { key: 'sponsor', label: 'Sponsor', type: 'text', value: (policy as any).sponsor },
         ] as EditField[]}
       />
-    </div>
+    </>
   )
 }

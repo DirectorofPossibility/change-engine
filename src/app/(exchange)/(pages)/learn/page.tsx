@@ -5,6 +5,7 @@ import { cookies } from 'next/headers'
 import { getLearningPaths, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { getUIStrings } from '@/lib/i18n'
+import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 
 export const revalidate = 3600
 
@@ -121,6 +122,10 @@ export default async function LearnPage() {
         {paths.length === 0 && (
           <p className="text-center py-12" style={{ color: "#5c6474" }}>{t('learn.coming_soon')}</p>
         )}
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6">
+        <PageCrossLinks preset="explore" />
       </div>
 
       {/* ── FOOTER LINK ── */}

@@ -27,6 +27,7 @@ import {
   Phone, Mail, Globe as GlobeIcon, ExternalLink, ArrowRight,
   Calendar, Scale, Building2, DollarSign, Users, MapPin,
 } from 'lucide-react'
+import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 
 // ── Design tokens ─────────────────────────────────────────────────────
 
@@ -688,6 +689,11 @@ async function AccountabilityCenter({ meta, centerColor }: { meta: typeof CENTER
         </div>
       </section>
 
+      {/* Cross-links */}
+      <div className="max-w-[900px] mx-auto px-6">
+        <PageCrossLinks preset="explore" />
+      </div>
+
       {/* ── CODA ── */}
       <div className="text-center py-10 bg-paper">
         <Link href="/centers" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>
@@ -876,6 +882,11 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
           </div>
         </div>
       </section>
+
+      {/* Cross-links */}
+      <div className="max-w-[900px] mx-auto px-6">
+        <PageCrossLinks preset="explore" />
+      </div>
 
       <div className="text-center py-10 bg-paper">
         <Link href="/centers" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>

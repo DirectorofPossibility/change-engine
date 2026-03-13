@@ -22,6 +22,7 @@ import { LearningPathCard } from '@/components/exchange/LearningPathCard'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SearchTabs } from './SearchTabs'
 import { SearchResultsHeader } from './SearchResultsHeader'
+import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 
 
 export const revalidate = 300
@@ -277,6 +278,10 @@ export default async function SearchPage({
         {totalCount > 0 && (
           <SearchTabs tabs={tabs}>{sections}</SearchTabs>
         )}
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6">
+        <PageCrossLinks preset="resources" />
       </div>
 
       {/* Footer */}

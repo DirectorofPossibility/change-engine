@@ -61,10 +61,10 @@ export async function Breadcrumb({ items, variant = 'light' }: BreadcrumbProps) 
 
   if (designV1) {
     const isDark = variant === 'dark'
-    const baseColor = isDark ? 'text-white/40' : 'text-brand-muted'
-    const activeColor = isDark ? 'text-white/70' : 'text-brand-text'
-    const chevronColor = isDark ? 'text-white/20' : 'text-brand-muted/50'
-    const hoverColor = isDark ? 'hover:text-white/60' : 'hover:text-brand-text'
+    const baseColor = isDark ? 'text-white/40' : 'text-muted'
+    const activeColor = isDark ? 'text-white/70' : 'text-ink'
+    const chevronColor = isDark ? 'text-white/20' : 'text-muted/50'
+    const hoverColor = isDark ? 'hover:text-white/60' : 'hover:text-ink'
 
     return (
       <nav aria-label="Breadcrumb" className={`flex items-center gap-1.5 text-sm ${baseColor} py-3 overflow-x-auto`}>
@@ -97,9 +97,9 @@ export async function Breadcrumb({ items, variant = 'light' }: BreadcrumbProps) 
       aria-label="Breadcrumb"
       className="max-w-[1080px] mx-auto px-8 py-3"
     >
-      <ol className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-brand-muted-light">
+      <ol className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-faint">
         <li>
-          <Link href="/" className="hover:text-brand-accent transition-colors">
+          <Link href="/" className="hover:text-blue transition-colors">
             {t('nav.home')}
           </Link>
         </li>
@@ -107,11 +107,11 @@ export async function Breadcrumb({ items, variant = 'light' }: BreadcrumbProps) 
           const isLast = i === items.length - 1
           return (
             <li key={i} className="flex items-center gap-1.5">
-              <span className="text-brand-border" aria-hidden="true">/</span>
+              <span className="text-rule" aria-hidden="true">/</span>
               {isLast || !item.href ? (
-                <span className="text-brand-muted">{translateLabel(item.label)}</span>
+                <span className="text-muted">{translateLabel(item.label)}</span>
               ) : (
-                <Link href={item.href} className="hover:text-brand-accent transition-colors">
+                <Link href={item.href} className="hover:text-blue transition-colors">
                   {translateLabel(item.label)}
                 </Link>
               )}

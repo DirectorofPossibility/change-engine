@@ -64,12 +64,12 @@ export function ContentCard({
   const displaySummary = rawSummary.length > 300 ? rawSummary.slice(0, 300) + '...' : rawSummary
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white overflow-hidden hover:border-ink transition-colors cursor-pointer', style: { border: '1px solid #dde1e8' } }
-    : { href: href || '/content/' + id, className: 'block bg-white overflow-hidden hover:border-ink transition-colors', style: { border: '1px solid #dde1e8' } }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-rule overflow-hidden hover:border-ink transition-colors cursor-pointer' }
+    : { href: href || '/content/' + id, className: 'block bg-white border border-rule overflow-hidden hover:border-ink transition-colors' }
   return (
     <Wrapper {...wrapperProps as any}>
       {imageUrl ? (
-        <div className="w-full h-36 relative" style={{ borderBottom: '1px solid #dde1e8' }}>
+        <div className="w-full h-36 relative border-b border-rule">
           <Image
             src={imageUrl}
             alt={displayTitle}
@@ -86,23 +86,17 @@ export function ContentCard({
           <ThemePill themeId={pathway} size="sm" linkable={false} />
           <CenterBadge center={center} linkable={false} />
         </div>
-        <h3
-          className="line-clamp-2 mb-1"
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#0d1117' }}
-        >
+        <h3 className="font-body text-[0.95rem] leading-snug font-semibold text-ink line-clamp-2 mb-1">
           {displayTitle}
         </h3>
-        <p
-          className="line-clamp-2 mb-2"
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#5c6474' }}
-        >
+        <p className="font-body text-[0.8rem] leading-relaxed text-muted line-clamp-2 mb-2">
           {displaySummary}
         </p>
         <div className="flex items-center justify-between">
-          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#5c6474' }}>
+          <span className="font-mono text-micro uppercase tracking-wider text-muted">
             {publishedAt ? new Date(publishedAt).toLocaleDateString() : ''}
           </span>
-          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#1b5e8a' }}>
+          <span className="font-mono text-micro uppercase tracking-wider text-blue">
             {t('card.read_more')} &rarr;
           </span>
         </div>

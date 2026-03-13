@@ -74,20 +74,20 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
       {/* Search + filter bar */}
       <div className="flex gap-2 mb-4">
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-brand-muted" />
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
           <input
             type="text"
             placeholder="Search by name, city, or ZIP..."
             aria-label="Search organizations"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 border border-brand-border bg-white text-sm text-brand-text placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent"
+            className="w-full pl-8 pr-3 py-2 border border-rule bg-white text-sm text-ink placeholder:text-faint focus:outline-none focus:ring-2 focus:ring-blue/30 focus:border-blue"
           />
         </div>
         <select
           value={typeFilter || ''}
           onChange={e => setTypeFilter(e.target.value || null)}
-          className="px-2.5 py-2 border border-brand-border bg-white text-xs font-semibold text-brand-text focus:outline-none focus:ring-2 focus:ring-brand-accent/30"
+          className="px-2.5 py-2 border border-rule bg-white text-xs font-semibold text-ink focus:outline-none focus:ring-2 focus:ring-blue/30"
         >
           <option value="">All ({organizations.length})</option>
           {ORG_TYPES.filter(t => typeCounts[t.label]).map(t => (
@@ -95,7 +95,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
           ))}
         </select>
         {typeFilter && (
-          <button onClick={() => setTypeFilter(null)} className="text-xs font-semibold text-brand-accent hover:underline shrink-0">
+          <button onClick={() => setTypeFilter(null)} className="text-xs font-semibold text-blue hover:underline shrink-0">
             Clear
           </button>
         )}
@@ -109,7 +109,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
             <Link
               key={org.org_id}
               href={`/organizations/${org.org_id}`}
-              className="group relative bg-white border border-brand-border overflow-hidden flex items-start gap-3 p-3 hover:border-brand-text hover:-translate-y-px transition-all duration-150"
+              className="group relative bg-white border border-rule overflow-hidden flex items-start gap-3 p-3 hover:border-ink hover:-translate-y-px transition-all duration-150"
              
             >
               {/* Left color bar */}
@@ -119,7 +119,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                 <Image
                   src={org.logo_url}
                   alt=""
-                  className="w-10 h-10 rounded-md object-contain bg-brand-bg border border-brand-border flex-shrink-0 ml-1"
+                  className="w-10 h-10 rounded-md object-contain bg-paper border border-rule flex-shrink-0 ml-1"
                  width={48} height={40} />
               ) : (
                 <div className="w-10 h-10 rounded-md flex items-center justify-center flex-shrink-0 ml-1" style={{ background: color + '12' }}>
@@ -131,7 +131,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-display font-bold text-[13px] text-brand-text leading-snug group-hover:text-brand-accent transition-colors line-clamp-1">
+                  <h3 className="font-display font-bold text-[13px] text-ink leading-snug group-hover:text-blue transition-colors line-clamp-1">
                     {org.org_name}
                   </h3>
                   {org.is_verified === 'Yes' && (
@@ -142,11 +142,11 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                   )}
                 </div>
                 {(org.description_5th_grade || org.mission_statement) && (
-                  <p className="text-[11px] text-brand-muted leading-snug mt-0.5 line-clamp-2">
+                  <p className="text-[11px] text-muted leading-snug mt-0.5 line-clamp-2">
                     {org.description_5th_grade || org.mission_statement}
                   </p>
                 )}
-                <div className="flex items-center gap-2 mt-1 text-[10px] text-brand-muted-light">
+                <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-light">
                   {org.org_type === 'Community Partner' ? (
                     <span className="inline-flex items-center gap-1 font-semibold" style={{ color: '#1b5e8a' }}>
                       <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="#1b5e8a"><path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" /></svg>
@@ -172,8 +172,8 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
-          <p className="text-brand-muted">No organizations match your search.</p>
-          <button onClick={() => { setSearch(''); setTypeFilter(null) }} className="mt-2 text-sm text-brand-accent hover:underline">
+          <p className="text-muted">No organizations match your search.</p>
+          <button onClick={() => { setSearch(''); setTypeFilter(null) }} className="mt-2 text-sm text-blue hover:underline">
             Clear filters
           </button>
         </div>

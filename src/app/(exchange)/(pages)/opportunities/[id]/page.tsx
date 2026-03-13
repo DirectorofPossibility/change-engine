@@ -16,11 +16,8 @@ export const revalidate = 86400
 const OPP_ID_RE = /^OPP_\d+$/i
 
 async function resolveOpportunity(supabase: any, idOrSlug: string) {
-  if (OPP_ID_RE.test(idOrSlug)) {
-    const { data } = await supabase.from('opportunities').select('*').eq('opportunity_id', idOrSlug).single()
-    return data
-  }
-  const { data } = await supabase.from('opportunities').select('*').eq('slug', idOrSlug).single()
+  // Always query by opportunity_id — opportunities table has no slug column
+  const { data } = await supabase.from('opportunities').select('*').eq('opportunity_id', idOrSlug).single()
   return data
 }
 
@@ -41,10 +38,6 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
 
   const opportunity = await resolveOpportunity(supabase, idOrSlug)
   if (!opportunity) notFound()
-
-  if (OPP_ID_RE.test(idOrSlug) && opportunity.slug) {
-    redirect('/opportunities/' + opportunity.slug)
-  }
 
   const id = opportunity.opportunity_id
 

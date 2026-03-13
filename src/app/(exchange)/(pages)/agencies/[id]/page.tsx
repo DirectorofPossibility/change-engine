@@ -25,10 +25,13 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
 
   const userProfile = await getUserProfile()
 
-  const [servicesResult] = await Promise.all([
-    supabase.from('municipal_services').select('service_id, service_name, description_5th_grade').eq('agency_id', id).limit(10),
-  ])
-  const services = servicesResult.data
+  // municipal_services has no agency_id column — query via agency's service_ids if available
+  const agencyAny = agency as any
+  let services: any[] = []
+  if (agencyAny.service_ids && Array.isArray(agencyAny.service_ids) && agencyAny.service_ids.length > 0) {
+    const { data } = await supabase.from('municipal_services').select('id, service_name, service_type').in('id', agencyAny.service_ids).limit(10)
+    services = data || []
+  }
 
   const address = [agency.address, agency.city, agency.state, agency.zip_code].filter(Boolean).join(', ')
 
@@ -118,7 +121,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
             <div className="space-y-2">
               {services.map(function (s: any) {
                 return (
-                  <Link key={s.service_id} href={`/municipal-services/${s.service_id}`}
+                  <Link key={s.id} href={`/municipal-services/${s.id}`}
                     className="block hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                     {s.service_name}
                   </Link>

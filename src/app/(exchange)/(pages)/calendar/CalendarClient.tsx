@@ -198,13 +198,13 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
         {/* Nav */}
         <div className="flex items-center gap-2">
-          <button onClick={navigatePrev} className="p-1.5 hover:bg-brand-bg transition-colors">
+          <button onClick={navigatePrev} className="p-1.5 hover:bg-brand-bg transition-colors" aria-label="Previous">
             <ChevronLeft size={18} className="text-brand-muted" />
           </button>
           <button onClick={goToToday} className="px-3 py-1 text-xs font-medium text-brand-accent hover:bg-brand-accent/5 transition-colors">
             Today
           </button>
-          <button onClick={navigateNext} className="p-1.5 hover:bg-brand-bg transition-colors">
+          <button onClick={navigateNext} className="p-1.5 hover:bg-brand-bg transition-colors" aria-label="Next">
             <ChevronRight size={18} className="text-brand-muted" />
           </button>
           <h2 className="text-lg font-display font-bold text-brand-text ml-2">
@@ -628,7 +628,7 @@ function EventDetail({ event, themes, onClose }: { event: CalendarItem; themes: 
           </div>
           <h2 className="text-xl font-display font-bold text-brand-text">{event.title}</h2>
         </div>
-        <button onClick={onClose} className="p-1 rounded hover:bg-brand-bg">
+        <button onClick={onClose} className="p-1 rounded hover:bg-brand-bg" aria-label="Close">
           <X size={18} className="text-brand-muted" />
         </button>
       </div>

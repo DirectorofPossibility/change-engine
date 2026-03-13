@@ -50,6 +50,24 @@ export default async function ElectionsPage({
             key deadlines, who represents you, and how to make sure your ballot counts.
           </p>
 
+          {/* Register to Vote CTA */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href="https://www.votetexas.gov/register-to-vote/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[0.7rem] font-semibold uppercase tracking-wider bg-blue text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
+            >
+              Register to Vote
+            </a>
+            <Link
+              href="/polling-places"
+              className="font-mono text-[0.7rem] font-semibold uppercase tracking-wider border-2 border-ink text-ink px-5 py-2.5 hover:bg-ink hover:text-white transition-colors"
+            >
+              Find Polling Places
+            </Link>
+          </div>
+
           {/* Quick stats strip */}
           <div className="mt-8 flex flex-wrap gap-8">
             {nextElection && (
@@ -123,13 +141,24 @@ export default async function ElectionsPage({
         </Suspense>
       </div>
 
-      {/* ── Footer rule ── */}
-      <div className="max-w-[900px] mx-auto px-6">
-        <div style={{ height: 1, background: '#dde1e8' }} />
-        <div className="py-8 text-center">
-          <Link href="/exchange" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
-            &larr; Back to The Community Exchange
-          </Link>
+      {/* Cross-links */}
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <div className="border-t border-rule pt-8">
+          <p className="font-mono text-micro uppercase tracking-wider text-faint mb-4">Related</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Link href="/officials" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Your Officials</p>
+              <p className="font-body text-sm text-muted">See who represents you</p>
+            </Link>
+            <Link href="/policies" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Policies</p>
+              <p className="font-body text-sm text-muted">Legislation and ordinances</p>
+            </Link>
+            <Link href="/call-your-senators" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Call Your Senators</p>
+              <p className="font-body text-sm text-muted">Make your voice heard</p>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

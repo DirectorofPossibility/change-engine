@@ -260,7 +260,7 @@ export default function SignupPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="zipCode" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
                   ZIP Code <span style={{ color: '#dde1e8' }}>(optional)</span>

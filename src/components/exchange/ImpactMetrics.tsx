@@ -58,7 +58,7 @@ export function ImpactMetrics({ stats }: ImpactMetricsProps) {
       <h2 className="font-display text-lg font-semibold text-center text-brand-muted mb-6">
         {t('home.community_glance')}
       </h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {METRICS.map(function (metric) {
           return <MetricCard key={metric.key} target={stats[metric.key]} icon={metric.icon} label={t(metric.labelKey)} href={metric.href} />
         })}

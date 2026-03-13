@@ -120,7 +120,7 @@ export function HeaderSearch() {
             className="flex-1 bg-transparent text-sm text-brand-text placeholder-brand-muted-light outline-none"
           />
           {query && (
-            <button type="button" onClick={function () { setQuery(''); inputRef.current?.focus() }} className="text-brand-muted hover:text-brand-text">
+            <button type="button" aria-label="Clear search" onClick={function () { setQuery(''); inputRef.current?.focus() }} className="text-muted hover:text-ink">
               <X size={14} />
             </button>
           )}

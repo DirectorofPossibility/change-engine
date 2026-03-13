@@ -19,6 +19,7 @@ import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
@@ -658,6 +659,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   </blockquote>
                 </div>
               )}
+
+              {/* Featured Promotion */}
+              <FeaturedPromo variant="card" />
             </aside>
           </div>
         </div>

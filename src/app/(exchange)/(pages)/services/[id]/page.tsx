@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { getUIStrings } from '@/lib/i18n'
 import { Phone, Globe, MapPin, Clock, ArrowRight } from 'lucide-react'
@@ -13,9 +12,11 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { serviceJsonLd } from '@/lib/jsonld'
 import { THEMES } from '@/lib/constants'
 
@@ -65,12 +66,13 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const { data: focusJunctions } = await (supabase as any).from('service_focus_areas').select('focus_id').eq('service_id', id)
   const focusIds = ((focusJunctions ?? []) as Array<{ focus_id: string }>).map(j => j.focus_id)
 
-  const { data: themeJunctions } = await (supabase as any).from('service_themes').select('theme_id').eq('service_id', id)
+  const { data: themeJunctions } = await (supabase as any).from('service_pathways').select('theme_id').eq('service_id', id)
   const themeIds = ((themeJunctions ?? []) as Array<{ theme_id: string }>).map(j => j.theme_id)
   const primaryTheme = themeIds.length > 0
     ? Object.entries(THEMES).find(([k]) => themeIds.includes(k))
     : undefined
   const themeName = primaryTheme ? primaryTheme[1].name : undefined
+  const themeColor = primaryTheme ? (primaryTheme[1] as any).color || '#1b5e8a' : '#1b5e8a'
 
   const fullAddress = [service.address, service.city, service.state, service.zip_code].filter(Boolean).join(', ')
 
@@ -108,70 +110,71 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   const jsonLd = serviceJsonLd(service as any, org?.org_name)
 
+  const subtitle = org
+    ? <>Provided by{' '}<Link href={'/organizations/' + org.org_id} className="text-blue hover:underline">{org.org_name}</Link></>
+    : undefined
+
+  const breadcrumbs = [
+    { label: 'Home', href: '/' },
+    { label: t('detail.all_services'), href: '/services' },
+    { label: displayName },
+  ]
+
+  const footerContent = (
+    <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+      <div className="h-px bg-rule mb-10" />
+      <Link href="/services" className="italic text-blue text-[0.95rem] hover:underline">
+        Back to Services
+      </Link>
+    </div>
+  )
+
   return (
-    <div className="bg-paper min-h-screen">
-      <SpiralTracker action="view_service" />
-      {jsonLd && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      )}
-
-      {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
-        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
-            The Change Engine {themeName ? ' / ' + themeName : ''}
-          </p>
-          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
-            {displayName}
-          </h1>
-          {org && (
-            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.5rem' }}>
-              Provided by{' '}
-              <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ color: "#1b5e8a" }}>
-                {org.org_name}
-              </Link>
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/services" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('detail.all_services')}</Link>
-          <span className="mx-2">/</span>
-          <span>{displayName}</span>
-        </nav>
-      </div>
-
-      {/* Main content */}
-      <div className="max-w-[900px] mx-auto px-6 py-8">
+    <>
+      <DetailPageLayout
+        title={displayName}
+        subtitle={subtitle as any}
+        eyebrow={themeName ? { text: themeName } : undefined}
+        breadcrumbs={breadcrumbs}
+        themeColor={themeColor}
+        wayfinderData={wayfinderData}
+        wayfinderType="service"
+        wayfinderEntityId={id}
+        userRole={userProfile?.role}
+        jsonLd={jsonLd || undefined}
+        feedbackType="service"
+        feedbackId={service.service_id}
+        feedbackName={displayName}
+        footer={footerContent}
+        sidebar={
+          <>
+            <FeaturedPromo variant="card" />
+            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
+          </>
+        }
+      >
+        <SpiralTracker action="view_service" />
 
         {/* Concierge CTA */}
         {(service.phone || service.website) && (
-          <div className="mb-10 p-6" style={{ border: '1px solid ' + '#1b5e8a', background: "#f4f5f7" }}>
-            <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: "#5c6474", marginBottom: '0.75rem' }}>
+          <div className="mb-10 p-6 border border-blue bg-faint">
+            <p className="font-mono text-micro uppercase tracking-wider text-muted mb-3">
               Here is how to reach them
             </p>
             <div className="flex flex-wrap gap-3">
               {service.phone && (
-                <a href={'tel:' + service.phone} className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, background: '#1b5e8a' }}>
+                <a href={'tel:' + service.phone} className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90 font-mono text-micro uppercase tracking-wider font-semibold bg-blue">
                   <Phone size={14} /> Call {service.phone}
                 </a>
               )}
               {service.website && (
-                <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 transition-colors" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, border: '1px solid ' + '#1b5e8a', color: "#1b5e8a" }}>
+                <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 transition-colors font-mono text-micro uppercase tracking-wider font-semibold border border-blue text-blue">
                   <Globe size={14} /> Visit their website
                 </a>
               )}
             </div>
             {fullAddress && (
-              <p className="mt-3 flex items-center gap-1.5" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
+              <p className="mt-3 flex items-center gap-1.5 text-[0.9rem] text-muted">
                 <MapPin size={13} /> {fullAddress}
               </p>
             )}
@@ -182,10 +185,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {displayDesc && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.about_service')}</h2>
+              <h2 className="text-2xl">{t('detail.about_service')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>{displayDesc}</p>
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            <p className="text-[0.95rem] leading-relaxed">{displayDesc}</p>
           </section>
         )}
 
@@ -193,25 +196,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {(service.eligibility || service.fees || service.languages) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.details')}</h2>
+              <h2 className="text-2xl">{t('detail.details')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             {service.eligibility && (
-              <div className="py-3" style={{ borderBottom: '1px solid #dde1e8' }}>
-                <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>{t('detail.eligibility')}</p>
-                <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: "#5c6474" }}>{service.eligibility}</p>
+              <div className="py-3 border-b border-rule">
+                <p className="text-[0.9rem] font-semibold mb-1">{t('detail.eligibility')}</p>
+                <p className="italic text-sm text-muted">{service.eligibility}</p>
               </div>
             )}
             {service.fees && (
-              <div className="py-3" style={{ borderBottom: '1px solid #dde1e8' }}>
-                <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>{t('detail.fees')}</p>
-                <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: "#5c6474" }}>{service.fees}</p>
+              <div className="py-3 border-b border-rule">
+                <p className="text-[0.9rem] font-semibold mb-1">{t('detail.fees')}</p>
+                <p className="italic text-sm text-muted">{service.fees}</p>
               </div>
             )}
             {service.languages && (
               <div className="py-3">
-                <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>{t('detail.languages')}</p>
-                <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: "#5c6474" }}>{service.languages}</p>
+                <p className="text-[0.9rem] font-semibold mb-1">{t('detail.languages')}</p>
+                <p className="italic text-sm text-muted">{service.languages}</p>
               </div>
             )}
           </section>
@@ -220,27 +223,27 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {/* Contact & Location */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.contact')}</h2>
+            <h2 className="text-2xl">{t('detail.contact')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+          <div className="h-px border-b border-dotted border-rule mb-4" />
           <div className="space-y-3">
             {service.phone && (
-              <a href={'tel:' + service.phone} className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
+              <a href={'tel:' + service.phone} className="flex items-center gap-2 hover:underline text-[0.9rem] text-blue">
                 <Phone size={15} /> {service.phone}
               </a>
             )}
             {service.website && (
-              <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
+              <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline text-[0.9rem] text-blue">
                 <Globe size={15} /> {t('detail.website')}
               </a>
             )}
             {fullAddress && (
-              <p className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
+              <p className="flex items-center gap-2 text-[0.9rem] text-muted">
                 <MapPin size={15} className="shrink-0" /> {fullAddress}
               </p>
             )}
             {service.hours && (
-              <p className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
+              <p className="flex items-center gap-2 text-[0.9rem] text-muted">
                 <Clock size={15} /> {service.hours}
               </p>
             )}
@@ -249,7 +252,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
         {/* Location Map */}
         {(service as any).latitude != null && (service as any).longitude != null && (
-          <div className="mb-10" style={{ border: '1px solid #dde1e8' }}>
+          <div className="mb-10 border border-rule">
             <SingleLocationMap
               marker={{
                 id: service.service_id,
@@ -264,19 +267,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
         )}
 
-        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
+        <div className="my-10 h-px bg-rule" />
 
         {/* Parent Organization */}
         {org && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.organization')}</h2>
+              <h2 className="text-2xl">{t('detail.organization')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <Link href={'/organizations/' + org.org_id} className="block p-5 transition-colors hover:opacity-80" style={{ border: '1px solid #dde1e8' }}>
-              <h3 style={{ fontSize: '1rem', fontWeight: 700,  }}>{org.org_name}</h3>
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            <Link href={'/organizations/' + org.org_id} className="block p-5 transition-colors hover:opacity-80 border border-rule">
+              <h3 className="text-base font-bold">{org.org_name}</h3>
               {org.description_5th_grade && (
-                <p className="line-clamp-2 mt-1" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{org.description_5th_grade}</p>
+                <p className="line-clamp-2 mt-1 text-sm text-muted">{org.description_5th_grade}</p>
               )}
             </Link>
           </section>
@@ -286,10 +289,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {libraryNuggets.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.go_deeper')}</h2>
+              <h2 className="text-2xl">{t('detail.go_deeper')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <LibraryNugget nuggets={libraryNuggets} variant="section" color={'#1b5e8a'} labels={{ goDeeper: t('detail.go_deeper') }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
+            <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} labels={{ goDeeper: t('detail.go_deeper') }} />
           </section>
         )}
 
@@ -297,33 +300,33 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {displayRelated.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.other_resources')}</h2>
-              <Link href="/services" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: "#1b5e8a" }}>
+              <h2 className="text-2xl">{t('detail.other_resources')}</h2>
+              <Link href="/services" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.65rem] uppercase tracking-wider text-blue">
                 {t('detail.all_services')} <ArrowRight size={12} />
               </Link>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="h-px border-b border-dotted border-rule mb-4" />
             {displayRelated.slice(0, 3).map(function (svc) {
               return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
-                  <h4 className="line-clamp-2" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{svc.service_name}</h4>
+                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
+                  <h4 className="line-clamp-2 text-[0.9rem] font-semibold">{svc.service_name}</h4>
                   {svc.description_5th_grade && (
-                    <p className="line-clamp-2 mt-0.5" style={{ fontStyle: 'italic', fontSize: '0.8rem', color: "#5c6474" }}>{svc.description_5th_grade}</p>
+                    <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
                   )}
                 </Link>
               )
             })}
             {displayRelated.length > 3 && (
               <details className="mt-2">
-                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary className="italic text-blue text-[0.9rem] cursor-pointer">
                   See {displayRelated.length - 3} more services
                 </summary>
                 {displayRelated.slice(3).map(function (svc) {
                   return (
-                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
-                      <h4 className="line-clamp-2" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{svc.service_name}</h4>
+                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
+                      <h4 className="line-clamp-2 text-[0.9rem] font-semibold">{svc.service_name}</h4>
                       {svc.description_5th_grade && (
-                        <p className="line-clamp-2 mt-0.5" style={{ fontStyle: 'italic', fontSize: '0.8rem', color: "#5c6474" }}>{svc.description_5th_grade}</p>
+                        <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
                       )}
                     </Link>
                   )
@@ -333,19 +336,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </section>
         )}
 
-        {/* Quote */}
-        {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />
-        )}
-      </div>
-
-      {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
-      <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/services" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
-          Back to Services
-        </Link>
-      </div>
+      </DetailPageLayout>
 
       <AdminEditPanel
         entityType="services_211"
@@ -366,6 +357,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           { key: 'service_area', label: 'Service Area', type: 'text', value: (service as any).service_area },
         ] as EditField[]}
       />
-    </div>
+    </>
   )
 }

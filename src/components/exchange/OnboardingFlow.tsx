@@ -280,7 +280,7 @@ export function OnboardingFlow() {
               <p className="text-sm text-brand-muted mb-4">
                 Pick one. You can always explore everything.
               </p>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {PERSONAS.map(function (p) {
                   return (
                     <button

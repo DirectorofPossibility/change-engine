@@ -7,11 +7,12 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { getOfficialsByZip } from '@/lib/data/officials'
 import { OfficialsPageClient } from './OfficialsPageClient'
+import { IndexPageHero } from '@/components/exchange/IndexPageHero'
+import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 
 
 export const dynamic = 'force-dynamic'
@@ -49,50 +50,19 @@ export default async function OfficialsPage() {
 
   return (
     <div className="bg-paper min-h-screen">
-      {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
-        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
-            The Change Engine
-          </p>
-          <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
-            Who Represents You
-          </h1>
-          <p style={{ fontSize: '1.1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
-            The people making decisions about your city, your state, and your country. Look them up. Reach out.
-          </p>
-          <div className="flex flex-wrap gap-8 mt-8">
-            <div>
-              <span style={{ fontSize: '2rem',  }}>{sortedOfficials.length}</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Officials</span>
-            </div>
-            <div>
-              <span style={{ fontSize: '2rem',  }}>{federalCount}</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Federal</span>
-            </div>
-            <div>
-              <span style={{ fontSize: '2rem',  }}>{stateCount}</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>State</span>
-            </div>
-            <div>
-              <span style={{ fontSize: '2rem',  }}>{localCount}</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Local</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <IndexPageHero
+        title="Who Represents You"
+        subtitle="The people making decisions about your city, your state, and your country. Look them up. Reach out."
+        color="#7a2018"
+        stats={[
+          { value: sortedOfficials.length, label: 'Officials' },
+          { value: federalCount, label: 'Federal' },
+          { value: stateCount, label: 'State' },
+          { value: localCount, label: 'Local' },
+        ]}
+      />
 
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
-          <span className="mx-2">/</span>
-          <span>Officials</span>
-        </nav>
-      </div>
+      <Breadcrumb items={[{ label: 'Officials' }]} />
 
       {/* Main content */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
@@ -104,12 +74,25 @@ export default async function OfficialsPage() {
         />
       </div>
 
-      {/* Footer rule + link */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
-      <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
-          Back to the Guide
-        </Link>
+      {/* Cross-links */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4 pb-12">
+        <div className="border-t border-rule pt-8">
+          <p className="font-mono text-micro uppercase tracking-wider text-faint mb-4">Related</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Link href="/elections" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Elections & Voting</p>
+              <p className="font-body text-sm text-muted">Upcoming elections and key dates</p>
+            </Link>
+            <Link href="/policies" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Policies</p>
+              <p className="font-body text-sm text-muted">Legislation and ordinances</p>
+            </Link>
+            <Link href="/call-your-senators" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Call Your Senators</p>
+              <p className="font-body text-sm text-muted">Make your voice heard</p>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -432,7 +432,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
       </p>
 
       {/* Totals */}
-      <div className="grid grid-cols-3 gap-2 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
         {[
           { v: data.totals.content, l: 'Content', c: '#C75B2A' },
           { v: data.totals.organizations, l: 'Organizations', c: '#1e4d7a' },

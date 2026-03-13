@@ -23,6 +23,7 @@ import { TranslateBar } from '@/components/exchange/TranslateBar'
 import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
 import { TickerTape } from '@/components/exchange/TickerTape'
 import MobileBottomNav from '@/components/exchange/MobileBottomNav'
+import { ScrollToTop } from '@/components/exchange/ScrollToTop'
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -74,6 +75,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
           <D2Footer />
           <TickerTape election={nextElection} className="ticker-banner" />
           <OnboardingLoader />
+          <ScrollToTop />
           <ChanceChatWidget />
           <MobileBottomNav />
         </div>

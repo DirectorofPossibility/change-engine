@@ -11,8 +11,10 @@ import {
   getLangId, fetchTranslationsForTable,
   getRandomQuote,
 } from '@/lib/data/exchange'
+import { getPathwayTopics } from '@/lib/data/taxonomy'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { getUIStrings } from '@/lib/i18n'
 import type { ContentPublished } from '@/lib/types/exchange'
@@ -22,6 +24,7 @@ import { ControlPanel } from '@/components/templates/ControlPanel'
 import { CouchGrid } from '@/components/templates/CouchGrid'
 import { DataStories } from '@/components/templates/DataStories'
 import { FeatureOpener } from '@/components/templates/FeatureOpener'
+import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 
 // Map theme IDs to sacred geometry types
 const THEME_GEO: Record<string, string> = {
@@ -78,12 +81,13 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   const theme = resolveTheme(slug)
   if (!theme) notFound()
 
-  const [content, centerCounts, allFocusAreas, bridgeData, newsCount] = await Promise.all([
+  const [content, centerCounts, allFocusAreas, bridgeData, newsCount, topics] = await Promise.all([
     getPathwayContent(theme.id),
     getCenterContentForPathway(theme.id),
     getFocusAreas(),
     getBridgesForPathway(theme.id),
     getPathwayNewsCount(theme.id),
+    getPathwayTopics(theme.id),
   ])
 
   const themeFocusAreas = allFocusAreas.filter(fa => fa.theme_id === theme.id)
@@ -208,6 +212,19 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             themeColor={theme.color}
             quotes={[{ quote: quote.quote_text, source: quote.attribution }]}
           />
+        )}
+
+        {/* Topic Pills */}
+        {topics.length > 0 && (
+          <div className="flex flex-wrap gap-2 py-6 border-b border-rule-inner">
+            {topics.map(function (topic) {
+              return (
+                <span key={topic} className="font-mono text-[0.65rem] uppercase tracking-wider text-muted border border-rule px-3 py-1">
+                  {topic}
+                </span>
+              )
+            })}
+          </div>
         )}
 
         {/* Data Stories — stats row */}
@@ -347,6 +364,11 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           </section>
         )}
 
+        {/* Featured Promotion */}
+        <section className="py-10 border-b border-rule-inner">
+          <FeaturedPromo variant="banner" />
+        </section>
+
         {/* Quote */}
         {quote && (
           <section className="py-10 border-b border-rule-inner">
@@ -385,6 +407,8 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             />
           </section>
         )}
+
+        <PageCrossLinks preset="explore" />
 
         {/* Colophon — pathway links */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 py-8">

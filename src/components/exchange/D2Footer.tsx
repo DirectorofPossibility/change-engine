@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Facebook, Instagram, Linkedin, Mail } from 'lucide-react'
 import { SeedOfLife } from '@/components/geo/sacred'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/use-translation'
@@ -44,13 +45,13 @@ export function D2Footer() {
     <>
       {/* Spectrum bar — 7 pathway colors (new palette) */}
       <div className="flex h-[2px]">
-        <div className="flex-1" style={{ background: '#1a6b56' }} />
-        <div className="flex-1" style={{ background: '#1e4d7a' }} />
-        <div className="flex-1" style={{ background: '#4a2870' }} />
-        <div className="flex-1" style={{ background: '#7a2018' }} />
-        <div className="flex-1" style={{ background: '#6a4e10' }} />
-        <div className="flex-1" style={{ background: '#1a5030' }} />
-        <div className="flex-1" style={{ background: '#1b5e8a' }} />
+        <div className="flex-1 bg-health" />
+        <div className="flex-1 bg-families" />
+        <div className="flex-1 bg-hood" />
+        <div className="flex-1 bg-voice" />
+        <div className="flex-1 bg-money" />
+        <div className="flex-1 bg-planet" />
+        <div className="flex-1 bg-blue" />
       </div>
 
       <footer className="bg-paper border-t-2 border-ink relative overflow-hidden">
@@ -75,6 +76,20 @@ export function D2Footer() {
               <p className="font-body text-[.82rem] leading-relaxed text-dim">
                 {t('brand.description')}
               </p>
+              <div className="flex items-center gap-3 mt-3">
+                <a href="https://www.facebook.com/TheChangeLabInc/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-faint hover:text-blue transition-colors">
+                  <Facebook size={18} />
+                </a>
+                <a href="https://www.instagram.com/thechangelabinc" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-faint hover:text-blue transition-colors">
+                  <Instagram size={18} />
+                </a>
+                <a href="https://www.linkedin.com/company/the-change-lab-inc" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-faint hover:text-blue transition-colors">
+                  <Linkedin size={18} />
+                </a>
+                <a href="mailto:hello@thechangelab.net" aria-label="Email" className="text-faint hover:text-blue transition-colors">
+                  <Mail size={18} />
+                </a>
+              </div>
             </div>
 
             {/* Discover */}

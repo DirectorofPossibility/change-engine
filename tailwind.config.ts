@@ -87,6 +87,7 @@ const config: Config = {
         serif:   ['var(--font-display)', 'Georgia', '"Times New Roman"', 'serif'],
       },
       fontSize: {
+        'micro': ['0.6875rem', { lineHeight: '1.2' }],
         'display': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         'headline': ['2.25rem', { lineHeight: '1.15', letterSpacing: '-0.01em' }],
         'title': ['1.5rem', { lineHeight: '1.25' }],

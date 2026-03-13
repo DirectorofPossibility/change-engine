@@ -12,16 +12,14 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
-import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
-import { URGENCY_LEVELS } from '@/lib/constants'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
-import { HelpUrgencyHeader } from './HelpUrgencyHeader'
+import { HelpListClient } from './HelpListClient'
 
 export const revalidate = 300
 
 
 export const metadata: Metadata = {
-  title: 'Available Resources',
+  title: 'Find Help — Change Engine',
   description: 'Find services and resources for food, housing, healthcare, jobs, and more in Houston.',
 }
 
@@ -32,13 +30,6 @@ export default async function HelpPage() {
     ? await fetchTranslationsForTable('life_situations', situations.map(s => s.situation_id), langId)
     : {}
 
-  const grouped: Record<string, typeof situations> = {}
-  situations.forEach((s) => {
-    const level = s.urgency_level || 'Low'
-    if (!grouped[level]) grouped[level] = []
-    grouped[level].push(s)
-  })
-
   return (
     <div className="bg-paper min-h-screen">
       {/* Hero */}
@@ -47,66 +38,49 @@ export default async function HelpPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-          <p style={{ color: "#5c6474" }} className="text-xs uppercase tracking-widest mb-4">
+          <p className="font-mono text-micro uppercase tracking-widest text-muted mb-4">
             Change Engine
           </p>
-          <h1 style={{  }} className="text-4xl sm:text-5xl mb-4">
-            Available Resources
+          <h1 className="font-display text-4xl sm:text-5xl mb-4">
+            Find Help
           </h1>
-          <p style={{ color: "#5c6474" }} className="text-lg max-w-xl mx-auto leading-relaxed">
-            Find services and resources for food, housing, healthcare, jobs, and more in Houston.
+          <p className="font-body text-lg text-muted max-w-xl mx-auto leading-relaxed">
+            Search for food, housing, healthcare, jobs, and more in Houston. Type what you need below.
           </p>
         </div>
       </section>
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ color: "#5c6474" }} className="text-xs">
-          <Link href="/" className="hover:underline">Home</Link>
+        <nav className="font-mono text-micro text-muted">
+          <Link href="/" className="text-blue hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <span style={{  }}>Available Resources</span>
+          <span>Find Help</span>
         </nav>
       </div>
 
       {/* Main content */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <HelpCrisisBanner />
+        <HelpListClient situations={situations} translations={translations} />
 
-        <div className="space-y-8">
-          {URGENCY_LEVELS.map((level) => {
-            const items = grouped[level]
-            if (!items || items.length === 0) return null
-
-            return (
-              <section key={level}>
-                <HelpUrgencyHeader level={level} />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {items.map((s) => (
-                    <LifeSituationCard
-                      key={s.situation_id}
-                      name={s.situation_name}
-                      slug={s.situation_slug}
-                      description={s.description_5th_grade}
-                      urgency={s.urgency_level}
-                      iconName={s.icon_name}
-                      translatedName={translations[s.situation_id]?.title}
-                      translatedDescription={translations[s.situation_id]?.summary}
-                    />
-                  ))}
-                </div>
-              </section>
-            )
-          })}
-        </div>
-
-        {/* Divider */}
-        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-10" />
-
-        {/* Footer */}
-        <div className="text-center">
-          <Link href="/" style={{ color: "#1b5e8a" }} className="text-xs hover:underline">
-            Back to Change Engine
-          </Link>
+        {/* Cross-links */}
+        <div className="mt-10 pt-8 border-t border-rule">
+          <p className="font-mono text-micro uppercase tracking-wider text-faint mb-4">You might also need</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Link href="/services" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Service Directory</p>
+              <p className="font-body text-sm text-muted">Browse 211 services by category</p>
+            </Link>
+            <Link href="/officials/lookup" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Find Your Rep</p>
+              <p className="font-body text-sm text-muted">Look up who represents you</p>
+            </Link>
+            <Link href="/opportunities" className="block p-4 border border-rule hover:border-ink transition-colors">
+              <p className="font-body font-semibold text-ink mb-1">Get Involved</p>
+              <p className="font-body text-sm text-muted">Volunteer and community opportunities</p>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

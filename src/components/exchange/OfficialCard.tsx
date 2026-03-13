@@ -27,7 +27,7 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
   const levelColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
 
   const cardContent = (
-    <div className="bg-white overflow-hidden hover:border-ink transition-colors group" style={{ border: '1px solid #dde1e8' }}>
+    <div className="bg-white border border-rule overflow-hidden hover:border-ink transition-colors group">
       {/* Level color bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: levelColor }} />
 
@@ -50,8 +50,8 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="group-hover:underline" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#0d1117' }}>{name}</h3>
-          {displayTitle && <p className="line-clamp-2 mt-0.5" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#5c6474' }}>{displayTitle}</p>}
+          <h3 className="font-body text-[0.95rem] leading-snug font-semibold text-ink group-hover:underline">{name}</h3>
+          {displayTitle && <p className="font-body text-[0.8rem] leading-relaxed text-muted line-clamp-2 mt-0.5">{displayTitle}</p>}
           <div className="flex items-center gap-1.5 mt-2 text-xs">
             {level && (
               <span className="inline-flex items-center gap-1 font-bold uppercase tracking-wide" style={{ color: levelColor }}>
@@ -59,8 +59,8 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
                 {level}
               </span>
             )}
-            {party && level && <span className="text-brand-muted">&middot;</span>}
-            {party && <span className="text-brand-muted">{party}</span>}
+            {party && level && <span className="text-muted">&middot;</span>}
+            {party && <span className="text-muted">{party}</span>}
           </div>
         </div>
       </div>
@@ -68,22 +68,22 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
       {/* Contact actions */}
       <div className="flex items-center gap-3 flex-wrap px-4 pb-3 pt-0">
         {email && (
-          <a href={'mailto:' + email} className="flex items-center gap-1 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={'mailto:' + email} className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Mail size={13} /> {t('card.email')}
           </a>
         )}
         {phone && (
-          <a href={'tel:' + phone} className="flex items-center gap-1 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={'tel:' + phone} className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Phone size={13} /> {t('card.call')}
           </a>
         )}
         {website && (
-          <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Globe size={13} /> {t('card.website')}
           </a>
         )}
         {linkedinUrl && (
-          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Linkedin size={13} /> LinkedIn
           </a>
         )}

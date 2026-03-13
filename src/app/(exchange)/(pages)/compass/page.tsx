@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { CompassClient } from './CompassClient'
 import { THEMES } from '@/lib/constants'
 import { getNewsFeed } from '@/lib/data/exchange'
+import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,19 +28,24 @@ export default async function CompassPage() {
   // If onboarding not complete, return minimal data for the quiz
   if (!onboardingComplete) {
     return (
-      <CompassClient
-        onboardingComplete={false}
-        zip={zip}
-        selectedThemes={[]}
-        archetype={archetype}
-        themeColors={themeColors}
-        councilMember={null}
-        nearbyServices={[]}
-        topPolicy={null}
-        nextEvent={null}
-        featuredContent={null}
-        recentNews={[]}
-      />
+      <>
+        <CompassClient
+          onboardingComplete={false}
+          zip={zip}
+          selectedThemes={[]}
+          archetype={archetype}
+          themeColors={themeColors}
+          councilMember={null}
+          nearbyServices={[]}
+          topPolicy={null}
+          nextEvent={null}
+          featuredContent={null}
+          recentNews={[]}
+        />
+        <div className="max-w-[900px] mx-auto px-6">
+          <PageCrossLinks preset="resources" />
+        </div>
+      </>
     )
   }
 
@@ -164,18 +170,23 @@ export default async function CompassPage() {
   ])
 
   return (
-    <CompassClient
-      onboardingComplete={true}
-      zip={zip}
-      selectedThemes={selectedThemes}
-      archetype={archetype}
-      themeColors={themeColors}
-      councilMember={officialsResult}
-      nearbyServices={servicesResult}
-      topPolicy={policiesResult}
-      nextEvent={eventsResult}
-      featuredContent={contentResult}
-      recentNews={recentNews}
-    />
+    <>
+      <CompassClient
+        onboardingComplete={true}
+        zip={zip}
+        selectedThemes={selectedThemes}
+        archetype={archetype}
+        themeColors={themeColors}
+        councilMember={officialsResult}
+        nearbyServices={servicesResult}
+        topPolicy={policiesResult}
+        nextEvent={eventsResult}
+        featuredContent={contentResult}
+        recentNews={recentNews}
+      />
+      <div className="max-w-[900px] mx-auto px-6">
+        <PageCrossLinks preset="resources" />
+      </div>
+    </>
   )
 }

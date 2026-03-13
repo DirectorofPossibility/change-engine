@@ -17,7 +17,7 @@ export default async function CandidatesPage() {
   const { data: candidates } = await supabase
     .from('candidates')
     .select('candidate_id, candidate_name, office_sought, office_level, district, party, incumbent, photo_url, bio_summary, campaign_website')
-    .eq('is_active', 'true')
+    .eq('is_active', 'Yes')
     .order('office_level, office_sought, candidate_name')
 
   const allCandidates = candidates || []

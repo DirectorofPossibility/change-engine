@@ -219,7 +219,7 @@ export function WayfinderPanel({ panel, onClose, onNavigate }: WayfinderPanelPro
         tabIndex={-1}
         onKeyDown={handleKeyDown}
         className={
-          'fixed right-0 top-0 h-full w-[460px] max-w-full bg-white shadow-2xl z-50 ' +
+          'fixed right-0 top-0 h-full w-[90vw] sm:w-[460px] max-w-full bg-white shadow-2xl z-50 ' +
           'flex flex-col outline-none transition-transform duration-300 ease-in-out ' +
           (isOpen ? 'translate-x-0' : 'translate-x-full')
         }

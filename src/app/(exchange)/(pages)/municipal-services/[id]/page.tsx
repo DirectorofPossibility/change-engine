@@ -12,7 +12,7 @@ export const revalidate = 300
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
   const supabase = await createClient()
-  const { data: service } = await supabase.from('municipal_services').select('*').eq('service_id', id).single()
+  const { data: service } = await supabase.from('municipal_services').select('*').eq('id', id).single()
   if (!service) return { title: 'Service Not Found' }
   const s = service as any
   return {
@@ -24,13 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default async function MunicipalServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: service } = await supabase.from('municipal_services').select('*').eq('service_id', id).single()
+  const { data: service } = await supabase.from('municipal_services').select('*').eq('id', id).single()
   if (!service) notFound()
 
   const s = service as any
 
   const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('municipal_service' as any, s.service_id, userProfile?.role)
+  const wayfinderData = await getWayfinderContext('municipal_service' as any, s.id, userProfile?.role)
 
   return (
     <div className="bg-paper min-h-screen">

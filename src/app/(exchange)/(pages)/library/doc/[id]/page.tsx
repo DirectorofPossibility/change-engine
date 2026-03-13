@@ -21,10 +21,6 @@ import { THEMES } from '@/lib/constants'
 import { LibraryCard } from '@/components/exchange/LibraryCard'
 import { ArticleVoting } from './ArticleVoting'
 
-// ── Design tokens (locked — matches CommunityGuide.tsx) ─────────────────
-
-const PARCHMENT_LIGHT = '#f4f5f7'
-
 
 export const revalidate = 300
 
@@ -85,17 +81,17 @@ export default async function DocumentDetailPage(
         <div className="relative z-10 max-w-[820px] mx-auto px-6 py-14 md:py-20">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb">
-            <p style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              <Link href="/exchange" className="hover:underline" style={{ color: "#5c6474" }}>
+            <p className="uppercase" style={{ fontSize: 11, letterSpacing: '0.1em' }}>
+              <Link href="/exchange" className="hover:underline text-muted">
                 The Exchange
               </Link>
-              <span style={{ color: "#5c6474" }}> / </span>
-              <Link href="/library" className="hover:underline" style={{ color: "#5c6474" }}>
+              <span className="text-muted"> / </span>
+              <Link href="/library" className="hover:underline text-muted">
                 Library
               </Link>
               {primaryTheme.slug && (
                 <>
-                  <span style={{ color: "#5c6474" }}> / </span>
+                  <span className="text-muted"> / </span>
                   <Link href={'/library/category/' + primaryTheme.slug} className="hover:underline" style={{ color: primaryTheme.color }}>
                     {primaryTheme.name}
                   </Link>
@@ -106,8 +102,8 @@ export default async function DocumentDetailPage(
 
           {/* Document type label */}
           <p
-            className="mt-8"
-            style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}
+            className="mt-8 text-blue uppercase"
+            style={{ fontSize: 11, letterSpacing: '0.12em' }}
           >
             Research Document
           </p>
@@ -146,10 +142,9 @@ export default async function DocumentDetailPage(
           {/* Summary */}
           {doc.summary && (
             <p
-              className="mt-5"
+              className="mt-5 text-muted"
               style={{
                                 fontSize: 'clamp(15px, 2vw, 18px)',
-                color: "#5c6474",
                 lineHeight: 1.7,
               }}
             >
@@ -158,7 +153,7 @@ export default async function DocumentDetailPage(
           )}
 
           {/* Metadata strip */}
-          <div className="mt-8 flex items-center gap-4 flex-wrap" style={{ fontSize: 12, color: "#5c6474" }}>
+          <div className="mt-8 flex items-center gap-4 flex-wrap text-muted" style={{ fontSize: 12 }}>
             {doc.page_count > 0 && (
               <span>{doc.page_count} pages</span>
             )}
@@ -184,7 +179,7 @@ export default async function DocumentDetailPage(
       {/* ═══════════════════════════════════════════════════════════════════
           ACTIONS — PDF download + Ask AI
           ═══════════════════════════════════════════════════════════════ */}
-      <section style={{ background: "#f4f5f7", borderBottom: `1px solid ${'#dde1e8'}` }}>
+      <section className="bg-paper border-b border-rule">
         <div className="max-w-[820px] mx-auto px-6 py-6">
           <div className="flex flex-col sm:flex-row gap-3">
             <a
@@ -228,7 +223,7 @@ export default async function DocumentDetailPage(
       {doc.key_points.length > 0 && (
         <section style={{ background: '#ffffff' }}>
           <div className="max-w-[820px] mx-auto px-6 py-14">
-            <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 24 }}>
+            <p className="text-blue uppercase" style={{ fontSize: 11, letterSpacing: '0.1em', marginBottom: 24 }}>
               Key Takeaways
             </p>
 
@@ -269,10 +264,10 @@ export default async function DocumentDetailPage(
           TAGS — Compact keyword strip
           ═══════════════════════════════════════════════════════════════ */}
       {doc.tags.length > 0 && (
-        <section style={{ background: '#f4f5f7', borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+        <section className="bg-paper border-t border-b border-rule">
           <div className="max-w-[820px] mx-auto px-6 py-6">
             <div className="flex items-center gap-3 flex-wrap">
-              <span style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase' }}>
+              <span className="text-muted uppercase" style={{ fontSize: 10, letterSpacing: '0.1em' }}>
                 Keywords
               </span>
               <span style={{ color: '#dde1e8' }}>|</span>
@@ -280,12 +275,10 @@ export default async function DocumentDetailPage(
                 return (
                   <span
                     key={tag}
-                    className="px-2.5 py-1"
+                    className="px-2.5 py-1 text-muted border border-rule"
                     style={{
                                             fontSize: 11,
-                      color: "#5c6474",
                       background: '#ffffff',
-                      border: '1px solid #dde1e8',
                     }}
                   >
                     {tag}
@@ -310,12 +303,12 @@ export default async function DocumentDetailPage(
           RELATED RESEARCH — Editorial card grid
           ═══════════════════════════════════════════════════════════════ */}
       {related.length > 0 && (
-        <section style={{ background: "#f4f5f7", borderTop: `1px solid ${'#dde1e8'}` }}>
+        <section className="bg-paper border-t border-rule">
           <div className="max-w-[1000px] mx-auto px-6 py-14">
-            <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 8 }}>
+            <p className="text-blue uppercase" style={{ fontSize: 11, letterSpacing: '0.1em', marginBottom: 8 }}>
               Related Research
             </p>
-            <p style={{ fontSize: 14, fontStyle: 'italic', color: "#5c6474", marginBottom: 24 }}>
+            <p className="italic text-muted" style={{ fontSize: 14, marginBottom: 24 }}>
               More from the library on similar topics
             </p>
 
@@ -356,12 +349,12 @@ export default async function DocumentDetailPage(
                     </h3>
 
                     {rel.summary && (
-                      <p className="line-clamp-2" style={{ fontSize: 14, color: "#5c6474", lineHeight: 1.6 }}>
+                      <p className="line-clamp-2 text-muted" style={{ fontSize: 14, lineHeight: 1.6 }}>
                         {rel.summary}
                       </p>
                     )}
 
-                    <div className="mt-4 flex items-center gap-3" style={{ fontSize: 11, color: "#5c6474" }}>
+                    <div className="mt-4 flex items-center gap-3 text-muted" style={{ fontSize: 11 }}>
                       {rel.page_count > 0 && <span>{rel.page_count} pages</span>}
                       {rel.tags.length > 0 && (
                         <>
@@ -378,8 +371,8 @@ export default async function DocumentDetailPage(
             <div className="mt-8 text-center">
               <Link
                 href="/library"
-                className="hover:underline"
-                style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
+                className="hover:underline italic text-blue"
+                style={{ fontSize: 14 }}
               >
                 Browse the full library &rarr;
               </Link>
@@ -394,8 +387,8 @@ export default async function DocumentDetailPage(
       <div className="text-center py-10 bg-paper">
         <Link
           href="/exchange"
-          className="hover:underline"
-          style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
+          className="hover:underline italic text-blue"
+          style={{ fontSize: 14 }}
         >
           &larr; Back to The Community Exchange
         </Link>

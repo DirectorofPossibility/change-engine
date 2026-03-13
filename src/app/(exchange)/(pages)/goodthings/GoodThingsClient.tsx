@@ -447,6 +447,7 @@ export function GoodThingsClient() {
                       <input type="email" value={email}
                         onChange={function (e) { setEmail(e.target.value) }}
                         placeholder="your@email.com"
+                        aria-label="Email address"
                         className="mt-2 w-full max-w-sm px-4 py-3 border border-brand-border text-sm bg-brand-bg focus:outline-none focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent transition-all" />
                     )}
                   </div>

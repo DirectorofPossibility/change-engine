@@ -145,27 +145,36 @@ export function D2Nav() {
 
           {/* Right side — desktop links */}
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-5">
               <Link
-                href="/pathways"
+                href="/help"
                 className="font-mono text-[12px] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
               >
-                {t('nav.regions')}
+                Help
               </Link>
               <Link
-                href="/search"
+                href="/officials"
                 className="font-mono text-[12px] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
               >
-                {t('nav.routes')}
+                Officials
+              </Link>
+              <Link
+                href="/services"
+                className="font-mono text-[12px] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
+              >
+                Services
               </Link>
             </div>
             <Link
               href="/compass"
-              className="hidden md:block font-mono text-xs uppercase tracking-wide bg-ink text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
-              style={{ fontWeight: 600, letterSpacing: '0.08em', fontSize: '0.7rem' }}
+              className="hidden md:block font-mono text-[0.7rem] font-semibold uppercase tracking-wider bg-ink text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
             >
               {t('nav.find_my_way')}
             </Link>
+            {/* Language (desktop) */}
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
             {/* Hamburger */}
             <button
               className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-paper transition-colors"
@@ -182,8 +191,7 @@ export function D2Nav() {
       {drawerOpen && (
         <>
           <div
-            className="fixed inset-0 z-[200]"
-            style={{ background: 'rgba(26,26,26,0.7)' }}
+            className="fixed inset-0 z-[200] bg-black/70"
             onClick={function () { setDrawerOpen(false) }}
           />
           <div
@@ -319,16 +327,15 @@ export function D2Nav() {
               <div className="pt-3">
                 <Link
                   href="/me"
-                  className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-ink text-white font-mono uppercase hover:opacity-90 transition-opacity"
-                  style={{ fontWeight: 600, letterSpacing: '0.08em', fontSize: '0.7rem' }}
+                  className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-ink text-white font-mono text-[0.7rem] font-semibold uppercase tracking-wider hover:opacity-90 transition-opacity"
                   onClick={closeDrawer}
                 >
                   {t('d2nav.my_account')}
                 </Link>
               </div>
 
-              {/* Support */}
-              <details className="group">
+              {/* Support — open by default so crisis numbers are always visible */}
+              <details open className="group">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                   <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
