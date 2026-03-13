@@ -80,6 +80,7 @@ export function Wayfinder({ crumbs }: WayfinderProps) {
 
 // Human-readable labels for known route segments
 const ROUTE_LABELS: Record<string, string> = {
+  home: 'Home',
   explore: 'Browse Topics',
   focus: 'Topic',
   officials: 'Who Runs This',

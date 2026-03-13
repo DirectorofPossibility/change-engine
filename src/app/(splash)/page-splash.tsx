@@ -174,6 +174,14 @@ export default function SplashPage() {
 
       {/* Buttons */}
       <div className="flex-1 px-4 py-1 space-y-1.5">
+        <Link
+          href="/home"
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl text-sm font-bold border-2 border-brand-accent bg-brand-accent text-white hover:bg-brand-accent-hover transition-all"
+        >
+          <BookOpen size={16} />
+          Enter the Community Guide
+        </Link>
+
         <button
           onClick={function () { setShareOpen(true); setMobileMenuOpen(false) }}
           className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold border-2 border-brand-border bg-white text-brand-text hover:border-brand-accent/40 transition-all flex items-center gap-2.5"
@@ -323,9 +331,14 @@ export default function SplashPage() {
             <span className="text-[9px] font-mono text-brand-accent uppercase tracking-widest">Beta</span>
           </div>
         </div>
-        <button onClick={function () { setMobileMenuOpen(!mobileMenuOpen) }} className="text-brand-text p-1">
-          <Menu size={22} />
-        </button>
+        <div className="relative z-10 flex items-center gap-2">
+          <Link href="/home" className="text-xs font-bold font-mono uppercase tracking-wider bg-brand-accent text-white px-3 py-1.5 rounded-lg">
+            Guide
+          </Link>
+          <button onClick={function () { setMobileMenuOpen(!mobileMenuOpen) }} className="text-brand-text p-1">
+            <Menu size={22} />
+          </button>
+        </div>
       </div>
 
       {/* ── Mobile menu overlay ── */}
