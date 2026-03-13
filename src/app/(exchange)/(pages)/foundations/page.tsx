@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { getFoundationsIndex, getFoundationPathways, getFoundationFocusAreas } from '@/lib/data/exchange'
 import FoundationsListClient from './FoundationsListClient'
 
@@ -16,6 +17,8 @@ export const metadata: Metadata = {
 
 
 export default async function FoundationsPage() {
+  await requirePageEnabled('page_foundations')
+
   const raw = await getFoundationsIndex()
   const ids = raw.map((f: any) => f.id)
 

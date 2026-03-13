@@ -5,6 +5,7 @@ import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 import { CalendarClient } from './CalendarClient'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 
 export const metadata: Metadata = {
   title: 'Community Calendar — Change Engine',
@@ -19,6 +20,7 @@ export default async function CalendarPage({
 }: {
   searchParams: Promise<{ pathway?: string }>
 }) {
+  await requirePageEnabled('page_calendar')
   const { pathway } = await searchParams
   const items = await getCalendarItems()
 

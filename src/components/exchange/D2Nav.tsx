@@ -8,6 +8,7 @@ import { HeaderSearch } from './HeaderSearch'
 import { ArchetypeSelector } from './ArchetypeSelector'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
+import { useSiteConfig } from '@/lib/contexts/SiteConfigContext'
 import { SeedOfLife, FlowerOfLife } from '@/components/geo/sacred'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
@@ -83,6 +84,8 @@ export function D2Nav() {
   const pathname = usePathname()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { t } = useTranslation()
+  const showLangSwitcher = useSiteConfig('nav_language_switcher')
+  const showDesktopLinks = useSiteConfig('nav_desktop_links')
 
   const rawCenters = useCenters(t)
 
@@ -145,7 +148,7 @@ export function D2Nav() {
 
           {/* Right side — desktop links */}
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-5">
+            {showDesktopLinks && <div className="hidden md:flex items-center gap-5">
               <Link
                 href="/help"
                 className="font-mono text-[12px] uppercase tracking-[0.08em] text-dim hover:text-ink transition-colors"
@@ -164,7 +167,7 @@ export function D2Nav() {
               >
                 Services
               </Link>
-            </div>
+            </div>}
             <Link
               href="/compass"
               className="hidden md:block font-mono text-[0.7rem] font-semibold uppercase tracking-wider bg-ink text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
@@ -172,9 +175,9 @@ export function D2Nav() {
               {t('nav.find_my_way')}
             </Link>
             {/* Language (desktop) */}
-            <div className="hidden md:block">
+            {showLangSwitcher && <div className="hidden md:block">
               <LanguageSwitcher />
-            </div>
+            </div>}
             {/* Hamburger */}
             <button
               className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-paper transition-colors"

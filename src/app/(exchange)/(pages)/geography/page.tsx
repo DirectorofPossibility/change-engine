@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getSuperNeighborhoodsList } from '@/lib/data/exchange'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { GeographyClient } from './GeographyClient'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -18,6 +19,8 @@ export default async function GeographyPage({
 }: {
   searchParams: Promise<{ zip?: string; superNeighborhood?: string }>
 }) {
+  await requirePageEnabled('page_geography')
+
   const params = await searchParams
   const superNeighborhoods = await getSuperNeighborhoodsList()
 

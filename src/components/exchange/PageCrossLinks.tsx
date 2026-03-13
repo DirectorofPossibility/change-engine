@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getSiteConfig } from '@/lib/data/site-config'
 
 interface CrossLink {
   href: string
@@ -38,7 +39,10 @@ interface PageCrossLinksProps {
   label?: string
 }
 
-export function PageCrossLinks({ preset, links, label = 'You might also want' }: PageCrossLinksProps) {
+export async function PageCrossLinks({ preset, links, label = 'You might also want' }: PageCrossLinksProps) {
+  const config = await getSiteConfig()
+  if (config.page_cross_links === false) return null
+
   const items = links || (preset ? CROSS_LINK_PRESETS[preset] : CROSS_LINK_PRESETS.resources)
 
   return (

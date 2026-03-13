@@ -5,6 +5,7 @@ import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 import { createClient } from '@/lib/supabase/server'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { Clock, MapPin, Video } from 'lucide-react'
 
 
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 }
 
 export default async function EventsPage() {
+  await requirePageEnabled('page_events')
   const cookieStore = await cookies()
   const userZip = cookieStore.get('zip')?.value || ''
 

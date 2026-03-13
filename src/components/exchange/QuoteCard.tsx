@@ -1,10 +1,15 @@
+import { getSiteConfig } from '@/lib/data/site-config'
+
 interface QuoteCardProps {
   text: string
   attribution?: string
   accentColor?: string
 }
 
-export function QuoteCard({ text, attribution, accentColor = '#C75B2A' }: QuoteCardProps) {
+export async function QuoteCard({ text, attribution, accentColor = '#C75B2A' }: QuoteCardProps) {
+  const config = await getSiteConfig()
+  if (config.quotes === false) return null
+
   return (
     <blockquote className="relative my-10 py-8">
       <div

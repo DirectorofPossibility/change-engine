@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { TeenHubClient } from '@/components/exchange/TeenHub'
 
 export const revalidate = 600
@@ -25,6 +26,8 @@ function youthFilter(text: string | null | undefined): boolean {
 }
 
 export default async function TeenHubPage() {
+  await requirePageEnabled('page_teens')
+
   const supabase = await createClient()
 
   const [contentRes, orgsRes, oppsRes, eventsRes, servicesRes, statsRes] = await Promise.all([

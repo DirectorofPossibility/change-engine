@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Megaphone } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
+import { useSiteConfig } from '@/lib/contexts/SiteConfigContext'
 
 interface Promotion {
   promo_id: string
@@ -39,8 +40,11 @@ const TYPE_LABELS: Record<string, string> = {
  * - "hero": large hero-style with image
  */
 export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner' | 'hero' }) {
+  const enabled = useSiteConfig('featured_promos')
   const [promo, setPromo] = useState<Promotion | null>(null)
   const [loading, setLoading] = useState(true)
+
+  if (!enabled) return null
 
   useEffect(function () {
     const supabase = createClient()

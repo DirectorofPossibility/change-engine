@@ -8,6 +8,7 @@
  */
 
 import { HomeCover, HomeToday, HomeOrientation, HomeNeighborhood, HomeNewsFeed, HomeIndex, HomeBackPages } from './home'
+import { useSiteConfigMap } from '@/lib/contexts/SiteConfigContext'
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -75,36 +76,43 @@ interface CommunityGuideProps {
 // ── Component ────────────────────────────────────────────────────────────
 
 export function CommunityGuide({ stats, latestContent, newsFeed, quote, promotions, upcomingEvents }: CommunityGuideProps) {
+  const cfg = useSiteConfigMap()
+  const on = function (key: string) { return cfg[key] !== false }
+
   return (
     <div className="bg-paper">
-      <HomeCover stats={stats} />
+      {on('home_cover') && <HomeCover stats={stats} />}
 
-      <HomeToday
+      {on('home_today') && <HomeToday
         quote={quote}
         promotions={promotions}
         upcomingEvents={upcomingEvents}
-      />
+      />}
 
-      <HomeOrientation />
+      {on('home_orientation') && <HomeOrientation />}
 
-      <div className="h-px bg-rule" />
+      {on('home_neighborhood') && <>
+        <div className="h-px bg-rule" />
+        <HomeNeighborhood />
+      </>}
 
-      <HomeNeighborhood />
+      {on('home_newsfeed') && <>
+        <div className="h-px bg-rule" />
+        <HomeNewsFeed
+          newsFeed={newsFeed}
+          latestContent={latestContent}
+        />
+      </>}
 
-      <div className="h-px bg-rule" />
+      {on('home_index') && <>
+        <div className="h-px bg-rule" />
+        <HomeIndex stats={stats} />
+      </>}
 
-      <HomeNewsFeed
-        newsFeed={newsFeed}
-        latestContent={latestContent}
-      />
-
-      <div className="h-px bg-rule" />
-
-      <HomeIndex stats={stats} />
-
-      <div className="h-px bg-rule" />
-
-      <HomeBackPages />
+      {on('home_backpages') && <>
+        <div className="h-px bg-rule" />
+        <HomeBackPages />
+      </>}
     </div>
   )
 }

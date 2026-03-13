@@ -11,7 +11,7 @@ import {
   Compass, BookMarked, Quote, Library,
   ChevronDown, Scale, Megaphone, MapPin,
   Tag, Network, Linkedin, CircleDot, Map,
-  Layers, Activity, SlidersHorizontal,
+  Layers, Activity, SlidersHorizontal, Settings,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -78,6 +78,7 @@ const ADMIN_GROUPS: NavGroup[] = [
   {
     label: 'Settings',
     items: [
+      { href: '/dashboard/site-config', label: 'Site Config', icon: Settings },
       { href: '/dashboard/preferences', label: 'Content Preferences', icon: SlidersHorizontal },
       { href: '/dashboard/utilities', label: 'Utilities', icon: Wrench },
     ],

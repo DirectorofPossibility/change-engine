@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { OpportunitiesClient } from './OpportunitiesClient'
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 }
 
 export default async function OpportunitiesPage() {
+  await requirePageEnabled('page_opportunities')
   const cookieStore = await cookies()
   const userZip = cookieStore.get('zip')?.value || ''
 

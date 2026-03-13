@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { GoodThingsClient } from './GoodThingsClient'
 
 export const revalidate = 600
@@ -11,7 +12,9 @@ export const metadata: Metadata = {
   description: 'Three good things. Every day. Real stories from Houston, updated daily. Because the news isn\'t only bad.',
 }
 
-export default function GoodThingsPage() {
+export default async function GoodThingsPage() {
+  await requirePageEnabled('page_goodthings')
+
   return (
     <div className="bg-paper min-h-screen">
       <div className="relative overflow-hidden bg-paper">

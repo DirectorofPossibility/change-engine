@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { getBookshelfItems } from '@/lib/data/library'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { BookshelfClient } from './BookshelfClient'
 import Link from 'next/link'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
 }
 
 export default async function BookshelfPage() {
+  await requirePageEnabled('page_bookshelf')
+
   const books = await getBookshelfItems()
 
   return (

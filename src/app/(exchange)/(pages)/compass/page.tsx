@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { CompassClient } from './CompassClient'
 import { THEMES } from '@/lib/constants'
 import { getNewsFeed } from '@/lib/data/exchange'
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
 }
 
 export default async function CompassPage() {
+  await requirePageEnabled('page_compass')
+
   const cookieStore = await cookies()
   const zip = cookieStore.get('zip')?.value || undefined
   const compassThemes = cookieStore.get('compass_themes')?.value || undefined

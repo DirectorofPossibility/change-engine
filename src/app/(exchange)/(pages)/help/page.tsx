@@ -12,6 +12,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
 import { HelpListClient } from './HelpListClient'
 
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 }
 
 export default async function HelpPage() {
+  await requirePageEnabled('page_help')
   const situations = await getLifeSituations()
   const langId = await getLangId()
   const translations = langId

@@ -6,9 +6,11 @@ import { SeedOfLife } from '@/components/geo/sacred'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems } from '@/lib/feature-flags'
+import { useSiteConfig } from '@/lib/contexts/SiteConfigContext'
 
 export function D2Footer() {
   const { t } = useTranslation()
+  const showSocials = useSiteConfig('footer_social_links')
 
   const DISCOVER = filterNavItems([
     { label: t('d2footer.civic_compass'), href: '/compass' },
@@ -76,7 +78,7 @@ export function D2Footer() {
               <p className="font-body text-[.82rem] leading-relaxed text-dim">
                 {t('brand.description')}
               </p>
-              <div className="flex items-center gap-3 mt-3">
+              {showSocials && <div className="flex items-center gap-3 mt-3">
                 <a href="https://www.facebook.com/TheChangeLabInc/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-faint hover:text-blue transition-colors">
                   <Facebook size={18} />
                 </a>
@@ -89,7 +91,7 @@ export function D2Footer() {
                 <a href="mailto:hello@thechangelab.net" aria-label="Email" className="text-faint hover:text-blue transition-colors">
                   <Mail size={18} />
                 </a>
-              </div>
+              </div>}
             </div>
 
             {/* Discover */}

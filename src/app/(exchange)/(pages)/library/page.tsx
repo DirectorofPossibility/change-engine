@@ -4,6 +4,7 @@ import { LibraryClient } from './LibraryClient'
 import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import { requirePageEnabled } from '@/lib/data/page-gate'
 
 export const revalidate = 300
 
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 
 export default async function LibraryPage() {
+  await requirePageEnabled('page_library')
   const { documents } = await getPublishedDocuments(1, 100)
 
   return (
