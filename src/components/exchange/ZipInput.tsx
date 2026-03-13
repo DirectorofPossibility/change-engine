@@ -22,8 +22,8 @@ export function ZipInput() {
       <div className="flex items-center gap-1 text-xs">
         <MapPin size={12} className="text-brand-accent" />
         <span className="text-brand-muted">{zip}</span>
-        <button onClick={clearZip} className="text-brand-muted hover:text-brand-text" aria-label={t('zip.clear')}>
-          <X size={12} />
+        <button onClick={clearZip} className="text-brand-muted hover:text-brand-text p-2 -m-2" aria-label={t('zip.clear')}>
+          <X size={14} />
         </button>
       </div>
     )

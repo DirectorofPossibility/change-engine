@@ -62,7 +62,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
                   {c.party || 'Candidate'}
                 </span>
                 {c.incumbent === 'true' && (
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: CLAY }}>Incumbent</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: CLAY }}>Incumbent</span>
                 )}
               </div>
               <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15 }}>

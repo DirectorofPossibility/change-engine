@@ -9,17 +9,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink:        '#0d1117',
-        paper:      '#f4f5f7',
+        /* ── Locked editorial palette ── */
+        ink:        '#1A1A1A',
+        paper:      '#F8F4EC',
+        parchment:  '#F5F0E8',
+        'parchment-warm': '#EDE7D8',
         white:      '#ffffff',
-        dim:        '#5c6474',
-        faint:      '#8a929e',
-        rule:       '#dde1e8',
-        blue:       '#1b5e8a',
-        'blue-lt':  '#2a7db5',
-        'blue-bg':  '#e8f2fa',
+        clay:       '#C4663A',
+        muted:      '#7a7265',
+        dim:        '#7a7265',       // alias → muted (backwards compat)
+        faint:      '#9a9189',
+        rule:       'rgba(196,102,58,0.3)',
+        blue:       '#1a3460',
+        'blue-lt':  '#2a5580',
+        'blue-bg':  '#f0ece4',
         teal:       '#7ec8e3',
-        civic:      '#b03a2a',
+        civic:      '#C4663A',       // alias → clay
         // Pathway colors — editorial dark palette
         health:     '#1a6b56',
         'health-lt':'#e4f2ed',
@@ -37,28 +42,28 @@ const config: Config = {
         accountability: '#9333ea',
         // Dashboard sidebar
         sidebar: {
-          bg: '#0d1117',
-          hover: '#161b22',
-          active: '#1c2333',
+          bg: '#1A1A1A',
+          hover: '#2a2a2a',
+          active: '#333333',
         },
-        // Legacy aliases for components that still reference brand.*
+        // Legacy aliases — updated to editorial palette
         brand: {
           bg: '#ffffff',
-          'bg-alt': '#f4f5f7',
+          'bg-alt': '#F8F4EC',
           cream: '#ffffff',
-          text: '#0d1117',
-          accent: '#1b5e8a',
-          'accent-hover': '#2a7db5',
-          muted: '#5c6474',
-          'muted-light': '#8a929e',
-          border: '#dde1e8',
+          text: '#1A1A1A',
+          accent: '#C4663A',
+          'accent-hover': '#b55a33',
+          muted: '#7a7265',
+          'muted-light': '#9a9189',
+          border: 'rgba(196,102,58,0.3)',
           card: '#ffffff',
           success: '#16a34a',
           warning: '#6a4e10',
           danger: '#b03a2a',
-          dark: '#0d1117',
-          sand: '#dde1e8',
-          warm: '#8a929e',
+          dark: '#1A1A1A',
+          sand: 'rgba(196,102,58,0.3)',
+          warm: '#9a9189',
         },
         // Legacy theme.* aliases — map to new pathway colors
         theme: {
@@ -78,12 +83,11 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['var(--font-display)', 'Georgia', 'serif'],
-        body:    ['var(--font-body)', 'Georgia', 'serif'],
-        mono:    ['var(--font-mono)', 'monospace'],
-        // Legacy aliases
-        sans:    ['var(--font-body)', 'Georgia', 'serif'],
-        serif:   ['var(--font-display)', 'Georgia', 'serif'],
+        display: ['Georgia', '"Times New Roman"', 'serif'],
+        body:    ['Georgia', '"Times New Roman"', 'serif'],
+        mono:    ['"Courier New"', 'Courier', 'monospace'],
+        sans:    ['Georgia', '"Times New Roman"', 'serif'],
+        serif:   ['Georgia', '"Times New Roman"', 'serif'],
       },
       fontSize: {
         'display': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
@@ -98,7 +102,7 @@ const config: Config = {
         'card-hover': 'none',
         'offset': 'none',
         'offset-lg': 'none',
-        'header': '0 1px 0 #dde1e8',
+        'header': '0 1px 0 rgba(196,102,58,0.3)',
         'drop': 'none',
       },
       keyframes: {

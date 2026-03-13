@@ -140,7 +140,7 @@ export function D2Nav() {
         <div className="max-w-[1080px] mx-auto px-6 flex items-center justify-between h-full">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <SeedOfLife color="#1b5e8a" size={28} />
+            <SeedOfLife color="#1a3460" size={28} />
             <span className="font-display text-[1rem] font-bold tracking-[-0.01em] text-ink">
               {t('nav.change_engine')}
             </span>
@@ -169,13 +169,14 @@ export function D2Nav() {
             </div>
             <Link
               href="/compass"
-              className="hidden md:block font-mono text-xs uppercase tracking-wide bg-ink text-white px-4 py-2 hover:bg-blue transition-colors"
+              className="hidden md:block font-mono text-xs uppercase tracking-wide bg-clay text-white px-5 py-2.5 hover:opacity-90 transition-opacity"
+              style={{ fontWeight: 600, letterSpacing: '0.08em', fontSize: '0.7rem' }}
             >
               {t('nav.find_my_way')}
             </Link>
             {/* Hamburger */}
             <button
-              className="p-2 hover:bg-paper transition-colors"
+              className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-paper transition-colors"
               onClick={function () { setDrawerOpen(true) }}
               aria-label="Open menu"
             >
@@ -190,7 +191,7 @@ export function D2Nav() {
         <>
           <div
             className="fixed inset-0 z-[200]"
-            style={{ background: 'rgba(13,17,23,0.7)' }}
+            style={{ background: 'rgba(26,26,26,0.7)' }}
             onClick={function () { setDrawerOpen(false) }}
           />
           <div
@@ -203,7 +204,7 @@ export function D2Nav() {
             {/* Drawer header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-rule">
               <div className="flex items-center gap-2.5">
-                <SeedOfLife color="#1b5e8a" size={24} />
+                <SeedOfLife color="#1a3460" size={24} />
                 <span className="font-display text-[15px] font-bold text-ink">{t('nav.change_engine')}</span>
               </div>
               <button
@@ -258,7 +259,7 @@ export function D2Nav() {
                       <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                       <span
                         className="font-mono text-[11px] uppercase tracking-[0.08em] group-open:text-blue transition-colors"
-                        style={{ color: isActive ? '#1b5e8a' : '#8a929e' }}
+                        style={{ color: isActive ? '#1a3460' : '#9a9189' }}
                       >
                         {center.label}
                       </span>
@@ -278,7 +279,7 @@ export function D2Nav() {
                             key={item.href}
                             href={item.href}
                             className="block pl-5 py-1.5 font-body text-[.82rem] transition-colors hover:text-blue"
-                            style={{ color: itemActive ? '#1b5e8a' : '#0d1117' }}
+                            style={{ color: itemActive ? '#1a3460' : '#1A1A1A' }}
                             onClick={closeDrawer}
                           >
                             {item.label}
@@ -343,7 +344,8 @@ export function D2Nav() {
               <div className="pt-3">
                 <Link
                   href="/me"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-ink text-white font-mono text-[11px] uppercase tracking-[0.08em] hover:bg-blue transition-colors"
+                  className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-clay text-white font-mono uppercase hover:opacity-90 transition-opacity"
+                  style={{ fontWeight: 600, letterSpacing: '0.08em', fontSize: '0.7rem' }}
                   onClick={closeDrawer}
                 >
                   {t('d2nav.my_account')}

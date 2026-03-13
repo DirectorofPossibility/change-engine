@@ -89,16 +89,16 @@ export default async function CommunityIndexPage() {
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
               <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{counts.neighborhoods}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
             </div>
             <div>
               <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{counts.organizations}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Organizations</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Organizations</span>
             </div>
             {counts.events > 0 && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{counts.events}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Upcoming Events</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Upcoming Events</span>
               </div>
             )}
           </div>
@@ -120,7 +120,7 @@ export default async function CommunityIndexPage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Explore</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{SECTIONS.length} sections</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{SECTIONS.length} sections</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
@@ -140,7 +140,7 @@ export default async function CommunityIndexPage() {
                         {section.label}
                       </h3>
                       {count > 0 && (
-                        <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.08em' }} className="mt-0.5 uppercase">
+                        <p style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.08em' }} className="mt-0.5 uppercase">
                           {count.toLocaleString()} available
                         </p>
                       )}

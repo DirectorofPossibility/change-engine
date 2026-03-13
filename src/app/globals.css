@@ -4,410 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Constrain Leaflet z-indices so nav dropdowns stay on top */
-.leaflet-pane { z-index: 1 !important; }
-.leaflet-top, .leaflet-bottom { z-index: 10 !important; }
-.leaflet-control { z-index: 10 !important; }
-
-@layer base {
-  /* Typography */
-  body {
-    font-family: var(--font-body);
-    color: #0d1117;
-    background: #ffffff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: 700;
-  }
-
-  /* Sharp corners everywhere */
-  *, *::before, *::after {
-    border-radius: 0 !important;
-  }
-
-  /* No box-shadows — editorial design uses borders for depth */
-  .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl,
-  .hover\:shadow-sm:hover, .hover\:shadow:hover, .hover\:shadow-md:hover,
-  .hover\:shadow-lg:hover, .hover\:shadow-xl:hover {
-    box-shadow: none !important;
-  }
-
-  /* Exception: only circular elements */
-  .rounded-full { border-radius: 9999px !important; }
-
-  /* Global focus indicators for keyboard accessibility */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible,
-  [tabindex]:focus-visible {
-    outline: 2px solid #1b5e8a;
-    outline-offset: 2px;
-  }
-}
-
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* DM Mono for all labels */
-.label, .tag, .kicker, .meta, .badge {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Meta label — DM Mono, uppercase, small */
-.meta-label {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #5c6474;
-}
-
-/* Source attribution — DM Mono, small */
-.meta-source {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #8a929e;
-}
-
-/* Section divider — clean rule */
-.section-rule {
-  border: none;
-  height: 1px;
-  background: #dde1e8;
-}
-
-/* Card hover — border-based, no shadows */
-.card-lift {
-  transition: all 0.2s ease;
-}
-.card-lift:hover {
-  border-color: #0d1117;
-}
-
-/* Color bar accent on cards */
-.color-bar-left {
-  position: relative;
-  overflow: hidden;
-}
-.color-bar-left::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  transition: width 0.2s ease;
-}
-.color-bar-left:hover::before {
-  width: 4px;
-}
-
-/* Effort tag — square badge */
-.effort-tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.125rem 0.5rem;
-  background: #f4f5f7;
-  color: #5c6474;
-}
-
-/* Spectrum bar — 7 pathway colors */
-.spectrum-bar {
-  display: flex;
-  height: 2px;
-}
-.spectrum-bar > div {
-  flex: 1;
-}
-
-/* Fade-in for page transitions */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-up {
-  animation: fade-up 0.4s ease-out both;
-}
-
-/* Ticker tape scroll */
-@keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.ticker-scroll {
-  animation: ticker-scroll 60s linear infinite;
-}
-.ticker-scroll:hover {
-  animation-play-state: paused;
-}
-
-/* Announcement scroll */
-@keyframes announcement-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.announcement-scroll {
-  animation: announcement-scroll 20s linear infinite;
-}
-.announcement-scroll:hover {
-  animation-play-state: paused;
-}
-
-/* Hero FOL color cycle */
-@keyframes fol-color-cycle {
-  0%   { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
-}
-.animate-fol-color-cycle {
-  animation: fol-color-cycle 20s linear infinite;
-}
-
-/* Bounce slow */
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-.animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
-@import 'leaflet/dist/leaflet.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Constrain Leaflet z-indices so nav dropdowns stay on top */
-.leaflet-pane { z-index: 1 !important; }
-.leaflet-top, .leaflet-bottom { z-index: 10 !important; }
-.leaflet-control { z-index: 10 !important; }
-
-@layer base {
-  /* Typography */
-  body {
-    font-family: var(--font-body);
-    color: #0d1117;
-    background: #ffffff;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: 700;
-  }
-
-  /* Sharp corners everywhere */
-  *, *::before, *::after {
-    border-radius: 0 !important;
-  }
-
-  /* No box-shadows — editorial design uses borders for depth */
-  .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl,
-  .hover\:shadow-sm:hover, .hover\:shadow:hover, .hover\:shadow-md:hover,
-  .hover\:shadow-lg:hover, .hover\:shadow-xl:hover {
-    box-shadow: none !important;
-  }
-
-  /* Exception: only circular elements */
-  .rounded-full { border-radius: 9999px !important; }
-
-  /* Global focus indicators for keyboard accessibility */
-  button:focus-visible,
-  a:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible,
-  [tabindex]:focus-visible {
-    outline: 2px solid #1b5e8a;
-    outline-offset: 2px;
-  }
-}
-
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* DM Mono for all labels */
-.label, .tag, .kicker, .meta, .badge {
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-/* Meta label — DM Mono, uppercase, small */
-.meta-label {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #5c6474;
-}
-
-/* Source attribution — DM Mono, small */
-.meta-source {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #8a929e;
-}
-
-/* Section divider — clean rule */
-.section-rule {
-  border: none;
-  height: 1px;
-  background: #dde1e8;
-}
-
-/* Card hover — border-based, no shadows */
-.card-lift {
-  transition: all 0.2s ease;
-}
-.card-lift:hover {
-  border-color: #0d1117;
-}
-
-/* Color bar accent on cards */
-.color-bar-left {
-  position: relative;
-  overflow: hidden;
-}
-.color-bar-left::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  transition: width 0.2s ease;
-}
-.color-bar-left:hover::before {
-  width: 4px;
-}
-
-/* Effort tag — square badge */
-.effort-tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.125rem 0.5rem;
-  background: #f4f5f7;
-  color: #5c6474;
-}
-
-/* Spectrum bar — 7 pathway colors */
-.spectrum-bar {
-  display: flex;
-  height: 2px;
-}
-.spectrum-bar > div {
-  flex: 1;
-}
-
-/* Fade-in for page transitions */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-up {
-  animation: fade-up 0.4s ease-out both;
-}
-
-/* Ticker tape scroll */
-@keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.ticker-scroll {
-  animation: ticker-scroll 60s linear infinite;
-}
-.ticker-scroll:hover {
-  animation-play-state: paused;
-}
-
-/* Announcement scroll */
-@keyframes announcement-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.announcement-scroll {
-  animation: announcement-scroll 20s linear infinite;
-}
-.announcement-scroll:hover {
-  animation-play-state: paused;
-}
-
-/* Hero FOL color cycle */
-@keyframes fol-color-cycle {
-  0%   { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
-}
-.animate-fol-color-cycle {
-  animation: fol-color-cycle 20s linear infinite;
-}
-
-/* Bounce slow */
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-.animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
-
-
-/*
- * ============================================================
- * CHANGE ENGINE — SITE-WIDE DESIGN FIXES
- * Drop into: app/globals.css (after your existing base styles)
- * ============================================================
- */
-
 /* ─────────────────────────────────────────────
-   1. DESIGN TOKENS — Single source of truth
-   Replace all hardcoded hex values with these
+   DESIGN TOKENS — Single source of truth
    ───────────────────────────────────────────── */
 :root {
+  /* Fonts — Georgia and Courier New, no Google Fonts */
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body:    Georgia, "Times New Roman", serif;
+  --font-mono:    "Courier New", Courier, monospace;
+
   /* Layout */
-  --max-width: 1080px;          /* ONE value, used everywhere */
-  --content-padding: 1.5rem;    /* 24px horizontal page padding */
+  --max-width: 1080px;
+  --content-padding: 1.5rem;
 
-  /* Colors (already in your system — making them official) */
-  --color-ink:        #0d1117;
-  --color-paper:      #f4f5f7;
+  /* Locked editorial palette */
+  --color-ink:        #1A1A1A;
+  --color-parchment:  #F5F0E8;
+  --color-paper:      #F8F4EC;
+  --color-parchment-warm: #EDE7D8;
   --color-white:      #ffffff;
-  --color-blue:       #1b5e8a;
-  --color-dim:        #5c6474;
-  --color-faint:      #9199a8;
-  --color-rule:       #dde1e8;
+  --color-clay:       #C4663A;
+  --color-blue:       #1a3460;
+  --color-muted:      #7a7265;
+  --color-faint:      #9a9189;
+  --color-rule:       rgba(196,102,58,0.3);
 
-  /* Theme colors */
+  /* Pathway theme colors */
   --color-health:     #1a6b56;
   --color-families:   #1e4d7a;
   --color-neighbor:   #4a2870;
@@ -416,7 +38,7 @@
   --color-safety:     #1a5030;
   --color-bigger-we:  #1a3460;
 
-  /* Typography scale — MINIMUM 11px, nothing smaller */
+  /* Typography scale — MINIMUM 11px */
   --text-micro:   0.6875rem;   /* 11px — absolute floor */
   --text-xs:      0.75rem;     /* 12px */
   --text-sm:      0.875rem;    /* 14px */
@@ -429,21 +51,226 @@
   --transition-slow:   300ms ease;
 }
 
+/* Constrain Leaflet z-indices so nav dropdowns stay on top */
+.leaflet-pane { z-index: 1 !important; }
+.leaflet-top, .leaflet-bottom { z-index: 10 !important; }
+.leaflet-control { z-index: 10 !important; }
+
 
 /* ─────────────────────────────────────────────
-   2. FONT SIZE FLOOR
-   Nothing on the site renders below 11px
+   BASE LAYER
+   ───────────────────────────────────────────── */
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background: var(--color-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  /* Sharp corners everywhere — flat editorial design */
+  *, *::before, *::after {
+    border-radius: 0 !important;
+  }
+
+  /* No box-shadows — borders do that work */
+  .shadow-sm, .shadow, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl,
+  .hover\:shadow-sm:hover, .hover\:shadow:hover, .hover\:shadow-md:hover,
+  .hover\:shadow-lg:hover, .hover\:shadow-xl:hover {
+    box-shadow: none !important;
+  }
+
+  /* Exception: circular elements only */
+  .rounded-full { border-radius: 9999px !important; }
+
+  /* Focus indicators — keyboard accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   UTILITIES
+   ───────────────────────────────────────────── */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY CLASSES
    ───────────────────────────────────────────── */
 
-/* Catch all the sub-11px classes used throughout */
+/* Courier New for all labels */
+.label, .tag, .kicker, .meta, .badge {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Meta label — Courier New, uppercase, small */
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+
+/* Source attribution */
+.meta-source {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-faint);
+}
+
+
+/* ─────────────────────────────────────────────
+   SECTION & CARD PATTERNS
+   ───────────────────────────────────────────── */
+
+/* Section divider — warm clay rule */
+.section-rule {
+  border: none;
+  height: 1px;
+  background: var(--color-rule);
+}
+
+/* Card hover — border-based, no shadows */
+.card-lift {
+  transition: all 0.2s ease;
+}
+.card-lift:hover {
+  border-color: var(--color-ink);
+}
+
+/* Color bar accent on cards */
+.color-bar-left {
+  position: relative;
+  overflow: hidden;
+}
+.color-bar-left::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  transition: width 0.2s ease;
+}
+.color-bar-left:hover::before {
+  width: 4px;
+}
+
+/* Effort tag — square badge */
+.effort-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.125rem 0.5rem;
+  background: var(--color-paper);
+  color: var(--color-muted);
+}
+
+/* Spectrum bar — 7 pathway colors */
+.spectrum-bar {
+  display: flex;
+  height: 2px;
+}
+.spectrum-bar > div {
+  flex: 1;
+}
+
+/* Theme gradient bar (footer) */
+.theme-gradient-bar {
+  display: flex;
+  height: 3px;
+}
+.theme-gradient-bar > div {
+  flex: 1;
+}
+
+
+/* ─────────────────────────────────────────────
+   BUTTON CONSISTENCY
+   Three types: primary (clay), secondary (blue outline), ghost (clay text)
+   ───────────────────────────────────────────── */
+
+.btn-primary {
+  background: var(--color-clay);
+  color: var(--color-white);
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.btn-secondary {
+  background: rgba(26,52,96,0.03);
+  color: var(--color-blue);
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 2px solid var(--color-blue);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.btn-secondary:hover {
+  background: rgba(26,52,96,0.08);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-clay);
+  padding: 0.25rem 0;
+  font-size: var(--text-sm);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+.btn-ghost:hover {
+  text-decoration: underline;
+}
+
+
+/* ─────────────────────────────────────────────
+   FONT SIZE FLOOR
+   Nothing renders below 11px
+   ───────────────────────────────────────────── */
+
 .text-\[\.5rem\],
 .text-\[\.52rem\],
 .text-\[\.56rem\],
 .text-\[0\.5rem\],
-.text-\[0\.56rem\] {
-  font-size: var(--text-micro) !important;  /* bump to 11px */
-}
-
+.text-\[0\.56rem\],
 .text-\[\.58rem\],
 .text-\[\.62rem\],
 .text-\[\.65rem\],
@@ -453,50 +280,38 @@
   font-size: var(--text-micro) !important;
 }
 
-/* Explicit: any element with font-size below 11px gets floored */
-* {
-  min-font-size: 11px; /* not yet universal but signals intent */
-}
-
 
 /* ─────────────────────────────────────────────
-   3. MAX-WIDTH STANDARDIZATION
-   Every container uses --max-width (1080px)
-   Override the 1200px exceptions on library pages
+   MAX-WIDTH STANDARDIZATION
    ───────────────────────────────────────────── */
 
-.max-w-\[1200px\] {
+.max-w-\[1200px\],
+.max-w-\[900px\] {
   max-width: var(--max-width) !important;
 }
 
-/* The one exception: allow full reading width on doc pages */
 .library-doc-layout {
   max-width: var(--max-width);
 }
 
 
 /* ─────────────────────────────────────────────
-   4. NAVIGATION — Height & alignment fix
+   NAVIGATION
    ───────────────────────────────────────────── */
 
 nav.sticky {
-  height: 56px; /* was 54px — aligns to 8px grid */
+  height: 54px;
 }
 
-/* Subnav dark bar: tighten the breadcrumb font */
 .bg-ink .font-mono {
-  letter-spacing: 0.06em; /* reduce from 0.14em — less shouty */
+  letter-spacing: 0.06em;
 }
 
 
 /* ─────────────────────────────────────────────
-   5. WAYFINDER SIDEBAR — Remove duplicate DOM pattern
-   The sidebar renders twice (desktop + mobile hidden copy).
-   This CSS solution replaces the need for two instances.
+   WAYFINDER SIDEBAR
    ───────────────────────────────────────────── */
 
-/* Keep ONE aside.wayfinder in your JSX.
-   Use this to control placement responsively: */
 aside.wayfinder {
   display: none;
 }
@@ -509,7 +324,6 @@ aside.wayfinder {
   }
 }
 
-/* For mobile: show wayfinder inline, collapsed */
 @media (max-width: 1023px) {
   aside.wayfinder {
     display: block;
@@ -520,8 +334,76 @@ aside.wayfinder {
 
 
 /* ─────────────────────────────────────────────
-   6. ANIMATIONS — Respect user preferences
-   Gate ALL decorative animations behind this
+   TYPOGRAPHY HIERARCHY — Reduce noise in sidebars
+   ───────────────────────────────────────────── */
+
+aside .font-mono {
+  font-size: var(--text-micro);
+  letter-spacing: 0.1em;
+}
+
+aside h3 {
+  font-size: var(--text-sm);
+}
+
+aside .text-xs,
+aside .text-\[10px\],
+aside .text-\[11px\] {
+  font-size: var(--text-micro);
+}
+
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────────── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.4s ease-out both;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-scroll {
+  animation: ticker-scroll 60s linear infinite;
+}
+.ticker-scroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes announcement-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.announcement-scroll {
+  animation: announcement-scroll 20s linear infinite;
+}
+.announcement-scroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes fol-color-cycle {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+.animate-fol-color-cycle {
+  animation: fol-color-cycle 20s linear infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+.animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
+
+
+/* ─────────────────────────────────────────────
+   ACCESSIBILITY — Reduced motion
    ───────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -533,53 +415,31 @@ aside.wayfinder {
     transition-duration: 0.01ms !important;
   }
 
-  /* Specifically kill the pulse animations */
   .animate-pulse {
     animation: none !important;
     opacity: 0.6;
   }
 }
 
-/* The Wayfinder FOL circle pulse: make it subtler even when motion is OK */
-circle[stroke="#1e4d7a"] animate[attributeName="opacity"] {
-  /* handled in component — values should be: 0.15 to 0.05 to 0.15 */
-}
-
-/* Tone down the green election dot pulse */
 .animate-pulse.w-2.h-2 {
-  animation-duration: 2.5s; /* slower = less anxious */
+  animation-duration: 2.5s;
 }
 
 
 /* ─────────────────────────────────────────────
-   7. TRAIL DEPTH DOTS — Fix or remove
-   Currently all dots are the same faint color.
-   Make them meaningful or remove the widget.
+   MISC COMPONENTS
    ───────────────────────────────────────────── */
 
-/* Option A: Remove entirely until it's functional */
 .trail-depth-widget {
   display: none;
 }
 
-/* Option B: Style for actual depth levels (add depth-1 through depth-5 
-   to the parent container in your component): */
 [data-depth="1"] .depth-dot:nth-child(1)   { background: rgba(255,255,255,0.7); }
 [data-depth="2"] .depth-dot:nth-child(-n+2) { background: rgba(255,255,255,0.7); }
 [data-depth="3"] .depth-dot:nth-child(-n+3) { background: rgba(255,255,255,0.7); }
 [data-depth="4"] .depth-dot:nth-child(-n+4) { background: rgba(255,255,255,0.7); }
 [data-depth="5"] .depth-dot                 { background: rgba(255,255,255,0.7); }
 
-
-/* ─────────────────────────────────────────────
-   8. ELECTION TICKER — Reposition
-   Move it OUT of between content and footer.
-   It now sits as a proper site-wide banner.
-   Add class "ticker-banner" to your ticker div.
-   ───────────────────────────────────────────── */
-
-/* In your layout, move the ticker ABOVE the footer, not after main content.
-   This CSS makes it feel like a proper system-level bar: */
 .ticker-banner {
   position: sticky;
   bottom: 0;
@@ -587,7 +447,6 @@ circle[stroke="#1e4d7a"] animate[attributeName="opacity"] {
   border-top: 1px solid rgba(255,255,255,0.12);
 }
 
-/* On mobile, give it more tap target height */
 @media (max-width: 768px) {
   .ticker-banner a {
     padding-top: 0.75rem;
@@ -595,97 +454,7 @@ circle[stroke="#1e4d7a"] animate[attributeName="opacity"] {
   }
 }
 
-
-/* ─────────────────────────────────────────────
-   9. TYPOGRAPHY HIERARCHY — Reduce noise
-   Cap the number of visible font-size steps in 
-   any one section to 3 (heading / body / label)
-   ───────────────────────────────────────────── */
-
-/* Wayfinder panel: too many sizes in tight space */
-aside .font-mono {
-  font-size: var(--text-micro); /* 11px uniform for all mono labels */
-  letter-spacing: 0.1em;
-}
-
-aside h3 {
-  font-size: var(--text-sm);   /* 14px */
-}
-
-aside .text-xs,
-aside .text-\[10px\],
-aside .text-\[11px\] {
-  font-size: var(--text-micro); /* consolidate to one size */
-}
-
-/* Footer: the four emergency numbers deserve more visual weight */
-footer .text-\[\.5rem\] strong,
-footer .text-\[\.56rem\] strong {
-  font-size: var(--text-xs);   /* 12px — readable at a glance */
-  font-weight: 700;
-}
-
-
-/* ─────────────────────────────────────────────
-   10. BUTTON CONSISTENCY
-   Three types only: primary, secondary, ghost
-   ───────────────────────────────────────────── */
-
-/* Primary: bg-ink text-white */
-.btn-primary {
-  background: var(--color-ink);
-  color: var(--color-white);
-  padding: 0.5rem 1rem;
-  font-family: var(--font-mono, monospace);
-  font-size: var(--text-micro);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border: none;
-  transition: background var(--transition-fast);
-}
-.btn-primary:hover { background: var(--color-blue); }
-
-/* Secondary: border + transparent */
-.btn-secondary {
-  background: transparent;
-  color: var(--color-ink);
-  padding: 0.5rem 1rem;
-  font-family: var(--font-mono, monospace);
-  font-size: var(--text-micro);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border: 1px solid var(--color-rule);
-  transition: border-color var(--transition-fast), color var(--transition-fast);
-}
-.btn-secondary:hover {
-  border-color: var(--color-ink);
-  color: var(--color-blue);
-}
-
-/* Ghost: text only */
-.btn-ghost {
-  background: transparent;
-  color: var(--color-blue);
-  padding: 0.25rem 0;
-  font-size: var(--text-sm);
-  text-decoration: underline;
-  border: none;
-  cursor: pointer;
-}
-
-
-/* ─────────────────────────────────────────────
-   11. FOCUS STYLES — Accessibility
-   Your current site has almost no visible focus rings
-   ───────────────────────────────────────────── */
-
-:focus-visible {
-  outline: 2px solid var(--color-blue);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-/* Skip link (already in your markup, just needs styling boost) */
+/* Skip link */
 .sr-only:focus {
   position: fixed;
   top: 0.75rem;
@@ -699,20 +468,4 @@ footer .text-\[\.56rem\] strong {
   clip: auto;
   width: auto;
   height: auto;
-}
-
-
-/* ─────────────────────────────────────────────
-   12. COLOR GRADIENT FOOTER BAR
-   The 7-color bar between ticker and footer is nice.
-   Make it slightly taller so it reads as intentional.
-   ───────────────────────────────────────────── */
-
-.theme-gradient-bar {
-  display: flex;
-  height: 3px; /* was 2px — more visible */
-}
-
-.theme-gradient-bar > div {
-  flex: 1;
 }

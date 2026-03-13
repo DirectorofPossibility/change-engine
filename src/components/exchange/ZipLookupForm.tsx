@@ -79,7 +79,8 @@ export function ZipLookupForm() {
         <button
           type="submit"
           disabled={loading || input.trim().length === 0}
-          className="px-6 py-3 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+          className="px-5 py-2.5 bg-brand-accent text-white font-mono uppercase hover:opacity-90 transition-opacity disabled:opacity-50"
+          style={{ fontSize: '0.7rem', letterSpacing: '0.08em', fontWeight: 600 }}
         >
           {loading ? 'Looking up...' : 'Find'}
         </button>

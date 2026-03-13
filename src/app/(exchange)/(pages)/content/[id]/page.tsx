@@ -260,7 +260,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         {/* Top color bar */}
         <div style={{ height: 3, background: themeColor }} />
 
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+        <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
           {/* Breadcrumb */}
           <nav className="mb-5" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED }}>
             <Link href="/explore" className="hover:text-[#C4663A] transition-colors">The Exchange</Link>
@@ -281,7 +281,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           {/* Content type label + translation indicator */}
           <div className="flex items-center gap-3 mb-4">
             {(item as any).content_type && (
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>
                 {(item as any).content_type}
                 {item.pathway_primary && themeEntry && (
                   <span style={{ color: CLAY }}> &middot; {themeEntry.name}</span>
@@ -289,7 +289,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </span>
             )}
             {isTranslated && (
-              <span className="relative flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: CLAY }}>
+              <span className="relative flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: CLAY }}>
                 <Globe size={11} /> {t('content.translated')}
                 <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
               </span>
@@ -300,7 +300,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           {themeEntry && (
             <div className="flex items-center gap-2 mb-4">
               <span style={{ width: 8, height: 8, background: themeColor, display: 'inline-block' }} />
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: themeColor }}>{themeEntry.name}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: themeColor }}>{themeEntry.name}</span>
             </div>
           )}
 
@@ -332,7 +332,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           )}
 
           {/* Metadata strip */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1" style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED }}>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED }}>
             {item.published_at && (
               <span>{new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             )}
@@ -364,7 +364,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
       {/* ── TWO-COLUMN LAYOUT: Body + Sidebar ── */}
       <section style={{ background: '#ffffff' }}>
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* ── LEFT COLUMN: Article Body ── */}
@@ -393,7 +393,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Body */}
               {bodyBlocks.length > 0 ? (
                 <div className="space-y-4">
-                  <span className="block mb-2" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.article')}</span>
+                  <span className="block mb-2" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.article')}</span>
                   {bodyBlocks.map(function (block, i) {
                     if (!block) return null
                     if (block.startsWith('## ')) {
@@ -458,14 +458,14 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   {/* Show summary as body text when no body content */}
                   {summary && (
                     <div>
-                      <span className="block mb-2" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.article')}</span>
+                      <span className="block mb-2" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.article')}</span>
                       <p style={{ fontFamily: SERIF, fontSize: 16, lineHeight: 1.8, color: INK }}>{summary}</p>
                     </div>
                   )}
                   {item.source_url && (
                     <div className="p-5 flex items-center justify-between gap-4" style={{ border: `1px solid ${RULE_COLOR}`, background: PARCHMENT_LIGHT }}>
                       <div>
-                        <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.56rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                        <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
                           {(item as any).content_type === 'video' ? 'Watch the video' :
                            (item as any).content_type === 'tool' ? 'Use the tool' :
                            (item as any).content_type === 'podcast' ? 'Listen now' :
@@ -493,7 +493,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {item.source_url && bodyBlocks.length > 0 && (
                 <div className="mt-6 p-5 flex items-center justify-between gap-4" style={{ border: `1px solid ${RULE_COLOR}`, background: PARCHMENT_LIGHT }}>
                   <div>
-                    <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.56rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                    <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
                       {(item as any).content_type === 'book' ? 'Read the book' :
                        (item as any).content_type === 'course' ? 'Start the course' :
                        (item as any).content_type === 'video' ? 'Watch the video' :
@@ -521,7 +521,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Break It Down */}
               {(summary || item.body) && (
                 <div className="mt-6 p-5" style={{ border: `1px solid ${RULE_COLOR}` }}>
-                  <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>AI Summary</p>
+                  <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>AI Summary</p>
                   <p className="mb-4" style={{ fontFamily: SERIF, fontSize: '0.88rem', color: MUTED }}>Let us break this down in plain language.</p>
                   <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
                 </div>
@@ -530,7 +530,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Programs */}
               {programs.length > 0 && (
                 <div className="mt-8">
-                  <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Programs</p>
+                  <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Programs</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {programs.map(function (prog, i) {
                       return (
@@ -553,7 +553,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
               {/* At a Glance */}
               <div className="p-5" style={{ background: PARCHMENT_LIGHT, border: `1px solid ${RULE_COLOR}` }}>
-                <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.at_a_glance')}</p>
+                <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.at_a_glance')}</p>
                 <div className="space-y-2.5">
                   {orgInfo && (
                     <div className="flex items-center justify-between text-sm">
@@ -575,7 +575,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   )}
                   {focusAreas.length > 0 && (
                     <div className="pt-2.5" style={{ borderTop: `1px solid ${RULE_COLOR}` }}>
-                      <p className="mb-2" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Focus Areas</p>
+                      <p className="mb-2" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Focus Areas</p>
                       <FocusAreaPills focusAreas={focusAreas} />
                     </div>
                   )}
@@ -585,7 +585,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Who Is Responsible */}
               {responsibleOfficials.length > 0 && (
                 <div className="p-5" style={{ background: PARCHMENT_LIGHT, border: `1px solid ${RULE_COLOR}` }}>
-                  <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Who Is Responsible</p>
+                  <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Who Is Responsible</p>
                   <div className="space-y-3">
                     {responsibleOfficials.slice(0, 5).map(function (o) {
                       return (
@@ -601,7 +601,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                           </div>
                           <div className="min-w-0">
                             <span className="block text-sm font-medium group-hover:underline truncate" style={{ fontFamily: SERIF, color: INK }}>{o.official_name}</span>
-                            <span className="block truncate" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                            <span className="block truncate" style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                               {[o.title, o.party, o.level].filter(Boolean).join(' / ')}
                             </span>
                           </div>
@@ -615,7 +615,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Take Action */}
               {(opportunities.length > 0 || policies.length > 0) && (
                 <div className="p-5" style={{ background: PARCHMENT_LIGHT, border: `1px solid ${RULE_COLOR}` }}>
-                  <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.take_action')}</p>
+                  <p className="mb-3" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.take_action')}</p>
                   <div className="space-y-2">
                     {opportunities.slice(0, 3).map(function (o: any) {
                       return (
@@ -651,8 +651,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       {/* ── RELATED CONTENT ── */}
       {related && related.length > 0 && (
         <section style={{ background: PARCHMENT }}>
-          <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <p className="mb-5" style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Related</p>
+          <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
+            <p className="mb-5" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>Related</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {related.map(function (r: any) {
                 const rTheme = r.pathway_primary ? (THEMES as Record<string, { name: string; color: string }>)[r.pathway_primary] : null
@@ -673,7 +673,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     )}
                     <div className="p-4">
                       {rTheme && (
-                        <span className="block mb-1.5" style={{ fontFamily: MONO, fontSize: '0.52rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: rColor }}>{rTheme.name}</span>
+                        <span className="block mb-1.5" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: rColor }}>{rTheme.name}</span>
                       )}
                       <span className="block group-hover:underline" style={{ fontFamily: SERIF, fontSize: '0.95rem', lineHeight: 1.35, color: INK, fontWeight: 600 }}>
                         {r.title_6th_grade}
@@ -695,8 +695,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       {/* ── FOCUS AREAS / DESTINATIONS ── */}
       {focusAreas.length > 0 && (
         <section style={{ background: PARCHMENT_LIGHT }}>
-          <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <p className="mb-5" style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>
+          <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
+            <p className="mb-5" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>
               {t('content.also_part_of') || 'Also part of these destinations'}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
@@ -716,7 +716,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                         {fa.focus_area_name}
                       </span>
                       {fa.theme_id && (THEMES as Record<string, { name: string }>)[fa.theme_id] && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.52rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: faColor }}>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: faColor }}>
                           {(THEMES as Record<string, { name: string }>)[fa.theme_id].name}
                         </span>
                       )}
@@ -738,7 +738,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               &ldquo;{quote.quote_text}&rdquo;
             </blockquote>
             {quote.attribution && (
-              <p className="mt-4" style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
+              <p className="mt-4" style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: MUTED }}>
                 -- {quote.attribution}
               </p>
             )}

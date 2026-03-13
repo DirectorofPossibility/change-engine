@@ -146,7 +146,7 @@ function EventItem({ e, userZip }: { e: any; userZip: string }) {
     <Link href={'/events/' + e.event_id} className="flex items-start gap-4 py-4 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
       {date && (
         <div className="flex-shrink-0 w-14 h-14 flex flex-col items-center justify-center" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
-          <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 700, color: CLAY }}>{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, color: CLAY }}>{date.toLocaleDateString('en-US', { month: 'short' })}</span>
           <span style={{ fontFamily: SERIF, fontSize: '1.2rem', fontWeight: 700, color: INK, lineHeight: 1 }}>{date.getDate()}</span>
         </div>
       )}
@@ -155,27 +155,27 @@ function EventItem({ e, userZip }: { e: any; userZip: string }) {
         {e.description_5th_grade && <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{e.description_5th_grade}</p>}
         <div className="flex flex-wrap gap-3 mt-2">
           {date && (
-            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
               <Clock className="w-3 h-3" />{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
             </span>
           )}
           {e.is_virtual === 'true' ? (
-            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
               <Video className="w-3 h-3" />Virtual
             </span>
           ) : e.city && (
-            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
               <MapPin className="w-3 h-3" />{e.city}
             </span>
           )}
           {userZip && e.zip_code === userZip && (
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', fontWeight: 500, color: CLAY }}>Near you</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', fontWeight: 500, color: CLAY }}>Near you</span>
           )}
           {e.is_free === 'true' && (
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
           )}
           {e.event_type && (
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{e.event_type}</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{e.event_type}</span>
           )}
         </div>
       </div>

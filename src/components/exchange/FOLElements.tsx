@@ -98,9 +98,9 @@ export function FOLButton({
 }) {
   const base = 'inline-flex items-center gap-2.5 font-display font-bold transition-all duration-300 group'
   const variants = {
-    primary: 'px-6 py-3 bg-brand-accent text-white hover:bg-brand-accent-hover hover:border-ink hover:-translate-y-0.5',
-    secondary: 'px-6 py-3 border border-brand-text bg-white text-brand-text hover:bg-brand-text hover:text-white hover:-translate-y-0.5',
-    ghost: 'px-4 py-2 text-brand-accent hover:text-brand-accent-hover',
+    primary: 'px-5 py-2.5 bg-brand-accent text-white font-mono uppercase hover:opacity-90 transition-opacity',
+    secondary: 'px-5 py-2.5 border-2 border-blue bg-transparent text-blue font-mono uppercase hover:bg-blue/5 transition-colors',
+    ghost: 'text-brand-accent hover:underline transition-colors',
   }
 
   return (

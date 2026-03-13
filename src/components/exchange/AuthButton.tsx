@@ -55,7 +55,7 @@ export function AuthButton() {
     <div ref={ref} className="relative">
       <button
         onClick={function () { setOpen(!open) }}
-        className="w-7 h-7 rounded-full bg-brand-accent text-white text-xs font-medium flex items-center justify-center hover:opacity-90 transition-opacity"
+        className="w-9 h-9 min-w-[44px] min-h-[44px] rounded-full bg-brand-accent text-white text-xs font-medium flex items-center justify-center hover:opacity-90 transition-opacity"
         aria-label="User menu"
       >
         {initial}

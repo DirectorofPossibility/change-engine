@@ -150,7 +150,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             {theme.description}
           </p>
           <div className="mt-4 flex items-center gap-4">
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">
               {totalStories} stories -- {totalEntities} resources
               {newsCount > 0 && <> -- {newsCount} in the wire</>}
             </span>
@@ -161,7 +161,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                 <Link
                   key={b.targetThemeId}
                   href={'/pathways/' + b.targetSlug}
-                  style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.08em', color: MUTED }}
+                  style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.08em', color: MUTED }}
                   className="uppercase hover:underline flex items-center gap-1.5"
                 >
                   <span className="w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
@@ -205,10 +205,10 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                   </Link>
                 )}
                 <div className="flex items-center gap-3 mb-3">
-                  <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.12em', color: '#fff', background: theme.color, padding: '2px 8px' }} className="uppercase">
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.12em', color: '#fff', background: theme.color, padding: '2px 8px' }} className="uppercase">
                     {leadStory.center || 'Feature'}
                   </span>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                     {fmtDate(leadStory.published_at)}
                     {leadStory.source_domain && <> -- {leadStory.source_domain}</>}
                   </span>
@@ -226,7 +226,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                 </p>
                 <Link
                   href={'/content/' + leadStory.id}
-                  style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.08em', color: CLAY, fontWeight: 600 }}
+                  style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.08em', color: CLAY, fontWeight: 600 }}
                   className="uppercase hover:underline"
                 >
                   {t('card.read_more')}
@@ -251,7 +251,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="w-1.5 h-1.5" style={{ backgroundColor: theme.color }} />
-                          <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                             {c.center || 'Feature'} -- {fmtDate(c.published_at)}
                           </span>
                         </div>
@@ -280,7 +280,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>By Center</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">4 desks</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">4 desks</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
@@ -368,7 +368,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
             <div className="flex items-baseline gap-4 mb-6">
               <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Topic Index</h2>
               <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{themeFocusAreas.length} topics</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{themeFocusAreas.length} topics</span>
             </div>
 
             {themeFocusAreas.slice(0, 4).map((fa, i) => (
@@ -430,7 +430,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                   style={{ border: '1px solid ' + RULE_COLOR }}
                 >
                   <span style={{ fontFamily: SERIF, fontSize: '0.85rem', color: INK }} className="group-hover:underline">{ref.label}</span>
-                  <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.08em', color: MUTED }} className="uppercase">{ref.source}</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.08em', color: MUTED }} className="uppercase">{ref.source}</span>
                 </a>
               ))}
             </div>
@@ -448,7 +448,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         {/* ── News Wire ── */}
         {newsCount > 0 && (
           <section className="p-6 mb-10" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase block mb-2">
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase block mb-2">
               The Wire
             </span>
             <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
@@ -525,7 +525,7 @@ function DeskBlock({ label, color, borderRight, borderBottom, children }: {
     >
       <div className="flex items-center gap-2 mb-4">
         <span className="w-2 h-2" style={{ backgroundColor: color }} />
-        <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
           {label}
         </span>
       </div>
@@ -555,7 +555,7 @@ function DeskItem({ href, title, meta, color, typeLabel }: {
       <span className="w-1 min-h-[1.5rem] flex-shrink-0 mt-0.5" style={{ backgroundColor: color + '40' }} />
       <div className="min-w-0 flex-1">
         {typeLabel && (
-          <span style={{ fontFamily: MONO, fontSize: '0.5rem', letterSpacing: '0.12em', color }} className="uppercase block mb-0.5">
+          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.12em', color }} className="uppercase block mb-0.5">
             {typeLabel}
           </span>
         )}
@@ -563,7 +563,7 @@ function DeskItem({ href, title, meta, color, typeLabel }: {
           {title}
         </h4>
         {meta && (
-          <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }} className="mt-0.5 block">
+          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }} className="mt-0.5 block">
             {meta}
           </span>
         )}

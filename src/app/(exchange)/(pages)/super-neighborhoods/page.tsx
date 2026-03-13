@@ -88,7 +88,7 @@ export default async function SuperNeighborhoodsPage() {
               {t('superNeighborhoods.all_heading')}
             </h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{superNeighborhoods.length} total</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{superNeighborhoods.length} total</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
@@ -112,12 +112,12 @@ export default async function SuperNeighborhoodsPage() {
                     </h3>
                     <div className="flex items-center gap-3 mt-1">
                       {sn.population != null && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                           Pop. {sn.population.toLocaleString()}
                         </span>
                       )}
                       {sn.median_income != null && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                           ${sn.median_income.toLocaleString()}
                         </span>
                       )}
@@ -154,12 +154,12 @@ export default async function SuperNeighborhoodsPage() {
                         </h3>
                         <div className="flex items-center gap-3 mt-1">
                           {sn.population != null && (
-                            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                               Pop. {sn.population.toLocaleString()}
                             </span>
                           )}
                           {sn.median_income != null && (
-                            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                               ${sn.median_income.toLocaleString()}
                             </span>
                           )}

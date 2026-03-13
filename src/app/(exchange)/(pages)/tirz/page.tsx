@@ -47,11 +47,11 @@ export default async function TirzPage() {
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
               <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{zones.length}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Active Zones</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Active Zones</span>
             </div>
             <div>
               <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>City</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Created by Council</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Created by Council</span>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default async function TirzPage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>All TIRZ Zones</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{zones.length} zones</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{zones.length} zones</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
@@ -108,7 +108,7 @@ export default async function TirzPage() {
                       <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }} className="truncate group-hover:underline">
                         {zone.name}
                       </h3>
-                      <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
+                      <p style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
                     </div>
                   </div>
                   {zone.description && (
@@ -117,7 +117,7 @@ export default async function TirzPage() {
                     </p>
                   )}
                   {zone.status && (
-                    <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }} className="uppercase inline-block mt-2">
+                    <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }} className="uppercase inline-block mt-2">
                       {zone.status}
                     </span>
                   )}
@@ -151,7 +151,7 @@ export default async function TirzPage() {
                           <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }} className="truncate group-hover:underline">
                             {zone.name}
                           </h3>
-                          <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
+                          <p style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
                         </div>
                       </div>
                       {zone.description && (
@@ -160,7 +160,7 @@ export default async function TirzPage() {
                         </p>
                       )}
                       {zone.status && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }} className="uppercase inline-block mt-2">
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }} className="uppercase inline-block mt-2">
                           {zone.status}
                         </span>
                       )}

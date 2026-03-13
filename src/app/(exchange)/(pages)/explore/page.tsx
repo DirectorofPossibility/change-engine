@@ -98,7 +98,7 @@ export default async function ExplorePage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Start Here</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">3 paths</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">3 paths</span>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
@@ -107,7 +107,7 @@ export default async function ExplorePage() {
               className="group p-6 hover:bg-white/50 transition-colors"
               style={{ borderRight: '1px solid ' + RULE_COLOR }}
             >
-              <p style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Knowledge Base</p>
+              <p style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Knowledge Base</p>
               <h3 style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, lineHeight: 1.3 }} className="mb-2 group-hover:underline">
                 Knowledge Base
               </h3>
@@ -123,7 +123,7 @@ export default async function ExplorePage() {
               className="group p-6 hover:bg-white/50 transition-colors"
               style={{ borderRight: '1px solid ' + RULE_COLOR }}
             >
-              <p style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Library</p>
+              <p style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Library</p>
               <h3 style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, lineHeight: 1.3 }} className="mb-2 group-hover:underline">
                 Research Library
               </h3>
@@ -136,7 +136,7 @@ export default async function ExplorePage() {
               href="/knowledge-graph"
               className="group p-6 hover:bg-white/50 transition-colors"
             >
-              <p style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Visualization</p>
+              <p style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Visualization</p>
               <h3 style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, lineHeight: 1.3 }} className="mb-2 group-hover:underline">
                 Knowledge Galaxy
               </h3>
@@ -154,7 +154,7 @@ export default async function ExplorePage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Browse by Pathway</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{themes.length} pathways</span>
+            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{themes.length} pathways</span>
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -170,7 +170,7 @@ export default async function ExplorePage() {
                   <span style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK }} className="group-hover:underline">
                     {theme.name}
                   </span>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
                     {theme.focusAreas.length}
                   </span>
                 </Link>

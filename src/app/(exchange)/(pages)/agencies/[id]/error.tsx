@@ -9,7 +9,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
     <div className="max-w-[1080px] mx-auto px-6 py-20">
       <p
         className="font-mono uppercase tracking-[0.2em] mb-3"
-        style={{ fontSize: '0.58rem', color: '#5c6474' }}
+        style={{ fontSize: '0.6875rem', color: '#5c6474' }}
       >
         {t('error.label')}
       </p>

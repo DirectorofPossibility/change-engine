@@ -88,24 +88,24 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
           <div className="flex flex-wrap gap-8">
             <div>
               <span style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK, fontWeight: 700 }}>TIRZ-{zone.site_number}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Zone Number</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Zone Number</span>
             </div>
             {zone.status && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK, fontWeight: 700, textTransform: 'capitalize' }}>{zone.status}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Status</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Status</span>
               </div>
             )}
             {zone.year_established && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK, fontWeight: 700 }}>{zone.year_established}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Established</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Established</span>
               </div>
             )}
             {zone.managing_entity && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 700 }}>{zone.managing_entity}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Managed By</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Managed By</span>
               </div>
             )}
           </div>
@@ -199,7 +199,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                       <h3 style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK }} className="truncate group-hover:underline">{official.official_name}</h3>
                       <p style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED }} className="truncate">{official.title}</p>
                       {official.party && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{official.party}</span>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{official.party}</span>
                       )}
                     </div>
                   </Link>
@@ -228,11 +228,11 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                   >
                     <div className="flex items-center gap-2 mb-1">
                       {p.level && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 6px', textTransform: 'uppercase' }}>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 6px', textTransform: 'uppercase' }}>
                           {p.level}
                         </span>
                       )}
-                      {p.status && <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, textTransform: 'uppercase' }}>{p.status}</span>}
+                      {p.status && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, textTransform: 'uppercase' }}>{p.status}</span>}
                     </div>
                     <h3 style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 600, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
                       {p.title_6th_grade || p.policy_name}

@@ -156,19 +156,19 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
             {sn.population != null && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{sn.population.toLocaleString()}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('superNeighborhoods.population')}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('superNeighborhoods.population')}</span>
               </div>
             )}
             {sn.median_income != null && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>${sn.median_income.toLocaleString()}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('superNeighborhoods.median_income')}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('superNeighborhoods.median_income')}</span>
               </div>
             )}
             {neighborhoods.length > 0 && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{neighborhoods.length}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('superNeighborhoods.neighborhoods')}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('superNeighborhoods.neighborhoods')}</span>
               </div>
             )}
           </div>
@@ -269,11 +269,11 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
                   >
                     <div className="flex items-center gap-2 mb-1">
                       {p.level && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.1em', color: '#fff', background: INK, padding: '2px 6px', textTransform: 'uppercase' }}>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.1em', color: '#fff', background: INK, padding: '2px 6px', textTransform: 'uppercase' }}>
                           {p.level}
                         </span>
                       )}
-                      {p.status && <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, textTransform: 'uppercase' }}>{p.status}</span>}
+                      {p.status && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, textTransform: 'uppercase' }}>{p.status}</span>}
                     </div>
                     <h3 style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 600, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
                       {p.title_6th_grade || p.policy_name}

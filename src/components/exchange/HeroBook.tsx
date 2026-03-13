@@ -89,7 +89,7 @@ export function HeroBook() {
                     <button
                       type="submit"
                       disabled={addressInput.trim().length < 5}
-                      className="px-6 py-3.5 bg-brand-accent text-white font-semibold hover:bg-brand-accent-hover disabled:opacity-40 transition-colors shadow-sm"
+                      className="px-5 py-2.5 bg-brand-accent text-white font-mono uppercase hover:opacity-90 disabled:opacity-40 transition-opacity"
                     >
                       Go
                     </button>
@@ -111,7 +111,7 @@ export function HeroBook() {
                     <button
                       type="submit"
                       disabled={zipInput.length !== 5}
-                      className="px-6 py-3.5 bg-brand-accent text-white font-semibold hover:bg-brand-accent-hover disabled:opacity-40 transition-colors shadow-sm"
+                      className="px-5 py-2.5 bg-brand-accent text-white font-mono uppercase hover:opacity-90 disabled:opacity-40 transition-opacity"
                     >
                       Go
                     </button>

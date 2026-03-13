@@ -283,7 +283,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               <div className="flex items-start gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
                 <MapPin size={15} className="shrink-0 mt-0.5" />
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.office')}</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.office')}</span>
                   {profile.address_office}
                 </div>
               </div>
@@ -292,7 +292,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               <div className="flex items-start gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
                 <MapPin size={15} className="shrink-0 mt-0.5" />
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.district_office')}</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.district_office')}</span>
                   {profile.address_district}
                 </div>
               </div>
@@ -328,20 +328,20 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
             <div className="flex items-center gap-6 mb-3">
               {official.district_type && (
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.type')}</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.type')}</span>
                   <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{official.district_type}</p>
                 </div>
               )}
               {official.district_id && (
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.id')}</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.id')}</span>
                   <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{official.district_id}</p>
                 </div>
               )}
             </div>
             {districtZips.length > 0 && (
               <div>
-                <span className="flex items-center gap-1 mb-2" style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>
+                <span className="flex items-center gap-1 mb-2" style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>
                   <MapPin size={11} /> {t('official.zip_codes')}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
@@ -404,11 +404,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <div>
                       <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{c.committee_name}</p>
                       {c.chamber && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
+                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
                       )}
                     </div>
                     {c.role && (
-                      <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
+                      <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
                         {c.role}
                       </span>
                     )}
@@ -428,11 +428,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                         <div>
                           <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{c.committee_name}</p>
                           {c.chamber && (
-                            <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
+                            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
                           )}
                         </div>
                         {c.role && (
-                          <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
+                          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
                             {c.role}
                           </span>
                         )}
@@ -462,8 +462,8 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                       {v.bill_number || t('official.vote')}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
-                      {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                      {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
+                      {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
                     </div>
                   </div>
                   <span className="flex-shrink-0" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>
@@ -489,8 +489,8 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                       <div className="min-w-0">
                         <p className="truncate" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{v.bill_number || t('official.vote')}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
-                          {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                          {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
+                          {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
                         </div>
                       </div>
                       <span className="flex-shrink-0" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>{v.vote}</span>

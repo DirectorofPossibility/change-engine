@@ -170,14 +170,14 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
             href={registerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold text-sm hover:bg-brand-accent-hover transition-colors shadow-card"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white font-mono uppercase hover:opacity-90 transition-opacity"
           >
             <UserCheck size={18} />
             Register to Vote
             <ExternalLink size={14} />
           </a>
         ) : (
-          <span className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold text-sm">
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white font-mono uppercase">
             <UserCheck size={18} />
             Register to Vote
           </span>
@@ -235,7 +235,7 @@ export function ElectionTimeline(props: ElectionTimelineProps) {
             href={findPollingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-brand-accent text-white font-semibold text-sm hover:bg-brand-accent-hover transition-colors shadow-card"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white font-mono uppercase hover:opacity-90 transition-opacity"
           >
             <MapPin size={18} />
             Find Your Polling Place

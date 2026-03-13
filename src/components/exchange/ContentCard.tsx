@@ -64,44 +64,48 @@ export function ContentCard({
   const displaySummary = rawSummary.length > 300 ? rawSummary.slice(0, 300) + '...' : rawSummary
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-brand-border overflow-hidden hover:border-ink transition-colors cursor-pointer' }
-    : { href: href || '/content/' + id, className: 'block bg-white border border-brand-border overflow-hidden hover:border-ink transition-colors' }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white overflow-hidden hover:border-ink transition-colors cursor-pointer', style: { border: '1px solid rgba(196,102,58,0.3)' } }
+    : { href: href || '/content/' + id, className: 'block bg-white overflow-hidden hover:border-ink transition-colors', style: { border: '1px solid rgba(196,102,58,0.3)' } }
   return (
     <Wrapper {...wrapperProps as any}>
-      {/* TODO: Replace with real Houston photography */}
       {imageUrl ? (
-        <div className="w-full h-40 relative bg-brand-bg">
+        <div className="w-full h-36 relative" style={{ borderBottom: '1px solid rgba(196,102,58,0.3)' }}>
           <Image
             src={imageUrl}
             alt={displayTitle}
             width={400}
-            height={200}
-            className="w-full h-full object-contain"
+            height={144}
+            className="w-full h-full object-cover"
           />
         </div>
       ) : (
         <FolFallback pathway={pathway} />
       )}
-      <div className="p-5">
-      <div className="flex items-center gap-2 mb-3">
-        <ThemePill themeId={pathway} size="sm" linkable={false} />
-        <CenterBadge center={center} linkable={false} />
-      </div>
-      <h3 className="font-semibold text-brand-text mb-2 line-clamp-2">{displayTitle}</h3>
-      <p className="text-sm text-brand-muted mb-3 line-clamp-3">{displaySummary}</p>
-      {focusAreaNames && focusAreaNames.length > 0 && (
-        <div className="mb-3">
-          <FocusAreaPills focusAreaNames={focusAreaNames} linkable={false} />
+      <div className="p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <ThemePill themeId={pathway} size="sm" linkable={false} />
+          <CenterBadge center={center} linkable={false} />
         </div>
-      )}
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-brand-muted">
-          {publishedAt ? new Date(publishedAt).toLocaleDateString() : ''}
-        </span>
-        <span className="text-xs text-brand-accent">
-          {t('card.read_more')} &rarr;
-        </span>
-      </div>
+        <h3
+          className="line-clamp-2 mb-1"
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#1A1A1A' }}
+        >
+          {displayTitle}
+        </h3>
+        <p
+          className="line-clamp-2 mb-2"
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#7a7265' }}
+        >
+          {displaySummary}
+        </p>
+        <div className="flex items-center justify-between">
+          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#7a7265' }}>
+            {publishedAt ? new Date(publishedAt).toLocaleDateString() : ''}
+          </span>
+          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#C4663A' }}>
+            {t('card.read_more')} &rarr;
+          </span>
+        </div>
       </div>
     </Wrapper>
   )

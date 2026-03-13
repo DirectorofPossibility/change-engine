@@ -1,30 +1,6 @@
 import type { Metadata } from 'next'
-import { Fraunces, Libre_Baskerville, DM_Mono } from 'next/font/google'
 import { cookies } from 'next/headers'
 import './globals.css'
-
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  weight: ['700', '900'],
-  style: ['normal', 'italic'],
-  variable: '--font-display',
-  display: 'swap',
-})
-
-const libreBaskerville = Libre_Baskerville({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
-  variable: '--font-body',
-  display: 'swap',
-})
-
-const dmMono = DM_Mono({
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-mono',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.changeengine.us'),
@@ -75,7 +51,7 @@ export default async function RootLayout({
   const lang = LANG_MAP[cookieStore.get('lang')?.value ?? ''] ?? 'en'
 
   return (
-    <html lang={lang} className={`${fraunces.variable} ${libreBaskerville.variable} ${dmMono.variable}`}>
+    <html lang={lang}>
       <body>{children}</body>
     </html>
   )

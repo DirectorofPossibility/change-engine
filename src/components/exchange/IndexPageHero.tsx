@@ -98,7 +98,7 @@ export function IndexPageHero({
                   </span>
                   <span
                     className="font-mono block uppercase tracking-[0.08em]"
-                    style={{ fontSize: '0.52rem', color: '#5c6474' }}
+                    style={{ fontSize: '0.6875rem', color: '#7a7265' }}
                   >
                     {stat.label}
                   </span>

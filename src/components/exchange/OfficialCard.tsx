@@ -27,7 +27,7 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
   const levelColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
 
   const cardContent = (
-    <div className="bg-white border border-brand-border overflow-hidden hover:-translate-y-0.5 hover:border-ink transition-all duration-200 group">
+    <div className="bg-white overflow-hidden hover:border-ink transition-colors group" style={{ border: '1px solid rgba(196,102,58,0.3)' }}>
       {/* Level color bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: levelColor }} />
 
@@ -38,20 +38,20 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
             <Image
               src={photoUrl.replace(/^http:\/\//, 'https://')}
               alt={name}
-              className="w-[72px] h-[72px] object-cover object-top border border-brand-border group-hover:scale-105 transition-transform duration-300"
+              className="w-[72px] h-[72px] object-cover object-top object-top"
               width={72}
               height={72}
             />
           ) : (
-            <div className="w-[72px] h-[72px] flex items-center justify-center border border-brand-border" style={{ backgroundColor: levelColor + '10' }}>
+            <div className="w-[72px] h-[72px] flex items-center justify-center" style={{ backgroundColor: levelColor + '10' }}>
               <span className="text-2xl font-display font-bold" style={{ color: levelColor }}>{name.charAt(0)}</span>
             </div>
           )}
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="font-bold text-brand-text group-hover:text-brand-accent transition-colors leading-tight">{name}</h3>
-          {displayTitle && <p className="text-sm text-brand-muted mt-0.5 leading-snug line-clamp-2">{displayTitle}</p>}
+          <h3 className="group-hover:underline" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#1A1A1A' }}>{name}</h3>
+          {displayTitle && <p className="line-clamp-2 mt-0.5" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#7a7265' }}>{displayTitle}</p>}
           <div className="flex items-center gap-1.5 mt-2 text-xs">
             {level && (
               <span className="inline-flex items-center gap-1 font-bold uppercase tracking-wide" style={{ color: levelColor }}>

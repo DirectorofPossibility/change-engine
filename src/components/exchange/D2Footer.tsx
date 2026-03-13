@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { SeedOfLife } from '@/components/geo/sacred'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems } from '@/lib/feature-flags'
 
@@ -58,7 +59,7 @@ export function D2Footer() {
             {/* Brand */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-3">
-                <SeedOfLife color="#1b5e8a" size={44} />
+                <SeedOfLife color="#1a3460" size={44} />
                 <div>
                   <span className="block font-display text-xl font-bold text-ink leading-tight">
                     {t('brand.name')}
@@ -87,7 +88,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-blue transition-colors"
+                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-clay transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -107,7 +108,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-blue transition-colors"
+                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-clay transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -127,7 +128,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-blue transition-colors"
+                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-clay transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -147,7 +148,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-blue transition-colors"
+                      className="block py-0.5 font-body text-[.82rem] text-dim hover:text-clay transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -168,11 +169,11 @@ export function D2Footer() {
           <div className="mt-4 pt-4 border-t border-rule flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.06em] text-faint">
             <p>&copy; {new Date().getFullYear()} {t('brand.copyright')}</p>
             <div className="flex items-center gap-4">
-              <Link href="/privacy" className="hover:text-blue transition-colors">{t('d2footer.privacy')}</Link>
-              <Link href="/terms" className="hover:text-blue transition-colors">{t('d2footer.terms')}</Link>
-              <Link href="/accessibility" className="hover:text-blue transition-colors">{t('d2footer.accessibility')}</Link>
+              <Link href="/privacy" className="hover:text-clay transition-colors">{t('d2footer.privacy')}</Link>
+              <Link href="/terms" className="hover:text-clay transition-colors">{t('d2footer.terms')}</Link>
+              <Link href="/accessibility" className="hover:text-clay transition-colors">{t('d2footer.accessibility')}</Link>
               <span className="text-rule">&middot;</span>
-              <span>English &middot; Espa&ntilde;ol &middot; Ti&#7871;ng Vi&#7879;t</span>
+              <LanguageSwitcher />
             </div>
           </div>
 

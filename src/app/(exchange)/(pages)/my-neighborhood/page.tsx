@@ -177,7 +177,7 @@ export default async function MyNeighborhoodPage({
                 return (
                   <div key={stat.label}>
                     <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{stat.value}</span>
-                    <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{stat.label}</span>
+                    <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{stat.label}</span>
                   </div>
                 )
               })}
