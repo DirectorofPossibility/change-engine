@@ -29,9 +29,14 @@ export function VotingLocationCard({
         )}
       </div>
       {fullAddress && (
-        <p className="flex items-center gap-1.5 text-xs text-brand-muted mb-2">
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-xs text-brand-accent hover:underline mb-2"
+        >
           <MapPin size={12} className="shrink-0" /> {fullAddress}
-        </p>
+        </a>
       )}
       <div className="space-y-1 text-xs text-brand-muted mb-3">
         {hoursEarlyVoting && (

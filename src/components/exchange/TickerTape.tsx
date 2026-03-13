@@ -6,6 +6,7 @@ import { useTranslation } from '@/lib/use-translation'
 
 interface TickerTapeProps {
   election?: {
+    election_id: string
     election_name: string
     election_date: string
     find_polling_url: string | null
@@ -31,7 +32,7 @@ export function TickerTape({ election, className }: TickerTapeProps) {
     const daysLabel = diff === 0 ? t('ticker.today') : diff === 1 ? t('ticker.tomorrow') : diff + ' ' + t('ticker.days_away')
     return {
       text: election.election_name + ' — ' + dateStr + ' (' + daysLabel + ')',
-      href: '/elections',
+      href: '/elections/' + election.election_id,
     }
   })() : null
 

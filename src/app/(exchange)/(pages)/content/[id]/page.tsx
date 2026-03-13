@@ -76,9 +76,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const supabase = await createClient()
   const item = await resolveContent(supabase, id)
   if (!item) return { title: 'Not Found' }
+  const canonicalSlug = item.slug || id
   return {
     title: item.title_6th_grade,
     description: item.summary_6th_grade || 'Details on the Change Engine.',
+    alternates: {
+      canonical: 'https://www.changeengine.us/content/' + canonicalSlug,
+    },
   }
 }
 
@@ -450,30 +454,39 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   })}
                 </div>
               ) : (
-                item.source_url ? (
-                  <div className="p-5 flex items-center justify-between gap-4" style={{ border: `1px solid ${RULE_COLOR}`, background: PARCHMENT_LIGHT }}>
+                <div className="space-y-6">
+                  {/* Show summary as body text when no body content */}
+                  {summary && (
                     <div>
-                      <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.56rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
-                        {(item as any).content_type === 'video' ? 'Watch the video' :
-                         (item as any).content_type === 'tool' ? 'Use the tool' :
-                         (item as any).content_type === 'podcast' ? 'Listen now' :
-                         'Read the full guide'}
-                      </p>
-                      <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
-                        We found this for you at <strong>{item.source_org_name || item.source_domain || sourceDomain}</strong>
-                      </p>
+                      <span className="block mb-2" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>{t('content.article')}</span>
+                      <p style={{ fontFamily: SERIF, fontSize: 16, lineHeight: 1.8, color: INK }}>{summary}</p>
                     </div>
-                    <a
-                      href={item.source_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90"
-                      style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, background: CLAY }}
-                    >
-                      <ExternalLink size={14} /> Take me there
-                    </a>
-                  </div>
-                ) : null
+                  )}
+                  {item.source_url && (
+                    <div className="p-5 flex items-center justify-between gap-4" style={{ border: `1px solid ${RULE_COLOR}`, background: PARCHMENT_LIGHT }}>
+                      <div>
+                        <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.56rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                          {(item as any).content_type === 'video' ? 'Watch the video' :
+                           (item as any).content_type === 'tool' ? 'Use the tool' :
+                           (item as any).content_type === 'podcast' ? 'Listen now' :
+                           'Read the full guide'}
+                        </p>
+                        <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+                          We found this for you at <strong>{item.source_org_name || item.source_domain || sourceDomain}</strong>
+                        </p>
+                      </div>
+                      <a
+                        href={item.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90"
+                        style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, background: CLAY }}
+                      >
+                        <ExternalLink size={14} /> Take me there
+                      </a>
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* Source CTA box — shown after body content */}
@@ -506,9 +519,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               )}
 
               {/* Break It Down */}
-              <div className="mt-6">
-                <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
-              </div>
+              {(summary || item.body) && (
+                <div className="mt-6 p-5" style={{ border: `1px solid ${RULE_COLOR}` }}>
+                  <p className="mb-1" style={{ fontFamily: MONO, fontSize: '0.58rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: MUTED }}>AI Summary</p>
+                  <p className="mb-4" style={{ fontFamily: SERIF, fontSize: '0.88rem', color: MUTED }}>Let us break this down in plain language.</p>
+                  <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
+                </div>
+              )}
 
               {/* Programs */}
               {programs.length > 0 && (
@@ -713,8 +730,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* ── QUOTE ── */}
-      {quote && (
+      {/* ── QUOTE — only show if it matches this content's pathway ── */}
+      {quote && quote.pathway_id && item.pathway_primary && quote.pathway_id === item.pathway_primary && (
         <section style={{ background: PARCHMENT_WARM }}>
           <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
             <blockquote style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: 'clamp(18px, 2.5vw, 24px)', lineHeight: 1.6, color: INK }}>

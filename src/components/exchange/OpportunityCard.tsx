@@ -51,7 +51,19 @@ export function OpportunityCard({
         {location && (
           <div className="flex items-center gap-1.5">
             <MapPin size={12} />
-            <span className="line-clamp-1">{location}</span>
+            {isVirtual !== 'Yes' && address ? (
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(location)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-accent hover:underline line-clamp-1"
+                onClick={function (e) { e.stopPropagation() }}
+              >
+                {location}
+              </a>
+            ) : (
+              <span className="line-clamp-1">{location}</span>
+            )}
           </div>
         )}
         {spotsAvailable != null && (

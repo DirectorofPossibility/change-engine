@@ -91,17 +91,26 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
               {level}
             </span>
           )}
-          {sourceUrl && (
+          <div className="flex items-center gap-3">
             <Link
-              href={sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-brand-accent hover:underline font-medium"
+              href="/officials/lookup"
+              className="text-xs text-brand-muted hover:text-brand-accent hover:underline font-medium"
               onClick={function (e) { e.stopPropagation() }}
             >
-              {t('card.view_source')} &rarr;
+              {t('card.contact_rep') || 'Contact your rep'}
             </Link>
-          )}
+            {sourceUrl && (
+              <Link
+                href={sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-brand-accent hover:underline font-medium"
+                onClick={function (e) { e.stopPropagation() }}
+              >
+                {t('card.view_source')} &rarr;
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>

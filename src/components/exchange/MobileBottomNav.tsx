@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Home, Search, MapPin, Compass, User } from 'lucide-react'
 
 const navItems = [
-  { href: '/', label: 'Home', icon: Home },
+  { href: '/home', label: 'Home', icon: Home },
   { href: '/my-area', label: 'My Area', icon: MapPin },
   { href: '/search', label: 'Search', icon: Search },
   { href: '/compass', label: 'Explore', icon: Compass },

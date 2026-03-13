@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslation } from '@/lib/use-translation'
+import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
+import { ConcentricRings } from '@/components/geo/sacred'
 
 interface WayfinderCrumb {
   label: string
@@ -24,13 +26,17 @@ interface WayfinderProps {
 export function Wayfinder({ crumbs }: WayfinderProps) {
   const pathname = usePathname()
   const { t } = useTranslation()
+  const { zip, neighborhood } = useNeighborhood()
+
+  // Hide site-level breadcrumbs on content detail pages (they have their own in-page breadcrumb)
+  if (!crumbs && pathname?.startsWith('/content/')) return null
 
   // Auto-generate crumbs from pathname if none provided
   const breadcrumbs = crumbs ?? generateCrumbs(pathname, t('wayfinder.guide'))
 
   return (
     <div className="bg-ink" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-      <div className="max-w-[1080px] mx-auto px-6 flex items-stretch flex-wrap">
+      <div className="max-w-[1080px] mx-auto px-6 flex items-center flex-wrap">
         {/* Breadcrumb strip */}
         <div
           className="flex items-center flex-1 min-w-0 overflow-x-auto scrollbar-hide"
@@ -73,6 +79,22 @@ export function Wayfinder({ crumbs }: WayfinderProps) {
           ))}
         </div>
 
+        {/* Near you — right side */}
+        {zip && (
+          <div className="flex items-center gap-2 flex-shrink-0 py-[0.85rem]">
+            <ConcentricRings size={12} color="rgba(255,255,255,0.3)" opacity={0.5} />
+            <span className="font-mono text-[.7rem] uppercase tracking-[0.06em]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              {t('neighborhood.near_you') || 'Near you'}:
+            </span>
+            <Link
+              href="/my-neighborhood"
+              className="font-mono text-[.7rem] uppercase tracking-[0.06em] hover:underline transition-colors"
+              style={{ color: '#7ec8e3' }}
+            >
+              {neighborhood?.neighborhood_name || zip}
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   )

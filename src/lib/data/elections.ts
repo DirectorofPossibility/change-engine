@@ -49,6 +49,7 @@ async function getOfficialsByZipForElections(supabase: SupabaseClient, zip: stri
 
 /** Fetch the next upcoming active election, or null if none. */
 export async function getNextElection(): Promise<{
+  election_id: string
   election_name: string
   election_date: string
   election_type: string | null
@@ -73,6 +74,7 @@ export async function getNextElection(): Promise<{
   if (!data || data.length === 0) return null
   const row = data[0] as any
   return {
+    election_id: row.election_id,
     election_name: row.election_name,
     election_date: row.election_date,
     election_type: row.election_type ?? null,

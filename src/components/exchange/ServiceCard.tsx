@@ -61,9 +61,15 @@ export function ServiceCard({ serviceId, name, orgName, orgId, description, phon
           </a>
         )}
         {fullAddress && (
-          <p className="flex items-center gap-2 text-xs text-brand-muted">
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-xs text-brand-accent hover:underline"
+            onClick={function (e) { e.stopPropagation() }}
+          >
             <MapPin size={14} className="shrink-0" /> {fullAddress}
-          </p>
+          </a>
         )}
         {website && (
           <a href={website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-brand-accent hover:underline" onClick={function (e) { e.stopPropagation() }}>

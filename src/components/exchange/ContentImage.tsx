@@ -15,16 +15,16 @@ export function ContentImage({ src, alt, themeColor, pathway }: ContentImageProp
   const [error, setError] = useState(false)
 
   if (error) {
-    return <FolFallback pathway={pathway} height="h-56" />
+    return <FolFallback pathway={pathway} height="h-72" />
   }
 
   return (
     <Image
       src={src}
       alt={alt}
-      className="w-full h-56 object-cover"
+      className="w-full h-72 object-cover"
       width={800}
-      height={224}
+      height={288}
       onError={() => setError(true)}
     />
   )
