@@ -1,12 +1,8 @@
 import type { Metadata } from 'next'
 import { getPublishedDocuments } from '@/lib/data/library'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { GradientFOL } from '@/components/exchange/GradientFOL'
-import { FOLDepthLayer, FOLStat } from '@/components/exchange/FOLElements'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { LibraryClient } from './LibraryClient'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export const revalidate = 300
 
@@ -15,132 +11,74 @@ export const metadata: Metadata = {
   description: 'Curated research, reports, and policy briefs from Houston organizations and community partners.',
 }
 
-const BUCKET = 'https://xesojwzcnjqtpuossmuv.supabase.co/storage/v1/object/public/Images/editorial'
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export default async function LibraryPage() {
   const { documents } = await getPublishedDocuments(1, 100)
 
   return (
-    <div>
-      {/* ══════════════════════════════════════════════════════════════
-          HERO — Full-width, editorial left / FOL wayfinder right
-         ══════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #f4f5f7 0%, #dde1e8 50%, #f4f5f7 100%)' }}>
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: 'radial-gradient(circle, rgba(44,44,44,0.03) 1px, transparent 1px)',
-          backgroundSize: '20px 20px',
-        }} />
-
-        <FOLDepthLayer position="top-right" size={600} opacity={0.06} />
-        <FOLDepthLayer position="bottom-left" size={400} opacity={0.04} />
-
-        <div className="relative z-10 max-w-[1080px] mx-auto px-6 sm:px-8 py-12 lg:py-16">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-16">
-            {/* Left — editorial content */}
-            <div className="flex-1 min-w-0 max-w-xl">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#1b5e8a] mb-3">Research Library</p>
-              <h1 className="font-display text-[clamp(2.2rem,4.5vw,3.2rem)] leading-[1.1] text-ink mb-4">
-                Knowledge is{' '}
-                <span className="relative inline-block">
-                  <span className="text-[#1b5e8a]">power.</span>
-                  <svg className="absolute -bottom-1 left-0 w-full" height="6" viewBox="0 0 200 6" fill="none" preserveAspectRatio="none">
-                    <path d="M0 5c50-4 150-4 200 0" stroke="#1b5e8a" strokeWidth="2" opacity="0.4" />
-                  </svg>
-                </span>
-              </h1>
-              <p className="text-lg leading-relaxed text-dim max-w-lg mb-8">
-                Curated reports, policy briefs, and community research from Houston&apos;s leading organizations. Every document summarized for quick understanding.
-              </p>
-              {/* Stats */}
-              <div className="flex items-center gap-8">
-                <FOLStat value={documents.length} label="documents" color="#1b5e8a" />
-                <div className="w-px h-10 bg-rule" />
-                <FOLStat value="7" label="pathways" color="#4a2870" />
-                <div className="w-px h-10 bg-rule" />
-                <FOLStat value="AI" label="assisted search" color="#1a6b56" />
-              </div>
-            </div>
-
-            {/* Right — reading room collage + FOL */}
-            <div className="hidden lg:block flex-1 min-w-0 max-w-[450px]">
-              <div className="relative h-[340px]">
-                {/* FOL wayfinder behind images */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] opacity-[0.08]">
-                  <GradientFOL variant="full" spinDur={80} colorDur={12} />
-                </div>
-
-                {/* Main image */}
-                <div
-                  className="absolute w-[260px] h-[180px] border-[3px] border-white overflow-hidden z-[2]"
-                  style={{ top: 10, left: 20, transform: 'rotate(-2deg)', border: '1px solid #dde1e8' }}
-                >
-                  <Image src={BUCKET + '/person-reading.jpg'} alt="Person reading at a library" className="w-full h-full object-cover" width={800} height={400} />
-                </div>
-
-                {/* Second image */}
-                <div
-                  className="absolute w-[180px] h-[130px] border-[3px] border-white overflow-hidden z-[1]"
-                  style={{ top: 150, left: -5, transform: 'rotate(3deg)', border: '1px solid #dde1e8' }}
-                >
-                  <Image src={BUCKET + '/reading.jpg'} alt="Books and reading materials" className="w-full h-full object-cover" width={800} height={400} />
-                </div>
-
-                {/* Third image */}
-                <div
-                  className="absolute w-[220px] h-[160px] border-[3px] border-white overflow-hidden z-[3]"
-                  style={{ top: 140, right: 0, transform: 'rotate(-1deg)', border: '1px solid #dde1e8' }}
-                >
-                  <Image src={BUCKET + '/person-reading2.jpg'} alt="Studying and research" className="w-full h-full object-cover" width={800} height={400} />
-                </div>
-
-                {/* Floating stat badge */}
-                <div
-                  className="absolute z-[5] bg-white/90 border border-rule px-3 py-2 font-mono text-[10px]"
-                  style={{ bottom: 15, left: 10, backdropFilter: 'blur(8px)' }}
-                >
-                  <span className="block text-2xl font-black text-[#1b5e8a] leading-none">{documents.length}</span>
-                  documents
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Spectrum bar */}
-        <div className="spectrum-bar">
-          <div style={{ background: '#7a2018' }} />
-          <div style={{ background: '#1e4d7a' }} />
-          <div style={{ background: '#4a2870' }} />
-          <div style={{ background: '#1a6b56' }} />
-          <div style={{ background: '#1b5e8a' }} />
-          <div style={{ background: '#1a5030' }} />
-          <div style={{ background: '#4a2870' }} />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── HERO ── */}
+      <section className="relative overflow-hidden py-16 sm:py-20" style={{ background: PARCHMENT_WARM }}>
+        <Image
+          src="/images/fol/seed-of-life.svg"
+          alt=""
+          width={500}
+          height={500}
+          className="opacity-[0.04] absolute top-1/2 right-8 -translate-y-1/2 pointer-events-none"
+        />
+        <div className="relative z-10 max-w-[900px] mx-auto px-6">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-[0.15em] uppercase mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
+            Research Library
+          </h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg leading-relaxed max-w-2xl">
+            Curated reports, policy briefs, and community research from Houston&apos;s leading organizations. Every document summarized for quick understanding.
+          </p>
         </div>
       </section>
 
+      {/* ── BREADCRUMB ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-wide">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Library</span>
+        </nav>
+      </div>
+
+      {/* ── STATS ── */}
+      <div className="max-w-[900px] mx-auto px-6 py-4">
+        <div className="flex items-center gap-6" style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1rem' }}>
+          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+            <strong style={{ color: INK, fontFamily: SERIF, fontSize: '1.25rem' }}>{documents.length}</strong> documents
+          </span>
+          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+            <strong style={{ color: INK, fontFamily: SERIF, fontSize: '1.25rem' }}>7</strong> pathways
+          </span>
+        </div>
+      </div>
+
       {/* ── CONTENT ── */}
-      <div className="max-w-[1080px] mx-auto px-6 sm:px-8 py-6">
-        <Breadcrumb items={[{ label: 'Library' }]} />
+      <div className="max-w-[900px] mx-auto px-6 pb-16">
+        <LibraryClient documents={documents} />
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          <div className="flex-1 min-w-0">
-            <LibraryClient documents={documents} />
-          </div>
-
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="library"
-                color="#1b5e8a"
-                related={[
-                  { label: 'News', href: '/news', color: '#1a5030' },
-                  { label: 'Ask Chance', href: '/chat', color: '#1b5e8a' },
-                  { label: 'Pathways', href: '/pathways', color: '#4a2870' },
-                ]}
-              />
-              <div className="mt-4"><FeaturedPromo variant="card" /></div>
-            </div>
-          </div>
+      {/* ── FOOTER LINK ── */}
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <div style={{ borderTop: '1px dotted ' + RULE_COLOR, paddingTop: '1.5rem' }}>
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">
+            &larr; Back to Home
+          </Link>
         </div>
       </div>
     </div>

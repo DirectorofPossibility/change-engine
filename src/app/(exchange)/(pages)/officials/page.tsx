@@ -1,6 +1,5 @@
 /**
- * @fileoverview Elected Officials — redesigned with immersive hero,
- * embedded ZIP search, social proof stats, and wayfinder sidebar.
+ * @fileoverview Elected Officials index — editorial culture guide treatment.
  *
  * @datasource Supabase: elected_officials, translations, zip_codes
  * @caching ISR with `revalidate = 86400` (24 hours)
@@ -8,12 +7,18 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { OfficialsPageClient } from './OfficialsPageClient'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 86400
 
@@ -29,64 +34,73 @@ export default async function OfficialsPage() {
   const officialIds = officials.map(function (o) { return o.official_id })
   const translations = langId ? await fetchTranslationsForTable('elected_officials', officialIds, langId) : {}
 
-  // Compute stats for social proof
   const federalCount = officials.filter(function (o) { return o.level === 'Federal' }).length
   const stateCount = officials.filter(function (o) { return o.level === 'State' }).length
   const localCount = officials.filter(function (o) { return o.level === 'County' || o.level === 'City' }).length
 
   return (
-    <div>
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#4a2870' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#4a2870' }} />
-          Accountability Center
-        </Link>
-      </div>
-      <IndexPageHero
-        color="#4a2870"
-        pattern="metatron"
-        titleKey="officials.title"
-        subtitleKey="officials.subtitle"
-        intro="The people making decisions about your city, your state, and your country. Look them up. Reach out."
-        stats={[
-          { value: officials.length, label: 'Officials' },
-          { value: federalCount, label: 'Federal' },
-          { value: stateCount, label: 'State' },
-          { value: localCount, label: 'Local' },
-        ]}
-      />
-
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Officials' }]} />
-
-        <div className="flex flex-col lg:flex-row gap-6 mt-4">
-          {/* Main content */}
-          <div className="flex-1 min-w-0">
-            <OfficialsPageClient
-              officials={officials}
-              levels={levels}
-              translations={translations}
-              linkedinProfiles={profiles}
-            />
-          </div>
-
-          {/* Wayfinder sidebar — desktop */}
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="officials"
-                color="#4a2870"
-                related={[
-                  { label: 'Governance Overview', href: '/governance', color: '#4a2870' },
-                  { label: 'Policies & Legislation', href: '/policies', color: '#1b5e8a' },
-                  { label: 'Elections', href: '/elections', color: '#1a6b56' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
-                ]}
-              />
-              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            Who Represents You
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            The people making decisions about your city, your state, and your country. Look them up. Reach out.
+          </p>
+          <div className="flex flex-wrap gap-8 mt-8">
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{officials.length}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Officials</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{federalCount}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Federal</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{stateCount}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>State</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{localCount}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Local</span>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Officials</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        <OfficialsPageClient
+          officials={officials}
+          levels={levels}
+          translations={translations}
+          linkedinProfiles={profiles}
+        />
+      </div>
+
+      {/* Footer rule + link */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
       </div>
     </div>
   )
