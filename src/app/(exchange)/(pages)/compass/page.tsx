@@ -5,7 +5,7 @@ import { CompassClient } from './CompassClient'
 import { THEMES } from '@/lib/constants'
 import { getNewsFeed } from '@/lib/data/exchange'
 
-export const revalidate = 600
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Civic Compass -- Change Engine',

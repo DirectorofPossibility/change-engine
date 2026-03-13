@@ -22,8 +22,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
-// ── Design tokens ─────────────────────────────────────────────────────
-
 const PARCHMENT = '#F5F0E8'
 const PARCHMENT_WARM = '#EDE7D8'
 const INK = '#1A1A1A'
@@ -81,26 +79,26 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
   return (
     <div style={{ background: PARCHMENT }} className="min-h-screen">
-      {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
-        <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
-            Change Engine -- Neighborhoods
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
           </p>
-          <p style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.15em', color: CLAY, textTransform: 'uppercase', marginTop: '0.5rem' }}>
             Neighborhood
             {hood.neighborhood_type && <> -- {hood.neighborhood_type}</>}
             {hood.city && <> -- {hood.city}</>}
             {hood.council_district && <> -- District {hood.council_district}</>}
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 2.8rem)', color: INK, lineHeight: 1.1 }}>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
             {hood.neighborhood_name}
           </h1>
           {hood.description && (
-            <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {hood.description}
             </p>
           )}
@@ -110,22 +108,22 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
             {hood.population != null && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{hood.population.toLocaleString()}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('neighborhoods.population')}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('neighborhoods.population')}</span>
               </div>
             )}
             {hood.median_income != null && (
               <div>
                 <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>${hood.median_income.toLocaleString()}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('neighborhoods.median_income')}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('neighborhoods.median_income')}</span>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── Breadcrumb ── */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
           <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/neighborhoods" className="hover:underline" style={{ color: CLAY }}>Neighborhoods</Link>
@@ -134,13 +132,13 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
         </nav>
       </div>
 
-      <div className="max-w-[900px] mx-auto px-6 py-10">
-        {/* ── Map ── */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        {/* Map */}
         <section className="mb-10">
-          <div className="flex items-baseline gap-4 mb-4">
+          <div className="flex items-baseline justify-between mb-1">
             <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Neighborhood Map</h2>
-            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
           </div>
+          <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
           <div style={{ border: '1px solid ' + RULE_COLOR }}>
             <NeighborhoodMap
               services={mapData.services}
@@ -152,7 +150,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </div>
         </section>
 
-        {/* ── ZIP codes ── */}
+        {/* ZIP codes */}
         {zips.length > 0 && (
           <div className="p-4 mb-8" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
             <p style={{ fontFamily: MONO, fontSize: '0.75rem', color: INK }}>
@@ -164,9 +162,9 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </div>
         )}
 
-        {/* ── Civic data reference ── */}
+        {/* Civic data reference */}
         <div className="p-4 mb-8" style={{ border: '1px solid ' + RULE_COLOR }}>
-          <p style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-2">Neighborhood data</p>
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase', marginBottom: '0.5rem' }}>Neighborhood data</p>
           <a
             href="https://www.understandinghouston.org/topic/demographics"
             target="_blank"
@@ -181,29 +179,29 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           </p>
         </div>
 
-        {/* ── Local services ── */}
+        {/* Local services */}
         {services.length > 0 && (
-          <section>
-            <div className="flex items-baseline gap-4 mb-6">
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('neighborhoods.services_area')}</h2>
-              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{services.length} services</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{services.length} services</span>
             </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+            <div className="space-y-0">
               {services.slice(0, 4).map(function (svc) {
                 return (
                   <Link
                     key={svc.service_id}
                     href={'/services/' + svc.service_id}
-                    className="block p-4 transition-colors hover:bg-white/50"
-                    style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                    className="block group"
+                    style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '0.75rem', paddingTop: '0.75rem' }}
                   >
-                    <h4 style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 mb-1">
+                    <h4 style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 600, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
                       {serviceTranslations[svc.service_id]?.title || svc.service_name}
                     </h4>
                     {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
-                      <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                      <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, lineHeight: 1.5, marginTop: '0.25rem' }} className="line-clamp-2">
                         {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
                       </p>
                     )}
@@ -214,23 +212,23 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
             {services.length > 4 && (
               <details className="mt-2">
-                <summary style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
                   Show all {services.length} services
                 </summary>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 mt-2" style={{ border: '1px solid ' + RULE_COLOR }}>
+                <div className="space-y-0 mt-2">
                   {services.slice(4).map(function (svc) {
                     return (
                       <Link
                         key={svc.service_id}
                         href={'/services/' + svc.service_id}
-                        className="block p-4 transition-colors hover:bg-white/50"
-                        style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                        className="block group"
+                        style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '0.75rem', paddingTop: '0.75rem' }}
                       >
-                        <h4 style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 mb-1">
+                        <h4 style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 600, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
                           {serviceTranslations[svc.service_id]?.title || svc.service_name}
                         </h4>
                         {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
-                          <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                          <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, lineHeight: 1.5, marginTop: '0.25rem' }} className="line-clamp-2">
                             {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
                           </p>
                         )}
@@ -242,15 +240,14 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
             )}
           </section>
         )}
+      </div>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
-
-        {/* ── Footer link ── */}
-        <div className="text-center py-4">
-          <Link href="/neighborhoods" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
-            Back to Neighborhoods
-          </Link>
-        </div>
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/neighborhoods" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to Neighborhoods
+        </Link>
       </div>
     </div>
   )

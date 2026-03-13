@@ -22,7 +22,7 @@ const RULE_COLOR = 'rgba(196,102,58,0.3)'
 const SERIF = 'Georgia, "Times New Roman", serif'
 const MONO = '"Courier New", Courier, monospace'
 
-export const revalidate = 86400
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Who Represents You — Change Engine',

@@ -16,7 +16,7 @@ const RULE_COLOR = 'rgba(196,102,58,0.3)'
 const SERIF = 'Georgia, "Times New Roman", serif'
 const MONO = '"Courier New", Courier, monospace'
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Find Services — Change Engine',

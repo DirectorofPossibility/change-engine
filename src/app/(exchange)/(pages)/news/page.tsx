@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: 'Articles, videos, guides, reports, tools, courses, and more from across the Houston community.',
 }
 
-export const revalidate = 600
+export const dynamic = 'force-dynamic'
 
 function formatDate(dateStr: string | null) {
   if (!dateStr) return null
