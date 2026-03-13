@@ -16,14 +16,6 @@ export const metadata: Metadata = {
 
 // ── Design tokens ─────────────────────────────────────────────────────
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default async function MyNeighborhoodPage({
   searchParams,
@@ -38,26 +30,26 @@ export default async function MyNeighborhoodPage({
   // No ZIP -- show prompt
   if (!zip) {
     return (
-      <div style={{ background: PARCHMENT }} className="min-h-screen">
-        <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="bg-paper min-h-screen">
+        <div className="relative overflow-hidden bg-paper">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="relative max-w-[900px] mx-auto px-6 py-16">
-            <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
               Change Engine
             </p>
-            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
               State of My Neighborhood
             </h1>
-            <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+            <p style={{ fontSize: '1.1rem', color: "#5c6474", lineHeight: 1.7 }} className="mt-4 max-w-xl">
               Enter your ZIP code to see a personalized portrait of your neighborhood -- your representatives, nearby services, upcoming elections, and more.
             </p>
           </div>
         </div>
         <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-          <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
-            <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+            <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
             <span className="mx-2">/</span>
             <span>My Neighborhood</span>
           </nav>
@@ -74,34 +66,34 @@ export default async function MyNeighborhoodPage({
 
   if (!neighborhoodId) {
     return (
-      <div style={{ background: PARCHMENT }} className="min-h-screen">
-        <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="bg-paper min-h-screen">
+        <div className="relative overflow-hidden bg-paper">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="relative max-w-[900px] mx-auto px-6 py-16">
-            <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
               Change Engine
             </p>
-            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
               State of My Neighborhood
             </h1>
           </div>
         </div>
         <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-          <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
-            <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+            <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
             <span className="mx-2">/</span>
             <span>My Neighborhood</span>
           </nav>
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-10">
-          <div className="p-8 text-center max-w-lg mx-auto" style={{ border: '1px solid ' + RULE_COLOR }}>
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }} className="mb-2">
+          <div className="p-8 text-center max-w-lg mx-auto" style={{ border: '1px solid #dde1e8' }}>
+            <h2 style={{ fontSize: '1.25rem',  }} className="mb-2">
               Neighborhood Not Found
             </h2>
-            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }} className="mb-4">
-              We could not find a neighborhood for ZIP code <span style={{ fontFamily: MONO, fontWeight: 700 }}>{zip}</span>.
+            <p style={{ fontSize: '0.9rem', color: "#5c6474", lineHeight: 1.6 }} className="mb-4">
+              We could not find a neighborhood for ZIP code <span style={{ fontWeight: 700 }}>{zip}</span>.
               This may be outside our current coverage area.
             </p>
             <ZipPrompt />
@@ -116,22 +108,22 @@ export default async function MyNeighborhoodPage({
 
   if (!storyData) {
     return (
-      <div style={{ background: PARCHMENT }} className="min-h-screen">
-        <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="bg-paper min-h-screen">
+        <div className="relative overflow-hidden bg-paper">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="relative max-w-[900px] mx-auto px-6 py-16">
-            <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
               Change Engine
             </p>
-            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+            <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
               State of My Neighborhood
             </h1>
           </div>
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-10">
-          <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED }} className="text-center py-10">
+          <p style={{ fontSize: '1rem', color: "#5c6474" }} className="text-center py-10">
             Unable to load neighborhood data. Please try again later.
           </p>
         </div>
@@ -155,20 +147,20 @@ export default async function MyNeighborhoodPage({
   ].filter(Boolean) as Array<{ value: string | number; label: string }>
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine -- State of My Neighborhood
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
             {storyData.neighborhood.neighborhood_name}
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, lineHeight: 1.7 }} className="mt-3 max-w-xl">
+          <p style={{ fontSize: '1.05rem', color: "#5c6474", lineHeight: 1.7 }} className="mt-3 max-w-xl">
             A data-driven portrait of your community -- demographics, representatives, services, policies, and civic engagement opportunities.
           </p>
           {heroStats.length > 0 && (
@@ -176,8 +168,8 @@ export default async function MyNeighborhoodPage({
               {heroStats.map(function (stat) {
                 return (
                   <div key={stat.label}>
-                    <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{stat.value}</span>
-                    <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{stat.label}</span>
+                    <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{stat.value}</span>
+                    <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{stat.label}</span>
                   </div>
                 )
               })}
@@ -188,10 +180,10 @@ export default async function MyNeighborhoodPage({
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/super-neighborhoods" className="hover:underline" style={{ color: CLAY }}>Super Neighborhoods</Link>
+          <Link href="/super-neighborhoods" className="hover:underline" style={{ color: "#1b5e8a" }}>Super Neighborhoods</Link>
           <span className="mx-2">/</span>
           <span>{storyData.neighborhood.neighborhood_name}</span>
         </nav>
@@ -200,10 +192,10 @@ export default async function MyNeighborhoodPage({
       <div className="max-w-[900px] mx-auto px-6 py-10">
         <NeighborhoodStory data={storyData} />
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         <div className="text-center py-4">
-          <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Back to Home
           </Link>
         </div>

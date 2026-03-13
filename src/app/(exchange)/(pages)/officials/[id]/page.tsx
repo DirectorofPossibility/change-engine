@@ -17,14 +17,6 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import Image from 'next/image'
 import { personJsonLd } from '@/lib/jsonld'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const FOCUS_DOT_COLORS = [
   '#1b5e8a', '#1a6b56', '#4a2870', '#6a4e10', '#1a5030', '#7a2018',
@@ -163,19 +155,19 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   const jsonLd = personJsonLd({ ...official, photo_url: profile?.photo_url || null, bio_short: profile?.bio_short || null } as any)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <SpiralTracker action="view_official" />
       {jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex items-start gap-6 mt-4">
@@ -184,38 +176,38 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 src={photoUrl}
                 alt={official.official_name}
                 className="object-cover flex-shrink-0"
-                style={{ border: '1px solid ' + RULE_COLOR }}
+                style={{ border: '1px solid #dde1e8' }}
                 width={120}
                 height={120}
               />
             )}
             <div>
-              <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15 }}>
+              <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15 }}>
                 {official.official_name}
               </h1>
               {(displayTitle || official.jurisdiction) && (
-                <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, marginTop: '0.5rem' }}>
+                <p style={{ fontSize: '1.05rem', color: "#5c6474", marginTop: '0.5rem' }}>
                   {[displayTitle, official.jurisdiction].filter(Boolean).join(', ')}
                 </p>
               )}
               <div className="flex flex-wrap gap-4 mt-4">
                 {official.party && (
-                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
                     {official.party}
                   </span>
                 )}
                 {official.level && (
-                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
                     {official.level}
                   </span>
                 )}
                 {official.term_end && (
-                  <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                  <span className="flex items-center gap-1" style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
                     <Calendar size={12} /> {t('official.term_ends')} {new Date(official.term_end).toLocaleDateString()}
                   </span>
                 )}
                 {official.district_id && (
-                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
                     District {official.district_id}
                   </span>
                 )}
@@ -227,10 +219,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/officials" className="hover:underline" style={{ color: CLAY }}>Officials</Link>
+          <Link href="/officials" className="hover:underline" style={{ color: "#1b5e8a" }}>Officials</Link>
           <span className="mx-2">/</span>
           <span>{official.official_name}</span>
         </nav>
@@ -243,10 +235,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {bio && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.about')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.about')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, lineHeight: 1.85 }}>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>
               {bio}
             </p>
           </section>
@@ -255,44 +247,44 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {/* Contact */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.contact')}</h2>
+            <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.contact')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
           <div className="space-y-3">
             {(profile?.phone_office || official.office_phone) && (
-              <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+              <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                 <Phone size={15} /> {profile?.phone_office || official.office_phone}
               </a>
             )}
             {official.email && (
-              <a href={'mailto:' + official.email} className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+              <a href={'mailto:' + official.email} className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                 <Mail size={15} /> {official.email}
               </a>
             )}
             {official.website && (
-              <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+              <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                 <Globe size={15} /> {t('detail.website')}
               </a>
             )}
             {profile?.social_linkedin && (
-              <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+              <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                 <Linkedin size={15} /> {t('official.linkedin')}
               </a>
             )}
             {profile?.address_office && (
-              <div className="flex items-start gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+              <div className="flex items-start gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
                 <MapPin size={15} className="shrink-0 mt-0.5" />
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.office')}</span>
+                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.office')}</span>
                   {profile.address_office}
                 </div>
               </div>
             )}
             {profile?.address_district && (
-              <div className="flex items-start gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+              <div className="flex items-start gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
                 <MapPin size={15} className="shrink-0 mt-0.5" />
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.district_office')}</span>
+                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.district_office')}</span>
                   {profile.address_district}
                 </div>
               </div>
@@ -304,14 +296,14 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {counties.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.counties')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{counties.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.counties')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{counties.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="space-y-1">
               {counties.map(function (c) {
                 return (
-                  <p key={c.county_id} style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>{c.county_name}</p>
+                  <p key={c.county_id} style={{ fontSize: '0.9rem',  }}>{c.county_name}</p>
                 )
               })}
             </div>
@@ -322,32 +314,32 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {(official.district_type || official.district_id) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.district')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.district')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="flex items-center gap-6 mb-3">
               {official.district_type && (
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.type')}</span>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{official.district_type}</p>
+                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.type')}</span>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{official.district_type}</p>
                 </div>
               )}
               {official.district_id && (
                 <div>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.id')}</span>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{official.district_id}</p>
+                  <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", display: 'block' }}>{t('official.id')}</span>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{official.district_id}</p>
                 </div>
               )}
             </div>
             {districtZips.length > 0 && (
               <div>
-                <span className="flex items-center gap-1 mb-2" style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>
+                <span className="flex items-center gap-1 mb-2" style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>
                   <MapPin size={11} /> {t('official.zip_codes')}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {districtZips.map(function (z) {
                     return (
-                      <span key={z} style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }}>
+                      <span key={z} style={{ fontSize: '0.7rem', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }}>
                         {String(z).padStart(5, '0')}
                       </span>
                     )
@@ -360,26 +352,26 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
         {/* District Map */}
         {(official.district_type || official.district_id) && (
-          <div className="mb-10" style={{ border: '1px solid ' + RULE_COLOR }}>
+          <div className="mb-10" style={{ border: '1px solid #dde1e8' }}>
             <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
           </div>
         )}
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Focus Areas */}
         {focusAreas.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.focus_areas')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{focusAreas.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.focus_areas')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{focusAreas.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div>
               {focusAreas.map(function (fa, i) {
                 const dotColor = FOCUS_DOT_COLORS[i % FOCUS_DOT_COLORS.length]
                 return (
-                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 hover:underline" style={{ fontSize: '0.9rem',  }}>
                     <span className="w-2 h-2 flex-shrink-0" style={{ background: dotColor }} />
                     <span>{fa.focus_area_name}</span>
                   </Link>
@@ -393,22 +385,22 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {committeeList.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.committees')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{committeeList.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.committees')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{committeeList.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {committeeList.slice(0, 4).map(function (c, i) {
               return (
-                <div key={i} className="py-3" style={{ borderBottom: i < Math.min(committeeList.length, 4) - 1 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                <div key={i} className="py-3" style={{ borderBottom: i < Math.min(committeeList.length, 4) - 1 ? '1px solid ' + '#dde1e8' : 'none' }}>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{c.committee_name}</p>
+                      <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{c.committee_name}</p>
                       {c.chamber && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
+                        <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{c.chamber}</span>
                       )}
                     </div>
                     {c.role && (
-                      <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
+                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0d1117', color: '#fff', padding: '2px 8px' }}>
                         {c.role}
                       </span>
                     )}
@@ -418,21 +410,21 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
             })}
             {committeeList.length > 4 && (
               <details className="mt-2">
-                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
                   See {committeeList.length - 4} more committees
                 </summary>
                 {committeeList.slice(4).map(function (c, i) {
                   return (
-                    <div key={i + 4} className="py-3" style={{ borderBottom: i < committeeList.length - 5 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                    <div key={i + 4} className="py-3" style={{ borderBottom: i < committeeList.length - 5 ? '1px solid ' + '#dde1e8' : 'none' }}>
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{c.committee_name}</p>
+                          <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{c.committee_name}</p>
                           {c.chamber && (
-                            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
+                            <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{c.chamber}</span>
                           )}
                         </div>
                         {c.role && (
-                          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
+                          <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0d1117', color: '#fff', padding: '2px 8px' }}>
                             {c.role}
                           </span>
                         )}
@@ -449,24 +441,24 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         {voteList.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.recent_votes')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{voteList.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.recent_votes')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{voteList.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {voteList.slice(0, 4).map(function (v, i) {
-              const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : MUTED
+              const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : '#5c6474'
               const inner = (
-                <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < Math.min(voteList.length, 4) - 1 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < Math.min(voteList.length, 4) - 1 ? '1px solid ' + '#dde1e8' : 'none' }}>
                   <div className="min-w-0">
-                    <p className="truncate" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>
+                    <p className="truncate" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>
                       {v.bill_number || t('official.vote')}
                     </p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
-                      {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                      {v.chamber && <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', color: "#5c6474" }}>{v.chamber}</span>}
+                      {v.vote_date && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
                     </div>
                   </div>
-                  <span className="flex-shrink-0" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>
+                  <span className="flex-shrink-0" style={{ fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>
                     {v.vote}
                   </span>
                 </div>
@@ -479,21 +471,21 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
             })}
             {voteList.length > 4 && (
               <details className="mt-2">
-                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
                   See {voteList.length - 4} more votes
                 </summary>
                 {voteList.slice(4).map(function (v, i) {
-                  const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : MUTED
+                  const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : '#5c6474'
                   const inner = (
-                    <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < voteList.length - 5 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                    <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < voteList.length - 5 ? '1px solid ' + '#dde1e8' : 'none' }}>
                       <div className="min-w-0">
-                        <p className="truncate" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{v.bill_number || t('official.vote')}</p>
+                        <p className="truncate" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{v.bill_number || t('official.vote')}</p>
                         <div className="flex items-center gap-2 mt-0.5">
-                          {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
-                          {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                          {v.chamber && <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', color: "#5c6474" }}>{v.chamber}</span>}
+                          {v.vote_date && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
                         </div>
                       </div>
-                      <span className="flex-shrink-0" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>{v.vote}</span>
+                      <span className="flex-shrink-0" style={{ fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>{v.vote}</span>
                     </div>
                   )
                   return v.policy_id ? (
@@ -507,17 +499,17 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           </section>
         )}
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Policies */}
         {policies && policies.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.policies')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{policies.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('official.policies')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{policies.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1px solid ' + RULE_COLOR, borderTop: '1px solid ' + RULE_COLOR }}>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1px solid ' + '#dde1e8', borderTop: '1px solid #dde1e8' }}>
               {policies.map(function (p) {
                 const pt = policyTranslations[p.policy_id]
                 return (
@@ -549,14 +541,14 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
         {/* Quote */}
         {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={CLAY} />
+          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />
         )}
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/officials" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/officials" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Officials
         </Link>
       </div>

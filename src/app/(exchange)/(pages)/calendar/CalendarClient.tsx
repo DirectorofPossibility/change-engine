@@ -49,7 +49,7 @@ interface CalendarClientProps {
 const CATEGORY_CONFIG: Record<string, { label: string; color: string; bgClass: string; textClass: string; icon: typeof Calendar }> = {
   event:       { label: 'Community',   color: '#7a2018', bgClass: 'bg-green-50',  textClass: 'text-green-700',  icon: Calendar },
   civic:       { label: 'Civic',       color: '#6a4e10', bgClass: 'bg-blue-50',   textClass: 'text-blue-700',   icon: Landmark },
-  opportunity: { label: 'Opportunity', color: '#1a3460', bgClass: 'bg-purple-50', textClass: 'text-purple-700', icon: Heart },
+  opportunity: { label: 'Opportunity', color: '#1b5e8a', bgClass: 'bg-purple-50', textClass: 'text-purple-700', icon: Heart },
   content:     { label: 'Featured',    color: '#1e4d7a', bgClass: 'bg-orange-50', textClass: 'text-orange-700', icon: Calendar },
 }
 

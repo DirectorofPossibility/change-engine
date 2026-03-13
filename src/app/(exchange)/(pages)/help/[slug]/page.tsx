@@ -20,14 +20,6 @@ import { getLibraryNuggets } from '@/lib/data/library'
 
 export const revalidate = 3600
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -85,21 +77,21 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
   const wayfinderData = await getWayfinderContext('life_situation', situation.situation_id, userProfile?.role)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             {situation.situation_name}
           </h1>
           {situation.description_5th_grade && (
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {situation.description_5th_grade}
             </p>
           )}
@@ -108,10 +100,10 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/help" className="hover:underline" style={{ color: CLAY }}>Available Resources</Link>
+          <Link href="/help" className="hover:underline" style={{ color: "#1b5e8a" }}>Available Resources</Link>
           <span className="mx-2">/</span>
           <span>{situation.situation_name}</span>
         </nav>
@@ -121,8 +113,8 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {/* Crisis banner for Critical */}
         {isCritical && (
           <div className="p-4 mb-6" style={{ border: '1px solid #c00', background: '#fef2f2' }}>
-            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: '#991b1b', marginBottom: '0.25rem' }}>Crisis Resources</p>
-            <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: '#b91c1c' }}>
+            <p style={{ fontSize: '0.9rem', fontWeight: 600, color: '#991b1b', marginBottom: '0.25rem' }}>Crisis Resources</p>
+            <p style={{ fontSize: '0.85rem', color: '#b91c1c' }}>
               Call <a href="tel:911" className="font-bold underline">911</a> for emergencies &bull;{' '}
               <a href="tel:988" className="font-bold underline">988</a> for mental health crisis &bull;{' '}
               <a href="tel:1-800-799-7233" className="font-bold underline">1-800-799-7233</a> for domestic violence
@@ -137,10 +129,10 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {content.length > 0 && (
           <section className="mb-10 mt-8">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Related Resources</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Related Resources</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '0.5rem' }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{content.length} resources</span>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
+            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{content.length} resources</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {content.map(function (item) {
                 const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
@@ -171,10 +163,10 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {services.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Services</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Services</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '0.5rem' }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{services.length} services</span>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
+            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{services.length} services</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {services.map(function (svc: any) {
                 const st = serviceTranslations[svc.service_id]
@@ -203,10 +195,10 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {opportunities.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Opportunities</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Opportunities</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '0.5rem' }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{opportunities.length} opportunities</span>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
+            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{opportunities.length} opportunities</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {opportunities.map(function (o) {
                 const ot = opportunityTranslations[o.opportunity_id]
@@ -235,10 +227,10 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {policies.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Related Policies</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Related Policies</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '0.5rem' }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{policies.length} policies</span>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
+            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{policies.length} policies</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {policies.map(function (p) {
                 const pt = policyTranslations[p.policy_id]
@@ -264,10 +256,10 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {relatedPath && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Learning Path</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Learning Path</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '0.5rem' }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>1 path</span>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
+            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>1 path</span>
             <div className="max-w-md mt-4">
               <Link href={'/learn/' + ((relatedPath as any).slug || relatedPath.path_id)}>
                 <LearningPathCard
@@ -285,9 +277,9 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/help" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/help" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Available Resources
         </Link>
       </div>

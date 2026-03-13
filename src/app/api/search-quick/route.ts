@@ -11,7 +11,7 @@ import { createClient } from '@/lib/supabase/server'
 const TYPE_COLORS: Record<string, string> = {
   content: '#6a4e10',
   service: '#C75B2A',
-  official: '#1a3460',
+  official: '#1b5e8a',
   organization: '#7a2018',
   opportunity: '#4a2870',
   election: '#1a6b56',

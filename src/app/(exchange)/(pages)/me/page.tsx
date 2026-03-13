@@ -9,14 +9,6 @@ import { SpiralProgress } from '@/components/exchange/SpiralProgress'
 
 export const dynamic = 'force-dynamic'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'My Account -- Change Engine',
@@ -149,38 +141,38 @@ export default async function MyDashboardPage() {
   const roleLabel = currentRole === 'admin' ? 'Administrator' : currentRole === 'partner' ? 'Community Partner' : 'Neighbor'
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute right-[-60px] top-[-20px]">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
           <div className="flex items-center gap-5 mt-4">
-            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0 text-xl font-bold" style={{ fontFamily: SERIF, background: CLAY + '20', color: CLAY }}>
+            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0 text-xl font-bold" style={{ background: '#1b5e8a' + '20', color: "#1b5e8a" }}>
               {displayName?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div>
-              <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl">
+              <h1 style={{  }} className="text-2xl sm:text-3xl">
                 Welcome back, {displayName}
               </h1>
-              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm" style={{ color: MUTED }}>
-                <span style={{ fontFamily: MONO, color: MUTED, borderBottom: '1px dotted ' + RULE_COLOR }} className="text-[11px] uppercase tracking-wide pb-0.5">
+              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm" style={{ color: "#5c6474" }}>
+                <span style={{ color: "#5c6474", borderBottom: '1px dotted ' + '#dde1e8' }} className="text-[11px] uppercase tracking-wide pb-0.5">
                   {roleLabel}
                 </span>
                 {profile?.zip_code && <span>ZIP {profile.zip_code}</span>}
-                <span>Impact Points: <strong style={{ color: CLAY }}>{totalPoints}</strong></span>
+                <span>Impact Points: <strong style={{ color: "#1b5e8a" }}>{totalPoints}</strong></span>
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-4">
-                <Link href="/me/settings" className="inline-block px-4 py-2 text-sm" style={{ fontFamily: MONO, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                <Link href="/me/settings" className="inline-block px-4 py-2 text-sm" style={{ border: '1px solid #dde1e8' }}>
                   Edit Settings
                 </Link>
-                <Link href="/compass" className="inline-block px-4 py-2 text-sm text-white" style={{ fontFamily: MONO, background: CLAY }}>
+                <Link href="/compass" className="inline-block px-4 py-2 text-sm text-white" style={{ background: '#1b5e8a' }}>
                   My Compass
                 </Link>
                 {['admin', 'partner', 'neighbor'].includes(currentRole) && (
-                  <Link href="/dashboard" className="inline-block px-4 py-2 text-sm" style={{ fontFamily: MONO, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                  <Link href="/dashboard" className="inline-block px-4 py-2 text-sm" style={{ border: '1px solid #dde1e8' }}>
                     Go to Dashboard
                   </Link>
                 )}
@@ -188,15 +180,15 @@ export default async function MyDashboardPage() {
             </div>
           </div>
         </div>
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </section>
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+        <nav style={{ color: "#5c6474" }} className="text-[11px] tracking-wide">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-1">/</span>
-          <span style={{ color: INK }}>My Account</span>
+          <span style={{  }}>My Account</span>
         </nav>
       </div>
 
@@ -207,27 +199,27 @@ export default async function MyDashboardPage() {
             {/* Learning Progress */}
             <section>
               <div className="flex items-baseline justify-between mb-1">
-                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">My Learning Paths</h2>
-                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{Object.keys(pathProgress).length} paths</span>
+                <h2 style={{  }} className="text-xl">My Learning Paths</h2>
+                <span style={{ color: "#5c6474" }} className="text-[11px]">{Object.keys(pathProgress).length} paths</span>
               </div>
-              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+              <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
               {Object.keys(pathProgress).length === 0 ? (
-                <div style={{ border: '1px solid ' + RULE_COLOR }} className="p-6 text-center">
-                  <p style={{ color: MUTED }} className="mb-3">You haven&apos;t started any learning paths yet.</p>
-                  <Link href="/learn" style={{ color: CLAY, fontFamily: MONO }} className="text-sm hover:underline">Browse learning paths &rarr;</Link>
+                <div style={{ border: '1px solid #dde1e8' }} className="p-6 text-center">
+                  <p style={{ color: "#5c6474" }} className="mb-3">You haven&apos;t started any learning paths yet.</p>
+                  <Link href="/learn" style={{ color: "#1b5e8a",  }} className="text-sm hover:underline">Browse learning paths &rarr;</Link>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {Object.entries(pathProgress).map(function ([pathId, prog]) {
                     const pct = prog.total > 0 ? Math.round((prog.completed / prog.total) * 100) : 0
                     return (
-                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid ' + RULE_COLOR }}>
+                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
                         <div className="flex items-center justify-between mb-2">
-                          <h3 style={{ fontFamily: SERIF, color: INK }} className="text-sm font-semibold">{pathNames[pathId] || pathId}</h3>
-                          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{prog.completed}/{prog.total} modules</span>
+                          <h3 style={{  }} className="text-sm font-semibold">{pathNames[pathId] || pathId}</h3>
+                          <span style={{ color: "#5c6474" }} className="text-xs">{prog.completed}/{prog.total} modules</span>
                         </div>
-                        <div className="w-full h-2" style={{ background: PARCHMENT_WARM }}>
-                          <div className="h-2 transition-all" style={{ width: pct + '%', background: CLAY }} />
+                        <div className="w-full h-2 bg-paper">
+                          <div className="h-2 transition-all" style={{ width: pct + '%', background: '#1b5e8a' }} />
                         </div>
                       </Link>
                     )
@@ -240,14 +232,14 @@ export default async function MyDashboardPage() {
             {representatives.length > 0 && (
               <section>
                 <div className="flex items-baseline justify-between mb-1">
-                  <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">Your Representatives</h2>
-                  <Link href="/officials" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">View all &rarr;</Link>
+                  <h2 style={{  }} className="text-xl">Your Representatives</h2>
+                  <Link href="/officials" style={{ color: "#1b5e8a" }} className="text-xs hover:underline">View all &rarr;</Link>
                 </div>
-                <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+                <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {representatives.map(function (rep: any) {
                     const levelColors: Record<string, string> = {
-                      Federal: '#1a3460', State: '#6a4e10', County: '#7a2018', City: '#1e4d7a',
+                      Federal: '#1b5e8a', State: '#6a4e10', County: '#7a2018', City: '#1e4d7a',
                     }
                     const color = levelColors[rep.level] || '#6B6560'
                     return (
@@ -255,9 +247,9 @@ export default async function MyDashboardPage() {
                         key={rep.official_id}
                         href={'/officials/' + rep.official_id}
                         className="group flex items-center gap-3 p-3 hover:opacity-80 transition-opacity"
-                        style={{ border: '1px solid ' + RULE_COLOR }}
+                        style={{ border: '1px solid #dde1e8' }}
                       >
-                        <div className="w-10 h-10 flex-shrink-0 overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+                        <div className="w-10 h-10 flex-shrink-0 overflow-hidden bg-paper">
                           {rep.photo_url ? (
                             <Image src={rep.photo_url} alt="" className="w-full h-full object-cover" width={40} height={40} />
                           ) : (
@@ -267,8 +259,8 @@ export default async function MyDashboardPage() {
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p style={{ fontFamily: SERIF, color: INK }} className="text-sm truncate">{rep.official_name}</p>
-                          <div className="flex items-center gap-2 text-[11px]" style={{ color: MUTED }}>
+                          <p style={{  }} className="text-sm truncate">{rep.official_name}</p>
+                          <div className="flex items-center gap-2 text-[11px]" style={{ color: "#5c6474" }}>
                             <span className="inline-block w-2 h-2 flex-shrink-0" style={{ backgroundColor: color }} />
                             <span className="truncate">{rep.title || rep.level}</span>
                             {rep.party && <span>({rep.party})</span>}
@@ -289,27 +281,27 @@ export default async function MyDashboardPage() {
             {/* Recent Activity */}
             <section>
               <div className="flex items-baseline justify-between mb-1">
-                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">Recent Activity</h2>
-                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{actions?.length || 0} actions</span>
+                <h2 style={{  }} className="text-xl">Recent Activity</h2>
+                <span style={{ color: "#5c6474" }} className="text-[11px]">{actions?.length || 0} actions</span>
               </div>
-              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+              <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
               {(!actions || actions.length === 0) ? (
-                <div style={{ border: '1px solid ' + RULE_COLOR }} className="p-6 text-center">
-                  <p style={{ color: MUTED }}>No activity yet. Start by exploring content and taking action!</p>
+                <div style={{ border: '1px solid #dde1e8' }} className="p-6 text-center">
+                  <p style={{ color: "#5c6474" }}>No activity yet. Start by exploring content and taking action!</p>
                 </div>
               ) : (
-                <div style={{ border: '1px solid ' + RULE_COLOR }}>
+                <div style={{ border: '1px solid #dde1e8' }}>
                   {actions.map(function (a, i) {
                     return (
-                      <div key={a.action_log_id} className="p-3 flex items-center justify-between" style={i > 0 ? { borderTop: '1px solid ' + RULE_COLOR } : {}}>
+                      <div key={a.action_log_id} className="p-3 flex items-center justify-between" style={i > 0 ? { borderTop: '1px solid #dde1e8' } : {}}>
                         <div>
-                          <p style={{ fontFamily: SERIF, color: INK }} className="text-sm">{a.target_name || a.action_type_id}</p>
+                          <p style={{  }} className="text-sm">{a.target_name || a.action_type_id}</p>
                           {a.action_date && (
-                            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{new Date(a.action_date).toLocaleDateString()}</p>
+                            <p style={{ color: "#5c6474" }} className="text-xs">{new Date(a.action_date).toLocaleDateString()}</p>
                           )}
                         </div>
                         {a.impact_points != null && a.impact_points > 0 && (
-                          <span style={{ fontFamily: MONO, color: CLAY }} className="text-xs font-medium">+{a.impact_points} pts</span>
+                          <span style={{ color: "#1b5e8a" }} className="text-xs font-medium">+{a.impact_points} pts</span>
                         )}
                       </div>
                     )
@@ -329,29 +321,29 @@ export default async function MyDashboardPage() {
             {/* Badges */}
             <section>
               <div className="flex items-baseline justify-between mb-1">
-                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg">My Badges</h2>
-                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{userBadges?.length || 0} earned</span>
+                <h2 style={{  }} className="text-lg">My Badges</h2>
+                <span style={{ color: "#5c6474" }} className="text-[11px]">{userBadges?.length || 0} earned</span>
               </div>
-              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+              <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
               {(!userBadges || userBadges.length === 0) ? (
-                <div style={{ border: '1px solid ' + RULE_COLOR }} className="p-6 text-center">
-                  <p style={{ fontFamily: MONO, color: MUTED }} className="text-sm">Complete learning paths and take action to earn badges!</p>
+                <div style={{ border: '1px solid #dde1e8' }} className="p-6 text-center">
+                  <p style={{ color: "#5c6474" }} className="text-sm">Complete learning paths and take action to earn badges!</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-3">
                   {userBadges.map(function (ub) {
                     const detail = badgeDetails.find(function (b) { return b.badge_id === ub.badge_id })
                     return (
-                      <div key={ub.user_badge_id} className="p-3 text-center" style={{ border: '1px solid ' + RULE_COLOR }}>
+                      <div key={ub.user_badge_id} className="p-3 text-center" style={{ border: '1px solid #dde1e8' }}>
                         <div
                           className="w-10 h-10 mx-auto mb-2 flex items-center justify-center text-white text-lg"
-                          style={{ backgroundColor: detail?.color || CLAY }}
+                          style={{ backgroundColor: detail?.color || '#1b5e8a' }}
                         >
                           {detail?.icon_name ? detail.icon_name.charAt(0).toUpperCase() : 'B'}
                         </div>
-                        <p style={{ fontFamily: SERIF, color: INK }} className="text-xs">{detail?.badge_name || 'Badge'}</p>
+                        <p style={{  }} className="text-xs">{detail?.badge_name || 'Badge'}</p>
                         {detail?.points && (
-                          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{detail.points} pts</p>
+                          <p style={{ color: "#5c6474" }} className="text-xs">{detail.points} pts</p>
                         )}
                       </div>
                     )
@@ -363,13 +355,13 @@ export default async function MyDashboardPage() {
             {/* Account upgrades */}
             {currentRole === 'neighbor' && (
               <section>
-                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg mb-1">Upgrade Your Account</h2>
-                <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
-                <div className="p-4 relative overflow-hidden" style={{ border: '2px solid ' + RULE_COLOR }}>
-                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: CLAY }} />
-                  <p style={{ fontFamily: MONO, color: CLAY }} className="text-[10px] uppercase tracking-wider mb-1 pl-2">Community Partner</p>
-                  <p style={{ fontFamily: SERIF, color: INK }} className="text-lg pl-2">$100<span className="text-sm" style={{ color: MUTED }}> - $5,000/yr</span></p>
-                  <ul className="mt-2 pl-2 space-y-1 text-[12px]" style={{ color: MUTED }}>
+                <h2 style={{  }} className="text-lg mb-1">Upgrade Your Account</h2>
+                <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
+                <div className="p-4 relative overflow-hidden" style={{ border: '2px solid ' + '#dde1e8' }}>
+                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: '#1b5e8a' }} />
+                  <p style={{ color: "#1b5e8a" }} className="text-[10px] uppercase tracking-wider mb-1 pl-2">Community Partner</p>
+                  <p style={{  }} className="text-lg pl-2">$100<span className="text-sm" style={{ color: "#5c6474" }}> - $5,000/yr</span></p>
+                  <ul className="mt-2 pl-2 space-y-1 text-[12px]" style={{ color: "#5c6474" }}>
                     <li>Verified organizational profile</li>
                     <li>Post events and guides</li>
                     <li>Partner dashboard and analytics</li>
@@ -384,14 +376,14 @@ export default async function MyDashboardPage() {
             <RoleRequestCard currentRole={currentRole} />
 
             {/* Donate */}
-            <div className="p-4 text-center relative overflow-hidden" style={{ border: '1px solid ' + RULE_COLOR }}>
+            <div className="p-4 text-center relative overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
               <Image src="/images/fol/seed-of-life.svg" alt="" width={28} height={28} className="mx-auto mb-2 opacity-30" />
-              <p style={{ fontFamily: SERIF, color: INK }} className="text-sm mb-1">Support the Exchange</p>
-              <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] mb-3">Help keep Houston connected. Every dollar strengthens civic infrastructure for all.</p>
+              <p style={{  }} className="text-sm mb-1">Support the Exchange</p>
+              <p style={{ color: "#5c6474" }} className="text-[11px] mb-3">Help keep Houston connected. Every dollar strengthens civic infrastructure for all.</p>
               <Link
                 href="/donate"
                 className="inline-block px-5 py-2 text-white text-sm"
-                style={{ fontFamily: MONO, background: CLAY }}
+                style={{ background: '#1b5e8a' }}
               >
                 Make a Donation
               </Link>
@@ -399,25 +391,25 @@ export default async function MyDashboardPage() {
 
             {/* Quick links */}
             <section>
-              <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg mb-1">Quick Links</h2>
-              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+              <h2 style={{  }} className="text-lg mb-1">Quick Links</h2>
+              <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
               <div className="space-y-2">
-                <Link href="/compass" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                <Link href="/compass" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
                   My Community Compass
                 </Link>
-                <Link href="/learn" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                <Link href="/learn" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
                   Browse Learning Paths
                 </Link>
-                <Link href="/officials" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                <Link href="/officials" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
                   Find My Representatives
                 </Link>
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
-                  <Link href="/dashboard/tools-guides" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                  <Link href="/dashboard/tools-guides" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
                     Tools &amp; Guides
                   </Link>
                 )}
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
-                  <Link href="/me/submit" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: MONO, color: CLAY, border: '2px solid ' + RULE_COLOR }}>
+                  <Link href="/me/submit" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ color: "#1b5e8a", border: '2px solid ' + '#dde1e8' }}>
                     Share a Resource
                   </Link>
                 )}
@@ -429,8 +421,8 @@ export default async function MyDashboardPage() {
 
       {/* ── Footer link ── */}
       <div className="max-w-[900px] mx-auto px-6 pb-10">
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="pt-4">
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to Home</Link>
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="pt-4">
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">&larr; Back to Home</Link>
         </div>
       </div>
     </div>

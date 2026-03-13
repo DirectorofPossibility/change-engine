@@ -50,7 +50,7 @@ export function D2Footer() {
         <div className="flex-1" style={{ background: '#7a2018' }} />
         <div className="flex-1" style={{ background: '#6a4e10' }} />
         <div className="flex-1" style={{ background: '#1a5030' }} />
-        <div className="flex-1" style={{ background: '#1a3460' }} />
+        <div className="flex-1" style={{ background: '#1b5e8a' }} />
       </div>
 
       <footer className="bg-paper border-t-2 border-ink relative overflow-hidden">
@@ -59,7 +59,7 @@ export function D2Footer() {
             {/* Brand */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-3">
-                <SeedOfLife color="#1a3460" size={44} />
+                <SeedOfLife color="#1b5e8a" size={44} />
                 <div>
                   <span className="block font-display text-xl font-bold text-ink leading-tight">
                     {t('brand.name')}

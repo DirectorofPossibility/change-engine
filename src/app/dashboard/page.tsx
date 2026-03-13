@@ -16,6 +16,7 @@
  */
 
 import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog, getEntityCounts } from '@/lib/data/dashboard'
+import Link from 'next/link'
 import { Inbox, Search, CheckCircle, Globe, Database } from 'lucide-react'
 import { StatsCard } from '@/components/ui/StatsCard'
 import { PipelineFlow } from '@/components/ui/PipelineFlow'
@@ -48,6 +49,21 @@ export default async function DashboardPage() {
 
       {/* ── Entity Counts ── */}
       {(() => {
+        const ENTITY_LINKS: Record<string, string> = {
+          content_published: '/news',
+          elected_officials: '/officials',
+          policies: '/policies',
+          services_211: '/services',
+          organizations: '/organizations',
+          opportunities: '/opportunities',
+          focus_areas: '/pathways',
+          learning_paths: '/learning',
+          neighborhoods: '/neighborhoods',
+          foundations: '/foundations',
+          campaigns: '/community',
+          events: '/calendar',
+          kb_documents: '/library',
+        }
         const entityTables = entityCounts.filter(e => !e.table.startsWith('content_type:'))
         const contentTypes = entityCounts.filter(e => e.table.startsWith('content_type:'))
         const entityTotal = entityTables.reduce((sum, e) => sum + e.count, 0)
@@ -65,12 +81,20 @@ export default async function DashboardPage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {entityTables
                   .sort((a, b) => b.count - a.count)
-                  .map((entity) => (
-                    <div key={entity.table} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3">
-                      <span className="text-sm font-medium truncate mr-2">{entity.label}</span>
-                      <span className="text-lg font-bold text-brand-accent tabular-nums">{entity.count.toLocaleString()}</span>
-                    </div>
-                  ))}
+                  .map((entity) => {
+                    const href = ENTITY_LINKS[entity.table]
+                    return href ? (
+                      <Link key={entity.table} href={href} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3 hover:bg-brand-accent/10 transition-colors">
+                        <span className="text-sm font-medium truncate mr-2">{entity.label}</span>
+                        <span className="text-lg font-bold text-brand-accent tabular-nums">{entity.count.toLocaleString()}</span>
+                      </Link>
+                    ) : (
+                      <div key={entity.table} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3">
+                        <span className="text-sm font-medium truncate mr-2">{entity.label}</span>
+                        <span className="text-lg font-bold text-brand-accent tabular-nums">{entity.count.toLocaleString()}</span>
+                      </div>
+                    )
+                  })}
               </div>
             </div>
             {contentTypes.length > 0 && (
@@ -83,12 +107,15 @@ export default async function DashboardPage() {
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {contentTypes.map((ct) => (
-                    <div key={ct.table} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3">
-                      <span className="text-sm font-medium truncate mr-2">{ct.label}</span>
-                      <span className="text-lg font-bold text-brand-accent tabular-nums">{ct.count.toLocaleString()}</span>
-                    </div>
-                  ))}
+                  {contentTypes.map((ct) => {
+                    const typeKey = ct.table.replace('content_type:', '')
+                    return (
+                      <Link key={ct.table} href={'/news?type=' + typeKey} className="flex items-center justify-between bg-brand-bg rounded-lg px-4 py-3 hover:bg-brand-accent/10 transition-colors">
+                        <span className="text-sm font-medium truncate mr-2">{ct.label}</span>
+                        <span className="text-lg font-bold text-brand-accent tabular-nums">{ct.count.toLocaleString()}</span>
+                      </Link>
+                    )
+                  })}
                 </div>
               </div>
             )}

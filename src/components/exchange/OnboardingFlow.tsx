@@ -230,7 +230,7 @@ export function OnboardingFlow() {
                 <div
                   className="flex items-center gap-2 border-2 px-4 py-3 bg-white mb-2 transition-colors"
                   style={{
-                    borderColor: error ? '#C53030' : '#1A1A1A',
+                    borderColor: error ? '#C53030' : '#0d1117',
                     
                   }}
                 >

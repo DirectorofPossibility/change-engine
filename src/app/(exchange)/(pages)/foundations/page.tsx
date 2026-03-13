@@ -14,14 +14,6 @@ export const metadata: Metadata = {
 
 // ── Design tokens ─────────────────────────────────────────────────────
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default async function FoundationsPage() {
   const raw = await getFoundationsIndex()
@@ -55,41 +47,41 @@ export default async function FoundationsPage() {
   const uniqueFocusAreas = new Set(foundations.flatMap(f => f.focusAreas.map((fa: any) => fa.name))).size
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <SpiralTracker action="view_foundation" />
 
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
             Foundations
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+          <p style={{ fontSize: '1.1rem', color: "#5c6474", lineHeight: 1.7 }} className="mt-4 max-w-xl">
             The foundations funding Houston -- all in one place. They fund the work. We make it findable.
           </p>
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
-              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{foundations.length}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Foundations</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{foundations.length}</span>
+              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Foundations</span>
             </div>
             <div>
-              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{assetStr}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Est. Assets</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{assetStr}</span>
+              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Est. Assets</span>
             </div>
             <div>
-              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{uniqueFocusAreas}</span>
-              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Focus Areas</span>
+              <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{uniqueFocusAreas}</span>
+              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Focus Areas</span>
             </div>
             {spotlightCount > 0 && (
               <div>
-                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{spotlightCount}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Spotlighted</span>
+                <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{spotlightCount}</span>
+                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Spotlighted</span>
               </div>
             )}
           </div>
@@ -98,8 +90,8 @@ export default async function FoundationsPage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Foundations</span>
         </nav>
@@ -109,32 +101,32 @@ export default async function FoundationsPage() {
         {/* What You Can Do */}
         <section className="mb-10">
           <div className="flex items-baseline gap-4 mb-6">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>What You Can Do</h2>
-            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+            <h2 style={{ fontSize: '1.5rem',  }}>What You Can Do</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
           </div>
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
-              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: CLAY }} />
-              <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }}>
-                <strong style={{ color: INK }}>Find foundations working on what you care about.</strong> Browse by issue area.
+              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: '#1b5e8a' }} />
+              <span style={{ fontSize: '0.9rem', color: "#5c6474", lineHeight: 1.6 }}>
+                <strong style={{  }}>Find foundations working on what you care about.</strong> Browse by issue area.
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: CLAY }} />
-              <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }}>
-                <strong style={{ color: INK }}>See who they fund.</strong> Connect the dots between money and mission.
+              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: '#1b5e8a' }} />
+              <span style={{ fontSize: '0.9rem', color: "#5c6474", lineHeight: 1.6 }}>
+                <strong style={{  }}>See who they fund.</strong> Connect the dots between money and mission.
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: CLAY }} />
-              <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }}>
-                <strong style={{ color: INK }}>Understand the landscape.</strong> Whether you are a nonprofit, a researcher, or just curious -- start here.
+              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: '#1b5e8a' }} />
+              <span style={{ fontSize: '0.9rem', color: "#5c6474", lineHeight: 1.6 }}>
+                <strong style={{  }}>Understand the landscape.</strong> Whether you are a nonprofit, a researcher, or just curious -- start here.
               </span>
             </li>
           </ul>
         </section>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* List view */}
         <FoundationsListClient
@@ -142,20 +134,20 @@ export default async function FoundationsPage() {
           totalCount={foundations.length}
         />
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* ── Footer links ── */}
         <div className="flex flex-wrap gap-6 py-4">
-          <Link href="/organizations" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/organizations" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Organizations
           </Link>
-          <Link href="/services" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/services" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Services
           </Link>
-          <Link href="/officials" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/officials" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Officials
           </Link>
-          <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
+          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
             Back to Home
           </Link>
         </div>

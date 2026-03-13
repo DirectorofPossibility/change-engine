@@ -18,14 +18,6 @@ import type { MarkerData } from '@/components/maps/MapMarker'
 
 export const revalidate = 3600
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -136,9 +128,9 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
   if (foundations.length > 0) sections.push({ label: 'Foundations', count: foundations.length, anchor: 'foundations' })
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
@@ -150,24 +142,24 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <Link
                 href={'/explore/theme/' + themeSlug}
                 className="hover:underline"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', color: themeColor, textTransform: 'uppercase' }}
+                style={{ fontSize: 11, letterSpacing: '0.1em', color: themeColor, textTransform: 'uppercase' }}
               >
                 {themeName}
               </Link>
             )}
             {!fa.theme_id && (
-              <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase' }}>
+              <span style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase' }}>
                 Focus Area
               </span>
             )}
           </div>
 
-          <h1 style={{ fontFamily: SERIF, fontSize: 40, lineHeight: 1.1, color: INK }}>
+          <h1 style={{ fontSize: 40, lineHeight: 1.1,  }}>
             {fa.focus_area_name}
           </h1>
 
           {fa.description && (
-            <p className="mt-4 max-w-[600px]" style={{ fontFamily: SERIF, fontSize: 17, lineHeight: 1.7, color: MUTED }}>
+            <p className="mt-4 max-w-[600px]" style={{ fontSize: 17, lineHeight: 1.7, color: "#5c6474" }}>
               {fa.description}
             </p>
           )}
@@ -177,7 +169,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
             {sdg && (
               <span
                 className="px-3 py-1"
-                style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.06em', color: sdg.sdg_color || MUTED, border: '1px solid ' + (sdg.sdg_color || RULE_COLOR), textTransform: 'uppercase' }}
+                style={{ fontSize: 10, letterSpacing: '0.06em', color: sdg.sdg_color || '#5c6474', border: '1px solid ' + (sdg.sdg_color || '#dde1e8'), textTransform: 'uppercase' }}
               >
                 SDG {sdg.sdg_number}: {sdg.sdg_name}
               </span>
@@ -185,7 +177,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
             {sdoh && (
               <span
                 className="px-3 py-1"
-                style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.06em', color: MUTED, border: '1px solid ' + RULE_COLOR, textTransform: 'uppercase' }}
+                style={{ fontSize: 10, letterSpacing: '0.06em', color: "#5c6474", border: '1px solid #dde1e8', textTransform: 'uppercase' }}
               >
                 SDOH: {sdoh.sdoh_name}
               </span>
@@ -193,7 +185,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
             {fa.is_bridging && (
               <span
                 className="px-3 py-1"
-                style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.06em', color: MUTED, border: '1px dashed ' + RULE_COLOR, textTransform: 'uppercase' }}
+                style={{ fontSize: 10, letterSpacing: '0.06em', color: "#5c6474", border: '1px dashed ' + '#dde1e8', textTransform: 'uppercase' }}
               >
                 Bridging Area
               </span>
@@ -201,15 +193,15 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
           </div>
         </div>
 
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </div>
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: 11, letterSpacing: '0.06em', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/explore" className="hover:underline" style={{ color: CLAY }}>Explore</Link>
+          <Link href="/explore" className="hover:underline" style={{ color: "#1b5e8a" }}>Explore</Link>
           <span className="mx-2">/</span>
           <span>{fa.focus_area_name}</span>
         </nav>
@@ -219,8 +211,8 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
         {/* ── Table of Contents — progressive disclosure starts here ── */}
         {sections.length > 0 && (
-          <nav className="mb-10 p-5" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
-            <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase' }}>
+          <nav className="mb-10 p-5" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
+            <p className="mb-3" style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase' }}>
               What's here
             </p>
             <div className="space-y-1.5">
@@ -231,11 +223,11 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
                     href={'#' + s.anchor}
                     className="flex items-baseline gap-2 group"
                   >
-                    <span className="flex-1 truncate" style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>
+                    <span className="flex-1 truncate" style={{ fontSize: 15,  }}>
                       {s.label}
                     </span>
-                    <span className="flex-1 border-b border-dotted" style={{ borderColor: RULE_COLOR }} />
-                    <span style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+                    <span className="flex-1 border-b border-dotted" style={{ borderColor: '#dde1e8' }} />
+                    <span style={{ fontSize: 12, color: "#5c6474" }}>
                       {s.count}
                     </span>
                   </a>
@@ -249,31 +241,31 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
         {isEmpty && (
           <div className="mb-10 text-center py-12">
             <Image src="/images/fol/vesica-piscis.svg" alt="" width={80} height={80} className="opacity-[0.08] mx-auto mb-6" />
-            <p style={{ fontFamily: SERIF, fontSize: 18, color: INK }}>
+            <p style={{ fontSize: 18,  }}>
               We're building out resources for {fa.focus_area_name}.
             </p>
-            <p className="mt-2 max-w-md mx-auto" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+            <p className="mt-2 max-w-md mx-auto" style={{ fontSize: 14, color: "#5c6474" }}>
               In the meantime, try these starting points:
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a
                 href="tel:211"
                 className="px-5 py-2.5 text-white transition-opacity hover:opacity-90"
-                style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
+                style={{ fontSize: 12, letterSpacing: '0.04em', background: '#1b5e8a' }}
               >
                 Call 211
               </a>
               <Link
                 href={'/search?q=' + encodeURIComponent(fa.focus_area_name)}
-                className="px-5 py-2.5 transition-colors hover:bg-[#EDE7D8]"
-                style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', color: INK, border: '1px solid ' + RULE_COLOR }}
+                className="px-5 py-2.5 transition-colors hover:bg-[#f4f5f7]"
+                style={{ fontSize: 12, letterSpacing: '0.04em', border: '1px solid #dde1e8' }}
               >
                 Search "{fa.focus_area_name}"
               </Link>
               <Link
                 href="/services"
-                className="px-5 py-2.5 transition-colors hover:bg-[#EDE7D8]"
-                style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', color: INK, border: '1px solid ' + RULE_COLOR }}
+                className="px-5 py-2.5 transition-colors hover:bg-[#f4f5f7]"
+                style={{ fontSize: 12, letterSpacing: '0.04em', border: '1px solid #dde1e8' }}
               >
                 Browse Services
               </Link>
@@ -309,7 +301,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <details className="mt-4 group">
                 <summary
                   className="cursor-pointer list-none hover:underline"
-                  style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
                 >
                   <span className="group-open:hidden">Show {contentRest.length} more articles &darr;</span>
                   <span className="hidden group-open:inline">Show fewer &uarr;</span>
@@ -337,7 +329,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               </details>
             )}
 
-            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
           </section>
         )}
 
@@ -345,23 +337,23 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
         {services.length > 0 && (
           <section id="services" className="scroll-mt-8">
             <SectionHeader label="Services" count={services.length} />
-            <div className="mt-5 divide-y" style={{ borderTop: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}>
+            <div className="mt-5 divide-y" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
               {servicesPreview.map(function (svc: any) {
                 return (
                   <Link
                     key={svc.service_id || svc.id}
                     href={'/services/' + (svc.service_id || svc.id)}
-                    className="block py-4 px-4 transition-colors hover:bg-[#EDE7D8]"
-                    style={{ borderColor: RULE_COLOR }}
+                    className="block py-4 px-4 transition-colors hover:bg-[#f4f5f7]"
+                    style={{ borderColor: '#dde1e8' }}
                   >
-                    <p style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>{svc.service_name}</p>
+                    <p style={{ fontSize: 15,  }}>{svc.service_name}</p>
                     {svc.description_5th_grade && (
-                      <p className="mt-1 line-clamp-2" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>
+                      <p className="mt-1 line-clamp-2" style={{ fontSize: 13, color: "#5c6474" }}>
                         {svc.description_5th_grade}
                       </p>
                     )}
                     {(svc.phone || svc.city) && (
-                      <p className="mt-1" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                      <p className="mt-1" style={{ fontSize: 11, color: "#5c6474" }}>
                         {[svc.city, svc.phone].filter(Boolean).join(' \u00b7 ')}
                       </p>
                     )}
@@ -373,28 +365,28 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <details className="mt-3 group">
                 <summary
                   className="cursor-pointer list-none hover:underline"
-                  style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
                 >
                   <span className="group-open:hidden">Show {servicesRest.length} more services &darr;</span>
                   <span className="hidden group-open:inline">Show fewer &uarr;</span>
                 </summary>
-                <div className="mt-3 divide-y" style={{ borderTop: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}>
+                <div className="mt-3 divide-y" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
                   {servicesRest.map(function (svc: any) {
                     return (
                       <Link
                         key={svc.service_id || svc.id}
                         href={'/services/' + (svc.service_id || svc.id)}
-                        className="block py-4 px-4 transition-colors hover:bg-[#EDE7D8]"
-                        style={{ borderColor: RULE_COLOR }}
+                        className="block py-4 px-4 transition-colors hover:bg-[#f4f5f7]"
+                        style={{ borderColor: '#dde1e8' }}
                       >
-                        <p style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>{svc.service_name}</p>
+                        <p style={{ fontSize: 15,  }}>{svc.service_name}</p>
                         {svc.description_5th_grade && (
-                          <p className="mt-1 line-clamp-2" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>
+                          <p className="mt-1 line-clamp-2" style={{ fontSize: 13, color: "#5c6474" }}>
                             {svc.description_5th_grade}
                           </p>
                         )}
                         {(svc.phone || svc.city) && (
-                          <p className="mt-1" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                          <p className="mt-1" style={{ fontSize: 11, color: "#5c6474" }}>
                             {[svc.city, svc.phone].filter(Boolean).join(' \u00b7 ')}
                           </p>
                         )}
@@ -405,7 +397,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               </details>
             )}
 
-            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
           </section>
         )}
 
@@ -415,7 +407,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
             <SectionHeader label="Opportunities" count={opportunities.length} />
 
             {opportunityMarkers.length > 0 && (
-              <div className="mt-5 mb-4" style={{ border: '1px solid ' + RULE_COLOR }}>
+              <div className="mt-5 mb-4" style={{ border: '1px solid #dde1e8' }}>
                 <ClusteredMap markers={opportunityMarkers} className="w-full h-[250px]" showLegend={false} />
               </div>
             )}
@@ -445,7 +437,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <details className="mt-3 group">
                 <summary
                   className="cursor-pointer list-none hover:underline"
-                  style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
                 >
                   <span className="group-open:hidden">Show {opportunitiesRest.length} more opportunities &darr;</span>
                   <span className="hidden group-open:inline">Show fewer &uarr;</span>
@@ -474,7 +466,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               </details>
             )}
 
-            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
           </section>
         )}
 
@@ -504,7 +496,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               <details className="mt-3 group">
                 <summary
                   className="cursor-pointer list-none hover:underline"
-                  style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                  style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
                 >
                   <span className="group-open:hidden">Show {policiesRest.length} more policies &darr;</span>
                   <span className="hidden group-open:inline">Show fewer &uarr;</span>
@@ -530,7 +522,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               </details>
             )}
 
-            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
           </section>
         )}
 
@@ -544,16 +536,16 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
                   <Link
                     key={f.id}
                     href="/foundations"
-                    className="block p-4 transition-colors hover:bg-[#EDE7D8]"
-                    style={{ border: '1px solid ' + RULE_COLOR }}
+                    className="block p-4 transition-colors hover:bg-[#f4f5f7]"
+                    style={{ border: '1px solid #dde1e8' }}
                   >
-                    <p style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>{f.name}</p>
+                    <p style={{ fontSize: 15,  }}>{f.name}</p>
                     <div className="flex items-center gap-3 mt-1">
                       {f.assets && (
-                        <span style={{ fontFamily: MONO, fontSize: 11, color: CLAY }}>{f.assets}</span>
+                        <span style={{ fontSize: 11, color: "#1b5e8a" }}>{f.assets}</span>
                       )}
                       {f.annual_giving && (
-                        <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>{f.annual_giving}/yr</span>
+                        <span style={{ fontSize: 11, color: "#5c6474" }}>{f.annual_giving}/yr</span>
                       )}
                     </div>
                   </Link>
@@ -561,14 +553,14 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
               })}
             </div>
 
-            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+            <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
           </section>
         )}
 
         {/* ── Related Focus Areas ── */}
         {siblingFocusAreas.length > 0 && (
           <section className="scroll-mt-8">
-            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase', marginBottom: 12 }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 12 }}>
               Related Focus Areas
             </p>
             <div className="flex flex-wrap gap-2">
@@ -577,8 +569,8 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
                   <Link
                     key={sib.focus_id}
                     href={'/explore/focus/' + sib.focus_id}
-                    className="px-4 py-2 transition-colors hover:bg-[#EDE7D8]"
-                    style={{ fontFamily: SERIF, fontSize: 14, color: INK, border: '1px solid ' + RULE_COLOR }}
+                    className="px-4 py-2 transition-colors hover:bg-[#f4f5f7]"
+                    style={{ fontSize: 14, border: '1px solid #dde1e8' }}
                   >
                     {sib.focus_area_name}
                   </Link>
@@ -589,13 +581,13 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
         )}
 
         {/* ── Footer ── */}
-        <div className="mt-12" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="mt-12" style={{ height: 1, background: '#dde1e8' }} />
         <div className="py-8 flex flex-wrap gap-6">
-          <Link href="/explore" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+          <Link href="/explore" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
             &larr; Back to Explore
           </Link>
           {themeSlug && (
-            <Link href={'/explore/theme/' + themeSlug} className="hover:underline" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+            <Link href={'/explore/theme/' + themeSlug} className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
               &larr; Back to {themeName}
             </Link>
           )}
@@ -610,9 +602,9 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 function SectionHeader({ label, count }: { label: string; count: number }) {
   return (
     <div className="flex items-baseline gap-3">
-      <h2 style={{ fontFamily: SERIF, fontSize: 24, color: INK }}>{label}</h2>
-      <div className="flex-1" style={{ height: 1, background: RULE_COLOR }} />
-      <span style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+      <h2 style={{ fontSize: 24,  }}>{label}</h2>
+      <div className="flex-1" style={{ height: 1, background: '#dde1e8' }} />
+      <span style={{ fontSize: 12, color: "#5c6474" }}>
         {count} {count === 1 ? 'item' : 'items'}
       </span>
     </div>

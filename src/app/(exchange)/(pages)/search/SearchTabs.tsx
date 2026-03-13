@@ -3,12 +3,6 @@
 import { useState } from 'react'
 import { useTranslation } from '@/lib/use-translation'
 
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 interface TabDef {
   key: string
@@ -29,13 +23,12 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
           onClick={function () { setActive('all') }}
           className="px-3 py-1.5 text-sm transition-colors"
           style={{
-            fontFamily: MONO,
-            fontSize: '0.7rem',
+                        fontSize: '0.7rem',
             textTransform: 'uppercase' as const,
             letterSpacing: '0.05em',
-            background: active === 'all' ? INK : 'transparent',
-            color: active === 'all' ? '#fff' : MUTED,
-            border: active === 'all' ? 'none' : '1px solid ' + RULE_COLOR,
+            background: active === 'all' ? '#0d1117' : 'transparent',
+            color: active === 'all' ? '#fff' : '#5c6474',
+            border: active === 'all' ? 'none' : '1px solid ' + '#dde1e8',
           }}
         >
           All ({total})
@@ -48,13 +41,12 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
               onClick={function () { setActive(tab.key) }}
               className="px-3 py-1.5 text-sm transition-colors"
               style={{
-                fontFamily: MONO,
-                fontSize: '0.7rem',
+                                fontSize: '0.7rem',
                 textTransform: 'uppercase' as const,
                 letterSpacing: '0.05em',
-                background: active === tab.key ? INK : 'transparent',
-                color: active === tab.key ? '#fff' : MUTED,
-                border: active === tab.key ? 'none' : '1px solid ' + RULE_COLOR,
+                background: active === tab.key ? '#0d1117' : 'transparent',
+                color: active === tab.key ? '#fff' : '#5c6474',
+                border: active === tab.key ? 'none' : '1px solid ' + '#dde1e8',
               }}
             >
               {t(tab.labelKey)} ({tab.count})
@@ -70,13 +62,13 @@ export function SearchTabs({ tabs, children }: { tabs: TabDef[]; children: Recor
             <section key={tab.key}>
               {active === 'all' && (
                 <div className="flex items-baseline justify-between mb-1">
-                  <h2 style={{ fontFamily: SERIF, fontSize: '1.3rem', color: INK }}>
+                  <h2 style={{ fontSize: '1.3rem',  }}>
                     {t(tab.labelKey)} ({tab.count})
                   </h2>
                 </div>
               )}
               {active === 'all' && (
-                <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+                <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               )}
               {children[tab.key]}
             </section>

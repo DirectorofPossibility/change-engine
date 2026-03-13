@@ -61,7 +61,7 @@ const THEMES: Record<string, {
   THEME_04: { name: "Voice", color: "#7a2018", emoji: "🗳️", content: 44, focus: 45, sdoh: ["SC"], sdgs: [16, 10], audiences: ["spark-plug", "register"], rings: { resources: 8, guides: 2, services: 5, officials: 20, policies: 12 }, orgs: ["houstontx.gov"] },
   THEME_05: { name: "Money", color: "#6a4e10", emoji: "💰", content: 16, focus: 44, sdoh: ["EA"], sdgs: [1, 8], audiences: ["hard-worker", "next-steps"], rings: { resources: 4, guides: 2, services: 12, officials: 6, policies: 5 }, orgs: ["BakerRipley", "YMCA Houston"] },
   THEME_06: { name: "Planet", color: "#1a5030", emoji: "🌍", content: 10, focus: 45, sdoh: ["NB"], sdgs: [13, 15, 11], audiences: ["scout", "spark-plug"], rings: { resources: 3, guides: 1, services: 4, officials: 4, policies: 3 }, orgs: ["houstontx.gov"] },
-  THEME_07: { name: "The Bigger We", color: "#1a3460", emoji: "🤝", content: 8, focus: 44, sdoh: ["SC"], sdgs: [16, 17, 10], audiences: ["bridge-builder", "spark-plug"], rings: { resources: 2, guides: 1, services: 3, officials: 6, policies: 2 }, orgs: ["BakerRipley"] },
+  THEME_07: { name: "The Bigger We", color: "#1b5e8a", emoji: "🤝", content: 8, focus: 44, sdoh: ["SC"], sdgs: [16, 17, 10], audiences: ["bridge-builder", "spark-plug"], rings: { resources: 2, guides: 1, services: 3, officials: 6, policies: 2 }, orgs: ["BakerRipley"] },
 };
 
 // ─── 4 Centers ─────────────────────────────────────────────────
@@ -76,7 +76,7 @@ const CENTERS: Record<string, { emoji: string; color: string; count: number; que
 // ─── 5 SDOH Domains ────────────────────────────────────────────
 
 const SDOH = [
-  { id: "SC", name: "Social & Community", short: "Social", color: "#1a3460", count: 73, themes: ["THEME_02", "THEME_04", "THEME_07"], sdgs: [16, 10, 17] },
+  { id: "SC", name: "Social & Community", short: "Social", color: "#1b5e8a", count: 73, themes: ["THEME_02", "THEME_04", "THEME_07"], sdgs: [16, 10, 17] },
   { id: "NB", name: "Neighborhood", short: "Neighbor", color: "#4a2870", count: 65, themes: ["THEME_03", "THEME_06"], sdgs: [11, 2, 13] },
   { id: "HC", name: "Healthcare", short: "Health", color: "#1a6b56", count: 23, themes: ["THEME_01"], sdgs: [3] },
   { id: "ED", name: "Education", short: "Edu", color: "#7a2018", count: 17, themes: ["THEME_02", "THEME_05"], sdgs: [4] },
@@ -182,7 +182,7 @@ const SDG_SDOH_LINKS = [
 
 const ORGANIZATIONS = [
   { id: "ORG_houston_food_bank", name: "Houston Food Bank", color: "#7a2018", count: 22, domain: "houstonfoodbank.org", themes: ["THEME_01", "THEME_02", "THEME_03"], sdoh: ["SC", "NB"], sdgs: [2, 1], situations: ["Find food", "Disaster help"], pipeline: "verified" },
-  { id: "ORG_baker_ripley", name: "BakerRipley", color: "#1a3460", count: 1, domain: "bakerripley.org", themes: ["THEME_02", "THEME_05", "THEME_07"], sdoh: ["SC", "EA", "ED"], sdgs: [1, 4, 10], situations: ["Find a job", "Immigration", "Pay rent", "Disaster help"], pipeline: "verified" },
+  { id: "ORG_baker_ripley", name: "BakerRipley", color: "#1b5e8a", count: 1, domain: "bakerripley.org", themes: ["THEME_02", "THEME_05", "THEME_07"], sdoh: ["SC", "EA", "ED"], sdgs: [1, 4, 10], situations: ["Find a job", "Immigration", "Pay rent", "Disaster help"], pipeline: "verified" },
   { id: "ORG_ymca_houston", name: "YMCA Houston", color: "#6a4e10", count: 12, domain: "ymcahouston.org", themes: ["THEME_01", "THEME_02", "THEME_05"], sdoh: ["SC", "ED", "HC"], sdgs: [3, 4, 8], situations: ["Childcare", "Find a job", "Education"], pipeline: "verified" },
   { id: "ORG_legacy_health", name: "Legacy Health", color: "#d53f8c", count: 2, domain: "legacycommunityhealth.org", themes: ["THEME_01"], sdoh: ["HC"], sdgs: [3], situations: ["Get healthcare", "Mental health"], pipeline: "verified" },
   { id: "ORG_houston_habitat", name: "Houston Habitat", color: "#7a2018", count: 12, domain: "houstonhabitat.org", themes: ["THEME_03", "THEME_05"], sdoh: ["NB", "EA"], sdgs: [11, 1], situations: ["Pay rent"], pipeline: "verified" },
@@ -218,7 +218,7 @@ const AUDIENCES = [
   { id: "next-steps", name: "Next Steps", emoji: "🎯", count: 35, color: "#6a4e10", tagline: "I'm already active. What's next?" },
   { id: "looking-for-answers", name: "Looking for Answers", emoji: "🔍", count: 48, color: "#1a6b56", tagline: "I have a specific question or need." },
   { id: "spark-plug", name: "Spark Plug", emoji: "⚡", count: 22, color: "#4a2870", tagline: "I want to lead and organize." },
-  { id: "bridge-builder", name: "Bridge Builder", emoji: "🌉", count: 18, color: "#1a3460", tagline: "I want to connect across divides." },
+  { id: "bridge-builder", name: "Bridge Builder", emoji: "🌉", count: 18, color: "#1b5e8a", tagline: "I want to connect across divides." },
   { id: "scout", name: "Scout", emoji: "🔭", count: 15, color: "#1a5030", tagline: "I want to explore what's out there." },
   { id: "register", name: "Register", emoji: "🗳️", count: 12, color: "#d53f8c", tagline: "I want to vote and participate in democracy." },
 ];
@@ -237,7 +237,7 @@ const RINGS = [
 
 const CROSSWALKS = [
   { name: "SDGs", full: "17 UN Goals", color: "#1e4d7a", count: 17 },
-  { name: "SDOH", full: "5 Health Domains", color: "#1a3460", count: 5 },
+  { name: "SDOH", full: "5 Health Domains", color: "#1b5e8a", count: 5 },
   { name: "NTEE", full: "Nonprofit Codes", color: "#6a4e10", count: 26 },
   { name: "AIRS", full: "211 Categories", color: "#10b981", count: 50 },
   { name: "Themes", full: "7 Pathways", color: "#C75B2A", count: 7 },
@@ -492,7 +492,7 @@ export default function KnowledgeGraphClient() {
       c.push({ label: "5 Rings", nodes: Object.entries(t.rings).map(([ring, cnt]) => `${ring}: ${cnt}`), color: "#C75B2A" });
       const bridges = BRIDGING.filter(b => b.a === node.id || b.b === node.id);
       if (bridges.length) c.push({ label: "Bridges", nodes: bridges.map(b => { const o = b.a === node.id ? b.b : b.a; return `${THEMES[o]?.name} (${b.shared} — ${b.reason})`; }), color: "#d53f8c" });
-      if (t.sdoh.length) c.push({ label: "SDOH", nodes: t.sdoh.map(code => SDOH.find(x => x.id === code)?.name || code), color: "#1a3460" });
+      if (t.sdoh.length) c.push({ label: "SDOH", nodes: t.sdoh.map(code => SDOH.find(x => x.id === code)?.name || code), color: "#1b5e8a" });
       if (t.sdgs.length) c.push({ label: "SDGs", nodes: t.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#1e4d7a" });
       if (t.audiences.length) c.push({ label: "Audiences", nodes: t.audiences.map(id => { const a = AUDIENCES.find(x => x.id === id); return a ? `${a.name}` : id; }), color: "#d53f8c" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.themes.includes(node.id as string));
@@ -511,7 +511,7 @@ export default function KnowledgeGraphClient() {
       c.push({ label: "Pathways", nodes: pwEdges.map(e => `${THEMES[e.pw]?.name} (${e.n})`), color: "#C75B2A" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.centers.includes(node.id as string));
       if (sits.length) c.push({ label: "Life Situations", nodes: sits.map(s => `${s.name}`), color: "#10b981" });
-      if (ctr?.sdoh.length) c.push({ label: "SDOH", nodes: ctr.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1a3460" });
+      if (ctr?.sdoh.length) c.push({ label: "SDOH", nodes: ctr.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1b5e8a" });
       if (ctr?.sdgs.length) c.push({ label: "SDGs", nodes: ctr.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#1e4d7a" });
       if (ctr?.orgs.length) { const ctrOrgs = ORGANIZATIONS.filter(o => ctr.orgs.includes(o.id)); c.push({ label: "Organizations", nodes: ctrOrgs.map(o => o.name), color: "#1e4d7a" }); }
       if (ctr?.geos.length) { const ctrGeos = GEOGRAPHY.filter(g => ctr.geos.includes(g.id)); c.push({ label: "Geography", nodes: ctrGeos.map(g => `${g.name}`), color: "#4a2870" }); }
@@ -533,7 +533,7 @@ export default function KnowledgeGraphClient() {
     }
     if (node.type === "sdg") {
       const linkedSdoh = SDG_SDOH_LINKS.filter(l => l.sdg === node.id);
-      if (linkedSdoh.length) c.push({ label: "SDOH", nodes: linkedSdoh.map(l => l.label), color: "#1a3460" });
+      if (linkedSdoh.length) c.push({ label: "SDOH", nodes: linkedSdoh.map(l => l.label), color: "#1b5e8a" });
       const themes = Object.entries(THEMES).filter(([, t]) => t.sdgs.includes(node.id as number));
       if (themes.length) c.push({ label: "Pathways", nodes: themes.map(([, t]) => `${t.name}`), color: "#C75B2A" });
       const sits = LIFE_SITUATIONS.filter(ls => ls.sdg === node.id);
@@ -550,7 +550,7 @@ export default function KnowledgeGraphClient() {
       if (sit) {
         c.push({ label: "Pathways", nodes: sit.themes.map(t => `${THEMES[t]?.name}`), color: "#C75B2A" });
         c.push({ label: "Centers", nodes: sit.centers.map(cn => `${cn}`), color: "#6366f1" });
-        c.push({ label: "SDOH", nodes: [SDOH.find(s => s.id === sit.sdoh)?.name || sit.sdoh], color: "#1a3460" });
+        c.push({ label: "SDOH", nodes: [SDOH.find(s => s.id === sit.sdoh)?.name || sit.sdoh], color: "#1b5e8a" });
         c.push({ label: "SDG", nodes: [(() => { const s = SDG_DATA.find(x => x.id === sit.sdg); return s ? `#${s.id}: ${s.name}` : `#${sit.sdg}`; })()], color: "#1e4d7a" });
         if (sit.services.length) c.push({ label: "Services", nodes: sit.services, color: "#10b981" });
         c.push({ label: "AIRS Code", nodes: [sit.airs], color: "#10b981" });
@@ -569,7 +569,7 @@ export default function KnowledgeGraphClient() {
       if (ring) {
         if (ring.orgs.length) { const ringOrgs = ORGANIZATIONS.filter(o => ring.orgs.includes(o.id)); c.push({ label: "Organizations", nodes: ringOrgs.map(o => o.name), color: "#1e4d7a" }); }
         if (ring.sdgs.length) c.push({ label: "SDGs", nodes: ring.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#1e4d7a" });
-        if (ring.sdoh.length) c.push({ label: "SDOH", nodes: ring.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1a3460" });
+        if (ring.sdoh.length) c.push({ label: "SDOH", nodes: ring.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1b5e8a" });
         if (ring.situations.length) c.push({ label: "Life Situations", nodes: ring.situations, color: "#10b981" });
         if (ring.geos.length) { const ringGeos = GEOGRAPHY.filter(g => ring.geos.includes(g.id)); c.push({ label: "Geography", nodes: ringGeos.map(g => `${g.name}`), color: "#4a2870" }); }
       }
@@ -578,7 +578,7 @@ export default function KnowledgeGraphClient() {
       const org = ORGANIZATIONS.find(o => o.id === node.id);
       if (org) {
         c.push({ label: "Pathways", nodes: org.themes.map(t => `${THEMES[t]?.name}`), color: "#C75B2A" });
-        c.push({ label: "SDOH", nodes: org.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1a3460" });
+        c.push({ label: "SDOH", nodes: org.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1b5e8a" });
         c.push({ label: "SDGs", nodes: org.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#1e4d7a" });
         if (org.situations.length) c.push({ label: "Life Situations", nodes: org.situations, color: "#10b981" });
         const orgGeos = GEOGRAPHY.filter(g => g.orgs.includes(org.id));
@@ -594,7 +594,7 @@ export default function KnowledgeGraphClient() {
         const geoOrgs = ORGANIZATIONS.filter(o => geo.orgs.includes(o.id));
         if (geoOrgs.length) c.push({ label: "Organizations", nodes: geoOrgs.map(o => o.name), color: "#1e4d7a" });
         if (geo.situations.length) c.push({ label: "Life Situations", nodes: geo.situations, color: "#10b981" });
-        if (geo.sdoh.length) c.push({ label: "SDOH", nodes: geo.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1a3460" });
+        if (geo.sdoh.length) c.push({ label: "SDOH", nodes: geo.sdoh.map(code => SDOH.find(s => s.id === code)?.name || code), color: "#1b5e8a" });
         if (geo.sdgs.length) c.push({ label: "SDGs", nodes: geo.sdgs.map(id => { const s = SDG_DATA.find(x => x.id === id); return s ? `#${s.id}: ${s.name}` : `#${id}`; }), color: "#1e4d7a" });
         if (geo.rings.length) { const geoRings = RINGS.filter(r => geo.rings.includes(r.id)); c.push({ label: "Content Rings", nodes: geoRings.map(r => `${r.name} (${r.count})`), color: "#6366f1" }); }
       }
@@ -673,7 +673,7 @@ export default function KnowledgeGraphClient() {
               { key: "bridging" as LayerKey, label: "Bridges", color: "#d53f8c" },
               { key: "rings" as LayerKey, label: "5 Rings", color: "#6366f1" },
               { key: "sdgs" as LayerKey, label: "SDGs", color: "#1e4d7a" },
-              { key: "sdoh" as LayerKey, label: "SDOH", color: "#1a3460" },
+              { key: "sdoh" as LayerKey, label: "SDOH", color: "#1b5e8a" },
               { key: "crosswalks" as LayerKey, label: "Rosetta", color: "#1a5030" },
               { key: "orgs" as LayerKey, label: "Orgs", color: "#1e4d7a" },
               { key: "geography" as LayerKey, label: "Geography", color: "#4a2870" },
@@ -760,7 +760,7 @@ export default function KnowledgeGraphClient() {
                 const cn = centerNodes.find(n => n.id === cName), sn = sdohNodes.find(n => n.id === code);
                 if (!cn || !sn) return null;
                 const hot = hovered?.id === cn.id || hovered?.id === sn.id || selectedNode?.id === cn.id;
-                return <line key={`ctr-sdoh-${cName}-${j}`} x1={cn.x} y1={cn.y} x2={sn.x} y2={sn.y} stroke="#1a3460" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 8" />;
+                return <line key={`ctr-sdoh-${cName}-${j}`} x1={cn.x} y1={cn.y} x2={sn.x} y2={sn.y} stroke="#1b5e8a" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 8" />;
               }))}
 
               {/* Center → SDG */}
@@ -792,7 +792,7 @@ export default function KnowledgeGraphClient() {
                 const sn = lifeSitNodes[i], dn = sdohNodes.find(n => n.id === sit.sdoh);
                 if (!dn) return null;
                 const hot = hovered?.id === sn.id || hovered?.id === dn.id || selectedNode?.id === sn.id || selectedNode?.id === dn.id;
-                return <line key={`sdoh-sit-${i}`} x1={dn.x} y1={dn.y} x2={sn.x} y2={sn.y} stroke="#1a3460" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 8" />;
+                return <line key={`sdoh-sit-${i}`} x1={dn.x} y1={dn.y} x2={sn.x} y2={sn.y} stroke="#1b5e8a" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 8" />;
               })}
 
               {/* SDG → Life Situation */}
@@ -838,7 +838,7 @@ export default function KnowledgeGraphClient() {
                 const rn = ringNodes[i], sn = sdohNodes.find(n => n.id === code);
                 if (!sn) return null;
                 const hot = hovered?.id === rn.id || hovered?.id === sn.id || selectedNode?.id === rn.id;
-                return <line key={`ring-sdoh-${i}-${j}`} x1={rn.x} y1={rn.y} x2={sn.x} y2={sn.y} stroke="#1a3460" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 10" />;
+                return <line key={`ring-sdoh-${i}-${j}`} x1={rn.x} y1={rn.y} x2={sn.x} y2={sn.y} stroke="#1b5e8a" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 10" />;
               }))}
 
               {/* Ring → SDG */}
@@ -870,7 +870,7 @@ export default function KnowledgeGraphClient() {
                 const gn = geoNodes[i], sn = sdohNodes.find(n => n.id === code);
                 if (!sn) return null;
                 const hot = hovered?.id === gn.id || hovered?.id === sn.id || selectedNode?.id === gn.id;
-                return <line key={`geo-sdoh-${i}-${j}`} x1={gn.x} y1={gn.y} x2={sn.x} y2={sn.y} stroke="#1a3460" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 10" />;
+                return <line key={`geo-sdoh-${i}-${j}`} x1={gn.x} y1={gn.y} x2={sn.x} y2={sn.y} stroke="#1b5e8a" strokeWidth={hot ? 0.8 : 0.15} opacity={hot ? 0.3 : 0.015} strokeDasharray="2 10" />;
               }))}
 
               {/* Org → SDOH */}
@@ -878,7 +878,7 @@ export default function KnowledgeGraphClient() {
                 const on = orgNodes[i], sn = sdohNodes.find(n => n.id === code);
                 if (!sn) return null;
                 const hot = hovered?.id === on.id || hovered?.id === sn.id || selectedNode?.id === on.id;
-                return <line key={`org-sdoh-${i}-${j}`} x1={on.x} y1={on.y} x2={sn.x} y2={sn.y} stroke="#1a3460" strokeWidth={hot ? 1 : 0.2} opacity={hot ? 0.35 : 0.02} strokeDasharray="3 8" />;
+                return <line key={`org-sdoh-${i}-${j}`} x1={on.x} y1={on.y} x2={sn.x} y2={sn.y} stroke="#1b5e8a" strokeWidth={hot ? 1 : 0.2} opacity={hot ? 0.35 : 0.02} strokeDasharray="3 8" />;
               }))}
 
               {/* Org → SDG */}
@@ -902,7 +902,7 @@ export default function KnowledgeGraphClient() {
                 const pw = pathwayNodes.find(n => n.id === tid), sn = sdohNodes.find(n => n.id === code);
                 if (!pw || !sn) return null;
                 const hot = hovered?.id === pw.id || hovered?.id === sn.id || selectedNode?.id === pw.id;
-                return <line key={`pw-sdoh-${tid}-${j}`} x1={pw.x} y1={pw.y} x2={sn.x} y2={sn.y} stroke="#1a3460" strokeWidth={hot ? 1 : 0.3} opacity={hot ? 0.4 : 0.03} strokeDasharray="3 8" />;
+                return <line key={`pw-sdoh-${tid}-${j}`} x1={pw.x} y1={pw.y} x2={sn.x} y2={sn.y} stroke="#1b5e8a" strokeWidth={hot ? 1 : 0.3} opacity={hot ? 0.4 : 0.03} strokeDasharray="3 8" />;
               }))}
 
               {/* Pathway → SDG */}
@@ -1261,7 +1261,7 @@ export default function KnowledgeGraphClient() {
                 { color: "#6366f1", label: "Centers", desc: "4 engagement frames" },
                 { color: "#10b981", label: "Life Situations", desc: "12 real-world needs" },
                 { color: "#1e4d7a", label: "SDGs", desc: "12 UN Sustainable Goals" },
-                { color: "#1a3460", label: "SDOH", desc: "5 health domains" },
+                { color: "#1b5e8a", label: "SDOH", desc: "5 health domains" },
                 { color: "#1a5030", label: "Crosswalks", desc: "Rosetta Stone mapping" },
                 { color: "#4a2870", label: "Geography", desc: "12 neighborhoods" },
                 { color: "#1e4d7a", label: "Organizations", desc: "10 pipelined orgs" },
@@ -1300,7 +1300,7 @@ export default function KnowledgeGraphClient() {
           { label: "Life Situations", color: "#10b981", nodes: lifeSitNodes },
           { label: "Pathways", color: "#C75B2A", nodes: pathwayNodes },
           { label: "SDGs", color: "#1e4d7a", nodes: sdgNodes },
-          { label: "SDOH", color: "#1a3460", nodes: sdohNodes },
+          { label: "SDOH", color: "#1b5e8a", nodes: sdohNodes },
           { label: "Geography", color: "#4a2870", nodes: geoNodes },
           { label: "Content Rings", color: "#6366f1", nodes: ringNodes },
           { label: "Organizations", color: "#1e4d7a", nodes: orgNodes },
@@ -1352,7 +1352,7 @@ export default function KnowledgeGraphClient() {
 
         // Center → SDOH
         Object.entries(CENTERS).forEach(([cName, ctr]) => {
-          ctr.sdoh.forEach(code => mapEdges.push({ fromId: cName, toId: code, color: "#1a3460" }));
+          ctr.sdoh.forEach(code => mapEdges.push({ fromId: cName, toId: code, color: "#1b5e8a" }));
         });
 
         // Center → SDG
@@ -1377,7 +1377,7 @@ export default function KnowledgeGraphClient() {
 
         // SDOH → Life Situation
         LIFE_SITUATIONS.forEach(sit => {
-          mapEdges.push({ fromId: sit.sdoh, toId: sit.name, color: "#1a3460" });
+          mapEdges.push({ fromId: sit.sdoh, toId: sit.name, color: "#1b5e8a" });
         });
 
         // SDG → Life Situation
@@ -1404,7 +1404,7 @@ export default function KnowledgeGraphClient() {
 
         // Org → SDOH
         ORGANIZATIONS.forEach(o => {
-          o.sdoh.forEach(code => mapEdges.push({ fromId: o.id, toId: code, color: "#1a3460" }));
+          o.sdoh.forEach(code => mapEdges.push({ fromId: o.id, toId: code, color: "#1b5e8a" }));
         });
 
         // Org → SDG
@@ -1424,7 +1424,7 @@ export default function KnowledgeGraphClient() {
 
         // Pathway → SDOH
         Object.entries(THEMES).forEach(([tid, theme]) => {
-          theme.sdoh.forEach(code => mapEdges.push({ fromId: tid, toId: code, color: "#1a3460" }));
+          theme.sdoh.forEach(code => mapEdges.push({ fromId: tid, toId: code, color: "#1b5e8a" }));
         });
 
         // Org → Geography (reverse: geo.orgs → org)
@@ -1444,7 +1444,7 @@ export default function KnowledgeGraphClient() {
 
         // Geography → SDOH
         GEOGRAPHY.forEach(geo => {
-          geo.sdoh.forEach(code => mapEdges.push({ fromId: geo.id, toId: code, color: "#1a3460" }));
+          geo.sdoh.forEach(code => mapEdges.push({ fromId: geo.id, toId: code, color: "#1b5e8a" }));
         });
 
         // Ring → Org
@@ -1464,7 +1464,7 @@ export default function KnowledgeGraphClient() {
 
         // Ring → SDOH
         RINGS.forEach(ring => {
-          ring.sdoh.forEach(code => mapEdges.push({ fromId: ring.id, toId: code, color: "#1a3460" }));
+          ring.sdoh.forEach(code => mapEdges.push({ fromId: ring.id, toId: code, color: "#1b5e8a" }));
         });
 
         // Ring → Life Situation
@@ -1598,7 +1598,7 @@ export default function KnowledgeGraphClient() {
                 {[
                   { color: "#C75B2A", label: "Pathway → Center" },
                   { color: "#10b981", label: "Life Sit/Ring ↔ Org" },
-                  { color: "#1a3460", label: "SDOH ↔ All types" },
+                  { color: "#1b5e8a", label: "SDOH ↔ All types" },
                   { color: "#f59e0b", label: "SDG ↔ SDOH" },
                   { color: "#1e4d7a", label: "SDG ↔ All types" },
                   { color: "#d53f8c", label: "Bridge" },
@@ -1718,7 +1718,7 @@ export default function KnowledgeGraphClient() {
               { label: "Translations", value: STATS.translations, color: "#f59e0b", sub: "Spanish + Vietnamese" },
               { label: "Services", value: STATS.services, color: "#1a6b56", sub: "211 directory entries" },
               { label: "Officials", value: STATS.officials, color: "#6a4e10", sub: "Federal → City" },
-              { label: "ZIP Codes", value: STATS.zipCodes, color: "#1a3460", sub: "Houston metro" },
+              { label: "ZIP Codes", value: STATS.zipCodes, color: "#1b5e8a", sub: "Houston metro" },
               { label: "Resources", value: STATS.resources, color: "#1a5030", sub: "Guides & tools" },
               { label: "Content Rings", value: 5, color: "#6366f1", sub: "Wayfinder layers" },
             ].map(s => (
@@ -1916,8 +1916,8 @@ export default function KnowledgeGraphClient() {
           )}
 
           {orgsNoSdoh.length > 0 && (
-          <div style={{ padding: 18, background: "#f4f5f7", borderRadius: 12, border: "1px solid #1a346030", marginBottom: 16 }}>
-            <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#1a3460" }}>Org → SDOH Gaps</h3>
+          <div style={{ padding: 18, background: "#f4f5f7", borderRadius: 12, border: "1px solid #1b5e8a30", marginBottom: 16 }}>
+            <h3 style={{ margin: "0 0 14px", fontSize: 15, color: "#1b5e8a" }}>Org → SDOH Gaps</h3>
             <p style={{ fontSize: 12, color: "#8b8178", margin: "0 0 10px" }}>Organizations missing health domain linkage — cannot assess health impact.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
               {orgsNoSdoh.map((org, i) => (
@@ -1926,7 +1926,7 @@ export default function KnowledgeGraphClient() {
                     <div style={{ fontSize: 12, fontWeight: 600, color: org.color }}>{org.name}</div>
                     <div style={{ fontSize: 10, color: "#8b8178" }}>{org.domain}</div>
                   </div>
-                  <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#1a346020", color: "#1a3460" }}>no SDOH</span>
+                  <span style={{ padding: "2px 6px", borderRadius: 4, fontSize: 9, fontWeight: 700, background: "#1b5e8a20", color: "#1b5e8a" }}>no SDOH</span>
                 </div>
               ))}
             </div>

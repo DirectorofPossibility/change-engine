@@ -11,14 +11,6 @@ export const metadata: Metadata = {
   description: 'Understand your community through research, news, guided pathways, and conversation.',
 }
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const SECTIONS = [
   {
@@ -77,9 +69,9 @@ export default async function LearningIndexPage() {
   const rest = SECTIONS.slice(4)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden py-16 sm:py-20" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden py-16 sm:py-20 bg-paper">
         <Image
           src="/images/fol/seed-of-life.svg"
           alt=""
@@ -88,13 +80,13 @@ export default async function LearningIndexPage() {
           className="opacity-[0.04] absolute top-1/2 right-8 -translate-y-1/2 pointer-events-none"
         />
         <div className="relative z-10 max-w-[900px] mx-auto px-6">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-[0.15em] uppercase mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs tracking-[0.15em] uppercase mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
             Learning
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg leading-relaxed max-w-2xl">
+          <p style={{ color: "#5c6474" }} className="text-lg leading-relaxed max-w-2xl">
             Understand what is happening in your community -- and why it matters.
           </p>
         </div>
@@ -102,8 +94,8 @@ export default async function LearningIndexPage() {
 
       {/* ── BREADCRUMB ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-wide">
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ color: "#5c6474" }} className="text-xs tracking-wide">
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Learning</span>
         </nav>
@@ -111,15 +103,15 @@ export default async function LearningIndexPage() {
 
       {/* ── STATS ── */}
       <div className="max-w-[900px] mx-auto px-6 py-4">
-        <div className="flex items-center gap-6" style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1rem' }}>
-          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
-            <strong style={{ color: INK, fontFamily: SERIF, fontSize: '1.25rem' }}>{counts.library}</strong> Library Documents
+        <div className="flex items-center gap-6" style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1rem' }}>
+          <span style={{ color: "#5c6474" }} className="text-xs">
+            <strong style={{ fontSize: '1.25rem' }}>{counts.library}</strong> Library Documents
           </span>
-          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
-            <strong style={{ color: INK, fontFamily: SERIF, fontSize: '1.25rem' }}>{counts.news}</strong> Articles &amp; Reports
+          <span style={{ color: "#5c6474" }} className="text-xs">
+            <strong style={{ fontSize: '1.25rem' }}>{counts.news}</strong> Articles &amp; Reports
           </span>
-          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
-            <strong style={{ color: INK, fontFamily: SERIF, fontSize: '1.25rem' }}>7</strong> Topics
+          <span style={{ color: "#5c6474" }} className="text-xs">
+            <strong style={{ fontSize: '1.25rem' }}>7</strong> Topics
           </span>
         </div>
       </div>
@@ -135,22 +127,22 @@ export default async function LearningIndexPage() {
                 key={section.href}
                 href={section.href}
                 className="block group"
-                style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1.5rem' }}
+                style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1.5rem' }}
               >
                 <div className="flex items-start gap-4">
-                  <Icon size={20} style={{ color: CLAY }} className="flex-shrink-0 mt-1" />
+                  <Icon size={20} style={{ color: "#1b5e8a" }} className="flex-shrink-0 mt-1" />
                   <div className="flex-1">
                     <div className="flex items-baseline gap-3">
-                      <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl group-hover:underline">
+                      <h2 style={{  }} className="text-xl group-hover:underline">
                         {section.label}
                       </h2>
                       {count > 0 && (
-                        <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+                        <span style={{ color: "#5c6474" }} className="text-xs">
                           {count.toLocaleString()} available
                         </span>
                       )}
                     </div>
-                    <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm leading-relaxed mt-1">
+                    <p style={{ color: "#5c6474" }} className="text-sm leading-relaxed mt-1">
                       {section.description}
                     </p>
                   </div>
@@ -162,7 +154,7 @@ export default async function LearningIndexPage() {
 
         {rest.length > 0 && (
           <details className="mt-6">
-            <summary style={{ fontFamily: MONO, color: CLAY, cursor: 'pointer' }} className="text-sm hover:underline">
+            <summary style={{ color: "#1b5e8a", cursor: 'pointer' }} className="text-sm hover:underline">
               Show {rest.length} more section{rest.length !== 1 ? 's' : ''}
             </summary>
             <div className="space-y-6 mt-4">
@@ -174,15 +166,15 @@ export default async function LearningIndexPage() {
                     key={section.href}
                     href={section.href}
                     className="block group"
-                    style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1.5rem' }}
+                    style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1.5rem' }}
                   >
                     <div className="flex items-start gap-4">
-                      <Icon size={20} style={{ color: CLAY }} className="flex-shrink-0 mt-1" />
+                      <Icon size={20} style={{ color: "#1b5e8a" }} className="flex-shrink-0 mt-1" />
                       <div className="flex-1">
-                        <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl group-hover:underline">
+                        <h2 style={{  }} className="text-xl group-hover:underline">
                           {section.label}
                         </h2>
-                        <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm leading-relaxed mt-1">
+                        <p style={{ color: "#5c6474" }} className="text-sm leading-relaxed mt-1">
                           {section.description}
                         </p>
                       </div>
@@ -195,7 +187,7 @@ export default async function LearningIndexPage() {
         )}
 
         <div className="mt-10 text-center">
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm italic">
+          <p style={{ color: "#5c6474" }} className="text-sm italic">
             Understanding is the first step toward participation.
           </p>
         </div>
@@ -203,8 +195,8 @@ export default async function LearningIndexPage() {
 
       {/* ── FOOTER LINK ── */}
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <div style={{ borderTop: '1px dotted ' + RULE_COLOR, paddingTop: '1.5rem' }}>
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">
+        <div style={{ borderTop: '1px dotted ' + '#dde1e8', paddingTop: '1.5rem' }}>
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">
             &larr; Back to Home
           </Link>
         </div>

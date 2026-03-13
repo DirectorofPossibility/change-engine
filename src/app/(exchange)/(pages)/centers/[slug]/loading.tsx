@@ -2,8 +2,8 @@ export default function Loading() {
   return (
     <div>
       {/* Hero skeleton */}
-      <div style={{ background: '#F5F0E8', minHeight: 420 }}>
-        <div style={{ height: 3, background: '#C4663A' }} />
+      <div style={{ background: '#f4f5f7', minHeight: 420 }}>
+        <div style={{ height: 3, background: '#1b5e8a' }} />
         <div className="max-w-[1000px] mx-auto px-6 py-16 md:py-24">
           <div className="h-3 w-40 animate-pulse" style={{ background: 'rgba(196,102,58,0.15)' }} />
           <div className="h-3 w-32 mt-8 animate-pulse" style={{ background: 'rgba(196,102,58,0.15)' }} />
@@ -23,7 +23,7 @@ export default function Loading() {
                 <div className="h-3 w-40 mb-4 animate-pulse" style={{ background: 'rgba(196,102,58,0.12)' }} />
                 <div className="flex gap-4 overflow-hidden">
                   {[0, 1, 2, 3].map(function (j) {
-                    return <div key={j} className="flex-shrink-0 w-[280px] h-52 animate-pulse" style={{ background: '#F5F0E8' }} />
+                    return <div key={j} className="flex-shrink-0 w-[280px] h-52 animate-pulse" style={{ background: '#f4f5f7' }} />
                   })}
                 </div>
               </div>

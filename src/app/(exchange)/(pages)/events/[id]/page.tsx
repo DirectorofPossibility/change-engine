@@ -8,14 +8,6 @@ import { getUserProfile } from '@/lib/auth/roles'
 import Image from 'next/image'
 import { eventJsonLd } from '@/lib/jsonld'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -72,39 +64,39 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const jsonLd = eventJsonLd(event as any, orgName)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex flex-wrap items-center gap-3 mt-3">
             {event.event_type && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{event.event_type}</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{event.event_type}</span>
             )}
             {event.is_free === 'true' && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
             )}
             {event.is_virtual === 'true' && (
-              <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED }}>
+              <span className="flex items-center gap-1" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
                 <Video className="w-3 h-3" /> Virtual
               </span>
             )}
           </div>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.5rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
             {event.event_name}
           </h1>
           <div className="flex flex-wrap items-center gap-4 mt-4">
             {startDate && (
-              <span className="flex items-center gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+              <span className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
                 <Clock className="w-4 h-4" />
                 {startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                 {' at '}
@@ -115,17 +107,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           </div>
           <div className="flex flex-wrap gap-3 mt-4">
             {event.registration_url && (
-              <a href={event.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 text-white transition-opacity hover:opacity-90" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: CLAY }}>
+              <a href={event.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 text-white transition-opacity hover:opacity-90" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: '#1b5e8a' }}>
                 Register <ExternalLink className="w-4 h-4" />
               </a>
             )}
             {calendarUrl && (
-              <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', color: CLAY }}>
+              <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline" style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: "#1b5e8a" }}>
                 <CalendarPlus className="w-4 h-4" /> Add to Calendar
               </a>
             )}
             {mapUrl && event.is_virtual !== 'true' && (
-              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', color: CLAY }}>
+              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline" style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: "#1b5e8a" }}>
                 <Navigation className="w-4 h-4" /> Get Directions
               </a>
             )}
@@ -135,10 +127,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/events" className="hover:underline" style={{ color: CLAY }}>Events</Link>
+          <Link href="/events" className="hover:underline" style={{ color: "#1b5e8a" }}>Events</Link>
           <span className="mx-2">/</span>
           <span>{event.event_name}</span>
         </nav>
@@ -151,104 +143,104 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         {event.description_5th_grade && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>About This Event</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>About This Event</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, lineHeight: 1.7 }}>{event.description_5th_grade}</p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <p style={{ fontSize: '0.95rem', lineHeight: 1.7 }}>{event.description_5th_grade}</p>
           </section>
         )}
 
         {/* When & Where */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          <div className="p-5" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
-            <h2 style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginBottom: '0.75rem' }}>When</h2>
+          <div className="p-5" style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}>
+            <h2 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", marginBottom: '0.75rem' }}>When</h2>
             <div className="space-y-2">
               {startDate && (
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" style={{ color: MUTED }} />
-                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 500, color: INK }}>{startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                  <Calendar className="w-4 h-4" style={{ color: "#5c6474" }} />
+                  <span style={{ fontSize: '0.9rem', fontWeight: 500,  }}>{startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span>
                 </div>
               )}
               {startDate && (
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" style={{ color: MUTED }} />
-                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+                  <Clock className="w-4 h-4" style={{ color: "#5c6474" }} />
+                  <span style={{ fontSize: '0.9rem',  }}>
                     {startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                     {endDate ? ' - ' + endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : ''}
                   </span>
                 </div>
               )}
               {event.is_recurring === 'true' && event.recurrence_pattern && (
-                <div className="flex items-center gap-2" style={{ color: MUTED }}>
+                <div className="flex items-center gap-2" style={{ color: "#5c6474" }}>
                   <Repeat className="w-4 h-4" />
-                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>{event.recurrence_pattern}</span>
+                  <span style={{ fontSize: '0.9rem' }}>{event.recurrence_pattern}</span>
                 </div>
               )}
               {event.cost && event.is_free !== 'true' && (
-                <div style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, marginTop: '0.25rem' }}>Cost: {event.cost}</div>
+                <div style={{ fontSize: '0.9rem', color: "#5c6474", marginTop: '0.25rem' }}>Cost: {event.cost}</div>
               )}
             </div>
           </div>
 
-          <div className="p-5" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
-            <h2 style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginBottom: '0.75rem' }}>Where</h2>
+          <div className="p-5" style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}>
+            <h2 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", marginBottom: '0.75rem' }}>Where</h2>
             <div className="space-y-2">
               {event.is_virtual === 'true' ? (
                 <div className="flex items-center gap-2">
-                  <Video className="w-4 h-4" style={{ color: MUTED }} />
-                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>Virtual / Online</span>
+                  <Video className="w-4 h-4" style={{ color: "#5c6474" }} />
+                  <span style={{ fontSize: '0.9rem',  }}>Virtual / Online</span>
                 </div>
               ) : address ? (
                 <>
                   <div className="flex items-start gap-2">
-                    <MapPin className="w-4 h-4 mt-0.5" style={{ color: MUTED }} />
-                    <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>{address}</span>
+                    <MapPin className="w-4 h-4 mt-0.5" style={{ color: "#5c6474" }} />
+                    <span style={{ fontSize: '0.9rem',  }}>{address}</span>
                   </div>
                   {mapUrl && (
-                    <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 ml-6 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                    <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 ml-6 hover:underline" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
                       <Navigation className="w-3 h-3" /> Open in Google Maps
                     </a>
                   )}
                 </>
               ) : (
-                <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>Location TBD</span>
+                <span style={{ fontSize: '0.9rem', color: "#5c6474" }}>Location TBD</span>
               )}
             </div>
           </div>
         </div>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Host Organization */}
         {org && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Hosted By</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Hosted By</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="flex items-start gap-4">
               {(org as any).logo_url ? (
-                <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 object-contain flex-shrink-0" style={{ border: '1px solid ' + RULE_COLOR }} width={48} height={48} />
+                <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 object-contain flex-shrink-0" style={{ border: '1px solid #dde1e8' }} width={48} height={48} />
               ) : (
-                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
-                  <Building2 className="w-6 h-6" style={{ color: MUTED }} />
+                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center" style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}>
+                  <Building2 className="w-6 h-6" style={{ color: "#5c6474" }} />
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ fontFamily: SERIF, fontSize: '1.1rem', fontWeight: 700, color: INK }}>
+                <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ fontSize: '1.1rem', fontWeight: 700,  }}>
                   {org.org_name}
                 </Link>
                 {(org as any).description_5th_grade && (
-                  <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{(org as any).description_5th_grade}</p>
+                  <p className="line-clamp-2 mt-1" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{(org as any).description_5th_grade}</p>
                 )}
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   {org.website && (
-                    <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                    <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
                       <Globe className="w-3 h-3" /> Website
                     </a>
                   )}
                   {(org as any).phone && (
-                    <a href={'tel:' + (org as any).phone} className="flex items-center gap-1 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                    <a href={'tel:' + (org as any).phone} className="flex items-center gap-1 hover:underline" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
                       <Phone className="w-3 h-3" /> {(org as any).phone}
                     </a>
                   )}
@@ -260,9 +252,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/events" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/events" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Events
         </Link>
       </div>

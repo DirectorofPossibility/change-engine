@@ -8,14 +8,6 @@ import Link from 'next/link'
 
 export const revalidate = 300
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Elections & Voting — The Change Engine',
@@ -39,21 +31,21 @@ export default async function ElectionsPage({
     data.officialsByLevel.city.length
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={600} height={600} className="opacity-[0.04]" />
         </div>
 
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-24">
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 className="mt-4" style={{ fontFamily: SERIF, fontSize: 44, lineHeight: 1.1, color: INK }}>
+          <h1 className="mt-4" style={{ fontSize: 44, lineHeight: 1.1,  }}>
             Elections & Voting
           </h1>
-          <p className="mt-4 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 17, lineHeight: 1.7, color: MUTED }}>
+          <p className="mt-4 max-w-[560px]" style={{ fontSize: 17, lineHeight: 1.7, color: "#5c6474" }}>
             Your vote is your voice. Here's everything you need — upcoming elections,
             key deadlines, who represents you, and how to make sure your ballot counts.
           </p>
@@ -62,30 +54,30 @@ export default async function ElectionsPage({
           <div className="mt-8 flex flex-wrap gap-8">
             {nextElection && (
               <div>
-                <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase' }}>
+                <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase' }}>
                   Next Election
                 </p>
-                <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 15, color: INK }}>
+                <p className="mt-1" style={{ fontSize: 15,  }}>
                   {nextElection.election_name}
                 </p>
               </div>
             )}
             {data.upcomingElections.length > 0 && (
               <div>
-                <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase' }}>
+                <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase' }}>
                   Upcoming
                 </p>
-                <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 'bold', color: CLAY }}>
+                <p className="mt-1" style={{ fontSize: 22, fontWeight: 'bold', color: "#1b5e8a" }}>
                   {data.upcomingElections.length}
                 </p>
               </div>
             )}
             {zip && totalOfficials > 0 && (
               <div>
-                <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase' }}>
+                <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase' }}>
                   Your Representatives
                 </p>
-                <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 22, fontWeight: 'bold', color: CLAY }}>
+                <p className="mt-1" style={{ fontSize: 22, fontWeight: 'bold', color: "#1b5e8a" }}>
                   {totalOfficials}
                 </p>
               </div>
@@ -94,13 +86,13 @@ export default async function ElectionsPage({
         </div>
 
         {/* Bottom rule */}
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </div>
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: 11, letterSpacing: '0.06em', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Elections & Voting</span>
         </nav>
@@ -112,7 +104,7 @@ export default async function ElectionsPage({
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
               <Image src="/images/fol/seed-of-life.svg" alt="" width={60} height={60} className="opacity-20 mx-auto animate-pulse" />
-              <p className="mt-4" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>Loading your voting guide...</p>
+              <p className="mt-4" style={{ fontSize: 14, color: "#5c6474" }}>Loading your voting guide...</p>
             </div>
           </div>
         }>
@@ -133,9 +125,9 @@ export default async function ElectionsPage({
 
       {/* ── Footer rule ── */}
       <div className="max-w-[900px] mx-auto px-6">
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
         <div className="py-8 text-center">
-          <Link href="/exchange" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+          <Link href="/exchange" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
             &larr; Back to The Community Exchange
           </Link>
         </div>

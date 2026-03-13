@@ -22,7 +22,7 @@ const PW: Record<string, { name: string; color: string; short: string; slug: str
   voice:        { name: "Voice",         color: "#7a2018", short: "Voice",        slug: "voice" },
   money:        { name: "Money",         color: "#6a4e10", short: "Money",        slug: "money" },
   planet:       { name: "Planet",        color: "#1a5030", short: "Planet",       slug: "planet" },
-  bigger_we:    { name: "The Bigger We",     color: "#1a3460", short: "Bigger We",    slug: "the-bigger-we" },
+  bigger_we:    { name: "The Bigger We",     color: "#1b5e8a", short: "Bigger We",    slug: "the-bigger-we" },
 }
 const PW_KEYS = Object.keys(PW)
 
@@ -154,7 +154,7 @@ function ContactRow({ icon, label, val, href }: { icon: string; label: string; v
 /* ── Bottom Drawer for Foundation Detail ── */
 function FoundationDrawer({ f, onClose, faIdMap }: { f: Foundation; onClose: () => void; faIdMap: Record<string, string> }) {
   const geo = GM[f.geo_level] || GEO[0]
-  const RS: Record<string, { c: string; l: string }> = { executive: { c: C.ac, l: "Exec" }, board: { c: "#1a3460", l: "Board" }, grants: { c: "#7a2018", l: "Grants" } }
+  const RS: Record<string, { c: string; l: string }> = { executive: { c: C.ac, l: "Exec" }, board: { c: "#1b5e8a", l: "Board" }, grants: { c: "#7a2018", l: "Grants" } }
 
   return (
     <div style={{
@@ -537,7 +537,7 @@ export default function FoundationsGalaxy() {
                 { l: "Showing", v: filtered.length, c: C.ac },
                 { l: "Assets", v: totalAssets >= 1000 ? "$" + (totalAssets / 1000).toFixed(0) + "B+" : "$" + totalAssets.toFixed(0) + "M+", c: "#7a2018" },
                 { l: "Focus Areas", v: uniqueFocusAreas, c: "#6a4e10" },
-                { l: "People", v: allPeople.length, c: "#1a3460" },
+                { l: "People", v: allPeople.length, c: "#1b5e8a" },
               ].map(s => (
                 <div key={s.l} style={{ background: C.alt, borderRadius: 8, padding: "8px 10px", textAlign: "center" }}>
                   <div style={{ fontSize: 16, fontWeight: 700, color: s.c, lineHeight: 1.1 }}>{s.v}</div>

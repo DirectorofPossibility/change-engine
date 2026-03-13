@@ -64,12 +64,12 @@ export function ContentCard({
   const displaySummary = rawSummary.length > 300 ? rawSummary.slice(0, 300) + '...' : rawSummary
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
-    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white overflow-hidden hover:border-ink transition-colors cursor-pointer', style: { border: '1px solid rgba(196,102,58,0.3)' } }
-    : { href: href || '/content/' + id, className: 'block bg-white overflow-hidden hover:border-ink transition-colors', style: { border: '1px solid rgba(196,102,58,0.3)' } }
+    ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white overflow-hidden hover:border-ink transition-colors cursor-pointer', style: { border: '1px solid #dde1e8' } }
+    : { href: href || '/content/' + id, className: 'block bg-white overflow-hidden hover:border-ink transition-colors', style: { border: '1px solid #dde1e8' } }
   return (
     <Wrapper {...wrapperProps as any}>
       {imageUrl ? (
-        <div className="w-full h-36 relative" style={{ borderBottom: '1px solid rgba(196,102,58,0.3)' }}>
+        <div className="w-full h-36 relative" style={{ borderBottom: '1px solid #dde1e8' }}>
           <Image
             src={imageUrl}
             alt={displayTitle}
@@ -88,21 +88,21 @@ export function ContentCard({
         </div>
         <h3
           className="line-clamp-2 mb-1"
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#1A1A1A' }}
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#0d1117' }}
         >
           {displayTitle}
         </h3>
         <p
           className="line-clamp-2 mb-2"
-          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#7a7265' }}
+          style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#5c6474' }}
         >
           {displaySummary}
         </p>
         <div className="flex items-center justify-between">
-          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#7a7265' }}>
+          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#5c6474' }}>
             {publishedAt ? new Date(publishedAt).toLocaleDateString() : ''}
           </span>
-          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#C4663A' }}>
+          <span style={{ fontFamily: '"Courier New", Courier, monospace', fontSize: '0.6875rem', letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#1b5e8a' }}>
             {t('card.read_more')} &rarr;
           </span>
         </div>

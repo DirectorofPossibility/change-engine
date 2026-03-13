@@ -65,7 +65,7 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
               key={a.id}
               onClick={function () { handleSelect(a.id) }}
               className="flex items-center gap-2.5 w-full text-left pl-5 py-1.5 text-[13px] font-medium transition-colors hover:text-brand-accent"
-              style={{ color: isActive ? '#C75B2A' : '#1A1A1A' }}
+              style={{ color: isActive ? '#C75B2A' : '#0d1117' }}
             >
               <a.Icon size={16} color={isActive ? '#C75B2A' : '#9B9590'} />
               <span>{a.name}</span>

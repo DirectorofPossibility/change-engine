@@ -13,14 +13,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -82,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen relative" style={{ background: PARCHMENT }}>
+    <div className="min-h-screen relative bg-paper">
       {/* Sacred geometry watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         <Image
@@ -97,17 +89,17 @@ export default function LoginPage() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
         {/* Header */}
         <Link href="/" className="mb-12 hover:opacity-80 transition-opacity">
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
         </Link>
 
         <div className="w-full max-w-[400px]">
           {/* Title */}
-          <h1 style={{ fontFamily: SERIF, fontSize: 32, color: INK, lineHeight: 1.15, marginBottom: 8 }}>
+          <h1 style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
             Good to have you back.
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED, marginBottom: 32 }}>
+          <p style={{ fontSize: 15, color: "#5c6474", marginBottom: 32 }}>
             Sign in to pick up where you left off.
           </p>
 
@@ -116,7 +108,7 @@ export default function LoginPage() {
             <div
               role="alert"
               className="mb-5 p-3"
-              style={{ background: '#FDF2F2', border: '1px solid rgba(197,48,48,0.2)', fontFamily: SERIF, fontSize: 14, color: '#C53030' }}
+              style={{ background: '#FDF2F2', border: '1px solid rgba(197,48,48,0.2)', fontSize: 14, color: '#C53030' }}
             >
               {error}
             </div>
@@ -127,7 +119,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}
+                style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}
               >
                 Email
               </label>
@@ -139,11 +131,9 @@ export default function LoginPage() {
                 onChange={function (e) { setEmail(e.target.value) }}
                 className="w-full px-4 py-3 focus:outline-none"
                 style={{
-                  fontFamily: SERIF,
-                  fontSize: 15,
-                  color: INK,
-                  background: '#ffffff',
-                  border: `1px solid ${RULE_COLOR}`,
+                                    fontSize: 15,
+                                    background: '#ffffff',
+                  border: '1px solid #dde1e8',
                 }}
                 placeholder="you@example.com"
               />
@@ -151,7 +141,7 @@ export default function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}
+                style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}
               >
                 Password
               </label>
@@ -163,11 +153,9 @@ export default function LoginPage() {
                 onChange={function (e) { setPassword(e.target.value) }}
                 className="w-full px-4 py-3 focus:outline-none"
                 style={{
-                  fontFamily: SERIF,
-                  fontSize: 15,
-                  color: INK,
-                  background: '#ffffff',
-                  border: `1px solid ${RULE_COLOR}`,
+                                    fontSize: 15,
+                                    background: '#ffffff',
+                  border: '1px solid #dde1e8',
                 }}
                 placeholder="Your password"
               />
@@ -176,27 +164,27 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ fontFamily: MONO, fontSize: 13, letterSpacing: '0.04em', background: CLAY }}
+              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#1b5e8a' }}
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
           {/* Rule */}
-          <div className="my-8" style={{ height: 1, background: RULE_COLOR }} />
+          <div className="my-8" style={{ height: 1, background: '#dde1e8' }} />
 
           {/* Links */}
           <div className="text-center space-y-3">
             <Link
               href="/reset-password"
               className="block hover:underline"
-              style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+              style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
             >
               Forgot your password? No stress.
             </Link>
-            <p style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+            <p style={{ fontSize: 14, color: "#5c6474" }}>
               No account? You don&apos;t need one to look around. But if you want to save things and get updates —{' '}
-              <Link href="/signup" className="hover:underline" style={{ color: CLAY }}>
+              <Link href="/signup" className="hover:underline" style={{ color: "#1b5e8a" }}>
                 join free
               </Link>.
             </p>
@@ -208,7 +196,7 @@ export default function LoginPage() {
           <Link
             href="/exchange"
             className="hover:underline"
-            style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}
+            style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}
           >
             &larr; Back to The Community Exchange
           </Link>

@@ -69,14 +69,14 @@ const VIBES = [
   { id: 'curious', label: 'The Curious One', icon: BookOpen, color: '#6a4e10', gradient: 'from-blue-500 to-cyan-400', desc: 'You want to understand how things actually work', filter: 'learn' },
   { id: 'fired-up', label: 'The Fired Up One', icon: Flame, color: '#1a6b56', gradient: 'from-red-500 to-orange-400', desc: 'You see something wrong and want to fix it', filter: 'act' },
   { id: 'builder', label: 'The Builder', icon: Target, color: '#7a2018', gradient: 'from-green-500 to-emerald-400', desc: 'You want to create something that lasts', filter: 'build' },
-  { id: 'connector', label: 'The Connector', icon: Users, color: '#1a3460', gradient: 'from-purple-500 to-pink-400', desc: 'You bring people together', filter: null },
+  { id: 'connector', label: 'The Connector', icon: Users, color: '#1b5e8a', gradient: 'from-purple-500 to-pink-400', desc: 'You bring people together', filter: null },
 ] as const
 
 // ── Pathway colors for accent mapping ──
 
 const PATHWAY_COLORS: Record<string, string> = {
   THEME_01: '#1a6b56', THEME_02: '#1e4d7a', THEME_03: '#4a2870',
-  THEME_04: '#7a2018', THEME_05: '#6a4e10', THEME_06: '#1a5030', THEME_07: '#1a3460',
+  THEME_04: '#7a2018', THEME_05: '#6a4e10', THEME_06: '#1a5030', THEME_07: '#1b5e8a',
 }
 
 // ── Component ──
@@ -133,7 +133,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
         }} />
 
         {/* Floating gradient orbs */}
-        <div className="absolute top-20 left-[10%] w-[400px] h-[400px] rounded-full opacity-20 blur-[120px] animate-pulse" style={{ background: 'radial-gradient(circle, #1a3460, transparent)' }} />
+        <div className="absolute top-20 left-[10%] w-[400px] h-[400px] rounded-full opacity-20 blur-[120px] animate-pulse" style={{ background: 'radial-gradient(circle, #1b5e8a, transparent)' }} />
         <div className="absolute bottom-20 right-[15%] w-[350px] h-[350px] rounded-full opacity-15 blur-[100px] animate-pulse" style={{ background: 'radial-gradient(circle, #6a4e10, transparent)', animationDelay: '1s' }} />
         <div className="absolute top-[40%] right-[30%] w-[250px] h-[250px] rounded-full opacity-10 blur-[80px] animate-pulse" style={{ background: 'radial-gradient(circle, #1a6b56, transparent)', animationDelay: '2s' }} />
 
@@ -192,7 +192,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
          ════════════════════════════════════════════════════════════ */}
       <section className="relative border-y border-white/5 bg-white/[0.02] overflow-hidden">
         <div className="flex items-center gap-12 py-4 px-6 overflow-x-auto scrollbar-hide">
-          <StatPill value={stats.orgs + '+'} label="organizations" color="#1a3460" />
+          <StatPill value={stats.orgs + '+'} label="organizations" color="#1b5e8a" />
           <div className="w-px h-6 bg-white/10 flex-shrink-0" />
           <StatPill value={stats.stories + '+'} label="stories" color="#6a4e10" />
           <div className="w-px h-6 bg-white/10 flex-shrink-0" />
@@ -624,7 +624,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
               { slug: 'voice', name: 'Voice', desc: 'Voting, advocacy, town halls, power', color: '#7a2018' },
               { slug: 'money', name: 'Money', desc: 'Jobs, internships, scholarships, business', color: '#6a4e10' },
               { slug: 'planet', name: 'Planet', desc: 'Climate, environment, energy, water', color: '#1a5030' },
-              { slug: 'the-bigger-we', name: 'The Bigger We', desc: 'Bridging, dialogue, inclusion, trust', color: '#1a3460' },
+              { slug: 'the-bigger-we', name: 'The Bigger We', desc: 'Bridging, dialogue, inclusion, trust', color: '#1b5e8a' },
             ].map(p => (
               <Link
                 key={p.slug}
@@ -652,7 +652,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
          ════════════════════════════════════════════════════════════ */}
       <section className="relative py-24 px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-[20%] w-[500px] h-[500px] rounded-full opacity-10 blur-[150px]" style={{ background: 'radial-gradient(circle, #1a3460, transparent)' }} />
+        <div className="absolute bottom-0 left-[20%] w-[500px] h-[500px] rounded-full opacity-10 blur-[150px]" style={{ background: 'radial-gradient(circle, #1b5e8a, transparent)' }} />
 
         <div className="relative max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
@@ -688,7 +688,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
 
       {/* Spectrum bar at very bottom */}
       <div className="h-1 flex">
-        {['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#6a4e10', '#1a5030', '#1a3460'].map(c => (
+        {['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#6a4e10', '#1a5030', '#1b5e8a'].map(c => (
           <div key={c} className="flex-1" style={{ backgroundColor: c }} />
         ))}
       </div>

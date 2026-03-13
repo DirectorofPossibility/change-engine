@@ -17,14 +17,6 @@ export const metadata: Metadata = {
 
 // ── Design tokens ─────────────────────────────────────────────────────
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const THEME_I18N: Record<string, string> = {
   THEME_01: 'theme.our_health',
@@ -63,20 +55,20 @@ export default async function ExplorePage() {
   const unthemed = focusAreas.filter(function (fa) { return !fa.theme_id })
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <div className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+          <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
             Explore
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+          <p style={{ fontSize: '1.1rem', color: "#5c6474", lineHeight: 1.7 }} className="mt-4 max-w-xl">
             Your launchpad for learning. Dive into articles, research, interactive visualizations, and focus areas across all seven pathways.
           </p>
         </div>
@@ -84,8 +76,8 @@ export default async function ExplorePage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Explore</span>
         </nav>
@@ -96,22 +88,22 @@ export default async function ExplorePage() {
         {/* ── Three feature links ── */}
         <section>
           <div className="flex items-baseline gap-4 mb-6">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Start Here</h2>
-            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">3 paths</span>
+            <h2 style={{ fontSize: '1.5rem',  }}>Start Here</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
+            <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">3 paths</span>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+          <div className="grid sm:grid-cols-3 gap-0" style={{ border: '1px solid #dde1e8' }}>
             <Link
               href="/explore/knowledge-base"
               className="group p-6 hover:bg-white/50 transition-colors"
-              style={{ borderRight: '1px solid ' + RULE_COLOR }}
+              style={{ borderRight: '1px solid #dde1e8' }}
             >
-              <p style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Knowledge Base</p>
-              <h3 style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, lineHeight: 1.3 }} className="mb-2 group-hover:underline">
+              <p style={{ fontSize: '0.6875rem', letterSpacing: '0.15em', color: "#1b5e8a" }} className="uppercase mb-3">Knowledge Base</p>
+              <h3 style={{ fontSize: '1.05rem', lineHeight: 1.3 }} className="mb-2 group-hover:underline">
                 Knowledge Base
               </h3>
-              <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.6 }}>
                 {totalItems > 0
                   ? 'Browse ' + totalItems + ' articles, guides, and reports organized by pathway and topic.'
                   : 'Browse articles and research organized by pathway and topic.'}
@@ -121,13 +113,13 @@ export default async function ExplorePage() {
             <Link
               href="/library"
               className="group p-6 hover:bg-white/50 transition-colors"
-              style={{ borderRight: '1px solid ' + RULE_COLOR }}
+              style={{ borderRight: '1px solid #dde1e8' }}
             >
-              <p style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Library</p>
-              <h3 style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, lineHeight: 1.3 }} className="mb-2 group-hover:underline">
+              <p style={{ fontSize: '0.6875rem', letterSpacing: '0.15em', color: "#1b5e8a" }} className="uppercase mb-3">Library</p>
+              <h3 style={{ fontSize: '1.05rem', lineHeight: 1.3 }} className="mb-2 group-hover:underline">
                 Research Library
               </h3>
-              <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.6 }}>
                 Curated reports, white papers, and policy documents with key takeaways and reading guides.
               </p>
             </Link>
@@ -136,25 +128,25 @@ export default async function ExplorePage() {
               href="/knowledge-graph"
               className="group p-6 hover:bg-white/50 transition-colors"
             >
-              <p style={{ fontFamily: MONO, fontSize: '0.6875rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">Visualization</p>
-              <h3 style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, lineHeight: 1.3 }} className="mb-2 group-hover:underline">
+              <p style={{ fontSize: '0.6875rem', letterSpacing: '0.15em', color: "#1b5e8a" }} className="uppercase mb-3">Visualization</p>
+              <h3 style={{ fontSize: '1.05rem', lineHeight: 1.3 }} className="mb-2 group-hover:underline">
                 Knowledge Galaxy
               </h3>
-              <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.6 }}>
                 Interactive visualization of the civic knowledge network -- pathways, centers, and 1,500+ connections.
               </p>
             </Link>
           </div>
         </section>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* ── Browse by Pathway ── */}
         <section>
           <div className="flex items-baseline gap-4 mb-6">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Browse by Pathway</h2>
-            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
-            <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{themes.length} pathways</span>
+            <h2 style={{ fontSize: '1.5rem',  }}>Browse by Pathway</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
+            <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{themes.length} pathways</span>
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -164,13 +156,13 @@ export default async function ExplorePage() {
                   key={theme.id}
                   href={'/pathways/' + (THEMES as Record<string, { slug: string }>)[theme.id].slug}
                   className="group flex items-center gap-2 px-4 py-2.5 hover:bg-white/50 transition-colors"
-                  style={{ border: '1px solid ' + RULE_COLOR }}
+                  style={{ border: '1px solid #dde1e8' }}
                 >
                   <span className="w-2 h-2" style={{ backgroundColor: theme.color }} />
-                  <span style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK }} className="group-hover:underline">
+                  <span style={{ fontSize: '0.88rem',  }} className="group-hover:underline">
                     {theme.name}
                   </span>
-                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>
+                  <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
                     {theme.focusAreas.length}
                   </span>
                 </Link>
@@ -179,13 +171,13 @@ export default async function ExplorePage() {
           </div>
         </section>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* ── Focus Area Explorer ── */}
         <section>
           <div className="flex items-baseline gap-4 mb-6">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Focus Areas</h2>
-            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+            <h2 style={{ fontSize: '1.5rem',  }}>Focus Areas</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
           </div>
           <ExploreFilterClient
             themes={themes}
@@ -195,11 +187,11 @@ export default async function ExplorePage() {
           />
         </section>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* ── Footer link ── */}
         <div className="text-center py-4">
-          <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Back to Home
           </Link>
         </div>

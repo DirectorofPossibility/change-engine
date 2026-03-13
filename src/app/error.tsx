@@ -11,7 +11,7 @@ export default function RootError({
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', background: '#F8F9FB' }}>
       <div style={{ textAlign: 'center', maxWidth: '28rem' }}>
         <p style={{ fontSize: '3rem', fontWeight: 'bold', color: '#E8723A', marginBottom: '1rem' }}>Oops</p>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1A1A1A', marginBottom: '0.75rem' }}>Something went wrong</h1>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#0d1117', marginBottom: '0.75rem' }}>Something went wrong</h1>
         <p style={{ color: '#6C7380', marginBottom: '2rem', fontSize: '0.875rem' }}>
           We hit a snag loading this page. Please try again.
         </p>

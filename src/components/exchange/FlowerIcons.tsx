@@ -61,7 +61,7 @@ export function BuilderIcon({ size = 20, color = '#7a2018', className }: IconPro
   )
 }
 
-export function WatchdogIcon({ size = 20, color = '#1a3460', className }: IconProps) {
+export function WatchdogIcon({ size = 20, color = '#1b5e8a', className }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" className={className} aria-hidden="true">
       <circle cx="24" cy="24" r="4" stroke={color} strokeWidth="1.5" />

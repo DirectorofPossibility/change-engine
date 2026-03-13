@@ -28,7 +28,7 @@ interface GoodThingEntry {
   created_at: string
 }
 
-const THING_COLORS = ['#7a2018', '#6a4e10', '#1a3460']
+const THING_COLORS = ['#7a2018', '#6a4e10', '#1b5e8a']
 
 // GradientFOL is now imported from @/components/exchange/GradientFOL
 
@@ -315,7 +315,7 @@ export default function SplashPage() {
         <div style={{ background: '#7a2018' }} />
         <div style={{ background: '#6a4e10' }} />
         <div style={{ background: '#1a5030' }} />
-        <div style={{ background: '#1a3460' }} />
+        <div style={{ background: '#1b5e8a' }} />
       </div>
 
       {/* ── Mobile header ── */}
@@ -464,7 +464,7 @@ export default function SplashPage() {
                     {[
                       { n: 1, color: '#7a2018', val: thing1, set: setThing1, ph: t('splash.placeholder_1') },
                       { n: 2, color: '#6a4e10', val: thing2, set: setThing2, ph: t('splash.placeholder_2') },
-                      { n: 3, color: '#1a3460', val: thing3, set: setThing3, ph: t('splash.placeholder_3') },
+                      { n: 3, color: '#1b5e8a', val: thing3, set: setThing3, ph: t('splash.placeholder_3') },
                     ].map(function (f) {
                       return (
                         <div key={f.n} className="flex items-center gap-2">

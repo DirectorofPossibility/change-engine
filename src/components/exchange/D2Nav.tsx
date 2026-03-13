@@ -140,7 +140,7 @@ export function D2Nav() {
         <div className="max-w-[1080px] mx-auto px-6 flex items-center justify-between h-full">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <SeedOfLife color="#1a3460" size={28} />
+            <SeedOfLife color="#1b5e8a" size={28} />
             <span className="font-display text-[1rem] font-bold tracking-[-0.01em] text-ink">
               {t('nav.change_engine')}
             </span>
@@ -204,7 +204,7 @@ export function D2Nav() {
             {/* Drawer header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-rule">
               <div className="flex items-center gap-2.5">
-                <SeedOfLife color="#1a3460" size={24} />
+                <SeedOfLife color="#1b5e8a" size={24} />
                 <span className="font-display text-[15px] font-bold text-ink">{t('nav.change_engine')}</span>
               </div>
               <button
@@ -259,7 +259,7 @@ export function D2Nav() {
                       <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
                       <span
                         className="font-mono text-[11px] uppercase tracking-[0.08em] group-open:text-blue transition-colors"
-                        style={{ color: isActive ? '#1a3460' : '#9a9189' }}
+                        style={{ color: isActive ? '#1b5e8a' : '#8a929e' }}
                       >
                         {center.label}
                       </span>
@@ -279,7 +279,7 @@ export function D2Nav() {
                             key={item.href}
                             href={item.href}
                             className="block pl-5 py-1.5 font-body text-[.82rem] transition-colors hover:text-blue"
-                            style={{ color: itemActive ? '#1a3460' : '#1A1A1A' }}
+                            style={{ color: itemActive ? '#1b5e8a' : '#0d1117' }}
                             onClick={closeDrawer}
                           >
                             {item.label}

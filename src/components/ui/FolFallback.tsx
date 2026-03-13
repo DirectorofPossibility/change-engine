@@ -18,7 +18,7 @@ const PATHWAY_GRADIENTS: Record<string, { from: string; to: string; angle: numbe
   THEME_04: { from: '#7a2018', to: '#4a1210', angle: 160 },
   THEME_05: { from: '#6a4e10', to: '#3a2a08', angle: 140 },
   THEME_06: { from: '#1a5030', to: '#0a2818', angle: 130 },
-  THEME_07: { from: '#1a3460', to: '#0a1a30', angle: 145 },
+  THEME_07: { from: '#1b5e8a', to: '#0a1a30', angle: 145 },
 }
 
 const DEFAULT_GRADIENT = { from: '#5c6474', to: '#2c3038', angle: 135 }

@@ -23,14 +23,6 @@ import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SearchTabs } from './SearchTabs'
 import { SearchResultsHeader } from './SearchResultsHeader'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -156,13 +148,13 @@ export default async function SearchPage({
         {results.organizations.map(function (org) {
           const t = orgTranslations[org.org_id]
           return (
-            <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid ' + RULE_COLOR }}>
-              <h4 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: '0.9rem', color: INK, marginBottom: '0.25rem' }}>{t?.title || org.org_name}</h4>
+            <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
+              <h4 style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.25rem' }}>{t?.title || org.org_name}</h4>
               {(t?.summary || org.description_5th_grade) && (
-                <p className="line-clamp-2" style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED }}>{t?.summary || org.description_5th_grade}</p>
+                <p className="line-clamp-2" style={{ fontSize: '0.8rem', color: "#5c6474" }}>{t?.summary || org.description_5th_grade}</p>
               )}
               {org.website && (
-                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, marginTop: '0.5rem', display: 'inline-block' }}>Visit website</span>
+                <span style={{ fontSize: '0.65rem', color: "#1b5e8a", marginTop: '0.5rem', display: 'inline-block' }}>Visit website</span>
               )}
             </Link>
           )
@@ -210,13 +202,13 @@ export default async function SearchPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.resources.map(function (r: any) {
           return (
-            <div key={r.resource_id} className="p-4" style={{ border: '1px solid ' + RULE_COLOR }}>
-              <h4 className="line-clamp-2" style={{ fontFamily: SERIF, fontWeight: 600, fontSize: '0.9rem', color: INK, marginBottom: '0.25rem' }}>{r.resource_name}</h4>
+            <div key={r.resource_id} className="p-4" style={{ border: '1px solid #dde1e8' }}>
+              <h4 className="line-clamp-2" style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.25rem' }}>{r.resource_name}</h4>
               {r.description_5th_grade && (
-                <p className="line-clamp-2 mb-2" style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED }}>{r.description_5th_grade}</p>
+                <p className="line-clamp-2 mb-2" style={{ fontSize: '0.8rem', color: "#5c6474" }}>{r.description_5th_grade}</p>
               )}
               {r.source_url && (
-                <Link href={r.source_url} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                <Link href={r.source_url} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
                   View resource
                 </Link>
               )}
@@ -246,21 +238,21 @@ export default async function SearchPage({
   }
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
       {!query && (
-        <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="bg-paper relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-            <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
               The Change Engine
             </p>
-            <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
               Search
             </h1>
-            <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '1.1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               Find services, officials, policies, organizations, and more across the Change Engine.
             </p>
           </div>
@@ -269,8 +261,8 @@ export default async function SearchPage({
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Search</span>
         </nav>
@@ -288,9 +280,9 @@ export default async function SearchPage({
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to the Guide
         </Link>
       </div>

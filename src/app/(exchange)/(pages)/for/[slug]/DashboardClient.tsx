@@ -19,7 +19,7 @@ const OTHER_PERSONAS = [
   { slug: 'seeker', name: 'The Seeker', desc: 'Find resources', color: '#4a2870' },
   { slug: 'learner', name: 'The Learner', desc: 'Understand issues', color: '#6a4e10' },
   { slug: 'builder', name: 'The Builder', desc: 'Take action', color: '#7a2018' },
-  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#1a3460' },
+  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#1b5e8a' },
   { slug: 'partner', name: 'The Partner', desc: 'Collaborate', color: '#1e4d7a' },
   { slug: 'explorer', name: 'The Explorer', desc: 'Discover it all', color: '#E8723A' },
 ]
@@ -41,7 +41,7 @@ const CENTER_META: Record<string, { label: string; question: string; color: stri
     entities: ['opportunities', 'services'],
   },
   Accountability: {
-    label: 'Accountability Center', question: 'Who makes decisions?', color: '#1a3460',
+    label: 'Accountability Center', question: 'Who makes decisions?', color: '#1b5e8a',
     icon: 'M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418',
     entities: ['officials', 'policies'],
   },
@@ -66,7 +66,7 @@ const THEMES: Record<string, { name: string; color: string }> = {
   THEME_04: { name: 'Voice', color: '#7a2018' },
   THEME_05: { name: 'Money', color: '#6a4e10' },
   THEME_06: { name: 'Planet', color: '#1a5030' },
-  THEME_07: { name: 'The Bigger We', color: '#1a3460' },
+  THEME_07: { name: 'The Bigger We', color: '#1b5e8a' },
 }
 
 function hasValidImage(url: string | null): boolean {
@@ -340,7 +340,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
             {/* Research Library */}
             {filteredLibrary.length > 0 && (
-              <SidebarCard title="Research Library" iconColor="#1a3460" seeAllHref="/library">
+              <SidebarCard title="Research Library" iconColor="#1b5e8a" seeAllHref="/library">
                 {filteredLibrary.slice(0, 4).map(function (doc: any) {
                   return (
                     <Link key={doc.id} href={'/library/' + doc.id}

@@ -4,14 +4,6 @@ import Image from 'next/image'
 
 export const revalidate = 86400
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Donate -- Change Engine',
@@ -35,40 +27,40 @@ const impactItems = [
 
 export default function DonatePage() {
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute right-[-60px] top-[-20px]">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl mt-2">
+          <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <h1 style={{  }} className="text-2xl sm:text-3xl mt-2">
             Help us keep it free for everyone.
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-base mt-2">
+          <p style={{ color: "#5c6474" }} className="text-base mt-2">
             Change Engine is free. It stays free because people like you think it should be.
           </p>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm mt-1 italic">
+          <p style={{ color: "#5c6474" }} className="text-sm mt-1 italic">
             Civic infrastructure shouldn&apos;t cost money to access. Building it does.
           </p>
         </div>
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </section>
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+        <nav style={{ color: "#5c6474" }} className="text-[11px] tracking-wide">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-1">/</span>
-          <span style={{ color: INK }}>Donate</span>
+          <span style={{  }}>Donate</span>
         </nav>
       </div>
 
       <div className="max-w-[900px] mx-auto px-6 py-8">
         {/* Mission */}
         <section className="mb-12">
-          <div className="space-y-4 text-lg leading-relaxed" style={{ fontFamily: SERIF, color: MUTED }}>
+          <div className="space-y-4 text-lg leading-relaxed" style={{ color: "#5c6474" }}>
             <p>
               Knowing who represents you. Finding services in your neighborhood.
               Understanding how to get involved. That information shouldn&rsquo;t
@@ -86,22 +78,22 @@ export default function DonatePage() {
         </section>
 
         {/* ── Divider ── */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-8" />
 
         {/* What Your Money Does */}
         <section className="mb-12">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">What your money does</h2>
-            <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{impactItems.length} facts</span>
+            <h2 style={{  }} className="text-xl">What your money does</h2>
+            <span style={{ color: "#5c6474" }} className="text-[11px]">{impactItems.length} facts</span>
           </div>
-          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
           <div className="space-y-3">
             {impactItems.map(function (item, i) {
               return (
                 <div key={i} className="flex items-start gap-3">
-                  <span className="w-2 h-2 flex-shrink-0 mt-2" style={{ background: CLAY }} />
-                  <p className="leading-relaxed" style={{ fontFamily: SERIF, color: MUTED }}>
-                    <strong style={{ color: INK }}>{item.bold}</strong>
+                  <span className="w-2 h-2 flex-shrink-0 mt-2" style={{ background: '#1b5e8a' }} />
+                  <p className="leading-relaxed" style={{ color: "#5c6474" }}>
+                    <strong style={{  }}>{item.bold}</strong>
                     {item.rest}
                   </p>
                 </div>
@@ -111,29 +103,29 @@ export default function DonatePage() {
         </section>
 
         {/* ── Divider ── */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-8" />
 
         {/* Tiers */}
         <section className="mb-12">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">Choose your level</h2>
-            <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{tiers.length} tiers</span>
+            <h2 style={{  }} className="text-xl">Choose your level</h2>
+            <span style={{ color: "#5c6474" }} className="text-[11px]">{tiers.length} tiers</span>
           </div>
-          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
           <div className="space-y-3">
             {tiers.map(function (tier) {
               return (
                 <div
                   key={tier.label}
                   className="p-5 relative overflow-hidden"
-                  style={{ border: '1px solid ' + RULE_COLOR }}
+                  style={{ border: '1px solid #dde1e8' }}
                 >
-                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: CLAY }} />
+                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: '#1b5e8a' }} />
                   <div className="pl-3">
-                    <p style={{ fontFamily: SERIF, color: INK }} className="font-bold">
+                    <p style={{  }} className="font-bold">
                       {tier.amount} -- {tier.label}.
                     </p>
-                    <p style={{ fontFamily: MONO, color: MUTED }} className="text-sm mt-1">{tier.desc}</p>
+                    <p style={{ color: "#5c6474" }} className="text-sm mt-1">{tier.desc}</p>
                   </div>
                 </div>
               )
@@ -141,14 +133,14 @@ export default function DonatePage() {
             {/* Custom amount */}
             <div
               className="p-5 relative overflow-hidden"
-              style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}
+              style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}
             >
-              <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: CLAY }} />
+              <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: '#1b5e8a' }} />
               <div className="pl-3">
-                <p style={{ fontFamily: SERIF, color: INK }} className="font-bold">
+                <p style={{  }} className="font-bold">
                   Your amount.
                 </p>
-                <p style={{ fontFamily: MONO, color: MUTED }} className="text-sm mt-1">
+                <p style={{ color: "#5c6474" }} className="text-sm mt-1">
                   Give what you can. All of it matters.
                 </p>
               </div>
@@ -163,32 +155,32 @@ export default function DonatePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-8 py-3 text-white text-base"
-            style={{ fontFamily: MONO, background: CLAY }}
+            style={{ background: '#1b5e8a' }}
           >
             Make a Donation
           </a>
         </section>
 
         {/* ── Divider ── */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-8" />
 
         {/* Tax Info */}
-        <section className="mb-12 p-6" style={{ background: PARCHMENT_WARM }}>
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-sm leading-relaxed">
+        <section className="mb-12 p-6 bg-paper">
+          <p style={{ color: "#5c6474" }} className="text-sm leading-relaxed">
             The Change Lab is fiscally sponsored by Impact Hub Houston, a
             501(c)(3). Your donation is tax-deductible.
           </p>
         </section>
 
         {/* Closing */}
-        <section className="relative p-8 text-center overflow-hidden" style={{ border: '1px solid ' + RULE_COLOR }}>
+        <section className="relative p-8 text-center overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
           <div className="absolute right-[-20px] bottom-[-20px]">
             <Image src="/images/fol/seed-of-life.svg" alt="" width={120} height={120} className="opacity-[0.04]" />
           </div>
-          <p style={{ fontFamily: SERIF, color: INK }} className="text-lg">
+          <p style={{  }} className="text-lg">
             Civic infrastructure only works if someone maintains it.
           </p>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="mt-2">
+          <p style={{ color: "#5c6474" }} className="mt-2">
             Thank you for being that someone.
           </p>
         </section>
@@ -196,8 +188,8 @@ export default function DonatePage() {
 
       {/* ── Footer link ── */}
       <div className="max-w-[900px] mx-auto px-6 pb-10">
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="pt-4 mt-8">
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to Home</Link>
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="pt-4 mt-8">
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">&larr; Back to Home</Link>
         </div>
       </div>
     </div>

@@ -39,16 +39,8 @@ const ENTITY_ICONS: Record<string, { label: string; href: string }> = {
 }
 
 /* ── Design tokens ── */
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const PARCHMENT_LIGHT = '#F8F4EC'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
+const PARCHMENT_LIGHT = '#f4f5f7'
 const SAGE = '#5C7A5E'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default async function PathwaysPage() {
   const [hubData, stats, bridges, quote] = await Promise.all([
@@ -69,29 +61,29 @@ export default async function PathwaysPage() {
   const themeEntries = Object.entries(THEMES)
 
   return (
-    <div style={{ color: INK }}>
+    <div style={{  }}>
 
       {/* ══════════════════════════════════════════
           1. HERO
           ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: PARCHMENT }}>
+      <section style={{ backgroundColor: '#f4f5f7' }}>
         {/* 3px clay top bar */}
-        <div style={{ height: 3, backgroundColor: CLAY }} />
+        <div style={{ height: 3, backgroundColor: '#1b5e8a' }} />
 
         <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
           {/* MONO breadcrumb */}
-          <nav style={{ fontFamily: MONO }} className="text-xs tracking-wider uppercase mb-6">
-            <Link href="/explore" className="hover:underline" style={{ color: MUTED }}>
+          <nav style={{  }} className="text-xs tracking-wider uppercase mb-6">
+            <Link href="/explore" className="hover:underline" style={{ color: "#5c6474" }}>
               The Exchange
             </Link>
-            <span style={{ color: MUTED }}> / </span>
-            <span style={{ color: CLAY }}>Pathways</span>
+            <span style={{ color: "#5c6474" }}> / </span>
+            <span style={{ color: "#1b5e8a" }}>Pathways</span>
           </nav>
 
           {/* Title */}
           <h1
             className="text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4"
-            style={{ fontFamily: SERIF, color: INK }}
+            style={{  }}
           >
             Seven pathways into community life.
           </h1>
@@ -99,7 +91,7 @@ export default async function PathwaysPage() {
           {/* Subtitle */}
           <p
             className="text-lg sm:text-xl max-w-2xl leading-relaxed mb-8"
-            style={{ fontFamily: SERIF, fontStyle: 'italic', color: MUTED }}
+            style={{ fontStyle: 'italic', color: "#5c6474" }}
           >
             Every pathway connects you to content, services, officials, learning paths, and opportunities across Houston's civic landscape.
           </p>
@@ -114,16 +106,16 @@ export default async function PathwaysPage() {
               { value: stats.learningPaths, label: 'Learning Paths' },
             ].map(function (stat) {
               return (
-                <div key={stat.label} style={{ fontFamily: MONO }} className="text-center">
-                  <p className="text-2xl font-bold" style={{ color: INK }}>{stat.value}</p>
-                  <p className="text-[10px] uppercase tracking-wider" style={{ color: MUTED }}>{stat.label}</p>
+                <div key={stat.label} style={{  }} className="text-center">
+                  <p className="text-2xl font-bold" style={{  }}>{stat.value}</p>
+                  <p className="text-[10px] uppercase tracking-wider" style={{ color: "#5c6474" }}>{stat.label}</p>
                 </div>
               )
             })}
           </div>
 
           {/* 60px clay rule */}
-          <div style={{ width: 60, height: 3, backgroundColor: CLAY }} />
+          <div style={{ width: 60, height: 3, backgroundColor: '#1b5e8a' }} />
         </div>
       </section>
 
@@ -145,7 +137,7 @@ export default async function PathwaysPage() {
             <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-10">
               <p
                 className="text-[11px] uppercase tracking-[0.2em] mb-6"
-                style={{ fontFamily: MONO, color: theme.color }}
+                style={{ color: theme.color }}
               >
                 Pathway {idx + 1} &middot; {theme.name}
               </p>
@@ -162,10 +154,8 @@ export default async function PathwaysPage() {
                       href={'/pathways/' + theme.slug}
                       className="block hover:underline"
                       style={{
-                        fontFamily: SERIF,
-                        fontSize: 'clamp(24px, 3vw, 36px)',
-                        color: INK,
-                        textDecorationColor: theme.color,
+                                                fontSize: 'clamp(24px, 3vw, 36px)',
+                                                textDecorationColor: theme.color,
                         lineHeight: 1.2,
                       }}
                     >
@@ -173,7 +163,7 @@ export default async function PathwaysPage() {
                     </Link>
                     <p
                       className="mt-2 leading-relaxed max-w-xl"
-                      style={{ fontFamily: SERIF, fontStyle: 'italic', color: MUTED, fontSize: '0.95rem' }}
+                      style={{ fontStyle: 'italic', color: "#5c6474", fontSize: '0.95rem' }}
                     >
                       {theme.description}
                     </p>
@@ -184,7 +174,7 @@ export default async function PathwaysPage() {
                     <Link
                       href={'/content/' + hero.id}
                       className="group block border mb-5 transition-colors"
-                      style={{ borderColor: RULE_COLOR }}
+                      style={{ borderColor: '#dde1e8' }}
                     >
                       <div className="group-hover:border-current" style={{ borderColor: theme.color }}>
                         {hero.image_url && (
@@ -203,7 +193,7 @@ export default async function PathwaysPage() {
                             {hero.content_type && (
                               <span
                                 className="text-[10px] uppercase tracking-wider font-bold"
-                                style={{ fontFamily: MONO, color: theme.color }}
+                                style={{ color: theme.color }}
                               >
                                 {hero.content_type}
                               </span>
@@ -211,7 +201,7 @@ export default async function PathwaysPage() {
                             {hero.source_domain && (
                               <span
                                 className="text-[10px]"
-                                style={{ fontFamily: MONO, color: MUTED }}
+                                style={{ color: "#5c6474" }}
                               >
                                 {hero.source_domain}
                               </span>
@@ -219,14 +209,14 @@ export default async function PathwaysPage() {
                           </div>
                           <h3
                             className="text-lg leading-snug group-hover:underline"
-                            style={{ fontFamily: SERIF, color: INK }}
+                            style={{  }}
                           >
                             {hero.title}
                           </h3>
                           {hero.summary && (
                             <p
                               className="text-sm mt-2 line-clamp-2 leading-relaxed"
-                              style={{ color: MUTED }}
+                              style={{ color: "#5c6474" }}
                             >
                               {hero.summary}
                             </p>
@@ -245,7 +235,7 @@ export default async function PathwaysPage() {
                             key={item.id}
                             href={'/content/' + item.id}
                             className="group block border transition-colors"
-                            style={{ borderColor: RULE_COLOR }}
+                            style={{ borderColor: '#dde1e8' }}
                           >
                             {item.image_url && (
                               <div className="aspect-[16/9] overflow-hidden">
@@ -261,13 +251,13 @@ export default async function PathwaysPage() {
                             <div className="p-3">
                               <span
                                 className="text-[9px] uppercase tracking-wider font-bold"
-                                style={{ fontFamily: MONO, color: theme.color }}
+                                style={{ color: theme.color }}
                               >
                                 {item.content_type}
                               </span>
                               <h4
                                 className="text-sm leading-snug mt-1 line-clamp-2 group-hover:underline"
-                                style={{ fontFamily: SERIF, color: INK }}
+                                style={{  }}
                               >
                                 {item.title}
                               </h4>
@@ -282,26 +272,26 @@ export default async function PathwaysPage() {
                 {/* ── Right column: data sidebar ── */}
                 <div>
                   {/* What you will find */}
-                  <div className="border p-5 mb-4" style={{ borderColor: RULE_COLOR }}>
+                  <div className="border p-5 mb-4" style={{ borderColor: '#dde1e8' }}>
                     <p
                       className="text-[10px] uppercase tracking-[0.15em] mb-4"
-                      style={{ fontFamily: MONO, color: MUTED }}
+                      style={{ color: "#5c6474" }}
                     >
                       What you will find
                     </p>
 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center justify-between">
-                        <span style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>Content</span>
-                        <span style={{ fontFamily: MONO, color: theme.color }} className="text-lg font-bold">{data.totalContent}</span>
+                        <span style={{ fontSize: '0.9rem' }}>Content</span>
+                        <span style={{ color: theme.color }} className="text-lg font-bold">{data.totalContent}</span>
                       </div>
                       {Object.entries(data.entityCounts).map(function ([key, count]) {
                         if (count === 0) return null
                         const info = ENTITY_ICONS[key]
                         return (
                           <div key={key} className="flex items-center justify-between">
-                            <span style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>{info?.label || key}</span>
-                            <span style={{ fontFamily: MONO, color: theme.color }} className="text-lg font-bold">{count}</span>
+                            <span style={{ fontSize: '0.9rem' }}>{info?.label || key}</span>
+                            <span style={{ color: theme.color }} className="text-lg font-bold">{count}</span>
                           </div>
                         )
                       })}
@@ -317,10 +307,10 @@ export default async function PathwaysPage() {
                               key={type}
                               href={'/news?pathway=' + themeId + '&type=' + type}
                               className="inline-flex items-center gap-1 text-xs border px-2 py-1 transition-colors hover:border-current"
-                              style={{ fontFamily: MONO, borderColor: RULE_COLOR, color: INK }}
+                              style={{ borderColor: '#dde1e8',  }}
                             >
                               <span className="font-bold">{count}</span>
-                              <span style={{ color: MUTED }}>{CONTENT_TYPE_LABELS[type] || type}</span>
+                              <span style={{ color: "#5c6474" }}>{CONTENT_TYPE_LABELS[type] || type}</span>
                             </Link>
                           )
                         })}
@@ -329,15 +319,15 @@ export default async function PathwaysPage() {
 
                   {/* Topics (focus areas) */}
                   {topFocusAreas.length > 0 && (
-                    <div className="border p-5 mb-4" style={{ borderColor: RULE_COLOR }}>
+                    <div className="border p-5 mb-4" style={{ borderColor: '#dde1e8' }}>
                       <div className="flex items-center justify-between mb-4">
                         <p
                           className="text-[10px] uppercase tracking-[0.15em]"
-                          style={{ fontFamily: MONO, color: MUTED }}
+                          style={{ color: "#5c6474" }}
                         >
                           Topics
                         </p>
-                        <span className="text-[10px]" style={{ fontFamily: MONO, color: MUTED }}>
+                        <span className="text-[10px]" style={{ color: "#5c6474" }}>
                           {data.focusAreas.length} total
                         </span>
                       </div>
@@ -353,7 +343,7 @@ export default async function PathwaysPage() {
                                   className="w-2 h-2 flex-shrink-0"
                                   style={{ backgroundColor: theme.color }}
                                 />
-                                <span style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>
+                                <span style={{ fontSize: '0.9rem' }}>
                                   {fa.focus_area_name}
                                 </span>
                               </Link>
@@ -365,7 +355,7 @@ export default async function PathwaysPage() {
                         <Link
                           href={'/pathways/' + theme.slug}
                           className="inline-block mt-3 text-xs hover:underline"
-                          style={{ fontFamily: MONO, color: theme.color }}
+                          style={{ color: theme.color }}
                         >
                           +{data.focusAreas.length - 8} more
                         </Link>
@@ -375,10 +365,10 @@ export default async function PathwaysPage() {
 
                   {/* Keep Learning */}
                   {(data.learningPaths.length > 0 || data.guides.length > 0) && (
-                    <div className="border p-5 mb-4" style={{ borderColor: RULE_COLOR }}>
+                    <div className="border p-5 mb-4" style={{ borderColor: '#dde1e8' }}>
                       <p
                         className="text-[10px] uppercase tracking-[0.15em] mb-4"
-                        style={{ fontFamily: MONO, color: MUTED }}
+                        style={{ color: "#5c6474" }}
                       >
                         Keep Learning
                       </p>
@@ -390,11 +380,11 @@ export default async function PathwaysPage() {
                               href={'/learning/' + lp.path_id}
                               className="group block hover:underline"
                             >
-                              <h4 style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>
+                              <h4 style={{ fontSize: '0.9rem' }}>
                                 {lp.path_name}
                               </h4>
                               {lp.estimated_minutes && (
-                                <span className="text-[10px]" style={{ fontFamily: MONO, color: MUTED }}>
+                                <span className="text-[10px]" style={{ color: "#5c6474" }}>
                                   ~{lp.estimated_minutes} min
                                 </span>
                               )}
@@ -408,10 +398,10 @@ export default async function PathwaysPage() {
                               href={'/guides/' + g.slug}
                               className="group block hover:underline"
                             >
-                              <h4 style={{ fontFamily: SERIF, color: INK, fontSize: '0.9rem' }}>
+                              <h4 style={{ fontSize: '0.9rem' }}>
                                 {g.title}
                               </h4>
-                              <span className="text-[10px]" style={{ fontFamily: MONO, color: MUTED }}>
+                              <span className="text-[10px]" style={{ color: "#5c6474" }}>
                                 Community Guide
                               </span>
                             </Link>
@@ -426,7 +416,7 @@ export default async function PathwaysPage() {
                     <div className="mb-4">
                       <p
                         className="text-[10px] uppercase tracking-[0.15em] mb-2"
-                        style={{ fontFamily: MONO, color: MUTED }}
+                        style={{ color: "#5c6474" }}
                       >
                         Connected to
                       </p>
@@ -437,11 +427,11 @@ export default async function PathwaysPage() {
                               key={b.targetThemeId}
                               href={'/pathways/' + b.targetSlug}
                               className="inline-flex items-center gap-1.5 text-xs hover:underline"
-                              style={{ fontFamily: MONO, color: b.targetColor }}
+                              style={{ color: b.targetColor }}
                             >
                               <span className="w-2 h-2" style={{ backgroundColor: b.targetColor }} />
                               {b.targetName}
-                              <span style={{ color: MUTED }}>({b.sharedCount})</span>
+                              <span style={{ color: "#5c6474" }}>({b.sharedCount})</span>
                             </Link>
                           )
                         })}
@@ -453,7 +443,7 @@ export default async function PathwaysPage() {
                   <Link
                     href={'/pathways/' + theme.slug}
                     className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: theme.color, fontFamily: MONO, letterSpacing: '0.05em' }}
+                    style={{ backgroundColor: theme.color, letterSpacing: '0.05em' }}
                   >
                     Explore {theme.name}
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -472,17 +462,17 @@ export default async function PathwaysPage() {
           3. CROSS-PATHWAY CONNECTIONS
           ══════════════════════════════════════════ */}
       {bridges.length > 0 && (
-        <section style={{ backgroundColor: PARCHMENT }} className="py-12">
+        <section style={{ backgroundColor: '#f4f5f7' }} className="py-12">
           <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
             <p
               className="text-[11px] uppercase tracking-[0.2em] mb-3"
-              style={{ fontFamily: MONO, color: CLAY }}
+              style={{ color: "#1b5e8a" }}
             >
               How pathways connect
             </p>
             <p
               className="text-lg mb-8 max-w-xl"
-              style={{ fontFamily: SERIF, fontStyle: 'italic', color: MUTED }}
+              style={{ fontStyle: 'italic', color: "#5c6474" }}
             >
               Community issues do not live in silos. These pathways share content, services, and focus areas.
             </p>
@@ -496,29 +486,29 @@ export default async function PathwaysPage() {
                   <div
                     key={b[0] + '|' + b[1]}
                     className="flex items-center gap-3 border p-4"
-                    style={{ borderColor: RULE_COLOR, backgroundColor: '#ffffff' }}
+                    style={{ borderColor: '#dde1e8', backgroundColor: '#ffffff' }}
                   >
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 flex-shrink-0" style={{ backgroundColor: themeA.color }} />
                       <Link
                         href={'/pathways/' + themeA.slug}
                         className="text-sm truncate hover:underline"
-                        style={{ fontFamily: SERIF, color: INK }}
+                        style={{  }}
                       >
                         {themeA.name}
                       </Link>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                      <div className="w-6 h-px" style={{ backgroundColor: RULE_COLOR }} />
-                      <span className="text-xs font-bold" style={{ fontFamily: MONO, color: MUTED }}>{b[2]}</span>
-                      <div className="w-6 h-px" style={{ backgroundColor: RULE_COLOR }} />
+                      <div className="w-6 h-px" style={{ backgroundColor: '#dde1e8' }} />
+                      <span className="text-xs font-bold" style={{ color: "#5c6474" }}>{b[2]}</span>
+                      <div className="w-6 h-px" style={{ backgroundColor: '#dde1e8' }} />
                     </div>
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 flex-shrink-0" style={{ backgroundColor: themeB.color }} />
                       <Link
                         href={'/pathways/' + themeB.slug}
                         className="text-sm truncate hover:underline"
-                        style={{ fontFamily: SERIF, color: INK }}
+                        style={{  }}
                       >
                         {themeB.name}
                       </Link>
@@ -535,22 +525,22 @@ export default async function PathwaysPage() {
           4. QUOTE (inline blockquote)
           ══════════════════════════════════════════ */}
       {quote && (
-        <section style={{ backgroundColor: PARCHMENT_WARM }} className="py-10">
+        <section style={{ backgroundColor: '#f4f5f7' }} className="py-10">
           <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
             <blockquote
               className="max-w-2xl mx-auto text-center"
-              style={{ borderTop: `1px solid ${RULE_COLOR}`, borderBottom: `1px solid ${RULE_COLOR}`, padding: '2rem 0' }}
+              style={{ borderTop: `1px solid ${'#dde1e8'}`, borderBottom: `1px solid ${'#dde1e8'}`, padding: '2rem 0' }}
             >
               <p
                 className="text-xl sm:text-2xl leading-relaxed mb-4"
-                style={{ fontFamily: SERIF, fontStyle: 'italic', color: INK }}
+                style={{ fontStyle: 'italic',  }}
               >
                 &ldquo;{quote.quote_text}&rdquo;
               </p>
               {quote.attribution && (
                 <cite
                   className="text-xs uppercase tracking-wider not-italic"
-                  style={{ fontFamily: MONO, color: MUTED }}
+                  style={{ color: "#5c6474" }}
                 >
                   {quote.attribution}
                 </cite>
@@ -572,11 +562,11 @@ export default async function PathwaysPage() {
       {/* ══════════════════════════════════════════
           6. FOOTER CODA
           ══════════════════════════════════════════ */}
-      <div className="py-10 text-center" style={{ backgroundColor: PARCHMENT }}>
+      <div className="py-10 text-center" style={{ backgroundColor: '#f4f5f7' }}>
         <Link
           href="/explore"
           className="hover:underline"
-          style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '1rem' }}
+          style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '1rem' }}
         >
           &larr; Back to The Exchange
         </Link>

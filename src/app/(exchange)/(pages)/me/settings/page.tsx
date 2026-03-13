@@ -24,14 +24,6 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null)
@@ -182,12 +174,12 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div style={{ background: PARCHMENT }} className="min-h-screen">
+      <div className="bg-paper min-h-screen">
         <div className="max-w-lg mx-auto px-6 py-16">
-          <div className="h-8 w-32 animate-pulse mb-6" style={{ background: PARCHMENT_WARM }} />
+          <div className="h-8 w-32 animate-pulse mb-6 bg-paper" />
           <div className="space-y-4">
             {[0, 1, 2, 3].map(function (i) {
-              return <div key={i} className="h-16 animate-pulse" style={{ background: PARCHMENT_WARM }} />
+              return <div key={i} className="h-16 animate-pulse bg-paper" />
             })}
           </div>
         </div>
@@ -196,28 +188,28 @@ export default function SettingsPage() {
   }
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute right-[-60px] top-[-20px]">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl mt-2">Your Settings</h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-base mt-2">Language, notifications, saved items, and account info -- all in one place.</p>
+          <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <h1 style={{  }} className="text-2xl sm:text-3xl mt-2">Your Settings</h1>
+          <p style={{ color: "#5c6474" }} className="text-base mt-2">Language, notifications, saved items, and account info -- all in one place.</p>
         </div>
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </section>
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+        <nav style={{ color: "#5c6474" }} className="text-[11px] tracking-wide">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-1">/</span>
           <Link href="/me" className="hover:underline">My Account</Link>
           <span className="mx-1">/</span>
-          <span style={{ color: INK }}>Settings</span>
+          <span style={{  }}>Settings</span>
         </nav>
       </div>
 
@@ -235,20 +227,20 @@ export default function SettingsPage() {
 
         {/* ── Profile Picture ── */}
         <div className="mb-8">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Profile Picture</h2>
-          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <h2 style={{  }} className="text-xl mb-1">Profile Picture</h2>
+          <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 overflow-hidden flex items-center justify-center flex-shrink-0" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+            <div className="w-16 h-16 overflow-hidden flex items-center justify-center flex-shrink-0" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
               {avatarUrl ? (
                 <Image src={avatarUrl} alt="Profile" className="w-full h-full object-cover" width={64} height={64} />
               ) : (
-                <span className="text-xl font-bold" style={{ fontFamily: SERIF, color: CLAY }}>
+                <span className="text-xl font-bold" style={{ color: "#1b5e8a" }}>
                   {displayName ? displayName.charAt(0).toUpperCase() : '?'}
                 </span>
               )}
             </div>
             <div>
-              <label className="inline-flex items-center gap-2 px-4 py-2 text-sm cursor-pointer" style={{ fontFamily: MONO, color: INK, border: '1px solid ' + RULE_COLOR }}>
+              <label className="inline-flex items-center gap-2 px-4 py-2 text-sm cursor-pointer" style={{ border: '1px solid #dde1e8' }}>
                 {uploadingAvatar ? 'Uploading...' : 'Change Picture'}
                 <input
                   type="file"
@@ -258,41 +250,41 @@ export default function SettingsPage() {
                   className="sr-only"
                 />
               </label>
-              <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs mt-1">JPG or PNG, max 2MB.</p>
+              <p style={{ color: "#5c6474" }} className="text-xs mt-1">JPG or PNG, max 2MB.</p>
             </div>
           </div>
         </div>
 
         {/* ── Profile Settings ── */}
         <form onSubmit={handleSaveProfile} className="space-y-4 mb-10">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Profile</h2>
-          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <h2 style={{  }} className="text-xl mb-1">Profile</h2>
+          <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
           <div>
-            <label htmlFor="displayName" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">Display Name</label>
+            <label htmlFor="displayName" style={{  }} className="block text-sm mb-1">Display Name</label>
             <input
               id="displayName"
               type="text"
               value={displayName}
               onChange={function (e) { setDisplayName(e.target.value) }}
               className="w-full px-3 py-2 text-sm focus:outline-none"
-              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              style={{ border: '1px solid #dde1e8', background: 'white' }}
             />
           </div>
           <div>
-            <label htmlFor="address" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">Address</label>
+            <label htmlFor="address" style={{  }} className="block text-sm mb-1">Address</label>
             <input
               id="address"
               type="text"
               value={address}
               onChange={function (e) { setAddress(e.target.value) }}
               className="w-full px-3 py-2 text-sm focus:outline-none"
-              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              style={{ border: '1px solid #dde1e8', background: 'white' }}
               placeholder="123 Main St, Houston, TX 77001"
             />
-            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs mt-1">Used to find your elected officials and local resources</p>
+            <p style={{ color: "#5c6474" }} className="text-xs mt-1">Used to find your elected officials and local resources</p>
           </div>
           <div>
-            <label htmlFor="zipCode" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">ZIP Code</label>
+            <label htmlFor="zipCode" style={{  }} className="block text-sm mb-1">ZIP Code</label>
             <input
               id="zipCode"
               type="text"
@@ -300,19 +292,19 @@ export default function SettingsPage() {
               value={zipCode}
               onChange={function (e) { setZipCode(e.target.value) }}
               className="w-full px-3 py-2 text-sm focus:outline-none"
-              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              style={{ border: '1px solid #dde1e8', background: 'white' }}
               placeholder="Auto-filled from address"
             />
           </div>
           <div>
-            <label htmlFor="language" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">Language</label>
-            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs mb-2">English, Spanish, or Vietnamese. Switch any time.</p>
+            <label htmlFor="language" style={{  }} className="block text-sm mb-1">Language</label>
+            <p style={{ color: "#5c6474" }} className="text-xs mb-2">English, Spanish, or Vietnamese. Switch any time.</p>
             <select
               id="language"
               value={language}
               onChange={function (e) { setLanguage(e.target.value) }}
               className="w-full px-3 py-2 text-sm focus:outline-none"
-              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              style={{ border: '1px solid #dde1e8', background: 'white' }}
             >
               <option value="en">English</option>
               <option value="es">Espanol</option>
@@ -325,30 +317,30 @@ export default function SettingsPage() {
               type="checkbox"
               checked={gamification}
               onChange={function (e) { setGamification(e.target.checked) }}
-              style={{ accentColor: CLAY }}
+              style={{ accentColor: '#1b5e8a' }}
             />
-            <label htmlFor="gamification" style={{ fontFamily: SERIF, color: INK }} className="text-sm">Enable badges and points</label>
+            <label htmlFor="gamification" style={{  }} className="text-sm">Enable badges and points</label>
           </div>
           <button
             type="submit"
             disabled={saving}
             className="px-6 py-2 text-white text-sm disabled:opacity-50"
-            style={{ fontFamily: MONO, background: CLAY }}
+            style={{ background: '#1b5e8a' }}
           >
             {saving ? 'Saving...' : 'Save Profile'}
           </button>
         </form>
 
         {/* ── Divider ── */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-8" />
 
         {/* ── Password Change ── */}
         <form onSubmit={handleChangePassword} className="space-y-4">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Account</h2>
-          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">Update your email or password.</p>
+          <h2 style={{  }} className="text-xl mb-1">Account</h2>
+          <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
+          <p style={{ color: "#5c6474" }} className="text-xs">Update your email or password.</p>
           <div>
-            <label htmlFor="newPassword" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">New Password</label>
+            <label htmlFor="newPassword" style={{  }} className="block text-sm mb-1">New Password</label>
             <input
               id="newPassword"
               type="password"
@@ -356,7 +348,7 @@ export default function SettingsPage() {
               value={newPassword}
               onChange={function (e) { setNewPassword(e.target.value) }}
               className="w-full px-3 py-2 text-sm focus:outline-none"
-              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              style={{ border: '1px solid #dde1e8', background: 'white' }}
               placeholder="At least 6 characters"
             />
           </div>
@@ -364,15 +356,15 @@ export default function SettingsPage() {
             type="submit"
             disabled={saving}
             className="px-6 py-2 text-white text-sm disabled:opacity-50"
-            style={{ fontFamily: MONO, background: INK }}
+            style={{ background: '#0d1117' }}
           >
             {saving ? 'Updating...' : 'Update Password'}
           </button>
         </form>
 
         {/* ── Footer link ── */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="mt-10 pt-4">
-          <Link href="/me" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to My Account</Link>
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="mt-10 pt-4">
+          <Link href="/me" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">&larr; Back to My Account</Link>
         </div>
       </div>
     </div>

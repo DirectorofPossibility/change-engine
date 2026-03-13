@@ -39,7 +39,7 @@ const PW: Record<string, { name: string; color: string; slug: string }> = {
   voice:        { name: 'Voice',        color: '#7a2018', slug: 'voice' },
   money:        { name: 'Money',        color: '#6a4e10', slug: 'money' },
   planet:       { name: 'Planet',       color: '#1a5030', slug: 'planet' },
-  bigger_we:    { name: 'The Bigger We',    color: '#1a3460', slug: 'the-bigger-we' },
+  bigger_we:    { name: 'The Bigger We',    color: '#1b5e8a', slug: 'the-bigger-we' },
 }
 
 /* ── Geo levels ── */

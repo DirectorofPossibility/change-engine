@@ -27,7 +27,7 @@ interface GoodThingEntry {
   created_at: string
 }
 
-const THING_COLORS = ['#7a2018', '#6a4e10', '#1a3460']
+const THING_COLORS = ['#7a2018', '#6a4e10', '#1b5e8a']
 
 export function GoodThingsClient() {
   const { t } = useTranslation()
@@ -164,7 +164,7 @@ export function GoodThingsClient() {
     ctx.globalAlpha = 1
 
     // ── Spectrum bar — top ──
-    const spectrum = ['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#1a5030', '#6a4e10', '#1a3460']
+    const spectrum = ['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#1a5030', '#6a4e10', '#1b5e8a']
     const barW = s / spectrum.length
     spectrum.forEach(function (c, i) { ctx.fillStyle = c; ctx.fillRect(i * barW, 0, barW + 1, 8) })
 
@@ -181,7 +181,7 @@ export function GoodThingsClient() {
     ctx.globalAlpha = 1
 
     // ── Title — large serif ──
-    ctx.fillStyle = '#1A1A1A'; ctx.font = 'bold 52px serif'
+    ctx.fillStyle = '#0d1117'; ctx.font = 'bold 52px serif'
     ctx.fillText('Three Good Things', pad, 120)
 
     // ── Accent underline ──
@@ -232,7 +232,7 @@ export function GoodThingsClient() {
 
     // ── Decorative corner FOLs ──
     ctx.globalAlpha = 0.06
-    drawFOL(ctx, s - 60, 60, 30, '#1a3460', 1)
+    drawFOL(ctx, s - 60, 60, 30, '#1b5e8a', 1)
     drawFOL(ctx, 60, s - 60, 30, '#7a2018', 1)
     ctx.globalAlpha = 1
 
@@ -299,7 +299,7 @@ export function GoodThingsClient() {
         <div className="absolute right-[-80px] top-[-40px] opacity-[0.04]">
           <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
         </div>
-        <div className="h-1 bg-gradient-to-r from-[#1a6b56] via-[#7a2018] to-[#1a3460]" />
+        <div className="h-1 bg-gradient-to-r from-[#1a6b56] via-[#7a2018] to-[#1b5e8a]" />
         <div className="relative z-10 max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
           <p className="text-base text-brand-muted mb-3 max-w-xl mx-auto">
             {t('gt.hero_sub')}
@@ -380,7 +380,7 @@ export function GoodThingsClient() {
           /* ── Form ── */
           <section ref={formRef} className="mb-12">
             <div className="bg-white border border-brand-border p-6 sm:p-8 relative overflow-hidden">
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#7a2018] via-[#6a4e10] to-[#1a3460]" />
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#7a2018] via-[#6a4e10] to-[#1b5e8a]" />
               <div className="pl-4">
                 <h2 className="font-display text-2xl font-bold text-brand-text mb-1">{t('gt.form_title')}</h2>
                 <p className="text-sm text-brand-muted mb-6">
@@ -390,7 +390,7 @@ export function GoodThingsClient() {
                   {[
                     { n: 1, color: '#7a2018', val: thing1, set: setThing1, label: t('gt.thing_1_label'), ph: t('gt.thing_1_ph') },
                     { n: 2, color: '#6a4e10', val: thing2, set: setThing2, label: t('gt.thing_2_label'), ph: t('gt.thing_2_ph') },
-                    { n: 3, color: '#1a3460', val: thing3, set: setThing3, label: t('gt.thing_3_label'), ph: t('gt.thing_3_ph') },
+                    { n: 3, color: '#1b5e8a', val: thing3, set: setThing3, label: t('gt.thing_3_label'), ph: t('gt.thing_3_ph') },
                   ].map(function (f) {
                     return (
                       <div key={f.n}>
@@ -520,7 +520,7 @@ export function GoodThingsClient() {
                   <div key={entry.id}
                     className="bg-white border border-brand-border p-4 relative overflow-hidden group hover:border-brand-text transition-all"
                    >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 bg-gradient-to-b from-[#7a2018] via-[#6a4e10] to-[#1a3460] transition-all" />
+                    <div className="absolute left-0 top-0 bottom-0 w-1 group-hover:w-1.5 bg-gradient-to-b from-[#7a2018] via-[#6a4e10] to-[#1b5e8a] transition-all" />
                     <div className="pl-3">
                       {[entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
                         return (

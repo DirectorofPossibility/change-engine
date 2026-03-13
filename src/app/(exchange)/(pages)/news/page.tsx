@@ -6,14 +6,6 @@ import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
 import Image from 'next/image'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'The News Stand — Change Engine',
@@ -127,23 +119,23 @@ export default async function NewsPage({
   }
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             The News Stand
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+          <p style={{ fontSize: '1.1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
             Articles, videos, guides, reports, and community content from across Houston.
           </p>
-          <p style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, marginTop: '0.5rem', fontStyle: 'italic' }}>{today}</p>
+          <p style={{ fontSize: '0.65rem', color: "#5c6474", marginTop: '0.5rem', fontStyle: 'italic' }}>{today}</p>
           <div className="flex justify-start mt-4">
             <div className="flex h-1 w-48 overflow-hidden">
               {Object.values(THEMES).map(function (theme) {
@@ -154,12 +146,12 @@ export default async function NewsPage({
           {items.length > 0 && (
             <div className="flex flex-wrap gap-8 mt-6">
               <div>
-                <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{items.length}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Items</span>
+                <span style={{ fontSize: '2rem',  }}>{items.length}</span>
+                <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Items</span>
               </div>
               <div>
-                <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{sections.length}</span>
-                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Sections</span>
+                <span style={{ fontSize: '2rem',  }}>{sections.length}</span>
+                <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Sections</span>
               </div>
             </div>
           )}
@@ -167,7 +159,7 @@ export default async function NewsPage({
       </div>
 
       {/* Filter bar */}
-      <div style={{ borderBottom: '1px solid ' + RULE_COLOR, background: PARCHMENT }} className="sticky top-0 z-20">
+      <div style={{ borderBottom: '1px solid #dde1e8', background: "#f4f5f7" }} className="sticky top-0 z-20">
         <div className="max-w-[900px] mx-auto px-6 py-3">
           <div className="flex flex-wrap items-center gap-2">
             {CONTENT_TYPES.map(function (ct) {
@@ -181,20 +173,19 @@ export default async function NewsPage({
                   href={href}
                   className="hover:opacity-80"
                   style={{
-                    fontFamily: MONO,
-                    fontSize: '0.65rem',
+                                        fontSize: '0.65rem',
                     textTransform: 'uppercase' as const,
                     letterSpacing: '0.05em',
                     padding: '4px 10px',
-                    color: active ? INK : MUTED,
-                    borderBottom: active ? '1px solid ' + INK : '1px solid transparent',
+                    color: active ? '#0d1117' : '#5c6474',
+                    borderBottom: active ? '1px solid ' + '#0d1117' : '1px solid transparent',
                   }}
                 >
                   {ct.label}
                 </Link>
               )
             })}
-            <span className="w-px h-4 mx-1" style={{ background: RULE_COLOR }} />
+            <span className="w-px h-4 mx-1" style={{ background: '#dde1e8' }} />
             {themeEntries.map(function ([id, theme]) {
               const active = pathway === id
               const href = '/news?pathway=' + id + (type ? '&type=' + type : '')
@@ -203,7 +194,7 @@ export default async function NewsPage({
                   key={id}
                   href={active ? '/news' + (type ? '?type=' + type : '') : href}
                   className="flex items-center gap-1.5 hover:opacity-80"
-                  style={{ fontFamily: MONO, fontSize: '0.65rem', color: active ? theme.color : MUTED }}
+                  style={{ fontSize: '0.65rem', color: active ? theme.color : '#5c6474' }}
                 >
                   <span className="w-2 h-2 flex-shrink-0" style={{ backgroundColor: theme.color, opacity: active ? 1 : 0.5 }} />
                   {active ? theme.name : ''}
@@ -211,7 +202,7 @@ export default async function NewsPage({
               )
             })}
             {pathway && (
-              <Link href={'/news' + (type ? '?type=' + type : '')} style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }} className="hover:underline ml-1">clear</Link>
+              <Link href={'/news' + (type ? '?type=' + type : '')} style={{ fontSize: '0.6875rem', color: "#5c6474" }} className="hover:underline ml-1">clear</Link>
             )}
           </div>
         </div>
@@ -219,8 +210,8 @@ export default async function NewsPage({
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>News Stand</span>
         </nav>
@@ -229,13 +220,13 @@ export default async function NewsPage({
       {/* Main content */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
         {items.length === 0 ? (
-          <div className="text-center py-16" style={{ border: '1px dashed ' + RULE_COLOR }}>
-            <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED }}>No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
+          <div className="text-center py-16" style={{ border: '1px dashed ' + '#dde1e8' }}>
+            <p style={{ fontSize: '1.1rem', color: "#5c6474" }}>No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
           </div>
         ) : (
           <>
             {/* Hero + Secondary */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8" style={{ borderBottom: '1px solid #dde1e8' }}>
               {hero && (
                 <Link href={'/content/' + hero.id} className="lg:col-span-7 group block">
                   {hasValidImage(hero) && (
@@ -245,30 +236,30 @@ export default async function NewsPage({
                   )}
                   <div className="flex items-center gap-2 mb-2">
                     {getTheme(hero) && (
-                      <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: getTheme(hero)!.color }}>
+                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: getTheme(hero)!.color }}>
                         {getTheme(hero)!.name}
                       </span>
                     )}
                     {hero.content_type && hero.content_type !== 'article' && (
-                      <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: MUTED }}>
+                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: "#5c6474" }}>
                         {hero.content_type}
                       </span>
                     )}
                     {isPastEvent(hero) && (
-                      <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: MUTED }}>Past</span>
+                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: "#5c6474" }}>Past</span>
                     )}
                   </div>
-                  <h2 className="group-hover:underline" style={{ fontFamily: SERIF, fontSize: '2rem', fontWeight: 700, color: INK, lineHeight: 1.2 }}>
+                  <h2 className="group-hover:underline" style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1.2 }}>
                     {hero.title_6th_grade}
                   </h2>
                   {hero.summary_6th_grade && (
-                    <p className="line-clamp-3 mt-3" style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, lineHeight: 1.6 }}>
+                    <p className="line-clamp-3 mt-3" style={{ fontSize: '1rem', color: "#5c6474", lineHeight: 1.6 }}>
                       {hero.summary_6th_grade}
                     </p>
                   )}
                   <div className="flex items-center gap-3 mt-3">
-                    {hero.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', fontWeight: 500, color: MUTED }}>{hero.source_domain}</span>}
-                    <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{formatDate(hero.published_at)}</span>
+                    {hero.source_domain && <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: "#5c6474" }}>{hero.source_domain}</span>}
+                    <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{formatDate(hero.published_at)}</span>
                   </div>
                 </Link>
               )}
@@ -277,26 +268,26 @@ export default async function NewsPage({
                 {secondary.map(function (item, idx) {
                   const theme = getTheme(item)
                   return (
-                    <Link key={item.id} href={'/content/' + item.id} className="group flex gap-4 py-4 hover:opacity-80" style={{ borderBottom: idx < secondary.length - 1 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                    <Link key={item.id} href={'/content/' + item.id} className="group flex gap-4 py-4 hover:opacity-80" style={{ borderBottom: idx < secondary.length - 1 ? '1px solid ' + '#dde1e8' : 'none' }}>
                       {hasValidImage(item) ? (
                         <Image src={item.image_url!} alt="" className="w-28 h-20 object-cover flex-shrink-0" width={112} height={80} />
                       ) : (
-                        <div className="w-28 h-20 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: PARCHMENT_WARM }}>
-                          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
+                        <div className="w-28 h-20 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f4f5f7' }}>
+                          <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
                         {theme && (
-                          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: theme.color }}>
+                          <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: theme.color }}>
                             {theme.name}
                           </span>
                         )}
-                        <h3 className="line-clamp-3 group-hover:underline" style={{ fontFamily: SERIF, fontSize: '1.05rem', fontWeight: 700, color: INK, lineHeight: 1.3 }}>
+                        <h3 className="line-clamp-3 group-hover:underline" style={{ fontSize: '1.05rem', fontWeight: 700, lineHeight: 1.3 }}>
                           {item.title_6th_grade}
                         </h3>
                         <div className="flex items-center gap-2 mt-1.5">
-                          {item.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{item.source_domain}</span>}
-                          <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{shortDate(item.published_at)}</span>
+                          {item.source_domain && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{item.source_domain}</span>}
+                          <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
                         </div>
                       </div>
                     </Link>
@@ -311,36 +302,36 @@ export default async function NewsPage({
                 return (
                   <section key={section.type} className="mb-10">
                     <div className="flex items-baseline justify-between mb-1">
-                      <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>
+                      <h2 style={{ fontSize: '1.5rem',  }}>
                         {section.label}
                       </h2>
-                      <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{section.items.length}</span>
+                      <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{section.items.length}</span>
                     </div>
-                    <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+                    <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
 
                     {section.items.slice(0, 4).map(function (item) {
                       const theme = getTheme(item)
                       return (
-                        <Link key={item.id} href={'/content/' + item.id} className="group flex items-start gap-4 py-3 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+                        <Link key={item.id} href={'/content/' + item.id} className="group flex items-start gap-4 py-3 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
                           {hasValidImage(item) ? (
                             <Image src={item.image_url!} alt="" className="w-20 h-14 object-cover flex-shrink-0" width={80} height={56} />
                           ) : (
-                            <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: PARCHMENT_WARM }}>
-                              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
+                            <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f4f5f7' }}>
+                              <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <h3 className="line-clamp-2 group-hover:underline" style={{ fontFamily: SERIF, fontSize: '0.95rem', fontWeight: 600, color: INK, lineHeight: 1.4 }}>
+                            <h3 className="line-clamp-2 group-hover:underline" style={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.4 }}>
                               {item.title_6th_grade}
                             </h3>
                             <div className="flex items-center gap-2 mt-1">
                               {theme && (
                                 <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />
                               )}
-                              {item.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{item.source_domain}</span>}
-                              <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{shortDate(item.published_at)}</span>
+                              {item.source_domain && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{item.source_domain}</span>}
+                              <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
                               {isPastEvent(item) && (
-                                <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
+                                <span style={{ fontSize: '0.6875rem', color: "#5c6474", fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
                               )}
                             </div>
                           </div>
@@ -349,30 +340,30 @@ export default async function NewsPage({
                     })}
                     {section.items.length > 4 && (
                       <details className="mt-2">
-                        <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                        <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
                           See {section.items.length - 4} more
                         </summary>
                         {section.items.slice(4).map(function (item) {
                           const theme = getTheme(item)
                           return (
-                            <Link key={item.id} href={'/content/' + item.id} className="group flex items-start gap-4 py-3 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+                            <Link key={item.id} href={'/content/' + item.id} className="group flex items-start gap-4 py-3 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
                               {hasValidImage(item) ? (
                                 <Image src={item.image_url!} alt="" className="w-20 h-14 object-cover flex-shrink-0" width={80} height={56} />
                               ) : (
-                                <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: PARCHMENT_WARM }}>
-                                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
+                                <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f4f5f7' }}>
+                                  <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                                 </div>
                               )}
                               <div className="flex-1 min-w-0">
-                                <h3 className="line-clamp-2 group-hover:underline" style={{ fontFamily: SERIF, fontSize: '0.95rem', fontWeight: 600, color: INK, lineHeight: 1.4 }}>
+                                <h3 className="line-clamp-2 group-hover:underline" style={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.4 }}>
                                   {item.title_6th_grade}
                                 </h3>
                                 <div className="flex items-center gap-2 mt-1">
                                   {theme && <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />}
-                                  {item.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{item.source_domain}</span>}
-                                  <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED }}>{shortDate(item.published_at)}</span>
+                                  {item.source_domain && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{item.source_domain}</span>}
+                                  <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
                                   {isPastEvent(item) && (
-                                    <span style={{ fontFamily: MONO, fontSize: '0.6875rem', color: MUTED, fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
+                                    <span style={{ fontSize: '0.6875rem', color: "#5c6474", fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
                                   )}
                                 </div>
                               </div>
@@ -390,9 +381,9 @@ export default async function NewsPage({
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to the Guide
         </Link>
       </div>

@@ -24,7 +24,7 @@ type Org = {
 }
 
 const ORG_TYPES: Array<{ label: string; color: string }> = [
-  { label: 'Community Partner', color: '#1a3460' },
+  { label: 'Community Partner', color: '#1b5e8a' },
   { label: 'Foundation/Grantmaker', color: '#4a2870' },
   { label: 'Government Agency', color: '#6a4e10' },
   { label: 'Educational Institution', color: '#1a5030' },
@@ -32,7 +32,7 @@ const ORG_TYPES: Array<{ label: string; color: string }> = [
   { label: 'Healthcare Provider', color: '#7a2018' },
   { label: 'Human Services', color: '#1e4d7a' },
   { label: 'Advocacy/Policy', color: '#C75B2A' },
-  { label: 'Arts, Culture & Humanities', color: '#1a3460' },
+  { label: 'Arts, Culture & Humanities', color: '#1b5e8a' },
   { label: 'Environmental', color: '#276749' },
   { label: 'Faith-Based', color: '#b7791f' },
 ]
@@ -136,7 +136,7 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                   </h3>
                   {org.is_verified === 'Yes' && (
                     <svg className="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 20 20" fill="none">
-                      <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#1a3460" />
+                      <path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" fill="#1b5e8a" />
                       <path d="M7 10l2 2 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
@@ -148,8 +148,8 @@ export function OrganizationsClient({ organizations }: { organizations: Org[] })
                 )}
                 <div className="flex items-center gap-2 mt-1 text-[10px] text-brand-muted-light">
                   {org.org_type === 'Community Partner' ? (
-                    <span className="inline-flex items-center gap-1 font-semibold" style={{ color: '#1a3460' }}>
-                      <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="#1a3460"><path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" /></svg>
+                    <span className="inline-flex items-center gap-1 font-semibold" style={{ color: '#1b5e8a' }}>
+                      <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="#1b5e8a"><path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" /></svg>
                       Community Partner
                     </span>
                   ) : org.org_type ? (

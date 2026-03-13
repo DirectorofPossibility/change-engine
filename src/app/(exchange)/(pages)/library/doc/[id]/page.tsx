@@ -23,16 +23,8 @@ import { ArticleVoting } from './ArticleVoting'
 
 // ── Design tokens (locked — matches CommunityGuide.tsx) ─────────────────
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const PARCHMENT_LIGHT = '#F8F4EC'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const PARCHMENT_LIGHT = '#f4f5f7'
 
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -65,7 +57,7 @@ export default async function DocumentDetailPage(
     })
     .filter(Boolean) as { id: string; color: string; name: string; slug: string }[]
 
-  const primaryTheme = themeInfo[0] || { id: '', color: CLAY, name: 'Research', slug: '' }
+  const primaryTheme = themeInfo[0] || { id: '', color: "#1b5e8a", name: 'Research', slug: '' }
   const fileSizeMB = (doc.file_size / (1024 * 1024)).toFixed(1)
   const pdfUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kb-documents/${doc.file_path}`
 
@@ -75,7 +67,7 @@ export default async function DocumentDetailPage(
       {/* ═══════════════════════════════════════════════════════════════════
           HERO — Parchment banner with document title
           ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT }}>
+      <section className="relative overflow-hidden bg-paper">
         {/* Sacred geometry watermark */}
         <div className="absolute inset-0 flex items-center justify-end pointer-events-none" aria-hidden="true">
           <Image
@@ -93,17 +85,17 @@ export default async function DocumentDetailPage(
         <div className="relative z-10 max-w-[820px] mx-auto px-6 py-14 md:py-20">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb">
-            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              <Link href="/exchange" className="hover:underline" style={{ color: MUTED }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <Link href="/exchange" className="hover:underline" style={{ color: "#5c6474" }}>
                 The Exchange
               </Link>
-              <span style={{ color: MUTED }}> / </span>
-              <Link href="/library" className="hover:underline" style={{ color: MUTED }}>
+              <span style={{ color: "#5c6474" }}> / </span>
+              <Link href="/library" className="hover:underline" style={{ color: "#5c6474" }}>
                 Library
               </Link>
               {primaryTheme.slug && (
                 <>
-                  <span style={{ color: MUTED }}> / </span>
+                  <span style={{ color: "#5c6474" }}> / </span>
                   <Link href={'/library/category/' + primaryTheme.slug} className="hover:underline" style={{ color: primaryTheme.color }}>
                     {primaryTheme.name}
                   </Link>
@@ -115,7 +107,7 @@ export default async function DocumentDetailPage(
           {/* Document type label */}
           <p
             className="mt-8"
-            style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase' }}
+            style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}
           >
             Research Document
           </p>
@@ -129,7 +121,7 @@ export default async function DocumentDetailPage(
                     key={theme.id}
                     href={'/library/category/' + theme.slug}
                     className="inline-flex items-center gap-1.5 hover:underline"
-                    style={{ fontFamily: MONO, fontSize: 11, color: theme.color }}
+                    style={{ fontSize: 11, color: theme.color }}
                   >
                     <span className="w-2 h-2 flex-shrink-0" style={{ background: theme.color }} />
                     {theme.name}
@@ -143,10 +135,8 @@ export default async function DocumentDetailPage(
           <h1
             className="mt-5"
             style={{
-              fontFamily: SERIF,
-              fontSize: 'clamp(26px, 4.5vw, 44px)',
-              color: INK,
-              lineHeight: 1.15,
+                            fontSize: 'clamp(26px, 4.5vw, 44px)',
+                            lineHeight: 1.15,
               fontWeight: 'normal',
             }}
           >
@@ -158,9 +148,8 @@ export default async function DocumentDetailPage(
             <p
               className="mt-5"
               style={{
-                fontFamily: SERIF,
-                fontSize: 'clamp(15px, 2vw, 18px)',
-                color: MUTED,
+                                fontSize: 'clamp(15px, 2vw, 18px)',
+                color: "#5c6474",
                 lineHeight: 1.7,
               }}
             >
@@ -169,19 +158,19 @@ export default async function DocumentDetailPage(
           )}
 
           {/* Metadata strip */}
-          <div className="mt-8 flex items-center gap-4 flex-wrap" style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+          <div className="mt-8 flex items-center gap-4 flex-wrap" style={{ fontSize: 12, color: "#5c6474" }}>
             {doc.page_count > 0 && (
               <span>{doc.page_count} pages</span>
             )}
             {doc.file_size > 0 && (
               <>
-                <span style={{ color: RULE_COLOR }}>|</span>
+                <span style={{ color: '#dde1e8' }}>|</span>
                 <span>{fileSizeMB} MB</span>
               </>
             )}
             {doc.published_at && (
               <>
-                <span style={{ color: RULE_COLOR }}>|</span>
+                <span style={{ color: '#dde1e8' }}>|</span>
                 <span>{new Date(doc.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
               </>
             )}
@@ -195,20 +184,18 @@ export default async function DocumentDetailPage(
       {/* ═══════════════════════════════════════════════════════════════════
           ACTIONS — PDF download + Ask AI
           ═══════════════════════════════════════════════════════════════ */}
-      <section style={{ background: PARCHMENT_WARM, borderBottom: `1px solid ${RULE_COLOR}` }}>
+      <section style={{ background: "#f4f5f7", borderBottom: `1px solid ${'#dde1e8'}` }}>
         <div className="max-w-[820px] mx-auto px-6 py-6">
           <div className="flex flex-col sm:flex-row gap-3">
             <a
               href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 transition-all bg-white border border-[rgba(196,102,58,0.3)] hover:border-[#C4663A]"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 transition-all bg-white border border-[#dde1e8] hover:border-[#1b5e8a]"
               style={{
-                fontFamily: MONO,
-                fontSize: 13,
+                                fontSize: 13,
                 letterSpacing: '0.04em',
-                color: INK,
-              }}
+                              }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -220,10 +207,9 @@ export default async function DocumentDetailPage(
 
             <Link
               href={'/library/chat?doc=' + doc.id}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 text-white transition-all bg-[#C4663A] hover:bg-[#a8522e]"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 text-white transition-all bg-[#1b5e8a] hover:bg-[#a8522e]"
               style={{
-                fontFamily: MONO,
-                fontSize: 13,
+                                fontSize: 13,
                 letterSpacing: '0.04em',
               }}
             >
@@ -242,7 +228,7 @@ export default async function DocumentDetailPage(
       {doc.key_points.length > 0 && (
         <section style={{ background: '#ffffff' }}>
           <div className="max-w-[820px] mx-auto px-6 py-14">
-            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase', marginBottom: 24 }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 24 }}>
               Key Takeaways
             </p>
 
@@ -252,14 +238,13 @@ export default async function DocumentDetailPage(
                   <div
                     key={i}
                     className="flex items-start gap-5 py-5"
-                    style={{ borderBottom: i < doc.key_points.length - 1 ? `1px solid ${RULE_COLOR}` : 'none' }}
+                    style={{ borderBottom: i < doc.key_points.length - 1 ? `1px solid ${'#dde1e8'}` : 'none' }}
                   >
                     {/* Number */}
                     <span
                       className="flex-shrink-0 w-8 h-8 flex items-center justify-center"
                       style={{
-                        fontFamily: SERIF,
-                        fontSize: 18,
+                                                fontSize: 18,
                         fontWeight: 'bold',
                         color: primaryTheme.color,
                         border: `2px solid ${primaryTheme.color}`,
@@ -269,7 +254,7 @@ export default async function DocumentDetailPage(
                     </span>
 
                     {/* Point text */}
-                    <p style={{ fontFamily: SERIF, fontSize: 16, color: INK, lineHeight: 1.7 }}>
+                    <p style={{ fontSize: 16, lineHeight: 1.7 }}>
                       {point}
                     </p>
                   </div>
@@ -284,24 +269,23 @@ export default async function DocumentDetailPage(
           TAGS — Compact keyword strip
           ═══════════════════════════════════════════════════════════════ */}
       {doc.tags.length > 0 && (
-        <section style={{ background: PARCHMENT_LIGHT, borderTop: `1px solid ${RULE_COLOR}`, borderBottom: `1px solid ${RULE_COLOR}` }}>
+        <section style={{ background: '#f4f5f7', borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
           <div className="max-w-[820px] mx-auto px-6 py-6">
             <div className="flex items-center gap-3 flex-wrap">
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase' }}>
+              <span style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase' }}>
                 Keywords
               </span>
-              <span style={{ color: RULE_COLOR }}>|</span>
+              <span style={{ color: '#dde1e8' }}>|</span>
               {doc.tags.map(function (tag) {
                 return (
                   <span
                     key={tag}
                     className="px-2.5 py-1"
                     style={{
-                      fontFamily: MONO,
-                      fontSize: 11,
-                      color: MUTED,
+                                            fontSize: 11,
+                      color: "#5c6474",
                       background: '#ffffff',
-                      border: `1px solid ${RULE_COLOR}`,
+                      border: '1px solid #dde1e8',
                     }}
                   >
                     {tag}
@@ -326,12 +310,12 @@ export default async function DocumentDetailPage(
           RELATED RESEARCH — Editorial card grid
           ═══════════════════════════════════════════════════════════════ */}
       {related.length > 0 && (
-        <section style={{ background: PARCHMENT, borderTop: `1px solid ${RULE_COLOR}` }}>
+        <section style={{ background: "#f4f5f7", borderTop: `1px solid ${'#dde1e8'}` }}>
           <div className="max-w-[1000px] mx-auto px-6 py-14">
-            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase', marginBottom: 8 }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 8 }}>
               Related Research
             </p>
-            <p style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: MUTED, marginBottom: 24 }}>
+            <p style={{ fontSize: 14, fontStyle: 'italic', color: "#5c6474", marginBottom: 24 }}>
               More from the library on similar topics
             </p>
 
@@ -348,14 +332,14 @@ export default async function DocumentDetailPage(
                   <Link
                     key={rel.id}
                     href={'/library/doc/' + rel.id}
-                    className="group block p-6 transition-all bg-white border border-[rgba(196,102,58,0.3)] hover:border-[#C4663A]"
+                    className="group block p-6 transition-all bg-white border border-[#dde1e8] hover:border-[#1b5e8a]"
                   >
                     {/* Theme indicators */}
                     {relThemes.length > 0 && (
                       <div className="flex items-center gap-3 mb-3">
                         {relThemes.slice(0, 3).map(function (t) {
                           return (
-                            <span key={t.name} className="inline-flex items-center gap-1" style={{ fontFamily: MONO, fontSize: 10, color: t.color }}>
+                            <span key={t.name} className="inline-flex items-center gap-1" style={{ fontSize: 10, color: t.color }}>
                               <span className="w-1.5 h-1.5" style={{ background: t.color }} />
                               {t.name}
                             </span>
@@ -366,22 +350,22 @@ export default async function DocumentDetailPage(
 
                     <h3
                       className="group-hover:underline line-clamp-2"
-                      style={{ fontFamily: SERIF, fontSize: 17, color: INK, lineHeight: 1.3, marginBottom: 8 }}
+                      style={{ fontSize: 17, lineHeight: 1.3, marginBottom: 8 }}
                     >
                       {rel.title}
                     </h3>
 
                     {rel.summary && (
-                      <p className="line-clamp-2" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED, lineHeight: 1.6 }}>
+                      <p className="line-clamp-2" style={{ fontSize: 14, color: "#5c6474", lineHeight: 1.6 }}>
                         {rel.summary}
                       </p>
                     )}
 
-                    <div className="mt-4 flex items-center gap-3" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                    <div className="mt-4 flex items-center gap-3" style={{ fontSize: 11, color: "#5c6474" }}>
                       {rel.page_count > 0 && <span>{rel.page_count} pages</span>}
                       {rel.tags.length > 0 && (
                         <>
-                          <span style={{ color: RULE_COLOR }}>|</span>
+                          <span style={{ color: '#dde1e8' }}>|</span>
                           <span>{rel.tags.slice(0, 2).join(', ')}</span>
                         </>
                       )}
@@ -395,7 +379,7 @@ export default async function DocumentDetailPage(
               <Link
                 href="/library"
                 className="hover:underline"
-                style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
               >
                 Browse the full library &rarr;
               </Link>
@@ -407,11 +391,11 @@ export default async function DocumentDetailPage(
       {/* ═══════════════════════════════════════════════════════════════════
           FOOTER CODA
           ═══════════════════════════════════════════════════════════════ */}
-      <div className="text-center py-10" style={{ background: PARCHMENT_WARM }}>
+      <div className="text-center py-10 bg-paper">
         <Link
           href="/exchange"
           className="hover:underline"
-          style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+          style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
         >
           &larr; Back to The Community Exchange
         </Link>

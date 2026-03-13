@@ -16,7 +16,7 @@ const CAT_COLORS: Record<string, string> = {
   Housing: '#6a4e10',
   Money: '#4a2870',
   Healthcare: '#1a6b56',
-  Legal: '#1a3460',
+  Legal: '#1b5e8a',
   Jobs: '#1e4d7a',
   Education: '#1a5030',
   Family: '#d53f8c',

@@ -41,14 +41,6 @@ function sanitizeHtml(html: string): string {
 
 export const dynamic = 'force-dynamic'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 interface GuideSection {
   id: string
@@ -122,23 +114,23 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
   ])
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <ReadingProgressBar />
 
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             {guideTitle}
           </h1>
           {guideDescription && (
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {guideDescription}
             </p>
           )}
@@ -146,7 +138,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           <div className="flex items-center gap-3 mt-4 flex-wrap">
             {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
             {guide.engagement_level && (
-              <span className={'px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{ fontFamily: MONO, fontSize: '0.7rem' }}>
+              <span className={'px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{ fontSize: '0.7rem' }}>
                 {guide.engagement_level}
               </span>
             )}
@@ -156,7 +148,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:underline"
-                style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY }}
+                style={{ fontSize: '0.7rem', color: "#1b5e8a" }}
               >
                 <ExternalLink size={12} />
                 {t('guides.original_source')}
@@ -183,10 +175,10 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/guides" className="hover:underline" style={{ color: CLAY }}>{t('guides.title')}</Link>
+          <Link href="/guides" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('guides.title')}</Link>
           <span className="mx-2">/</span>
           <span>{guideTitle}</span>
         </nav>
@@ -202,12 +194,12 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           <div className="space-y-8 mt-8">
             {sections.map(function (section) {
               return (
-                <section key={section.id} id={'section-' + section.id} className="scroll-mt-16" style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '2rem' }}>
-                  <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, marginBottom: '0.75rem' }}>
+                <section key={section.id} id={'section-' + section.id} className="scroll-mt-16" style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '2rem' }}>
+                  <h2 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>
                     {section.title}
                   </h2>
                   <div
-                    style={{ color: INK, fontFamily: SERIF, fontSize: '0.95rem', lineHeight: 1.85 }}
+                    style={{ fontSize: '0.95rem', lineHeight: 1.85 }}
                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(section.content) }}
                   />
                 </section>
@@ -219,20 +211,20 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
         {/* content_html */}
         {guide.content_html && (
           <div
-            style={{ color: INK, fontFamily: SERIF, fontSize: '0.95rem', lineHeight: 1.85, marginTop: '2rem' }}
+            style={{ fontSize: '0.95rem', lineHeight: 1.85, marginTop: '2rem' }}
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(guide.content_html) }}
           />
         )}
 
         {/* Sidebar Content Inlined */}
-        <div style={{ borderTop: '1px dotted ' + RULE_COLOR, marginTop: '2rem', paddingTop: '2rem' }}>
+        <div style={{ borderTop: '1px dotted ' + '#dde1e8', marginTop: '2rem', paddingTop: '2rem' }}>
           {/* Focus areas */}
           {focusAreas.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }}>{t('guides.focus_areas')}</h3>
+                <h3 style={{ fontSize: '1.25rem',  }}>{t('guides.focus_areas')}</h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <FocusAreaPills focusAreas={focusAreas} />
             </section>
           )}
@@ -241,9 +233,9 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {sdgIds.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }}>{t('guides.global_goals')}</h3>
+                <h3 style={{ fontSize: '1.25rem',  }}>{t('guides.global_goals')}</h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <div className="flex flex-wrap gap-1.5">
                 {sdgIds.map(function (sdg) {
                   const info = sdgMap[sdg]
@@ -266,9 +258,9 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {sdohCodes.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }}>{t('guides.social_determinants')}</h3>
+                <h3 style={{ fontSize: '1.25rem',  }}>{t('guides.social_determinants')}</h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <div className="flex flex-wrap gap-1.5">
                 {sdohCodes.map(function (code) {
                   const info = sdohMap[code]
@@ -291,12 +283,12 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {relatedOrgs.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }} className="flex items-center gap-1.5">
-                  <Building2 size={16} style={{ color: MUTED }} />
+                <h3 style={{ fontSize: '1.25rem',  }} className="flex items-center gap-1.5">
+                  <Building2 size={16} style={{ color: "#5c6474" }} />
                   {t('guides.related_orgs')}
                 </h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <div className="space-y-3">
                 {relatedOrgs.map(function (org) {
                   return (
@@ -316,11 +308,11 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                           />
                         )}
                         <div className="min-w-0">
-                          <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK, fontWeight: 500 }} className="group-hover:underline line-clamp-1">
+                          <span style={{ fontSize: '0.9rem', fontWeight: 500 }} className="group-hover:underline line-clamp-1">
                             {org.org_name}
                           </span>
                           {org.description_5th_grade && (
-                            <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, marginTop: '0.15rem' }} className="line-clamp-2">{org.description_5th_grade}</p>
+                            <p style={{ fontSize: '0.8rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-2">{org.description_5th_grade}</p>
                           )}
                         </div>
                       </div>
@@ -335,19 +327,19 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {opportunities.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }} className="flex items-center gap-1.5">
-                  <Newspaper size={16} style={{ color: MUTED }} />
+                <h3 style={{ fontSize: '1.25rem',  }} className="flex items-center gap-1.5">
+                  <Newspaper size={16} style={{ color: "#5c6474" }} />
                   {t('guides.opportunities')}
                 </h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <div className="space-y-2">
                 {opportunities.slice(0, 5).map(function (opp: any) {
                   return (
-                    <div key={opp.opportunity_id} style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '0.5rem' }}>
-                      <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 500, color: INK }} className="line-clamp-2">{opp.opportunity_name}</p>
+                    <div key={opp.opportunity_id} style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '0.5rem' }}>
+                      <p style={{ fontSize: '0.9rem', fontWeight: 500,  }} className="line-clamp-2">{opp.opportunity_name}</p>
                       {opp.description_5th_grade && (
-                        <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, marginTop: '0.15rem' }} className="line-clamp-1">{opp.description_5th_grade}</p>
+                        <p style={{ fontSize: '0.8rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-1">{opp.description_5th_grade}</p>
                       )}
                       {opp.registration_url && (
                         <a
@@ -355,7 +347,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:underline mt-0.5 inline-block"
-                          style={{ fontFamily: SERIF, fontSize: '0.8rem', color: CLAY }}
+                          style={{ fontSize: '0.8rem', color: "#1b5e8a" }}
                         >
                           {t('guides.learn_more')} &rarr;
                         </a>
@@ -371,27 +363,27 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {policies.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }} className="flex items-center gap-1.5">
-                  <Scale size={16} style={{ color: MUTED }} />
+                <h3 style={{ fontSize: '1.25rem',  }} className="flex items-center gap-1.5">
+                  <Scale size={16} style={{ color: "#5c6474" }} />
                   {t('guides.related_policies')}
                 </h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <ul className="space-y-2">
                 {policies.slice(0, 5).map(function (pol: any) {
                   return (
-                    <li key={pol.policy_id} style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '0.5rem' }}>
+                    <li key={pol.policy_id} style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '0.5rem' }}>
                       <Link href={'/policies/' + pol.policy_id} className="group">
-                        <span style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 500, color: INK }} className="group-hover:underline line-clamp-2">
+                        <span style={{ fontSize: '0.9rem', fontWeight: 500,  }} className="group-hover:underline line-clamp-2">
                           {pol.policy_name}
                         </span>
                       </Link>
                       <div className="flex items-center gap-2 mt-0.5">
                         {pol.bill_number && (
-                          <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{pol.bill_number}</span>
+                          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{pol.bill_number}</span>
                         )}
                         {pol.status && (
-                          <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{pol.status}</span>
+                          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{pol.status}</span>
                         )}
                       </div>
                     </li>
@@ -405,12 +397,12 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {relatedContent.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }} className="flex items-center gap-1.5">
-                  <FileText size={16} style={{ color: MUTED }} />
+                <h3 style={{ fontSize: '1.25rem',  }} className="flex items-center gap-1.5">
+                  <FileText size={16} style={{ color: "#5c6474" }} />
                   {t('guides.related_articles')}
                 </h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <div className="space-y-3">
                 {relatedContent.map(function (item: any) {
                   const itemId = item.inbox_id || item.id
@@ -433,11 +425,11 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                           />
                         )}
                         <div className="min-w-0">
-                          <span style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 500, color: INK }} className="group-hover:underline line-clamp-2">
+                          <span style={{ fontSize: '0.9rem', fontWeight: 500,  }} className="group-hover:underline line-clamp-2">
                             {itemTitle}
                           </span>
                           {itemSummary && (
-                            <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, marginTop: '0.15rem' }} className="line-clamp-1">{itemSummary}</p>
+                            <p style={{ fontSize: '0.8rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-1">{itemSummary}</p>
                           )}
                         </div>
                       </div>
@@ -452,9 +444,9 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           {focusAreas.length > 0 && (
             <section className="mb-8">
               <div className="flex items-baseline justify-between mb-1">
-                <h3 style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK }}>{t('guides.knowledge_map')}</h3>
+                <h3 style={{ fontSize: '1.25rem',  }}>{t('guides.knowledge_map')}</h3>
               </div>
-              <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+              <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
               <GuideMiniGraph
                 guideTitle={guideTitle}
                 focusAreas={focusAreas.map(fa => ({
@@ -475,9 +467,9 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/guides" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/guides" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Guides
         </Link>
       </div>

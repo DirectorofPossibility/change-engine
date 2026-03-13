@@ -25,13 +25,6 @@ import { PersonaSelector } from '@/components/exchange/PersonaSelector'
 
 export const revalidate = 600
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Your Guide to What\'s Going On — Change Engine',
@@ -66,38 +59,29 @@ export default async function GuidePageServer() {
   ])
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-ink">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.06]" />
         </div>
-        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+        <div className="relative z-10 max-w-[1080px] mx-auto px-6 py-16 text-center">
+          <p className="font-mono text-xs uppercase tracking-widest mb-4 text-faint">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
-            Your guide to what's going on.
+          <h1 className="font-display text-4xl sm:text-5xl font-black mb-4 text-white tracking-tight">
+            Your guide to what&apos;s going on.
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+          <p className="font-body text-lg max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Curated. Local. Updated daily.
           </p>
-          <p style={{ color: MUTED }} className="text-sm max-w-lg mx-auto mt-4 leading-relaxed">
+          <p className="text-sm max-w-lg mx-auto mt-4 leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
             News. Analysis. Community stories. Explainers about how Houston works. Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you. Pick your perspective below.
           </p>
         </div>
       </section>
 
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
-          <Link href="/" className="hover:underline">Home</Link>
-          <span className="mx-2">/</span>
-          <span style={{ color: INK }}>Guide</span>
-        </nav>
-      </div>
-
-      <div className="max-w-[900px] mx-auto px-6 py-8">
+      <div className="max-w-[1080px] mx-auto px-6 py-8">
         <PersonaSelector />
       </div>
 

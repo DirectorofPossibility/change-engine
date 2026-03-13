@@ -60,7 +60,7 @@ function ProgressRing({ completed, total }: { completed: number; total: number }
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-[#1A1A1A]">{completed}</span>
+        <span className="text-2xl font-bold text-[#0d1117]">{completed}</span>
         <span className="text-xs text-[#6C7380]">of {total}</span>
       </div>
     </div>
@@ -105,7 +105,7 @@ export default function CivicScorecard() {
             ) : (
               <Award className="h-5 w-5 text-[#E8723A]" />
             )}
-            <h2 className="font-display text-xl font-semibold text-[#1A1A1A]">
+            <h2 className="font-display text-xl font-semibold text-[#0d1117]">
               Civic Scorecard
             </h2>
           </div>
@@ -123,7 +123,7 @@ export default function CivicScorecard() {
               <div className="flex items-start gap-3 px-3 py-2.5 bg-green-50/60">
                 <CheckCircle2 className="h-5 w-5 text-[#2D8659] mt-0.5 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm font-medium text-[#1A1A1A]">
+                  <span className="text-sm font-medium text-[#0d1117]">
                     {item.label}
                   </span>
                   {item.completedAt && (
@@ -140,7 +140,7 @@ export default function CivicScorecard() {
               >
                 <Circle className="h-5 w-5 text-[#E5E1DB] group-hover:text-[#E8723A] mt-0.5 flex-shrink-0 transition-colors" />
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm text-[#6C7380] group-hover:text-[#1A1A1A] transition-colors">
+                  <span className="text-sm text-[#6C7380] group-hover:text-[#0d1117] transition-colors">
                     {item.label}
                   </span>
                   <span className="ml-2 text-xs text-[#E8723A] opacity-0 group-hover:opacity-100 transition-opacity">

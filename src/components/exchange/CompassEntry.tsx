@@ -105,7 +105,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                 {/* Center name */}
                 <h3
                   className="font-display text-xl font-bold mb-2 transition-colors"
-                  style={{ color: isHovered ? color : '#1A1A1A' }}
+                  style={{ color: isHovered ? color : '#0d1117' }}
                 >
                   {key} Center
                 </h3>

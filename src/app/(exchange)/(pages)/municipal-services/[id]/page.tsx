@@ -8,14 +8,6 @@ import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -41,25 +33,25 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
   const wayfinderData = await getWayfinderContext('municipal_service' as any, s.service_id, userProfile?.role)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: CLAY, display: 'block', marginTop: '0.75rem' }}>City Service</span>
+          <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a", display: 'block', marginTop: '0.75rem' }}>City Service</span>
           {s.department && (
-            <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, display: 'block', marginTop: '0.25rem' }}>{s.department}</span>
+            <span style={{ fontSize: '0.65rem', color: "#5c6474", display: 'block', marginTop: '0.25rem' }}>{s.department}</span>
           )}
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.5rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
             {s.service_name}
           </h1>
           {s.description_5th_grade && (
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {s.description_5th_grade}
             </p>
           )}
@@ -68,10 +60,10 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/municipal-services" className="hover:underline" style={{ color: CLAY }}>City Services</Link>
+          <Link href="/municipal-services" className="hover:underline" style={{ color: "#1b5e8a" }}>City Services</Link>
           <span className="mx-2">/</span>
           <span>{s.service_name}</span>
         </nav>
@@ -84,33 +76,33 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
         {(s.phone || s.website || s.address) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Contact</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>Contact</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="space-y-3">
               {s.phone && (
-                <div style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>
-                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Phone: </span>
-                  <a href={`tel:${s.phone}`} style={{ color: CLAY }} className="hover:underline">{s.phone}</a>
+                <div style={{ fontSize: '0.9rem' }}>
+                  <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Phone: </span>
+                  <a href={`tel:${s.phone}`} style={{ color: "#1b5e8a" }} className="hover:underline">{s.phone}</a>
                 </div>
               )}
               {s.website && (
-                <div style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>
-                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Web: </span>
-                  <a href={s.website} target="_blank" rel="noopener noreferrer" style={{ color: CLAY }} className="hover:underline truncate">
+                <div style={{ fontSize: '0.9rem' }}>
+                  <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Web: </span>
+                  <a href={s.website} target="_blank" rel="noopener noreferrer" style={{ color: "#1b5e8a" }} className="hover:underline truncate">
                     {s.website.replace(/^https?:\/\//, '')}
                   </a>
                 </div>
               )}
               {s.address && (
-                <div style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>
-                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Address: </span>
-                  <span style={{ color: INK }}>{s.address}</span>
+                <div style={{ fontSize: '0.9rem' }}>
+                  <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Address: </span>
+                  <span style={{  }}>{s.address}</span>
                 </div>
               )}
               {s.agency_id && (
-                <div className="pt-2 mt-2" style={{ borderTop: '1px solid ' + RULE_COLOR }}>
-                  <Link href={`/agencies/${s.agency_id}`} style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }} className="hover:underline">
+                <div className="pt-2 mt-2" style={{ borderTop: '1px solid #dde1e8' }}>
+                  <Link href={`/agencies/${s.agency_id}`} style={{ fontSize: '0.9rem', color: "#1b5e8a" }} className="hover:underline">
                     View parent agency
                   </Link>
                 </div>
@@ -123,18 +115,18 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
         {s.description && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>About This Service</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>About This Service</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, lineHeight: 1.85 }}>{s.description}</p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>{s.description}</p>
           </section>
         )}
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/municipal-services" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/municipal-services" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to City Services
         </Link>
       </div>

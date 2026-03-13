@@ -81,7 +81,7 @@ const ENTITY_TYPES = [
   { key: 'organizations', label: 'Organizations', icon: Building2, color: '#C75B2A' },
   { key: 'services', label: 'Services', icon: Heart, color: '#7a2018' },
   { key: 'officials', label: 'Officials', icon: Landmark, color: '#6a4e10' },
-  { key: 'voting', label: 'Voting', icon: Vote, color: '#1a3460' },
+  { key: 'voting', label: 'Voting', icon: Vote, color: '#1b5e8a' },
 ]
 
 export function GeographyClient({

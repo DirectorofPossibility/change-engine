@@ -22,7 +22,7 @@ interface Props {
   focusEntry?: Entry | null
 }
 
-const MARKER_COLORS = ['#7a2018', '#6a4e10', '#1a3460', '#C75B2A', '#4a2870', '#1a6b56', '#1a5030']
+const MARKER_COLORS = ['#7a2018', '#6a4e10', '#1b5e8a', '#C75B2A', '#4a2870', '#1a6b56', '#1a5030']
 
 // Popup uses small inline FOL icons for each "thing"
 function folSvg(color: string, size: number) {
@@ -145,7 +145,7 @@ function buildPopupHtml(entry: Entry) {
       [entry.thing_1, entry.thing_2, entry.thing_3].map(function (thing, i) {
         return '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:flex-start;">' +
           folSvg(MARKER_COLORS[i], 16) +
-          '<span style="font-size:13px;color:#1A1A1A;line-height:1.4;">' + thing + '</span>' +
+          '<span style="font-size:13px;color:#0d1117;line-height:1.4;">' + thing + '</span>' +
         '</div>'
       }).join('') +
     '</div>'

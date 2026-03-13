@@ -588,7 +588,7 @@ export function GoldenSpiral({
 // ════════════════════════════════════════════════════════════
 
 export function MetatronCube({
-  color = '#1a3460',
+  color = '#1b5e8a',
   size = 240,
   opacity = 1,
   animated = false,

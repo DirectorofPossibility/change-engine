@@ -27,7 +27,7 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
   const levelColor = (level && LEVEL_COLORS[level]) || DEFAULT_LEVEL_COLOR
 
   const cardContent = (
-    <div className="bg-white overflow-hidden hover:border-ink transition-colors group" style={{ border: '1px solid rgba(196,102,58,0.3)' }}>
+    <div className="bg-white overflow-hidden hover:border-ink transition-colors group" style={{ border: '1px solid #dde1e8' }}>
       {/* Level color bar */}
       <div className="h-1 transition-all group-hover:h-1.5" style={{ backgroundColor: levelColor }} />
 
@@ -50,8 +50,8 @@ export function OfficialCard({ id, name, title, party, level, email, phone, webs
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="group-hover:underline" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#1A1A1A' }}>{name}</h3>
-          {displayTitle && <p className="line-clamp-2 mt-0.5" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#7a7265' }}>{displayTitle}</p>}
+          <h3 className="group-hover:underline" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.95rem', lineHeight: 1.35, fontWeight: 600, color: '#0d1117' }}>{name}</h3>
+          {displayTitle && <p className="line-clamp-2 mt-0.5" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '0.8rem', lineHeight: 1.5, color: '#5c6474' }}>{displayTitle}</p>}
           <div className="flex items-center gap-1.5 mt-2 text-xs">
             {level && (
               <span className="inline-flex items-center gap-1 font-bold uppercase tracking-wide" style={{ color: levelColor }}>

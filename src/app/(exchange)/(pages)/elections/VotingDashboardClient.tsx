@@ -14,14 +14,6 @@ import { ElectionTimeline } from '@/components/exchange/ElectionTimeline'
 import { MyBallot } from '@/components/exchange/MyBallot'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 interface VotingDashboardClientProps {
   pastElections: any[]
@@ -158,7 +150,7 @@ export function VotingDashboardClient({
           {/* Upcoming ballot items */}
           {upcomingBallotItems.length > 0 && (
             <div className="mt-8">
-              <p className="mb-4" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+              <p className="mb-4" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase' }}>
                 Propositions on the Ballot
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -184,7 +176,7 @@ export function VotingDashboardClient({
           {/* Other upcoming elections */}
           {upcomingElections.length > 1 && (
             <div className="mt-8">
-              <p className="mb-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+              <p className="mb-3" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase' }}>
                 Also on the calendar
               </p>
               <div className="space-y-3">
@@ -193,19 +185,19 @@ export function VotingDashboardClient({
                     <Link
                       key={election.election_id}
                       href={'/elections/' + election.election_id}
-                      className="block p-4 hover:bg-[#EDE7D8] transition-colors"
-                      style={{ border: '1px solid ' + RULE_COLOR }}
+                      className="block p-4 hover:bg-[#f4f5f7] transition-colors"
+                      style={{ border: '1px solid #dde1e8' }}
                     >
                       <div className="flex items-baseline justify-between gap-4">
-                        <p style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>
+                        <p style={{ fontSize: 16,  }}>
                           {election.election_name}
                         </p>
-                        <p style={{ fontFamily: MONO, fontSize: 12, color: MUTED, whiteSpace: 'nowrap' }}>
+                        <p style={{ fontSize: 12, color: "#5c6474", whiteSpace: 'nowrap' }}>
                           {election.election_date && new Date(election.election_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                         </p>
                       </div>
                       {election.election_type && (
-                        <p className="mt-1" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+                        <p className="mt-1" style={{ fontSize: 10, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase' }}>
                           {election.election_type}
                         </p>
                       )}
@@ -218,12 +210,12 @@ export function VotingDashboardClient({
 
           {/* Registration + vote-by-mail CTAs */}
           {nextElection.registration_deadline && (
-            <div className="mt-8 p-6" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
-              <p style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>
+            <div className="mt-8 p-6" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
+              <p style={{ fontSize: 16,  }}>
                 Registration deadline:{' '}
                 <strong>{new Date(nextElection.registration_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</strong>
               </p>
-              <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+              <p className="mt-1" style={{ fontSize: 14, color: "#5c6474" }}>
                 Make sure you're ready to vote.
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
@@ -232,7 +224,7 @@ export function VotingDashboardClient({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-5 py-2.5 text-white transition-opacity hover:opacity-90"
-                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
+                  style={{ fontSize: 12, letterSpacing: '0.04em', background: '#1b5e8a' }}
                 >
                   Check Your Registration
                 </a>
@@ -240,8 +232,8 @@ export function VotingDashboardClient({
                   href="https://www.votetexas.gov/voting/vote-by-mail.html"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-5 py-2.5 transition-colors hover:bg-[#F5F0E8]"
-                  style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', color: INK, border: '1px solid ' + RULE_COLOR }}
+                  className="px-5 py-2.5 transition-colors hover:bg-[#f4f5f7]"
+                  style={{ fontSize: 12, letterSpacing: '0.04em', border: '1px solid #dde1e8' }}
                 >
                   Vote by Mail
                 </a>
@@ -254,7 +246,7 @@ export function VotingDashboardClient({
       {!nextElection && (
         <section>
           <ChapterHeading number="I" title="What's Coming Up" />
-          <p className="mt-4" style={{ fontFamily: SERIF, fontSize: 15, color: MUTED }}>
+          <p className="mt-4" style={{ fontSize: 15, color: "#5c6474" }}>
             No upcoming elections scheduled right now. Check back soon — and make sure you're registered so you're ready when the next one is announced.
           </p>
           <div className="mt-4">
@@ -263,7 +255,7 @@ export function VotingDashboardClient({
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 text-white transition-opacity hover:opacity-90 inline-block"
-              style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
+              style={{ fontSize: 12, letterSpacing: '0.04em', background: '#1b5e8a' }}
             >
               Check Your Registration
             </a>
@@ -272,7 +264,7 @@ export function VotingDashboardClient({
       )}
 
       {/* Section rule */}
-      <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-12" style={{ height: 1, background: '#dde1e8' }} />
 
       {/* ════════════════════════════════════════════════════════
           CHAPTER 2: Who Represents You
@@ -280,7 +272,7 @@ export function VotingDashboardClient({
       <section>
         <ChapterHeading number="II" title="Who Represents You" />
 
-        <p className="mt-3 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 15, lineHeight: 1.7, color: MUTED }}>
+        <p className="mt-3 max-w-[560px]" style={{ fontSize: 15, lineHeight: 1.7, color: "#5c6474" }}>
           {initialZip
             ? 'These are the elected officials who represent your area. Contact them about the issues that matter to you.'
             : 'Enter your ZIP code to find the officials who represent you at every level of government — from city hall to the U.S. Capitol.'
@@ -298,13 +290,13 @@ export function VotingDashboardClient({
             onChange={function (e) { setZipInput(e.target.value.replace(/\D/g, '')) }}
             placeholder="Your ZIP code"
             className="flex-1 px-4 py-3 focus:outline-none"
-            style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: '1px solid ' + RULE_COLOR }}
+            style={{ fontSize: 15, background: '#ffffff', border: '1px solid #dde1e8' }}
           />
           <button
             type="submit"
             disabled={zipInput.length !== 5}
             className="px-5 py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-40"
-            style={{ fontFamily: MONO, fontSize: 12, letterSpacing: '0.04em', background: CLAY }}
+            style={{ fontSize: 12, letterSpacing: '0.04em', background: '#1b5e8a' }}
           >
             Find My Reps
           </button>
@@ -313,7 +305,7 @@ export function VotingDashboardClient({
               type="button"
               onClick={handleZipClear}
               className="hover:underline"
-              style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}
+              style={{ fontSize: 13, color: "#5c6474" }}
             >
               Clear
             </button>
@@ -321,7 +313,7 @@ export function VotingDashboardClient({
         </form>
 
         {initialZip && (
-          <p className="mt-3" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', color: MUTED, textTransform: 'uppercase' }}>
+          <p className="mt-3" style={{ fontSize: 11, letterSpacing: '0.06em', color: "#5c6474", textTransform: 'uppercase' }}>
             Showing results for {initialZip}
           </p>
         )}
@@ -334,11 +326,11 @@ export function VotingDashboardClient({
               return (
                 <div key={key}>
                   <div className="flex items-baseline gap-3 mb-4">
-                    <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: CLAY, textTransform: 'uppercase' }}>
+                    <p style={{ fontSize: 11, letterSpacing: '0.08em', color: "#1b5e8a", textTransform: 'uppercase' }}>
                       {label}
                     </p>
-                    <div className="flex-1" style={{ height: 1, background: RULE_COLOR }} />
-                    <p style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+                    <div className="flex-1" style={{ height: 1, background: '#dde1e8' }} />
+                    <p style={{ fontSize: 11, color: "#5c6474" }}>
                       {officials.length}
                     </p>
                   </div>
@@ -364,24 +356,24 @@ export function VotingDashboardClient({
               )
             })}
             <div className="pt-2">
-              <Link href="/officials" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}>
+              <Link href="/officials" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>
                 See all elected officials &rarr;
               </Link>
             </div>
           </div>
         ) : !initialZip ? (
-          <div className="mt-8 relative p-8 text-center" style={{ border: '1px dashed ' + RULE_COLOR }}>
+          <div className="mt-8 relative p-8 text-center" style={{ border: '1px dashed ' + '#dde1e8' }}>
             <Image src="/images/fol/vesica-piscis.svg" alt="" width={80} height={80} className="opacity-[0.06] mx-auto mb-4" />
-            <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED }}>
+            <p style={{ fontSize: 15, color: "#5c6474" }}>
               Enter your ZIP code above to see who represents you.
             </p>
           </div>
         ) : (
-          <div className="mt-8 p-6" style={{ border: '1px solid ' + RULE_COLOR }}>
-            <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED }}>
+          <div className="mt-8 p-6" style={{ border: '1px solid #dde1e8' }}>
+            <p style={{ fontSize: 15, color: "#5c6474" }}>
               We couldn't find officials for that ZIP code. Try a different one, or browse the full list.
             </p>
-            <Link href="/officials" className="mt-2 inline-block hover:underline" style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}>
+            <Link href="/officials" className="mt-2 inline-block hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>
               Browse all officials &rarr;
             </Link>
           </div>
@@ -389,7 +381,7 @@ export function VotingDashboardClient({
       </section>
 
       {/* Section rule */}
-      <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-12" style={{ height: 1, background: '#dde1e8' }} />
 
       {/* ════════════════════════════════════════════════════════
           CHAPTER 3: How to Participate — practical resources
@@ -397,7 +389,7 @@ export function VotingDashboardClient({
       <section>
         <ChapterHeading number="III" title="How to Participate" />
 
-        <p className="mt-3 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 15, lineHeight: 1.7, color: MUTED }}>
+        <p className="mt-3 max-w-[560px]" style={{ fontSize: 15, lineHeight: 1.7, color: "#5c6474" }}>
           Voting is one of the most direct ways to shape your community. Here's what you need.
         </p>
 
@@ -446,7 +438,7 @@ export function VotingDashboardClient({
       </section>
 
       {/* Section rule */}
-      <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-12" style={{ height: 1, background: '#dde1e8' }} />
 
       {/* ════════════════════════════════════════════════════════
           CHAPTER 4: Key Dates — civic calendar
@@ -455,12 +447,12 @@ export function VotingDashboardClient({
         <>
           <section>
             <ChapterHeading number="IV" title="Key Dates" />
-            <p className="mt-3 mb-6 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 15, lineHeight: 1.7, color: MUTED }}>
+            <p className="mt-3 mb-6 max-w-[560px]" style={{ fontSize: 15, lineHeight: 1.7, color: "#5c6474" }}>
               Council meetings, registration deadlines, early voting windows — the dates that matter for civic life in Houston.
             </p>
             <CivicTimeline events={civicEvents} />
           </section>
-          <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+          <div className="my-12" style={{ height: 1, background: '#dde1e8' }} />
         </>
       )}
 
@@ -502,11 +494,11 @@ export function VotingDashboardClient({
 
             {/* Runoff callout */}
             {runoffCandidates.length > 0 && nextElection && nextElection.election_type === 'Primary Runoff' && (
-              <div className="mt-6 p-5" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
-                <p style={{ fontFamily: SERIF, fontSize: 16, fontWeight: 'bold', color: INK }}>
+              <div className="mt-6 p-5" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
+                <p style={{ fontSize: 16, fontWeight: 'bold',  }}>
                   These races are heading to a runoff
                 </p>
-                <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+                <p className="mt-1" style={{ fontSize: 14, color: "#5c6474" }}>
                   No candidate won a majority. Voters will decide again on{' '}
                   {nextElection.election_date && new Date(nextElection.election_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}.
                 </p>
@@ -516,7 +508,7 @@ export function VotingDashboardClient({
                       <span
                         key={c.candidate_id}
                         className="px-3 py-1"
-                        style={{ fontFamily: MONO, fontSize: 11, color: INK, background: '#ffffff', border: '1px solid ' + RULE_COLOR }}
+                        style={{ fontSize: 11, background: '#ffffff', border: '1px solid #dde1e8' }}
                       >
                         {c.candidate_name} ({c.party?.charAt(0)}) — {c.office_sought}
                       </span>
@@ -529,7 +521,7 @@ export function VotingDashboardClient({
             {/* Propositions */}
             {recentBallotItems.length > 0 && (
               <div className="mt-6">
-                <p className="mb-4" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase' }}>
+                <p className="mb-4" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase' }}>
                   Propositions
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -556,13 +548,13 @@ export function VotingDashboardClient({
               <Link
                 href={'/elections/' + recentElection.election_id}
                 className="hover:underline"
-                style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
               >
                 Full election details &rarr;
               </Link>
             </div>
           </section>
-          <div className="my-12" style={{ height: 1, background: RULE_COLOR }} />
+          <div className="my-12" style={{ height: 1, background: '#dde1e8' }} />
         </>
       )}
 
@@ -578,11 +570,11 @@ export function VotingDashboardClient({
                 <Link
                   key={item.id}
                   href={'/content/' + item.id}
-                  className="block p-4 transition-colors hover:bg-[#EDE7D8]"
-                  style={{ border: '1px solid ' + RULE_COLOR }}
+                  className="block p-4 transition-colors hover:bg-[#f4f5f7]"
+                  style={{ border: '1px solid #dde1e8' }}
                 >
                   {item.image_url && (
-                    <div className="h-32 overflow-hidden mb-3 -mx-4 -mt-4" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+                    <div className="h-32 overflow-hidden mb-3 -mx-4 -mt-4" style={{ borderBottom: '1px solid #dde1e8' }}>
                       <Image
                         src={item.image_url}
                         alt=""
@@ -592,11 +584,11 @@ export function VotingDashboardClient({
                       />
                     </div>
                   )}
-                  <p style={{ fontFamily: SERIF, fontSize: 15, color: INK, lineHeight: 1.4 }} className="line-clamp-2">
+                  <p style={{ fontSize: 15, lineHeight: 1.4 }} className="line-clamp-2">
                     {item.title_6th_grade}
                   </p>
                   {item.summary_6th_grade && (
-                    <p className="mt-1 line-clamp-2" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>
+                    <p className="mt-1 line-clamp-2" style={{ fontSize: 13, color: "#5c6474" }}>
                       {item.summary_6th_grade}
                     </p>
                   )}
@@ -616,11 +608,11 @@ function ChapterHeading({ number, title }: { number: string; title: string }) {
   return (
     <div>
       {number && (
-        <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase', marginBottom: 6 }}>
+        <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 6 }}>
           Chapter {number}
         </p>
       )}
-      <h2 style={{ fontFamily: SERIF, fontSize: 28, lineHeight: 1.15, color: INK }}>
+      <h2 style={{ fontSize: 28, lineHeight: 1.15,  }}>
         {title}
       </h2>
     </div>
@@ -648,12 +640,12 @@ function ResourceLink({
     <Tag
       href={href}
       {...extraProps as any}
-      className="block p-5 transition-colors hover:bg-[#EDE7D8]"
-      style={{ border: '1px solid ' + RULE_COLOR }}
+      className="block p-5 transition-colors hover:bg-[#f4f5f7]"
+      style={{ border: '1px solid #dde1e8' }}
     >
-      <p style={{ fontFamily: SERIF, fontSize: 16, color: INK }}>{label}</p>
-      <p className="mt-1" style={{ fontFamily: SERIF, fontSize: 13, color: MUTED }}>{description}</p>
-      <p className="mt-2" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.06em', color: CLAY, textTransform: 'uppercase' }}>
+      <p style={{ fontSize: 16,  }}>{label}</p>
+      <p className="mt-1" style={{ fontSize: 13, color: "#5c6474" }}>{description}</p>
+      <p className="mt-2" style={{ fontSize: 10, letterSpacing: '0.06em', color: "#1b5e8a", textTransform: 'uppercase' }}>
         {mono} {external ? ' \u2197' : ''}
       </p>
     </Tag>

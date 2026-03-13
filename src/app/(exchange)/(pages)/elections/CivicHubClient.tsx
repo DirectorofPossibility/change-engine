@@ -16,7 +16,7 @@ import { TurnoutLabel, CertifiedBadge } from './ElectionsSectionHeaders'
 const TABS = [
   { level: 'City',    label: 'Houston',      color: '#7a2018', Icon: Building },
   { level: 'County',  label: 'Harris County', color: '#4a2870', Icon: Building2 },
-  { level: 'State',   label: 'Texas',        color: '#1a3460', Icon: Star },
+  { level: 'State',   label: 'Texas',        color: '#1b5e8a', Icon: Star },
   { level: 'Federal', label: 'Federal',      color: '#6a4e10', Icon: Landmark },
 ] as const
 

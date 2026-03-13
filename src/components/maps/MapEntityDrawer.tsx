@@ -36,12 +36,12 @@ const TYPE_LABELS: Record<string, { label: string; color: string }> = {
   organization: { label: 'Organization', color: '#7a2018' },
   service: { label: 'Service', color: '#6a4e10' },
   voting: { label: 'Voting Location', color: '#1a6b56' },
-  official: { label: 'Official', color: '#1a3460' },
+  official: { label: 'Official', color: '#1b5e8a' },
   park: { label: 'Park', color: '#7a2018' },
   police: { label: 'Police', color: '#6a4e10' },
   fire: { label: 'Fire Station', color: '#1a6b56' },
   school: { label: 'School', color: '#1e4d7a' },
-  medical: { label: 'Medical', color: '#1a3460' },
+  medical: { label: 'Medical', color: '#1b5e8a' },
   library: { label: 'Library', color: '#4a2870' },
 }
 

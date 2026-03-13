@@ -16,14 +16,6 @@ import Image from 'next/image'
 import { organizationJsonLd } from '@/lib/jsonld'
 import { THEMES } from '@/lib/constants'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 86400
 
@@ -117,34 +109,34 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const childCount = (services?.length || 0) + (content?.length || 0) + (opportunities?.length || 0)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <SpiralTracker action="view_organization" />
       {jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex items-start gap-5 mt-4">
             {org.logo_url && (
-              <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0 hidden sm:block" style={{ border: '1px solid ' + RULE_COLOR }} width={72} height={72} />
+              <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0 hidden sm:block" style={{ border: '1px solid #dde1e8' }} width={72} height={72} />
             )}
             <div>
               {org.org_type && org.org_type !== 'Organization' && (
-                <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{org.org_type}</span>
+                <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{org.org_type}</span>
               )}
-              <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.25rem' }}>
+              <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.25rem' }}>
                 {displayOrgName}
               </h1>
               {(org.mission_statement || displayOrgDesc) && (
-                <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.5rem', lineHeight: 1.7 }}>
+                <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.5rem', lineHeight: 1.7 }}>
                   {org.mission_statement || displayOrgDesc}
                 </p>
               )}
@@ -152,13 +144,13 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           </div>
           <div className="flex flex-wrap gap-4 mt-6">
             {org.phone && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{org.phone}</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{org.phone}</span>
             )}
             {fullAddress && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{fullAddress}</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{fullAddress}</span>
             )}
             {org.year_founded && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>Est. {org.year_founded}</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>Est. {org.year_founded}</span>
             )}
           </div>
         </div>
@@ -166,10 +158,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/organizations" className="hover:underline" style={{ color: CLAY }}>Organizations</Link>
+          <Link href="/organizations" className="hover:underline" style={{ color: "#1b5e8a" }}>Organizations</Link>
           <span className="mx-2">/</span>
           <span>{displayOrgName}</span>
         </nav>
@@ -182,10 +174,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {((org.mission_statement && displayOrgDesc) || (!org.mission_statement && displayOrgDesc)) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.about')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.about')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: MUTED, lineHeight: 1.7 }}>{displayOrgDesc}</p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <p style={{ fontSize: '0.95rem', color: "#5c6474", lineHeight: 1.7 }}>{displayOrgDesc}</p>
           </section>
         )}
 
@@ -193,50 +185,50 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {(org.phone || org.email || org.website || fullAddress || org.map_link || socialLinks.length > 0) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.contact')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.contact')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <ul className="space-y-2">
               {org.phone && (
                 <li className="flex items-center gap-2">
-                  <Phone size={14} style={{ color: MUTED }} />
-                  <a href={'tel:' + org.phone} className="hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>{org.phone}</a>
+                  <Phone size={14} style={{ color: "#5c6474" }} />
+                  <a href={'tel:' + org.phone} className="hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>{org.phone}</a>
                 </li>
               )}
               {org.email && (
                 <li className="flex items-center gap-2">
-                  <Mail size={14} style={{ color: MUTED }} />
-                  <a href={'mailto:' + org.email} className="hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>{org.email}</a>
+                  <Mail size={14} style={{ color: "#5c6474" }} />
+                  <a href={'mailto:' + org.email} className="hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>{org.email}</a>
                 </li>
               )}
               {org.website && (
                 <li className="flex items-center gap-2">
-                  <Globe size={14} style={{ color: MUTED }} />
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+                  <Globe size={14} style={{ color: "#5c6474" }} />
+                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                     {t('detail.website')} <ExternalLink size={10} className="inline opacity-50" />
                   </a>
                 </li>
               )}
               {fullAddress && (
                 <li className="flex items-center gap-2">
-                  <MapPin size={14} style={{ color: MUTED }} />
-                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>{fullAddress}</span>
+                  <MapPin size={14} style={{ color: "#5c6474" }} />
+                  <span style={{ fontSize: '0.9rem', color: "#5c6474" }}>{fullAddress}</span>
                 </li>
               )}
               {org.map_link && (
                 <li className="flex items-center gap-2">
-                  <MapPin size={14} style={{ color: MUTED }} />
-                  <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+                  <MapPin size={14} style={{ color: "#5c6474" }} />
+                  <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                     View on Map <ExternalLink size={10} className="inline opacity-50" />
                   </a>
                 </li>
               )}
             </ul>
             {socialLinks.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid ' + RULE_COLOR }}>
+              <div className="flex flex-wrap gap-2 mt-3 pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
                 {socialLinks.map(function (link) {
                   return (
-                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="capitalize hover:underline" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: CLAY, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }}>
+                    <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" className="capitalize hover:underline" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#1b5e8a", border: '1px solid #dde1e8', padding: '2px 8px' }}>
                       {link.platform}
                     </a>
                   )
@@ -250,17 +242,17 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {hoursList.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 className="flex items-center gap-2" style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>
-                <Clock size={18} style={{ color: MUTED }} /> Hours of Operation
+              <h2 className="flex items-center gap-2" style={{ fontSize: '1.5rem',  }}>
+                <Clock size={18} style={{ color: "#5c6474" }} /> Hours of Operation
               </h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
               {hoursList.map(function (h) {
                 return (
-                  <div key={h.day} className="flex justify-between py-1" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                    <span style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 500, color: INK }}>{h.day}</span>
-                    <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>{h.time}</span>
+                  <div key={h.day} className="flex justify-between py-1" style={{ borderBottom: '1px solid #dde1e8' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 500,  }}>{h.day}</span>
+                    <span style={{ fontSize: '0.9rem', color: "#5c6474" }}>{h.time}</span>
                   </div>
                 )
               })}
@@ -272,32 +264,32 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {(org.people_served || org.service_area || org.partner_count || org.annual_budget) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>At a Glance</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>At a Glance</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-0" style={{ borderTop: '2px solid ' + INK }}>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-0" style={{ borderTop: '2px solid ' + '#0d1117' }}>
               {org.people_served && (
-                <div className="p-4" style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <span className="block" style={{ fontFamily: SERIF, fontSize: '1.3rem', fontWeight: 700, color: INK }}>{org.people_served}</span>
-                  <span className="block" style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginTop: '0.25rem' }}>People Served</span>
+                <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block" style={{ fontSize: '1.3rem', fontWeight: 700,  }}>{org.people_served}</span>
+                  <span className="block" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", marginTop: '0.25rem' }}>People Served</span>
                 </div>
               )}
               {org.service_area && (
-                <div className="p-4" style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <span className="block" style={{ fontFamily: SERIF, fontSize: '1.3rem', fontWeight: 700, color: INK }}>{org.service_area}</span>
-                  <span className="block" style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginTop: '0.25rem' }}>Service Area</span>
+                <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block" style={{ fontSize: '1.3rem', fontWeight: 700,  }}>{org.service_area}</span>
+                  <span className="block" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", marginTop: '0.25rem' }}>Service Area</span>
                 </div>
               )}
               {org.partner_count != null && (
-                <div className="p-4" style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <span className="block" style={{ fontFamily: SERIF, fontSize: '1.3rem', fontWeight: 700, color: INK }}>{org.partner_count}</span>
-                  <span className="block" style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginTop: '0.25rem' }}>Partners</span>
+                <div className="p-4" style={{ borderRight: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block" style={{ fontSize: '1.3rem', fontWeight: 700,  }}>{org.partner_count}</span>
+                  <span className="block" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", marginTop: '0.25rem' }}>Partners</span>
                 </div>
               )}
               {org.annual_budget != null && (
-                <div className="p-4" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <span className="block" style={{ fontFamily: SERIF, fontSize: '1.3rem', fontWeight: 700, color: INK }}>{'$' + org.annual_budget.toLocaleString()}</span>
-                  <span className="block" style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginTop: '0.25rem' }}>Annual Budget</span>
+                <div className="p-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                  <span className="block" style={{ fontSize: '1.3rem', fontWeight: 700,  }}>{'$' + org.annual_budget.toLocaleString()}</span>
+                  <span className="block" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", marginTop: '0.25rem' }}>Annual Budget</span>
                 </div>
               )}
             </div>
@@ -308,38 +300,38 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {org.tags && org.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-10">
             {org.tags.map(function (tag) {
-              return <span key={tag} style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }}>{tag}</span>
+              return <span key={tag} style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }}>{tag}</span>
             })}
           </div>
         )}
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Services */}
         {services && services.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Services</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{services.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>Services</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{services.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {services.slice(0, 4).map(function (svc) {
               const st = serviceTranslations[svc.service_id]
               const svcName = st?.title || svc.service_name
               const svcDesc = st?.summary || svc.description_5th_grade
               return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 hover:underline" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: CLAY }} />
+                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                  <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} />
                   <div className="min-w-0">
-                    <span className="block" style={{ fontFamily: SERIF, fontWeight: 600, color: INK }}>{svcName}</span>
-                    {svcDesc && <span className="block line-clamp-2 mt-0.5" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{svcDesc}</span>}
+                    <span className="block" style={{ fontWeight: 600,  }}>{svcName}</span>
+                    {svcDesc && <span className="block line-clamp-2 mt-0.5" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{svcDesc}</span>}
                   </div>
                 </Link>
               )
             })}
             {services.length > 4 && (
               <details className="mt-2">
-                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
                   See {services.length - 4} more services
                 </summary>
                 {services.slice(4).map(function (svc) {
@@ -347,11 +339,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                   const svcName = st?.title || svc.service_name
                   const svcDesc = st?.summary || svc.description_5th_grade
                   return (
-                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 hover:underline" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                      <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: CLAY }} />
+                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-3 hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                      <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} />
                       <div className="min-w-0">
-                        <span className="block" style={{ fontFamily: SERIF, fontWeight: 600, color: INK }}>{svcName}</span>
-                        {svcDesc && <span className="block line-clamp-2 mt-0.5" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{svcDesc}</span>}
+                        <span className="block" style={{ fontWeight: 600,  }}>{svcName}</span>
+                        {svcDesc && <span className="block line-clamp-2 mt-0.5" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{svcDesc}</span>}
                       </div>
                     </Link>
                   )
@@ -365,10 +357,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {content && content.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>News & Resources</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{content.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>News & Resources</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{content.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {content.map(function (item: any) {
                 const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
@@ -396,23 +388,23 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         {opportunities && opportunities.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Opportunities</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{opportunities.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>Opportunities</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{opportunities.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {opportunities.map(function (opp: any) {
               return (
-                <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-3 hover:underline" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: CLAY }} />
+                <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-3 hover:underline" style={{ borderBottom: '1px solid #dde1e8' }}>
+                  <span className="mt-2 flex-shrink-0" style={{ display: 'inline-block', width: 6, height: 6, background: '#1b5e8a' }} />
                   <div className="min-w-0">
-                    <span className="block" style={{ fontFamily: SERIF, fontWeight: 600, color: INK }}>{opp.opportunity_name}</span>
-                    {opp.description_5th_grade && <span className="block line-clamp-2 mt-0.5" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{opp.description_5th_grade}</span>}
+                    <span className="block" style={{ fontWeight: 600,  }}>{opp.opportunity_name}</span>
+                    {opp.description_5th_grade && <span className="block line-clamp-2 mt-0.5" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{opp.description_5th_grade}</span>}
                     <div className="flex items-center gap-2 flex-wrap mt-1">
                       {opp.time_commitment && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{opp.time_commitment}</span>
+                        <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{opp.time_commitment}</span>
                       )}
                       {opp.is_virtual === 'Yes' && (
-                        <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: CLAY, border: '1px solid ' + CLAY, padding: '1px 6px' }}>Virtual</span>
+                        <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#1b5e8a", border: '1px solid ' + '#1b5e8a', padding: '1px 6px' }}>Virtual</span>
                       )}
                     </div>
                   </div>
@@ -424,19 +416,19 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
         {/* Empty state */}
         {childCount === 0 && (
-          <div className="text-center py-12" style={{ border: '1px dashed ' + RULE_COLOR }}>
-            <p style={{ fontFamily: SERIF, color: MUTED }}>No services, content, or opportunities have been linked to this organization yet.</p>
+          <div className="text-center py-12" style={{ border: '1px dashed ' + '#dde1e8' }}>
+            <p style={{ color: "#5c6474" }}>No services, content, or opportunities have been linked to this organization yet.</p>
           </div>
         )}
 
         {/* Quote */}
-        {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={CLAY} />}
+        {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />}
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/organizations" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/organizations" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Organizations
         </Link>
       </div>

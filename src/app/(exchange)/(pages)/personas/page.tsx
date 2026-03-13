@@ -14,14 +14,6 @@ export const metadata: Metadata = {
   description: 'Find the path that matches how you want to engage with your community.',
 }
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const PERSONAS = [
   {
@@ -61,7 +53,7 @@ const PERSONAS = [
     description: 'You track decisions, follow the money, attend public meetings, and hold elected officials accountable. Transparency and civic engagement are your tools for change.',
     center: 'Accountability' as const,
     Icon: WatchdogIcon,
-    color: '#1a3460',
+    color: '#1b5e8a',
     actions: ['Track elected officials', 'Follow policy changes', 'View civic calendar'],
   },
   {
@@ -88,20 +80,20 @@ const PERSONAS = [
 
 export default function PersonasPage() {
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs uppercase tracking-widest mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl mb-4">
             Your Journey
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+          <p style={{ color: "#5c6474" }} className="text-lg max-w-xl mx-auto leading-relaxed">
             Everyone engages differently. Choose the path that fits where you are right now -- you can always explore another.
           </p>
         </div>
@@ -109,19 +101,19 @@ export default function PersonasPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+        <nav style={{ color: "#5c6474" }} className="text-xs">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <span style={{ color: INK }}>Your Journey</span>
+          <span style={{  }}>Your Journey</span>
         </nav>
       </div>
 
       {/* Main content */}
       <div className="max-w-[900px] mx-auto px-6 py-10">
         <div className="mb-8">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-2xl mb-2">Choose Your Path</h2>
-          <div style={{ borderTop: '2px dotted ' + RULE_COLOR }} className="pt-2">
-            <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{PERSONAS.length} journeys</span>
+          <h2 style={{  }} className="text-2xl mb-2">Choose Your Path</h2>
+          <div style={{ borderTop: '2px dotted ' + '#dde1e8' }} className="pt-2">
+            <span style={{ color: "#5c6474" }} className="text-xs">{PERSONAS.length} journeys</span>
           </div>
         </div>
 
@@ -134,13 +126,13 @@ export default function PersonasPage() {
                 key={p.id}
                 href={'/for/' + p.id}
                 className="group block border hover:border-current transition-colors"
-                style={{ borderColor: RULE_COLOR }}
+                style={{ borderColor: '#dde1e8' }}
               >
                 {/* Color top bar */}
                 <div className="h-1" style={{ backgroundColor: centerColor }} />
 
                 {/* Header */}
-                <div className="flex items-center gap-4 p-5 pb-3" style={{ background: PARCHMENT_WARM }}>
+                <div className="flex items-center gap-4 p-5 pb-3 bg-paper">
                   <div
                     className="w-14 h-14 flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: centerColor + '15', border: '2px solid ' + centerColor + '25' }}
@@ -148,18 +140,18 @@ export default function PersonasPage() {
                     <p.Icon size={32} color={centerColor} />
                   </div>
                   <div>
-                    <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg">{p.name}</h2>
-                    <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm italic">{p.tagline}</p>
+                    <h2 style={{  }} className="text-lg">{p.name}</h2>
+                    <p style={{ color: "#5c6474" }} className="text-sm italic">{p.tagline}</p>
                   </div>
                 </div>
 
                 {/* Description */}
-                <div className="px-5 pb-4" style={{ background: PARCHMENT_WARM }}>
-                  <p style={{ color: INK }} className="text-sm leading-relaxed">{p.description}</p>
+                <div className="px-5 pb-4 bg-paper">
+                  <p style={{  }} className="text-sm leading-relaxed">{p.description}</p>
                 </div>
 
                 {/* Actions */}
-                <div className="px-5 pb-5" style={{ background: PARCHMENT_WARM }}>
+                <div className="px-5 pb-5 bg-paper">
                   <div className="flex flex-wrap gap-2">
                     {p.actions.map(function (action) {
                       return (
@@ -176,10 +168,10 @@ export default function PersonasPage() {
                 </div>
 
                 {/* CTA */}
-                <div className="px-5 py-3 flex items-center justify-between" style={{ borderTop: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
+                <div className="px-5 py-3 flex items-center justify-between" style={{ borderTop: '1px solid #dde1e8', background: "#f4f5f7" }}>
                   <span
                     className="text-sm font-semibold"
-                    style={{ color: centerColor, fontFamily: MONO }}
+                    style={{ color: centerColor,  }}
                   >
                     Start as {p.name}
                   </span>
@@ -191,11 +183,11 @@ export default function PersonasPage() {
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-10" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-10" />
 
         {/* Footer */}
         <div className="text-center">
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-xs hover:underline">
             Back to Change Engine
           </Link>
         </div>

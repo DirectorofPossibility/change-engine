@@ -33,7 +33,7 @@ const CROSS_LINKS = [
   { i18nKey: 'wayfinder.nav_opportunities', href: '/opportunities', color: '#1a5030' },
   { i18nKey: 'wayfinder.nav_news', href: '/news', color: '#6a4e10' },
   { i18nKey: 'wayfinder.nav_library', href: '/library', color: '#1e4d7a' },
-  { i18nKey: 'wayfinder.nav_neighborhoods', href: '/neighborhoods', color: '#1a3460' },
+  { i18nKey: 'wayfinder.nav_neighborhoods', href: '/neighborhoods', color: '#1b5e8a' },
 ]
 
 export function IndexWayfinder({

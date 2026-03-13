@@ -20,22 +20,14 @@ import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { policyJsonLd } from '@/lib/jsonld'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 function statusColor(status: string | null): { dotColor: string; textColor: string } {
-  if (!status) return { dotColor: CLAY, textColor: CLAY }
+  if (!status) return { dotColor: '#1b5e8a', textColor: '#1b5e8a' }
   const s = status.toLowerCase()
   if (s === 'passed' || s === 'enacted' || s === 'signed') return { dotColor: '#2d5a27', textColor: '#2d5a27' }
   if (s === 'pending' || s === 'introduced' || s === 'in committee' || s === 'active') return { dotColor: '#8b6914', textColor: '#8b6914' }
   if (s === 'failed' || s === 'vetoed' || s === 'dead') return { dotColor: '#a12323', textColor: '#a12323' }
-  return { dotColor: CLAY, textColor: CLAY }
+  return { dotColor: '#1b5e8a', textColor: '#1b5e8a' }
 }
 
 function formatGeoType(geoType: string): string {
@@ -137,49 +129,49 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
   const jsonLd = policyJsonLd(policy as any)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <SpiralTracker action="view_policy" />
       {jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex flex-wrap items-center gap-3 mt-3">
             {policy.level && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED }}>{policy.level}</span>
+              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#5c6474" }}>{policy.level}</span>
             )}
             {policy.policy_type && (
-              <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED }}>{policy.policy_type}</span>
+              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#5c6474" }}>{policy.policy_type}</span>
             )}
             {policy.status && (
               <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
                 <span style={{ width: 7, height: 7, background: sc.dotColor, display: 'inline-block', flexShrink: 0 }} />
-                <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{policy.status}</span>
+                <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{policy.status}</span>
               </span>
             )}
           </div>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             {displayName}
           </h1>
           {displaySummary && (
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {displaySummary}
             </p>
           )}
           <div className="flex flex-wrap gap-4 mt-4">
             {policy.bill_number && (
-              <span style={{ fontFamily: MONO, fontSize: '0.75rem', color: MUTED }}>{policy.bill_number}</span>
+              <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{policy.bill_number}</span>
             )}
             {policy.source_url && (
-              <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: CLAY }}>
+              <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#1b5e8a" }}>
                 <ExternalLink size={10} /> Source
               </a>
             )}
@@ -189,10 +181,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/policies" className="hover:underline" style={{ color: CLAY }}>{t('policy.policies')}</Link>
+          <Link href="/policies" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('policy.policies')}</Link>
           <span className="mx-2">/</span>
           <span>{displayName}</span>
         </nav>
@@ -204,32 +196,32 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {/* Quick Facts */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.quick_facts')}</h2>
+            <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.quick_facts')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
           <div className="space-y-2" style={{ fontSize: '0.875rem' }}>
             {policy.level && (
               <div className="flex justify-between">
-                <span style={{ fontFamily: MONO, fontSize: '0.75rem', color: MUTED }}>{t('policy.level')}</span>
-                <span style={{ fontFamily: SERIF, fontWeight: 600, color: INK }}>{policy.level}</span>
+                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.level')}</span>
+                <span style={{ fontWeight: 600,  }}>{policy.level}</span>
               </div>
             )}
             {policy.status && (
               <div className="flex justify-between">
-                <span style={{ fontFamily: MONO, fontSize: '0.75rem', color: MUTED }}>{t('policy.status')}</span>
-                <span style={{ fontFamily: SERIF, fontWeight: 600, color: sc.textColor }}>{policy.status}</span>
+                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.status')}</span>
+                <span style={{ fontWeight: 600, color: sc.textColor }}>{policy.status}</span>
               </div>
             )}
             {policy.introduced_date && (
               <div className="flex justify-between">
-                <span style={{ fontFamily: MONO, fontSize: '0.75rem', color: MUTED }}>{t('policy.introduced')}</span>
-                <span style={{ fontFamily: SERIF, color: INK }}>{new Date(policy.introduced_date).toLocaleDateString()}</span>
+                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.introduced')}</span>
+                <span style={{  }}>{new Date(policy.introduced_date).toLocaleDateString()}</span>
               </div>
             )}
             {policy.data_source && (
               <div className="flex justify-between">
-                <span style={{ fontFamily: MONO, fontSize: '0.75rem', color: MUTED }}>{t('policy.source')}</span>
-                <span style={{ fontFamily: SERIF, color: INK, textTransform: 'capitalize' }}>{policy.data_source.replace(/_/g, ' ')}</span>
+                <span style={{ fontSize: '0.75rem', color: "#5c6474" }}>{t('policy.source')}</span>
+                <span style={{ textTransform: 'capitalize' }}>{policy.data_source.replace(/_/g, ' ')}</span>
               </div>
             )}
           </div>
@@ -239,10 +231,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {displaySummary && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.what_it_does')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.what_it_does')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: INK, lineHeight: 1.7 }}>{displaySummary}</p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <p style={{ fontSize: '1rem', lineHeight: 1.7 }}>{displaySummary}</p>
           </section>
         )}
 
@@ -254,16 +246,16 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {/* AI Break It Down */}
         <BreakItDown title={displayName} summary={displaySummary} type="policy" />
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Focus areas */}
         {focusAreas.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.topics')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{focusAreas.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.topics')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{focusAreas.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <FocusAreaPills focusAreas={focusAreas} />
           </section>
         )}
@@ -272,18 +264,18 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {geography.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.where_applies')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.where_applies')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="space-y-3">
               {Object.entries(geoByType).map(function ([geoType, ids]) {
                 return (
                   <div key={geoType}>
-                    <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: MUTED }}>{formatGeoType(geoType)}</span>
+                    <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: "#5c6474" }}>{formatGeoType(geoType)}</span>
                     <div className="flex flex-wrap gap-1.5 mt-1">
                       {ids.map(function (gid) {
                         return (
-                          <span key={gid} style={{ fontFamily: MONO, fontSize: '0.75rem', color: INK, background: PARCHMENT_WARM, padding: '2px 8px', border: '1px solid ' + RULE_COLOR, display: 'inline-block' }}>
+                          <span key={gid} style={{ fontSize: '0.75rem', background: "#f4f5f7", padding: '2px 8px', border: '1px solid #dde1e8', display: 'inline-block' }}>
                             {gid}
                           </span>
                         )
@@ -299,27 +291,27 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {/* Timeline */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.timeline')}</h2>
+            <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.timeline')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
           <div>
             {policy.introduced_date && (
-              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                <span style={{ width: 8, height: 8, background: CLAY, marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
+                <span style={{ width: 8, height: 8, background: '#1b5e8a', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
                 <div>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{t('policy.introduced')}</p>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{t('policy.introduced')}</p>
+                  <p style={{ fontSize: '0.85rem', color: "#5c6474" }}>{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
               </div>
             )}
             {policy.last_action && (
-              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+              <div className="flex items-start gap-4 py-4" style={{ borderBottom: '1px solid #dde1e8' }}>
                 <span style={{ width: 8, height: 8, background: sc.dotColor, marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
                 <div>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{t('policy.latest_action')}</p>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{policy.last_action}</p>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{t('policy.latest_action')}</p>
+                  <p style={{ fontSize: '0.85rem', color: "#5c6474" }}>{policy.last_action}</p>
                   {policy.last_action_date && (
-                    <p style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED, marginTop: '0.25rem' }}>
+                    <p style={{ fontSize: '0.7rem', color: "#5c6474", marginTop: '0.25rem' }}>
                       {new Date(policy.last_action_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
                   )}
@@ -328,10 +320,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
             )}
             {policy.source_url && (
               <div className="flex items-start gap-4 py-4">
-                <span style={{ width: 8, height: 8, background: RULE_COLOR, marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
+                <span style={{ width: 8, height: 8, background: '#dde1e8', marginTop: 5, flexShrink: 0, display: 'inline-block' }} />
                 <div>
-                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{t('policy.source')}</p>
-                  <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: CLAY }}>
+                  <p style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{t('policy.source')}</p>
+                  <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.85rem', color: "#1b5e8a" }}>
                     View on {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'source'} <ExternalLink size={12} />
                   </a>
                 </div>
@@ -340,16 +332,16 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
           </div>
         </section>
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Decision Makers */}
         {officials.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.leaders_connected')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{officials.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.leaders_connected')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{officials.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {officials.map(function (o) {
                 const ot = officialTranslations[o.official_id]
@@ -377,15 +369,15 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         {related && related.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('policy.related_policies')}</h2>
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{related.length}</span>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('policy.related_policies')}</h2>
+              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{related.length}</span>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
               {related.map(function (p, i) {
                 const rpt = relatedPolicyTranslations[p.policy_id]
                 return (
-                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} style={{ display: 'block', padding: '1rem', borderBottom: '1px solid ' + RULE_COLOR, borderRight: i % 2 === 0 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} style={{ display: 'block', padding: '1rem', borderBottom: '1px solid #dde1e8', borderRight: i % 2 === 0 ? '1px solid ' + '#dde1e8' : 'none' }}>
                     <PolicyCard
                       name={p.title_6th_grade || p.policy_name}
                       summary={p.summary_6th_grade || p.summary_5th_grade}
@@ -407,14 +399,14 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
         {/* Quote */}
         {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={CLAY} />
+          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />
         )}
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/policies" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/policies" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Policies
         </Link>
       </div>

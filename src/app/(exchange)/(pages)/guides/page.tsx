@@ -14,14 +14,6 @@ export const metadata: Metadata = {
   description: 'Civic engagement guides for Houston — contacting officials, voting, community organizing, and local resources.',
 }
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default async function GuidesPage() {
   const guides = await getGuides()
@@ -38,9 +30,9 @@ export default async function GuidesPage() {
   const rest = guides.slice(4)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden py-16 sm:py-20" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden py-16 sm:py-20 bg-paper">
         <Image
           src="/images/fol/seed-of-life.svg"
           alt=""
@@ -49,13 +41,13 @@ export default async function GuidesPage() {
           className="opacity-[0.04] absolute top-1/2 right-8 -translate-y-1/2 pointer-events-none"
         />
         <div className="relative z-10 max-w-[900px] mx-auto px-6">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-[0.15em] uppercase mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs tracking-[0.15em] uppercase mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
             {t('guides.title')}
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg leading-relaxed max-w-2xl">
+          <p style={{ color: "#5c6474" }} className="text-lg leading-relaxed max-w-2xl">
             {t('guides.subtitle')}
           </p>
         </div>
@@ -63,8 +55,8 @@ export default async function GuidesPage() {
 
       {/* ── BREADCRUMB ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-wide">
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ color: "#5c6474" }} className="text-xs tracking-wide">
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Guides</span>
         </nav>
@@ -72,16 +64,16 @@ export default async function GuidesPage() {
 
       {/* ── SECTION HEADER ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <div className="flex items-baseline justify-between" style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '0.75rem' }}>
-          <h2 style={{ fontFamily: SERIF, color: INK, fontSize: '1.5rem' }}>All Guides</h2>
-          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{guides.length} guides</span>
+        <div className="flex items-baseline justify-between" style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: '1.5rem' }}>All Guides</h2>
+          <span style={{ color: "#5c6474" }} className="text-xs">{guides.length} guides</span>
         </div>
       </div>
 
       {/* ── GUIDES LIST ── */}
       <div className="max-w-[900px] mx-auto px-6 py-6">
         {guides.length === 0 && (
-          <p className="text-center py-12" style={{ fontFamily: SERIF, color: MUTED }}>{t('guides.coming_soon')}</p>
+          <p className="text-center py-12" style={{ color: "#5c6474" }}>{t('guides.coming_soon')}</p>
         )}
 
         <div className="space-y-4">
@@ -93,7 +85,7 @@ export default async function GuidesPage() {
                 key={guide.guide_id}
                 href={'/guides/' + guide.slug}
                 className="block border border-transparent hover:border-current transition-colors"
-                style={{ borderColor: RULE_COLOR }}
+                style={{ borderColor: '#dde1e8' }}
               >
                 <div className="flex gap-4">
                   {guide.hero_image_url && (
@@ -107,14 +99,14 @@ export default async function GuidesPage() {
                     </div>
                   )}
                   <div className="py-3 pr-4 flex-1 min-w-0">
-                    <h3 style={{ fontFamily: SERIF, color: INK }} className="text-lg leading-snug mb-1">{title}</h3>
+                    <h3 style={{  }} className="text-lg leading-snug mb-1">{title}</h3>
                     {description && (
-                      <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm line-clamp-2 mb-2">{description}</p>
+                      <p style={{ color: "#5c6474" }} className="text-sm line-clamp-2 mb-2">{description}</p>
                     )}
                     <div className="flex items-center gap-2 flex-wrap">
                       {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" linkable={false} />}
                       {guide.engagement_level && (
-                        <span className={'text-xs px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{ fontFamily: MONO }}>
+                        <span className={'text-xs px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{  }}>
                           {guide.engagement_level}
                         </span>
                       )}
@@ -128,7 +120,7 @@ export default async function GuidesPage() {
 
         {rest.length > 0 && (
           <details className="mt-6">
-            <summary style={{ fontFamily: MONO, color: CLAY, cursor: 'pointer' }} className="text-sm hover:underline">
+            <summary style={{ color: "#1b5e8a", cursor: 'pointer' }} className="text-sm hover:underline">
               Show {rest.length} more guide{rest.length !== 1 ? 's' : ''}
             </summary>
             <div className="space-y-4 mt-4">
@@ -140,7 +132,7 @@ export default async function GuidesPage() {
                     key={guide.guide_id}
                     href={'/guides/' + guide.slug}
                     className="block border border-transparent hover:border-current transition-colors"
-                    style={{ borderColor: RULE_COLOR }}
+                    style={{ borderColor: '#dde1e8' }}
                   >
                     <div className="flex gap-4">
                       {guide.hero_image_url && (
@@ -154,14 +146,14 @@ export default async function GuidesPage() {
                         </div>
                       )}
                       <div className="py-3 pr-4 flex-1 min-w-0">
-                        <h3 style={{ fontFamily: SERIF, color: INK }} className="text-lg leading-snug mb-1">{title}</h3>
+                        <h3 style={{  }} className="text-lg leading-snug mb-1">{title}</h3>
                         {description && (
-                          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm line-clamp-2 mb-2">{description}</p>
+                          <p style={{ color: "#5c6474" }} className="text-sm line-clamp-2 mb-2">{description}</p>
                         )}
                         <div className="flex items-center gap-2 flex-wrap">
                           {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" linkable={false} />}
                           {guide.engagement_level && (
-                            <span className={'text-xs px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{ fontFamily: MONO }}>
+                            <span className={'text-xs px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{  }}>
                               {guide.engagement_level}
                             </span>
                           )}
@@ -178,8 +170,8 @@ export default async function GuidesPage() {
 
       {/* ── FOOTER LINK ── */}
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <div style={{ borderTop: '1px dotted ' + RULE_COLOR, paddingTop: '1.5rem' }}>
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">
+        <div style={{ borderTop: '1px dotted ' + '#dde1e8', paddingTop: '1.5rem' }}>
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">
             &larr; Back to Home
           </Link>
         </div>

@@ -10,14 +10,6 @@ export const metadata: Metadata = {
   description: 'Know who represents you, what policies affect you, and when to show up.',
 }
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const SECTIONS = [
   {
@@ -56,20 +48,20 @@ export default async function ActionIndexPage() {
   }
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs uppercase tracking-widest mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl mb-4">
             Action
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+          <p style={{ color: "#5c6474" }} className="text-lg max-w-xl mx-auto leading-relaxed">
             Know who makes decisions, what they are deciding, and how to participate.
           </p>
           <div className="flex items-center justify-center gap-8 mt-8">
@@ -80,8 +72,8 @@ export default async function ActionIndexPage() {
             ].map(function (stat) {
               return (
                 <div key={stat.label}>
-                  <span style={{ fontFamily: SERIF, color: INK }} className="block text-2xl">{stat.value.toLocaleString()}</span>
-                  <span style={{ fontFamily: MONO, color: MUTED }} className="text-[10px] uppercase tracking-wider">{stat.label}</span>
+                  <span style={{  }} className="block text-2xl">{stat.value.toLocaleString()}</span>
+                  <span style={{ color: "#5c6474" }} className="text-[10px] uppercase tracking-wider">{stat.label}</span>
                 </div>
               )
             })}
@@ -91,10 +83,10 @@ export default async function ActionIndexPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+        <nav style={{ color: "#5c6474" }} className="text-xs">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <span style={{ color: INK }}>Action</span>
+          <span style={{  }}>Action</span>
         </nav>
       </div>
 
@@ -102,9 +94,9 @@ export default async function ActionIndexPage() {
       <div className="max-w-[900px] mx-auto px-6 py-10">
         {/* Section header */}
         <div className="mb-8">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-2xl mb-2">Civic Categories</h2>
-          <div style={{ borderTop: '2px dotted ' + RULE_COLOR }} className="pt-2">
-            <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{SECTIONS.length} sections</span>
+          <h2 style={{  }} className="text-2xl mb-2">Civic Categories</h2>
+          <div style={{ borderTop: '2px dotted ' + '#dde1e8' }} className="pt-2">
+            <span style={{ color: "#5c6474" }} className="text-xs">{SECTIONS.length} sections</span>
           </div>
         </div>
 
@@ -116,18 +108,18 @@ export default async function ActionIndexPage() {
                 key={section.href}
                 href={section.href}
                 className="block border border-transparent hover:border-current transition-colors"
-                style={{ borderColor: RULE_COLOR }}
+                style={{ borderColor: '#dde1e8' }}
               >
-                <div className="p-6" style={{ background: PARCHMENT_WARM }}>
+                <div className="p-6 bg-paper">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 style={{ fontFamily: SERIF, color: INK }} className="text-xl">{section.label}</h3>
+                    <h3 style={{  }} className="text-xl">{section.label}</h3>
                     {count > 0 && (
-                      <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs mt-1">
+                      <span style={{ color: "#5c6474" }} className="text-xs mt-1">
                         {count.toLocaleString()} tracked
                       </span>
                     )}
                   </div>
-                  <p style={{ color: MUTED }} className="text-sm leading-relaxed">
+                  <p style={{ color: "#5c6474" }} className="text-sm leading-relaxed">
                     {section.description}
                   </p>
                 </div>
@@ -137,13 +129,13 @@ export default async function ActionIndexPage() {
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-10" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-10" />
 
         {/* Quick actions */}
         <div className="mb-8">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-2xl mb-2">Quick Actions</h2>
-          <div style={{ borderTop: '2px dotted ' + RULE_COLOR }} className="pt-2">
-            <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">2 actions</span>
+          <h2 style={{  }} className="text-2xl mb-2">Quick Actions</h2>
+          <div style={{ borderTop: '2px dotted ' + '#dde1e8' }} className="pt-2">
+            <span style={{ color: "#5c6474" }} className="text-xs">2 actions</span>
           </div>
         </div>
 
@@ -151,30 +143,30 @@ export default async function ActionIndexPage() {
           <Link
             href="/officials/lookup"
             className="block p-5 border hover:border-current transition-colors"
-            style={{ background: PARCHMENT_WARM, borderColor: RULE_COLOR }}
+            style={{ background: "#f4f5f7", borderColor: '#dde1e8' }}
           >
-            <p style={{ fontFamily: SERIF, color: INK }} className="text-base mb-1">Find My Representatives</p>
-            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">Enter your address to see who represents you</p>
+            <p style={{  }} className="text-base mb-1">Find My Representatives</p>
+            <p style={{ color: "#5c6474" }} className="text-xs">Enter your address to see who represents you</p>
           </Link>
           <Link
             href="/call-your-senators"
             className="block p-5 border hover:border-current transition-colors"
-            style={{ background: PARCHMENT_WARM, borderColor: RULE_COLOR }}
+            style={{ background: "#f4f5f7", borderColor: '#dde1e8' }}
           >
-            <p style={{ fontFamily: SERIF, color: INK }} className="text-base mb-1">Call Your Senators</p>
-            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">Script and contact info ready to go</p>
+            <p style={{  }} className="text-base mb-1">Call Your Senators</p>
+            <p style={{ color: "#5c6474" }} className="text-xs">Script and contact info ready to go</p>
           </Link>
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-10" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-10" />
 
         {/* Footer */}
         <div className="text-center">
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm italic mb-4">
+          <p style={{ color: "#5c6474" }} className="text-sm italic mb-4">
             Democracy works when people show up.
           </p>
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-xs hover:underline">
             Back to Change Engine
           </Link>
         </div>

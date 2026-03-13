@@ -5,14 +5,6 @@ import { createClient } from '@/lib/supabase/server'
 
 export const revalidate = 3600
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Resources -- Change Engine',
@@ -58,54 +50,54 @@ export default async function ResourcesIndexPage() {
   const totalCount = counts.services + counts.opportunities + counts.situations
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute right-[-60px] top-[-20px]">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl mt-2">Resources</h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-base mt-2">
+          <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <h1 style={{  }} className="text-2xl sm:text-3xl mt-2">Resources</h1>
+          <p style={{ color: "#5c6474" }} className="text-base mt-2">
             What is available to you -- services, opportunities, and support already in place across Houston.
           </p>
           {/* Stats */}
           <div className="flex items-center gap-6 mt-6">
             <div>
-              <p style={{ fontFamily: SERIF, color: INK }} className="text-xl font-bold">{counts.services.toLocaleString()}</p>
-              <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-wide">Services</p>
+              <p style={{  }} className="text-xl font-bold">{counts.services.toLocaleString()}</p>
+              <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-wide">Services</p>
             </div>
-            <div className="w-px h-8" style={{ background: RULE_COLOR }} />
+            <div className="w-px h-8" style={{ background: '#dde1e8' }} />
             <div>
-              <p style={{ fontFamily: SERIF, color: INK }} className="text-xl font-bold">{counts.opportunities.toLocaleString()}</p>
-              <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-wide">Opportunities</p>
+              <p style={{  }} className="text-xl font-bold">{counts.opportunities.toLocaleString()}</p>
+              <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-wide">Opportunities</p>
             </div>
-            <div className="w-px h-8" style={{ background: RULE_COLOR }} />
+            <div className="w-px h-8" style={{ background: '#dde1e8' }} />
             <div>
-              <p style={{ fontFamily: SERIF, color: INK }} className="text-xl font-bold">{counts.situations.toLocaleString()}</p>
-              <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-wide">Life Situations</p>
+              <p style={{  }} className="text-xl font-bold">{counts.situations.toLocaleString()}</p>
+              <p style={{ color: "#5c6474" }} className="text-[11px] uppercase tracking-wide">Life Situations</p>
             </div>
           </div>
         </div>
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </section>
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+        <nav style={{ color: "#5c6474" }} className="text-[11px] tracking-wide">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-1">/</span>
-          <span style={{ color: INK }}>Resources</span>
+          <span style={{  }}>Resources</span>
         </nav>
       </div>
 
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="flex items-baseline justify-between mb-1">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">Browse by Category</h2>
-          <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{SECTIONS.length} categories</span>
+          <h2 style={{  }} className="text-xl">Browse by Category</h2>
+          <span style={{ color: "#5c6474" }} className="text-[11px]">{SECTIONS.length} categories</span>
         </div>
-        <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-6" />
+        <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-6" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {SECTIONS.map(function (section) {
@@ -115,25 +107,25 @@ export default async function ResourcesIndexPage() {
                 key={section.href}
                 href={section.href}
                 className="block overflow-hidden hover:opacity-80 transition-opacity"
-                style={{ border: '1px solid ' + RULE_COLOR }}
+                style={{ border: '1px solid #dde1e8' }}
               >
                 <div className="flex">
-                  <div className="w-1 flex-shrink-0" style={{ background: CLAY }} />
+                  <div className="w-1 flex-shrink-0" style={{ background: '#1b5e8a' }} />
                   <div className="flex-1 p-6">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 style={{ fontFamily: SERIF, color: INK }} className="text-xl">
+                        <h3 style={{  }} className="text-xl">
                           {section.label}
                         </h3>
                         {count > 0 && (
-                          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] mt-0.5">
+                          <p style={{ color: "#5c6474" }} className="text-[11px] mt-0.5">
                             {count.toLocaleString()} available
                           </p>
                         )}
                       </div>
-                      <span style={{ color: CLAY }} className="text-lg">&rarr;</span>
+                      <span style={{ color: "#1b5e8a" }} className="text-lg">&rarr;</span>
                     </div>
-                    <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm leading-relaxed">
+                    <p style={{ color: "#5c6474" }} className="text-sm leading-relaxed">
                       {section.description}
                     </p>
                   </div>
@@ -144,21 +136,21 @@ export default async function ResourcesIndexPage() {
         </div>
 
         {/* ── Divider ── */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-8" />
 
         {/* Crisis quick-access */}
-        <div className="p-5" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[10px] uppercase tracking-wider mb-3">Immediate Support</p>
-          <div className="flex flex-wrap gap-6 text-sm" style={{ fontFamily: MONO, color: MUTED }}>
-            <span>Crisis Line: <strong style={{ color: INK }}>988</strong></span>
-            <span>City Services: <strong style={{ color: INK }}>311</strong></span>
-            <span>Social Services: <strong style={{ color: INK }}>211</strong></span>
-            <span>DV Hotline: <strong style={{ color: INK }}>713-528-2121</strong></span>
+        <div className="p-5" style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}>
+          <p style={{ color: "#5c6474" }} className="text-[10px] uppercase tracking-wider mb-3">Immediate Support</p>
+          <div className="flex flex-wrap gap-6 text-sm" style={{ color: "#5c6474" }}>
+            <span>Crisis Line: <strong style={{  }}>988</strong></span>
+            <span>City Services: <strong style={{  }}>311</strong></span>
+            <span>Social Services: <strong style={{  }}>211</strong></span>
+            <span>DV Hotline: <strong style={{  }}>713-528-2121</strong></span>
           </div>
         </div>
 
         <div className="mt-10 text-center">
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm italic">
+          <p style={{ color: "#5c6474" }} className="text-sm italic">
             Everything here already exists. We just made it findable.
           </p>
         </div>
@@ -166,8 +158,8 @@ export default async function ResourcesIndexPage() {
 
       {/* ── Footer link ── */}
       <div className="max-w-[900px] mx-auto px-6 pb-10">
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="pt-4">
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to Home</Link>
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="pt-4">
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">&larr; Back to Home</Link>
         </div>
       </div>
     </div>

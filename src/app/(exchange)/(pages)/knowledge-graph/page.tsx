@@ -12,14 +12,6 @@ export const metadata: Metadata = {
 
 export const revalidate = 300
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const ENTITIES = [
   { name: 'Officials', desc: 'who represents you, how they vote, and what they prioritize.' },
@@ -34,22 +26,22 @@ export default async function KnowledgeGraphPage() {
   const data = await getCircleGraphData()
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <SpiralTracker action="explore_knowledge_graph" />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs uppercase tracking-widest mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl mb-4">
             The Civic Knowledge Galaxy
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+          <p style={{ color: "#5c6474" }} className="text-lg max-w-xl mx-auto leading-relaxed">
             Not a list. Not a directory. A living map of how it all fits together.
           </p>
         </div>
@@ -57,17 +49,17 @@ export default async function KnowledgeGraphPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+        <nav style={{ color: "#5c6474" }} className="text-xs">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <span style={{ color: INK }}>Knowledge Graph</span>
+          <span style={{  }}>Knowledge Graph</span>
         </nav>
       </div>
 
       {/* Prose */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
-        <div className="space-y-4 mb-8" style={{ color: MUTED }}>
-          <p style={{ fontFamily: SERIF, color: CLAY }} className="text-sm font-semibold">
+        <div className="space-y-4 mb-8" style={{ color: "#5c6474" }}>
+          <p style={{ color: "#1b5e8a" }} className="text-sm font-semibold">
             Everything in Houston civic life is connected. Nobody was showing you how.
           </p>
           <p>
@@ -79,17 +71,17 @@ export default async function KnowledgeGraphPage() {
 
         {/* What's Connected */}
         <div className="mb-8">
-          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-2xl mb-2">What's Connected</h2>
-          <div style={{ borderTop: '2px dotted ' + RULE_COLOR }} className="pt-2 mb-4">
-            <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{ENTITIES.length} entity types</span>
+          <h2 style={{  }} className="text-2xl mb-2">What's Connected</h2>
+          <div style={{ borderTop: '2px dotted ' + '#dde1e8' }} className="pt-2 mb-4">
+            <span style={{ color: "#5c6474" }} className="text-xs">{ENTITIES.length} entity types</span>
           </div>
           <ul className="space-y-2">
             {ENTITIES.map(function (e) {
               return (
                 <li key={e.name} className="flex items-start gap-3">
-                  <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ background: CLAY }} />
-                  <span style={{ color: MUTED }} className="text-sm">
-                    <strong style={{ color: INK }}>{e.name}</strong> -- {e.desc}
+                  <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ background: '#1b5e8a' }} />
+                  <span style={{ color: "#5c6474" }} className="text-sm">
+                    <strong style={{  }}>{e.name}</strong> -- {e.desc}
                   </span>
                 </li>
               )
@@ -97,7 +89,7 @@ export default async function KnowledgeGraphPage() {
           </ul>
         </div>
 
-        <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm italic mb-8">
+        <p style={{ color: "#5c6474" }} className="text-sm italic mb-8">
           Most platforms show you one thing. We show you how everything connects. That's the difference between a list and a map.
         </p>
       </div>
@@ -109,7 +101,7 @@ export default async function KnowledgeGraphPage() {
 
       {/* Footer */}
       <div className="max-w-[900px] mx-auto px-6 pb-10 text-center">
-        <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">
+        <Link href="/" style={{ color: "#1b5e8a" }} className="text-xs hover:underline">
           Back to Change Engine
         </Link>
       </div>

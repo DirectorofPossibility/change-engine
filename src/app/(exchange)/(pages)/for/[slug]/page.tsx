@@ -9,14 +9,6 @@ import { DashboardClient } from './DashboardClient'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 const PERSONA_CONFIG: Record<string, {
   name: string
@@ -58,7 +50,7 @@ const PERSONA_CONFIG: Record<string, {
     centerOrder: ['Learning', 'Resource', 'Accountability', 'Action'],
     quickActions: [
       { label: 'Browse Library', href: '/library', color: '#6a4e10', effort: 'Read' },
-      { label: 'Learning Paths', href: '/learn', color: '#1a3460', effort: '30-90 min' },
+      { label: 'Learning Paths', href: '/learn', color: '#1b5e8a', effort: '30-90 min' },
       { label: 'Read the News', href: '/news', color: '#1a5030', effort: '5 min' },
       { label: 'Ask Chance', href: '/chat', color: '#C75B2A', effort: 'Chat' },
     ],
@@ -83,13 +75,13 @@ const PERSONA_CONFIG: Record<string, {
     name: 'The Watchdog',
     tagline: 'Hold power accountable',
     description: 'You track decisions, follow the money, attend public meetings, and hold elected officials accountable. Transparency is your tool for change.',
-    color: '#1a3460',
+    color: '#1b5e8a',
     folImage: '/images/fol/metatrons-cube.svg',
     primaryCenter: 'Accountability',
     heroQuestion: 'Who makes decisions?',
     centerOrder: ['Accountability', 'Learning', 'Action', 'Resource'],
     quickActions: [
-      { label: 'Find Your Officials', href: '/officials', color: '#1a3460', effort: 'Browse' },
+      { label: 'Find Your Officials', href: '/officials', color: '#1b5e8a', effort: 'Browse' },
       { label: 'Track Policies', href: '/policies', color: '#6a4e10', effort: 'Browse' },
       { label: 'Elections Hub', href: '/elections', color: '#1a6b56', effort: 'Dashboard' },
       { label: 'Call Your Reps', href: '/officials/lookup', color: '#C75B2A', effort: '5 min' },
@@ -106,7 +98,7 @@ const PERSONA_CONFIG: Record<string, {
     centerOrder: ['Resource', 'Action', 'Learning', 'Accountability'],
     quickActions: [
       { label: 'Organizations', href: '/organizations', color: '#1e4d7a', effort: 'Browse' },
-      { label: 'Foundations', href: '/foundations', color: '#1a3460', effort: 'Browse' },
+      { label: 'Foundations', href: '/foundations', color: '#1b5e8a', effort: 'Browse' },
       { label: 'Submit a Resource', href: '/me/submit', color: '#7a2018', effort: '5 min' },
       { label: 'Partner Dashboard', href: '/me', color: '#C75B2A', effort: 'Dashboard' },
     ],
@@ -125,7 +117,7 @@ const PERSONA_CONFIG: Record<string, {
     centerOrder: ['Learning', 'Resource', 'Action', 'Accountability'],
     quickActions: [
       { label: 'Explore Pathways', href: '/pathways', color: '#E8723A', effort: 'Browse' },
-      { label: 'Knowledge Graph', href: '/knowledge-graph', color: '#1a3460', effort: 'Interactive' },
+      { label: 'Knowledge Graph', href: '/knowledge-graph', color: '#1b5e8a', effort: 'Interactive' },
       { label: 'Neighborhoods', href: '/neighborhoods', color: '#7a2018', effort: 'Map' },
       { label: 'Search Everything', href: '/search', color: '#6a4e10', effort: 'Search' },
     ],
@@ -165,30 +157,30 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
   })
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
-      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+    <div className="bg-paper min-h-screen">
+      <div className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <Image src={config.folImage} alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-20">
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: config.color, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: config.color, textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 className="mt-4" style={{ fontFamily: SERIF, fontSize: 40, lineHeight: 1.1, color: INK }}>
+          <h1 className="mt-4" style={{ fontSize: 40, lineHeight: 1.1,  }}>
             {config.name}
           </h1>
-          <p className="mt-2" style={{ fontFamily: SERIF, fontSize: 20, color: config.color }}>
+          <p className="mt-2" style={{ fontSize: 20, color: config.color }}>
             {config.tagline}
           </p>
-          <p className="mt-4 max-w-[560px]" style={{ fontFamily: SERIF, fontSize: 17, lineHeight: 1.7, color: MUTED }}>
+          <p className="mt-4 max-w-[560px]" style={{ fontSize: 17, lineHeight: 1.7, color: "#5c6474" }}>
             {config.description}
           </p>
         </div>
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
       </div>
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.06em', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: 11, letterSpacing: '0.06em', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>{config.name}</span>
         </nav>
@@ -203,9 +195,9 @@ export default async function PersonaPage({ params }: { params: Promise<{ slug: 
         />
       </div>
       <div className="max-w-[900px] mx-auto px-6">
-        <div style={{ height: 1, background: RULE_COLOR }} />
+        <div style={{ height: 1, background: '#dde1e8' }} />
         <div className="py-8">
-          <Link href="/personas" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+          <Link href="/personas" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
             &larr; Choose a different path
           </Link>
         </div>

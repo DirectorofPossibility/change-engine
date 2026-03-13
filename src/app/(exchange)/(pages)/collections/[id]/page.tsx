@@ -8,14 +8,6 @@ import Image from 'next/image'
 
 export const revalidate = 300
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -36,7 +28,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
   if (!collection) notFound()
 
   const c = collection as any
-  const color = c.color || (c.theme_id && (THEMES as any)[c.theme_id]?.color) || CLAY
+  const color = c.color || (c.theme_id && (THEMES as any)[c.theme_id]?.color) || '#1b5e8a'
   const itemType = c.item_type || 'content'
 
   // Parse item_ids and fetch content
@@ -87,36 +79,36 @@ export default async function CollectionDetailPage({ params }: { params: Promise
   const rest = items.slice(4)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             {collectionName}
           </h1>
           {subtitle && (
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {subtitle}
             </p>
           )}
           {items.length > 0 && (
-            <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED, marginTop: '1rem', display: 'block' }}>{items.length} Resources</span>
+            <span style={{ fontSize: '0.7rem', color: "#5c6474", marginTop: '1rem', display: 'block' }}>{items.length} Resources</span>
           )}
         </div>
       </div>
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/collections" className="hover:underline" style={{ color: CLAY }}>Collections</Link>
+          <Link href="/collections" className="hover:underline" style={{ color: "#1b5e8a" }}>Collections</Link>
           <span className="mx-2">/</span>
           <span>{collectionName}</span>
         </nav>
@@ -125,8 +117,8 @@ export default async function CollectionDetailPage({ params }: { params: Promise
       {/* Content */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
         {items.length === 0 ? (
-          <div className="py-16" style={{ border: '1px dashed ' + RULE_COLOR }}>
-            <p style={{ fontFamily: SERIF, color: MUTED, fontStyle: 'italic', textAlign: 'center' }}>This collection is being curated. Check back soon.</p>
+          <div className="py-16" style={{ border: '1px dashed ' + '#dde1e8' }}>
+            <p style={{ color: "#5c6474", fontStyle: 'italic', textAlign: 'center' }}>This collection is being curated. Check back soon.</p>
           </div>
         ) : (
           <>
@@ -146,7 +138,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                     key={itemId}
                     href={href}
                     className="block group"
-                    style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1rem' }}
+                    style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1rem' }}
                   >
                     <div className="flex gap-4">
                       {image && (
@@ -155,14 +147,14 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <h3 style={{ fontFamily: SERIF, fontSize: '1rem', color: INK, lineHeight: 1.3 }} className="group-hover:underline line-clamp-2">
+                        <h3 style={{ fontSize: '1rem', lineHeight: 1.3 }} className="group-hover:underline line-clamp-2">
                           {title}
                         </h3>
                         {summary && (
-                          <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
+                          <p style={{ fontSize: '0.85rem', color: "#5c6474", marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
                         )}
                         {item.source_url && (
-                          <div className="flex items-center gap-1 mt-2" style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED }}>
+                          <div className="flex items-center gap-1 mt-2" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
                             <ExternalLink size={10} />
                             <span className="truncate">{new URL(item.source_url).hostname.replace('www.', '')}</span>
                           </div>
@@ -176,7 +168,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
 
             {rest.length > 0 && (
               <details className="mt-6">
-                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
                   Show {rest.length} more resource{rest.length !== 1 ? 's' : ''}
                 </summary>
                 <div className="space-y-4 mt-4">
@@ -195,7 +187,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                         key={itemId}
                         href={href}
                         className="block group"
-                        style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1rem' }}
+                        style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1rem' }}
                       >
                         <div className="flex gap-4">
                           {image && (
@@ -204,11 +196,11 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <h3 style={{ fontFamily: SERIF, fontSize: '1rem', color: INK, lineHeight: 1.3 }} className="group-hover:underline line-clamp-2">
+                            <h3 style={{ fontSize: '1rem', lineHeight: 1.3 }} className="group-hover:underline line-clamp-2">
                               {title}
                             </h3>
                             {summary && (
-                              <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
+                              <p style={{ fontSize: '0.85rem', color: "#5c6474", marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
                             )}
                           </div>
                         </div>
@@ -223,9 +215,9 @@ export default async function CollectionDetailPage({ params }: { params: Promise
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/collections" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/collections" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Collections
         </Link>
       </div>

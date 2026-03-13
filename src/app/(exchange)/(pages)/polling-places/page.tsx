@@ -9,14 +9,6 @@ import { PollingPlaceClient } from './PollingPlaceClient'
 
 export const revalidate = 3600
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Find Where to Vote',
@@ -41,23 +33,23 @@ export default async function PollingPlacesPage() {
   const activeElection = upcoming && upcoming.length > 0 ? upcoming[0] : null
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden border-b">
+      <div className="bg-paper relative overflow-hidden border-b">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-12 relative">
-          <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11, letterSpacing: '0.12em' }} className="uppercase mb-3">
+          <p style={{ color: "#5c6474", fontSize: 11, letterSpacing: '0.12em' }} className="uppercase mb-3">
             The Change Engine
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 12, color: CLAY, letterSpacing: '0.08em' }} className="uppercase mb-2">
+          <p style={{ fontSize: 12, color: "#1b5e8a", letterSpacing: '0.08em' }} className="uppercase mb-2">
             {t('polling.hook')}
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-3xl sm:text-4xl mb-3">
+          <h1 style={{  }} className="text-3xl sm:text-4xl mb-3">
             {t('polling.title')}
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 17 }} className="max-w-[600px] leading-relaxed">
+          <p style={{ color: "#5c6474", fontSize: 17 }} className="max-w-[600px] leading-relaxed">
             {t('polling.subhead')}
           </p>
         </div>
@@ -65,8 +57,8 @@ export default async function PollingPlacesPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
-        <nav style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.06em' }} className="uppercase">
-          <Link href="/elections" className="hover:underline" style={{ color: CLAY }}>Elections</Link>
+        <nav style={{ fontSize: 11, color: "#5c6474", letterSpacing: '0.06em' }} className="uppercase">
+          <Link href="/elections" className="hover:underline" style={{ color: "#1b5e8a" }}>Elections</Link>
           <span className="mx-2">/</span>
           <span>Polling Places</span>
         </nav>
@@ -94,9 +86,9 @@ export default async function PollingPlacesPage() {
             )}
 
             {/* Helpful links */}
-            <div className="border" style={{ borderColor: RULE_COLOR }}>
-              <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE_COLOR}` }}>
-                <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.08em' }} className="uppercase">
+            <div className="border" style={{ borderColor: '#dde1e8' }}>
+              <div className="px-5 py-3" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
+                <span style={{ fontSize: 11, color: "#5c6474", letterSpacing: '0.08em' }} className="uppercase">
                   {t('detail.helpful_links')}
                 </span>
               </div>
@@ -105,7 +97,7 @@ export default async function PollingPlacesPage() {
                   href="https://www.votetexas.gov/voting/where.html"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontFamily: SERIF, fontSize: 14, color: CLAY }}
+                  style={{ fontSize: 14, color: "#1b5e8a" }}
                   className="block hover:underline"
                 >
                   VoteTexas.gov &rarr;
@@ -114,7 +106,7 @@ export default async function PollingPlacesPage() {
                   href="https://www.harrisvotes.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontFamily: SERIF, fontSize: 14, color: CLAY }}
+                  style={{ fontSize: 14, color: "#1b5e8a" }}
                   className="block hover:underline"
                 >
                   HarrisVotes.com &rarr;
@@ -123,7 +115,7 @@ export default async function PollingPlacesPage() {
                   href="https://www.vote.org/register-to-vote/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontFamily: SERIF, fontSize: 14, color: CLAY }}
+                  style={{ fontSize: 14, color: "#1b5e8a" }}
                   className="block hover:underline"
                 >
                   Register to Vote &rarr;
@@ -132,22 +124,22 @@ export default async function PollingPlacesPage() {
             </div>
 
             {/* Support numbers */}
-            <div style={{ borderTop: `1px solid ${RULE_COLOR}` }} className="pt-4">
-              <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.08em' }} className="uppercase block mb-2">
+            <div style={{ borderTop: `1px solid ${'#dde1e8'}` }} className="pt-4">
+              <span style={{ fontSize: 11, color: "#5c6474", letterSpacing: '0.08em' }} className="uppercase block mb-2">
                 {t('d2nav.support')}
               </span>
-              <div className="space-y-1" style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
-                <p>Harris County Elections: <strong style={{ color: INK }}>713-755-6965</strong></p>
-                <p>TX SOS Voter Hotline: <strong style={{ color: INK }}>1-800-252-8683</strong></p>
+              <div className="space-y-1" style={{ fontSize: 12, color: "#5c6474" }}>
+                <p>Harris County Elections: <strong style={{  }}>713-755-6965</strong></p>
+                <p>TX SOS Voter Hotline: <strong style={{  }}>1-800-252-8683</strong></p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer link */}
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
         <div className="text-center pb-12">
-          <Link href="/elections" style={{ fontFamily: MONO, color: CLAY, fontSize: 12, letterSpacing: '0.06em' }} className="uppercase hover:underline">
+          <Link href="/elections" style={{ color: "#1b5e8a", fontSize: 12, letterSpacing: '0.06em' }} className="uppercase hover:underline">
             Back to Elections
           </Link>
         </div>

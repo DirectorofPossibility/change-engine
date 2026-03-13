@@ -10,13 +10,6 @@ import { OfficialsClient } from './OfficialsClient'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import type { ElectedOfficial, GovernmentLevel, TranslationMap } from '@/lib/types/exchange'
 
-const PARCHMENT = '#F5F0E8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 interface ZipResults {
   federal: ElectedOfficial[]
@@ -147,19 +140,19 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
   return (
     <div>
       {/* ZIP Search Bar */}
-      <div className="p-6 mb-8" style={{ background: '#fff', border: '1px solid ' + RULE_COLOR }}>
-        <h2 style={{ fontFamily: SERIF, fontSize: '1.3rem', color: INK, marginBottom: '0.5rem' }}>Who Represents You?</h2>
-        <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, marginBottom: '1rem' }}>Drop your ZIP code. We will show you everyone from City Hall to the Capitol.</p>
+      <div className="p-6 mb-8" style={{ background: '#fff', border: '1px solid #dde1e8' }}>
+        <h2 style={{ fontSize: '1.3rem', marginBottom: '0.5rem' }}>Who Represents You?</h2>
+        <p style={{ fontSize: '0.9rem', color: "#5c6474", marginBottom: '1rem' }}>Drop your ZIP code. We will show you everyone from City Hall to the Capitol.</p>
         <form onSubmit={handleZipSearch} className="flex gap-3">
           <div className="relative flex-1 max-w-xs">
-            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: MUTED }} />
+            <MapPin size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#5c6474" }} />
             <input
               type="text"
               value={zip}
               onChange={function (e) { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
               placeholder="Enter ZIP code"
               className="w-full pl-9 pr-4 py-3 text-sm focus:outline-none"
-              style={{ fontFamily: MONO, border: '1px solid ' + RULE_COLOR, background: PARCHMENT }}
+              style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}
               maxLength={5}
             />
             <TranslatedTooltip tip={TOOLTIPS.zip_lookup} position="bottom" />
@@ -168,21 +161,21 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
             type="submit"
             disabled={loading || zip.length !== 5}
             className="px-6 py-3 text-white text-sm hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
-            style={{ fontFamily: MONO, textTransform: 'uppercase', letterSpacing: '0.08em', background: INK }}
+            style={{ textTransform: 'uppercase', letterSpacing: '0.08em', background: '#0d1117' }}
           >
             <Search size={16} />
             {loading ? 'Searching...' : 'Find'}
           </button>
         </form>
-        {error && <p className="text-sm mt-3" style={{ color: CLAY }}>{error}</p>}
+        {error && <p className="text-sm mt-3" style={{ color: "#1b5e8a" }}>{error}</p>}
       </div>
 
       {/* ZIP Results */}
       {zipResults && (
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Your Representatives</h2>
-            <button onClick={clearZipResults} className="text-sm hover:underline" style={{ fontFamily: MONO, color: CLAY }}>
+            <h2 style={{ fontSize: '1.5rem',  }}>Your Representatives</h2>
+            <button onClick={clearZipResults} className="text-sm hover:underline" style={{ color: "#1b5e8a" }}>
               Clear results
             </button>
           </div>
@@ -192,8 +185,8 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
             if (group.length === 0) return null
             return (
               <div key={key} className="mb-6">
-                <h3 className="flex items-center gap-2 mb-3" style={{ fontFamily: SERIF, fontSize: '1.1rem', color: INK }}>
-                  <Icon size={18} style={{ color: MUTED }} /> {label}
+                <h3 className="flex items-center gap-2 mb-3" style={{ fontSize: '1.1rem',  }}>
+                  <Icon size={18} style={{ color: "#5c6474" }} /> {label}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {group.map(function (o) {
@@ -222,19 +215,19 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
 
           {zipResults.federal.length === 0 && zipResults.state.length === 0 &&
             zipResults.county.length === 0 && zipResults.city.length === 0 && (
-            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, padding: '1rem 0' }}>No officials found for this ZIP code.</p>
+            <p style={{ fontSize: '0.9rem', color: "#5c6474", padding: '1rem 0' }}>No officials found for this ZIP code.</p>
           )}
 
-          <div className="my-8" style={{ height: 1, background: RULE_COLOR }} />
+          <div className="my-8" style={{ height: 1, background: '#dde1e8' }} />
         </div>
       )}
 
       {/* Full Officials Listing */}
       <div className="flex items-baseline justify-between mb-1">
-        <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>The Full Roster</h2>
-        <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{officials.length} officials</span>
+        <h2 style={{ fontSize: '1.5rem',  }}>The Full Roster</h2>
+        <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{officials.length} officials</span>
       </div>
-      <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1.5rem' }} />
+      <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1.5rem' }} />
       <OfficialsClient officials={officials} levels={levels} translations={translations} linkedinProfiles={linkedinProfiles} />
     </div>
   )

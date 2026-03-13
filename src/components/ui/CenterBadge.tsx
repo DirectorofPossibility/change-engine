@@ -5,7 +5,7 @@ const CENTER_COLORS: Record<string, string> = {
   Learning:       '#4a2870',
   Action:         '#7a2018',
   Resource:       '#6a4e10',
-  Accountability: '#1a3460',
+  Accountability: '#1b5e8a',
 }
 
 const CENTER_CONFIG: Record<string, { question: string }> = {

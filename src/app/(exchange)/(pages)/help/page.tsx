@@ -19,14 +19,6 @@ import { HelpUrgencyHeader } from './HelpUrgencyHeader'
 
 export const revalidate = 300
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Available Resources',
@@ -48,20 +40,20 @@ export default async function HelpPage() {
   })
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs uppercase tracking-widest mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl mb-4">
             Available Resources
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+          <p style={{ color: "#5c6474" }} className="text-lg max-w-xl mx-auto leading-relaxed">
             Find services and resources for food, housing, healthcare, jobs, and more in Houston.
           </p>
         </div>
@@ -69,10 +61,10 @@ export default async function HelpPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+        <nav style={{ color: "#5c6474" }} className="text-xs">
           <Link href="/" className="hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <span style={{ color: INK }}>Available Resources</span>
+          <span style={{  }}>Available Resources</span>
         </nav>
       </div>
 
@@ -108,11 +100,11 @@ export default async function HelpPage() {
         </div>
 
         {/* Divider */}
-        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-10" />
+        <div style={{ borderTop: '1px solid #dde1e8' }} className="my-10" />
 
         {/* Footer */}
         <div className="text-center">
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-xs hover:underline">
             Back to Change Engine
           </Link>
         </div>

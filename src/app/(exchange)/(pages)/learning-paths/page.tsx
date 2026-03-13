@@ -11,14 +11,6 @@ export const metadata: Metadata = {
   description: 'Structured journeys to deepen your understanding of civic life in Houston — explore guided learning paths across community topics.',
 }
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export default async function LearningPathsPage() {
   const supabase = await createClient()
@@ -34,9 +26,9 @@ export default async function LearningPathsPage() {
   const rest = items.slice(4)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden py-16 sm:py-20" style={{ background: PARCHMENT_WARM }}>
+      <section className="relative overflow-hidden py-16 sm:py-20 bg-paper">
         <Image
           src="/images/fol/seed-of-life.svg"
           alt=""
@@ -45,13 +37,13 @@ export default async function LearningPathsPage() {
           className="opacity-[0.04] absolute top-1/2 right-8 -translate-y-1/2 pointer-events-none"
         />
         <div className="relative z-10 max-w-[900px] mx-auto px-6">
-          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-[0.15em] uppercase mb-4">
+          <p style={{ color: "#5c6474" }} className="text-xs tracking-[0.15em] uppercase mb-4">
             Change Engine
           </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
+          <h1 style={{  }} className="text-4xl sm:text-5xl leading-[1.15] mb-4">
             Learning Paths
           </h1>
-          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg leading-relaxed max-w-2xl">
+          <p style={{ color: "#5c6474" }} className="text-lg leading-relaxed max-w-2xl">
             Structured journeys to deepen your understanding of civic life
           </p>
         </div>
@@ -59,8 +51,8 @@ export default async function LearningPathsPage() {
 
       {/* ── BREADCRUMB ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
-        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs tracking-wide">
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ color: "#5c6474" }} className="text-xs tracking-wide">
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Learning Paths</span>
         </nav>
@@ -68,16 +60,16 @@ export default async function LearningPathsPage() {
 
       {/* ── SECTION HEADER ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <div className="flex items-baseline justify-between" style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '0.75rem' }}>
-          <h2 style={{ fontFamily: SERIF, color: INK, fontSize: '1.5rem' }}>All Paths</h2>
-          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{items.length} paths</span>
+        <div className="flex items-baseline justify-between" style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: '1.5rem' }}>All Paths</h2>
+          <span style={{ color: "#5c6474" }} className="text-xs">{items.length} paths</span>
         </div>
       </div>
 
       {/* ── PATHS LIST ── */}
       <div className="max-w-[900px] mx-auto px-6 py-6">
         {items.length === 0 ? (
-          <p className="text-center py-12" style={{ fontFamily: SERIF, color: MUTED }}>
+          <p className="text-center py-12" style={{ color: "#5c6474" }}>
             Learning paths are being developed. Check back soon.
           </p>
         ) : (
@@ -85,27 +77,27 @@ export default async function LearningPathsPage() {
             <div className="space-y-4">
               {visible.map(function (path: any) {
                 const theme = path.theme_id ? THEMES[path.theme_id as keyof typeof THEMES] : null
-                const themeColor = theme?.color ?? CLAY
+                const themeColor = theme?.color ?? '#1b5e8a'
 
                 return (
                   <Link
                     key={path.path_id}
                     href={'/learning-paths/' + path.path_id}
                     className="block hover:underline"
-                    style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1rem' }}
+                    style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1rem' }}
                   >
                     <div className="flex gap-4">
                       <div className="w-1 flex-shrink-0 self-stretch" style={{ backgroundColor: themeColor }} />
                       <div className="flex-1 min-w-0">
-                        <h3 style={{ fontFamily: SERIF, color: INK }} className="text-lg leading-snug mb-1">
+                        <h3 style={{  }} className="text-lg leading-snug mb-1">
                           {path.path_name}
                         </h3>
                         {path.description_5th_grade && (
-                          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm line-clamp-2 mb-2">
+                          <p style={{ color: "#5c6474" }} className="text-sm line-clamp-2 mb-2">
                             {path.description_5th_grade}
                           </p>
                         )}
-                        <div className="flex items-center gap-3 text-xs flex-wrap" style={{ fontFamily: MONO, color: MUTED }}>
+                        <div className="flex items-center gap-3 text-xs flex-wrap" style={{ color: "#5c6474" }}>
                           {path.difficulty_level && (
                             <span>{path.difficulty_level}</span>
                           )}
@@ -125,33 +117,33 @@ export default async function LearningPathsPage() {
 
             {rest.length > 0 && (
               <details className="mt-6">
-                <summary style={{ fontFamily: MONO, color: CLAY, cursor: 'pointer' }} className="text-sm hover:underline">
+                <summary style={{ color: "#1b5e8a", cursor: 'pointer' }} className="text-sm hover:underline">
                   Show {rest.length} more path{rest.length !== 1 ? 's' : ''}
                 </summary>
                 <div className="space-y-4 mt-4">
                   {rest.map(function (path: any) {
                     const theme = path.theme_id ? THEMES[path.theme_id as keyof typeof THEMES] : null
-                    const themeColor = theme?.color ?? CLAY
+                    const themeColor = theme?.color ?? '#1b5e8a'
 
                     return (
                       <Link
                         key={path.path_id}
                         href={'/learning-paths/' + path.path_id}
                         className="block hover:underline"
-                        style={{ borderBottom: '1px dotted ' + RULE_COLOR, paddingBottom: '1rem' }}
+                        style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '1rem' }}
                       >
                         <div className="flex gap-4">
                           <div className="w-1 flex-shrink-0 self-stretch" style={{ backgroundColor: themeColor }} />
                           <div className="flex-1 min-w-0">
-                            <h3 style={{ fontFamily: SERIF, color: INK }} className="text-lg leading-snug mb-1">
+                            <h3 style={{  }} className="text-lg leading-snug mb-1">
                               {path.path_name}
                             </h3>
                             {path.description_5th_grade && (
-                              <p style={{ fontFamily: SERIF, color: MUTED }} className="text-sm line-clamp-2 mb-2">
+                              <p style={{ color: "#5c6474" }} className="text-sm line-clamp-2 mb-2">
                                 {path.description_5th_grade}
                               </p>
                             )}
-                            <div className="flex items-center gap-3 text-xs flex-wrap" style={{ fontFamily: MONO, color: MUTED }}>
+                            <div className="flex items-center gap-3 text-xs flex-wrap" style={{ color: "#5c6474" }}>
                               {path.difficulty_level && <span>{path.difficulty_level}</span>}
                               {path.estimated_minutes != null && <span>{path.estimated_minutes} min</span>}
                               {path.module_count != null && <span>{path.module_count} {path.module_count === 1 ? 'module' : 'modules'}</span>}
@@ -170,8 +162,8 @@ export default async function LearningPathsPage() {
 
       {/* ── FOOTER LINK ── */}
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <div style={{ borderTop: '1px dotted ' + RULE_COLOR, paddingTop: '1.5rem' }}>
-          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">
+        <div style={{ borderTop: '1px dotted ' + '#dde1e8', paddingTop: '1.5rem' }}>
+          <Link href="/" style={{ color: "#1b5e8a" }} className="text-sm hover:underline">
             &larr; Back to Home
           </Link>
         </div>

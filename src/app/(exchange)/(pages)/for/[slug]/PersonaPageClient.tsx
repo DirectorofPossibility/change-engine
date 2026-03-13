@@ -31,7 +31,7 @@ const OTHER_PERSONAS = [
   { slug: 'seeker', name: 'The Seeker', desc: 'Find resources', color: '#4a2870' },
   { slug: 'learner', name: 'The Learner', desc: 'Understand issues', color: '#6a4e10' },
   { slug: 'builder', name: 'The Builder', desc: 'Take action', color: '#7a2018' },
-  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#1a3460' },
+  { slug: 'watchdog', name: 'The Watchdog', desc: 'Track accountability', color: '#1b5e8a' },
   { slug: 'partner', name: 'The Partner', desc: 'Collaborate', color: '#1e4d7a' },
   { slug: 'explorer', name: 'The Explorer', desc: 'Discover it all', color: '#E8723A' },
 ]

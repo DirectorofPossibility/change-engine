@@ -18,7 +18,7 @@ const THEME_COLORS: Record<string, string> = {
   THEME_04: '#7a2018',
   THEME_05: '#6a4e10',
   THEME_06: '#1a5030',
-  THEME_07: '#1a3460',
+  THEME_07: '#1b5e8a',
 }
 
 function themeColor(themeId: string | null): string {

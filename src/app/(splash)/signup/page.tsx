@@ -12,14 +12,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 function validatePassword(pw: string): string | null {
   if (pw.length < 8) return 'Password must be at least 8 characters.'
@@ -144,38 +136,38 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center px-6" style={{ background: PARCHMENT }}>
+      <div className="min-h-screen relative flex items-center justify-center px-6 bg-paper">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={400} height={400} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 w-full max-w-[440px] text-center">
           <Image src="/images/fol/flower-full.svg" alt="" width={60} height={60} className="mx-auto mb-6 opacity-30" />
-          <h1 style={{ fontFamily: SERIF, fontSize: 28, color: INK, marginBottom: 12 }}>
+          <h1 style={{ fontSize: 28, marginBottom: 12 }}>
             Check your email.
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED, lineHeight: 1.7, marginBottom: 24 }}>
-            We sent a verification link to <strong style={{ color: INK }}>{email}</strong>.
+          <p style={{ fontSize: 15, color: "#5c6474", lineHeight: 1.7, marginBottom: 24 }}>
+            We sent a verification link to <strong style={{  }}>{email}</strong>.
             Click the link to activate your account and start exploring.
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 11, color: MUTED, marginBottom: 20 }}>
+          <p style={{ fontSize: 11, color: "#5c6474", marginBottom: 20 }}>
             Check spam if you don&apos;t see it in a few minutes.
           </p>
           {resent ? (
-            <p style={{ fontFamily: MONO, fontSize: 12, color: '#16a34a', marginBottom: 16 }}>Verification email resent.</p>
+            <p style={{ fontSize: 12, color: '#16a34a', marginBottom: 16 }}>Verification email resent.</p>
           ) : (
             <button
               onClick={handleResendVerification}
               disabled={resending}
               className="hover:underline disabled:opacity-50 mb-4 block mx-auto"
-              style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+              style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
             >
               {resending ? 'Resending...' : 'Didn\u2019t get it? Resend.'}
             </button>
           )}
           {error && (
-            <p style={{ fontFamily: SERIF, fontSize: 13, color: '#C53030', marginBottom: 16 }}>{error}</p>
+            <p style={{ fontSize: 13, color: '#C53030', marginBottom: 16 }}>{error}</p>
           )}
-          <Link href="/login" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}>
+          <Link href="/login" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>
             Back to sign in
           </Link>
         </div>
@@ -186,7 +178,7 @@ export default function SignupPage() {
   // ── Main form ──
 
   return (
-    <div className="min-h-screen relative" style={{ background: PARCHMENT }}>
+    <div className="min-h-screen relative bg-paper">
       {/* Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         <Image src="/images/fol/flower-full.svg" alt="" width={600} height={600} className="opacity-[0.03]" />
@@ -195,17 +187,17 @@ export default function SignupPage() {
       <div className="relative z-10 flex flex-col items-center py-12 px-6">
         {/* Header */}
         <Link href="/" className="mb-10 hover:opacity-80 transition-opacity">
-          <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color: CLAY, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
         </Link>
 
         <div className="w-full max-w-[460px]">
           {/* Title */}
-          <h1 style={{ fontFamily: SERIF, fontSize: 32, color: INK, lineHeight: 1.15, marginBottom: 8 }}>
+          <h1 style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
             Join the Exchange.
           </h1>
-          <p style={{ fontFamily: SERIF, fontSize: 15, color: MUTED, marginBottom: 32 }}>
+          <p style={{ fontSize: 15, color: "#5c6474", marginBottom: 32 }}>
             Connect with resources, services, and civic opportunities in Houston.
           </p>
 
@@ -214,7 +206,7 @@ export default function SignupPage() {
             <div
               role="alert"
               className="mb-5 p-3"
-              style={{ background: '#FDF2F2', border: '1px solid rgba(197,48,48,0.2)', fontFamily: SERIF, fontSize: 14, color: '#C53030' }}
+              style={{ background: '#FDF2F2', border: '1px solid rgba(197,48,48,0.2)', fontSize: 14, color: '#C53030' }}
             >
               {error}
             </div>
@@ -224,72 +216,72 @@ export default function SignupPage() {
           <form
             onSubmit={handleSubmit}
             className="p-6 space-y-5"
-            style={{ background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+            style={{ background: '#ffffff', border: '1px solid #dde1e8' }}
           >
             <div>
-              <label htmlFor="displayName" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+              <label htmlFor="displayName" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
                 Display Name
               </label>
               <input
                 id="displayName" type="text" required value={displayName} maxLength={50}
                 onChange={function (e) { setDisplayName(e.target.value) }}
                 className="w-full px-4 py-3 focus:outline-none"
-                style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                style={{ fontSize: 15, background: '#ffffff', border: '1px solid #dde1e8' }}
                 placeholder="Your name"
               />
             </div>
 
             <div>
-              <label htmlFor="email" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+              <label htmlFor="email" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
                 Email
               </label>
               <input
                 id="email" type="email" required value={email}
                 onChange={function (e) { setEmail(e.target.value) }}
                 className="w-full px-4 py-3 focus:outline-none"
-                style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                style={{ fontSize: 15, background: '#ffffff', border: '1px solid #dde1e8' }}
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+              <label htmlFor="password" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
                 Password
               </label>
               <input
                 id="password" type="password" required minLength={8} value={password}
                 onChange={function (e) { setPassword(e.target.value); setPasswordHint(validatePassword(e.target.value)) }}
                 className="w-full px-4 py-3 focus:outline-none"
-                style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                style={{ fontSize: 15, background: '#ffffff', border: '1px solid #dde1e8' }}
                 placeholder="8+ characters, uppercase + number"
               />
               {password && passwordHint && (
-                <p style={{ fontFamily: MONO, fontSize: 11, color: '#b45309', marginTop: 4 }}>{passwordHint}</p>
+                <p style={{ fontSize: 11, color: '#b45309', marginTop: 4 }}>{passwordHint}</p>
               )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="zipCode" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
-                  ZIP Code <span style={{ color: RULE_COLOR }}>(optional)</span>
+                <label htmlFor="zipCode" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                  ZIP Code <span style={{ color: '#dde1e8' }}>(optional)</span>
                 </label>
                 <input
                   id="zipCode" type="text" maxLength={5} value={zipCode}
                   onChange={function (e) { setZipCode(e.target.value.replace(/\D/g, '').slice(0, 5)) }}
                   className="w-full px-4 py-3 focus:outline-none"
-                  style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                  style={{ fontSize: 15, background: '#ffffff', border: '1px solid #dde1e8' }}
                   placeholder="77001"
                 />
               </div>
               <div>
-                <label htmlFor="language" style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.08em', color: MUTED, textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                <label htmlFor="language" style={{ fontSize: 11, letterSpacing: '0.08em', color: "#5c6474", textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
                   Language
                 </label>
                 <select
                   id="language" value={language}
                   onChange={function (e) { setLanguage(e.target.value) }}
                   className="w-full px-4 py-3 focus:outline-none"
-                  style={{ fontFamily: SERIF, fontSize: 15, color: INK, background: '#ffffff', border: `1px solid ${RULE_COLOR}` }}
+                  style={{ fontSize: 15, background: '#ffffff', border: '1px solid #dde1e8' }}
                 >
                   <option value="en">English</option>
                   <option value="es">Espanol</option>
@@ -299,8 +291,8 @@ export default function SignupPage() {
             </div>
 
             {/* Policy agreements */}
-            <div className="pt-4 space-y-3" style={{ borderTop: `1px solid ${RULE_COLOR}` }}>
-              <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase' }}>
+            <div className="pt-4 space-y-3" style={{ borderTop: `1px solid ${'#dde1e8'}` }}>
+              <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase' }}>
                 Review &amp; Agree
               </p>
 
@@ -309,11 +301,11 @@ export default function SignupPage() {
                   type="checkbox" checked={agreedPrivacy}
                   onChange={function () { setAgreedPrivacy(!agreedPrivacy) }}
                   className="mt-0.5 w-4 h-4"
-                  style={{ accentColor: CLAY }}
+                  style={{ accentColor: '#1b5e8a' }}
                 />
-                <span style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                <span style={{ fontSize: 14,  }}>
                   I have read and agree to the{' '}
-                  <Link href="/privacy" target="_blank" className="hover:underline" style={{ color: CLAY }}>Privacy Policy</Link>
+                  <Link href="/privacy" target="_blank" className="hover:underline" style={{ color: "#1b5e8a" }}>Privacy Policy</Link>
                 </span>
               </label>
 
@@ -322,11 +314,11 @@ export default function SignupPage() {
                   type="checkbox" checked={agreedAccessibility}
                   onChange={function () { setAgreedAccessibility(!agreedAccessibility) }}
                   className="mt-0.5 w-4 h-4"
-                  style={{ accentColor: CLAY }}
+                  style={{ accentColor: '#1b5e8a' }}
                 />
-                <span style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                <span style={{ fontSize: 14,  }}>
                   I have read the{' '}
-                  <Link href="/accessibility" target="_blank" className="hover:underline" style={{ color: CLAY }}>Accessibility Statement</Link>
+                  <Link href="/accessibility" target="_blank" className="hover:underline" style={{ color: "#1b5e8a" }}>Accessibility Statement</Link>
                 </span>
               </label>
 
@@ -335,11 +327,11 @@ export default function SignupPage() {
                   type="checkbox" checked={agreedTerms}
                   onChange={function () { setAgreedTerms(!agreedTerms) }}
                   className="mt-0.5 w-4 h-4"
-                  style={{ accentColor: CLAY }}
+                  style={{ accentColor: '#1b5e8a' }}
                 />
-                <span style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                <span style={{ fontSize: 14,  }}>
                   I agree to the{' '}
-                  <Link href="/terms" target="_blank" className="hover:underline" style={{ color: CLAY }}>Terms of Service</Link>
+                  <Link href="/terms" target="_blank" className="hover:underline" style={{ color: "#1b5e8a" }}>Terms of Service</Link>
                 </span>
               </label>
             </div>
@@ -348,35 +340,35 @@ export default function SignupPage() {
               type="submit"
               disabled={loading || !allAgreed}
               className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ fontFamily: MONO, fontSize: 13, letterSpacing: '0.04em', background: CLAY }}
+              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#1b5e8a' }}
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
 
-          <p className="mt-6 text-center" style={{ fontFamily: SERIF, fontSize: 14, color: MUTED }}>
+          <p className="mt-6 text-center" style={{ fontSize: 14, color: "#5c6474" }}>
             Already have an account?{' '}
-            <Link href="/login" className="hover:underline" style={{ color: CLAY }}>Sign in</Link>
+            <Link href="/login" className="hover:underline" style={{ color: "#1b5e8a" }}>Sign in</Link>
           </p>
 
           {/* Account tier */}
-          <div className="mt-8 p-5 text-center" style={{ background: PARCHMENT_WARM, border: `1px solid ${RULE_COLOR}` }}>
-            <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: CLAY, textTransform: 'uppercase', marginBottom: 4 }}>
+          <div className="mt-8 p-5 text-center" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
+            <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 4 }}>
               Neighbor Account
             </p>
-            <p style={{ fontFamily: SERIF, fontSize: 24, color: INK }}>Free</p>
-            <p style={{ fontFamily: SERIF, fontSize: 13, color: MUTED, marginTop: 6 }}>
+            <p style={{ fontSize: 24,  }}>Free</p>
+            <p style={{ fontSize: 13, color: "#5c6474", marginTop: 6 }}>
               Share resources, submit content, track your civic activity, and earn impact points.
             </p>
           </div>
-          <p className="text-center mt-2" style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>
+          <p className="text-center mt-2" style={{ fontSize: 11, color: "#5c6474" }}>
             Organizations can upgrade to Community Partner from the account dashboard.
           </p>
         </div>
 
         {/* Footer */}
         <div className="mt-12">
-          <Link href="/exchange" className="hover:underline" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+          <Link href="/exchange" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
             &larr; Back to The Community Exchange
           </Link>
         </div>

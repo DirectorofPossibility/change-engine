@@ -18,16 +18,6 @@ import { CENTERS, CENTER_COLORS, THEMES } from '@/lib/constants'
 
 // ── Design tokens (locked — matches CommunityGuide.tsx) ─────────────────
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const PARCHMENT_LIGHT = '#F8F4EC'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 // ── Center metadata ─────────────────────────────────────────────────────
 
@@ -41,13 +31,13 @@ const CENTER_META: Record<string, {
     motif: '/images/fol/vesica-piscis.svg',
     tagline: 'Knowledge is the first step.',
     description: 'Understand what is happening in your community. Read research, explore data, and learn how issues connect to your daily life.',
-    bg: PARCHMENT_LIGHT,
+    bg: '#f4f5f7',
   },
   Resource: {
     motif: '/images/fol/seed-of-life.svg',
     tagline: 'Your community has resources waiting.',
     description: 'Access what you need. Find services, benefits, hotlines, and organizations that provide direct support.',
-    bg: PARCHMENT_WARM,
+    bg: '#f4f5f7',
   },
   Action: {
     motif: '/images/fol/tripod-of-life.svg',
@@ -59,7 +49,7 @@ const CENTER_META: Record<string, {
     motif: '/images/fol/metatrons-cube.svg',
     tagline: 'Follow the trail.',
     description: 'Know who makes decisions and how to influence them. Track officials, follow policy, and show up at public meetings.',
-    bg: PARCHMENT,
+    bg: '#f4f5f7',
   },
 }
 
@@ -113,8 +103,7 @@ export default async function CentersIndexPage() {
           HERO — Title + philosophy
           ═══════════════════════════════════════════════════════════════ */}
       <section
-        className="relative overflow-hidden"
-        style={{ background: PARCHMENT }}
+        className="relative overflow-hidden bg-paper"
       >
         {/* FOL watermark */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
@@ -128,30 +117,30 @@ export default async function CentersIndexPage() {
         </div>
 
         {/* Top rule */}
-        <div style={{ height: 3, background: CLAY }} />
+        <div style={{ height: 3, background: '#1b5e8a' }} />
 
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-20 text-center">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb">
-            <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              <Link href="/exchange" className="hover:underline" style={{ color: MUTED }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <Link href="/exchange" className="hover:underline" style={{ color: "#5c6474" }}>
                 The Exchange
               </Link>
-              <span style={{ color: MUTED }}> / </span>
-              <span style={{ color: CLAY }}>Centers</span>
+              <span style={{ color: "#5c6474" }}> / </span>
+              <span style={{ color: "#1b5e8a" }}>Centers</span>
             </p>
           </nav>
 
           <h1
             className="mt-8"
-            style={{ fontFamily: SERIF, fontSize: 'clamp(30px, 5vw, 48px)', color: INK, lineHeight: 1.15 }}
+            style={{ fontSize: 'clamp(30px, 5vw, 48px)', lineHeight: 1.15 }}
           >
             Four doorways in.
           </h1>
 
           <p
             className="mt-5 mx-auto"
-            style={{ fontFamily: SERIF, fontSize: 'clamp(15px, 2vw, 18px)', color: MUTED, lineHeight: 1.7, maxWidth: 520 }}
+            style={{ fontSize: 'clamp(15px, 2vw, 18px)', color: "#5c6474", lineHeight: 1.7, maxWidth: 520 }}
           >
             Every piece of content in the Exchange lives in one of four centers.
             Each answers a different question about your community.
@@ -159,13 +148,13 @@ export default async function CentersIndexPage() {
 
           <p
             className="mt-5"
-            style={{ fontFamily: MONO, fontSize: 12, color: CLAY, letterSpacing: '0.06em' }}
+            style={{ fontSize: 12, color: "#1b5e8a", letterSpacing: '0.06em' }}
           >
             {totalResources} resources across {centerNames.length} centers
           </p>
 
           {/* Rule */}
-          <div className="mx-auto mt-8" style={{ width: 60, height: 2, background: CLAY }} />
+          <div className="mx-auto mt-8" style={{ width: 60, height: 2, background: '#1b5e8a' }} />
         </div>
       </section>
 
@@ -190,7 +179,7 @@ export default async function CentersIndexPage() {
               className="group block relative overflow-hidden transition-all"
               style={{
                 background: meta.bg,
-                borderBottom: `1px solid ${RULE_COLOR}`,
+                borderBottom: `1px solid ${'#dde1e8'}`,
               }}
             >
               {/* Color accent bar on left */}
@@ -218,29 +207,29 @@ export default async function CentersIndexPage() {
                   {/* Main content */}
                   <div className={isEven ? 'order-1' : 'order-1 md:order-2'}>
                     {/* Label */}
-                    <p style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '0.12em', color, textTransform: 'uppercase', marginBottom: 12 }}>
+                    <p style={{ fontSize: 11, letterSpacing: '0.12em', color, textTransform: 'uppercase', marginBottom: 12 }}>
                       Chapter {i + 1} &middot; {count} resources
                     </p>
 
                     {/* Center name as headline */}
-                    <h2 style={{ fontFamily: SERIF, fontSize: 'clamp(26px, 3.5vw, 36px)', color: INK, lineHeight: 1.15, marginBottom: 8 }}>
+                    <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 36px)', lineHeight: 1.15, marginBottom: 8 }}>
                       {name} Center
                     </h2>
 
                     {/* Guiding question */}
-                    <p style={{ fontFamily: SERIF, fontSize: 18, fontStyle: 'italic', color: MUTED, marginBottom: 16 }}>
+                    <p style={{ fontSize: 18, fontStyle: 'italic', color: "#5c6474", marginBottom: 16 }}>
                       {config.question}
                     </p>
 
                     {/* Description */}
-                    <p style={{ fontFamily: SERIF, fontSize: 15, color: INK, lineHeight: 1.7, opacity: 0.85, maxWidth: 480 }}>
+                    <p style={{ fontSize: 15, lineHeight: 1.7, opacity: 0.85, maxWidth: 480 }}>
                       {meta.description}
                     </p>
 
                     {/* CTA */}
                     <span
                       className="inline-block mt-6 group-hover:text-[#a8522e] transition-colors"
-                      style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+                      style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
                     >
                       Turn to chapter &rarr;
                     </span>
@@ -248,7 +237,7 @@ export default async function CentersIndexPage() {
 
                   {/* Pathway breakdown */}
                   <div className={`${isEven ? 'order-2' : 'order-2 md:order-1'} hidden md:block`}>
-                    <p style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '0.1em', color: MUTED, textTransform: 'uppercase', marginBottom: 12 }}>
+                    <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#5c6474", textTransform: 'uppercase', marginBottom: 12 }}>
                       Top pathways
                     </p>
 
@@ -258,13 +247,13 @@ export default async function CentersIndexPage() {
                           <div
                             key={pw.id}
                             className="flex items-center gap-2 py-2"
-                            style={{ borderBottom: `1px solid ${RULE_COLOR}` }}
+                            style={{ borderBottom: `1px solid ${'#dde1e8'}` }}
                           >
                             <span className="w-2 h-2 flex-shrink-0" style={{ background: pw.color }} />
-                            <span className="flex-1" style={{ fontFamily: SERIF, fontSize: 14, color: INK }}>
+                            <span className="flex-1" style={{ fontSize: 14,  }}>
                               {pw.name}
                             </span>
-                            <span style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+                            <span style={{ fontSize: 12, color: "#5c6474" }}>
                               {pw.count}
                             </span>
                           </div>
@@ -273,7 +262,7 @@ export default async function CentersIndexPage() {
                     </div>
 
                     {/* Tagline */}
-                    <p className="mt-4" style={{ fontFamily: SERIF, fontSize: 13, fontStyle: 'italic', color: MUTED }}>
+                    <p className="mt-4" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
                       {meta.tagline}
                     </p>
                   </div>
@@ -287,11 +276,11 @@ export default async function CentersIndexPage() {
       {/* ═══════════════════════════════════════════════════════════════════
           FOOTER CODA
           ═══════════════════════════════════════════════════════════════ */}
-      <div className="text-center py-10" style={{ background: PARCHMENT_WARM }}>
+      <div className="text-center py-10 bg-paper">
         <Link
           href="/exchange"
           className="hover:underline"
-          style={{ fontFamily: SERIF, fontSize: 14, fontStyle: 'italic', color: CLAY }}
+          style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
         >
           &larr; Back to The Community Exchange
         </Link>

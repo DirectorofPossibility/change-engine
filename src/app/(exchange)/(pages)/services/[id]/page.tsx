@@ -19,14 +19,6 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { serviceJsonLd } from '@/lib/jsonld'
 import { THEMES } from '@/lib/constants'
 
-const PARCHMENT = '#F5F0E8'
-const PARCHMENT_WARM = '#EDE7D8'
-const INK = '#1A1A1A'
-const CLAY = '#C4663A'
-const MUTED = '#7a7265'
-const RULE_COLOR = 'rgba(196,102,58,0.3)'
-const SERIF = 'Georgia, "Times New Roman", serif'
-const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -117,28 +109,28 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const jsonLd = serviceJsonLd(service as any, org?.org_name)
 
   return (
-    <div style={{ background: PARCHMENT }} className="min-h-screen">
+    <div className="bg-paper min-h-screen">
       <SpiralTracker action="view_service" />
       {jsonLd && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+      <div className="bg-paper relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine {themeName ? ' / ' + themeName : ''}
           </p>
-          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             {displayName}
           </h1>
           {org && (
-            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.5rem' }}>
+            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.5rem' }}>
               Provided by{' '}
-              <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ color: CLAY }}>
+              <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ color: "#1b5e8a" }}>
                 {org.org_name}
               </Link>
             </p>
@@ -148,10 +140,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
-          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
-          <Link href="/services" className="hover:underline" style={{ color: CLAY }}>{t('detail.all_services')}</Link>
+          <Link href="/services" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('detail.all_services')}</Link>
           <span className="mx-2">/</span>
           <span>{displayName}</span>
         </nav>
@@ -162,24 +154,24 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
         {/* Concierge CTA */}
         {(service.phone || service.website) && (
-          <div className="mb-10 p-6" style={{ border: '1px solid ' + CLAY, background: PARCHMENT_WARM }}>
-            <p style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: MUTED, marginBottom: '0.75rem' }}>
+          <div className="mb-10 p-6" style={{ border: '1px solid ' + '#1b5e8a', background: "#f4f5f7" }}>
+            <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: "#5c6474", marginBottom: '0.75rem' }}>
               Here is how to reach them
             </p>
             <div className="flex flex-wrap gap-3">
               {service.phone && (
-                <a href={'tel:' + service.phone} className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, background: CLAY }}>
+                <a href={'tel:' + service.phone} className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, background: '#1b5e8a' }}>
                   <Phone size={14} /> Call {service.phone}
                 </a>
               )}
               {service.website && (
-                <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 transition-colors" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, border: '1px solid ' + CLAY, color: CLAY }}>
+                <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 transition-colors" style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, border: '1px solid ' + '#1b5e8a', color: "#1b5e8a" }}>
                   <Globe size={14} /> Visit their website
                 </a>
               )}
             </div>
             {fullAddress && (
-              <p className="mt-3 flex items-center gap-1.5" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+              <p className="mt-3 flex items-center gap-1.5" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
                 <MapPin size={13} /> {fullAddress}
               </p>
             )}
@@ -190,10 +182,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {displayDesc && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.about_service')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.about_service')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, lineHeight: 1.85 }}>{displayDesc}</p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>{displayDesc}</p>
           </section>
         )}
 
@@ -201,25 +193,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {(service.eligibility || service.fees || service.languages) && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.details')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.details')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {service.eligibility && (
-              <div className="py-3" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK, marginBottom: '0.25rem' }}>{t('detail.eligibility')}</p>
-                <p style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '0.85rem', color: MUTED }}>{service.eligibility}</p>
+              <div className="py-3" style={{ borderBottom: '1px solid #dde1e8' }}>
+                <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>{t('detail.eligibility')}</p>
+                <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: "#5c6474" }}>{service.eligibility}</p>
               </div>
             )}
             {service.fees && (
-              <div className="py-3" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK, marginBottom: '0.25rem' }}>{t('detail.fees')}</p>
-                <p style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '0.85rem', color: MUTED }}>{service.fees}</p>
+              <div className="py-3" style={{ borderBottom: '1px solid #dde1e8' }}>
+                <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>{t('detail.fees')}</p>
+                <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: "#5c6474" }}>{service.fees}</p>
               </div>
             )}
             {service.languages && (
               <div className="py-3">
-                <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK, marginBottom: '0.25rem' }}>{t('detail.languages')}</p>
-                <p style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '0.85rem', color: MUTED }}>{service.languages}</p>
+                <p style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.25rem' }}>{t('detail.languages')}</p>
+                <p style={{ fontStyle: 'italic', fontSize: '0.85rem', color: "#5c6474" }}>{service.languages}</p>
               </div>
             )}
           </section>
@@ -228,27 +220,27 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {/* Contact & Location */}
         <section className="mb-10">
           <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.contact')}</h2>
+            <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.contact')}</h2>
           </div>
-          <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+          <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
           <div className="space-y-3">
             {service.phone && (
-              <a href={'tel:' + service.phone} className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+              <a href={'tel:' + service.phone} className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                 <Phone size={15} /> {service.phone}
               </a>
             )}
             {service.website && (
-              <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+              <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontSize: '0.9rem', color: "#1b5e8a" }}>
                 <Globe size={15} /> {t('detail.website')}
               </a>
             )}
             {fullAddress && (
-              <p className="flex items-center gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+              <p className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
                 <MapPin size={15} className="shrink-0" /> {fullAddress}
               </p>
             )}
             {service.hours && (
-              <p className="flex items-center gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+              <p className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
                 <Clock size={15} /> {service.hours}
               </p>
             )}
@@ -257,7 +249,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
         {/* Location Map */}
         {(service as any).latitude != null && (service as any).longitude != null && (
-          <div className="mb-10" style={{ border: '1px solid ' + RULE_COLOR }}>
+          <div className="mb-10" style={{ border: '1px solid #dde1e8' }}>
             <SingleLocationMap
               marker={{
                 id: service.service_id,
@@ -272,19 +264,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
         )}
 
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         {/* Parent Organization */}
         {org && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.organization')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.organization')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <Link href={'/organizations/' + org.org_id} className="block p-5 transition-colors hover:opacity-80" style={{ border: '1px solid ' + RULE_COLOR }}>
-              <h3 style={{ fontFamily: SERIF, fontSize: '1rem', fontWeight: 700, color: INK }}>{org.org_name}</h3>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <Link href={'/organizations/' + org.org_id} className="block p-5 transition-colors hover:opacity-80" style={{ border: '1px solid #dde1e8' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700,  }}>{org.org_name}</h3>
               {org.description_5th_grade && (
-                <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{org.description_5th_grade}</p>
+                <p className="line-clamp-2 mt-1" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{org.description_5th_grade}</p>
               )}
             </Link>
           </section>
@@ -294,10 +286,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {libraryNuggets.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.go_deeper')}</h2>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.go_deeper')}</h2>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
-            <LibraryNugget nuggets={libraryNuggets} variant="section" color={CLAY} labels={{ goDeeper: t('detail.go_deeper') }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
+            <LibraryNugget nuggets={libraryNuggets} variant="section" color={'#1b5e8a'} labels={{ goDeeper: t('detail.go_deeper') }} />
           </section>
         )}
 
@@ -305,33 +297,33 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {displayRelated.length > 0 && (
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.other_resources')}</h2>
-              <Link href="/services" className="inline-flex items-center gap-1 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: CLAY }}>
+              <h2 style={{ fontSize: '1.5rem',  }}>{t('detail.other_resources')}</h2>
+              <Link href="/services" className="inline-flex items-center gap-1 hover:underline" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: "#1b5e8a" }}>
                 {t('detail.all_services')} <ArrowRight size={12} />
               </Link>
             </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {displayRelated.slice(0, 3).map(function (svc) {
               return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                  <h4 className="line-clamp-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{svc.service_name}</h4>
+                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
+                  <h4 className="line-clamp-2" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{svc.service_name}</h4>
                   {svc.description_5th_grade && (
-                    <p className="line-clamp-2 mt-0.5" style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '0.8rem', color: MUTED }}>{svc.description_5th_grade}</p>
+                    <p className="line-clamp-2 mt-0.5" style={{ fontStyle: 'italic', fontSize: '0.8rem', color: "#5c6474" }}>{svc.description_5th_grade}</p>
                   )}
                 </Link>
               )
             })}
             {displayRelated.length > 3 && (
               <details className="mt-2">
-                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
                   See {displayRelated.length - 3} more services
                 </summary>
                 {displayRelated.slice(3).map(function (svc) {
                   return (
-                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
-                      <h4 className="line-clamp-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{svc.service_name}</h4>
+                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
+                      <h4 className="line-clamp-2" style={{ fontSize: '0.9rem', fontWeight: 600,  }}>{svc.service_name}</h4>
                       {svc.description_5th_grade && (
-                        <p className="line-clamp-2 mt-0.5" style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: '0.8rem', color: MUTED }}>{svc.description_5th_grade}</p>
+                        <p className="line-clamp-2 mt-0.5" style={{ fontStyle: 'italic', fontSize: '0.8rem', color: "#5c6474" }}>{svc.description_5th_grade}</p>
                       )}
                     </Link>
                   )
@@ -343,14 +335,14 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
         {/* Quote */}
         {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={CLAY} />
+          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={'#1b5e8a'} />
         )}
       </div>
 
       {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
       <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/services" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+        <Link href="/services" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
           Back to Services
         </Link>
       </div>
