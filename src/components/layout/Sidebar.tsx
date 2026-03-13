@@ -9,7 +9,7 @@ import {
   Languages, Wrench, Users, BookOpen, HelpCircle,
   Briefcase, CalendarDays, Building2, Globe,
   Compass, BookMarked, Quote, Library,
-  ChevronDown, Rss, Scale, Megaphone,
+  ChevronDown, Scale, Megaphone,
   Tag, Network, Linkedin, CircleDot, Map,
   Layers, Activity, SlidersHorizontal,
 } from 'lucide-react'
@@ -34,12 +34,16 @@ const ADMIN_GROUPS: NavGroup[] = [
     defaultOpen: true,
     items: [
       { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-      { href: '/dashboard/review', label: 'Review Queue', icon: Search },
-      { href: '/dashboard/content', label: 'Published Content', icon: FileText },
-      { href: '/dashboard/policies', label: 'Policies', icon: Scale },
       { href: '/dashboard/ingestion', label: 'Ingestion', icon: Zap },
-      { href: '/dashboard/feeds', label: 'RSS Feeds', icon: Rss },
+      { href: '/dashboard/review', label: 'Review Queue', icon: Search },
       { href: '/dashboard/translations', label: 'Translations', icon: Languages },
+    ],
+  },
+  {
+    label: 'Content',
+    items: [
+      { href: '/dashboard/content', label: 'Published', icon: FileText },
+      { href: '/dashboard/policies', label: 'Policies', icon: Scale },
     ],
   },
   {
