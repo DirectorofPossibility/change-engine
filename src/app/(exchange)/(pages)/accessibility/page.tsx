@@ -1,7 +1,17 @@
 import type { Metadata } from 'next'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 86400
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Accessibility | Change Engine',
@@ -10,53 +20,105 @@ export const metadata: Metadata = {
 
 export default function AccessibilityPage() {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-      <Breadcrumb items={[{ label: 'Accessibility' }]} />
-
-      <h1 className="font-display text-3xl md:text-4xl font-bold text-brand-text mt-6 mb-2">
-        Accessibility
-      </h1>
-      <p className="text-brand-muted mb-8">
-        Our commitment to making civic participation accessible to everyone.
-      </p>
-
-      <div className="prose prose-sm max-w-none text-brand-text space-y-6">
-        <section>
-          <h2 className="font-display text-xl font-bold text-brand-text mb-2">Our Commitment</h2>
-          <p className="leading-relaxed text-brand-text/80">
-            The Change Lab believes that civic life should be open to everyone. We are committed to ensuring that the Change Engine is accessible to people of all abilities, backgrounds, and circumstances. We continuously work to improve the usability and experience of our platform for all visitors.
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute right-[-60px] top-[-20px]">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl mt-2">Accessibility</h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-base mt-2">
+            Our commitment to making civic participation accessible to everyone.
           </p>
-        </section>
+        </div>
+        <div style={{ height: 1, background: RULE_COLOR }} />
+      </section>
 
-        <section>
-          <h2 className="font-display text-xl font-bold text-brand-text mb-2">What We Do</h2>
-          <ul className="list-disc pl-5 space-y-2 text-brand-text/80">
-            <li>Write all content at a 6th-grade reading level so information is clear and easy to understand</li>
-            <li>Provide translations in Spanish and Vietnamese for key content</li>
-            <li>Use semantic HTML and proper heading structure for screen reader compatibility</li>
-            <li>Maintain sufficient color contrast throughout the platform</li>
-            <li>Support keyboard navigation across all interactive elements</li>
-            <li>Design responsive layouts that work across devices and screen sizes</li>
-          </ul>
-        </section>
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-1">/</span>
+          <span style={{ color: INK }}>Accessibility</span>
+        </nav>
+      </div>
 
-        <section>
-          <h2 className="font-display text-xl font-bold text-brand-text mb-2">Standards</h2>
-          <p className="leading-relaxed text-brand-text/80">
-            We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 at the AA level. We recognize that accessibility is an ongoing effort and we are continually working to improve.
-          </p>
-        </section>
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        <div className="space-y-8">
+          <section>
+            <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Our Commitment</h2>
+            <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+            <p className="leading-relaxed" style={{ fontFamily: SERIF, color: MUTED }}>
+              The Change Lab believes that civic life should be open to everyone. We are committed to ensuring that the Change Engine is accessible to people of all abilities, backgrounds, and circumstances. We continuously work to improve the usability and experience of our platform for all visitors.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="font-display text-xl font-bold text-brand-text mb-2">Feedback</h2>
-          <p className="leading-relaxed text-brand-text/80">
-            If you experience any difficulty accessing content on the Change Engine, or have suggestions for how we can improve accessibility, please reach out to us at{' '}
-            <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
-              hello@thechangelab.net
-            </a>
-            . We take all feedback seriously and will do our best to respond promptly.
-          </p>
-        </section>
+          <div style={{ borderTop: '1px solid ' + RULE_COLOR }} />
+
+          <section>
+            <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">What We Do</h2>
+            <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+            <ul className="space-y-2" style={{ fontFamily: SERIF, color: MUTED }}>
+              <li className="flex gap-2">
+                <span className="w-2 h-2 flex-shrink-0 mt-1.5" style={{ background: CLAY }} />
+                <span>Write all content at a 6th-grade reading level so information is clear and easy to understand</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="w-2 h-2 flex-shrink-0 mt-1.5" style={{ background: CLAY }} />
+                <span>Provide translations in Spanish and Vietnamese for key content</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="w-2 h-2 flex-shrink-0 mt-1.5" style={{ background: CLAY }} />
+                <span>Use semantic HTML and proper heading structure for screen reader compatibility</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="w-2 h-2 flex-shrink-0 mt-1.5" style={{ background: CLAY }} />
+                <span>Maintain sufficient color contrast throughout the platform</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="w-2 h-2 flex-shrink-0 mt-1.5" style={{ background: CLAY }} />
+                <span>Support keyboard navigation across all interactive elements</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="w-2 h-2 flex-shrink-0 mt-1.5" style={{ background: CLAY }} />
+                <span>Design responsive layouts that work across devices and screen sizes</span>
+              </li>
+            </ul>
+          </section>
+
+          <div style={{ borderTop: '1px solid ' + RULE_COLOR }} />
+
+          <section>
+            <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Standards</h2>
+            <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+            <p className="leading-relaxed" style={{ fontFamily: SERIF, color: MUTED }}>
+              We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 at the AA level. We recognize that accessibility is an ongoing effort and we are continually working to improve.
+            </p>
+          </section>
+
+          <div style={{ borderTop: '1px solid ' + RULE_COLOR }} />
+
+          <section>
+            <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Feedback</h2>
+            <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+            <p className="leading-relaxed" style={{ fontFamily: SERIF, color: MUTED }}>
+              If you experience any difficulty accessing content on the Change Engine, or have suggestions for how we can improve accessibility, please reach out to us at{' '}
+              <a href="mailto:hello@thechangelab.net" style={{ color: CLAY }} className="hover:underline">
+                hello@thechangelab.net
+              </a>
+              . We take all feedback seriously and will do our best to respond promptly.
+            </p>
+          </section>
+        </div>
+      </div>
+
+      {/* ── Footer link ── */}
+      <div className="max-w-[900px] mx-auto px-6 pb-10">
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="pt-4">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to Home</Link>
+        </div>
       </div>
     </div>
   )

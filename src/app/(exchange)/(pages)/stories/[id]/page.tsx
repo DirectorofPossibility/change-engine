@@ -1,11 +1,19 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { getWayfinderContext } from '@/lib/data/exchange'
-import { getUserProfile } from '@/lib/auth/roles'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 300
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -26,39 +34,57 @@ export default async function StoryDetailPage({ params }: { params: Promise<{ id
   if (!story) notFound()
 
   const s = story as any
-  const storyId = s.story_id || s.id
   const storyTitle = s.title || s.story_title || 'Story'
 
-  const userProfile = await getUserProfile()
-  const wayfinderData = await getWayfinderContext('story' as any, storyId, userProfile?.role)
-
-  const canonicalUrl = `https://www.changeengine.us/stories/${id}`
-
   return (
-    <DetailPageLayout
-      breadcrumbs={[
-        { label: 'Stories', href: '/stories' },
-        { label: storyTitle },
-      ]}
-      eyebrow={{ text: 'Community Story' }}
-      title={storyTitle}
-      subtitle={s.person_name ? `${s.person_name}${s.neighborhood ? ` from ${s.neighborhood}` : ''}` : undefined}
-      actions={{
-        share: { title: storyTitle, url: canonicalUrl },
-      }}
-      wayfinderData={wayfinderData}
-      wayfinderType={'story'}
-      wayfinderEntityId={storyId}
-      userRole={userProfile?.role}
-      feedbackType="story"
-      feedbackId={storyId}
-      feedbackName={storyTitle}
-    >
-      <div className="prose prose-brand max-w-none text-brand-text leading-relaxed">
-        {(s.body || s.story_body || s.summary || s.story_summary || '').split('\n\n').map(function (p: string, i: number) {
-          return <p key={i}>{p}</p>
-        })}
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            {storyTitle}
+          </h1>
+          {s.person_name && (
+            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem' }}>
+              {s.person_name}{s.neighborhood ? ' from ' + s.neighborhood : ''}
+            </p>
+          )}
+        </div>
       </div>
-    </DetailPageLayout>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/stories" className="hover:underline" style={{ color: CLAY }}>Stories</Link>
+          <span className="mx-2">/</span>
+          <span>{storyTitle}</span>
+        </nav>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        <div style={{ color: INK, fontFamily: SERIF }}>
+          {(s.body || s.story_body || s.summary || s.story_summary || '').split('\n\n').map(function (p: string, i: number) {
+            return <p key={i} style={{ fontSize: '0.95rem', lineHeight: 1.85, marginBottom: '1rem' }}>{p}</p>
+          })}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/stories" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to Stories
+        </Link>
+      </div>
+    </div>
   )
 }

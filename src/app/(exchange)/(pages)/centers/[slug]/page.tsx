@@ -167,14 +167,23 @@ async function AccountabilityCenter({ meta, centerColor }: { meta: typeof CENTER
       .eq('is_published', true)
       .order('last_action_date', { ascending: false })
       .limit(10),
-    // Federal spending entries
-    supabase
-      .from('policies')
-      .select('policy_id, policy_name, title_6th_grade, impact_statement, level, status, last_action_date')
-      .eq('level', 'Federal')
-      .like('policy_type', '%Spending%')
-      .order('last_action_date', { ascending: false })
-      .limit(6),
+    // Federal spending entries — filtered by ZIP districts when available
+    (async () => {
+      if (zip) {
+        const byZip = await getPoliciesByZip(zip)
+        const allZipPolicies = [...byZip.federal, ...byZip.state, ...byZip.city]
+        const spending = allZipPolicies.filter((p: any) => p.policy_type && p.policy_type.includes('Spending'))
+        if (spending.length > 0) return { data: spending.slice(0, 6) }
+      }
+      // Fallback: all federal spending
+      return supabase
+        .from('policies')
+        .select('policy_id, policy_name, title_6th_grade, impact_statement, level, status, last_action_date')
+        .eq('level', 'Federal')
+        .like('policy_type', '%Spending%')
+        .order('last_action_date', { ascending: false })
+        .limit(6)
+    })(),
     // Upcoming civic calendar events (meetings, hearings)
     supabase
       .from('civic_calendar')
@@ -199,7 +208,7 @@ async function AccountabilityCenter({ meta, centerColor }: { meta: typeof CENTER
   const policies = policiesByZip
   const allUserPolicies = [...(policies.federal || []), ...(policies.state || []), ...(policies.city || [])]
   const recentPolicies = allPoliciesResult.data || []
-  const spending = spendingResult.data || []
+  const spending = (spendingResult as any).data || []
   const civicEvents = civicEventsResult.data || []
   const content = accountabilityContent.data || []
 

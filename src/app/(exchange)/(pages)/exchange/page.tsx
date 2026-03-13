@@ -1,5 +1,5 @@
 /**
- * @fileoverview Homepage — The Community Exchange.
+ * @fileoverview Homepage -- The Community Exchange.
  *
  * Culture guide to Houston civic life. Fetches stats, news, quote,
  * promotions, and upcoming events for the CommunityGuide component.
@@ -22,8 +22,8 @@ import { CommunityGuide } from '@/components/exchange/CommunityGuide'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Community Exchange — Houston, Texas | The Change Engine',
-  description: 'Your culture guide to Houston — find services, know who represents you, and get involved in your community.',
+  title: 'Community Exchange -- Houston, Texas | The Change Engine',
+  description: 'Your culture guide to Houston -- find services, know who represents you, and get involved in your community.',
 }
 
 export default async function ExchangeHomePage() {

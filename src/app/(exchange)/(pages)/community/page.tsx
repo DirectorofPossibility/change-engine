@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
-import { MapPin, Building2, Heart, CalendarDays } from 'lucide-react'
 
 export const revalidate = 3600
 
@@ -12,12 +10,22 @@ export const metadata: Metadata = {
   description: 'Explore your community — neighborhoods, organizations, foundations, and events across Houston.',
 }
 
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 const SECTIONS = [
   {
     href: '/neighborhoods',
     label: 'Neighborhoods',
-    description: 'Discover what is happening in your part of Houston — officials, services, organizations, and resources mapped to where you live.',
-    icon: MapPin,
+    description: 'Discover what is happening in your part of Houston -- officials, services, organizations, and resources mapped to where you live.',
     color: '#4a2870',
     countKey: 'neighborhoods',
   },
@@ -25,7 +33,6 @@ const SECTIONS = [
     href: '/organizations',
     label: 'Organizations',
     description: 'Nonprofits, civic groups, faith communities, and service providers already doing the work in Houston.',
-    icon: Building2,
     color: '#1e4d7a',
     countKey: 'organizations',
   },
@@ -33,7 +40,6 @@ const SECTIONS = [
     href: '/foundations',
     label: 'Foundations',
     description: 'Philanthropic organizations funding programs and initiatives across the region.',
-    icon: Heart,
     color: '#7a2018',
     countKey: 'foundations',
   },
@@ -41,7 +47,6 @@ const SECTIONS = [
     href: '/calendar',
     label: 'Events & Calendar',
     description: 'Community events, public meetings, volunteer days, and civic gatherings happening near you.',
-    icon: CalendarDays,
     color: '#1b5e8a',
     countKey: 'events',
   },
@@ -65,76 +70,107 @@ export default async function CommunityIndexPage() {
   }
 
   return (
-    <div>
-      <IndexPageHero
-        color="#4a2870"
-        pattern="flower"
-        title="Community"
-        subtitle="The people, places, and organizations that make Houston what it is."
-        stats={[
-          { value: counts.neighborhoods, label: 'Neighborhoods' },
-          { value: counts.organizations, label: 'Organizations' },
-          { value: counts.events, label: 'Upcoming Events' },
-        ]}
-      />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+            Community
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+            The people, places, and organizations that make Houston what it is.
+          </p>
+          <div className="flex flex-wrap gap-6 mt-6">
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{counts.neighborhoods}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{counts.organizations}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Organizations</span>
+            </div>
+            {counts.events > 0 && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{counts.events}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Upcoming Events</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {SECTIONS.map(function (section) {
-            const Icon = section.icon
-            const count = counts[section.countKey] || 0
-            return (
-              <Link
-                key={section.href}
-                href={section.href}
-                className="group bg-white border border-brand-border overflow-hidden hover:border-ink transition-all"
-               
-              >
-                <div className="flex">
-                  <div
-                    className="w-2 flex-shrink-0"
-                    style={{ backgroundColor: section.color }}
-                  />
-                  <div className="flex-1 p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-10 h-10 flex items-center justify-center"
-                          style={{ backgroundColor: section.color + '15' }}
-                        >
-                          <Icon size={20} style={{ color: section.color }} />
-                        </div>
-                        <div>
-                          <h2 className="font-display text-xl font-bold text-brand-text group-hover:text-brand-accent transition-colors">
-                            {section.label}
-                          </h2>
-                          {count > 0 && (
-                            <p className="text-[11px] font-mono text-brand-muted-light mt-0.5">
-                              {count.toLocaleString()} available
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                      <span className="text-brand-muted group-hover:text-brand-accent transition-colors text-lg">&rarr;</span>
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Community</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        {/* ── Section cards ── */}
+        <section>
+          <div className="flex items-baseline gap-4 mb-6">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Explore</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{SECTIONS.length} sections</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+            {SECTIONS.map(function (section) {
+              const count = counts[section.countKey] || 0
+              return (
+                <Link
+                  key={section.href}
+                  href={section.href}
+                  className="group p-6 transition-colors hover:bg-white/50"
+                  style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                >
+                  <div className="flex items-start gap-3 mb-3">
+                    <span className="w-2 h-8 flex-shrink-0 mt-0.5" style={{ backgroundColor: section.color }} />
+                    <div>
+                      <h3 style={{ fontFamily: SERIF, fontSize: '1.2rem', color: INK }} className="group-hover:underline">
+                        {section.label}
+                      </h3>
+                      {count > 0 && (
+                        <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.08em' }} className="mt-0.5 uppercase">
+                          {count.toLocaleString()} available
+                        </p>
+                      )}
                     </div>
-                    <p className="text-sm text-brand-muted leading-relaxed">
-                      {section.description}
-                    </p>
                   </div>
-                </div>
-              </Link>
-            )
-          })}
+                  <p style={{ fontFamily: SERIF, fontSize: '0.88rem', color: MUTED, lineHeight: 1.6 }}>
+                    {section.description}
+                  </p>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Closing thought ── */}
+        <div className="text-center py-6">
+          <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, fontStyle: 'italic' }}>
+            Community is not a place -- it is the connections between people.
+          </p>
         </div>
 
-        {/* Community callout */}
-        <div className="mt-10 text-center">
-          <div className="inline-flex items-center gap-2 text-brand-muted-light">
-            <FlowerOfLifeIcon size={20} color="#4a2870" />
-            <p className="text-sm font-display italic">
-              Community is not a place — it is the connections between people.
-            </p>
-          </div>
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Footer link ── */}
+        <div className="text-center py-4">
+          <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Back to Home
+          </Link>
         </div>
       </div>
     </div>

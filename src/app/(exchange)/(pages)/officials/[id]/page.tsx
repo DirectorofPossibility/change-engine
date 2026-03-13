@@ -4,10 +4,9 @@ import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { getUIStrings } from '@/lib/i18n'
-import { Mail, Phone, Globe, MapPin, Calendar, Users, Linkedin, Vote, Building2 } from 'lucide-react'
+import { Mail, Phone, Globe, MapPin, Calendar, Linkedin } from 'lucide-react'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { RelatedContent } from '@/components/exchange/RelatedContent'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
@@ -18,13 +17,14 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import Image from 'next/image'
 import { personJsonLd } from '@/lib/jsonld'
 
-function levelBarColor(level: string | null): string {
-  if (level === 'Federal') return '#1e3a5f'
-  if (level === 'State') return '#2d5a27'
-  if (level === 'County') return '#8b4513'
-  if (level === 'City') return '#1a5e5e'
-  return '#5c6474'
-}
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 const FOCUS_DOT_COLORS = [
   '#1b5e8a', '#1a6b56', '#4a2870', '#6a4e10', '#1a5030', '#7a2018',
@@ -47,7 +47,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   const { id } = await params
   const supabase = await createClient()
 
-  // Fetch official + profile + all junction data in parallel (H9 fix: was 8 sequential queries)
   const [
     { data: official },
     { data: profileRow },
@@ -76,7 +75,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     social_linkedin?: string | null; photo_url?: string | null
   } | null
 
-  // Resolve junction data in parallel (second batch — depends on first batch IDs)
   const policyIds = (policyJunctions ?? []).map(j => j.policy_id)
   const focusAreaIds = (focusJunctions ?? []).map(j => j.focus_id)
   const countyIds = (countyJunctions ?? []).map((j: any) => j.county_id)
@@ -107,14 +105,12 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
     policy_id: string | null; chamber: string | null
   }>
 
-  // Batch 3: All remaining lookups in parallel (district ZIPs, related content, translations, wayfinder, quote)
   const userProfile = await getUserProfile()
   const langId = await getLangId()
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
-  // Build district ZIP query
   let districtZipColumn = ''
   if (official.district_id) {
     const districtType = official.district_type?.toLowerCase() || ''
@@ -141,7 +137,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
 
   const districtZips = (districtZipResult.data ?? []).map((z: any) => z.zip_code)
 
-  // Use related content from wayfinderData (already fetched via getWayfinderContext)
   const related = (wayfinderData.content ?? []).slice(0, 4).map(c => ({
     id: c.id,
     title_6th_grade: c.title_6th_grade || '',
@@ -165,267 +160,194 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
   const photoUrl = rawPhotoUrl?.replace(/^http:\/\//, 'https://') ?? null
   const bio = profile?.bio_short || official.description_5th_grade
 
-  const barColor = levelBarColor(official.level)
-
   const jsonLd = personJsonLd({ ...official, photo_url: profile?.photo_url || null, bio_short: profile?.bio_short || null } as any)
 
-  const canonicalUrl = `https://www.changeengine.us/officials/${id}`
-
-  // Build eyebrow meta (title + jurisdiction inline text)
-  const eyebrowMetaText = [displayTitle, official.jurisdiction].filter(Boolean).join(' \u00b7 ')
-
-  // Build meta row
-  const metaRow = (
-    <div className="flex flex-wrap gap-4">
-      {official.party && (
-        <span
-          className="flex items-center gap-2"
-          style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
-        >
-          <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: barColor }} />
-          <strong style={{ color: '#0d1117' }}>{official.party}</strong>
-        </span>
+  return (
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      <SpiralTracker action="view_official" />
+      {jsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
-      {official.term_end && (
-        <span
-          className="flex items-center gap-2"
-          style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
-        >
-          <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: barColor }} />
-          <Calendar size={12} />
-          <strong style={{ color: '#0d1117' }}>{t('official.term_ends')} {new Date(official.term_end).toLocaleDateString()}</strong>
-        </span>
-      )}
-      {official.district_id && (
-        <span
-          className="flex items-center gap-2"
-          style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#5c6474' }}
-        >
-          <span className="w-1.5 h-1.5 flex-shrink-0" style={{ background: barColor }} />
-          <strong style={{ color: '#0d1117' }}>District {official.district_id}</strong>
-        </span>
-      )}
-    </div>
-  )
 
-  // Build hero image
-  const heroImage = photoUrl ? (
-    <Image
-      src={photoUrl}
-      alt={official.official_name}
-      className="object-cover"
-      style={{ border: '1px solid #dde1e8', width: 140, height: 140 }}
-      width={140}
-      height={140}
-    />
-  ) : undefined
-
-  // Build sidebar content
-  const sidebarContent = (
-    <>
-      {/* Counties */}
-      {counties.length > 0 && (
-        <div>
-          <span
-            className="font-mono uppercase tracking-[0.2em] block mb-3 pb-2"
-            style={{ fontSize: '0.58rem', color: '#5c6474', borderBottom: '1px solid #dde1e8' }}
-          >
-            {t('official.counties')}
-          </span>
-          <div className="space-y-1.5">
-            {counties.map(function (c) {
-              return (
-                <p
-                  key={c.county_id}
-                  className="font-body text-sm"
-                  style={{ color: '#0d1117' }}
-                >
-                  {c.county_name}
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <div className="flex items-start gap-6 mt-4">
+            {photoUrl && (
+              <Image
+                src={photoUrl}
+                alt={official.official_name}
+                className="object-cover flex-shrink-0"
+                style={{ border: '1px solid ' + RULE_COLOR }}
+                width={120}
+                height={120}
+              />
+            )}
+            <div>
+              <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15 }}>
+                {official.official_name}
+              </h1>
+              {(displayTitle || official.jurisdiction) && (
+                <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, marginTop: '0.5rem' }}>
+                  {[displayTitle, official.jurisdiction].filter(Boolean).join(', ')}
                 </p>
-              )
-            })}
+              )}
+              <div className="flex flex-wrap gap-4 mt-4">
+                {official.party && (
+                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                    {official.party}
+                  </span>
+                )}
+                {official.level && (
+                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                    {official.level}
+                  </span>
+                )}
+                {official.term_end && (
+                  <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                    <Calendar size={12} /> {t('official.term_ends')} {new Date(official.term_end).toLocaleDateString()}
+                  </span>
+                )}
+                {official.district_id && (
+                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED }}>
+                    District {official.district_id}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      )}
-    </>
-  )
+      </div>
 
-  return (
-    <>
-      <SpiralTracker action="view_official" />
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/officials" className="hover:underline" style={{ color: CLAY }}>Officials</Link>
+          <span className="mx-2">/</span>
+          <span>{official.official_name}</span>
+        </nav>
+      </div>
 
-      <DetailPageLayout
-        breadcrumbs={[
-          { label: t('official.civic_leaders'), href: '/officials' },
-          { label: official.official_name },
-        ]}
-        eyebrow={official.level ? { text: official.level } : undefined}
-        eyebrowMeta={
-          eyebrowMetaText ? (
-            <span
-              className="font-mono uppercase tracking-[0.12em]"
-              style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
-            >
-              {eyebrowMetaText}
-            </span>
-          ) : undefined
-        }
-        title={official.official_name}
-        subtitle={displayTitle && official.jurisdiction
-          ? `${displayTitle}, ${official.jurisdiction}`
-          : displayTitle || official.jurisdiction || null
-        }
-        heroImage={heroImage}
-        metaRow={metaRow}
-        actions={{
-          translate: {
-            isTranslated: !!officialTranslation?.title,
-            contentType: 'elected_officials',
-            contentId: official.official_id,
-          },
-          share: {
-            title: official.official_name,
-            url: canonicalUrl,
-          },
-        }}
-        mastheadBorderTop={`3px solid ${barColor}`}
-        mastheadBorderLeft="4px solid #b03a2a"
-        themeColor={barColor}
-        wayfinderData={wayfinderData}
-        wayfinderType="official"
-        wayfinderEntityId={id}
-        userRole={userProfile?.role}
-        sidebar={sidebarContent}
-        feedbackType="elected_officials"
-        feedbackId={official.official_id}
-        feedbackName={official.official_name || ''}
-        jsonLd={jsonLd}
-      >
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+
         {/* About */}
         {bio && (
-          <div className="mb-8">
-            <span
-              className="font-mono uppercase tracking-[0.2em] block mb-3"
-              style={{ fontSize: '0.58rem', color: '#5c6474' }}
-            >
-              {t('detail.about')}
-            </span>
-            <p
-              className="font-body leading-[1.85]"
-              style={{ fontSize: '0.88rem', color: '#0d1117' }}
-            >
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.about')}</h2>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, lineHeight: 1.85 }}>
               {bio}
             </p>
-          </div>
+          </section>
         )}
 
         {/* Contact */}
-        <div className="mb-8 space-y-3">
-          <span
-            className="font-mono uppercase tracking-[0.2em] block mb-3"
-            style={{ fontSize: '0.58rem', color: '#5c6474' }}
-          >
-            {t('detail.contact')}
-          </span>
-          {(profile?.phone_office || official.office_phone) && (
-            <a
-              href={'tel:' + (profile?.phone_office || official.office_phone)}
-              className="flex items-center gap-2 hover:underline"
-              style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
-            >
-              <Phone size={15} /> {profile?.phone_office || official.office_phone}
-            </a>
-          )}
-          {official.email && (
-            <a
-              href={'mailto:' + official.email}
-              className="flex items-center gap-2 hover:underline"
-              style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
-            >
-              <Mail size={15} /> {official.email}
-            </a>
-          )}
-          {official.website && (
-            <a
-              href={official.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:underline"
-              style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
-            >
-              <Globe size={15} /> {t('detail.website')}
-            </a>
-          )}
-          {profile?.social_linkedin && (
-            <a
-              href={profile.social_linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:underline"
-              style={{ fontSize: '0.88rem', color: '#1b5e8a' }}
-            >
-              <Linkedin size={15} /> {t('official.linkedin')}
-            </a>
-          )}
-          {profile?.address_office && (
-            <div className="flex items-start gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
-              <MapPin size={15} className="shrink-0 mt-0.5" />
-              <div>
-                <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.office')}</span>
-                {profile.address_office}
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between mb-1">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('detail.contact')}</h2>
+          </div>
+          <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+          <div className="space-y-3">
+            {(profile?.phone_office || official.office_phone) && (
+              <a href={'tel:' + (profile?.phone_office || official.office_phone)} className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+                <Phone size={15} /> {profile?.phone_office || official.office_phone}
+              </a>
+            )}
+            {official.email && (
+              <a href={'mailto:' + official.email} className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+                <Mail size={15} /> {official.email}
+              </a>
+            )}
+            {official.website && (
+              <a href={official.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+                <Globe size={15} /> {t('detail.website')}
+              </a>
+            )}
+            {profile?.social_linkedin && (
+              <a href={profile.social_linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
+                <Linkedin size={15} /> {t('official.linkedin')}
+              </a>
+            )}
+            {profile?.address_office && (
+              <div className="flex items-start gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+                <MapPin size={15} className="shrink-0 mt-0.5" />
+                <div>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.office')}</span>
+                  {profile.address_office}
+                </div>
               </div>
-            </div>
-          )}
-          {profile?.address_district && (
-            <div className="flex items-start gap-2" style={{ fontSize: '0.88rem', color: '#5c6474' }}>
-              <MapPin size={15} className="shrink-0 mt-0.5" />
-              <div>
-                <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.district_office')}</span>
-                {profile.address_district}
+            )}
+            {profile?.address_district && (
+              <div className="flex items-start gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+                <MapPin size={15} className="shrink-0 mt-0.5" />
+                <div>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.district_office')}</span>
+                  {profile.address_district}
+                </div>
               </div>
+            )}
+          </div>
+        </section>
+
+        {/* Counties */}
+        {counties.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.counties')}</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{counties.length}</span>
             </div>
-          )}
-        </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div className="space-y-1">
+              {counties.map(function (c) {
+                return (
+                  <p key={c.county_id} style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>{c.county_name}</p>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         {/* District Info */}
         {(official.district_type || official.district_id) && (
-          <div className="mb-8">
-            <span
-              className="font-mono uppercase tracking-[0.2em] block mb-3"
-              style={{ fontSize: '0.58rem', color: '#5c6474' }}
-            >
-              {t('official.district')}
-            </span>
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.district')}</h2>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
             <div className="flex items-center gap-6 mb-3">
               {official.district_type && (
                 <div>
-                  <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.type')}</span>
-                  <p className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{official.district_type}</p>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.type')}</span>
+                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{official.district_type}</p>
                 </div>
               )}
               {official.district_id && (
                 <div>
-                  <span className="font-mono uppercase tracking-[0.1em] block" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('official.id')}</span>
-                  <p className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{official.district_id}</p>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, display: 'block' }}>{t('official.id')}</span>
+                  <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{official.district_id}</p>
                 </div>
               )}
             </div>
             {districtZips.length > 0 && (
               <div>
-                <span
-                  className="font-mono uppercase tracking-[0.1em] flex items-center gap-1 mb-2"
-                  style={{ fontSize: '0.52rem', color: '#5c6474' }}
-                >
+                <span className="flex items-center gap-1 mb-2" style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>
                   <MapPin size={11} /> {t('official.zip_codes')}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {districtZips.map(function (z) {
                     return (
-                      <span
-                        key={z}
-                        className="font-mono"
-                        style={{ fontSize: '0.7rem', color: '#5c6474', border: '1px solid #dde1e8', padding: '2px 8px' }}
-                      >
+                      <span key={z} style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }}>
                         {String(z).padStart(5, '0')}
                       </span>
                     )
@@ -433,169 +355,173 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 </div>
               </div>
             )}
-          </div>
+          </section>
         )}
 
         {/* District Map */}
         {(official.district_type || official.district_id) && (
-          <div className="mb-8" style={{ border: '1px solid #dde1e8' }}>
+          <div className="mb-10" style={{ border: '1px solid ' + RULE_COLOR }}>
             <OfficialDistrictMap districtType={official.district_type} districtId={official.district_id} />
           </div>
         )}
 
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
         {/* Focus Areas */}
         {focusAreas.length > 0 && (
-          <div className="mb-8">
-            <span
-              className="font-mono uppercase tracking-[0.2em] block mb-3"
-              style={{ fontSize: '0.58rem', color: '#5c6474' }}
-            >
-              {t('official.focus_areas')}
-            </span>
-            <div className="space-y-0">
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.focus_areas')}</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{focusAreas.length}</span>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div>
               {focusAreas.map(function (fa, i) {
                 const dotColor = FOCUS_DOT_COLORS[i % FOCUS_DOT_COLORS.length]
                 return (
-                  <Link
-                    key={fa.focus_id}
-                    href={'/explore/focus/' + fa.focus_id}
-                    className="flex items-center gap-2 py-2 hover:underline"
-                    style={{ fontSize: '0.88rem', color: '#0d1117' }}
-                  >
+                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
                     <span className="w-2 h-2 flex-shrink-0" style={{ background: dotColor }} />
-                    <span className="font-body">{fa.focus_area_name}</span>
+                    <span>{fa.focus_area_name}</span>
                   </Link>
                 )
               })}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Committee Assignments */}
         {committeeList.length > 0 && (
-          <div className="mb-8">
-            <span
-              className="font-mono uppercase tracking-[0.2em] block mb-3"
-              style={{ fontSize: '0.58rem', color: '#5c6474' }}
-            >
-              {t('official.committees')}
-            </span>
-            <div>
-              {committeeList.map(function (c, i) {
-                return (
-                  <div
-                    key={i}
-                    className="py-3"
-                    style={{ borderBottom: i < committeeList.length - 1 ? '1px solid #dde1e8' : 'none' }}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{c.committee_name}</p>
-                        {c.chamber && (
-                          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{c.chamber}</span>
-                        )}
-                      </div>
-                      {c.role && (
-                        <span
-                          className="font-mono uppercase tracking-[0.12em] px-2 py-0.5 flex-shrink-0"
-                          style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}
-                        >
-                          {c.role}
-                        </span>
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.committees')}</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{committeeList.length}</span>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            {committeeList.slice(0, 4).map(function (c, i) {
+              return (
+                <div key={i} className="py-3" style={{ borderBottom: i < Math.min(committeeList.length, 4) - 1 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{c.committee_name}</p>
+                      {c.chamber && (
+                        <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
                       )}
                     </div>
-                    {c.jurisdiction_focus && c.jurisdiction_focus.length > 0 && (
-                      <div className="mt-1.5 flex flex-wrap gap-1.5">
-                        {c.jurisdiction_focus.map(function (jf) {
-                          return (
-                            <span
-                              key={jf}
-                              className="font-mono"
-                              style={{ fontSize: '0.62rem', color: '#5c6474', border: '1px solid #dde1e8', padding: '1px 6px' }}
-                            >
-                              {jf}
-                            </span>
-                          )
-                        })}
-                      </div>
+                    {c.role && (
+                      <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
+                        {c.role}
+                      </span>
                     )}
                   </div>
-                )
-              })}
-            </div>
-          </div>
+                </div>
+              )
+            })}
+            {committeeList.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                  See {committeeList.length - 4} more committees
+                </summary>
+                {committeeList.slice(4).map(function (c, i) {
+                  return (
+                    <div key={i + 4} className="py-3" style={{ borderBottom: i < committeeList.length - 5 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{c.committee_name}</p>
+                          {c.chamber && (
+                            <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{c.chamber}</span>
+                          )}
+                        </div>
+                        {c.role && (
+                          <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: INK, color: '#fff', padding: '2px 8px' }}>
+                            {c.role}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </details>
+            )}
+          </section>
         )}
 
         {/* Vote Records */}
         {voteList.length > 0 && (
-          <div className="mb-8">
-            <span
-              className="font-mono uppercase tracking-[0.2em] block mb-3"
-              style={{ fontSize: '0.58rem', color: '#5c6474' }}
-            >
-              {t('official.recent_votes')}
-            </span>
-            <div>
-              {voteList.map(function (v, i) {
-                const voteColor = v.vote === 'Yea' ? '#2d5a27'
-                  : v.vote === 'Nay' ? '#a12323'
-                  : '#5c6474'
-                const inner = (
-                  <div
-                    className="flex items-center justify-between gap-3 py-3"
-                    style={{ borderBottom: i < voteList.length - 1 ? '1px solid #dde1e8' : 'none' }}
-                  >
-                    <div className="min-w-0">
-                      <p className="font-display text-sm font-bold truncate" style={{ color: '#0d1117' }}>
-                        {v.bill_number || t('official.vote')}
-                      </p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        {v.chamber && (
-                          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{v.chamber}</span>
-                        )}
-                        {v.vote_date && (
-                          <span className="font-mono" style={{ fontSize: '0.52rem', color: '#8a929e' }}>{new Date(v.vote_date).toLocaleDateString()}</span>
-                        )}
-                      </div>
-                    </div>
-                    <span
-                      className="font-mono uppercase tracking-[0.08em] font-bold flex-shrink-0"
-                      style={{ fontSize: '0.68rem', color: voteColor }}
-                    >
-                      {v.vote}
-                    </span>
-                  </div>
-                )
-                return v.policy_id ? (
-                  <Link key={i} href={'/policies/' + v.policy_id} className="block transition-colors hover:bg-[#f4f5f7]">
-                    {inner}
-                  </Link>
-                ) : (
-                  <div key={i}>{inner}</div>
-                )
-              })}
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.recent_votes')}</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{voteList.length}</span>
             </div>
-          </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            {voteList.slice(0, 4).map(function (v, i) {
+              const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : MUTED
+              const inner = (
+                <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < Math.min(voteList.length, 4) - 1 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                  <div className="min-w-0">
+                    <p className="truncate" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>
+                      {v.bill_number || t('official.vote')}
+                    </p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
+                      {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                    </div>
+                  </div>
+                  <span className="flex-shrink-0" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>
+                    {v.vote}
+                  </span>
+                </div>
+              )
+              return v.policy_id ? (
+                <Link key={i} href={'/policies/' + v.policy_id} className="block hover:opacity-80">{inner}</Link>
+              ) : (
+                <div key={i}>{inner}</div>
+              )
+            })}
+            {voteList.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                  See {voteList.length - 4} more votes
+                </summary>
+                {voteList.slice(4).map(function (v, i) {
+                  const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : MUTED
+                  const inner = (
+                    <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < voteList.length - 5 ? '1px solid ' + RULE_COLOR : 'none' }}>
+                      <div className="min-w-0">
+                        <p className="truncate" style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 600, color: INK }}>{v.bill_number || t('official.vote')}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {v.chamber && <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', color: MUTED }}>{v.chamber}</span>}
+                          {v.vote_date && <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{new Date(v.vote_date).toLocaleDateString()}</span>}
+                        </div>
+                      </div>
+                      <span className="flex-shrink-0" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: 700, color: voteColor }}>{v.vote}</span>
+                    </div>
+                  )
+                  return v.policy_id ? (
+                    <Link key={i + 4} href={'/policies/' + v.policy_id} className="block hover:opacity-80">{inner}</Link>
+                  ) : (
+                    <div key={i + 4}>{inner}</div>
+                  )
+                })}
+              </details>
+            )}
+          </section>
         )}
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
 
         {/* Policies */}
         {policies && policies.length > 0 && (
-          <div className="mb-8">
-            <span
-              className="font-mono uppercase tracking-[0.2em] block mb-3"
-              style={{ fontSize: '0.58rem', color: '#5c6474' }}
-            >
-              {t('official.policies')}
-            </span>
-            <div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-0"
-              style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}
-            >
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('official.policies')}</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{policies.length}</span>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1px solid ' + RULE_COLOR, borderTop: '1px solid ' + RULE_COLOR }}>
               {policies.map(function (p) {
                 const pt = policyTranslations[p.policy_id]
-                const isActive = ['pending', 'introduced', 'in committee', 'active'].includes((p.status || '').toLowerCase())
                 return (
-                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} style={isActive ? { borderLeft: '3px solid #b03a2a' } : undefined}>
+                  <Link key={p.policy_id} href={'/policies/' + p.policy_id}>
                     <PolicyCard
                       name={p.title_6th_grade || p.policy_name}
                       summary={p.summary_6th_grade || p.summary_5th_grade}
@@ -611,23 +537,30 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                 )
               })}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Related Content */}
         {related.length > 0 && (
-          <div className="mb-8">
+          <section className="mb-10">
             <RelatedContent title={t('official.related_content')} items={related} />
-          </div>
+          </section>
         )}
 
-        {/* Quote (GAP 2) */}
+        {/* Quote */}
         {quote && (
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={barColor} />
+          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={CLAY} />
         )}
-      </DetailPageLayout>
+      </div>
 
-      {/* Admin panel */}
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/officials" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to Officials
+        </Link>
+      </div>
+
       <AdminEditPanel
         entityType="elected_officials"
         entityId={official.official_id}
@@ -645,6 +578,6 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
           { key: 'government_level', label: 'Government Level', type: 'select', value: (official as any).government_level, options: ['federal', 'state', 'county', 'city'] },
         ] as EditField[]}
       />
-    </>
+    </div>
   )
 }

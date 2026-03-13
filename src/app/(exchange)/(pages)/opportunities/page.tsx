@@ -1,13 +1,17 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { FOLWatermark } from '@/components/exchange/FOLWatermark'
-import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 3600
 
@@ -28,7 +32,6 @@ export default async function OpportunitiesPage() {
     .eq('is_active' as any, 'Yes')
     .order('opportunity_name')
 
-  // Sort local opportunities to top when ZIP is set
   let all = opportunities || []
   if (userZip) {
     all = all.slice().sort((a, b) => {
@@ -39,103 +42,100 @@ export default async function OpportunitiesPage() {
   }
 
   return (
-    <div>
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/action" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1a6b56' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1a6b56' }} />
-          Action Center
-        </Link>
-      </div>
-      <IndexPageHero
-        color="#1a6b56"
-        pattern="tripod"
-        titleKey="opportunities.title"
-        subtitleKey="opportunities.subtitle"
-        intro="Your community needs your talents, time, and energy. Browse volunteer positions, learning opportunities, and ways to get involved in Houston."
-        stats={all.length > 0 ? [
-          { value: all.length, label: 'Opportunities' },
-        ] : undefined}
-      />
-
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Opportunities' }]} />
-
-        <div className="flex flex-col lg:flex-row gap-6 mt-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-4">
-              <h2 className="font-display text-xl font-bold text-ink">
-                All Opportunities ({all.length})
-              </h2>
-              <span className="relative text-[10px] font-bold uppercase tracking-wider text-dim">
-                Time Commitment
-                <WayfinderTooltipPos tipKey="time_commitment" position="bottom" />
-              </span>
-              <span className="relative text-[10px] font-bold uppercase tracking-wider text-dim">
-                Virtual
-                <WayfinderTooltipPos tipKey="virtual_badge" position="bottom" />
-              </span>
-              <span className="relative text-[10px] font-bold uppercase tracking-wider text-dim">
-                Spots Available
-                <WayfinderTooltipPos tipKey="spots_available" position="bottom" />
-              </span>
-            </div>
-
-            {all.length === 0 ? (
-              <div className="relative text-center py-16 bg-white border border-rule overflow-hidden">
-                <div className="absolute right-4 top-4 opacity-[0.06]">
-                  <FOLWatermark variant="tripod" size="md" color="#1a6b56" />
-                </div>
-                <p className="text-dim text-lg font-display">
-                  Opportunities are being gathered.
-                </p>
-                <p className="text-dim text-sm mt-2">
-                  Check back soon for ways to get involved in your community.
-                </p>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            Opportunities
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            Your community needs your talents, time, and energy. Browse volunteer positions, learning opportunities, and ways to get involved in Houston.
+          </p>
+          {all.length > 0 && (
+            <div className="flex flex-wrap gap-8 mt-8">
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{all.length}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Opportunities</span>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {all.map(function (opp) {
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Opportunities</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        <div className="flex items-baseline justify-between mb-1">
+          <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>All Opportunities</h2>
+          <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{all.length}</span>
+        </div>
+        <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1.5rem' }} />
+
+        {all.length === 0 ? (
+          <div className="text-center py-16" style={{ border: '1px dashed ' + RULE_COLOR }}>
+            <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED }}>Opportunities are being gathered.</p>
+            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, marginTop: '0.5rem' }}>Check back soon for ways to get involved in your community.</p>
+          </div>
+        ) : (
+          <>
+            {all.slice(0, 4).map(function (opp) {
+              return (
+                <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="block py-4 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+                  <h3 style={{ fontFamily: SERIF, fontSize: '1rem', fontWeight: 600, color: INK }}>{opp.opportunity_name}</h3>
+                  {opp.description_5th_grade && (
+                    <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{opp.description_5th_grade}</p>
+                  )}
+                  {userZip && opp.zip_code === userZip && (
+                    <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, marginTop: '0.25rem', display: 'inline-block' }}>Near you</span>
+                  )}
+                </Link>
+              )
+            })}
+            {all.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                  See {all.length - 4} more opportunities
+                </summary>
+                {all.slice(4).map(function (opp) {
                   return (
-                    <Link
-                      key={opp.opportunity_id}
-                      href={'/opportunities/' + opp.opportunity_id}
-                      className="bg-white border border-rule p-5 hover:border-ink transition-shadow group relative overflow-hidden"
-                    >
-                      {/* Color bar */}
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-theme-voice group-hover:w-1.5 transition-all" />
-                      <h3 className="font-display font-bold text-ink group-hover:text-brand-accent transition-colors mb-1 pl-3">
-                        {opp.opportunity_name}
-                      </h3>
+                    <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="block py-4 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+                      <h3 style={{ fontFamily: SERIF, fontSize: '1rem', fontWeight: 600, color: INK }}>{opp.opportunity_name}</h3>
                       {opp.description_5th_grade && (
-                        <p className="text-sm text-dim line-clamp-2 pl-3">
-                          {opp.description_5th_grade}
-                        </p>
+                        <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{opp.description_5th_grade}</p>
                       )}
                       {userZip && opp.zip_code === userZip && (
-                        <span className="text-[10px] text-brand-accent font-medium pl-3">Near you</span>
+                        <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, marginTop: '0.25rem', display: 'inline-block' }}>Near you</span>
                       )}
                     </Link>
                   )
                 })}
-              </div>
+              </details>
             )}
-          </div>
+          </>
+        )}
+      </div>
 
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="opportunities"
-                color="#1a6b56"
-                related={[
-                  { label: 'Services', href: '/services', color: '#1a6b56' },
-                  { label: 'Organizations', href: '/organizations', color: '#1e4d7a' },
-                  { label: 'Events', href: '/calendar', color: '#1b5e8a' },
-                ]}
-              />
-              <div className="mt-4"><FeaturedPromo variant="card" /></div>
-            </div>
-          </div>
-        </div>
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
       </div>
     </div>
   )

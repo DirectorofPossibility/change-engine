@@ -20,10 +20,18 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { TranslatedTooltip } from '@/components/exchange/TranslatedTooltip'
-import { TOOLTIPS } from '@/lib/tooltips'
 import Image from 'next/image'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null)
@@ -81,7 +89,6 @@ export default function SettingsPage() {
     setError(null)
 
     const supabase = createClient()
-    // Extract ZIP from address if provided
     const extractedZip = address.match(/\b(\d{5})\b/)?.[1]
     const effectiveZip = zipCode || extractedZip || null
 
@@ -101,7 +108,6 @@ export default function SettingsPage() {
       setError(updateError.message)
     } else {
       setMessage('Settings saved.')
-      // Update language cookie
       document.cookie = 'lang=' + language + ';path=/;max-age=31536000'
       if (zipCode) {
         document.cookie = 'zip=' + zipCode + ';path=/;max-age=31536000'
@@ -176,158 +182,199 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-lg mx-auto px-4 py-16">
-        <div className="h-8 w-32 bg-white/60 rounded animate-pulse mb-6" />
-        <div className="space-y-4">
-          {[0, 1, 2, 3].map(function (i) {
-            return <div key={i} className="h-16 bg-white/60 animate-pulse" />
-          })}
+      <div style={{ background: PARCHMENT }} className="min-h-screen">
+        <div className="max-w-lg mx-auto px-6 py-16">
+          <div className="h-8 w-32 animate-pulse mb-6" style={{ background: PARCHMENT_WARM }} />
+          <div className="space-y-4">
+            {[0, 1, 2, 3].map(function (i) {
+              return <div key={i} className="h-16 animate-pulse" style={{ background: PARCHMENT_WARM }} />
+            })}
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-12">
-      <h1 className="text-2xl font-bold text-brand-text mb-2">Your settings.</h1>
-      <p className="text-sm text-brand-muted mb-8">Language, notifications, saved items, and account info — all in one place.</p>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute right-[-60px] top-[-20px]">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl mt-2">Your Settings</h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-base mt-2">Language, notifications, saved items, and account info -- all in one place.</p>
+        </div>
+        <div style={{ height: 1, background: RULE_COLOR }} />
+      </section>
 
-      {message && (
-        <div className="bg-green-50 border border-green-200 text-green-700 text-sm p-3 mb-4">
-          {message}
-        </div>
-      )}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-3 mb-4">
-          {error}
-        </div>
-      )}
-
-      {/* ── Profile Picture ── */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold text-brand-text mb-3">Profile Picture</h2>
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-brand-bg-alt border border-brand-border overflow-hidden flex items-center justify-center flex-shrink-0">
-            {avatarUrl ? (
-              <Image src={avatarUrl} alt="Profile" className="w-full h-full object-cover"  width={800} height={400} />
-            ) : (
-              <span className="text-xl font-bold text-brand-accent">
-                {displayName ? displayName.charAt(0).toUpperCase() : '?'}
-              </span>
-            )}
-          </div>
-          <div>
-            <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-brand-border text-sm font-medium text-brand-text hover:border-brand-accent transition-colors cursor-pointer">
-              {uploadingAvatar ? 'Uploading...' : 'Change Picture'}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarUpload}
-                disabled={uploadingAvatar}
-                className="sr-only"
-              />
-            </label>
-            <p className="text-xs text-brand-muted mt-1">JPG or PNG, max 2MB. Shown in the Knowledge Graph and across the site.</p>
-          </div>
-        </div>
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-1">/</span>
+          <Link href="/me" className="hover:underline">My Account</Link>
+          <span className="mx-1">/</span>
+          <span style={{ color: INK }}>Settings</span>
+        </nav>
       </div>
 
-      {/* ── Profile Settings ── */}
-      <form onSubmit={handleSaveProfile} className="space-y-4 mb-10">
-        <h2 className="text-lg font-semibold text-brand-text">Profile</h2>
-        <div>
-          <label htmlFor="displayName" className="block text-sm font-medium text-brand-text mb-1">Display Name</label>
+      <div className="max-w-lg mx-auto px-6 py-8">
+        {message && (
+          <div className="text-sm p-3 mb-4" style={{ background: '#f0f7f0', border: '1px solid #c3dac3', color: '#2d6a2d' }}>
+            {message}
+          </div>
+        )}
+        {error && (
+          <div className="text-sm p-3 mb-4" style={{ background: '#fdf0f0', border: '1px solid #e5c3c3', color: '#8b2020' }}>
+            {error}
+          </div>
+        )}
 
-          <input
-            id="displayName"
-            type="text"
-            value={displayName}
-            onChange={function (e) { setDisplayName(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
-          />
+        {/* ── Profile Picture ── */}
+        <div className="mb-8">
+          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Profile Picture</h2>
+          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 overflow-hidden flex items-center justify-center flex-shrink-0" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+              {avatarUrl ? (
+                <Image src={avatarUrl} alt="Profile" className="w-full h-full object-cover" width={64} height={64} />
+              ) : (
+                <span className="text-xl font-bold" style={{ fontFamily: SERIF, color: CLAY }}>
+                  {displayName ? displayName.charAt(0).toUpperCase() : '?'}
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="inline-flex items-center gap-2 px-4 py-2 text-sm cursor-pointer" style={{ fontFamily: MONO, color: INK, border: '1px solid ' + RULE_COLOR }}>
+                {uploadingAvatar ? 'Uploading...' : 'Change Picture'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarUpload}
+                  disabled={uploadingAvatar}
+                  className="sr-only"
+                />
+              </label>
+              <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs mt-1">JPG or PNG, max 2MB.</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <label htmlFor="address" className="block text-sm font-medium text-brand-text mb-1">Address</label>
-          <input
-            id="address"
-            type="text"
-            value={address}
-            onChange={function (e) { setAddress(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
-            placeholder="123 Main St, Houston, TX 77001"
-          />
-          <p className="text-xs text-brand-muted mt-1">Used to find your elected officials and local resources</p>
-        </div>
-        <div>
-          <label htmlFor="zipCode" className="block text-sm font-medium text-brand-text mb-1">ZIP Code</label>
-          <input
-            id="zipCode"
-            type="text"
-            maxLength={5}
-            value={zipCode}
-            onChange={function (e) { setZipCode(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
-            placeholder="Auto-filled from address"
-          />
-        </div>
-        <div>
-          <label htmlFor="language" className="block text-sm font-medium text-brand-text mb-1">Language</label>
-          <p className="text-xs text-brand-muted mb-2">English, Spanish, or Vietnamese. Switch any time.</p>
-          <select
-            id="language"
-            value={language}
-            onChange={function (e) { setLanguage(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent bg-white"
+
+        {/* ── Profile Settings ── */}
+        <form onSubmit={handleSaveProfile} className="space-y-4 mb-10">
+          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Profile</h2>
+          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <div>
+            <label htmlFor="displayName" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">Display Name</label>
+            <input
+              id="displayName"
+              type="text"
+              value={displayName}
+              onChange={function (e) { setDisplayName(e.target.value) }}
+              className="w-full px-3 py-2 text-sm focus:outline-none"
+              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+            />
+          </div>
+          <div>
+            <label htmlFor="address" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">Address</label>
+            <input
+              id="address"
+              type="text"
+              value={address}
+              onChange={function (e) { setAddress(e.target.value) }}
+              className="w-full px-3 py-2 text-sm focus:outline-none"
+              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              placeholder="123 Main St, Houston, TX 77001"
+            />
+            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs mt-1">Used to find your elected officials and local resources</p>
+          </div>
+          <div>
+            <label htmlFor="zipCode" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">ZIP Code</label>
+            <input
+              id="zipCode"
+              type="text"
+              maxLength={5}
+              value={zipCode}
+              onChange={function (e) { setZipCode(e.target.value) }}
+              className="w-full px-3 py-2 text-sm focus:outline-none"
+              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              placeholder="Auto-filled from address"
+            />
+          </div>
+          <div>
+            <label htmlFor="language" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">Language</label>
+            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs mb-2">English, Spanish, or Vietnamese. Switch any time.</p>
+            <select
+              id="language"
+              value={language}
+              onChange={function (e) { setLanguage(e.target.value) }}
+              className="w-full px-3 py-2 text-sm focus:outline-none"
+              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+            >
+              <option value="en">English</option>
+              <option value="es">Espanol</option>
+              <option value="vi">Tieng Viet</option>
+            </select>
+          </div>
+          <div className="flex items-center gap-3">
+            <input
+              id="gamification"
+              type="checkbox"
+              checked={gamification}
+              onChange={function (e) { setGamification(e.target.checked) }}
+              style={{ accentColor: CLAY }}
+            />
+            <label htmlFor="gamification" style={{ fontFamily: SERIF, color: INK }} className="text-sm">Enable badges and points</label>
+          </div>
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-6 py-2 text-white text-sm disabled:opacity-50"
+            style={{ fontFamily: MONO, background: CLAY }}
           >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="vi">Tiếng Việt</option>
-          </select>
-        </div>
-        <div className="relative flex items-center gap-3">
-          <input
-            id="gamification"
-            type="checkbox"
-            checked={gamification}
-            onChange={function (e) { setGamification(e.target.checked) }}
-            className="rounded border-brand-border"
-          />
-          <label htmlFor="gamification" className="text-sm text-brand-text">Enable badges and points</label>
-          <TranslatedTooltip tip={TOOLTIPS.gamification_toggle} position="bottom" />
-        </div>
-        <button
-          type="submit"
-          disabled={saving}
-          className="px-6 py-2 bg-brand-accent text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {saving ? 'Saving...' : 'Save Profile'}
-        </button>
-      </form>
+            {saving ? 'Saving...' : 'Save Profile'}
+          </button>
+        </form>
 
-      {/* ── Password Change ── */}
-      <form onSubmit={handleChangePassword} className="space-y-4">
-        <h2 className="text-lg font-semibold text-brand-text">Account</h2>
-        <p className="text-xs text-brand-muted">Update your email or password.</p>
-        <div>
-          <label htmlFor="newPassword" className="block text-sm font-medium text-brand-text mb-1">New Password</label>
-          <input
-            id="newPassword"
-            type="password"
-            minLength={6}
-            value={newPassword}
-            onChange={function (e) { setNewPassword(e.target.value) }}
-            className="w-full px-3 py-2 border border-brand-border text-sm focus:outline-none focus:border-brand-accent"
-            placeholder="At least 6 characters"
-          />
+        {/* ── Divider ── */}
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+
+        {/* ── Password Change ── */}
+        <form onSubmit={handleChangePassword} className="space-y-4">
+          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-1">Account</h2>
+          <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">Update your email or password.</p>
+          <div>
+            <label htmlFor="newPassword" style={{ fontFamily: MONO, color: INK }} className="block text-sm mb-1">New Password</label>
+            <input
+              id="newPassword"
+              type="password"
+              minLength={6}
+              value={newPassword}
+              onChange={function (e) { setNewPassword(e.target.value) }}
+              className="w-full px-3 py-2 text-sm focus:outline-none"
+              style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR, background: 'white' }}
+              placeholder="At least 6 characters"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-6 py-2 text-white text-sm disabled:opacity-50"
+            style={{ fontFamily: MONO, background: INK }}
+          >
+            {saving ? 'Updating...' : 'Update Password'}
+          </button>
+        </form>
+
+        {/* ── Footer link ── */}
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="mt-10 pt-4">
+          <Link href="/me" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to My Account</Link>
         </div>
-        <button
-          type="submit"
-          disabled={saving}
-          className="px-6 py-2 bg-brand-text text-white text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
-          {saving ? 'Updating...' : 'Update Password'}
-        </button>
-      </form>
+      </div>
     </div>
   )
 }

@@ -1,20 +1,25 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { RoleRequestCard } from '@/components/exchange/RoleRequestCard'
 import { SubmissionTracker } from '@/components/exchange/SubmissionTracker'
-import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
-import { FOLWatermark } from '@/components/exchange/FOLWatermark'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import { SpiralProgress } from '@/components/exchange/SpiralProgress'
-import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
 
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export const metadata: Metadata = {
-  title: 'My Account — Change Engine',
+  title: 'My Account -- Change Engine',
   description: 'Your personal dashboard on the Change Engine.',
 }
 
@@ -144,38 +149,38 @@ export default async function MyDashboardPage() {
   const roleLabel = currentRole === 'admin' ? 'Administrator' : currentRole === 'partner' ? 'Community Partner' : 'Neighbor'
 
   return (
-    <div>
-      {/* Welcome hero */}
-      <section className="relative bg-brand-bg overflow-hidden">
-        <div className="absolute right-[-60px] top-[-20px] opacity-[0.04]">
-          <FOLWatermark variant="flower" size="lg" color="#C75B2A" />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute right-[-60px] top-[-20px]">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
-        <div className="relative z-10 max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 bg-brand-accent/20 flex items-center justify-center flex-shrink-0 text-xl font-display font-bold text-brand-accent">
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <div className="flex items-center gap-5 mt-4">
+            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0 text-xl font-bold" style={{ fontFamily: SERIF, background: CLAY + '20', color: CLAY }}>
               {displayName?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold">Welcome back, {displayName}</h1>
-              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm text-brand-muted">
-                <span className="relative px-2 py-0.5 bg-brand-bg-alt text-[11px] font-mono font-bold uppercase tracking-wide text-brand-muted">
+              <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl">
+                Welcome back, {displayName}
+              </h1>
+              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-sm" style={{ color: MUTED }}>
+                <span style={{ fontFamily: MONO, color: MUTED, borderBottom: '1px dotted ' + RULE_COLOR }} className="text-[11px] uppercase tracking-wide pb-0.5">
                   {roleLabel}
-                  <WayfinderTooltipPos tipKey="role_badge" position="bottom" />
                 </span>
                 {profile?.zip_code && <span>ZIP {profile.zip_code}</span>}
-                <span className="relative">Impact Points: <strong className="text-brand-accent">{totalPoints}</strong>
-                  <WayfinderTooltipPos tipKey="impact_points" position="bottom" />
-                </span>
+                <span>Impact Points: <strong style={{ color: CLAY }}>{totalPoints}</strong></span>
               </div>
-              <div className="flex flex-wrap items-center gap-3 mt-3">
-                <Link href="/me/settings" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border text-sm text-brand-text hover:bg-brand-border/50 transition-all">
+              <div className="flex flex-wrap items-center gap-3 mt-4">
+                <Link href="/me/settings" className="inline-block px-4 py-2 text-sm" style={{ fontFamily: MONO, color: INK, border: '1px solid ' + RULE_COLOR }}>
                   Edit Settings
                 </Link>
-                <Link href="/compass" className="inline-block px-4 py-2 bg-brand-accent text-sm text-white font-semibold hover:bg-brand-accent-hover transition-all">
+                <Link href="/compass" className="inline-block px-4 py-2 text-sm text-white" style={{ fontFamily: MONO, background: CLAY }}>
                   My Compass
                 </Link>
                 {['admin', 'partner', 'neighbor'].includes(currentRole) && (
-                  <Link href="/dashboard" className="inline-block px-4 py-2 bg-brand-bg-alt border border-brand-border text-sm text-brand-text hover:bg-brand-border/50 transition-all">
+                  <Link href="/dashboard" className="inline-block px-4 py-2 text-sm" style={{ fontFamily: MONO, color: INK, border: '1px solid ' + RULE_COLOR }}>
                     Go to Dashboard
                   </Link>
                 )}
@@ -183,33 +188,46 @@ export default async function MyDashboardPage() {
             </div>
           </div>
         </div>
-        <div className="h-1 bg-gradient-to-r from-brand-accent to-transparent" />
+        <div style={{ height: 1, background: RULE_COLOR }} />
       </section>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-1">/</span>
+          <span style={{ color: INK }}>My Account</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main column */}
           <div className="lg:col-span-2 space-y-8">
             {/* Learning Progress */}
             <section>
-              <h2 className="font-display text-lg font-bold text-brand-text mb-4">My Learning Paths</h2>
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">My Learning Paths</h2>
+                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{Object.keys(pathProgress).length} paths</span>
+              </div>
+              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
               {Object.keys(pathProgress).length === 0 ? (
-                <div className="bg-white border border-brand-border p-6 text-center">
-                  <p className="text-brand-muted mb-3">You haven&apos;t started any learning paths yet.</p>
-                  <Link href="/learn" className="text-sm text-brand-accent hover:underline">Browse learning paths &rarr;</Link>
+                <div style={{ border: '1px solid ' + RULE_COLOR }} className="p-6 text-center">
+                  <p style={{ color: MUTED }} className="mb-3">You haven&apos;t started any learning paths yet.</p>
+                  <Link href="/learn" style={{ color: CLAY, fontFamily: MONO }} className="text-sm hover:underline">Browse learning paths &rarr;</Link>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {Object.entries(pathProgress).map(function ([pathId, prog]) {
                     const pct = prog.total > 0 ? Math.round((prog.completed / prog.total) * 100) : 0
                     return (
-                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block bg-white border border-brand-border p-4 hover:border-brand-text transition-all">
+                      <Link key={pathId} href={'/learn/' + (pathSlugs[pathId] || pathId)} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid ' + RULE_COLOR }}>
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-semibold text-brand-text text-sm">{pathNames[pathId] || pathId}</h3>
-                          <span className="text-xs text-brand-muted">{prog.completed}/{prog.total} modules</span>
+                          <h3 style={{ fontFamily: SERIF, color: INK }} className="text-sm font-semibold">{pathNames[pathId] || pathId}</h3>
+                          <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{prog.completed}/{prog.total} modules</span>
                         </div>
-                        <div className="w-full bg-brand-bg rounded-full h-2">
-                          <div className="bg-brand-accent rounded-full h-2 transition-all" style={{ width: pct + '%' }} />
+                        <div className="w-full h-2" style={{ background: PARCHMENT_WARM }}>
+                          <div className="h-2 transition-all" style={{ width: pct + '%', background: CLAY }} />
                         </div>
                       </Link>
                     )
@@ -221,10 +239,11 @@ export default async function MyDashboardPage() {
             {/* Your Representatives */}
             {representatives.length > 0 && (
               <section>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="font-display text-lg font-bold text-brand-text">Your Representatives</h2>
-                  <Link href="/officials" className="text-xs text-brand-accent hover:underline">View all &rarr;</Link>
+                <div className="flex items-baseline justify-between mb-1">
+                  <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">Your Representatives</h2>
+                  <Link href="/officials" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">View all &rarr;</Link>
                 </div>
+                <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {representatives.map(function (rep: any) {
                     const levelColors: Record<string, string> = {
@@ -235,12 +254,12 @@ export default async function MyDashboardPage() {
                       <Link
                         key={rep.official_id}
                         href={'/officials/' + rep.official_id}
-                        className="group flex items-center gap-3 bg-white border border-brand-border p-3 hover:border-brand-text transition-all"
-                       
+                        className="group flex items-center gap-3 p-3 hover:opacity-80 transition-opacity"
+                        style={{ border: '1px solid ' + RULE_COLOR }}
                       >
-                        <div className="w-10 h-10 flex-shrink-0 overflow-hidden bg-brand-bg">
+                        <div className="w-10 h-10 flex-shrink-0 overflow-hidden" style={{ background: PARCHMENT_WARM }}>
                           {rep.photo_url ? (
-                            <Image src={rep.photo_url} alt="" className="w-full h-full object-cover"  width={800} height={400} />
+                            <Image src={rep.photo_url} alt="" className="w-full h-full object-cover" width={40} height={40} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-sm font-bold text-white" style={{ backgroundColor: color }}>
                               {rep.official_name?.charAt(0) || '?'}
@@ -248,9 +267,9 @@ export default async function MyDashboardPage() {
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-brand-text truncate">{rep.official_name}</p>
-                          <div className="flex items-center gap-2 text-[11px] text-brand-muted">
-                            <span className="inline-block w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
+                          <p style={{ fontFamily: SERIF, color: INK }} className="text-sm truncate">{rep.official_name}</p>
+                          <div className="flex items-center gap-2 text-[11px]" style={{ color: MUTED }}>
+                            <span className="inline-block w-2 h-2 flex-shrink-0" style={{ backgroundColor: color }} />
                             <span className="truncate">{rep.title || rep.level}</span>
                             {rep.party && <span>({rep.party})</span>}
                           </div>
@@ -269,24 +288,28 @@ export default async function MyDashboardPage() {
 
             {/* Recent Activity */}
             <section>
-              <h2 className="font-display text-lg font-bold text-brand-text mb-4">Recent Activity</h2>
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">Recent Activity</h2>
+                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{actions?.length || 0} actions</span>
+              </div>
+              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
               {(!actions || actions.length === 0) ? (
-                <div className="bg-white border border-brand-border p-6 text-center">
-                  <p className="text-brand-muted">No activity yet. Start by exploring content and taking action!</p>
+                <div style={{ border: '1px solid ' + RULE_COLOR }} className="p-6 text-center">
+                  <p style={{ color: MUTED }}>No activity yet. Start by exploring content and taking action!</p>
                 </div>
               ) : (
-                <div className="bg-white border border-brand-border divide-y divide-brand-border overflow-hidden">
-                  {actions.map(function (a) {
+                <div style={{ border: '1px solid ' + RULE_COLOR }}>
+                  {actions.map(function (a, i) {
                     return (
-                      <div key={a.action_log_id} className="p-3 flex items-center justify-between">
+                      <div key={a.action_log_id} className="p-3 flex items-center justify-between" style={i > 0 ? { borderTop: '1px solid ' + RULE_COLOR } : {}}>
                         <div>
-                          <p className="text-sm text-brand-text">{a.target_name || a.action_type_id}</p>
+                          <p style={{ fontFamily: SERIF, color: INK }} className="text-sm">{a.target_name || a.action_type_id}</p>
                           {a.action_date && (
-                            <p className="text-xs text-brand-muted">{new Date(a.action_date).toLocaleDateString()}</p>
+                            <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{new Date(a.action_date).toLocaleDateString()}</p>
                           )}
                         </div>
                         {a.impact_points != null && a.impact_points > 0 && (
-                          <span className="text-xs font-medium text-brand-accent">+{a.impact_points} pts</span>
+                          <span style={{ fontFamily: MONO, color: CLAY }} className="text-xs font-medium">+{a.impact_points} pts</span>
                         )}
                       </div>
                     )
@@ -305,28 +328,30 @@ export default async function MyDashboardPage() {
           <div className="space-y-6">
             {/* Badges */}
             <section>
-              <h2 className="relative font-display text-lg font-bold text-brand-text mb-4">My Badges
-                <WayfinderTooltipPos tipKey="badges" position="bottom" />
-              </h2>
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg">My Badges</h2>
+                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{userBadges?.length || 0} earned</span>
+              </div>
+              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
               {(!userBadges || userBadges.length === 0) ? (
-                <div className="bg-white border border-brand-border p-6 text-center">
-                  <p className="text-sm text-brand-muted">Complete learning paths and take action to earn badges!</p>
+                <div style={{ border: '1px solid ' + RULE_COLOR }} className="p-6 text-center">
+                  <p style={{ fontFamily: MONO, color: MUTED }} className="text-sm">Complete learning paths and take action to earn badges!</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-3">
                   {userBadges.map(function (ub) {
                     const detail = badgeDetails.find(function (b) { return b.badge_id === ub.badge_id })
                     return (
-                      <div key={ub.user_badge_id} className="bg-white border border-brand-border p-3 text-center">
+                      <div key={ub.user_badge_id} className="p-3 text-center" style={{ border: '1px solid ' + RULE_COLOR }}>
                         <div
-                          className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-white text-lg"
-                          style={{ backgroundColor: detail?.color || '#C75B2A' }}
+                          className="w-10 h-10 mx-auto mb-2 flex items-center justify-center text-white text-lg"
+                          style={{ backgroundColor: detail?.color || CLAY }}
                         >
                           {detail?.icon_name ? detail.icon_name.charAt(0).toUpperCase() : 'B'}
                         </div>
-                        <p className="text-xs font-medium text-brand-text">{detail?.badge_name || 'Badge'}</p>
+                        <p style={{ fontFamily: SERIF, color: INK }} className="text-xs">{detail?.badge_name || 'Badge'}</p>
                         {detail?.points && (
-                          <p className="text-xs text-brand-muted">{detail.points} pts</p>
+                          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{detail.points} pts</p>
                         )}
                       </div>
                     )
@@ -338,14 +363,13 @@ export default async function MyDashboardPage() {
             {/* Account upgrades */}
             {currentRole === 'neighbor' && (
               <section>
-                <h2 className="relative font-display text-lg font-bold text-brand-text mb-4">Upgrade Your Account
-                  <WayfinderTooltipPos tipKey="neighbor_vs_partner" position="bottom" />
-                </h2>
-                <div className="bg-white border-2 border-brand-accent/30 p-4 relative overflow-hidden">
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-accent" />
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mb-1 pl-2">Community Partner</p>
-                  <p className="text-lg font-display font-bold text-brand-text pl-2">$100<span className="text-sm font-normal text-brand-muted"> - $5,000/yr</span></p>
-                  <ul className="mt-2 pl-2 space-y-1 text-[12px] text-brand-muted">
+                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg mb-1">Upgrade Your Account</h2>
+                <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
+                <div className="p-4 relative overflow-hidden" style={{ border: '2px solid ' + RULE_COLOR }}>
+                  <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: CLAY }} />
+                  <p style={{ fontFamily: MONO, color: CLAY }} className="text-[10px] uppercase tracking-wider mb-1 pl-2">Community Partner</p>
+                  <p style={{ fontFamily: SERIF, color: INK }} className="text-lg pl-2">$100<span className="text-sm" style={{ color: MUTED }}> - $5,000/yr</span></p>
+                  <ul className="mt-2 pl-2 space-y-1 text-[12px]" style={{ color: MUTED }}>
                     <li>Verified organizational profile</li>
                     <li>Post events and guides</li>
                     <li>Partner dashboard and analytics</li>
@@ -360,13 +384,14 @@ export default async function MyDashboardPage() {
             <RoleRequestCard currentRole={currentRole} />
 
             {/* Donate */}
-            <div className="bg-white border border-brand-border p-4 text-center relative overflow-hidden">
-              <FlowerOfLifeIcon size={28} className="mx-auto mb-2" />
-              <p className="font-display text-sm font-bold text-brand-text mb-1">Support the Exchange</p>
-              <p className="text-[11px] text-brand-muted mb-3">Help keep Houston connected. Every dollar strengthens civic infrastructure for all.</p>
+            <div className="p-4 text-center relative overflow-hidden" style={{ border: '1px solid ' + RULE_COLOR }}>
+              <Image src="/images/fol/seed-of-life.svg" alt="" width={28} height={28} className="mx-auto mb-2 opacity-30" />
+              <p style={{ fontFamily: SERIF, color: INK }} className="text-sm mb-1">Support the Exchange</p>
+              <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] mb-3">Help keep Houston connected. Every dollar strengthens civic infrastructure for all.</p>
               <Link
                 href="/donate"
-                className="inline-block px-5 py-2 bg-brand-accent text-white text-sm font-semibold hover:bg-brand-accent-hover transition-colors"
+                className="inline-block px-5 py-2 text-white text-sm"
+                style={{ fontFamily: MONO, background: CLAY }}
               >
                 Make a Donation
               </Link>
@@ -374,30 +399,38 @@ export default async function MyDashboardPage() {
 
             {/* Quick links */}
             <section>
-              <h2 className="font-display text-lg font-bold text-brand-text mb-4">Quick Links</h2>
+              <h2 style={{ fontFamily: SERIF, color: INK }} className="text-lg mb-1">Quick Links</h2>
+              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
               <div className="space-y-2">
-                <Link href="/compass" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                <Link href="/compass" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
                   My Community Compass
                 </Link>
-                <Link href="/learn" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                <Link href="/learn" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
                   Browse Learning Paths
                 </Link>
-                <Link href="/officials" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                <Link href="/officials" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
                   Find My Representatives
                 </Link>
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
-                  <Link href="/dashboard/tools-guides" className="block bg-white border border-brand-border p-3 text-sm text-brand-text hover:border-brand-text transition-all">
+                  <Link href="/dashboard/tools-guides" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: SERIF, color: INK, border: '1px solid ' + RULE_COLOR }}>
                     Tools &amp; Guides
                   </Link>
                 )}
                 {['neighbor', 'partner', 'admin'].includes(currentRole) && (
-                  <Link href="/me/submit" className="block bg-brand-accent/5 border-2 border-brand-accent/20 p-3 text-sm text-brand-accent hover:bg-brand-accent/10 transition-all">
+                  <Link href="/me/submit" className="block p-3 text-sm hover:opacity-80 transition-opacity" style={{ fontFamily: MONO, color: CLAY, border: '2px solid ' + RULE_COLOR }}>
                     Share a Resource
                   </Link>
                 )}
               </div>
             </section>
           </div>
+        </div>
+      </div>
+
+      {/* ── Footer link ── */}
+      <div className="max-w-[900px] mx-auto px-6 pb-10">
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="pt-4">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to Home</Link>
         </div>
       </div>
     </div>

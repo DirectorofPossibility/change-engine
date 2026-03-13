@@ -1,15 +1,13 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { MapPin, Users, DollarSign, ExternalLink, BarChart3 } from 'lucide-react'
-import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { NeighborhoodMap } from '@/components/exchange/NeighborhoodMap'
 import { getMapMarkersForNeighborhood, getLangId, fetchTranslationsForTable, getWayfinderContext } from '@/lib/data/exchange'
 import { getUIStrings } from '@/lib/i18n'
 import { getUserProfile } from '@/lib/auth/roles'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 
 export const revalidate = 86400
 
@@ -24,6 +22,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export default async function NeighborhoodDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -36,7 +45,6 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
   if (!hood) notFound()
 
-  // Get ZIP codes from junction table (REST API — table not in generated types)
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   const zipRes = await fetch(
@@ -45,6 +53,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   )
   const zipJunctions: Array<{ zip_code: string }> = zipRes.ok ? await zipRes.json() : []
   const zips = zipJunctions.map(j => j.zip_code)
+
   let services: Array<{ service_id: string; service_name: string; description_5th_grade: string | null; phone: string | null; address: string | null; city: string | null; state: string | null; zip_code: string | null; website: string | null }> = []
   if (zips.length > 0) {
     const { data: svcData } = await supabase
@@ -56,14 +65,12 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
     services = svcData || []
   }
 
-  // Fetch map markers for neighborhood
   const userProfile = await getUserProfile()
   const [mapData, wayfinderData] = await Promise.all([
     getMapMarkersForNeighborhood(id),
     getWayfinderContext('neighborhood' as any, id, userProfile?.role),
   ])
 
-  // Translation support
   const langId = await getLangId()
   const serviceTranslations = langId && services.length > 0
     ? await fetchTranslationsForTable('services_211', services.map(s => s.service_id), langId)
@@ -72,139 +79,179 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
   const lang = cookieStore.get('lang')?.value || 'en'
   const t = getUIStrings(lang)
 
-  const eyebrowMeta = (
-    <span
-      className="font-mono uppercase tracking-[0.12em]"
-      style={{ fontSize: '0.58rem', color: '#5c6474', letterSpacing: '0.2em' }}
-    >
-      {hood.neighborhood_type && <>{hood.neighborhood_type} &middot; </>}
-      {hood.city && <>{hood.city}</>}
-      {hood.council_district && <> &middot; District {hood.council_district}</>}
-    </span>
-  )
-
-  const metaRow = (
-    <div className="flex flex-wrap gap-6" style={{ borderTop: '1px solid #dde1e8', borderBottom: '1px solid #dde1e8', padding: '1rem 0' }}>
-      {hood.population != null && (
-        <div className="flex items-center gap-2">
-          <Users size={16} style={{ color: '#1b5e8a' }} />
-          <div>
-            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{hood.population.toLocaleString()}</span>
-            <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.population')}</span>
-          </div>
-        </div>
-      )}
-      {hood.median_income != null && (
-        <div className="flex items-center gap-2">
-          <DollarSign size={16} style={{ color: '#1b5e8a' }} />
-          <div>
-            <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${hood.median_income.toLocaleString()}</span>
-            <span className="font-mono uppercase tracking-[0.1em] ml-2" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('neighborhoods.median_income')}</span>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-
-  const sidebarContent = (
-    <>
-      {/* ZIP code lookup link */}
-      {zips.length > 0 && (
-        <div className="p-4" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
-          <p className="font-mono" style={{ fontSize: '0.75rem', color: '#0d1117' }}>
-            ZIP codes: {zips.join(', ')} &mdash;{' '}
-            <Link href={'/officials/lookup'} className="hover:underline font-medium" style={{ color: '#1b5e8a' }}>
-              {t('neighborhoods.find_reps')} &rarr;
-            </Link>
-          </p>
-        </div>
-      )}
-
-      {/* Civic data reference */}
-      <div className="p-4" style={{ border: '1px solid #dde1e8', background: '#ffffff' }}>
-        <div className="flex items-center gap-2 mb-2">
-          <BarChart3 size={12} style={{ color: '#1b5e8a' }} />
-          <span className="font-mono uppercase tracking-[0.2em] text-xs" style={{ color: '#5c6474' }}>Neighborhood data</span>
-        </div>
-        <a
-          href="https://www.understandinghouston.org/topic/demographics"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-          style={{ color: '#1b5e8a' }}
-        >
-          <ExternalLink size={12} /> Understanding Houston
-        </a>
-        <p className="text-[0.7rem] mt-1" style={{ color: '#8a929e' }}>
-          Tract-level data on demographics, health, economy, and housing across the Houston region.
-        </p>
-      </div>
-    </>
-  )
-
   return (
-    <DetailPageLayout
-      breadcrumbs={[{ label: 'Neighborhoods', href: '/neighborhoods' }, { label: hood.neighborhood_name }]}
-      eyebrow={{ text: 'Neighborhood', bgColor: '#0d1117' }}
-      eyebrowMeta={eyebrowMeta}
-      title={hood.neighborhood_name}
-      subtitle={hood.description || null}
-      metaRow={metaRow}
-      themeColor="#1b5e8a"
-      wayfinderData={wayfinderData}
-      wayfinderType="neighborhood"
-      wayfinderEntityId={id}
-      userRole={userProfile?.role}
-      actions={{
-        translate: { isTranslated: false, contentType: 'neighborhood', contentId: id },
-        share: { title: hood.neighborhood_name, url: `https://www.changeengine.us/neighborhoods/${id}` },
-      }}
-      sidebar={sidebarContent}
-      feedbackType="neighborhood"
-      feedbackId={id}
-      feedbackName={hood.neighborhood_name}
-    >
-      {/* Neighborhood Map */}
-      <div className="mb-6">
-        <NeighborhoodMap
-          services={mapData.services}
-          votingLocations={mapData.votingLocations}
-          distributionSites={mapData.distributionSites}
-          organizations={mapData.organizations}
-          municipalServices={mapData.municipalServices}
-        />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine -- Neighborhoods
+          </p>
+          <p style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase mb-3">
+            Neighborhood
+            {hood.neighborhood_type && <> -- {hood.neighborhood_type}</>}
+            {hood.city && <> -- {hood.city}</>}
+            {hood.council_district && <> -- District {hood.council_district}</>}
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 2.8rem)', color: INK, lineHeight: 1.1 }}>
+            {hood.neighborhood_name}
+          </h1>
+          {hood.description && (
+            <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+              {hood.description}
+            </p>
+          )}
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-6 mt-6">
+            {hood.population != null && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{hood.population.toLocaleString()}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('neighborhoods.population')}</span>
+              </div>
+            )}
+            {hood.median_income != null && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>${hood.median_income.toLocaleString()}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('neighborhoods.median_income')}</span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Local services */}
-      {services.length > 0 && (
-        <section>
-          <span
-            className="font-mono uppercase tracking-[0.2em] block mb-3"
-            style={{ fontSize: '0.58rem', color: '#5c6474' }}
-          >
-            {t('neighborhoods.services_area')}
-          </span>
-          <div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-0"
-            style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}
-          >
-            {services.map(function (svc) {
-              return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block p-4 bg-white transition-colors hover:bg-[#f4f5f7]" style={{ borderRight: '1.5px solid #dde1e8', borderBottom: '1.5px solid #dde1e8' }}>
-                  <h4 className="font-display line-clamp-2 mb-1" style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0d1117' }}>
-                    {serviceTranslations[svc.service_id]?.title || svc.service_name}
-                  </h4>
-                  {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
-                    <p className="font-body italic line-clamp-2" style={{ fontSize: '0.75rem', color: '#5c6474' }}>
-                      {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
-                    </p>
-                  )}
-                </Link>
-              )
-            })}
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/neighborhoods" className="hover:underline" style={{ color: CLAY }}>Neighborhoods</Link>
+          <span className="mx-2">/</span>
+          <span>{hood.neighborhood_name}</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        {/* ── Map ── */}
+        <section className="mb-10">
+          <div className="flex items-baseline gap-4 mb-4">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Neighborhood Map</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+          </div>
+          <div style={{ border: '1px solid ' + RULE_COLOR }}>
+            <NeighborhoodMap
+              services={mapData.services}
+              votingLocations={mapData.votingLocations}
+              distributionSites={mapData.distributionSites}
+              organizations={mapData.organizations}
+              municipalServices={mapData.municipalServices}
+            />
           </div>
         </section>
-      )}
-    </DetailPageLayout>
+
+        {/* ── ZIP codes ── */}
+        {zips.length > 0 && (
+          <div className="p-4 mb-8" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+            <p style={{ fontFamily: MONO, fontSize: '0.75rem', color: INK }}>
+              ZIP codes: {zips.join(', ')} --{' '}
+              <Link href="/officials/lookup" className="hover:underline" style={{ color: CLAY, fontWeight: 600 }}>
+                {t('neighborhoods.find_reps')}
+              </Link>
+            </p>
+          </div>
+        )}
+
+        {/* ── Civic data reference ── */}
+        <div className="p-4 mb-8" style={{ border: '1px solid ' + RULE_COLOR }}>
+          <p style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-2">Neighborhood data</p>
+          <a
+            href="https://www.understandinghouston.org/topic/demographics"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}
+            className="hover:underline"
+          >
+            Understanding Houston
+          </a>
+          <p style={{ fontFamily: SERIF, fontSize: '0.75rem', color: MUTED, marginTop: '0.25rem' }}>
+            Tract-level data on demographics, health, economy, and housing across the Houston region.
+          </p>
+        </div>
+
+        {/* ── Local services ── */}
+        {services.length > 0 && (
+          <section>
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('neighborhoods.services_area')}</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{services.length} services</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+              {services.slice(0, 4).map(function (svc) {
+                return (
+                  <Link
+                    key={svc.service_id}
+                    href={'/services/' + svc.service_id}
+                    className="block p-4 transition-colors hover:bg-white/50"
+                    style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                  >
+                    <h4 style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 mb-1">
+                      {serviceTranslations[svc.service_id]?.title || svc.service_name}
+                    </h4>
+                    {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
+                      <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                        {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
+                      </p>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+
+            {services.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+                  Show all {services.length} services
+                </summary>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 mt-2" style={{ border: '1px solid ' + RULE_COLOR }}>
+                  {services.slice(4).map(function (svc) {
+                    return (
+                      <Link
+                        key={svc.service_id}
+                        href={'/services/' + svc.service_id}
+                        className="block p-4 transition-colors hover:bg-white/50"
+                        style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                      >
+                        <h4 style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 mb-1">
+                          {serviceTranslations[svc.service_id]?.title || svc.service_name}
+                        </h4>
+                        {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
+                          <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                            {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
+                          </p>
+                        )}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </details>
+            )}
+          </section>
+        )}
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Footer link ── */}
+        <div className="text-center py-4">
+          <Link href="/neighborhoods" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Back to Neighborhoods
+          </Link>
+        </div>
+      </div>
+    </div>
   )
 }

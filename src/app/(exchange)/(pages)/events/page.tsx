@@ -1,12 +1,18 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { PageHero } from '@/components/exchange/PageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { Calendar, MapPin, Clock, Video } from 'lucide-react'
+import { Clock, MapPin, Video } from 'lucide-react'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -28,7 +34,6 @@ export default async function EventsPage() {
 
   const now = new Date().toISOString()
 
-  // Sort local events to top when ZIP is set
   function geoSort(list: typeof events) {
     if (!userZip || !list) return list || []
     return list.slice().sort((a, b) => {
@@ -41,69 +46,139 @@ export default async function EventsPage() {
   const upcoming = geoSort((events || []).filter(function (e) { return !e.start_datetime || e.start_datetime >= now }))
   const past = (events || []).filter(function (e) { return e.start_datetime && e.start_datetime < now })
 
-  function EventCard({ e }: { e: any }) {
-    const date = e.start_datetime ? new Date(e.start_datetime) : null
-    return (
-      <Link href={`/events/${e.event_id}`} className="block bg-white border border-brand-border p-5 hover:border-ink transition-shadow">
-        <div className="flex items-start gap-4">
-          {date && (
-            <div className="flex-shrink-0 w-14 h-14 bg-brand-accent/10 flex flex-col items-center justify-center">
-              <span className="text-xs font-bold text-brand-accent uppercase">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
-              <span className="text-lg font-bold text-brand-text leading-none">{date.getDate()}</span>
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-brand-text">{e.event_name}</h3>
-            {e.description_5th_grade && <p className="text-sm text-brand-muted mt-1 line-clamp-2">{e.description_5th_grade}</p>}
-            <div className="flex flex-wrap gap-3 mt-2 text-xs text-brand-muted">
-              {date && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>}
-              {e.is_virtual === 'true' ? <span className="flex items-center gap-1"><Video className="w-3 h-3" />Virtual</span> : e.city && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{e.city}</span>}
-              {userZip && (e as any).zip_code === userZip && <span className="text-brand-accent font-medium">Near you</span>}
-              {e.is_free === 'true' && <span className="bg-theme-money/10 text-theme-money px-2 py-0.5 rounded font-medium">Free</span>}
-              {e.event_type && <span className="bg-brand-bg px-2 py-0.5 rounded">{e.event_type}</span>}
-            </div>
-          </div>
-        </div>
-      </Link>
-    )
-  }
-
   return (
-    <div>
-      <PageHero variant="sacred" sacredPattern="tripod" gradientColor="#4a2870" title="Community Events" subtitle="Town halls, workshops, volunteer days, and civic gatherings happening across Houston." />
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Breadcrumb items={[{ label: 'Events' }]} />
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
-          <div>
-            {upcoming.length > 0 && (
-              <div className="mb-10">
-                <h2 className="text-lg font-display font-bold text-brand-text mb-4">Upcoming</h2>
-                <div className="space-y-3">{upcoming.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
-              </div>
-            )}
-            {past.length > 0 && (
-              <div>
-                <h2 className="text-lg font-display font-bold text-brand-muted mb-4">Past Events</h2>
-                <div className="space-y-3 opacity-70">{past.map(function (e) { return <EventCard key={e.event_id} e={e} /> })}</div>
-              </div>
-            )}
-          </div>
-          <div className="hidden lg:block">
-            <div className="sticky top-24 space-y-4">
-              <IndexWayfinder
-                currentPage="events"
-                color="#7a2018"
-                related={[
-                  { label: 'Calendar', href: '/calendar' },
-                  { label: 'Organizations', href: '/organizations' },
-                  { label: 'Opportunities', href: '/opportunities' },
-                ]}
-              />
-              <FeaturedPromo variant="card" />
-            </div>
-          </div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            Community Events
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            Town halls, workshops, volunteer days, and civic gatherings happening across Houston.
+          </p>
         </div>
       </div>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Events</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+
+        {/* Upcoming */}
+        {upcoming.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Upcoming</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{upcoming.length}</span>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            {upcoming.slice(0, 4).map(function (e) {
+              return <EventItem key={e.event_id} e={e} userZip={userZip} />
+            })}
+            {upcoming.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                  See {upcoming.length - 4} more upcoming events
+                </summary>
+                {upcoming.slice(4).map(function (e) {
+                  return <EventItem key={e.event_id} e={e} userZip={userZip} />
+                })}
+              </details>
+            )}
+          </section>
+        )}
+
+        {/* Past */}
+        {past.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: MUTED }}>Past Events</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{past.length}</span>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div style={{ opacity: 0.7 }}>
+              {past.slice(0, 3).map(function (e) {
+                return <EventItem key={e.event_id} e={e} userZip={userZip} />
+              })}
+              {past.length > 3 && (
+                <details className="mt-2">
+                  <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                    See {past.length - 3} more past events
+                  </summary>
+                  {past.slice(3).map(function (e) {
+                    return <EventItem key={e.event_id} e={e} userZip={userZip} />
+                  })}
+                </details>
+              )}
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
+      </div>
     </div>
+  )
+}
+
+function EventItem({ e, userZip }: { e: any; userZip: string }) {
+  const date = e.start_datetime ? new Date(e.start_datetime) : null
+  return (
+    <Link href={'/events/' + e.event_id} className="flex items-start gap-4 py-4 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+      {date && (
+        <div className="flex-shrink-0 w-14 h-14 flex flex-col items-center justify-center" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+          <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 700, color: CLAY }}>{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+          <span style={{ fontFamily: SERIF, fontSize: '1.2rem', fontWeight: 700, color: INK, lineHeight: 1 }}>{date.getDate()}</span>
+        </div>
+      )}
+      <div className="flex-1 min-w-0">
+        <h3 style={{ fontFamily: SERIF, fontWeight: 600, color: INK }}>{e.event_name}</h3>
+        {e.description_5th_grade && <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{e.description_5th_grade}</p>}
+        <div className="flex flex-wrap gap-3 mt-2">
+          {date && (
+            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+              <Clock className="w-3 h-3" />{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+            </span>
+          )}
+          {e.is_virtual === 'true' ? (
+            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+              <Video className="w-3 h-3" />Virtual
+            </span>
+          ) : e.city && (
+            <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+              <MapPin className="w-3 h-3" />{e.city}
+            </span>
+          )}
+          {userZip && e.zip_code === userZip && (
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', fontWeight: 500, color: CLAY }}>Near you</span>
+          )}
+          {e.is_free === 'true' && (
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
+          )}
+          {e.event_type && (
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{e.event_type}</span>
+          )}
+        </div>
+      </div>
+    </Link>
   )
 }

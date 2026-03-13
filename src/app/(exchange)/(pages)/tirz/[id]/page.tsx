@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Building2, MapPin, Scale, ExternalLink } from 'lucide-react'
-import { getTirzZone, getOfficialsForTirz, getPoliciesForTirz } from '@/lib/data/exchange'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { TirzDetailMap } from './TirzDetailMap'
 import Image from 'next/image'
+import { getTirzZone, getOfficialsForTirz, getPoliciesForTirz } from '@/lib/data/exchange'
+import { TirzDetailMap } from './TirzDetailMap'
 
 export const revalidate = 300
 
@@ -19,6 +17,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export default async function TirzDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const [zone, officials, policies] = await Promise.all([
@@ -30,205 +39,238 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
   if (!zone) notFound()
 
   return (
-    <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Breadcrumb items={[
-        { label: 'TIRZ Zones', href: '/tirz' },
-        { label: zone.name },
-      ]} />
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-2">
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine -- TIRZ Zones
+          </p>
+          <div className="flex items-center gap-3 mb-3">
             <span
-              className="w-12 h-12 flex items-center justify-center text-white text-lg font-bold"
-              style={{ backgroundColor: '#C75B2A' }}
+              className="w-12 h-12 flex items-center justify-center text-white text-lg font-bold flex-shrink-0"
+              style={{ fontFamily: MONO, backgroundColor: CLAY }}
             >
               {zone.site_number}
             </span>
-            <div>
-              <h1 className="text-3xl font-bold text-brand-text">{zone.name}</h1>
-              <p className="text-sm font-mono text-brand-muted">TIRZ-{zone.site_number}</p>
-            </div>
+            <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 mb-8">
-            <div className="bg-white border border-brand-border p-4 text-center">
-              <Building2 size={20} className="mx-auto mb-1" style={{ color: '#C75B2A' }} />
-              <div className="text-lg font-bold text-brand-text">TIRZ-{zone.site_number}</div>
-              <div className="text-xs text-brand-muted">Zone Number</div>
-            </div>
-            {zone.status && (
-              <div className="bg-white border border-brand-border p-4 text-center">
-                <div className="text-lg font-bold text-brand-text capitalize">{zone.status}</div>
-                <div className="text-xs text-brand-muted">Status</div>
-              </div>
-            )}
-            {zone.year_established && (
-              <div className="bg-white border border-brand-border p-4 text-center">
-                <div className="text-lg font-bold text-brand-text">{zone.year_established}</div>
-                <div className="text-xs text-brand-muted">Established</div>
-              </div>
-            )}
-            {zone.managing_entity && (
-              <div className="bg-white border border-brand-border p-4 text-center">
-                <div className="text-sm font-bold text-brand-text truncate">{zone.managing_entity}</div>
-                <div className="text-xs text-brand-muted">Managed By</div>
-              </div>
-            )}
-          </div>
-
-          {/* Description */}
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 2.8rem)', color: INK, lineHeight: 1.1 }}>
+            {zone.name}
+          </h1>
           {zone.description && (
-            <section className="mb-8">
-              <p className="text-brand-muted leading-relaxed">{zone.description}</p>
-            </section>
+            <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+              {zone.description}
+            </p>
           )}
+        </div>
+      </div>
 
-          {/* Website */}
-          {zone.website && (
-            <div className="mb-8">
-              <a
-                href={zone.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-              >
-                <ExternalLink size={14} />
-                Visit TIRZ Website
-              </a>
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/tirz" className="hover:underline" style={{ color: CLAY }}>TIRZ Zones</Link>
+          <span className="mx-2">/</span>
+          <span>{zone.name}</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        {/* ── Stats ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 mb-10" style={{ border: '1px solid ' + RULE_COLOR }}>
+          <div className="p-4 text-center" style={{ borderRight: '1px solid ' + RULE_COLOR }}>
+            <div style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK, fontWeight: 700 }}>TIRZ-{zone.site_number}</div>
+            <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase mt-1">Zone Number</div>
+          </div>
+          {zone.status && (
+            <div className="p-4 text-center" style={{ borderRight: '1px solid ' + RULE_COLOR }}>
+              <div style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK, fontWeight: 700, textTransform: 'capitalize' }}>{zone.status}</div>
+              <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase mt-1">Status</div>
             </div>
           )}
-
-          {/* Map */}
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-brand-text mb-4">Zone Boundary</h2>
-            <TirzDetailMap siteNumber={zone.site_number} />
-          </section>
-
-          {/* Council Districts */}
-          {zone.council_districts && (
-            <div className="bg-brand-accent/5 border border-brand-border p-4 mb-8">
-              <p className="text-sm text-brand-text">
-                Overlapping Council Districts: <strong>{zone.council_districts}</strong> &mdash;{' '}
-                <Link href="/officials" className="text-brand-accent hover:underline font-medium">
-                  View Officials &rarr;
-                </Link>
-              </p>
+          {zone.year_established && (
+            <div className="p-4 text-center" style={{ borderRight: '1px solid ' + RULE_COLOR }}>
+              <div style={{ fontFamily: SERIF, fontSize: '1.25rem', color: INK, fontWeight: 700 }}>{zone.year_established}</div>
+              <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase mt-1">Established</div>
             </div>
           )}
-
-          {/* ZIP Codes */}
-          {zone.zip_codes && (
-            <div className="bg-brand-bg border border-brand-border p-4 mb-8">
-              <p className="text-sm text-brand-text">
-                ZIP Codes: <strong>{zone.zip_codes}</strong> &mdash;{' '}
-                <Link href="/officials/lookup" className="text-brand-accent hover:underline font-medium">
-                  Who represents this area? &rarr;
-                </Link>
-              </p>
+          {zone.managing_entity && (
+            <div className="p-4 text-center">
+              <div style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK, fontWeight: 700 }} className="truncate">{zone.managing_entity}</div>
+              <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase mt-1">Managed By</div>
             </div>
-          )}
-
-          {/* Officials */}
-          {officials.length > 0 && (
-            <section className="mb-8">
-              <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
-                <MapPin size={20} style={{ color: '#C75B2A' }} />
-                Officials Connected to This Zone
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {officials.slice(0, 8).map(function (official: any) {
-                  return (
-                    <Link
-                      key={official.official_id}
-                      href={'/officials/' + official.official_id}
-                      className="flex items-center gap-3 bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
-                    >
-                      {official.photo_url ? (
-                        <Image
-                          src={official.photo_url}
-                          alt={official.official_name}
-                          className="w-12 h-12 rounded-full object-cover border border-brand-border"
-                         width={80} height={48} />
-                      ) : (
-                        <div className="w-12 h-12 rounded-full bg-brand-bg-alt flex items-center justify-center text-brand-muted text-sm font-bold">
-                          {(official.official_name || '').split(' ').map(function (n: string) { return n[0] }).join('').slice(0, 2)}
-                        </div>
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-brand-text text-sm truncate">{official.official_name}</h3>
-                        <p className="text-xs text-brand-muted truncate">{official.title}</p>
-                        {official.party && (
-                          <span className="text-[10px] font-mono text-brand-muted-light">{official.party}</span>
-                        )}
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-            </section>
-          )}
-
-          {/* Policies */}
-          {policies.length > 0 && (
-            <section className="mb-8">
-              <h2 className="text-xl font-bold text-brand-text mb-4 flex items-center gap-2">
-                <Scale size={20} style={{ color: '#C75B2A' }} />
-                Related Policies
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {policies.slice(0, 6).map(function (p: any) {
-                  return (
-                    <Link
-                      key={p.policy_id}
-                      href={'/policies/' + p.policy_id}
-                      className="bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        {p.level && <span className="text-xs px-2 py-0.5 bg-brand-bg text-brand-muted">{p.level}</span>}
-                        {p.status && <span className="text-xs text-brand-muted">{p.status}</span>}
-                      </div>
-                      <h3 className="font-semibold text-brand-text text-sm line-clamp-2">{p.title_6th_grade || p.policy_name}</h3>
-                      {p.bill_number && <p className="text-xs font-mono text-brand-muted mt-1">{p.bill_number}</p>}
-                    </Link>
-                  )
-                })}
-              </div>
-            </section>
           )}
         </div>
 
-        {/* Right sidebar */}
-        <div>
-          <div className="sticky top-24 space-y-4">
-            {/* Quick facts card */}
-            <div className="border border-brand-border rounded-[0.75rem] bg-white overflow-hidden">
-              <div className="h-1.5" style={{ backgroundColor: '#C75B2A' }} />
-              <div className="p-5">
-                <h3 className="font-display text-sm font-bold text-brand-text mb-3">About TIRZ Zones</h3>
-                <p className="text-xs leading-relaxed text-brand-muted mb-3">
-                  Tax Increment Reinvestment Zones are special districts created by Houston City Council.
-                  Growth in property tax revenue within the zone is captured and reinvested locally.
-                </p>
-                <div className="space-y-2 text-xs">
-                  <Link href="/tirz" className="flex items-center gap-2 text-brand-accent hover:underline font-medium">
-                    View All TIRZ Zones &rarr;
-                  </Link>
-                  <Link href="/geography" className="flex items-center gap-2 text-brand-accent hover:underline font-medium">
-                    Explore Geography &rarr;
-                  </Link>
-                  <Link href="/districts" className="flex items-center gap-2 text-brand-accent hover:underline font-medium">
-                    District Types &rarr;
-                  </Link>
-                  <Link href="/governance" className="flex items-center gap-2 text-brand-accent hover:underline font-medium">
-                    Governance Overview &rarr;
-                  </Link>
-                </div>
-              </div>
-            </div>
+        {/* ── Website ── */}
+        {zone.website && (
+          <div className="mb-8">
+            <a
+              href={zone.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.08em', color: CLAY }}
+              className="uppercase hover:underline"
+            >
+              Visit TIRZ Website
+            </a>
           </div>
+        )}
+
+        {/* ── Map ── */}
+        <section className="mb-10">
+          <div className="flex items-baseline gap-4 mb-4">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Zone Boundary</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+          </div>
+          <div style={{ border: '1px solid ' + RULE_COLOR }}>
+            <TirzDetailMap siteNumber={zone.site_number} />
+          </div>
+        </section>
+
+        {/* ── Council Districts ── */}
+        {zone.council_districts && (
+          <div className="p-4 mb-8" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+              Overlapping Council Districts: <strong>{zone.council_districts}</strong> --{' '}
+              <Link href="/officials" className="hover:underline" style={{ color: CLAY, fontWeight: 600 }}>
+                View Officials
+              </Link>
+            </p>
+          </div>
+        )}
+
+        {/* ── ZIP Codes ── */}
+        {zone.zip_codes && (
+          <div className="p-4 mb-8" style={{ border: '1px solid ' + RULE_COLOR }}>
+            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+              ZIP Codes: <strong>{zone.zip_codes}</strong> --{' '}
+              <Link href="/officials/lookup" className="hover:underline" style={{ color: CLAY, fontWeight: 600 }}>
+                Who represents this area?
+              </Link>
+            </p>
+          </div>
+        )}
+
+        {/* ── Officials ── */}
+        {officials.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Officials Connected to This Zone</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{officials.length} officials</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+              {officials.slice(0, 8).map(function (official: any) {
+                return (
+                  <Link
+                    key={official.official_id}
+                    href={'/officials/' + official.official_id}
+                    className="group flex items-center gap-3 p-4 transition-colors hover:bg-white/50"
+                    style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                  >
+                    {official.photo_url ? (
+                      <Image
+                        src={official.photo_url}
+                        alt={official.official_name}
+                        className="w-12 h-12 object-cover flex-shrink-0"
+                        style={{ border: '1px solid ' + RULE_COLOR }}
+                        width={48}
+                        height={48}
+                      />
+                    ) : (
+                      <div
+                        className="w-12 h-12 flex items-center justify-center flex-shrink-0"
+                        style={{ background: PARCHMENT_WARM, fontFamily: MONO, fontSize: '0.75rem', color: MUTED, border: '1px solid ' + RULE_COLOR }}
+                      >
+                        {(official.official_name || '').split(' ').map(function (n: string) { return n[0] }).join('').slice(0, 2)}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }} className="truncate group-hover:underline">{official.official_name}</h3>
+                      <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }} className="truncate">{official.title}</p>
+                      {official.party && (
+                        <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{official.party}</span>
+                      )}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── Policies ── */}
+        {policies.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Related Policies</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{policies.length} policies</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+              {policies.slice(0, 6).map(function (p: any) {
+                return (
+                  <Link
+                    key={p.policy_id}
+                    href={'/policies/' + p.policy_id}
+                    className="group block p-4 transition-colors hover:bg-white/50"
+                    style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      {p.level && (
+                        <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 6px' }} className="uppercase">
+                          {p.level}
+                        </span>
+                      )}
+                      {p.status && <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }} className="uppercase">{p.status}</span>}
+                    </div>
+                    <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
+                      {p.title_6th_grade || p.policy_name}
+                    </h3>
+                    {p.bill_number && <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, marginTop: '0.25rem' }}>{p.bill_number}</p>}
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Sidebar info ── */}
+        <section className="mb-10 p-6" style={{ border: '1px solid ' + RULE_COLOR }}>
+          <h3 style={{ fontFamily: SERIF, fontSize: '1.1rem', color: INK, fontWeight: 700 }} className="mb-3">About TIRZ Zones</h3>
+          <p style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED, lineHeight: 1.6 }} className="mb-4">
+            Tax Increment Reinvestment Zones are special districts created by Houston City Council.
+            Growth in property tax revenue within the zone is captured and reinvested locally.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/tirz" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: CLAY }} className="uppercase hover:underline">
+              View All TIRZ Zones
+            </Link>
+            <Link href="/geography" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: CLAY }} className="uppercase hover:underline">
+              Explore Geography
+            </Link>
+            <Link href="/districts" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: CLAY }} className="uppercase hover:underline">
+              District Types
+            </Link>
+            <Link href="/governance" style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: CLAY }} className="uppercase hover:underline">
+              Governance Overview
+            </Link>
+          </div>
+        </section>
+
+        {/* ── Footer link ── */}
+        <div className="text-center py-4">
+          <Link href="/tirz" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Back to TIRZ Zones
+          </Link>
         </div>
       </div>
     </div>

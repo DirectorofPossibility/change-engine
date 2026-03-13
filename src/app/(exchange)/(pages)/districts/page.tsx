@@ -1,11 +1,18 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import Image from 'next/image'
 import { MapPin, Building2, Landmark, Scale, GraduationCap, Users, Flag, TrendingUp } from 'lucide-react'
 
 export const revalidate = 3600
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Districts — Change Engine',
@@ -17,212 +24,226 @@ const DISTRICT_TYPES = [
     title: 'City Council',
     description: 'Houston is divided into 11 council districts plus 5 at-large positions. Your council member is your closest connection to city government.',
     icon: Building2,
-    color: '#1b5e8a',
     href: '/officials',
-    level: 'City',
   },
   {
     title: 'Congressional Districts',
     description: 'Houston spans multiple U.S. congressional districts. Your representative carries your voice to Washington.',
     icon: Landmark,
-    color: '#4a2870',
     href: '/officials',
-    level: 'Federal',
   },
   {
     title: 'State House Districts',
     description: 'Texas House representatives serve districts of roughly 190,000 people. They shape state law, budgets, and education policy.',
     icon: Scale,
-    color: '#1b5e8a',
     href: '/officials',
-    level: 'State',
   },
   {
     title: 'State Senate Districts',
     description: 'Texas Senators represent larger districts and confirm gubernatorial appointments, pass legislation, and set state priorities.',
     icon: Flag,
-    color: '#1a5030',
     href: '/officials',
-    level: 'State',
   },
   {
     title: 'County Precincts',
     description: 'Harris County Commissioners Court oversees county roads, flood control, public health, and a multi-billion dollar budget.',
     icon: Users,
-    color: '#4a2870',
     href: '/officials',
-    level: 'County',
   },
   {
     title: 'HISD Trustee Districts',
     description: 'Houston Independent School District trustees govern the largest school district in Texas, serving over 180,000 students.',
     icon: GraduationCap,
-    color: '#1a6b56',
     href: '/officials',
-    level: 'City',
   },
   {
     title: 'TIRZ Zones',
-    description: 'Tax Increment Reinvestment Zones capture property tax growth and reinvest it locally — funding infrastructure, housing, and development.',
+    description: 'Tax Increment Reinvestment Zones capture property tax growth and reinvest it locally -- funding infrastructure, housing, and development.',
     icon: TrendingUp,
-    color: '#1b5e8a',
     href: '/tirz',
-    level: 'City',
   },
 ]
 
 export default function DistrictsPage() {
+  const initialCount = 4
+  const hasMore = DISTRICT_TYPES.length > initialCount
+
   return (
-    <div>
-      <IndexPageHero
-        color="#4a2870"
-        pattern="metatron"
-        title="Every District. Every Representative. Mapped."
-        subtitle="You live in more districts than you think."
-        intro="City council. County precinct. State house and senate. Congress. They all overlap where you live. Understanding your districts is the first step to knowing who represents you."
-        stats={[
-          { value: '7', label: 'District Types' },
-          { value: '11', label: 'City Council' },
-          { value: '4', label: 'County Precincts' },
-          { value: '150', label: 'State House' },
-        ]}
-      />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden border-b">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-12 relative">
+          <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11, letterSpacing: '0.12em' }} className="uppercase mb-3">
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-3xl sm:text-4xl mb-3">
+            Every District. Every Representative. Mapped.
+          </h1>
+          <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 17 }} className="max-w-[600px] leading-relaxed mb-4">
+            City council. County precinct. State house and senate. Congress. They all overlap where you live. Understanding your districts is the first step to knowing who represents you.
+          </p>
+          <div className="flex gap-6" style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+            <span><strong style={{ color: INK }}>7</strong> District Types</span>
+            <span><strong style={{ color: INK }}>11</strong> City Council</span>
+            <span><strong style={{ color: INK }}>4</strong> County Precincts</span>
+          </div>
+        </div>
+      </div>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Districts' }]} />
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.06em' }} className="uppercase">
+          <span>Districts</span>
+        </nav>
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          {/* Main content */}
-          <div className="flex-1 min-w-0">
-            {/* Find Your Districts CTA */}
-            <div
-              className="border border-brand-border rounded-[0.75rem] bg-white overflow-hidden mb-8"
-             
-            >
-              <div className="h-1.5" style={{ backgroundColor: '#4a2870' }} />
-              <div className="p-6 sm:p-8">
-                <div className="flex items-start gap-4">
-                  <div
-                    className="w-12 h-12 flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: '#4a287015' }}
-                  >
-                    <MapPin size={24} style={{ color: '#4a2870' }} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h2 className="font-display text-xl font-bold text-brand-text mb-2">
-                      Find Your Districts
-                    </h2>
-                    <p className="text-sm leading-relaxed text-brand-muted mb-4">
-                      Enter your address to see every political boundary that covers your block
-                      and every person responsible for what happens inside it.
-                    </p>
-                    <Link
-                      href="/officials/lookup"
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity"
-                    >
-                      <MapPin size={16} />
-                      Look Up Your Address
-                    </Link>
-                  </div>
-                </div>
-              </div>
+      {/* Main Content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+
+        {/* Find Your Districts CTA */}
+        <div className="border p-6 sm:p-8 mb-8" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 flex items-center justify-center flex-shrink-0" style={{ background: PARCHMENT }}>
+              <MapPin size={24} style={{ color: CLAY }} />
             </div>
-
-            {/* District Types Grid */}
-            <div className="mb-6">
-              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-4">
-                Explore by District Type
+            <div className="flex-1 min-w-0">
+              <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 20 }} className="mb-2">
+                Find Your Districts
+              </h2>
+              <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 14 }} className="leading-relaxed mb-4">
+                Enter your address to see every political boundary that covers your block
+                and every person responsible for what happens inside it.
               </p>
+              <Link
+                href="/officials/lookup"
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
+                style={{ background: CLAY, color: '#fff', fontFamily: MONO, fontSize: 12, letterSpacing: '0.06em' }}
+              >
+                <MapPin size={16} />
+                Look Up Your Address
+              </Link>
             </div>
+          </div>
+        </div>
 
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* District Types */}
+        <div className="flex items-baseline justify-between mb-1">
+          <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>Explore by District Type</h2>
+        </div>
+        <div style={{ height: 1, background: RULE_COLOR }} className="mb-1" />
+        <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11 }} className="mb-6">
+          {DISTRICT_TYPES.length} types
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {DISTRICT_TYPES.slice(0, initialCount).map(function (district) {
+            const Icon = district.icon
+            return (
+              <Link
+                key={district.title}
+                href={district.href}
+                className="block border overflow-hidden transition-colors hover:border-current"
+                style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}
+              >
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ background: PARCHMENT }}>
+                      <Icon size={20} style={{ color: CLAY }} />
+                    </div>
+                    <h3 style={{ fontFamily: SERIF, color: INK, fontSize: 17 }}>
+                      {district.title}
+                    </h3>
+                  </div>
+                  <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 14 }} className="leading-relaxed">
+                    {district.description}
+                  </p>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+
+        {hasMore && (
+          <details className="mt-4">
+            <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, cursor: 'pointer', fontSize: 15 }} className="mb-4">
+              Show all {DISTRICT_TYPES.length} district types...
+            </summary>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {DISTRICT_TYPES.map(function (district) {
+              {DISTRICT_TYPES.slice(initialCount).map(function (district) {
                 const Icon = district.icon
                 return (
                   <Link
                     key={district.title}
                     href={district.href}
-                    className="group border border-brand-border rounded-[0.75rem] overflow-hidden bg-white hover:translate-y-[-2px] transition-all duration-200"
-                   
+                    className="block border overflow-hidden transition-colors hover:border-current"
+                    style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}
                   >
-                    <div className="flex">
-                      <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: district.color }} />
-                      <div className="p-5 flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div
-                            className="w-10 h-10 flex items-center justify-center flex-shrink-0"
-                            style={{ backgroundColor: district.color + '15' }}
-                          >
-                            <Icon size={20} style={{ color: district.color }} />
-                          </div>
-                          <h3 className="font-display text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">
-                            {district.title}
-                          </h3>
+                    <div className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ background: PARCHMENT }}>
+                          <Icon size={20} style={{ color: CLAY }} />
                         </div>
-                        <p className="text-sm leading-relaxed text-brand-muted">
-                          {district.description}
-                        </p>
-                        <div className="mt-3 flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-brand-accent opacity-0 group-hover:opacity-100 transition-opacity">
-                          {district.href === '/tirz' ? 'Explore Zones' : 'View Officials'}
-                          <span aria-hidden="true">&rarr;</span>
-                        </div>
+                        <h3 style={{ fontFamily: SERIF, color: INK, fontSize: 17 }}>
+                          {district.title}
+                        </h3>
                       </div>
+                      <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 14 }} className="leading-relaxed">
+                        {district.description}
+                      </p>
                     </div>
                   </Link>
                 )
               })}
             </div>
+          </details>
+        )}
 
-            {/* How Districts Work */}
-            <div className="mt-10 border-t-2 border-brand-border pt-8">
-              <h2 className="font-display text-2xl font-bold text-brand-text mb-4">
-                How Districts Work
-              </h2>
-              <p className="text-sm leading-relaxed text-brand-muted max-w-2xl mb-6">
-                Every person in Houston lives inside multiple overlapping political boundaries.
-                Your home address determines which city council member, county commissioner,
-                state representative, state senator, and congressional representative speaks for you.
-                District lines are redrawn every ten years after the census.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-display font-bold text-brand-text text-sm mb-1">Local</p>
-                  <p className="text-[12px] leading-relaxed text-brand-muted">
-                    City council and county commissioners handle roads, parks, public safety, and local budgets.
-                  </p>
-                </div>
-                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-display font-bold text-brand-text text-sm mb-1">State</p>
-                  <p className="text-[12px] leading-relaxed text-brand-muted">
-                    State house and senate members shape education, healthcare, criminal justice, and state taxes.
-                  </p>
-                </div>
-                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-display font-bold text-brand-text text-sm mb-1">Federal</p>
-                  <p className="text-[12px] leading-relaxed text-brand-muted">
-                    Congressional representatives and senators set national policy, defense, immigration, and federal funding.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
 
-          {/* Wayfinder sidebar */}
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="districts"
-                color="#4a2870"
-                related={[
-                  { label: 'Officials Directory', href: '/officials', color: '#4a2870' },
-                  { label: 'Look Up Your Address', href: '/officials/lookup', color: '#1b5e8a' },
-                  { label: 'Governance Overview', href: '/governance', color: '#1b5e8a' },
-                  { label: 'Elections', href: '/elections', color: '#1a6b56' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
-                ]}
-              />
-            </div>
+        {/* How Districts Work */}
+        <div className="flex items-baseline justify-between mb-1">
+          <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>How Districts Work</h2>
+        </div>
+        <div style={{ height: 1, background: RULE_COLOR }} className="mb-4" />
+
+        <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 15 }} className="leading-relaxed max-w-2xl mb-6">
+          Every person in Houston lives inside multiple overlapping political boundaries.
+          Your home address determines which city council member, county commissioner,
+          state representative, state senator, and congressional representative speaks for you.
+          District lines are redrawn every ten years after the census.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="border p-4" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
+            <p style={{ fontFamily: SERIF, color: INK, fontSize: 14, fontWeight: 600 }} className="mb-1">Local</p>
+            <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 12 }} className="leading-relaxed">
+              City council and county commissioners handle roads, parks, public safety, and local budgets.
+            </p>
           </div>
+          <div className="border p-4" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
+            <p style={{ fontFamily: SERIF, color: INK, fontSize: 14, fontWeight: 600 }} className="mb-1">State</p>
+            <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 12 }} className="leading-relaxed">
+              State house and senate members shape education, healthcare, criminal justice, and state taxes.
+            </p>
+          </div>
+          <div className="border p-4" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
+            <p style={{ fontFamily: SERIF, color: INK, fontSize: 14, fontWeight: 600 }} className="mb-1">Federal</p>
+            <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 12 }} className="leading-relaxed">
+              Congressional representatives and senators set national policy, defense, immigration, and federal funding.
+            </p>
+          </div>
+        </div>
+
+        {/* Footer link */}
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="text-center pb-12">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY, fontSize: 12, letterSpacing: '0.06em' }} className="uppercase hover:underline">
+            Back to Home
+          </Link>
         </div>
       </div>
     </div>

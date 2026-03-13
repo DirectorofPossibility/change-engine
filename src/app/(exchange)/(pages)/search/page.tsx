@@ -1,25 +1,17 @@
 /**
- * @fileoverview Universal search page for The Change Engine.
+ * @fileoverview Universal search page — editorial culture guide treatment.
  *
- * Uses the `searchAll()` helper to perform full-text search across 8 entity
- * types: content, services, officials, organizations, policies, life
- * situations, resources, and learning paths.  For non-English users the
- * page fetches per-entity translations in parallel via
- * `fetchTranslationsForTable`.  Results are rendered in a tabbed UI
- * (`SearchTabs`) with per-type cards.
- *
- * @datasource Supabase full-text search via `searchAll()`; translations
- *   table for i18n
+ * @datasource Supabase full-text search via `searchAll()`; translations table for i18n
  * @caching `dynamic = 'force-dynamic'` (no ISR; query-dependent)
  * @route GET /search?q=<query>
  */
 
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { PAGE_INTROS, CENTER_COLORS, THEMES } from '@/lib/constants'
+import Image from 'next/image'
+import { THEMES } from '@/lib/constants'
 import { searchAll, searchByTaxonomy } from '@/lib/data/search'
 import type { TaxonomyFilter } from '@/lib/data/search'
-import { PageHero } from '@/components/exchange/PageHero'
 import { HeroSearchInput } from '@/components/exchange/HeroSearchInput'
 import { TranslatedContentGrid } from '@/components/exchange/TranslatedContentGrid'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
@@ -27,11 +19,18 @@ import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
 import { LearningPathCard } from '@/components/exchange/LearningPathCard'
-import { CompactCircleGraph } from '@/components/exchange/CompactCircleGraph'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { SearchTabs } from './SearchTabs'
 import { SearchResultsHeader } from './SearchResultsHeader'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -55,7 +54,6 @@ export default async function SearchPage({
   const query = params.q || ''
   const label = params.label || ''
 
-  // Check for taxonomy filters (from wayfinder taxonomy links)
   const taxFilter: TaxonomyFilter = {}
   if (params.sdg) taxFilter.sdg = params.sdg
   if (params.sdoh) taxFilter.sdoh = params.sdoh
@@ -72,7 +70,6 @@ export default async function SearchPage({
       : emptyResults
   const totalCount = results.content.length + results.officials.length + results.services.length + results.organizations.length + results.policies.length + results.situations.length + results.resources.length + results.paths.length
 
-  // ── Translations (non-English users) ──
   const langId = await getLangId()
   let officialTranslations: Record<string, { title?: string; summary?: string }> = {}
   let serviceTranslations: Record<string, { title?: string; summary?: string }> = {}
@@ -95,19 +92,6 @@ export default async function SearchPage({
     policyTranslations = pt
   }
 
-  // ── Extract active pathways from results ──
-  const THEME_ENTRIES = Object.entries(THEMES) as Array<[string, { name: string; color: string; slug: string }]>
-  const slugToKey = Object.fromEntries(THEME_ENTRIES.map(function ([k, v]) { return [v.slug, k] }))
-  const activePathwaySet = new Set<string>()
-  results.content.forEach(function (c: any) {
-    if (c.pathway_primary && slugToKey[c.pathway_primary]) activePathwaySet.add(slugToKey[c.pathway_primary])
-  })
-  results.paths.forEach(function (p: any) {
-    if (p.theme_id) activePathwaySet.add(p.theme_id)
-  })
-  const searchPathways = Array.from(activePathwaySet)
-
-  // ── Tab definitions ──
   const tabs = [
     { key: 'content', labelKey: 'search.tab_content', count: results.content.length, center: 'Learning' },
     { key: 'services', labelKey: 'search.tab_services', count: results.services.length, center: 'Resource' },
@@ -119,7 +103,6 @@ export default async function SearchPage({
     { key: 'paths', labelKey: 'search.tab_learning', count: results.paths.length, center: 'Learning' },
   ]
 
-  // ── Per-tab result sections ──
   const sections: Record<string, React.ReactNode> = {
     content: (
       <TranslatedContentGrid items={results.content} />
@@ -173,13 +156,13 @@ export default async function SearchPage({
         {results.organizations.map(function (org) {
           const t = orgTranslations[org.org_id]
           return (
-            <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow">
-              <h4 className="font-semibold text-brand-text text-sm mb-1">{t?.title || org.org_name}</h4>
+            <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid ' + RULE_COLOR }}>
+              <h4 style={{ fontFamily: SERIF, fontWeight: 600, fontSize: '0.9rem', color: INK, marginBottom: '0.25rem' }}>{t?.title || org.org_name}</h4>
               {(t?.summary || org.description_5th_grade) && (
-                <p className="text-xs text-brand-muted line-clamp-2">{t?.summary || org.description_5th_grade}</p>
+                <p className="line-clamp-2" style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED }}>{t?.summary || org.description_5th_grade}</p>
               )}
               {org.website && (
-                <span className="text-xs text-brand-accent mt-2 inline-block">Visit website</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, marginTop: '0.5rem', display: 'inline-block' }}>Visit website</span>
               )}
             </Link>
           )
@@ -227,14 +210,14 @@ export default async function SearchPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results.resources.map(function (r: any) {
           return (
-            <div key={r.resource_id} className="bg-white border border-brand-border p-4 hover:border-ink transition-shadow">
-              <h4 className="font-semibold text-brand-text text-sm mb-1 line-clamp-2">{r.resource_name}</h4>
+            <div key={r.resource_id} className="p-4" style={{ border: '1px solid ' + RULE_COLOR }}>
+              <h4 className="line-clamp-2" style={{ fontFamily: SERIF, fontWeight: 600, fontSize: '0.9rem', color: INK, marginBottom: '0.25rem' }}>{r.resource_name}</h4>
               {r.description_5th_grade && (
-                <p className="text-xs text-brand-muted line-clamp-2 mb-2">{r.description_5th_grade}</p>
+                <p className="line-clamp-2 mb-2" style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED }}>{r.description_5th_grade}</p>
               )}
               {r.source_url && (
-                <Link href={r.source_url} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-accent hover:underline">
-                  View resource &rarr;
+                <Link href={r.source_url} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                  View resource
                 </Link>
               )}
             </div>
@@ -263,45 +246,53 @@ export default async function SearchPage({
   }
 
   return (
-    <div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
       {!query && (
-        <PageHero variant="editorial" titleKey="search.title" intro={PAGE_INTROS.search} height="sm" />
+        <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+          </div>
+          <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+            <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+              The Change Engine
+            </p>
+            <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+              Search
+            </h1>
+            <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+              Find services, officials, policies, organizations, and more across the Change Engine.
+            </p>
+          </div>
+        </div>
       )}
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Search' }]} />
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Search</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="mb-6 max-w-2xl">
           <HeroSearchInput />
         </div>
         <SearchResultsHeader query={label || query} totalCount={totalCount} />
 
         {totalCount > 0 && (
-          <div className="flex flex-col lg:flex-row gap-6">
-            <div className="flex-1 min-w-0">
-              <SearchTabs tabs={tabs}>{sections}</SearchTabs>
-            </div>
-            {searchPathways.length > 0 && (
-              <aside className="lg:w-72 shrink-0">
-                <div className="bg-white border border-brand-border p-4 lg:sticky lg:top-24">
-                  <h3 className="font-display text-sm font-semibold text-brand-text mb-1">Pathways in Results</h3>
-                  <p className="text-[10px] text-brand-muted mb-2">{searchPathways.length} of 7 pathways represented</p>
-                  <CompactCircleGraph activePathways={searchPathways} accentColor="#C75B2A" />
-                  <div className="space-y-1.5 mt-2">
-                    {THEME_ENTRIES.map(function ([key, theme]) {
-                      const isActive = activePathwaySet.has(key)
-                      if (!isActive) return null
-                      return (
-                        <Link key={key} href={'/pathways/' + theme.slug} className="flex items-center gap-1.5 text-xs text-brand-text hover:text-brand-accent transition-colors">
-                          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                          {theme.name}
-                        </Link>
-                      )
-                    })}
-                  </div>
-                </div>
-              </aside>
-            )}
-          </div>
+          <SearchTabs tabs={tabs}>{sections}</SearchTabs>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
       </div>
     </div>
   )

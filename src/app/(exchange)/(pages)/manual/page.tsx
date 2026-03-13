@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { PageHero } from '@/components/exchange/PageHero'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export const revalidate = 3600
 
@@ -7,6 +8,15 @@ export const metadata: Metadata = {
   title: 'User Manual — Change Engine',
   description: 'How Change Engine works. Start anywhere. The platform will show you what connects.',
 }
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 const sections = [
   {
@@ -96,48 +106,115 @@ const sections = [
   },
 ]
 
-export default function ManualPage() {
-  return (
-    <div>
-      <PageHero
-        variant="editorial"
-        title="How Change Engine works."
-        subtitle="Start anywhere. The platform will show you what connects."
-        intro="You don't need a guide to use this. But here's one anyway."
-      />
+const VISIBLE_COUNT = 4
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {sections.map(function (section, i) {
+export default function ManualPage() {
+  const visible = sections.slice(0, VISIBLE_COUNT)
+  const rest = sections.slice(VISIBLE_COUNT)
+
+  return (
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+            How Change Engine works.
+          </h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+            Start anywhere. The platform will show you what connects.
+          </p>
+          <p style={{ color: MUTED }} className="text-sm mt-4">
+            You don't need a guide to use this. But here's one anyway.
+          </p>
+        </div>
+      </section>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-2">/</span>
+          <span style={{ color: INK }}>Manual</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        <div className="mb-8">
+          <h2 style={{ fontFamily: SERIF, color: INK }} className="text-2xl mb-2">Chapters</h2>
+          <div style={{ borderTop: '2px dotted ' + RULE_COLOR }} className="pt-2">
+            <span style={{ fontFamily: MONO, color: MUTED }} className="text-xs">{sections.length} sections</span>
+          </div>
+        </div>
+
+        {visible.map(function (section, i) {
           return (
             <section key={i} className="mb-10">
-              <h2 className="text-title font-bold text-brand-text mb-4">
+              <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-4">
                 {section.title}
               </h2>
-              <div className="space-y-4 text-brand-muted leading-relaxed">
+              <div className="space-y-4" style={{ color: MUTED }}>
                 {section.paragraphs.map(function (p, j) {
-                  return <p key={j}>{p}</p>
+                  return <p key={j} className="leading-relaxed">{p}</p>
                 })}
               </div>
+              <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="mt-8" />
             </section>
           )
         })}
 
+        {rest.length > 0 && (
+          <details>
+            <summary style={{ fontFamily: MONO, color: CLAY }} className="text-xs cursor-pointer hover:underline py-2 mb-6">
+              Show {rest.length} more sections
+            </summary>
+            {rest.map(function (section, i) {
+              return (
+                <section key={i} className="mb-10">
+                  <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl mb-4">
+                    {section.title}
+                  </h2>
+                  <div className="space-y-4" style={{ color: MUTED }}>
+                    {section.paragraphs.map(function (p, j) {
+                      return <p key={j} className="leading-relaxed">{p}</p>
+                    })}
+                  </div>
+                  <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="mt-8" />
+                </section>
+              )
+            })}
+          </details>
+        )}
+
         {/* Closing */}
-        <section className="bg-brand-bg-alt rounded-card p-6">
-          <p className="text-brand-muted leading-relaxed">
+        <section className="p-6 border" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
+          <p style={{ color: MUTED }} className="leading-relaxed">
             That&rsquo;s it. Start with what you know. The platform shows you the rest.
           </p>
-          <p className="text-brand-muted mt-3">
+          <p style={{ color: MUTED }} className="mt-3">
             Questions? Reach us at{' '}
-            <a
-              href="mailto:hello@thechangelab.net"
-              className="text-brand-accent hover:underline font-medium"
-            >
+            <a href="mailto:hello@thechangelab.net" style={{ color: CLAY }} className="hover:underline font-medium">
               hello@thechangelab.net
             </a>
             .
           </p>
         </section>
+
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-10" />
+
+        {/* Footer */}
+        <div className="text-center">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">
+            Back to Change Engine
+          </Link>
+        </div>
       </div>
     </div>
   )

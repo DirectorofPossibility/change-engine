@@ -1,13 +1,21 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
-import { Building2, Globe, Phone, MapPin } from 'lucide-react'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -25,10 +33,8 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
 
   const userProfile = await getUserProfile()
 
-  // Related services and wayfinder data in parallel
-  const [servicesResult, wayfinderData] = await Promise.all([
+  const [servicesResult] = await Promise.all([
     supabase.from('municipal_services').select('service_id, service_name, description_5th_grade').eq('agency_id', id).limit(10),
-    getWayfinderContext('agency', id, userProfile?.role),
   ])
   const services = servicesResult.data
 
@@ -39,57 +45,105 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
     : agency.agency_name
 
   return (
-    <DetailPageLayout
-      breadcrumbs={[{ label: 'Agencies', href: '/agencies' }, { label: agency.agency_name }]}
-      eyebrow={agency.jurisdiction ? { text: agency.jurisdiction } : undefined}
-      eyebrowMeta={
-        <Building2 className="w-5 h-5" style={{ color: '#C75B2A' }} />
-      }
-      title={titleDisplay}
-      subtitle={agency.description_5th_grade}
-      themeColor="#C75B2A"
-      wayfinderData={wayfinderData}
-      wayfinderType="agency"
-      wayfinderEntityId={id}
-      userRole={userProfile?.role}
-      feedbackType="agency"
-      feedbackId={id}
-      feedbackName={agency.agency_name}
-      actions={{
-        share: { title: agency.agency_name, url: `https://www.changeengine.us/agencies/${id}` },
-      }}
-      sidebar={
-        <>
-          {/* No additional sidebar content beyond wayfinder + feedback */}
-        </>
-      }
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Contact card */}
-        <div className="bg-white border border-brand-border p-5">
-          <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Contact</h2>
-          <div className="space-y-3 text-sm">
-            {agency.phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-brand-muted" /><a href={`tel:${agency.phone}`} className="text-brand-accent hover:underline">{agency.phone}</a></div>}
-            {agency.website && <div className="flex items-center gap-2"><Globe className="w-4 h-4 text-brand-muted" /><a href={agency.website} target="_blank" rel="noopener noreferrer" className="text-brand-accent hover:underline truncate">{agency.website.replace(/^https?:\/\//, '')}</a></div>}
-            {address && <div className="flex items-start gap-2"><MapPin className="w-4 h-4 text-brand-muted mt-0.5" /><span className="text-brand-text">{address}</span></div>}
-          </div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          {agency.jurisdiction && (
+            <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: CLAY, display: 'block', marginTop: '0.75rem' }}>{agency.jurisdiction}</span>
+          )}
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.5rem' }}>
+            {titleDisplay}
+          </h1>
+          {agency.description_5th_grade && (
+            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+              {agency.description_5th_grade}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/agencies" className="hover:underline" style={{ color: CLAY }}>Agencies</Link>
+          <span className="mx-2">/</span>
+          <span>{agency.agency_name}</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+
+        {/* Contact */}
+        {(agency.phone || agency.website || address) && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Contact</h2>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div className="space-y-3">
+              {agency.phone && (
+                <div style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>
+                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Phone: </span>
+                  <a href={`tel:${agency.phone}`} style={{ color: CLAY }} className="hover:underline">{agency.phone}</a>
+                </div>
+              )}
+              {agency.website && (
+                <div style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>
+                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Web: </span>
+                  <a href={agency.website} target="_blank" rel="noopener noreferrer" style={{ color: CLAY }} className="hover:underline truncate">
+                    {agency.website.replace(/^https?:\/\//, '')}
+                  </a>
+                </div>
+              )}
+              {address && (
+                <div style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>
+                  <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Address: </span>
+                  <span style={{ color: INK }}>{address}</span>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* Services */}
         {services && services.length > 0 && (
-          <div className="bg-white border border-brand-border p-5">
-            <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Services Provided</h2>
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Services Provided</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{services.length}</span>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
             <div className="space-y-2">
               {services.map(function (s: any) {
                 return (
-                  <Link key={s.service_id} href={`/municipal-services/${s.service_id}`} className="block text-sm text-brand-accent hover:underline">
+                  <Link key={s.service_id} href={`/municipal-services/${s.service_id}`}
+                    className="block hover:underline" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: CLAY }}>
                     {s.service_name}
                   </Link>
                 )
               })}
             </div>
-          </div>
+          </section>
         )}
       </div>
-    </DetailPageLayout>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/agencies" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to Agencies
+        </Link>
+      </div>
+    </div>
   )
 }

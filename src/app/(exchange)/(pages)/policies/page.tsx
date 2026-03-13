@@ -1,13 +1,20 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import { getPoliciesByZip } from '@/lib/data/policies'
 import { PoliciesPageClient } from './PoliciesPageClient'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 86400
 
@@ -22,81 +29,95 @@ export default async function PoliciesPage({ searchParams }: { searchParams: Pro
   const userZip = cookieStore.get('zip')?.value || ''
   const supabase = await createClient()
 
-  const { data: policies } = await supabase
-    .from('policies')
-    .select('*')
-    .eq('is_published', true)
-    .order('last_action_date', { ascending: false })
+  // Fetch all policies + ZIP-filtered policies in parallel
+  const [{ data: allPolicies }, zipPolicies] = await Promise.all([
+    supabase
+      .from('policies')
+      .select('*')
+      .eq('is_published', true)
+      .order('last_action_date', { ascending: false }),
+    userZip ? getPoliciesByZip(userZip) : Promise.resolve(null),
+  ])
 
-  const rawPolicies = policies || []
+  const rawPolicies = allPolicies || []
 
-  // When user has a ZIP, prioritize local policies (city > county > state > federal)
-  const govLevelPriority: Record<string, number> = { City: 0, County: 1, State: 2, Federal: 3 }
-  const all = userZip
-    ? [...rawPolicies].sort(function (a: any, b: any) {
-        const aPri = govLevelPriority[a.government_level] ?? 4
-        const bPri = govLevelPriority[b.government_level] ?? 4
-        if (aPri !== bPri) return aPri - bPri
-        // Within same level, preserve original order (last_action_date desc)
-        return 0
-      })
-    : rawPolicies
+  // If ZIP available, put user's geo-matched policies first, then the rest
+  let all: any[]
+  if (zipPolicies) {
+    const zipMatched = [...zipPolicies.federal, ...zipPolicies.state, ...zipPolicies.city]
+    const zipMatchedIds = new Set(zipMatched.map((p: any) => p.policy_id))
+    const rest = rawPolicies.filter((p: any) => !zipMatchedIds.has(p.policy_id))
+    all = [...zipMatched, ...rest]
+  } else {
+    all = rawPolicies
+  }
 
   const langId = await getLangId()
   const policyIds = all.map(function (p) { return p.policy_id })
   const translations = langId ? await fetchTranslationsForTable('policies', policyIds, langId) : {}
 
-  // Stats — government_level may not be in generated types yet
   const federalPolicies = all.filter(function (p) { return (p as any).government_level === 'Federal' }).length
   const statePolicies = all.filter(function (p) { return (p as any).government_level === 'State' }).length
   const localPolicies = all.filter(function (p) { return (p as any).government_level === 'County' || (p as any).government_level === 'City' }).length
 
   return (
-    <div>
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#4a2870' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#4a2870' }} />
-          Accountability Center
-        </Link>
-      </div>
-      <IndexPageHero
-        color="#1b5e8a"
-        pattern="vesica"
-        titleKey="policies.title"
-        subtitleKey="policies.subtitle"
-        intro="Legislation shapes everyday life. Track bills, ordinances, and policy actions at every level of government — from Houston City Council to the U.S. Congress."
-        stats={[
-          { value: all.length, label: 'Active Policies' },
-          { value: federalPolicies, label: 'Federal' },
-          { value: statePolicies, label: 'State' },
-          { value: localPolicies, label: 'Local' },
-        ]}
-      />
-
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Policies' }]} />
-
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          <div className="flex-1 min-w-0">
-            <PoliciesPageClient policies={all} translations={translations} initialLevel={urlLevel} />
-          </div>
-
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="policies"
-                color="#1b5e8a"
-                related={[
-                  { label: 'Governance Overview', href: '/governance', color: '#4a2870' },
-                  { label: 'Officials', href: '/officials', color: '#4a2870' },
-                  { label: 'Elections', href: '/elections', color: '#1a6b56' },
-                  { label: 'News', href: '/news', color: '#1a5030' },
-                ]}
-              />
-              <div className="mt-4"><FeaturedPromo variant="card" /></div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            Policies & Legislation
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            Legislation shapes everyday life. Track bills, ordinances, and policy actions at every level of government -- from Houston City Council to the U.S. Congress.
+          </p>
+          <div className="flex flex-wrap gap-8 mt-8">
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{all.length}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Active Policies</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{federalPolicies}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Federal</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{statePolicies}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>State</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{localPolicies}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Local</span>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Policies</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        <PoliciesPageClient policies={all} translations={translations} initialLevel={urlLevel} />
+      </div>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
       </div>
     </div>
   )

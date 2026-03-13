@@ -1,13 +1,22 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { PageHero } from '@/components/exchange/PageHero'
 import { faqJsonLd } from '@/lib/jsonld'
 
 export const revalidate = 300
 
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export const metadata: Metadata = {
-  title: 'Frequently Asked Questions — Change Engine',
+  title: 'Frequently Asked Questions -- Change Engine',
   description: 'Answers to common questions about civic participation, services, and the Change Engine.',
 }
 
@@ -29,36 +38,75 @@ export default async function FAQPage() {
 
   const jsonLd = faqJsonLd((faqs || []).filter(function (f) { return f.answer }).map(function (f) { return { question: f.question, answer: f.answer! } }))
 
+  const totalFaqs = (faqs || []).length
+
   return (
-    <div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <PageHero variant="sacred" sacredPattern="seed" gradientColor="#4a2870" title="Frequently Asked Questions" subtitle="Quick answers to the most common questions about civic participation, services, and how to use the Change Engine." />
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Breadcrumb items={[{ label: 'FAQ' }]} />
-        {Object.entries(grouped).map(function ([category, items]) {
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute right-[-60px] top-[-20px]">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-10">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] uppercase tracking-[0.15em] mb-1">changeengine.us</p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-2xl sm:text-3xl mt-2">Frequently Asked Questions</h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-base mt-2">
+            Quick answers to the most common questions about civic participation, services, and how to use the Change Engine.
+          </p>
+        </div>
+        <div style={{ height: 1, background: RULE_COLOR }} />
+      </section>
+
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-[11px] tracking-wide">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-1">/</span>
+          <span style={{ color: INK }}>FAQ</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        {Object.entries(grouped).map(function ([category, items], catIdx) {
           return (
             <div key={category} className="mb-10">
-              <h2 className="text-lg font-display font-bold text-brand-text mb-4 border-b border-brand-border pb-2">{category}</h2>
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 style={{ fontFamily: SERIF, color: INK }} className="text-xl">{category}</h2>
+                <span style={{ fontFamily: MONO, color: MUTED }} className="text-[11px]">{(items || []).length} questions</span>
+              </div>
+              <div style={{ borderBottom: '2px dotted ' + RULE_COLOR }} className="mb-4" />
               <div className="space-y-3">
                 {(items || []).map(function (f) {
                   return (
-                    <details key={f.faq_id} className="bg-white border border-brand-border group">
-                      <summary className="px-5 py-4 cursor-pointer font-semibold text-brand-text hover:text-brand-accent transition-colors list-none flex items-center justify-between">
+                    <details key={f.faq_id} className="group" style={{ border: '1px solid ' + RULE_COLOR }}>
+                      <summary className="px-5 py-4 cursor-pointer list-none flex items-center justify-between" style={{ fontFamily: SERIF, color: INK }}>
                         <span>{f.question}</span>
-                        <span className="text-brand-muted group-open:rotate-180 transition-transform ml-3 flex-shrink-0">
+                        <span className="group-open:rotate-180 transition-transform ml-3 flex-shrink-0" style={{ color: MUTED }}>
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                         </span>
                       </summary>
-                      <div className="px-5 pb-4 text-sm text-brand-text leading-relaxed border-t border-brand-border pt-3">
+                      <div className="px-5 pb-4 text-sm leading-relaxed pt-3" style={{ fontFamily: SERIF, color: MUTED, borderTop: '1px solid ' + RULE_COLOR }}>
                         {f.answer}
                       </div>
                     </details>
                   )
                 })}
               </div>
+              {catIdx < Object.entries(grouped).length - 1 && (
+                <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-8" />
+              )}
             </div>
           )
         })}
+      </div>
+
+      {/* ── Footer link ── */}
+      <div className="max-w-[900px] mx-auto px-6 pb-10">
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="pt-4">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-sm hover:underline">&larr; Back to Home</Link>
+        </div>
       </div>
     </div>
   )

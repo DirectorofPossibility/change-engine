@@ -15,6 +15,7 @@ export function D2Footer() {
     { label: t('d2footer.live_dashboard'), href: '/dashboard-live' },
     { label: t('d2footer.three_good_things'), href: '/goodthings' },
     { label: t('d2footer.polling_places'), href: '/polling-places' },
+    { label: t('discover.geography'), href: '/geography' },
     { label: t('d2footer.tirz_zones'), href: '/tirz' },
   ])
 

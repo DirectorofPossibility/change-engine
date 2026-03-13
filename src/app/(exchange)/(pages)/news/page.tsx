@@ -4,12 +4,16 @@ import { cookies } from 'next/headers'
 import { getNewsFeed } from '@/lib/data/exchange'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
-import { FileText, Video, BookOpen, Wrench, GraduationCap, Calendar, Megaphone, Heart, ArrowRight } from 'lucide-react'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
 import Image from 'next/image'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'The News Stand — Change Engine',
@@ -34,20 +38,6 @@ function formatDate(dateStr: string | null) {
 function shortDate(dateStr: string | null) {
   if (!dateStr) return ''
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
-function typeIcon(t: string | null) {
-  if (!t) return <FileText size={14} />
-  switch (t) {
-    case 'video': return <Video size={14} />
-    case 'guide': return <BookOpen size={14} />
-    case 'tool': return <Wrench size={14} />
-    case 'course': return <GraduationCap size={14} />
-    case 'event': return <Calendar size={14} />
-    case 'campaign': return <Megaphone size={14} />
-    case 'opportunity': return <Heart size={14} />
-    default: return <FileText size={14} />
-  }
 }
 
 const CONTENT_TYPES = [
@@ -84,7 +74,6 @@ export default async function NewsPage({
 
   const rawItems = await getNewsFeed(pathway, 80, type || undefined)
 
-  // When user has a ZIP, look up matching content IDs and sort them to the top
   let items = rawItems
   if (userZip && rawItems.length > 0) {
     const supabase = await createClient()
@@ -103,14 +92,12 @@ export default async function NewsPage({
 
   const themeEntries = Object.entries(THEMES) as [string, { name: string; color: string; slug: string }][]
 
-  // Split into hero, secondary, and the rest
   const withImages = items.filter(hasValidImage)
   const hero = withImages[0] || items[0]
   const secondary = withImages.slice(1, 4).length >= 2 ? withImages.slice(1, 4) : items.slice(1, 4)
   const usedIds = new Set([hero?.id, ...secondary.map(function (s) { return s.id })].filter(Boolean))
   const remaining = items.filter(function (i) { return !usedIds.has(i.id) })
 
-  // Group remaining by content type for section display
   const sections: { type: string; label: string; items: Item[] }[] = []
   const typeOrder = ['article', 'report', 'video', 'guide', 'tool', 'course', 'event', 'campaign', 'opportunity']
   const typeLabels: Record<string, string> = {
@@ -120,17 +107,14 @@ export default async function NewsPage({
   }
 
   if (!type) {
-    // When showing all, group by type
     typeOrder.forEach(function (t) {
       const group = remaining.filter(function (i) { return i.content_type === t })
       if (group.length > 0) sections.push({ type: t, label: typeLabels[t] || t, items: group })
     })
-    // Catch any ungrouped
     const grouped = new Set(typeOrder)
     const other = remaining.filter(function (i) { return !grouped.has(i.content_type || '') })
     if (other.length > 0) sections.push({ type: 'other', label: 'More', items: other })
   } else {
-    // When filtered to one type, just show all as one section
     if (remaining.length > 0) {
       sections.push({ type: type, label: typeLabels[type] || type, items: remaining })
     }
@@ -143,34 +127,49 @@ export default async function NewsPage({
   }
 
   return (
-    <div className="bg-paper min-h-screen">
-      {/* Masthead */}
-      <div className="border-b border-rule">
-        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
-          <Breadcrumb items={[{ label: 'News Stand' }]} />
-          <Link href="/centers/learning" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1b5e8a' }}>
-            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1b5e8a' }} />
-            Learning Center
-          </Link>
-          <h1 className="font-display text-5xl sm:text-6xl font-bold text-ink tracking-tight mt-2">
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
             The News Stand
           </h1>
-          <p className="text-sm text-dim mt-2 font-body italic">{today}</p>
-          <div className="flex justify-center mt-3">
-            <div className="flex h-1 w-48 rounded overflow-hidden">
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            Articles, videos, guides, reports, and community content from across Houston.
+          </p>
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, marginTop: '0.5rem', fontStyle: 'italic' }}>{today}</p>
+          <div className="flex justify-start mt-4">
+            <div className="flex h-1 w-48 overflow-hidden">
               {Object.values(THEMES).map(function (theme) {
                 return <div key={theme.slug} className="flex-1" style={{ backgroundColor: theme.color }} />
               })}
             </div>
           </div>
+          {items.length > 0 && (
+            <div className="flex flex-wrap gap-8 mt-6">
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{items.length}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Items</span>
+              </div>
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{sections.length}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Sections</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Filter bar */}
-      <div className="border-b border-rule bg-white/60 backdrop-blur-sm sticky top-0 z-20">
-        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <div className="relative flex flex-wrap items-center gap-2">
-            <WayfinderTooltipPos tipKey="content_type_badge" position="bottom" />
+      <div style={{ borderBottom: '1px solid ' + RULE_COLOR, background: PARCHMENT }} className="sticky top-0 z-20">
+        <div className="max-w-[900px] mx-auto px-6 py-3">
+          <div className="flex flex-wrap items-center gap-2">
             {CONTENT_TYPES.map(function (ct) {
               const active = (type || '') === ct.key
               const href = ct.key
@@ -180,16 +179,22 @@ export default async function NewsPage({
                 <Link
                   key={ct.key}
                   href={href}
-                  className={'text-xs px-3 py-1.5 font-medium transition-colors ' +
-                    (active
-                      ? 'text-ink border-b border-rule'
-                      : 'text-dim hover:text-ink')}
+                  className="hover:opacity-80"
+                  style={{
+                    fontFamily: MONO,
+                    fontSize: '0.65rem',
+                    textTransform: 'uppercase' as const,
+                    letterSpacing: '0.05em',
+                    padding: '4px 10px',
+                    color: active ? INK : MUTED,
+                    borderBottom: active ? '1px solid ' + INK : '1px solid transparent',
+                  }}
                 >
                   {ct.label}
                 </Link>
               )
             })}
-            <span className="w-px h-4 bg-rule mx-1" />
+            <span className="w-px h-4 mx-1" style={{ background: RULE_COLOR }} />
             {themeEntries.map(function ([id, theme]) {
               const active = pathway === id
               const href = '/news?pathway=' + id + (type ? '&type=' + type : '')
@@ -197,112 +202,101 @@ export default async function NewsPage({
                 <Link
                   key={id}
                   href={active ? '/news' + (type ? '?type=' + type : '') : href}
-                  className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-ink"
-                  style={active ? { color: theme.color } : { color: '#6B6560' }}
+                  className="flex items-center gap-1.5 hover:opacity-80"
+                  style={{ fontFamily: MONO, fontSize: '0.65rem', color: active ? theme.color : MUTED }}
                 >
-                  <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color, opacity: active ? 1 : 0.5 }} />
+                  <span className="w-2 h-2 flex-shrink-0" style={{ backgroundColor: theme.color, opacity: active ? 1 : 0.5 }} />
                   {active ? theme.name : ''}
                 </Link>
               )
             })}
             {pathway && (
-              <Link href={'/news' + (type ? '?type=' + type : '')} className="text-[10px] text-dim hover:text-ink ml-1">clear</Link>
+              <Link href={'/news' + (type ? '?type=' + type : '')} style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }} className="hover:underline ml-1">clear</Link>
             )}
           </div>
         </div>
       </div>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>News Stand</span>
+        </nav>
+      </div>
 
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
         {items.length === 0 ? (
-          <div className="text-center py-24">
-            <FileText size={48} className="mx-auto text-dim mb-4" />
-            <p className="font-display text-xl text-dim">No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
+          <div className="text-center py-16" style={{ border: '1px dashed ' + RULE_COLOR }}>
+            <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED }}>No content found{type ? ' for ' + type + 's' : ''}{pathway ? ' in this pathway' : ''}.</p>
           </div>
         ) : (
           <>
-            {/* ABOVE THE FOLD: Hero + Secondary */}
-            <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-rule">
-              <WayfinderTooltipPos tipKey="source_attribution_card" position="bottom" />
-              {/* Hero story */}
+            {/* Hero + Secondary */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
               {hero && (
-                <Link href={'/content/' + hero.id} className="lg:col-span-7 group">
+                <Link href={'/content/' + hero.id} className="lg:col-span-7 group block">
                   {hasValidImage(hero) && (
                     <div className="aspect-[16/9] overflow-hidden mb-4">
-                      <Image
-                        src={hero.image_url!}
-                        alt=""
-                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                       width={800} height={400} />
+                      <Image src={hero.image_url!} alt="" className="w-full h-full object-cover" width={800} height={400} />
                     </div>
                   )}
                   <div className="flex items-center gap-2 mb-2">
                     {getTheme(hero) && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: getTheme(hero)!.color }}>
+                      <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: getTheme(hero)!.color }}>
                         {getTheme(hero)!.name}
                       </span>
                     )}
                     {hero.content_type && hero.content_type !== 'article' && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-dim">
+                      <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: MUTED }}>
                         {hero.content_type}
                       </span>
                     )}
                     {isPastEvent(hero) && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-dim/10 text-dim">Past</span>
+                      <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: MUTED }}>Past</span>
                     )}
                   </div>
-                  <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight group-hover:text-brand-accent transition-colors">
+                  <h2 className="group-hover:underline" style={{ fontFamily: SERIF, fontSize: '2rem', fontWeight: 700, color: INK, lineHeight: 1.2 }}>
                     {hero.title_6th_grade}
                   </h2>
                   {hero.summary_6th_grade && (
-                    <p className="text-dim mt-3 text-base leading-relaxed line-clamp-3">
+                    <p className="line-clamp-3 mt-3" style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, lineHeight: 1.6 }}>
                       {hero.summary_6th_grade}
                     </p>
                   )}
-                  <div className="flex items-center gap-3 mt-3 text-xs text-dim">
-                    {hero.source_domain && <span className="font-medium">{hero.source_domain}</span>}
-                    <span>{formatDate(hero.published_at)}</span>
+                  <div className="flex items-center gap-3 mt-3">
+                    {hero.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.6rem', fontWeight: 500, color: MUTED }}>{hero.source_domain}</span>}
+                    <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>{formatDate(hero.published_at)}</span>
                   </div>
                 </Link>
               )}
 
-              {/* Secondary stories */}
-              <div className="lg:col-span-5 flex flex-col divide-y divide-rule">
+              <div className="lg:col-span-5 flex flex-col">
                 {secondary.map(function (item, idx) {
                   const theme = getTheme(item)
                   return (
-                    <Link key={item.id} href={'/content/' + item.id} className={'group flex gap-4 ' + (idx === 0 ? 'pb-5' : 'py-5')}>
+                    <Link key={item.id} href={'/content/' + item.id} className="group flex gap-4 py-4 hover:opacity-80" style={{ borderBottom: idx < secondary.length - 1 ? '1px solid ' + RULE_COLOR : 'none' }}>
                       {hasValidImage(item) ? (
-                        <Image
-                          src={item.image_url!}
-                          alt=""
-                          className="w-28 h-20 object-cover flex-shrink-0 group-hover:opacity-90 transition-opacity"
-                         width={800} height={80} />
+                        <Image src={item.image_url!} alt="" className="w-28 h-20 object-cover flex-shrink-0" width={112} height={80} />
                       ) : (
-                        <div
-                          className="w-28 h-20 flex-shrink-0 flex items-center justify-center"
-                          style={{ backgroundColor: (theme?.color || '#1b5e8a') + '12' }}
-                        >
-                          {typeIcon(item.content_type)}
+                        <div className="w-28 h-20 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: PARCHMENT_WARM }}>
+                          <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          {theme && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: theme.color }}>
-                              {theme.name}
-                            </span>
-                          )}
-                          {isPastEvent(item) && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-dim/10 text-dim">Past</span>
-                          )}
-                        </div>
-                        <h3 className="font-display text-lg font-bold text-ink leading-snug group-hover:text-brand-accent transition-colors line-clamp-3">
+                        {theme && (
+                          <span style={{ fontFamily: MONO, fontSize: '0.6rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: theme.color }}>
+                            {theme.name}
+                          </span>
+                        )}
+                        <h3 className="line-clamp-3 group-hover:underline" style={{ fontFamily: SERIF, fontSize: '1.05rem', fontWeight: 700, color: INK, lineHeight: 1.3 }}>
                           {item.title_6th_grade}
                         </h3>
-                        <div className="flex items-center gap-2 mt-1.5 text-[11px] text-dim">
-                          {item.source_domain && <span>{item.source_domain}</span>}
-                          <span>{shortDate(item.published_at)}</span>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          {item.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{item.source_domain}</span>}
+                          <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{shortDate(item.published_at)}</span>
                         </div>
                       </div>
                     </Link>
@@ -311,122 +305,96 @@ export default async function NewsPage({
               </div>
             </div>
 
-            {/* SECTIONS BY CONTENT TYPE */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
-              {/* Main column */}
-              <div className="lg:col-span-8">
-                {sections.map(function (section) {
-                  return (
-                    <section key={section.type} className="mb-10">
-                      {/* Section header */}
-                      <div className="flex items-center gap-3 mb-4 pb-2 border-b border-rule">
-                        <span className="text-dim">{typeIcon(section.type)}</span>
-                        <h2 className="font-display text-xl font-bold text-ink">{section.label}</h2>
-                        <span className="text-xs text-dim">{section.items.length}</span>
-                      </div>
+            {/* Sections by content type */}
+            <div className="mt-8">
+              {sections.map(function (section) {
+                return (
+                  <section key={section.type} className="mb-10">
+                    <div className="flex items-baseline justify-between mb-1">
+                      <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>
+                        {section.label}
+                      </h2>
+                      <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{section.items.length}</span>
+                    </div>
+                    <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
 
-                      {/* First item large if it has an image */}
-                      {hasValidImage(section.items[0]) && (
-                        <Link href={'/content/' + section.items[0].id} className="group block mb-5">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="aspect-[16/10] overflow-hidden">
-                              <Image
-                                src={section.items[0].image_url!}
-                                alt=""
-                                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                               width={800} height={400} />
+                    {section.items.slice(0, 4).map(function (item) {
+                      const theme = getTheme(item)
+                      return (
+                        <Link key={item.id} href={'/content/' + item.id} className="group flex items-start gap-4 py-3 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
+                          {hasValidImage(item) ? (
+                            <Image src={item.image_url!} alt="" className="w-20 h-14 object-cover flex-shrink-0" width={80} height={56} />
+                          ) : (
+                            <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: PARCHMENT_WARM }}>
+                              <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                             </div>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                {getTheme(section.items[0]) && (
-                                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: getTheme(section.items[0])!.color }}>
-                                    {getTheme(section.items[0])!.name}
-                                  </span>
-                                )}
-                                {isPastEvent(section.items[0]) && (
-                                  <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-dim/10 text-dim">Past</span>
-                                )}
-                              </div>
-                              <h3 className="font-display text-xl font-bold text-ink leading-snug mt-1 group-hover:text-brand-accent transition-colors">
-                                {section.items[0].title_6th_grade}
-                              </h3>
-                              {section.items[0].summary_6th_grade && (
-                                <p className="text-sm text-dim mt-2 line-clamp-3 leading-relaxed">
-                                  {section.items[0].summary_6th_grade}
-                                </p>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="line-clamp-2 group-hover:underline" style={{ fontFamily: SERIF, fontSize: '0.95rem', fontWeight: 600, color: INK, lineHeight: 1.4 }}>
+                              {item.title_6th_grade}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              {theme && (
+                                <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />
                               )}
-                              <div className="flex items-center gap-2 mt-2 text-[11px] text-dim">
-                                {section.items[0].source_domain && <span className="font-medium">{section.items[0].source_domain}</span>}
-                                <span>{shortDate(section.items[0].published_at)}</span>
-                              </div>
+                              {item.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{item.source_domain}</span>}
+                              <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{shortDate(item.published_at)}</span>
+                              {isPastEvent(item) && (
+                                <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
+                              )}
                             </div>
                           </div>
                         </Link>
-                      )}
-
-                      {/* Remaining items */}
-                      <div className="divide-y divide-rule/60">
-                        {section.items.slice(hasValidImage(section.items[0]) ? 1 : 0).map(function (item) {
+                      )
+                    })}
+                    {section.items.length > 4 && (
+                      <details className="mt-2">
+                        <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+                          See {section.items.length - 4} more
+                        </summary>
+                        {section.items.slice(4).map(function (item) {
                           const theme = getTheme(item)
                           return (
-                            <Link
-                              key={item.id}
-                              href={'/content/' + item.id}
-                              className="group flex items-start gap-4 py-3 hover:bg-white/50 -mx-3 px-3 transition-colors"
-                            >
+                            <Link key={item.id} href={'/content/' + item.id} className="group flex items-start gap-4 py-3 hover:opacity-80" style={{ borderBottom: '1px solid ' + RULE_COLOR }}>
                               {hasValidImage(item) ? (
-                                <Image src={item.image_url!} alt="" className="w-20 h-14 rounded object-cover flex-shrink-0"  width={800} height={56} />
+                                <Image src={item.image_url!} alt="" className="w-20 h-14 object-cover flex-shrink-0" width={80} height={56} />
                               ) : (
-                                <div
-                                  className="w-20 h-14 rounded flex-shrink-0 flex items-center justify-center"
-                                  style={{ backgroundColor: (theme?.color || '#1b5e8a') + '10' }}
-                                >
-                                  {typeIcon(item.content_type)}
+                                <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: PARCHMENT_WARM }}>
+                                  <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                                 </div>
                               )}
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-display text-base font-semibold text-ink group-hover:text-brand-accent transition-colors line-clamp-2 leading-snug">
+                                <h3 className="line-clamp-2 group-hover:underline" style={{ fontFamily: SERIF, fontSize: '0.95rem', fontWeight: 600, color: INK, lineHeight: 1.4 }}>
                                   {item.title_6th_grade}
                                 </h3>
-                                <div className="flex items-center gap-2 mt-1 text-[11px] text-dim">
-                                  {theme && (
-                                    <span className="w-1.5 h-1.5 rounded-sm flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                                  )}
-                                  {item.source_domain && <span>{item.source_domain}</span>}
-                                  <span>{shortDate(item.published_at)}</span>
+                                <div className="flex items-center gap-2 mt-1">
+                                  {theme && <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />}
+                                  {item.source_domain && <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{item.source_domain}</span>}
+                                  <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }}>{shortDate(item.published_at)}</span>
                                   {isPastEvent(item) && (
-                                    <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-dim/10">Past</span>
+                                    <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED, fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
                                   )}
                                 </div>
                               </div>
-                              <ArrowRight size={14} className="text-dim/30 group-hover:text-brand-accent flex-shrink-0 mt-1 transition-colors" />
                             </Link>
                           )
                         })}
-                      </div>
-                    </section>
-                  )
-                })}
-              </div>
-
-              {/* Sidebar */}
-              <aside className="lg:col-span-4 hidden lg:block">
-                <div className="sticky top-24 space-y-4">
-                  <IndexWayfinder
-                    currentPage="news"
-                    color="#1a5030"
-                    related={[
-                      { label: 'Library', href: '/library' },
-                      { label: 'Events', href: '/calendar' },
-                      { label: 'Topics', href: '/pathways' },
-                    ]}
-                  />
-                  <FeaturedPromo variant="card" />
-                </div>
-              </aside>
+                      </details>
+                    )}
+                  </section>
+                )
+              })}
             </div>
           </>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
       </div>
     </div>
   )

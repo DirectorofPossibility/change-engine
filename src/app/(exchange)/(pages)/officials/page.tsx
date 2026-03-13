@@ -8,7 +8,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { cookies } from 'next/headers'
 import { getOfficials, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
+import { getOfficialsByZip } from '@/lib/data/officials'
 import { OfficialsPageClient } from './OfficialsPageClient'
 
 const PARCHMENT = '#F5F0E8'
@@ -28,15 +30,30 @@ export const metadata: Metadata = {
 }
 
 export default async function OfficialsPage() {
-  const { officials, levels, profiles } = await getOfficials()
+  const cookieStore = await cookies()
+  const userZip = cookieStore.get('zip')?.value || ''
+
+  const [{ officials, levels, profiles }, zipOfficials] = await Promise.all([
+    getOfficials(),
+    userZip ? getOfficialsByZip(userZip) : Promise.resolve(null),
+  ])
+
+  // If ZIP available, put geo-matched officials first
+  let sortedOfficials = officials
+  if (zipOfficials) {
+    const zipMatched = [...zipOfficials.federal, ...zipOfficials.state, ...zipOfficials.county, ...zipOfficials.city]
+    const zipMatchedIds = new Set(zipMatched.map((o: any) => o.official_id))
+    const rest = officials.filter((o: any) => !zipMatchedIds.has(o.official_id))
+    sortedOfficials = [...zipMatched, ...rest]
+  }
 
   const langId = await getLangId()
-  const officialIds = officials.map(function (o) { return o.official_id })
+  const officialIds = sortedOfficials.map(function (o) { return o.official_id })
   const translations = langId ? await fetchTranslationsForTable('elected_officials', officialIds, langId) : {}
 
-  const federalCount = officials.filter(function (o) { return o.level === 'Federal' }).length
-  const stateCount = officials.filter(function (o) { return o.level === 'State' }).length
-  const localCount = officials.filter(function (o) { return o.level === 'County' || o.level === 'City' }).length
+  const federalCount = sortedOfficials.filter(function (o) { return o.level === 'Federal' }).length
+  const stateCount = sortedOfficials.filter(function (o) { return o.level === 'State' }).length
+  const localCount = sortedOfficials.filter(function (o) { return o.level === 'County' || o.level === 'City' }).length
 
   return (
     <div style={{ background: PARCHMENT }} className="min-h-screen">
@@ -57,7 +74,7 @@ export default async function OfficialsPage() {
           </p>
           <div className="flex flex-wrap gap-8 mt-8">
             <div>
-              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{officials.length}</span>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{sortedOfficials.length}</span>
               <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Officials</span>
             </div>
             <div>
@@ -88,7 +105,7 @@ export default async function OfficialsPage() {
       {/* Main content */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <OfficialsPageClient
-          officials={officials}
+          officials={sortedOfficials}
           levels={levels}
           translations={translations}
           linkedinProfiles={profiles}

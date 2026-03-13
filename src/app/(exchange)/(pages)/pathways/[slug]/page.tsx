@@ -13,11 +13,9 @@ import {
   getRandomQuote,
 } from '@/lib/data/exchange'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { getUIStrings } from '@/lib/i18n'
-import { ArrowRight, BookOpen, Heart, Package, Scale, FileText, Phone, MapPin, Calendar, ExternalLink, BarChart3 } from 'lucide-react'
 import type { ContentPublished } from '@/lib/types/exchange'
 
 function resolveTheme(slug: string) {
@@ -38,6 +36,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: theme.description,
   }
 }
+
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export default async function SinglePathwayPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -77,34 +86,28 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
     }
   }
 
-  // ── Editorial content selection ──
-  // Sort: featured first, then by recency
   const sorted = [...content].sort((a, b) => {
     if (a.is_featured && !b.is_featured) return -1
     if (!a.is_featured && b.is_featured) return 1
     return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime()
   })
 
-  // Lead story: prefer featured with image, then any with image, then first
   const leadStory = sorted.find(c => c.is_featured && c.image_url)
     || sorted.find(c => c.image_url)
     || sorted[0]
     || null
 
-  // Sidebar stories: next 4, skip lead, prefer variety of centers
   const sidebarStories: ContentPublished[] = []
   const usedCenters = new Set<string>()
   if (leadStory) usedCenters.add(leadStory.center || '')
   for (const c of sorted) {
     if (sidebarStories.length >= 4) break
     if (c === leadStory) continue
-    // Prefer different centers for variety
     if (sidebarStories.length < 2 && usedCenters.has(c.center || '') && sorted.filter(s => s !== leadStory && !usedCenters.has(s.center || '')).length > 0) continue
     sidebarStories.push(c)
     usedCenters.add(c.center || '')
   }
 
-  // Remaining content grouped by center for the desk blocks
   const usedIds = new Set([leadStory?.id, ...sidebarStories.map(s => s.id)])
   const remaining = sorted.filter(c => !usedIds.has(c.id))
   const byCenter: Record<string, ContentPublished[]> = { Learning: [], Action: [], Resource: [], Accountability: [] }
@@ -123,401 +126,373 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
   }
   const fmtDate = (d: string | null) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
 
-  // Stats for masthead
   const totalStories = content.length
   const totalEntities = opportunities.length + policies.length + relatedServices.length + relatedOfficials.length
 
   return (
-    <div>
-      {/* ═══════════════════════════════════════════════════════════════════
-          1. MASTHEAD
-         ═══════════════════════════════════════════════════════════════════ */}
-      <div
-        className="relative overflow-hidden"
-        style={{ background: `linear-gradient(158deg, #0d1117 0%, ${theme.color}88 50%, ${theme.color} 100%)` }}
-      >
-        <div className="max-w-[1080px] mx-auto px-6 relative z-10" style={{ padding: '3.5rem 1.5rem 3rem' }}>
-          <Breadcrumb items={[
-            { label: t('nav.pathways'), href: '/pathways' },
-            { label: theme.name }
-          ]} variant="dark" />
-
-          <div className="flex items-center gap-2.5 mt-6 mb-2.5">
-            <span className="block w-6 h-px" style={{ background: 'rgba(255,255,255,.3)' }} />
-            <span className="font-mono text-[.6rem] tracking-[0.24em] uppercase" style={{ color: 'rgba(255,255,255,.4)' }}>
-              Houston, TX &middot; {theme.name}
-            </span>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine -- Pathways
+          </p>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="w-3 h-3" style={{ backgroundColor: theme.color }} />
+            <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+              {theme.name}
+            </h1>
           </div>
-
-          <h1
-            className="font-display font-black leading-[.95] tracking-tight text-white"
-            style={{ fontSize: 'clamp(2.4rem, 5vw, 4.2rem)', letterSpacing: '-.025em' }}
-          >
-            {theme.name}
-          </h1>
-
-          <div className="my-5" style={{ width: '50px', height: '2px', background: 'rgba(255,255,255,.3)' }} />
-
-          <p
-            className="font-body italic leading-[1.7]"
-            style={{ fontSize: '1rem', color: 'rgba(255,255,255,.65)', maxWidth: '560px' }}
-          >
+          <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, lineHeight: 1.7 }} className="max-w-xl">
             {theme.description}
           </p>
-
-          {/* Inside this section + connected pathways */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span className="font-mono text-[11px] tracking-[0.1em] uppercase" style={{ color: 'rgba(255,255,255,.35)' }}>
-              {totalStories} stories &middot; {totalEntities} resources
-              {newsCount > 0 && <> &middot; {newsCount} in the wire</>}
+          <div className="mt-4 flex items-center gap-4">
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">
+              {totalStories} stories -- {totalEntities} resources
+              {newsCount > 0 && <> -- {newsCount} in the wire</>}
             </span>
-            {bridgeData.length > 0 && (
-              <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                {bridgeData.slice(0, 4).map(b => (
-                  <Link
-                    key={b.targetThemeId}
-                    href={'/pathways/' + b.targetSlug}
-                    className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
-                    style={{ color: 'rgba(255,255,255,.45)' }}
-                  >
-                    <span className="block w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
-                    {b.targetName}
-                  </Link>
-                ))}
-              </span>
-            )}
           </div>
-        </div>
-      </div>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          2. LEAD STORY + SIDEBAR
-         ═══════════════════════════════════════════════════════════════════ */}
-      {leadStory && (
-        <section className="max-w-[1080px] mx-auto px-6 py-10" style={{ borderBottom: '2px solid #0d1117' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-0">
-            {/* Lead */}
-            <div className="lg:pr-8 lg:border-r" style={{ borderColor: '#dde1e8' }}>
-              {leadStory.image_url && (
-                <Link href={'/content/' + leadStory.id} className="block mb-5 relative overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
-                  <Image
-                    src={leadStory.image_url}
-                    alt={getTitle(leadStory)}
-                    width={700}
-                    height={400}
-                    className="w-full h-auto object-contain bg-[#f4f5f7]"
-                    style={{ maxHeight: '380px' }}
-                  />
-                </Link>
-              )}
-              <div className="flex items-center gap-3 mb-3">
-                <span
-                  className="font-mono text-[11px] tracking-[0.12em] uppercase px-2 py-0.5"
-                  style={{ background: theme.color, color: '#fff' }}
-                >
-                  {leadStory.center || 'Feature'}
-                </span>
-                <span className="font-mono text-[11px] tracking-[0.12em] uppercase" style={{ color: '#5c6474' }}>
-                  {fmtDate(leadStory.published_at)}
-                  {leadStory.source_domain && <> &middot; {leadStory.source_domain}</>}
-                </span>
-              </div>
-              <Link href={'/content/' + leadStory.id}>
-                <h2
-                  className="font-display font-black leading-[1.05] tracking-tight mb-3 hover:underline"
-                  style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', color: '#0d1117' }}
-                >
-                  {getTitle(leadStory)}
-                </h2>
-              </Link>
-              <p
-                className="font-body italic leading-[1.75] mb-4"
-                style={{ fontSize: '0.95rem', color: '#5c6474', maxWidth: '520px' }}
-              >
-                {getSummary(leadStory)}
-              </p>
-              <Link
-                href={'/content/' + leadStory.id}
-                className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
-                style={{ color: theme.color, fontWeight: 600 }}
-              >
-                {t('card.read_more')} <ArrowRight size={12} />
-              </Link>
-            </div>
-
-            {/* Sidebar stories */}
-            <div className="lg:pl-8 mt-8 lg:mt-0 space-y-0">
-              {sidebarStories.map((c, i) => (
+          {bridgeData.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-4">
+              {bridgeData.slice(0, 4).map(b => (
                 <Link
-                  key={c.id}
-                  href={'/content/' + c.id}
-                  className="group block py-4 transition-colors hover:bg-[#f4f5f7] px-2 -mx-2"
-                  style={{ borderBottom: i < sidebarStories.length - 1 ? '1px solid #dde1e8' : undefined }}
+                  key={b.targetThemeId}
+                  href={'/pathways/' + b.targetSlug}
+                  style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.08em', color: MUTED }}
+                  className="uppercase hover:underline flex items-center gap-1.5"
                 >
-                  <div className="flex gap-4">
-                    {i === 0 && c.image_url && (
-                      <div className="w-24 h-16 flex-shrink-0 overflow-hidden" style={{ border: '1px solid #dde1e8' }}>
-                        <Image src={c.image_url} alt="" width={96} height={64} className="w-full h-full object-contain bg-[#f4f5f7]" />
-                      </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                        <span className="font-mono text-[11px] tracking-[0.1em] uppercase" style={{ color: '#5c6474' }}>
-                          {c.center || 'Feature'} &middot; {fmtDate(c.published_at)}
-                        </span>
-                      </div>
-                      <h3
-                        className="font-display font-bold leading-snug line-clamp-2 group-hover:underline"
-                        style={{ fontSize: '0.92rem', color: '#0d1117' }}
-                      >
-                        {getTitle(c)}
-                      </h3>
-                      {i === 0 && (
-                        <p className="font-body text-[.8rem] italic text-[#5c6474] mt-1 line-clamp-2">{getSummary(c)}</p>
-                      )}
-                    </div>
-                  </div>
+                  <span className="w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
+                  {b.targetName}
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          3. FOUR DESKS — editorial center blocks
-         ═══════════════════════════════════════════════════════════════════ */}
-      <div className="max-w-[1080px] mx-auto px-6 py-10" style={{ borderBottom: '1.5px solid #dde1e8' }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-
-          {/* ── Learning Desk ── */}
-          <DeskBlock
-            icon={<BookOpen size={14} />}
-            label="How can I understand?"
-            color={CENTER_COLORS.Learning}
-            themeColor={theme.color}
-            borderRight
-            borderBottom
-          >
-            {byCenter.Learning.slice(0, 5).map(c => (
-              <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-            ))}
-            {libraryNuggets.length > 0 && libraryNuggets.slice(0, 2).map(n => (
-              <DeskItem
-                key={n.documentId}
-                href={n.link}
-                title={n.chunkExcerpt || n.documentTitle}
-                meta="From the archives"
-                color={CENTER_COLORS.Learning}
-                typeLabel="Guide"
-              />
-            ))}
-          </DeskBlock>
-
-          {/* ── Action Desk ── */}
-          <DeskBlock
-            icon={<Heart size={14} />}
-            label="How can I help?"
-            color={CENTER_COLORS.Action}
-            themeColor={theme.color}
-            borderBottom
-          >
-            {byCenter.Action.slice(0, 3).map(c => (
-              <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-            ))}
-            {opportunities.slice(0, 4).map(o => (
-              <DeskItem
-                key={o.opportunity_id}
-                href={'/opportunities/' + o.opportunity_id}
-                title={o.opportunity_name}
-                meta={o.start_date ? 'Starts ' + new Date(o.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : undefined}
-                color={CENTER_COLORS.Action}
-                typeLabel="Opportunity"
-              />
-            ))}
-          </DeskBlock>
-
-          {/* ── Resource Desk ── */}
-          <DeskBlock
-            icon={<Package size={14} />}
-            label="What's available?"
-            color={CENTER_COLORS.Resource}
-            themeColor={theme.color}
-            borderRight
-          >
-            {byCenter.Resource.slice(0, 3).map(c => (
-              <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-            ))}
-            {relatedServices.slice(0, 4).map(s => (
-              <DeskItem
-                key={s.service_id}
-                href={'/services/' + s.service_id}
-                title={s.service_name}
-                meta={undefined}
-                color={CENTER_COLORS.Resource}
-                typeLabel="Service"
-              />
-            ))}
-          </DeskBlock>
-
-          {/* ── Accountability Desk ── */}
-          <DeskBlock
-            icon={<Scale size={14} />}
-            label="Who makes decisions?"
-            color={CENTER_COLORS.Accountability}
-            themeColor={theme.color}
-          >
-            {byCenter.Accountability.slice(0, 3).map(c => (
-              <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-            ))}
-            {relatedOfficials.slice(0, 3).map(o => (
-              <DeskItem
-                key={o.official_id}
-                href={'/officials/' + o.official_id}
-                title={o.official_name}
-                meta={o.title || undefined}
-                color={CENTER_COLORS.Accountability}
-                typeLabel="Official"
-              />
-            ))}
-            {policies.slice(0, 3).map(p => (
-              <DeskItem
-                key={p.policy_id}
-                href={'/policies/' + p.policy_id}
-                title={p.title_6th_grade || p.policy_name}
-                meta={[p.bill_number, p.status].filter(Boolean).join(' · ') || undefined}
-                color={CENTER_COLORS.Accountability}
-                typeLabel="Policy"
-              />
-            ))}
-          </DeskBlock>
+          )}
         </div>
       </div>
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          4. TOPIC INDEX — focus areas as compact pills
-         ═══════════════════════════════════════════════════════════════════ */}
-      {themeFocusAreas.length > 0 && (
-        <section className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
-          <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5c6474] block mb-4">
-            Topic index
-          </span>
-          <div className="space-y-0">
-            {themeFocusAreas.map((fa, i) => (
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/pathways" className="hover:underline" style={{ color: CLAY }}>{t('nav.pathways')}</Link>
+          <span className="mx-2">/</span>
+          <span>{theme.name}</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+
+        {/* ── Lead Story + Sidebar ── */}
+        {leadStory && (
+          <section>
+            <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-0">
+              {/* Lead */}
+              <div className="lg:pr-8" style={{ borderRight: '1px solid ' + RULE_COLOR }}>
+                {leadStory.image_url && (
+                  <Link href={'/content/' + leadStory.id} className="block mb-5 overflow-hidden" style={{ border: '1px solid ' + RULE_COLOR }}>
+                    <Image
+                      src={leadStory.image_url}
+                      alt={getTitle(leadStory)}
+                      width={700}
+                      height={400}
+                      className="w-full h-auto object-contain"
+                      style={{ maxHeight: '380px', background: PARCHMENT_WARM }}
+                    />
+                  </Link>
+                )}
+                <div className="flex items-center gap-3 mb-3">
+                  <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.12em', color: '#fff', background: theme.color, padding: '2px 8px' }} className="uppercase">
+                    {leadStory.center || 'Feature'}
+                  </span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                    {fmtDate(leadStory.published_at)}
+                    {leadStory.source_domain && <> -- {leadStory.source_domain}</>}
+                  </span>
+                </div>
+                <Link href={'/content/' + leadStory.id}>
+                  <h2
+                    style={{ fontFamily: SERIF, fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', color: INK, lineHeight: 1.15 }}
+                    className="mb-3 hover:underline"
+                  >
+                    {getTitle(leadStory)}
+                  </h2>
+                </Link>
+                <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.75, maxWidth: '520px' }} className="mb-4">
+                  {getSummary(leadStory)}
+                </p>
+                <Link
+                  href={'/content/' + leadStory.id}
+                  style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.08em', color: CLAY, fontWeight: 600 }}
+                  className="uppercase hover:underline"
+                >
+                  {t('card.read_more')}
+                </Link>
+              </div>
+
+              {/* Sidebar stories */}
+              <div className="lg:pl-8 mt-8 lg:mt-0">
+                {sidebarStories.map((c, i) => (
+                  <Link
+                    key={c.id}
+                    href={'/content/' + c.id}
+                    className="group block py-4 px-2 -mx-2 transition-colors hover:bg-white/40"
+                    style={{ borderBottom: i < sidebarStories.length - 1 ? '1px solid ' + RULE_COLOR : undefined }}
+                  >
+                    <div className="flex gap-4">
+                      {i === 0 && c.image_url && (
+                        <div className="w-24 h-16 flex-shrink-0 overflow-hidden" style={{ border: '1px solid ' + RULE_COLOR }}>
+                          <Image src={c.image_url} alt="" width={96} height={64} className="w-full h-full object-contain" style={{ background: PARCHMENT_WARM }} />
+                        </div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="w-1.5 h-1.5" style={{ backgroundColor: theme.color }} />
+                          <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>
+                            {c.center || 'Feature'} -- {fmtDate(c.published_at)}
+                          </span>
+                        </div>
+                        <h3
+                          style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK, lineHeight: 1.3 }}
+                          className="line-clamp-2 group-hover:underline"
+                        >
+                          {getTitle(c)}
+                        </h3>
+                        {i === 0 && (
+                          <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED }} className="mt-1 line-clamp-2">{getSummary(c)}</p>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+          </section>
+        )}
+
+        {/* ── Four Desks ── */}
+        <section>
+          <div className="flex items-baseline gap-4 mb-6">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>By Center</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">4 desks</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+            <DeskBlock label="How can I understand?" color={CENTER_COLORS.Learning} borderRight borderBottom>
+              {byCenter.Learning.slice(0, 5).map(c => (
+                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
+              ))}
+              {libraryNuggets.length > 0 && libraryNuggets.slice(0, 2).map(n => (
+                <DeskItem
+                  key={n.documentId}
+                  href={n.link}
+                  title={n.chunkExcerpt || n.documentTitle}
+                  meta="From the archives"
+                  color={CENTER_COLORS.Learning}
+                  typeLabel="Guide"
+                />
+              ))}
+            </DeskBlock>
+
+            <DeskBlock label="How can I help?" color={CENTER_COLORS.Action} borderBottom>
+              {byCenter.Action.slice(0, 3).map(c => (
+                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
+              ))}
+              {opportunities.slice(0, 4).map(o => (
+                <DeskItem
+                  key={o.opportunity_id}
+                  href={'/opportunities/' + o.opportunity_id}
+                  title={o.opportunity_name}
+                  meta={o.start_date ? 'Starts ' + new Date(o.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : undefined}
+                  color={CENTER_COLORS.Action}
+                  typeLabel="Opportunity"
+                />
+              ))}
+            </DeskBlock>
+
+            <DeskBlock label="What's available?" color={CENTER_COLORS.Resource} borderRight>
+              {byCenter.Resource.slice(0, 3).map(c => (
+                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
+              ))}
+              {relatedServices.slice(0, 4).map(s => (
+                <DeskItem
+                  key={s.service_id}
+                  href={'/services/' + s.service_id}
+                  title={s.service_name}
+                  meta={undefined}
+                  color={CENTER_COLORS.Resource}
+                  typeLabel="Service"
+                />
+              ))}
+            </DeskBlock>
+
+            <DeskBlock label="Who makes decisions?" color={CENTER_COLORS.Accountability}>
+              {byCenter.Accountability.slice(0, 3).map(c => (
+                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
+              ))}
+              {relatedOfficials.slice(0, 3).map(o => (
+                <DeskItem
+                  key={o.official_id}
+                  href={'/officials/' + o.official_id}
+                  title={o.official_name}
+                  meta={o.title || undefined}
+                  color={CENTER_COLORS.Accountability}
+                  typeLabel="Official"
+                />
+              ))}
+              {policies.slice(0, 3).map(p => (
+                <DeskItem
+                  key={p.policy_id}
+                  href={'/policies/' + p.policy_id}
+                  title={p.title_6th_grade || p.policy_name}
+                  meta={[p.bill_number, p.status].filter(Boolean).join(' / ') || undefined}
+                  color={CENTER_COLORS.Accountability}
+                  typeLabel="Policy"
+                />
+              ))}
+            </DeskBlock>
+          </div>
+        </section>
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Topic Index ── */}
+        {themeFocusAreas.length > 0 && (
+          <section>
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Topic Index</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{themeFocusAreas.length} topics</span>
+            </div>
+
+            {themeFocusAreas.slice(0, 4).map((fa, i) => (
               <Link
                 key={fa.focus_id}
                 href={'/explore/focus/' + fa.focus_id}
-                className="group flex items-center gap-3 py-3 transition-colors hover:bg-[#f4f5f7] -mx-2 px-2"
-                style={{ borderBottom: i < themeFocusAreas.length - 1 ? '1px solid #f0f1f3' : undefined }}
+                className="group flex items-center gap-3 py-3 -mx-2 px-2 transition-colors hover:bg-white/40"
+                style={{ borderBottom: '1px solid ' + RULE_COLOR }}
               >
                 <span className="w-1 h-4 flex-shrink-0" style={{ backgroundColor: theme.color }} />
-                <span className="font-body text-[.84rem] font-medium text-[#0d1117] group-hover:underline">{fa.focus_area_name}</span>
+                <span style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK }} className="group-hover:underline">{fa.focus_area_name}</span>
                 {fa.description && (
-                  <span className="font-body text-[.75rem] italic text-[#5c6474] hidden sm:inline">&mdash; {fa.description}</span>
+                  <span style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED }} className="hidden sm:inline">-- {fa.description}</span>
                 )}
               </Link>
             ))}
-          </div>
-        </section>
-      )}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          4b. CIVIC DATA — Understanding Houston deep links
-         ═══════════════════════════════════════════════════════════════════ */}
-      {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id] && (
-        <section className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart3 size={14} style={{ color: theme.color }} />
-            <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5c6474]">
-              See the data
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id].map(ref => (
-              <a
-                key={ref.url}
-                href={ref.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 py-2.5 px-4 transition-colors hover:bg-[#f4f5f7]"
-                style={{ border: '1px solid #dde1e8' }}
-              >
-                <ExternalLink size={12} style={{ color: theme.color }} />
-                <span className="font-body text-[.84rem] font-medium text-[#0d1117] group-hover:underline">{ref.label}</span>
-                <span className="font-mono text-[11px] tracking-[0.08em] uppercase text-[#8a929e]">{ref.source}</span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
+            {themeFocusAreas.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+                  Show all {themeFocusAreas.length} topics
+                </summary>
+                {themeFocusAreas.slice(4).map((fa) => (
+                  <Link
+                    key={fa.focus_id}
+                    href={'/explore/focus/' + fa.focus_id}
+                    className="group flex items-center gap-3 py-3 -mx-2 px-2 transition-colors hover:bg-white/40"
+                    style={{ borderBottom: '1px solid ' + RULE_COLOR }}
+                  >
+                    <span className="w-1 h-4 flex-shrink-0" style={{ backgroundColor: theme.color }} />
+                    <span style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK }} className="group-hover:underline">{fa.focus_area_name}</span>
+                    {fa.description && (
+                      <span style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED }} className="hidden sm:inline">-- {fa.description}</span>
+                    )}
+                  </Link>
+                ))}
+              </details>
+            )}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          5. QUOTE
-         ═══════════════════════════════════════════════════════════════════ */}
-      {quote && (
-        <div className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
-          <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={theme.color} />
-        </div>
-      )}
+            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+          </section>
+        )}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          6. NEWS WIRE
-         ═══════════════════════════════════════════════════════════════════ */}
-      {newsCount > 0 && (
-        <section style={{ backgroundColor: theme.color + '08', borderBottom: '1.5px solid #dde1e8' }}>
-          <div className="max-w-[1080px] mx-auto px-6 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-[#5c6474] block mb-1">
-                The wire
-              </span>
-              <p className="font-body text-[.88rem]" style={{ color: '#0d1117' }}>
-                {newsCount} news {newsCount === 1 ? 'article' : 'articles'} covering {theme.name} in Houston
-              </p>
+        {/* ── Civic Data ── */}
+        {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id] && (
+          <section>
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>See the Data</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
             </div>
+            <div className="flex flex-wrap gap-3">
+              {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id].map(ref => (
+                <a
+                  key={ref.url}
+                  href={ref.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2 py-2.5 px-4 transition-colors hover:bg-white/40"
+                  style={{ border: '1px solid ' + RULE_COLOR }}
+                >
+                  <span style={{ fontFamily: SERIF, fontSize: '0.85rem', color: INK }} className="group-hover:underline">{ref.label}</span>
+                  <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.08em', color: MUTED }} className="uppercase">{ref.source}</span>
+                </a>
+              ))}
+            </div>
+            <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+          </section>
+        )}
+
+        {/* ── Quote ── */}
+        {quote && (
+          <section className="mb-10">
+            <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={theme.color} />
+          </section>
+        )}
+
+        {/* ── News Wire ── */}
+        {newsCount > 0 && (
+          <section className="p-6 mb-10" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase block mb-2">
+              The Wire
+            </span>
+            <p style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+              {newsCount} news {newsCount === 1 ? 'article' : 'articles'} covering {theme.name} in Houston
+            </p>
             <Link
               href={'/news?pathway=' + theme.id}
-              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline flex-shrink-0"
-              style={{ color: theme.color, fontWeight: 600 }}
+              style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: CLAY, fontWeight: 600 }}
+              className="uppercase hover:underline mt-2 inline-block"
             >
-              Read the latest <ArrowRight size={12} />
+              Read the latest
             </Link>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          7. DEEPER READING
-         ═══════════════════════════════════════════════════════════════════ */}
-      {libraryNuggets.length > 0 && (
-        <div className="max-w-[1080px] mx-auto px-6 py-8" style={{ borderBottom: '1.5px solid #dde1e8' }}>
-          <LibraryNugget
-            nuggets={libraryNuggets}
-            variant="sidebar"
-            color={theme.color}
-            labels={{ fromThe: t('library.from_the'), readMore: t('library.read_more') }}
-          />
-        </div>
-      )}
+        {/* ── Deeper Reading ── */}
+        {libraryNuggets.length > 0 && (
+          <section className="mb-10">
+            <LibraryNugget
+              nuggets={libraryNuggets}
+              variant="sidebar"
+              color={theme.color}
+              labels={{ fromThe: t('library.from_the'), readMore: t('library.read_more') }}
+            />
+          </section>
+        )}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          8. COLOPHON
-         ═══════════════════════════════════════════════════════════════════ */}
-      <div className="max-w-[1080px] mx-auto px-6 py-6">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Colophon ── */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 py-4">
           <Link
             href="/pathways"
-            className="font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
-            style={{ color: '#5c6474' }}
+            style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: CLAY }}
+            className="uppercase hover:underline"
           >
-            &larr; All sections
+            All Pathways
           </Link>
           {bridgeData.map(b => (
             <Link
               key={b.targetThemeId}
               href={'/pathways/' + b.targetSlug}
-              className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] hover:underline"
-              style={{ color: b.targetColor }}
+              className="inline-flex items-center gap-1.5 hover:underline"
+              style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.08em', color: b.targetColor }}
             >
               <span className="w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
               {b.targetName}
@@ -531,36 +506,31 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
 // ── Desk Block Component ─────────────────────────────────────────────────
 
-function DeskBlock({ icon, label, color, themeColor, borderRight, borderBottom, children }: {
-  icon: React.ReactNode
+function DeskBlock({ label, color, borderRight, borderBottom, children }: {
   label: string
   color: string
-  themeColor: string
   borderRight?: boolean
   borderBottom?: boolean
   children: React.ReactNode
 }) {
   return (
     <div
-      className="py-6 first:pt-0"
+      className="py-6"
       style={{
         paddingRight: borderRight ? '2rem' : undefined,
         paddingLeft: !borderRight ? '2rem' : undefined,
-        borderRight: borderRight ? '1px solid #dde1e8' : undefined,
-        borderBottom: borderBottom ? '1px solid #dde1e8' : undefined,
+        borderRight: borderRight ? '1px solid ' + RULE_COLOR : undefined,
+        borderBottom: borderBottom ? '1px solid ' + RULE_COLOR : undefined,
       }}
     >
-      {/* Desk header */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-6 h-6 flex items-center justify-center" style={{ backgroundColor: color + '18', color }}>
-          {icon}
-        </div>
-        <span className="font-mono text-[11px] tracking-[0.12em] uppercase" style={{ color: '#5c6474' }}>
+        <span className="w-2 h-2" style={{ backgroundColor: color }} />
+        <span style={{ fontFamily: MONO, fontSize: '0.6rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
           {label}
         </span>
       </div>
       <div className="h-0.5 w-8 mb-4" style={{ backgroundColor: color }} />
-      <div className="space-y-0">
+      <div>
         {children}
       </div>
     </div>
@@ -579,21 +549,21 @@ function DeskItem({ href, title, meta, color, typeLabel }: {
   return (
     <Link
       href={href}
-      className="group flex items-start gap-3 py-2.5 transition-colors hover:bg-[#f4f5f7] -mx-2 px-2"
-      style={{ borderBottom: '1px solid #f0f1f3' }}
+      className="group flex items-start gap-3 py-2.5 -mx-2 px-2 transition-colors hover:bg-white/40"
+      style={{ borderBottom: '1px solid ' + RULE_COLOR }}
     >
-      <span className="w-1 h-full min-h-[1.5rem] flex-shrink-0 mt-0.5" style={{ backgroundColor: color + '40' }} />
+      <span className="w-1 min-h-[1.5rem] flex-shrink-0 mt-0.5" style={{ backgroundColor: color + '40' }} />
       <div className="min-w-0 flex-1">
         {typeLabel && (
-          <span className="font-mono text-[.48rem] tracking-[0.12em] uppercase block mb-0.5" style={{ color }}>
+          <span style={{ fontFamily: MONO, fontSize: '0.5rem', letterSpacing: '0.12em', color }} className="uppercase block mb-0.5">
             {typeLabel}
           </span>
         )}
-        <h4 className="font-body text-[.84rem] font-medium leading-snug text-[#0d1117] line-clamp-2 group-hover:underline">
+        <h4 style={{ fontFamily: SERIF, fontSize: '0.85rem', color: INK, lineHeight: 1.35 }} className="line-clamp-2 group-hover:underline">
           {title}
         </h4>
         {meta && (
-          <span className="font-mono text-[11px] tracking-[0.05em] uppercase text-[#5c6474] mt-0.5 block">
+          <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }} className="mt-0.5 block">
             {meta}
           </span>
         )}

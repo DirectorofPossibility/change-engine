@@ -1,26 +1,32 @@
 /**
  * @fileoverview Help / Available Resources listing page.
  *
- * Displays all life situations organized by urgency level, with a hero
- * banner featuring the community-gathering illustration. Includes a crisis
- * resource banner at the top for emergency contacts.
+ * Displays all life situations organized by urgency level, with editorial
+ * culture guide aesthetic. Includes a crisis resource banner.
  *
  * @datasource Supabase tables: life_situations, translations
  * @caching ISR with `revalidate = 300` (5 minutes)
  * @route GET /help
  */
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
 import { getLifeSituations, getLangId, fetchTranslationsForTable } from '@/lib/data/exchange'
 import { LifeSituationCard } from '@/components/exchange/LifeSituationCard'
-import { PageHero } from '@/components/exchange/PageHero'
-import { PAGE_INTROS, URGENCY_LEVELS } from '@/lib/constants'
+import { URGENCY_LEVELS } from '@/lib/constants'
 import { HelpCrisisBanner } from './HelpCrisisBanner'
 import { HelpUrgencyHeader } from './HelpUrgencyHeader'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 
 export const revalidate = 300
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Available Resources',
@@ -42,53 +48,73 @@ export default async function HelpPage() {
   })
 
   return (
-    <div>
-      <PageHero
-        variant="sacred"
-        sacredPattern="tripod"
-        gradientColor="#E8723A"
-        titleKey="help.title"
-        subtitleKey="help.subtitle"
-        intro={PAGE_INTROS.availableResources}
-      />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+            Available Resources
+          </h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+            Find services and resources for food, housing, healthcare, jobs, and more in Houston.
+          </p>
+        </div>
+      </section>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Available Resources' }]} />
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-2">/</span>
+          <span style={{ color: INK }}>Available Resources</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
         <HelpCrisisBanner />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
-          <div className="space-y-6">
-            {URGENCY_LEVELS.map((level) => {
-              const items = grouped[level]
-              if (!items || items.length === 0) return null
+        <div className="space-y-8">
+          {URGENCY_LEVELS.map((level) => {
+            const items = grouped[level]
+            if (!items || items.length === 0) return null
 
-              return (
-                <section key={level}>
-                  <HelpUrgencyHeader level={level} />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {items.map((s) => (
-                      <LifeSituationCard
-                        key={s.situation_id}
-                        name={s.situation_name}
-                        slug={s.situation_slug}
-                        description={s.description_5th_grade}
-                        urgency={s.urgency_level}
-                        iconName={s.icon_name}
-                        translatedName={translations[s.situation_id]?.title}
-                        translatedDescription={translations[s.situation_id]?.summary}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )
-            })}
-          </div>
-          <div className="hidden lg:block">
-            <div className="sticky top-24 space-y-4">
-              <IndexWayfinder currentPage="help" related={[{label:'Services',href:'/services'},{label:'Benefits',href:'/benefits'},{label:'Agencies',href:'/agencies'}]} color="#C75B2A" />
-              <FeaturedPromo variant="card" />
-            </div>
-          </div>
+            return (
+              <section key={level}>
+                <HelpUrgencyHeader level={level} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {items.map((s) => (
+                    <LifeSituationCard
+                      key={s.situation_id}
+                      name={s.situation_name}
+                      slug={s.situation_slug}
+                      description={s.description_5th_grade}
+                      urgency={s.urgency_level}
+                      iconName={s.icon_name}
+                      translatedName={translations[s.situation_id]?.title}
+                      translatedDescription={translations[s.situation_id]?.summary}
+                    />
+                  ))}
+                </div>
+              </section>
+            )
+          })}
+        </div>
+
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid ' + RULE_COLOR }} className="my-10" />
+
+        {/* Footer */}
+        <div className="text-center">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY }} className="text-xs hover:underline">
+            Back to Change Engine
+          </Link>
         </div>
       </div>
     </div>

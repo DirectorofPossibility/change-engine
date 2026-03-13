@@ -1,138 +1,167 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import Image from 'next/image'
 import { ALL_ADVENTURES } from '@/lib/data/adventures'
-import { Landmark, Search, CloudRain, Clock, MapPin, Compass } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Community Adventures — The Change Engine',
   description: 'Interactive stories that put you at the center of civic life. Navigate a town hall meeting, discover hidden neighborhood assets, or prepare your community for hurricane season.',
 }
 
-const ICON_MAP: Record<string, typeof Landmark> = {
-  landmark: Landmark,
-  search: Search,
-  'cloud-rain': CloudRain,
-}
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
+const VISIBLE_COUNT = 3
 
 export default function AdventuresPage() {
+  const visible = ALL_ADVENTURES.slice(0, VISIBLE_COUNT)
+  const rest = ALL_ADVENTURES.slice(VISIBLE_COUNT)
+
   return (
-    <div>
-      <IndexPageHero
-        color="#1a3460"
-        pattern="seed"
-        title="Community Adventures"
-        subtitle="Interactive stories where your choices shape the outcome."
-        intro="Step into real civic scenarios — attending your first public meeting, mapping your neighborhood's hidden assets, or preparing your block for a storm. Every choice teaches you something real."
-        stats={[
-          { value: String(ALL_ADVENTURES.length), label: 'Adventures' },
-          { value: '~5 min', label: 'Each' },
-          { value: 'Free', label: 'Always' },
-        ]}
-      />
-
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Adventures' }]} />
-
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          <div className="flex-1 min-w-0">
-            <div className="mb-6">
-              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted">
-                Choose Your Adventure
-              </p>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.5rem', color: INK, lineHeight: 1.15, marginTop: '0.75rem' }}>
+            Community Adventures
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
+            Interactive stories where your choices shape the outcome. Step into real civic scenarios -- every choice teaches you something real.
+          </p>
+          <div className="flex flex-wrap gap-8 mt-8">
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>{ALL_ADVENTURES.length}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Adventures</span>
             </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>~5 min</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Each</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '2rem', color: INK }}>Free</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Always</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            <div className="space-y-5">
-              {ALL_ADVENTURES.map(function (adventure) {
-                const Icon = ICON_MAP[adventure.icon] || Compass
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Adventures</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        {/* Section header */}
+        <div className="flex items-baseline justify-between mb-1">
+          <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Choose Your Adventure</h2>
+          <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{ALL_ADVENTURES.length}</span>
+        </div>
+        <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1.5rem' }} />
+
+        {/* Visible adventures */}
+        <div className="space-y-4">
+          {visible.map(function (adventure) {
+            return (
+              <Link
+                key={adventure.slug}
+                href={'/adventures/' + adventure.slug}
+                className="block border hover:border-current transition-colors"
+                style={{ borderColor: RULE_COLOR }}
+              >
+                <div className="p-6" style={{ background: PARCHMENT_WARM }}>
+                  <h3 style={{ fontFamily: SERIF, color: INK, fontSize: '1.15rem' }}>{adventure.title}</h3>
+                  <p style={{ fontFamily: MONO, color: CLAY, fontSize: '0.7rem', marginTop: '0.25rem' }}>{adventure.subtitle}</p>
+                  <p style={{ fontFamily: SERIF, color: MUTED, fontSize: '0.85rem', lineHeight: 1.6, marginTop: '0.5rem' }}>{adventure.description}</p>
+                  <div className="flex items-center gap-4 mt-3" style={{ fontFamily: MONO, color: MUTED, fontSize: '0.65rem' }}>
+                    <span>~{adventure.estimatedMinutes} min</span>
+                    <span>{adventure.nodeCount} scenes</span>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Progressive disclosure */}
+        {rest.length > 0 && (
+          <details className="mt-4">
+            <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.9rem', cursor: 'pointer' }}>
+              See {rest.length} more adventure{rest.length > 1 ? 's' : ''}
+            </summary>
+            <div className="space-y-4 mt-4">
+              {rest.map(function (adventure) {
                 return (
                   <Link
                     key={adventure.slug}
                     href={'/adventures/' + adventure.slug}
-                    className="group block bg-white border border-brand-border overflow-hidden hover:border-ink hover:translate-y-[-2px] transition-all"
-                   
+                    className="block border hover:border-current transition-colors"
+                    style={{ borderColor: RULE_COLOR }}
                   >
-                    <div className="flex">
-                      <div className="w-2 flex-shrink-0" style={{ backgroundColor: adventure.color }} />
-                      <div className="flex-1 p-6">
-                        <div className="flex items-start gap-4">
-                          <div
-                            className="w-12 h-12 flex items-center justify-center flex-shrink-0"
-                            style={{ backgroundColor: adventure.color + '15' }}
-                          >
-                            <Icon size={22} style={{ color: adventure.color }} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h2 className="font-display text-lg font-bold text-brand-text group-hover:text-brand-accent transition-colors">
-                              {adventure.title}
-                            </h2>
-                            <p className="text-xs font-medium mt-0.5" style={{ color: adventure.color }}>
-                              {adventure.subtitle}
-                            </p>
-                            <p className="text-sm text-brand-muted leading-relaxed mt-2">
-                              {adventure.description}
-                            </p>
-                            <div className="flex items-center gap-4 mt-3 text-[11px] font-mono text-brand-muted-light">
-                              <span className="flex items-center gap-1">
-                                <Clock size={11} /> ~{adventure.estimatedMinutes} min
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <MapPin size={11} /> {adventure.nodeCount} scenes
-                              </span>
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white" style={{ backgroundColor: adventure.color }}>
-                                Play Now
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                    <div className="p-6" style={{ background: PARCHMENT_WARM }}>
+                      <h3 style={{ fontFamily: SERIF, color: INK, fontSize: '1.15rem' }}>{adventure.title}</h3>
+                      <p style={{ fontFamily: MONO, color: CLAY, fontSize: '0.7rem', marginTop: '0.25rem' }}>{adventure.subtitle}</p>
+                      <p style={{ fontFamily: SERIF, color: MUTED, fontSize: '0.85rem', lineHeight: 1.6, marginTop: '0.5rem' }}>{adventure.description}</p>
+                      <div className="flex items-center gap-4 mt-3" style={{ fontFamily: MONO, color: MUTED, fontSize: '0.65rem' }}>
+                        <span>~{adventure.estimatedMinutes} min</span>
+                        <span>{adventure.nodeCount} scenes</span>
                       </div>
                     </div>
                   </Link>
                 )
               })}
             </div>
+          </details>
+        )}
 
-            {/* How it works */}
-            <div className="mt-10 border-t-2 border-brand-border pt-8">
-              <h2 className="font-display text-xl font-bold text-brand-text mb-4">How Community Adventures Work</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  { step: '1', title: 'Read the Scene', desc: 'Each scene puts you in a real civic situation with illustrated context.' },
-                  { step: '2', title: 'Make a Choice', desc: 'Your decisions shape the story. There\'s no wrong answer — every path teaches something.' },
-                  { step: '3', title: 'Learn & Connect', desc: 'Scenes include real facts and links to explore topics further on The Change Engine.' },
-                ].map(function (item) {
-                  return (
-                    <div key={item.step} className="bg-white border border-brand-border p-5">
-                      <div className="w-8 h-8 rounded-full bg-brand-accent/10 flex items-center justify-center mb-3">
-                        <span className="text-sm font-bold text-brand-accent">{item.step}</span>
-                      </div>
-                      <h3 className="font-display font-bold text-brand-text text-sm mb-1">{item.title}</h3>
-                      <p className="text-xs text-brand-muted leading-relaxed">{item.desc}</p>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
 
-          {/* Sidebar */}
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="adventures"
-                color="#1a3460"
-                related={[
-                  { label: 'Pathways', href: '/pathways', color: '#1a3460' },
-                  { label: 'Knowledge Graph', href: '/knowledge-graph', color: '#4a2870' },
-                  { label: 'Library', href: '/library', color: '#6a4e10' },
-                  { label: 'Ask Chance', href: '/chat', color: '#7a2018' },
-                ]}
-              />
-            </div>
-          </div>
+        {/* How it works */}
+        <div className="flex items-baseline justify-between mb-1">
+          <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>How Community Adventures Work</h2>
+          <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>3 steps</span>
         </div>
+        <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1.5rem' }} />
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { step: '1', title: 'Read the Scene', desc: 'Each scene puts you in a real civic situation with illustrated context.' },
+            { step: '2', title: 'Make a Choice', desc: 'Your decisions shape the story. There is no wrong answer -- every path teaches something.' },
+            { step: '3', title: 'Learn & Connect', desc: 'Scenes include real facts and links to explore topics further on The Change Engine.' },
+          ].map(function (item) {
+            return (
+              <div key={item.step} className="p-5 border" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
+                <span style={{ fontFamily: MONO, color: CLAY, fontSize: '0.85rem', fontWeight: 700 }}>{item.step}.</span>
+                <h3 style={{ fontFamily: SERIF, color: INK, fontSize: '1rem', marginTop: '0.5rem' }}>{item.title}</h3>
+                <p style={{ fontFamily: SERIF, color: MUTED, fontSize: '0.8rem', lineHeight: 1.6, marginTop: '0.25rem' }}>{item.desc}</p>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Footer rule + link */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to the Guide
+        </Link>
       </div>
     </div>
   )

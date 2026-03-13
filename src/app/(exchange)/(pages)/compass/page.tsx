@@ -8,7 +8,7 @@ import { getNewsFeed } from '@/lib/data/exchange'
 export const revalidate = 600
 
 export const metadata: Metadata = {
-  title: 'Civic Compass — Change Engine',
+  title: 'Civic Compass -- Change Engine',
   description: 'Your personalized guide to Houston civic life.',
 }
 
@@ -76,14 +76,12 @@ export default async function CompassPage() {
 
     // Nearby services filtered by theme
     zip ? (async () => {
-      // Get focus areas for selected themes
       const { data: focusAreas } = await supabase
         .from('focus_areas')
         .select('focus_id')
         .in('theme_id', selectedThemes)
       const focusIds = (focusAreas || []).map(f => f.focus_id)
       if (focusIds.length === 0) {
-        // Fallback: just get services by ZIP
         const { data } = await supabase
           .from('services_211')
           .select('service_id, service_name, org_name, phone, address, city, description_5th_grade')

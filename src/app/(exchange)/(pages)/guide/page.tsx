@@ -5,7 +5,8 @@
  * data sources and passes them to the GuidePage client component.
  */
 import { Metadata } from 'next'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
+import Image from 'next/image'
+import Link from 'next/link'
 import {
   getExchangeStats,
   getLatestContent,
@@ -23,6 +24,14 @@ import { GuidePage } from '@/components/exchange/GuidePage'
 import { PersonaSelector } from '@/components/exchange/PersonaSelector'
 
 export const revalidate = 600
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Your Guide to What\'s Going On — Change Engine',
@@ -57,17 +66,41 @@ export default async function GuidePageServer() {
   ])
 
   return (
-    <>
-      <IndexPageHero
-        title="Your guide to what's going on."
-        subtitle="Curated. Local. Updated daily."
-        intro="News. Analysis. Community stories. Explainers about how Houston works. Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you. Pick your perspective below."
-        color="#C75B2A"
-        pattern="flower"
-      />
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <section className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 text-center">
+          <p style={{ fontFamily: MONO, color: MUTED }} className="text-xs uppercase tracking-widest mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-4xl sm:text-5xl mb-4">
+            Your guide to what's going on.
+          </h1>
+          <p style={{ fontFamily: SERIF, color: MUTED }} className="text-lg max-w-xl mx-auto leading-relaxed">
+            Curated. Local. Updated daily.
+          </p>
+          <p style={{ color: MUTED }} className="text-sm max-w-lg mx-auto mt-4 leading-relaxed">
+            News. Analysis. Community stories. Explainers about how Houston works. Every piece is reviewed by a human editor, rewritten at a sixth-grade reading level, and organized so you can find what matters to you. Pick your perspective below.
+          </p>
+        </div>
+      </section>
+
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, color: MUTED }} className="text-xs">
+          <Link href="/" className="hover:underline">Home</Link>
+          <span className="mx-2">/</span>
+          <span style={{ color: INK }}>Guide</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-8">
         <PersonaSelector />
       </div>
+
       <GuidePage
         stats={stats}
         latestContent={latestContent}
@@ -81,6 +114,6 @@ export default async function GuidePageServer() {
         sdohDomains={sdohDomains}
         pathwayCounts={pathwayCounts}
       />
-    </>
+    </div>
   )
 }

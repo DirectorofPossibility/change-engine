@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import Link from 'next/link'
+import Image from 'next/image'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { getFoundationsIndex, getFoundationPathways, getFoundationFocusAreas } from '@/lib/data/exchange'
 import FoundationsListClient from './FoundationsListClient'
@@ -14,6 +12,17 @@ export const metadata: Metadata = {
   description: 'Explore Houston-area foundations — discover funding, focus areas, and connections across seven community pathways.',
 }
 
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export default async function FoundationsPage() {
   const raw = await getFoundationsIndex()
   const ids = raw.map((f: any) => f.id)
@@ -23,7 +32,6 @@ export default async function FoundationsPage() {
     getFoundationFocusAreas(ids),
   ])
 
-  // Enrich foundations with pathway + focus area data
   const foundations = raw.map((f: any) => ({
     ...f,
     pathways: pwLinks.filter(p => p.foundation_id === f.id).map(p => p.pathway_id),
@@ -44,72 +52,114 @@ export default async function FoundationsPage() {
     ? '$' + (totalAssets / 1000).toFixed(0) + 'B+'
     : '$' + totalAssets.toFixed(0) + 'M+'
 
+  const uniqueFocusAreas = new Set(foundations.flatMap(f => f.focusAreas.map((fa: any) => fa.name))).size
+
   return (
-    <div className="min-h-screen bg-brand-bg">
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
       <SpiralTracker action="view_foundation" />
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <Breadcrumb items={[{ label: 'Foundations' }]} />
-      </div>
-
-      <IndexPageHero
-        title="The foundations funding Houston -- all in one place."
-        subtitle="They fund the work. We make it findable."
-        intro="Houston has one of the most generous philanthropic communities in the country. Health. Education. Housing. Arts. Civic life. There are hundreds of foundations working on all of it. Most people never know they exist. This page changes that."
-        color="#C75B2A"
-        pattern="metatron"
-        stats={[
-          { value: foundations.length, label: 'Foundations' },
-          { value: assetStr, label: 'Est. Assets' },
-          { value: new Set(foundations.flatMap(f => f.focusAreas.map((fa: any) => fa.name))).size, label: 'Focus Areas' },
-          ...(spotlightCount > 0 ? [{ value: spotlightCount, label: 'Spotlighted' }] : []),
-        ]}
-      />
-
-      {/* What You Can Do + IndexWayfinder */}
-      <div className="relative max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
-          <div>
-            <div className="max-w-2xl mb-6 mt-6">
-              <h2 className="text-lg font-display font-bold text-brand-text mb-3">What You Can Do</h2>
-              <ul className="space-y-2 text-brand-muted">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2 shrink-0" />
-                  <span><strong className="text-brand-text">Find foundations working on what you care about.</strong> Browse by issue area.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2 shrink-0" />
-                  <span><strong className="text-brand-text">See who they fund.</strong> Connect the dots between money and mission.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2 shrink-0" />
-                  <span><strong className="text-brand-text">Understand the landscape.</strong> Whether you're a nonprofit, a researcher, or just curious -- start here.</span>
-                </li>
-              </ul>
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+            Foundations
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+            The foundations funding Houston -- all in one place. They fund the work. We make it findable.
+          </p>
+          <div className="flex flex-wrap gap-6 mt-6">
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{foundations.length}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Foundations</span>
             </div>
-          </div>
-          <div className="hidden lg:block">
-            <div className="sticky top-24 space-y-4 mt-6">
-              <IndexWayfinder
-                currentPage="foundations"
-                color="#1a3460"
-                related={[
-                  { label: 'Organizations', href: '/organizations' },
-                  { label: 'Services', href: '/services' },
-                  { label: 'Officials', href: '/officials' },
-                ]}
-              />
-              <FeaturedPromo variant="card" />
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{assetStr}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Est. Assets</span>
             </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{uniqueFocusAreas}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Focus Areas</span>
+            </div>
+            {spotlightCount > 0 && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{spotlightCount}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Spotlighted</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* List view (default) with galaxy toggle */}
-      <FoundationsListClient
-        foundations={foundations}
-        totalCount={foundations.length}
-      />
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>Foundations</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        {/* What You Can Do */}
+        <section className="mb-10">
+          <div className="flex items-baseline gap-4 mb-6">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>What You Can Do</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+          </div>
+          <ul className="space-y-3">
+            <li className="flex items-start gap-3">
+              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: CLAY }} />
+              <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }}>
+                <strong style={{ color: INK }}>Find foundations working on what you care about.</strong> Browse by issue area.
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: CLAY }} />
+              <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }}>
+                <strong style={{ color: INK }}>See who they fund.</strong> Connect the dots between money and mission.
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="w-1.5 h-1.5 mt-2 flex-shrink-0" style={{ backgroundColor: CLAY }} />
+              <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, lineHeight: 1.6 }}>
+                <strong style={{ color: INK }}>Understand the landscape.</strong> Whether you are a nonprofit, a researcher, or just curious -- start here.
+              </span>
+            </li>
+          </ul>
+        </section>
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* List view */}
+        <FoundationsListClient
+          foundations={foundations}
+          totalCount={foundations.length}
+        />
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Footer links ── */}
+        <div className="flex flex-wrap gap-6 py-4">
+          <Link href="/organizations" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Organizations
+          </Link>
+          <Link href="/services" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Services
+          </Link>
+          <Link href="/officials" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Officials
+          </Link>
+          <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
+            Back to Home
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

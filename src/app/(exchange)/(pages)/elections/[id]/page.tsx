@@ -81,27 +81,29 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
   return (
     <div style={{ background: PARCHMENT }} className="min-h-screen">
       {/* Hero */}
-      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden border-b" >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
-        <div className="max-w-[900px] mx-auto px-6 py-12 relative">
-          <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11, letterSpacing: '0.12em' }} className="uppercase mb-3">
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <p style={{ fontFamily: MONO, fontSize: 12, color: CLAY, letterSpacing: '0.08em' }} className="uppercase mb-2">
-            {election.election_type || 'Election'}
-          </p>
-          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-3xl sm:text-4xl mb-3">
+          <div className="flex flex-wrap items-center gap-3 mt-3">
+            {election.election_type && (
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: CLAY }}>{election.election_type}</span>
+            )}
+          </div>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.5rem' }}>
             {election.election_name}
           </h1>
           {election.description && (
-            <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 17 }} className="max-w-[600px] leading-relaxed">
+            <p style={{ fontFamily: SERIF, fontSize: '1rem', color: MUTED, marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
               {election.description}
             </p>
           )}
           {election.election_date && (
-            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 12 }} className="mt-4">
+            <p style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED, marginTop: '1rem' }}>
               {new Date(election.election_date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           )}
@@ -109,8 +111,10 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
       </div>
 
       {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
-        <nav style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.06em' }} className="uppercase">
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
           <Link href="/elections" className="hover:underline" style={{ color: CLAY }}>Elections</Link>
           <span className="mx-2">/</span>
           <span>{election.election_name}</span>
@@ -155,17 +159,17 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
         {/* Register to vote CTA */}
         {canRegister && (
-          <div className="text-center p-6 mb-8 border" style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}>
-            <p style={{ fontFamily: SERIF, color: INK, fontSize: 18 }} className="mb-2">Make sure you&apos;re registered to vote</p>
-            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 12 }} className="mb-4">
+          <div className="p-6 mb-8" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
+            <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: INK, marginBottom: '0.5rem' }}>Make sure you&apos;re registered to vote</p>
+            <p style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED, marginBottom: '1rem' }}>
               Registration deadline: {new Date(election.registration_deadline! + 'T00:00:00').toLocaleDateString()}
             </p>
             <Link
               href="https://www.votetexas.gov/register-to-vote/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-5 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
-              style={{ background: CLAY, color: '#fff', fontFamily: MONO, fontSize: 12, letterSpacing: '0.06em' }}
+              className="inline-block px-5 py-2 text-white transition-opacity hover:opacity-90"
+              style={{ background: CLAY, fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}
             >
               Register to Vote
             </Link>
@@ -174,14 +178,12 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
         {/* Election Results */}
         {hasResults && (
-          <section className="mb-8">
+          <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>Election Results</h2>
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Election Results</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{Object.keys(candidateGroups).length} race{Object.keys(candidateGroups).length !== 1 ? 's' : ''}</span>
             </div>
-            <div style={{ height: 1, background: RULE_COLOR }} className="mb-1" />
-            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11 }} className="mb-4">
-              {Object.keys(candidateGroups).length} race{Object.keys(candidateGroups).length !== 1 ? 's' : ''}
-            </p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {Object.entries(candidateGroups).map(function ([office, cands]) {
                 return (
@@ -211,19 +213,17 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
         {/* Candidates */}
         {Object.keys(candidateGroups).length > 0 && (
-          <section className="mb-8">
+          <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>Who&apos;s Running</h2>
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Who&apos;s Running</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{candidates.length} candidate{candidates.length !== 1 ? 's' : ''}</span>
             </div>
-            <div style={{ height: 1, background: RULE_COLOR }} className="mb-1" />
-            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11 }} className="mb-4">
-              {candidates.length} candidate{candidates.length !== 1 ? 's' : ''}
-            </p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
             <div className="space-y-6">
               {Object.entries(candidateGroups).map(function ([office, cands]) {
                 return (
                   <div key={office}>
-                    <h3 style={{ fontFamily: SERIF, color: INK, fontSize: 18 }} className="mb-3">{office}</h3>
+                    <h3 style={{ fontFamily: SERIF, fontSize: '1.1rem', color: INK, marginBottom: '0.75rem' }}>{office}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       {cands.map(function (c) {
                         return (
@@ -254,14 +254,12 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
         {/* Ballot Items */}
         {ballotItems.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>What&apos;s on the Ballot</h2>
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>What&apos;s on the Ballot</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{ballotItems.length} item{ballotItems.length !== 1 ? 's' : ''}</span>
             </div>
-            <div style={{ height: 1, background: RULE_COLOR }} className="mb-1" />
-            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11 }} className="mb-4">
-              {ballotItems.length} item{ballotItems.length !== 1 ? 's' : ''}
-            </p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {ballotItems.map(function (item) {
                 return (
@@ -292,14 +290,12 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
         {/* Voting Locations */}
         {votingLocations.length > 0 && (
-          <section className="mb-8">
+          <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>Where to Vote</h2>
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Where to Vote</h2>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>{votingLocations.length} location{votingLocations.length !== 1 ? 's' : ''}</span>
             </div>
-            <div style={{ height: 1, background: RULE_COLOR }} className="mb-1" />
-            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11 }} className="mb-4">
-              {votingLocations.length} location{votingLocations.length !== 1 ? 's' : ''}
-            </p>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
             <VotingLocationsMap locations={votingLocations} />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
               {votingLocations.map(function (loc) {
@@ -322,14 +318,14 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
             </div>
           </section>
         )}
+      </div>
 
-        {/* Footer link */}
-        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
-        <div className="text-center pb-12">
-          <Link href="/elections" style={{ fontFamily: MONO, color: CLAY, fontSize: 12, letterSpacing: '0.06em' }} className="uppercase hover:underline">
-            Back to Elections
-          </Link>
-        </div>
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/elections" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to Elections
+        </Link>
       </div>
 
       {/* JSON-LD */}

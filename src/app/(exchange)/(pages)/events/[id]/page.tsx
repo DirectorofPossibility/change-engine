@@ -2,12 +2,20 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Calendar, Clock, MapPin, Globe, Video, ExternalLink, Users, Building2, Phone, Mail, Navigation, CalendarPlus, Repeat } from 'lucide-react'
+import { Calendar, Clock, MapPin, Globe, Video, ExternalLink, Building2, Phone, Navigation, CalendarPlus, Repeat } from 'lucide-react'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import Image from 'next/image'
 import { eventJsonLd } from '@/lib/jsonld'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const revalidate = 300
 
@@ -25,23 +33,16 @@ function buildMapUrl(address: string, city?: string, state?: string, zip?: strin
 }
 
 function buildAddToCalendarUrl(event: {
-  event_name: string
-  start_datetime?: string | null
-  end_datetime?: string | null
-  description_5th_grade?: string | null
-  address?: string | null
-  city?: string | null
-  state?: string | null
-  is_virtual?: string | null
+  event_name: string; start_datetime?: string | null; end_datetime?: string | null
+  description_5th_grade?: string | null; address?: string | null; city?: string | null
+  state?: string | null; is_virtual?: string | null
 }): string {
   const start = event.start_datetime ? new Date(event.start_datetime) : null
   const end = event.end_datetime ? new Date(event.end_datetime) : start
   if (!start) return ''
-
   const fmt = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
   const location = event.is_virtual === 'true' ? 'Virtual' : [event.address, event.city, event.state].filter(Boolean).join(', ')
   const desc = (event.description_5th_grade || '').substring(0, 500)
-
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.event_name)}&dates=${fmt(start)}/${end ? fmt(end) : fmt(start)}&details=${encodeURIComponent(desc)}&location=${encodeURIComponent(location)}`
 }
 
@@ -70,200 +71,201 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const orgName = orgResult?.data?.org_name || null
   const jsonLd = eventJsonLd(event as any, orgName)
 
-  const eyebrowMeta = (
-    <>
-      {event.event_type && <span className="text-xs font-medium text-brand-muted uppercase tracking-wide">{event.event_type}</span>}
-      {event.is_free === 'true' && <span className="text-xs font-medium text-theme-money bg-theme-money/10 px-2 py-0.5 rounded">Free</span>}
-      {event.is_virtual === 'true' && <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded flex items-center gap-1"><Video className="w-3 h-3" /> Virtual</span>}
-    </>
-  )
-
-  const metaRow = (
-    <>
-      {startDate && (
-        <span className="text-brand-muted flex items-center gap-2 text-sm">
-          <Clock className="w-4 h-4" />
-          {startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-          {' at '}
-          {startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-          {endDate ? ` - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}` : ''}
-        </span>
-      )}
-      {event.registration_url && (
-        <a href={event.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded text-sm font-medium text-white bg-brand-accent hover:bg-brand-accent-hover transition-colors">
-          Register <ExternalLink className="w-4 h-4" />
-        </a>
-      )}
-      {calendarUrl && (
-        <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline">
-          <CalendarPlus className="w-4 h-4" /> Add to Calendar
-        </a>
-      )}
-      {mapUrl && event.is_virtual !== 'true' && (
-        <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-accent hover:underline">
-          <Navigation className="w-4 h-4" /> Get Directions
-        </a>
-      )}
-    </>
-  )
-
-  const sidebarContent = (
-    <>
-      {/* iCal subscription */}
-      <div className="bg-brand-bg-alt p-4 text-sm text-brand-muted flex items-center gap-3">
-        <CalendarPlus className="w-5 h-5 flex-shrink-0" />
-        <div>
-          <span className="font-medium text-brand-text">Subscribe to our calendar</span>
-          {' — '}
-          <a href="/api/calendar.ics" className="text-brand-accent hover:underline">Download .ics file</a>
-          {' or add '}
-          <code className="text-[11px] bg-white px-1.5 py-0.5 rounded border border-brand-border">https://www.changeengine.us/api/calendar.ics</code>
-          {' to your calendar app.'}
-        </div>
-      </div>
-    </>
-  )
-
   return (
-    <DetailPageLayout
-      breadcrumbs={[{ label: 'Events', href: '/events' }, { label: event.event_name }]}
-      eyebrow={{ text: 'Event', bgColor: '#0d1117' }}
-      eyebrowMeta={eyebrowMeta}
-      title={event.event_name}
-      subtitle={null}
-      metaRow={metaRow}
-      themeColor="#7a2018"
-      wayfinderData={wayfinderData}
-      wayfinderType="event"
-      wayfinderEntityId={id}
-      userRole={userProfile?.role}
-      actions={{
-        translate: { isTranslated: false, contentType: 'event', contentId: id },
-        share: { title: event.event_name, url: `https://www.changeengine.us/events/${id}` },
-      }}
-      sidebar={sidebarContent}
-      feedbackType="event"
-      feedbackId={id}
-      feedbackName={event.event_name}
-      jsonLd={jsonLd}
-    >
-      {/* Description */}
-      {event.description_5th_grade && (
-        <div className="bg-white border border-brand-border p-6 mb-6">
-          <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">About This Event</h2>
-          <p className="text-brand-text leading-relaxed">{event.description_5th_grade}</p>
-        </div>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {jsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
-      {/* When & Where cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-white border border-brand-border p-5">
-          <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">When</h2>
-          <div className="space-y-2 text-sm">
-            {startDate && (
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-brand-muted" />
-                <span className="text-brand-text font-medium">{startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span>
-              </div>
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
+          <p style={{ fontFamily: MONO, fontSize: '0.7rem', letterSpacing: '0.15em', color: MUTED, textTransform: 'uppercase' }}>
+            The Change Engine
+          </p>
+          <div className="flex flex-wrap items-center gap-3 mt-3">
+            {event.event_type && (
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED }}>{event.event_type}</span>
             )}
-            {startDate && (
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-brand-muted" />
-                <span className="text-brand-text">
-                  {startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-                  {endDate ? ` - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}` : ''}
-                </span>
-              </div>
+            {event.is_free === 'true' && (
+              <span style={{ fontFamily: MONO, fontSize: '0.65rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
             )}
-            {event.is_recurring === 'true' && event.recurrence_pattern && (
-              <div className="flex items-center gap-2 text-brand-muted">
-                <Repeat className="w-4 h-4" />
-                <span>{event.recurrence_pattern}</span>
-              </div>
-            )}
-            {event.cost && event.is_free !== 'true' && (
-              <div className="text-brand-muted mt-1">Cost: {event.cost}</div>
+            {event.is_virtual === 'true' && (
+              <span className="flex items-center gap-1" style={{ fontFamily: MONO, fontSize: '0.65rem', color: MUTED }}>
+                <Video className="w-3 h-3" /> Virtual
+              </span>
             )}
           </div>
-        </div>
-
-        <div className="bg-white border border-brand-border p-5">
-          <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Where</h2>
-          <div className="space-y-2 text-sm">
-            {event.is_virtual === 'true' ? (
-              <div className="flex items-center gap-2">
-                <Video className="w-4 h-4 text-blue-500" />
-                <span className="text-brand-text">Virtual / Online</span>
-              </div>
-            ) : address ? (
-              <>
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-brand-muted mt-0.5" />
-                  <span className="text-brand-text">{address}</span>
-                </div>
-                {mapUrl && (
-                  <a
-                    href={mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-brand-accent hover:underline text-xs ml-6"
-                  >
-                    <Navigation className="w-3 h-3" /> Open in Google Maps
-                  </a>
-                )}
-              </>
-            ) : (
-              <span className="text-brand-muted">Location TBD</span>
+          <h1 style={{ fontFamily: SERIF, fontSize: '2.2rem', color: INK, lineHeight: 1.15, marginTop: '0.5rem' }}>
+            {event.event_name}
+          </h1>
+          <div className="flex flex-wrap items-center gap-4 mt-4">
+            {startDate && (
+              <span className="flex items-center gap-2" style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>
+                <Clock className="w-4 h-4" />
+                {startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                {' at '}
+                {startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                {endDate ? ' - ' + endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : ''}
+              </span>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-3 mt-4">
+            {event.registration_url && (
+              <a href={event.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 text-white transition-opacity hover:opacity-90" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', background: CLAY }}>
+                Register <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
+            {calendarUrl && (
+              <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', color: CLAY }}>
+                <CalendarPlus className="w-4 h-4" /> Add to Calendar
+              </a>
+            )}
+            {mapUrl && event.is_virtual !== 'true' && (
+              <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:underline" style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', color: CLAY }}>
+                <Navigation className="w-4 h-4" /> Get Directions
+              </a>
             )}
           </div>
         </div>
       </div>
 
-      {/* Host Organization */}
-      {org && (
-        <div className="bg-white border border-brand-border p-5 mb-6">
-          <h2 className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Hosted By</h2>
-          <div className="flex items-start gap-4">
-            {(org as any).logo_url ? (
-              <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 object-contain bg-brand-bg border border-brand-border"  width={48} height={48} />
-            ) : (
-              <div className="w-12 h-12 bg-brand-bg-alt border border-brand-border flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-brand-muted" />
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <Link href={`/organizations/${org.org_id}`} className="text-lg font-display font-bold text-brand-text hover:text-brand-accent transition-colors">
-                {org.org_name}
-              </Link>
-              {(org as any).description_5th_grade && (
-                <p className="text-sm text-brand-muted mt-1 line-clamp-2">{(org as any).description_5th_grade}</p>
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6">
+        <nav style={{ fontFamily: MONO, fontSize: '0.7rem', color: MUTED }}>
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/events" className="hover:underline" style={{ color: CLAY }}>Events</Link>
+          <span className="mx-2">/</span>
+          <span>{event.event_name}</span>
+        </nav>
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+
+        {/* Description */}
+        {event.description_5th_grade && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>About This Event</h2>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, lineHeight: 1.7 }}>{event.description_5th_grade}</p>
+          </section>
+        )}
+
+        {/* When & Where */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div className="p-5" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
+            <h2 style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginBottom: '0.75rem' }}>When</h2>
+            <div className="space-y-2">
+              {startDate && (
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" style={{ color: MUTED }} />
+                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', fontWeight: 500, color: INK }}>{startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                </div>
               )}
-              <div className="flex flex-wrap items-center gap-3 mt-2">
-                {org.website && (
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-accent hover:underline flex items-center gap-1">
-                    <Globe className="w-3 h-3" /> Website
-                  </a>
-                )}
-                {(org as any).phone && (
-                  <a href={`tel:${(org as any).phone}`} className="text-xs text-brand-accent hover:underline flex items-center gap-1">
-                    <Phone className="w-3 h-3" /> {(org as any).phone}
-                  </a>
-                )}
-                {(org as any).donate_url && (
-                  <a href={(org as any).donate_url} target="_blank" rel="noopener noreferrer" className="text-xs text-theme-money hover:underline">
-                    Donate
-                  </a>
-                )}
-                {(org as any).volunteer_url && (
-                  <a href={(org as any).volunteer_url} target="_blank" rel="noopener noreferrer" className="text-xs text-theme-health hover:underline">
-                    Volunteer
-                  </a>
-                )}
-              </div>
+              {startDate && (
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" style={{ color: MUTED }} />
+                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>
+                    {startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                    {endDate ? ' - ' + endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : ''}
+                  </span>
+                </div>
+              )}
+              {event.is_recurring === 'true' && event.recurrence_pattern && (
+                <div className="flex items-center gap-2" style={{ color: MUTED }}>
+                  <Repeat className="w-4 h-4" />
+                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem' }}>{event.recurrence_pattern}</span>
+                </div>
+              )}
+              {event.cost && event.is_free !== 'true' && (
+                <div style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED, marginTop: '0.25rem' }}>Cost: {event.cost}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="p-5" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
+            <h2 style={{ fontFamily: MONO, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: MUTED, marginBottom: '0.75rem' }}>Where</h2>
+            <div className="space-y-2">
+              {event.is_virtual === 'true' ? (
+                <div className="flex items-center gap-2">
+                  <Video className="w-4 h-4" style={{ color: MUTED }} />
+                  <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>Virtual / Online</span>
+                </div>
+              ) : address ? (
+                <>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="w-4 h-4 mt-0.5" style={{ color: MUTED }} />
+                    <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }}>{address}</span>
+                  </div>
+                  {mapUrl && (
+                    <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 ml-6 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                      <Navigation className="w-3 h-3" /> Open in Google Maps
+                    </a>
+                  )}
+                </>
+              ) : (
+                <span style={{ fontFamily: SERIF, fontSize: '0.9rem', color: MUTED }}>Location TBD</span>
+              )}
             </div>
           </div>
         </div>
-      )}
-    </DetailPageLayout>
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* Host Organization */}
+        {org && (
+          <section className="mb-10">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Hosted By</h2>
+            </div>
+            <div style={{ height: 1, borderBottom: '1px dotted ' + RULE_COLOR, marginBottom: '1rem' }} />
+            <div className="flex items-start gap-4">
+              {(org as any).logo_url ? (
+                <Image src={(org as any).logo_url} alt={org.org_name} className="w-12 h-12 object-contain flex-shrink-0" style={{ border: '1px solid ' + RULE_COLOR }} width={48} height={48} />
+              ) : (
+                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center" style={{ border: '1px solid ' + RULE_COLOR, background: PARCHMENT_WARM }}>
+                  <Building2 className="w-6 h-6" style={{ color: MUTED }} />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ fontFamily: SERIF, fontSize: '1.1rem', fontWeight: 700, color: INK }}>
+                  {org.org_name}
+                </Link>
+                {(org as any).description_5th_grade && (
+                  <p className="line-clamp-2 mt-1" style={{ fontFamily: SERIF, fontSize: '0.85rem', color: MUTED }}>{(org as any).description_5th_grade}</p>
+                )}
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  {org.website && (
+                    <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                      <Globe className="w-3 h-3" /> Website
+                    </a>
+                  )}
+                  {(org as any).phone && (
+                    <a href={'tel:' + (org as any).phone} className="flex items-center gap-1 hover:underline" style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY }}>
+                      <Phone className="w-3 h-3" /> {(org as any).phone}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: RULE_COLOR }} />
+      <div className="max-w-[900px] mx-auto px-6 pb-12">
+        <Link href="/events" style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, fontSize: '0.95rem' }} className="hover:underline">
+          Back to Events
+        </Link>
+      </div>
+    </div>
   )
 }

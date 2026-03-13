@@ -1,29 +1,13 @@
-/**
- * @fileoverview Super neighborhood detail page.
- *
- * Displays a single Houston super neighborhood with demographic stats
- * (population, median income), an interactive map showing services,
- * voting locations, and organizations as markers, a list of child
- * neighborhoods, and a grid of nearby services.
- *
- * @datasource Supabase tables: super_neighborhoods, neighborhoods,
- *   services_211, voting_locations, organizations
- * @caching ISR with `revalidate = 300` (5 minutes)
- * @route GET /super-neighborhoods/[id]
- */
-
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
-import { Users, DollarSign, MapPin, Scale } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { THEMES } from '@/lib/constants'
 import { getSuperNeighborhood, getNeighborhoodsBySuperNeighborhood, getMapMarkersForSuperNeighborhood, getLangId, fetchTranslationsForTable, getPoliciesForNeighborhood, getWayfinderContext } from '@/lib/data/exchange'
 import { SuperNeighborhoodDetailMap } from './SuperNeighborhoodDetailMap'
-import { ServiceCard } from '@/components/exchange/ServiceCard'
 import { getUIStrings } from '@/lib/i18n'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
 import { getUserProfile } from '@/lib/auth/roles'
 
 export const revalidate = 300
@@ -38,6 +22,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
 }
 
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export default async function SuperNeighborhoodDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const userProfile = await getUserProfile()
@@ -51,7 +46,6 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
 
   if (!sn) notFound()
 
-  // Translation support
   const langId = await getLangId()
   const snTranslations = langId
     ? await fetchTranslationsForTable('super_neighborhoods', [sn.sn_id], langId)
@@ -68,7 +62,6 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
   const snName = snTranslations[sn.sn_id]?.title || sn.sn_name
   const snDescription = snTranslations[sn.sn_id]?.summary || sn.description
 
-  // Build marker data for the map
   const markers = [
     ...mapData.services
       .filter(s => s.latitude != null && s.longitude != null)
@@ -116,7 +109,6 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
     })),
   ]
 
-  // Get ZIP codes via junction table for child neighborhoods
   const supabase = await createClient()
   const { data: childHoods } = await supabase
     .from('neighborhoods')
@@ -132,162 +124,236 @@ export default async function SuperNeighborhoodDetailPage({ params }: { params: 
     zips = Array.from(new Set((zipJunctions ?? []).map(j => j.zip_code)))
   }
 
-  const metaRow = (
-    <div className="flex flex-wrap gap-6">
-      {sn.population != null && (
-        <div className="flex items-center gap-2">
-          <Users size={16} style={{ color: '#1b5e8a' }} />
-          <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{sn.population.toLocaleString()}</span>
-          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.population')}</span>
-        </div>
-      )}
-      {sn.median_income != null && (
-        <div className="flex items-center gap-2">
-          <DollarSign size={16} style={{ color: '#1b5e8a' }} />
-          <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>${sn.median_income.toLocaleString()}</span>
-          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.median_income')}</span>
-        </div>
-      )}
-      {neighborhoods.length > 0 && (
-        <div className="flex items-center gap-2">
-          <MapPin size={16} style={{ color: '#1b5e8a' }} />
-          <span className="font-display text-lg font-bold" style={{ color: '#0d1117' }}>{neighborhoods.length}</span>
-          <span className="font-mono uppercase tracking-[0.1em]" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{t('superNeighborhoods.neighborhoods')}</span>
-        </div>
-      )}
-    </div>
-  )
-
-  const eyebrowMeta = (
-    <span
-      className="w-10 h-10 flex items-center justify-center text-white text-sm font-bold font-mono"
-      style={{ backgroundColor: '#0d1117' }}
-    >
-      {sn.sn_number}
-    </span>
-  )
-
   return (
-    <DetailPageLayout
-      breadcrumbs={[{ label: t('superNeighborhoods.breadcrumb'), href: '/super-neighborhoods' }, { label: snName }]}
-      eyebrow={{ text: 'Super Neighborhood' }}
-      eyebrowMeta={eyebrowMeta}
-      title={snName}
-      subtitle={snDescription || null}
-      metaRow={metaRow}
-      themeColor="#1b5e8a"
-      wayfinderData={wayfinderData}
-      wayfinderType={'super_neighborhood' as any}
-      wayfinderEntityId={sn.sn_id}
-      userRole={userProfile?.role}
-      feedbackType="super_neighborhood"
-      feedbackId={sn.sn_id}
-      feedbackName={snName}
-      actions={{
-        translate: { isTranslated: !!snTranslations[sn.sn_id], contentType: 'super_neighborhood', contentId: sn.sn_id },
-        share: { title: snName, url: `https://www.changeengine.us/super-neighborhoods/${id}` },
-      }}
-    >
-      {/* ── Map ── */}
-      <section className="mb-8">
-        <span className="font-mono uppercase tracking-[0.2em] block mb-3" style={{ fontSize: '0.58rem', color: '#5c6474' }}>{t('superNeighborhoods.map')}</span>
-        <div style={{ border: '1px solid #dde1e8' }}>
-          <SuperNeighborhoodDetailMap markers={markers} snId={sn.sn_id} />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
-      </section>
-
-      {/* ── ZIP Codes ── */}
-      {zips.length > 0 && (
-        <div className="p-4 mb-8" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
-          <p className="font-mono" style={{ fontSize: '0.75rem', color: '#0d1117' }}>
-            ZIP codes: {zips.join(', ')} &mdash;{' '}
-            <Link href="/officials/lookup" className="hover:underline font-medium" style={{ color: '#1b5e8a' }}>
-              {t('superNeighborhoods.find_reps')} &rarr;
-            </Link>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine -- Super Neighborhoods
           </p>
-        </div>
-      )}
+          <div className="flex items-center gap-3 mb-3">
+            <span
+              className="w-10 h-10 flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+              style={{ fontFamily: MONO, backgroundColor: INK }}
+            >
+              {sn.sn_number}
+            </span>
+            <p style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.15em', color: CLAY }} className="uppercase">Super Neighborhood</p>
+          </div>
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 2.8rem)', color: INK, lineHeight: 1.1 }}>
+            {snName}
+          </h1>
+          {snDescription && (
+            <p style={{ fontFamily: SERIF, fontSize: '1.05rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+              {snDescription}
+            </p>
+          )}
 
-      {/* ── Child Neighborhoods ── */}
-      {neighborhoods.length > 0 && (
-        <section className="mb-8">
-          <span className="font-mono uppercase tracking-[0.2em] block mb-3" style={{ fontSize: '0.58rem', color: '#5c6474' }}>{t('superNeighborhoods.neighborhoods')}</span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}>
-            {neighborhoods.map(hood => (
-              <Link
-                key={hood.neighborhood_id}
-                href={'/neighborhoods/' + hood.neighborhood_id}
-                className="block p-4 bg-white transition-colors hover:bg-[#f4f5f7]"
-                style={{ borderRight: '1.5px solid #dde1e8', borderBottom: '1.5px solid #dde1e8' }}
-              >
-                <h3 className="font-display text-sm font-bold" style={{ color: '#0d1117' }}>{hood.neighborhood_name}</h3>
-                <div className="flex items-center gap-3 mt-1">
-                  {hood.neighborhood_type && <span className="font-mono" style={{ fontSize: '0.58rem', color: '#5c6474' }}>{hood.neighborhood_type}</span>}
-                  {hood.population != null && (
-                    <span className="flex items-center gap-1 font-mono" style={{ fontSize: '0.58rem', color: '#5c6474' }}>
-                      <Users size={10} />
-                      {hood.population.toLocaleString()}
-                    </span>
-                  )}
-                </div>
-              </Link>
-            ))}
+          {/* Stats */}
+          <div className="flex flex-wrap gap-6 mt-6">
+            {sn.population != null && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{sn.population.toLocaleString()}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('superNeighborhoods.population')}</span>
+              </div>
+            )}
+            {sn.median_income != null && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>${sn.median_income.toLocaleString()}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('superNeighborhoods.median_income')}</span>
+              </div>
+            )}
+            {neighborhoods.length > 0 && (
+              <div>
+                <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{neighborhoods.length}</span>
+                <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{t('superNeighborhoods.neighborhoods')}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <Link href="/super-neighborhoods" className="hover:underline" style={{ color: CLAY }}>{t('superNeighborhoods.breadcrumb')}</Link>
+          <span className="mx-2">/</span>
+          <span>{snName}</span>
+        </nav>
+      </div>
+
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        {/* ── Map ── */}
+        <section className="mb-10">
+          <div className="flex items-baseline gap-4 mb-4">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('superNeighborhoods.map')}</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+          </div>
+          <div style={{ border: '1px solid ' + RULE_COLOR }}>
+            <SuperNeighborhoodDetailMap markers={markers} snId={sn.sn_id} />
           </div>
         </section>
-      )}
 
-      {/* ── Policies Affecting This Neighborhood ── */}
-      {snPolicies.length > 0 && (
-        <section className="mb-8">
-          <span className="font-mono uppercase tracking-[0.2em] block mb-3" style={{ fontSize: '0.58rem', color: '#5c6474' }}>
-            Policy Watch — This Neighborhood
-          </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}>
-            {snPolicies.slice(0, 6).map(function (p: any) {
-              const isActive = ['pending', 'introduced', 'in committee', 'active'].includes((p.status || '').toLowerCase())
-              return (
+        {/* ── ZIP Codes ── */}
+        {zips.length > 0 && (
+          <div className="p-4 mb-8" style={{ background: PARCHMENT_WARM, border: '1px solid ' + RULE_COLOR }}>
+            <p style={{ fontFamily: MONO, fontSize: '0.75rem', color: INK }}>
+              ZIP codes: {zips.join(', ')} --{' '}
+              <Link href="/officials/lookup" className="hover:underline" style={{ color: CLAY, fontWeight: 600 }}>
+                {t('superNeighborhoods.find_reps')}
+              </Link>
+            </p>
+          </div>
+        )}
+
+        {/* ── Child Neighborhoods ── */}
+        {neighborhoods.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('superNeighborhoods.neighborhoods')}</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{neighborhoods.length} areas</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+              {neighborhoods.map(hood => (
                 <Link
-                  key={p.policy_id}
-                  href={'/policies/' + p.policy_id}
-                  className="block p-4 bg-white transition-colors hover:bg-[#f4f5f7]"
-                  style={{ borderRight: '1.5px solid #dde1e8', borderBottom: '1.5px solid #dde1e8', borderLeft: isActive ? '3px solid #b03a2a' : 'none' }}
+                  key={hood.neighborhood_id}
+                  href={'/neighborhoods/' + hood.neighborhood_id}
+                  className="group block p-4 transition-colors hover:bg-white/50"
+                  style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    {p.level && <span className="font-mono uppercase tracking-[0.12em] px-2 py-0.5" style={{ fontSize: '0.52rem', background: '#0d1117', color: '#ffffff' }}>{p.level}</span>}
-                    {p.status && <span className="font-mono uppercase" style={{ fontSize: '0.52rem', color: '#5c6474' }}>{p.status}</span>}
+                  <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK, fontWeight: 700 }} className="group-hover:underline">{hood.neighborhood_name}</h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    {hood.neighborhood_type && <span style={{ fontFamily: MONO, fontSize: '0.58rem', color: MUTED }}>{hood.neighborhood_type}</span>}
+                    {hood.population != null && (
+                      <span style={{ fontFamily: MONO, fontSize: '0.58rem', color: MUTED }}>
+                        Pop. {hood.population.toLocaleString()}
+                      </span>
+                    )}
                   </div>
-                  <h3 className="font-display text-sm font-bold line-clamp-2" style={{ color: '#0d1117' }}>{p.title_6th_grade || p.policy_name}</h3>
-                  {p.bill_number && <p className="font-mono mt-1" style={{ fontSize: '0.62rem', color: '#5c6474' }}>{p.bill_number}</p>}
-                  {p.impact_statement && (
-                    <p className="font-body italic mt-2 line-clamp-2" style={{ fontSize: '0.75rem', color: '#b03a2a' }}>{p.impact_statement}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── Policies ── */}
+        {snPolicies.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Policy Watch</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{snPolicies.length} policies</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+              {snPolicies.slice(0, 6).map(function (p: any) {
+                const isActive = ['pending', 'introduced', 'in committee', 'active'].includes((p.status || '').toLowerCase())
+                return (
+                  <Link
+                    key={p.policy_id}
+                    href={'/policies/' + p.policy_id}
+                    className="group block p-4 transition-colors hover:bg-white/50"
+                    style={{
+                      borderRight: '1px solid ' + RULE_COLOR,
+                      borderBottom: '1px solid ' + RULE_COLOR,
+                      borderLeft: isActive ? '3px solid ' + CLAY : undefined,
+                    }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      {p.level && (
+                        <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.12em', color: '#fff', background: INK, padding: '2px 6px' }} className="uppercase">
+                          {p.level}
+                        </span>
+                      )}
+                      {p.status && <span style={{ fontFamily: MONO, fontSize: '0.55rem', color: MUTED }} className="uppercase">{p.status}</span>}
+                    </div>
+                    <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
+                      {p.title_6th_grade || p.policy_name}
+                    </h3>
+                    {p.bill_number && <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, marginTop: '0.25rem' }}>{p.bill_number}</p>}
+                    {p.impact_statement && (
+                      <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: CLAY, marginTop: '0.5rem', lineHeight: 1.5 }} className="line-clamp-2">
+                        {p.impact_statement}
+                      </p>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── Services ── */}
+        {mapData.services.length > 0 && (
+          <section>
+            <div className="flex items-baseline gap-4 mb-6">
+              <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>{t('superNeighborhoods.services_area')}</h2>
+              <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{mapData.services.length} services</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+              {mapData.services.slice(0, 4).map(svc => (
+                <Link
+                  key={svc.service_id}
+                  href={'/services/' + svc.service_id}
+                  className="block p-4 transition-colors hover:bg-white/50"
+                  style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                >
+                  <h4 style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 mb-1">
+                    {serviceTranslations[svc.service_id]?.title || svc.service_name}
+                  </h4>
+                  {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
+                    <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                      {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
+                    </p>
                   )}
                 </Link>
-              )
-            })}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+            {mapData.services.length > 4 && (
+              <details className="mt-2">
+                <summary style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+                  Show all {mapData.services.length} services
+                </summary>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 mt-2" style={{ border: '1px solid ' + RULE_COLOR }}>
+                  {mapData.services.slice(4, 12).map(svc => (
+                    <Link
+                      key={svc.service_id}
+                      href={'/services/' + svc.service_id}
+                      className="block p-4 transition-colors hover:bg-white/50"
+                      style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                    >
+                      <h4 style={{ fontFamily: SERIF, fontSize: '0.88rem', color: INK, fontWeight: 700, lineHeight: 1.3 }} className="line-clamp-2 mb-1">
+                        {serviceTranslations[svc.service_id]?.title || svc.service_name}
+                      </h4>
+                      {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
+                        <p style={{ fontFamily: SERIF, fontSize: '0.78rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                          {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
+                        </p>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </details>
+            )}
+          </section>
+        )}
 
-      {/* ── Services ── */}
-      {mapData.services.length > 0 && (
-        <section>
-          <span className="font-mono uppercase tracking-[0.2em] block mb-3" style={{ fontSize: '0.58rem', color: '#5c6474' }}>{t('superNeighborhoods.services_area')}</span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: '1.5px solid #dde1e8', borderTop: '1.5px solid #dde1e8' }}>
-            {mapData.services.slice(0, 12).map(svc => (
-              <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block p-4 bg-white transition-colors hover:bg-[#f4f5f7]" style={{ borderRight: '1.5px solid #dde1e8', borderBottom: '1.5px solid #dde1e8' }}>
-                <h4 className="font-display line-clamp-2 mb-1" style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0d1117' }}>
-                  {serviceTranslations[svc.service_id]?.title || svc.service_name}
-                </h4>
-                {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
-                  <p className="font-body italic line-clamp-2" style={{ fontSize: '0.75rem', color: '#5c6474' }}>
-                    {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
-                  </p>
-                )}
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-    </DetailPageLayout>
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Footer link ── */}
+        <div className="text-center py-4">
+          <Link href="/super-neighborhoods" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Back to Super Neighborhoods
+          </Link>
+        </div>
+      </div>
+    </div>
   )
 }

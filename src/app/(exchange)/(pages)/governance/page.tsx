@@ -9,14 +9,19 @@
  */
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase/server'
 
 export const revalidate = 86400
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Governance — Change Engine',
@@ -24,10 +29,10 @@ export const metadata: Metadata = {
 }
 
 const LEVELS = [
-  { key: 'City', label: 'City of Houston', color: '#0d9488', icon: 'M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6' },
-  { key: 'County', label: 'Harris County', color: '#d97706', icon: 'M3 21h18M4 21V10l8-7 8 7v11M9 21v-4h6v4' },
-  { key: 'State', label: 'State of Texas', color: '#2563eb', icon: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' },
-  { key: 'Federal', label: 'United States', color: '#7c3aed', icon: 'M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M12 3v4' },
+  { key: 'City', label: 'City of Houston' },
+  { key: 'County', label: 'Harris County' },
+  { key: 'State', label: 'State of Texas' },
+  { key: 'Federal', label: 'United States' },
 ] as const
 
 interface Official {
@@ -54,12 +59,12 @@ interface Policy {
 }
 
 function statusDotColor(status: string | null): string {
-  if (!status) return '#9B9590'
+  if (!status) return MUTED
   const s = status.toLowerCase()
   if (s === 'passed' || s === 'enacted' || s === 'signed') return '#2D8659'
   if (s === 'pending' || s === 'introduced' || s === 'in committee') return '#C47D1A'
   if (s === 'failed' || s === 'vetoed' || s === 'dead') return '#C53030'
-  return '#9B9590'
+  return MUTED
 }
 
 export default async function GovernancePage() {
@@ -95,175 +100,207 @@ export default async function GovernancePage() {
   }
 
   return (
-    <div>
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-        <Link href="/centers/accountability" className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider mb-2 hover:underline" style={{ color: '#1a3460' }}>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#1a3460' }} />
-          Accountability Center
-        </Link>
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden border-b">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-12 relative">
+          <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11, letterSpacing: '0.12em' }} className="uppercase mb-3">
+            The Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-3xl sm:text-4xl mb-3">
+            Governance
+          </h1>
+          <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 17 }} className="max-w-[600px] leading-relaxed mb-4">
+            From City Hall to the Capitol -- the officials who represent Houston and the policies they are working on.
+          </p>
+          <div className="flex gap-6" style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+            <span><strong style={{ color: INK }}>{allOfficials.length}</strong> Officials</span>
+            <span><strong style={{ color: INK }}>{allPolicies.length}</strong> Policies Tracked</span>
+            <span><strong style={{ color: INK }}>{LEVELS.length}</strong> Levels</span>
+          </div>
+        </div>
       </div>
 
-      <IndexPageHero
-        color="#1a3460"
-        pattern="metatron"
-        title="Governance"
-        subtitle="Who\u2019s in charge and what they\u2019re doing"
-        intro="From City Hall to the Capitol — the officials who represent Houston and the policies they\u2019re working on."
-        stats={[
-          { value: allOfficials.length, label: 'Officials' },
-          { value: allPolicies.length, label: 'Policies Tracked' },
-          { value: LEVELS.length, label: 'Levels of Government' },
-        ]}
-      />
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.06em' }} className="uppercase">
+          <span>Governance</span>
+        </nav>
+      </div>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'Governance' }]} />
+      {/* Main Content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
+        {LEVELS.map(function (level, idx) {
+          const lvlOfficials = officialsByLevel[level.key] || []
+          const lvlPolicies = (policiesByLevel[level.key] || []).slice(0, 12)
+          if (lvlOfficials.length === 0 && lvlPolicies.length === 0) return null
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          {/* Main content */}
-          <div className="flex-1 min-w-0 space-y-10">
-            {LEVELS.map(function (level) {
-              const lvlOfficials = officialsByLevel[level.key] || []
-              const lvlPolicies = (policiesByLevel[level.key] || []).slice(0, 12)
-              if (lvlOfficials.length === 0 && lvlPolicies.length === 0) return null
+          return (
+            <section key={level.key}>
+              {/* Level header */}
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 style={{ fontFamily: SERIF, color: INK, fontSize: 24 }}>{level.label}</h2>
+              </div>
+              <div style={{ height: 1, background: RULE_COLOR }} className="mb-1" />
+              <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11 }} className="mb-5">
+                {lvlOfficials.length} official{lvlOfficials.length !== 1 ? 's' : ''}
+                {lvlPolicies.length > 0 ? ` / ${lvlPolicies.length} recent polic${lvlPolicies.length !== 1 ? 'ies' : 'y'}` : ''}
+              </p>
 
-              return (
-                <section key={level.key}>
-                  {/* Level header */}
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-10 h-10 flex items-center justify-center" style={{ backgroundColor: level.color + '14' }}>
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke={level.color}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d={level.icon} />
-                      </svg>
-                    </div>
-                    <div>
-                      <h2 className="text-xl font-display font-bold text-brand-text">{level.label}</h2>
-                      <p className="text-xs text-brand-muted">
-                        {lvlOfficials.length} official{lvlOfficials.length !== 1 ? 's' : ''}
-                        {lvlPolicies.length > 0 ? ` · ${lvlPolicies.length} recent polic${lvlPolicies.length !== 1 ? 'ies' : 'y'}` : ''}
-                      </p>
-                    </div>
+              {/* Officials row */}
+              {lvlOfficials.length > 0 && (
+                <div className="mb-6">
+                  <p style={{ fontFamily: MONO, fontSize: 10, color: MUTED, letterSpacing: '0.1em' }} className="uppercase mb-3">
+                    Who represents you
+                  </p>
+                  <div className="flex gap-3 overflow-x-auto pb-2">
+                    {lvlOfficials.slice(0, 8).map(function (o) {
+                      return (
+                        <Link
+                          key={o.official_id}
+                          href={'/officials/' + o.official_id}
+                          className="flex-shrink-0 w-[150px] border overflow-hidden transition-colors hover:border-current"
+                          style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}
+                        >
+                          {o.photo_url ? (
+                            <div className="h-[90px] overflow-hidden">
+                              <Image
+                                src={o.photo_url.replace(/^http:\/\//, 'https://')}
+                                alt={o.official_name}
+                                className="w-full h-full object-cover object-top"
+                                width={150} height={90}
+                              />
+                            </div>
+                          ) : (
+                            <div className="h-[50px] flex items-center justify-center" style={{ background: PARCHMENT }}>
+                              <span style={{ fontFamily: SERIF, color: MUTED, fontSize: 20 }}>{o.official_name.charAt(0)}</span>
+                            </div>
+                          )}
+                          <div className="p-3">
+                            <p style={{ fontFamily: SERIF, color: INK, fontSize: 13 }} className="leading-tight line-clamp-1">{o.official_name}</p>
+                            <p style={{ fontFamily: MONO, color: MUTED, fontSize: 10 }} className="mt-0.5 leading-snug line-clamp-2">{o.title}</p>
+                            {o.party && (
+                              <p style={{ fontFamily: MONO, color: CLAY, fontSize: 10 }} className="mt-1">{o.party}</p>
+                            )}
+                          </div>
+                        </Link>
+                      )
+                    })}
                   </div>
-
-                  {/* Officials row */}
-                  {lvlOfficials.length > 0 && (
-                    <div className="mb-5">
-                      <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-3">Who represents you</p>
-                      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                        {lvlOfficials.map(function (o) {
+                  {lvlOfficials.length > 8 && (
+                    <details className="mt-2">
+                      <summary style={{ fontFamily: SERIF, fontStyle: 'italic', color: CLAY, cursor: 'pointer', fontSize: 14 }}>
+                        Show all {lvlOfficials.length} officials...
+                      </summary>
+                      <div className="flex gap-3 overflow-x-auto pb-2 mt-2">
+                        {lvlOfficials.slice(8).map(function (o) {
                           return (
                             <Link
                               key={o.official_id}
                               href={'/officials/' + o.official_id}
-                              className="group flex-shrink-0 w-[160px] bg-white border border-brand-border hover:-translate-y-1 transition-all duration-200 overflow-hidden"
-                              style={{}}
+                              className="flex-shrink-0 w-[150px] border overflow-hidden transition-colors hover:border-current"
+                              style={{ borderColor: RULE_COLOR, background: PARCHMENT_WARM }}
                             >
-                              {/* Photo or color header */}
                               {o.photo_url ? (
-                                <div className="h-[100px] overflow-hidden">
+                                <div className="h-[90px] overflow-hidden">
                                   <Image
                                     src={o.photo_url.replace(/^http:\/\//, 'https://')}
                                     alt={o.official_name}
-                                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                                   width={800} height={400} />
+                                    className="w-full h-full object-cover object-top"
+                                    width={150} height={90}
+                                  />
                                 </div>
                               ) : (
-                                <div className="h-[60px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, ' + level.color + ' 0%, ' + level.color + 'cc 100%)' }}>
-                                  <span className="text-white/50 text-2xl font-display font-bold">{o.official_name.charAt(0)}</span>
+                                <div className="h-[50px] flex items-center justify-center" style={{ background: PARCHMENT }}>
+                                  <span style={{ fontFamily: SERIF, color: MUTED, fontSize: 20 }}>{o.official_name.charAt(0)}</span>
                                 </div>
                               )}
                               <div className="p-3">
-                                <p className="text-sm font-bold text-brand-text leading-tight line-clamp-1">{o.official_name}</p>
-                                <p className="text-[11px] text-brand-muted mt-0.5 leading-snug line-clamp-2">{o.title}</p>
+                                <p style={{ fontFamily: SERIF, color: INK, fontSize: 13 }} className="leading-tight line-clamp-1">{o.official_name}</p>
+                                <p style={{ fontFamily: MONO, color: MUTED, fontSize: 10 }} className="mt-0.5 line-clamp-2">{o.title}</p>
                                 {o.party && (
-                                  <p className="text-[10px] mt-1.5 font-medium" style={{ color: level.color }}>{o.party}</p>
+                                  <p style={{ fontFamily: MONO, color: CLAY, fontSize: 10 }} className="mt-1">{o.party}</p>
                                 )}
                               </div>
                             </Link>
                           )
                         })}
                       </div>
+                    </details>
+                  )}
+                </div>
+              )}
+
+              {/* Policies list */}
+              {lvlPolicies.length > 0 && (
+                <div className="mb-4">
+                  <p style={{ fontFamily: MONO, fontSize: 10, color: MUTED, letterSpacing: '0.1em' }} className="uppercase mb-3">
+                    What they are working on
+                  </p>
+                  <div className="border overflow-hidden" style={{ borderColor: RULE_COLOR }}>
+                    {lvlPolicies.map(function (p, pIdx) {
+                      const displayTitle = p.title_6th_grade || p.policy_name
+                      return (
+                        <Link
+                          key={p.policy_id}
+                          href={'/policies/' + p.policy_id}
+                          className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-opacity-50"
+                          style={{ borderBottom: pIdx < lvlPolicies.length - 1 ? `1px solid ${RULE_COLOR}` : 'none', background: PARCHMENT_WARM }}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              {p.bill_number && (
+                                <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED }}>{p.bill_number}</span>
+                              )}
+                              {p.status && (
+                                <span className="inline-flex items-center gap-1" style={{ fontSize: 11, fontWeight: 500, color: statusDotColor(p.status) }}>
+                                  <span className="w-1.5 h-1.5" style={{ backgroundColor: statusDotColor(p.status), display: 'inline-block' }} />
+                                  {p.status}
+                                </span>
+                              )}
+                            </div>
+                            <p style={{ fontFamily: SERIF, color: INK, fontSize: 14 }} className="leading-snug line-clamp-2">
+                              {displayTitle}
+                            </p>
+                            {(p.summary_6th_grade || p.summary_5th_grade) && (
+                              <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 12 }} className="mt-1 line-clamp-1">
+                                {p.summary_6th_grade || p.summary_5th_grade}
+                              </p>
+                            )}
+                          </div>
+                          {p.last_action_date && (
+                            <span style={{ fontFamily: MONO, fontSize: 10, color: MUTED }} className="flex-shrink-0 mt-1 tabular-nums">
+                              {new Date(p.last_action_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            </span>
+                          )}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                  {(policiesByLevel[level.key] || []).length > 12 && (
+                    <div className="mt-2 text-right">
+                      <Link href={'/policies?level=' + level.key} style={{ fontFamily: MONO, color: CLAY, fontSize: 12 }} className="hover:underline">
+                        See all {(policiesByLevel[level.key] || []).length} policies &rarr;
+                      </Link>
                     </div>
                   )}
+                </div>
+              )}
 
-                  {/* Policies list */}
-                  {lvlPolicies.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-3">What they're working on</p>
-                      <div className="bg-white border border-brand-border overflow-hidden">
-                        <div className="divide-y divide-brand-border">
-                          {lvlPolicies.map(function (p) {
-                            const displayTitle = p.title_6th_grade || p.policy_name
-                            return (
-                              <Link
-                                key={p.policy_id}
-                                href={'/policies/' + p.policy_id}
-                                className="flex items-start gap-3 px-4 py-3 hover:bg-brand-bg transition-colors group"
-                              >
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center gap-2 mb-0.5">
-                                    {p.bill_number && (
-                                      <span className="text-[11px] font-mono text-brand-muted flex-shrink-0">{p.bill_number}</span>
-                                    )}
-                                    {p.status && (
-                                      <span className="inline-flex items-center gap-1 text-[11px] font-medium flex-shrink-0" style={{ color: statusDotColor(p.status) }}>
-                                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: statusDotColor(p.status) }} />
-                                        {p.status}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <p className="text-sm font-medium text-brand-text leading-snug line-clamp-2 group-hover:text-brand-accent transition-colors">
-                                    {displayTitle}
-                                  </p>
-                                  {(p.summary_6th_grade || p.summary_5th_grade) && (
-                                    <p className="text-xs text-brand-muted mt-1 line-clamp-1">
-                                      {p.summary_6th_grade || p.summary_5th_grade}
-                                    </p>
-                                  )}
-                                </div>
-                                {p.last_action_date && (
-                                  <span className="text-[10px] text-brand-muted flex-shrink-0 mt-1 tabular-nums">
-                                    {new Date(p.last_action_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                                  </span>
-                                )}
-                              </Link>
-                            )
-                          })}
-                        </div>
-                      </div>
-                      {(policiesByLevel[level.key] || []).length > 12 && (
-                        <div className="mt-2 text-right">
-                          <Link href={'/policies?level=' + level.key} className="text-xs font-semibold hover:underline" style={{ color: level.color }}>
-                            See all {(policiesByLevel[level.key] || []).length} policies &rarr;
-                          </Link>
-                        </div>
-                      )}
-                    </div>
-                  )}
+              {/* Divider between levels */}
+              <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+            </section>
+          )
+        })}
 
-                  {/* Divider between levels */}
-                  <div className="mt-8 h-px bg-gradient-to-r from-transparent via-brand-border to-transparent" />
-                </section>
-              )
-            })}
-          </div>
-
-          {/* Wayfinder sidebar */}
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="governance"
-                color="#1a3460"
-                related={[
-                  { label: 'Officials', href: '/officials', color: '#1a3460' },
-                  { label: 'Policies', href: '/policies', color: '#6a4e10' },
-                  { label: 'Elections', href: '/elections', color: '#7a2018' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
-                ]}
-              />
-              <div className="mt-4"><FeaturedPromo variant="card" /></div>
-            </div>
-          </div>
+        {/* Footer link */}
+        <div className="text-center pb-12">
+          <Link href="/" style={{ fontFamily: MONO, color: CLAY, fontSize: 12, letterSpacing: '0.06em' }} className="uppercase hover:underline">
+            Back to Home
+          </Link>
         </div>
       </div>
     </div>

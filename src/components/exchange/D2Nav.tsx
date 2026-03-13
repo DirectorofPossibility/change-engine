@@ -77,6 +77,7 @@ function useDiscoverLinks(t: (key: string) => string) {
     { href: '/teens', label: t('d2nav.teen_hub') },
     { href: '/call-your-senators', label: t('d2nav.call_senators') },
     { href: '/polling-places', label: t('d2nav.polling_places') },
+    { href: '/geography', label: t('discover.geography') },
   ]
 }
 

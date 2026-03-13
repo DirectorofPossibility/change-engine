@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Breadcrumb } from '@/components/exchange/Breadcrumb'
-import { IndexPageHero } from '@/components/exchange/IndexPageHero'
-import { IndexWayfinder } from '@/components/exchange/IndexWayfinder'
+import Image from 'next/image'
 import { getTirzZones } from '@/lib/data/exchange'
 import { TirzMap } from './TirzMap'
 
@@ -13,135 +11,222 @@ export const metadata: Metadata = {
   description: 'Explore Houston\'s 27 Tax Increment Reinvestment Zones (TIRZ). See how reinvestment dollars are shaping neighborhoods across the city.',
 }
 
+// ── Design tokens ─────────────────────────────────────────────────────
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
+
 export default async function TirzPage() {
   const zones = await getTirzZones()
 
+  const VISIBLE_COUNT = 9
+
   return (
-    <div>
-      <IndexPageHero
-        color="#C75B2A"
-        pattern="vesica"
-        title="Tax Increment Reinvestment Zones"
-        subtitle="Where reinvestment meets neighborhoods."
-        intro="TIRZ zones capture the growth in property tax revenue within a designated area and reinvest it locally — funding infrastructure, affordable housing, parks, and economic development. Houston has 27 active zones shaping communities across the city."
-        stats={[
-          { value: String(zones.length), label: 'Active Zones' },
-          { value: '27', label: 'Neighborhoods' },
-          { value: 'City', label: 'Created by Council' },
-        ]}
-      />
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* ── Hero ── */}
+      <div className="relative overflow-hidden" style={{ background: PARCHMENT_WARM }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="relative max-w-[900px] mx-auto px-6 py-16">
+          <p style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.2em', color: MUTED }} className="uppercase mb-4">
+            Change Engine
+          </p>
+          <h1 style={{ fontFamily: SERIF, fontSize: 'clamp(2rem, 4vw, 3rem)', color: INK, lineHeight: 1.1 }}>
+            Tax Increment Reinvestment Zones
+          </h1>
+          <p style={{ fontFamily: SERIF, fontSize: '1.1rem', color: MUTED, lineHeight: 1.7 }} className="mt-4 max-w-xl">
+            Where reinvestment meets neighborhoods. TIRZ zones capture the growth in property tax revenue within a designated area and reinvest it locally -- funding infrastructure, affordable housing, parks, and economic development.
+          </p>
+          <div className="flex flex-wrap gap-6 mt-6">
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>{zones.length}</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Active Zones</span>
+            </div>
+            <div>
+              <span style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK, fontWeight: 700 }}>City</span>
+              <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Created by Council</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={[{ label: 'TIRZ Zones' }]} />
+      {/* ── Breadcrumb ── */}
+      <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: '0.65rem', letterSpacing: '0.12em', color: MUTED }} className="uppercase">
+          <Link href="/" className="hover:underline" style={{ color: CLAY }}>Home</Link>
+          <span className="mx-2">/</span>
+          <span>TIRZ Zones</span>
+        </nav>
+      </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          {/* Main content */}
-          <div className="flex-1 min-w-0">
-            {/* Interactive map */}
+      <div className="max-w-[900px] mx-auto px-6 py-10">
+        {/* ── Interactive map ── */}
+        <section className="mb-10">
+          <div className="flex items-baseline gap-4 mb-4">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>Zone Map</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+          </div>
+          <div style={{ border: '1px solid ' + RULE_COLOR }}>
             <TirzMap />
+          </div>
+        </section>
 
-            {/* Zone grid */}
-            <div className="mb-6">
-              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mb-4">
-                All TIRZ Zones ({zones.length})
-              </p>
-            </div>
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {zones.map(function (zone: any) {
-                return (
-                  <Link
-                    key={zone.tirz_id}
-                    href={'/tirz/' + zone.tirz_id}
-                    className="group border border-brand-border rounded-[0.75rem] overflow-hidden bg-white hover:translate-y-[-2px] transition-all duration-200"
-                   
-                  >
-                    <div className="flex">
-                      <div className="w-1.5 flex-shrink-0" style={{ backgroundColor: '#C75B2A' }} />
-                      <div className="p-4 flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <span
-                            className="w-9 h-9 flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                            style={{ backgroundColor: '#C75B2A' }}
-                          >
-                            {zone.site_number}
-                          </span>
-                          <div className="min-w-0">
-                            <h3 className="font-display text-sm font-bold text-brand-text group-hover:text-brand-accent transition-colors truncate">
-                              {zone.name}
-                            </h3>
-                            <p className="text-[11px] font-mono text-brand-muted">
-                              TIRZ-{zone.site_number}
-                            </p>
-                          </div>
-                        </div>
-                        {zone.description && (
-                          <p className="text-xs leading-relaxed text-brand-muted line-clamp-2">
-                            {zone.description}
-                          </p>
-                        )}
-                        {zone.status && (
-                          <span className="inline-block mt-2 text-[10px] font-mono font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-bg-alt text-brand-muted">
-                            {zone.status}
-                          </span>
-                        )}
-                      </div>
+        {/* ── Zone grid ── */}
+        <section>
+          <div className="flex items-baseline gap-4 mb-6">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>All TIRZ Zones</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+            <span style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED, letterSpacing: '0.1em' }} className="uppercase">{zones.length} zones</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+            {zones.slice(0, VISIBLE_COUNT).map(function (zone: any) {
+              return (
+                <Link
+                  key={zone.tirz_id}
+                  href={'/tirz/' + zone.tirz_id}
+                  className="group p-4 transition-colors hover:bg-white/50"
+                  style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <span
+                      className="w-8 h-8 flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                      style={{ fontFamily: MONO, backgroundColor: CLAY }}
+                    >
+                      {zone.site_number}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }} className="truncate group-hover:underline">
+                        {zone.name}
+                      </h3>
+                      <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
                     </div>
-                  </Link>
-                )
-              })}
-            </div>
+                  </div>
+                  {zone.description && (
+                    <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                      {zone.description}
+                    </p>
+                  )}
+                  {zone.status && (
+                    <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }} className="uppercase inline-block mt-2">
+                      {zone.status}
+                    </span>
+                  )}
+                </Link>
+              )
+            })}
+          </div>
 
-            {/* How TIRZ Works */}
-            <div className="mt-10 border-t-2 border-brand-border pt-8">
-              <h2 className="font-display text-2xl font-bold text-brand-text mb-4">
-                How TIRZ Zones Work
-              </h2>
-              <p className="text-sm leading-relaxed text-brand-muted max-w-2xl mb-6">
-                When a TIRZ is created, the property tax base is frozen at its current level.
-                As property values grow, the increment — the difference between the frozen base and the new value —
-                is captured and reinvested directly in the zone. This funds improvements that might not happen otherwise:
-                new sidewalks, drainage, affordable housing, parks, and economic development programs.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-display font-bold text-brand-text text-sm mb-1">Created by Council</p>
-                  <p className="text-[12px] leading-relaxed text-brand-muted">
-                    City Council designates TIRZ zones to attract investment in areas that need it most.
-                  </p>
-                </div>
-                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-display font-bold text-brand-text text-sm mb-1">Tax Increment Captured</p>
-                  <p className="text-[12px] leading-relaxed text-brand-muted">
-                    Growth in property tax revenue stays in the zone instead of going to the general fund.
-                  </p>
-                </div>
-                <div className="border border-brand-border rounded-[0.75rem] p-4 bg-brand-bg">
-                  <p className="font-display font-bold text-brand-text text-sm mb-1">Reinvested Locally</p>
-                  <p className="text-[12px] leading-relaxed text-brand-muted">
-                    Funds go toward infrastructure, housing, parks, and development within the zone.
-                  </p>
-                </div>
+          {zones.length > VISIBLE_COUNT && (
+            <details className="mt-4">
+              <summary style={{ fontFamily: MONO, fontSize: '0.65rem', color: CLAY, letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+                Show all {zones.length} zones
+              </summary>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 mt-2" style={{ border: '1px solid ' + RULE_COLOR }}>
+                {zones.slice(VISIBLE_COUNT).map(function (zone: any) {
+                  return (
+                    <Link
+                      key={zone.tirz_id}
+                      href={'/tirz/' + zone.tirz_id}
+                      className="group p-4 transition-colors hover:bg-white/50"
+                      style={{ borderRight: '1px solid ' + RULE_COLOR, borderBottom: '1px solid ' + RULE_COLOR }}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <span
+                          className="w-8 h-8 flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                          style={{ fontFamily: MONO, backgroundColor: CLAY }}
+                        >
+                          {zone.site_number}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 style={{ fontFamily: SERIF, fontSize: '0.9rem', color: INK }} className="truncate group-hover:underline">
+                            {zone.name}
+                          </h3>
+                          <p style={{ fontFamily: MONO, fontSize: '0.6rem', color: MUTED }}>TIRZ-{zone.site_number}</p>
+                        </div>
+                      </div>
+                      {zone.description && (
+                        <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, lineHeight: 1.5 }} className="line-clamp-2">
+                          {zone.description}
+                        </p>
+                      )}
+                      {zone.status && (
+                        <span style={{ fontFamily: MONO, fontSize: '0.55rem', letterSpacing: '0.1em', color: MUTED, border: '1px solid ' + RULE_COLOR, padding: '2px 8px' }} className="uppercase inline-block mt-2">
+                          {zone.status}
+                        </span>
+                      )}
+                    </Link>
+                  )
+                })}
               </div>
-            </div>
-          </div>
+            </details>
+          )}
+        </section>
 
-          {/* Wayfinder sidebar */}
-          <div className="hidden lg:block lg:w-[280px] flex-shrink-0">
-            <div className="sticky top-24">
-              <IndexWayfinder
-                currentPage="tirz"
-                color="#C75B2A"
-                related={[
-                  { label: 'Districts', href: '/districts', color: '#1a3460' },
-                  { label: 'Officials Directory', href: '/officials', color: '#6a4e10' },
-                  { label: 'Policies', href: '/policies', color: '#7a2018' },
-                  { label: 'Geography', href: '/geography', color: '#1a5030' },
-                  { label: 'Neighborhoods', href: '/neighborhoods', color: '#4a2870' },
-                ]}
-              />
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── How TIRZ Works ── */}
+        <section>
+          <div className="flex items-baseline gap-4 mb-6">
+            <h2 style={{ fontFamily: SERIF, fontSize: '1.5rem', color: INK }}>How TIRZ Zones Work</h2>
+            <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: RULE_COLOR }} />
+          </div>
+          <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: MUTED, lineHeight: 1.75, maxWidth: '650px' }} className="mb-8">
+            When a TIRZ is created, the property tax base is frozen at its current level.
+            As property values grow, the increment -- the difference between the frozen base and the new value --
+            is captured and reinvested directly in the zone. This funds improvements that might not happen otherwise:
+            new sidewalks, drainage, affordable housing, parks, and economic development programs.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0" style={{ border: '1px solid ' + RULE_COLOR }}>
+            <div className="p-5" style={{ borderRight: '1px solid ' + RULE_COLOR }}>
+              <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 700 }} className="mb-2">Created by Council</p>
+              <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, lineHeight: 1.6 }}>
+                City Council designates TIRZ zones to attract investment in areas that need it most.
+              </p>
+            </div>
+            <div className="p-5" style={{ borderRight: '1px solid ' + RULE_COLOR }}>
+              <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 700 }} className="mb-2">Tax Increment Captured</p>
+              <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, lineHeight: 1.6 }}>
+                Growth in property tax revenue stays in the zone instead of going to the general fund.
+              </p>
+            </div>
+            <div className="p-5">
+              <p style={{ fontFamily: SERIF, fontSize: '0.95rem', color: INK, fontWeight: 700 }} className="mb-2">Reinvested Locally</p>
+              <p style={{ fontFamily: SERIF, fontSize: '0.8rem', color: MUTED, lineHeight: 1.6 }}>
+                Funds go toward infrastructure, housing, parks, and development within the zone.
+              </p>
             </div>
           </div>
+        </section>
+
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+
+        {/* ── Footer links ── */}
+        <div className="flex flex-wrap gap-6 py-4">
+          <Link href="/districts" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Districts
+          </Link>
+          <Link href="/officials" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Officials
+          </Link>
+          <Link href="/policies" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Policies
+          </Link>
+          <Link href="/geography" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline">
+            Geography
+          </Link>
+          <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: CLAY, letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
+            Back to Home
+          </Link>
         </div>
       </div>
     </div>

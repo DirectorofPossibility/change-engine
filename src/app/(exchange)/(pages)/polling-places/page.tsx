@@ -1,12 +1,22 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { getUIStrings } from '@/lib/i18n'
 import { ElectionCountdown } from '@/components/exchange/ElectionCountdown'
 import { PollingPlaceClient } from './PollingPlaceClient'
-import { FlowerOfLife } from '@/components/geo/sacred'
 
 export const revalidate = 3600
+
+const PARCHMENT = '#F5F0E8'
+const PARCHMENT_WARM = '#EDE7D8'
+const INK = '#1A1A1A'
+const CLAY = '#C4663A'
+const MUTED = '#7a7265'
+const RULE_COLOR = 'rgba(196,102,58,0.3)'
+const SERIF = 'Georgia, "Times New Roman", serif'
+const MONO = '"Courier New", Courier, monospace'
 
 export const metadata: Metadata = {
   title: 'Find Where to Vote',
@@ -31,38 +41,47 @@ export default async function PollingPlacesPage() {
   const activeElection = upcoming && upcoming.length > 0 ? upcoming[0] : null
 
   return (
-    <div>
-      {/* Masthead */}
-      <div className="bg-ink border-b-2 border-ink">
-        <div className="max-w-[1080px] mx-auto px-6 py-10 relative overflow-hidden">
-          <div className="absolute top-4 right-4 opacity-[0.06]">
-            <FlowerOfLife color="#ffffff" size={180} />
-          </div>
-          <span className="inline-block font-mono text-[11px] uppercase tracking-[0.12em] text-teal border border-teal/30 px-2.5 py-1 mb-4">
+    <div style={{ background: PARCHMENT }} className="min-h-screen">
+      {/* Hero */}
+      <div style={{ background: PARCHMENT_WARM }} className="relative overflow-hidden border-b">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+        </div>
+        <div className="max-w-[900px] mx-auto px-6 py-12 relative">
+          <p style={{ fontFamily: MONO, color: MUTED, fontSize: 11, letterSpacing: '0.12em' }} className="uppercase mb-3">
+            The Change Engine
+          </p>
+          <p style={{ fontFamily: MONO, fontSize: 12, color: CLAY, letterSpacing: '0.08em' }} className="uppercase mb-2">
             {t('polling.hook')}
-          </span>
-          <h1 className="font-display text-3xl sm:text-[2.5rem] font-bold text-white leading-tight mb-3">
+          </p>
+          <h1 style={{ fontFamily: SERIF, color: INK }} className="text-3xl sm:text-4xl mb-3">
             {t('polling.title')}
           </h1>
-          <p className="font-body text-[1.05rem] text-white/70 max-w-[600px] mb-2">
+          <p style={{ fontFamily: SERIF, color: MUTED, fontSize: 17 }} className="max-w-[600px] leading-relaxed">
             {t('polling.subhead')}
-          </p>
-          <p className="font-body text-[.9rem] text-white/50 max-w-[520px]">
-            {t('polling.subtitle')}
           </p>
         </div>
       </div>
 
-      {/* Body */}
-      <div className="max-w-[1080px] mx-auto px-6 py-8">
+      {/* Breadcrumb */}
+      <div className="max-w-[900px] mx-auto px-6 pt-4 pb-2">
+        <nav style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.06em' }} className="uppercase">
+          <Link href="/elections" className="hover:underline" style={{ color: CLAY }}>Elections</Link>
+          <span className="mx-2">/</span>
+          <span>Polling Places</span>
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
-          {/* Main column — search + results */}
+          {/* Main column */}
           <div>
             <PollingPlaceClient activeElection={activeElection} />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6 lg:border-l lg:border-rule lg:pl-8">
+          <div className="space-y-6">
             {activeElection && (
               <ElectionCountdown
                 electionName={activeElection.election_name}
@@ -74,10 +93,10 @@ export default async function PollingPlacesPage() {
               />
             )}
 
-            {/* Quick links */}
-            <div className="border-2 border-ink">
-              <div className="border-b border-rule px-5 py-3">
-                <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint">
+            {/* Helpful links */}
+            <div className="border" style={{ borderColor: RULE_COLOR }}>
+              <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE_COLOR}` }}>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.08em' }} className="uppercase">
                   {t('detail.helpful_links')}
                 </span>
               </div>
@@ -86,7 +105,8 @@ export default async function PollingPlacesPage() {
                   href="https://www.votetexas.gov/voting/where.html"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block font-body text-[.85rem] text-blue hover:text-ink transition-colors"
+                  style={{ fontFamily: SERIF, fontSize: 14, color: CLAY }}
+                  className="block hover:underline"
                 >
                   VoteTexas.gov &rarr;
                 </a>
@@ -94,7 +114,8 @@ export default async function PollingPlacesPage() {
                   href="https://www.harrisvotes.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block font-body text-[.85rem] text-blue hover:text-ink transition-colors"
+                  style={{ fontFamily: SERIF, fontSize: 14, color: CLAY }}
+                  className="block hover:underline"
                 >
                   HarrisVotes.com &rarr;
                 </a>
@@ -102,7 +123,8 @@ export default async function PollingPlacesPage() {
                   href="https://www.vote.org/register-to-vote/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block font-body text-[.85rem] text-blue hover:text-ink transition-colors"
+                  style={{ fontFamily: SERIF, fontSize: 14, color: CLAY }}
+                  className="block hover:underline"
                 >
                   Register to Vote &rarr;
                 </a>
@@ -110,16 +132,24 @@ export default async function PollingPlacesPage() {
             </div>
 
             {/* Support numbers */}
-            <div className="border-t border-rule pt-4">
-              <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint block mb-2">
+            <div style={{ borderTop: `1px solid ${RULE_COLOR}` }} className="pt-4">
+              <span style={{ fontFamily: MONO, fontSize: 11, color: MUTED, letterSpacing: '0.08em' }} className="uppercase block mb-2">
                 {t('d2nav.support')}
               </span>
-              <div className="space-y-1 font-mono text-[12px] text-dim">
-                <p>Harris County Elections: <strong className="text-ink">713-755-6965</strong></p>
-                <p>TX SOS Voter Hotline: <strong className="text-ink">1-800-252-8683</strong></p>
+              <div className="space-y-1" style={{ fontFamily: MONO, fontSize: 12, color: MUTED }}>
+                <p>Harris County Elections: <strong style={{ color: INK }}>713-755-6965</strong></p>
+                <p>TX SOS Voter Hotline: <strong style={{ color: INK }}>1-800-252-8683</strong></p>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Footer link */}
+        <div className="my-10" style={{ height: 1, background: RULE_COLOR }} />
+        <div className="text-center pb-12">
+          <Link href="/elections" style={{ fontFamily: MONO, color: CLAY, fontSize: 12, letterSpacing: '0.06em' }} className="uppercase hover:underline">
+            Back to Elections
+          </Link>
         </div>
       </div>
     </div>
