@@ -3,8 +3,8 @@ import { cookies } from 'next/headers'
 import { LanguageProvider } from '@/lib/contexts/LanguageContext'
 
 export const metadata: Metadata = {
-  title: 'Change Engine — Coming Soon',
-  description: 'A civic platform connecting Houston neighbors with resources, services, and civic participation opportunities. Coming soon.',
+  title: 'The Change Engine — Houston Civic Guide',
+  description: 'Your community guide to Houston civic life. Officials, services, policies, events, and more — all in one place.',
 }
 
 export default async function SplashLayout({ children }: { children: React.ReactNode }) {
