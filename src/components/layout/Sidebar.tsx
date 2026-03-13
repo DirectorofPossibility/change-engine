@@ -9,9 +9,9 @@ import {
   Languages, Wrench, Users, BookOpen, HelpCircle,
   Briefcase, CalendarDays, Building2, Globe,
   Compass, BookMarked, Quote, Library,
-  ChevronDown, Rss, Scale, Megaphone, Key,
+  ChevronDown, Rss, Scale, Megaphone,
   Tag, Network, Linkedin, CircleDot, Map,
-  Settings, Layers, Activity, SlidersHorizontal,
+  Layers, Activity, SlidersHorizontal,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -75,9 +75,7 @@ const ADMIN_GROUPS: NavGroup[] = [
     label: 'Settings',
     items: [
       { href: '/dashboard/preferences', label: 'Content Preferences', icon: SlidersHorizontal },
-      { href: '/dashboard/api-keys', label: 'API Keys', icon: Key },
       { href: '/dashboard/utilities', label: 'Utilities', icon: Wrench },
-      { href: '/dashboard/pipeline', label: 'Pipeline Status', icon: Settings },
     ],
   },
   {

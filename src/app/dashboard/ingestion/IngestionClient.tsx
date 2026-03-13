@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Modal } from '@/components/ui/Modal'
 import { addFeed, updateFeed, deleteFeed, addTrustDomain, updateTrust, pollRssFeedsAction } from './actions'
-import type { RssFeed } from '@/lib/types/dashboard'
+import { SubmitClient } from '../submit/SubmitClient'
+import { ApiKeysClient } from '../api-keys/ApiKeysClient'
+import type { RssFeed, ApiKey } from '@/lib/types/dashboard'
 
-const TABS = ['Pipeline Logs', 'RSS Feeds', 'Source Trust', 'Process Flow'] as const
+const TABS = ['Submit URL', 'Pipeline Logs', 'RSS Feeds', 'Source Trust', 'API Keys', 'Process Flow'] as const
 
 interface PipelineFlowStats {
   inbox: { pending: number; classified: number; flagged: number; needs_review: number }
@@ -19,13 +21,15 @@ export function IngestionClient({
   initialFeeds,
   initialTrust,
   pipelineStats,
+  apiKeys = [],
 }: {
   initialLogs: any[]
   initialFeeds: RssFeed[]
   initialTrust: any[]
   pipelineStats: PipelineFlowStats
+  apiKeys?: ApiKey[]
 }) {
-  const [activeTab, setActiveTab] = useState<string>('Pipeline Logs')
+  const [activeTab, setActiveTab] = useState<string>('Submit URL')
   const [logs] = useState(initialLogs)
   const [feeds, setFeeds] = useState(initialFeeds)
   const [trust] = useState(initialTrust)
@@ -170,6 +174,12 @@ export function IngestionClient({
           </button>
         ))}
       </div>
+
+      {/* Submit URL */}
+      {activeTab === 'Submit URL' && <SubmitClient />}
+
+      {/* API Keys */}
+      {activeTab === 'API Keys' && <ApiKeysClient initialKeys={apiKeys} />}
 
       {/* Pipeline Logs */}
       {activeTab === 'Pipeline Logs' && (
