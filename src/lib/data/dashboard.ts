@@ -23,17 +23,20 @@ import type { ApiKey, PipelineStats, ReviewStatusBreakdown, RssFeed } from '@/li
 /** Aggregate counts for the 4 dashboard overview cards (ingested, needs review, published, translated). */
 export async function getPipelineStats(): Promise<PipelineStats> {
   const supabase = await createClient()
-  const [inbox, review, published, translations] = await Promise.all([
+  const [inbox, review, published, translationRows] = await Promise.all([
     supabase.from('content_inbox').select('id', { count: 'exact', head: true }),
     supabase.from('content_review_queue').select('id', { count: 'exact', head: true }).in('review_status', ['pending', 'flagged']),
     supabase.from('content_published').select('id', { count: 'exact', head: true }),
-    supabase.from('translations').select('translation_id', { count: 'exact', head: true }),
+    // Count distinct translated items (not rows) — each content_id+language pair = 1 item
+    supabase.from('translations').select('content_id, language_id').in('field_name', ['title_6th_grade', 'title']),
   ])
+  // Deduplicate: count unique content_id values across all languages
+  const translatedIds = new Set((translationRows.data || []).map((r: any) => r.content_id))
   return {
     totalIngested: inbox.count ?? 0,
     needsReview: review.count ?? 0,
     published: published.count ?? 0,
-    translated: translations.count ?? 0,
+    translated: translatedIds.size,
   }
 }
 
@@ -218,18 +221,74 @@ export async function getSourceTrust() {
 
 // ── Translation coverage ───────────────────────────────────────────────
 
-/** Translation coverage stats: how many titles are translated to ES/VI vs total published. */
+/**
+ * Translation coverage stats across all entity types.
+ * Counts distinct content_ids per language (not rows) to avoid inflated percentages.
+ */
 export async function getTranslationStats() {
   const supabase = await createClient()
-  const [esCount, viCount, publishedCount] = await Promise.all([
-    supabase.from('translations').select('translation_id', { count: 'exact', head: true }).eq('language_id', 'LANG-ES').in('field_name', ['title_6th_grade', 'title']),
-    supabase.from('translations').select('translation_id', { count: 'exact', head: true }).eq('language_id', 'LANG-VI').in('field_name', ['title_6th_grade', 'title']),
-    supabase.from('content_published').select('id', { count: 'exact', head: true }),
+
+  // Entity types and their tables/count queries
+  const entityTypes = [
+    'content_published', 'elected_officials', 'services_211', 'policies',
+    'organizations', 'opportunities', 'foundations', 'events', 'guides',
+    'campaigns', 'benefit_programs', 'learning_paths', 'life_situations',
+  ] as const
+
+  // Count distinct translated items per language per entity type (title field only)
+  const [esRows, viRows] = await Promise.all([
+    supabase.from('translations')
+      .select('content_type, content_id')
+      .eq('language_id', 'LANG-ES')
+      .in('field_name', ['title_6th_grade', 'title']),
+    supabase.from('translations')
+      .select('content_type, content_id')
+      .eq('language_id', 'LANG-VI')
+      .in('field_name', ['title_6th_grade', 'title']),
   ])
+
+  // Deduplicate: one content_id per entity type counts as "translated"
+  function distinctByType(rows: any[]) {
+    const map: Record<string, Set<string>> = {}
+    for (const r of rows) {
+      const ct = r.content_type || 'content_published'
+      if (!map[ct]) map[ct] = new Set()
+      map[ct].add(r.content_id)
+    }
+    const result: Record<string, number> = {}
+    for (const ct of entityTypes) result[ct] = map[ct]?.size ?? 0
+    return result
+  }
+
+  const esMap = distinctByType(esRows.data || [])
+  const viMap = distinctByType(viRows.data || [])
+
+  // Count totals per entity table
+  const totalCounts: Record<string, number> = {}
+  const countPromises = entityTypes.map(async (et) => {
+    const { count } = await supabase.from(et).select('*', { count: 'exact', head: true })
+    totalCounts[et] = count ?? 0
+  })
+  await Promise.all(countPromises)
+
+  // Build per-entity breakdown
+  const breakdown = entityTypes.map((et) => ({
+    entity: et,
+    total: totalCounts[et] ?? 0,
+    es: esMap[et] ?? 0,
+    vi: viMap[et] ?? 0,
+  })).filter((b) => b.total > 0)
+
+  // Aggregate totals
+  const totalItems = breakdown.reduce((s, b) => s + b.total, 0)
+  const esTotal = breakdown.reduce((s, b) => s + b.es, 0)
+  const viTotal = breakdown.reduce((s, b) => s + b.vi, 0)
+
   return {
-    esCount: esCount.count ?? 0,
-    viCount: viCount.count ?? 0,
-    totalPublished: publishedCount.count ?? 0,
+    esCount: esTotal,
+    viCount: viTotal,
+    totalPublished: totalItems,
+    breakdown,
   }
 }
 

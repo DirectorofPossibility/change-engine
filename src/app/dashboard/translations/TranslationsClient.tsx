@@ -3,10 +3,34 @@
 import { useState } from 'react'
 import { translateAll } from '@/lib/data/edge-functions'
 
+interface EntityBreakdown {
+  entity: string
+  total: number
+  es: number
+  vi: number
+}
+
 interface TranslationStats {
   esCount: number
   viCount: number
   totalPublished: number
+  breakdown?: EntityBreakdown[]
+}
+
+const ENTITY_LABELS: Record<string, string> = {
+  content_published: 'Published Content',
+  elected_officials: 'Elected Officials',
+  services_211: 'Services',
+  policies: 'Policies',
+  organizations: 'Organizations',
+  opportunities: 'Opportunities',
+  foundations: 'Foundations',
+  events: 'Events',
+  guides: 'Guides',
+  campaigns: 'Campaigns',
+  benefit_programs: 'Benefits',
+  learning_paths: 'Learning Paths',
+  life_situations: 'Life Situations',
 }
 
 export function TranslationsClient({
@@ -56,6 +80,8 @@ export function TranslationsClient({
     window.location.reload()
   }
 
+  const breakdown = stats.breakdown || []
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -69,17 +95,17 @@ export function TranslationsClient({
         </button>
       </div>
 
-      {/* Coverage Meters */}
+      {/* Overall Coverage Meters */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-white rounded-lg shadow-sm border border-brand-border p-5">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Spanish (ES)</span>
-            <span className="text-sm text-brand-muted">{stats.esCount} / {stats.totalPublished}</span>
+            <span className="text-sm text-brand-muted">{stats.esCount.toLocaleString()} / {stats.totalPublished.toLocaleString()}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
               className="bg-brand-accent h-3 rounded-full transition-all"
-              style={{ width: `${esPct}%` }}
+              style={{ width: `${Math.min(esPct, 100)}%` }}
             />
           </div>
           <p className="text-xs text-brand-muted mt-1">{esPct}% coverage</p>
@@ -87,17 +113,64 @@ export function TranslationsClient({
         <div className="bg-white rounded-lg shadow-sm border border-brand-border p-5">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium">Vietnamese (VI)</span>
-            <span className="text-sm text-brand-muted">{stats.viCount} / {stats.totalPublished}</span>
+            <span className="text-sm text-brand-muted">{stats.viCount.toLocaleString()} / {stats.totalPublished.toLocaleString()}</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
               className="bg-theme-voice h-3 rounded-full transition-all"
-              style={{ width: `${viPct}%` }}
+              style={{ width: `${Math.min(viPct, 100)}%` }}
             />
           </div>
           <p className="text-xs text-brand-muted mt-1">{viPct}% coverage</p>
         </div>
       </div>
+
+      {/* Per-entity breakdown */}
+      {breakdown.length > 0 && (
+        <div className="bg-white rounded-lg shadow-sm border border-brand-border overflow-hidden">
+          <div className="px-4 py-3 border-b border-brand-border bg-brand-bg/50">
+            <h2 className="text-sm font-semibold text-brand-text">Coverage by Entity Type</h2>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-brand-border text-left text-brand-muted">
+                <th className="px-4 py-2 font-medium">Entity</th>
+                <th className="px-4 py-2 font-medium text-right">Total</th>
+                <th className="px-4 py-2 font-medium">Spanish</th>
+                <th className="px-4 py-2 font-medium">Vietnamese</th>
+              </tr>
+            </thead>
+            <tbody>
+              {breakdown.map((b) => {
+                const esBPct = b.total > 0 ? Math.round((b.es / b.total) * 100) : 0
+                const viBPct = b.total > 0 ? Math.round((b.vi / b.total) * 100) : 0
+                return (
+                  <tr key={b.entity} className="border-b border-brand-border/50 hover:bg-brand-bg/50">
+                    <td className="px-4 py-2.5 font-medium">{ENTITY_LABELS[b.entity] || b.entity}</td>
+                    <td className="px-4 py-2.5 text-right text-brand-muted">{b.total.toLocaleString()}</td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-gray-100 rounded-full h-2 max-w-[120px]">
+                          <div className="bg-brand-accent h-2 rounded-full" style={{ width: `${Math.min(esBPct, 100)}%` }} />
+                        </div>
+                        <span className="text-xs text-brand-muted w-16 text-right">{b.es} ({esBPct}%)</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-gray-100 rounded-full h-2 max-w-[120px]">
+                          <div className="bg-theme-voice h-2 rounded-full" style={{ width: `${Math.min(viBPct, 100)}%` }} />
+                        </div>
+                        <span className="text-xs text-brand-muted w-16 text-right">{b.vi} ({viBPct}%)</span>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {/* Filter */}
       <div className="flex gap-3 items-center">
