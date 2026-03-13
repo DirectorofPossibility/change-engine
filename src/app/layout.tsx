@@ -7,7 +7,6 @@ const fraunces = Fraunces({
   subsets: ['latin'],
   weight: ['700', '900'],
   style: ['normal', 'italic'],
-  axes: ['opsz'],
   variable: '--font-display',
   display: 'swap',
 })

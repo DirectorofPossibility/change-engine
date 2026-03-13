@@ -100,7 +100,7 @@ export async function getPipelineFlowStats() {
 /** Count of records in each major entity table — for the dashboard "at a glance" grid. */
 export async function getEntityCounts(): Promise<{ label: string; table: string; count: number }[]> {
   const supabase = await createClient()
-  const [content, officials, policies, services, organizations, opportunities, focusAreas, learningPaths, neighborhoods, foundations, campaigns] = await Promise.all([
+  const [content, officials, policies, services, organizations, opportunities, focusAreas, learningPaths, neighborhoods, foundations, campaigns, events, kbDocs, contentTypes] = await Promise.all([
     supabase.from('content_published').select('*', { count: 'exact', head: true }),
     supabase.from('elected_officials').select('*', { count: 'exact', head: true }),
     supabase.from('policies').select('*', { count: 'exact', head: true }),
@@ -112,8 +112,46 @@ export async function getEntityCounts(): Promise<{ label: string; table: string;
     supabase.from('neighborhoods').select('*', { count: 'exact', head: true }),
     supabase.from('foundations').select('*', { count: 'exact', head: true }),
     supabase.from('campaigns').select('*', { count: 'exact', head: true }),
+    supabase.from('events').select('*', { count: 'exact', head: true }),
+    supabase.from('kb_documents').select('*', { count: 'exact', head: true }),
+    // Content type breakdown
+    supabase.from('content_published').select('content_type'),
   ])
+
+  // Count content by type
+  const typeCounts: Record<string, number> = {}
+  for (const row of (contentTypes.data ?? []) as { content_type: string | null }[]) {
+    const t = row.content_type || 'unclassified'
+    typeCounts[t] = (typeCounts[t] || 0) + 1
+  }
+
+  const TYPE_LABELS: Record<string, string> = {
+    article: 'Articles',
+    guide: 'Guides',
+    report: 'Reports',
+    video: 'Videos',
+    tool: 'Tools',
+    course: 'Courses',
+    event: 'Event Content',
+    campaign: 'Campaign Content',
+    opportunity: 'Opportunity Content',
+    book: 'Books',
+    podcast: 'Podcasts',
+    research: 'Research',
+    diy_kit: 'DIY Kits',
+  }
+
+  const contentTypeRows = Object.entries(typeCounts)
+    .filter(([t]) => t !== 'unclassified')
+    .sort((a, b) => b[1] - a[1])
+    .map(([t, count]) => ({
+      label: TYPE_LABELS[t] || (t.charAt(0).toUpperCase() + t.slice(1) + 's'),
+      table: 'content_type:' + t,
+      count,
+    }))
+
   return [
+    // Entity tables
     { label: 'Published Content', table: 'content_published', count: content.count ?? 0 },
     { label: 'Elected Officials', table: 'elected_officials', count: officials.count ?? 0 },
     { label: 'Policies', table: 'policies', count: policies.count ?? 0 },
@@ -125,6 +163,10 @@ export async function getEntityCounts(): Promise<{ label: string; table: string;
     { label: 'Neighborhoods', table: 'neighborhoods', count: neighborhoods.count ?? 0 },
     { label: 'Foundations', table: 'foundations', count: foundations.count ?? 0 },
     { label: 'Campaigns', table: 'campaigns', count: campaigns.count ?? 0 },
+    { label: 'Events', table: 'events', count: events.count ?? 0 },
+    { label: 'Library Documents', table: 'kb_documents', count: kbDocs.count ?? 0 },
+    // Content type breakdown
+    ...contentTypeRows,
   ]
 }
 
