@@ -18,6 +18,9 @@ import {
   validateAndEnrich,
 } from '@/lib/classification'
 
+// Allow up to 120s for PDF parsing + embeddings + 2 Claude calls
+export const maxDuration = 120
+
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || ''
@@ -130,9 +133,11 @@ export async function POST(req: NextRequest) {
   const authError = await validateApiRequest(req)
   if (authError) return authError
 
+  let document_id: string | null = null
+
   try {
     const body = await req.json()
-    const { document_id } = body
+    document_id = body.document_id
 
     if (!document_id) {
       return NextResponse.json({ error: 'document_id required' }, { status: 400 })
@@ -334,6 +339,18 @@ ${sampleText}`
     })
   } catch (err) {
     console.error('Library process error:', err)
+
+    // Reset status back to pending so admin can retry
+    if (document_id) {
+      try {
+        await supaRest('PATCH', `kb_documents?id=eq.${document_id}`, {
+          status: 'pending',
+        })
+      } catch (resetErr) {
+        console.error('Failed to reset document status:', resetErr)
+      }
+    }
+
     return NextResponse.json(
       { error: 'Processing failed: ' + (err instanceof Error ? err.message : 'Unknown error') },
       { status: 500 }

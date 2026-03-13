@@ -499,15 +499,15 @@ export function LibraryAdmin({ documents: initialDocs, role = 'admin' }: Library
                             <Eye size={15} />
                           </a>
                         )}
-                        {doc.status === 'pending' && isAdmin && (
+                        {(doc.status === 'pending' || doc.status === 'processing') && isAdmin && (
                           <>
                             <button
                               onClick={function () { handleApprove(doc.id) }}
                               disabled={isProcessing}
                               className="p-1.5 rounded-md hover:bg-green-50 text-green-600 disabled:opacity-50"
-                              title="Approve & Process"
+                              title={doc.status === 'processing' ? 'Retry Processing' : 'Approve & Process'}
                             >
-                              {isProcessing ? <RefreshCw size={15} className="animate-spin" /> : <Check size={15} />}
+                              {isProcessing ? <RefreshCw size={15} className="animate-spin" /> : doc.status === 'processing' ? <RefreshCw size={15} /> : <Check size={15} />}
                             </button>
                             <button
                               onClick={function () { handleReject(doc.id) }}
