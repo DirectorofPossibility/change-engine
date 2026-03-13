@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { PipelineStats } from '@/lib/types/dashboard'
 import {
-  LayoutDashboard, Search, FileText, Zap, BarChart3,
+  LayoutDashboard, Search, FileText, Zap,
   Languages, Wrench, Users, BookOpen, HelpCircle,
   Briefcase, CalendarDays, Building2, Globe,
   Compass, BookMarked, Quote, Library,
@@ -58,7 +58,6 @@ const ADMIN_GROUPS: NavGroup[] = [
   {
     label: 'Visualizations',
     items: [
-      { href: '/dashboard/graphs', label: 'Graph Views', icon: BarChart3 },
       { href: '/dashboard/graph-explorer', label: 'Graph Explorer', icon: Network },
       { href: '/dashboard/graph-coverage', label: 'Coverage Map', icon: Map },
       { href: '/dashboard/circles', label: 'Circle Graph', icon: CircleDot },
@@ -108,7 +107,6 @@ const PARTNER_GROUPS: NavGroup[] = [
     label: 'Explore',
     items: [
       { href: '/dashboard/pipeline', label: 'Pipeline', icon: Zap },
-      { href: '/dashboard/graphs', label: 'Graphs', icon: BarChart3 },
       { href: '/dashboard/library', label: 'Knowledge Base', icon: BookOpen },
     ],
   },

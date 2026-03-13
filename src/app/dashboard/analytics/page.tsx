@@ -11,6 +11,8 @@
  * @route GET /dashboard/analytics
  */
 
+export const dynamic = 'force-dynamic'
+
 import { createClient } from '@/lib/supabase/server'
 import { BarChart3, Users, Activity, MousePointer } from 'lucide-react'
 import { StatsCard } from '@/components/ui/StatsCard'
