@@ -23,8 +23,6 @@ import { TranslateBar } from '@/components/exchange/TranslateBar'
 import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
 import { TickerTape } from '@/components/exchange/TickerTape'
 import MobileBottomNav from '@/components/exchange/MobileBottomNav'
-import { Wayfinder } from '@/components/layout/Wayfinder'
-// NeighborhoodBar content moved into Wayfinder breadcrumb bar
 import { getNextElection } from '@/lib/data/exchange'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
@@ -69,7 +67,6 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
             Skip to main content
           </a>
           <D2Nav />
-          <Wayfinder />
           <TranslateBar />
           <main id="main-content" className="flex-1 pb-14">
             {children}

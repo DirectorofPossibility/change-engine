@@ -59,11 +59,10 @@ export function FocusTrail({ levels, themeColor, focusName, seeAllHref }: FocusT
         return (
           <div
             key={lvl.level}
-            className="grid grid-cols-1 md:grid-cols-[180px_1fr] border-b border-rule"
-            style={{ borderWidth: '1.5px' }}
+            className="grid grid-cols-1 md:grid-cols-[180px_1fr] border-b border-rule-inner"
           >
             {/* Spine */}
-            <div className="py-8 md:pr-6 md:border-r border-rule flex flex-col gap-3" style={{ borderWidth: '1.5px' }}>
+            <div className="py-8 md:pr-6 md:border-r border-rule-inner flex flex-col gap-3">
               {/* Geo SVG */}
               <div className="w-[60px] h-[60px] opacity-[0.35]">
                 <Geo type={meta.geoType} size={60} color={levelColor} />
@@ -106,7 +105,6 @@ export function FocusTrail({ levels, themeColor, focusName, seeAllHref }: FocusT
                       key={entry.id}
                       href={entry.href}
                       className="group flex items-center gap-4 py-4 border-b border-rule hover:bg-paper transition-colors -mx-4 px-4"
-                      style={{ borderWidth: '1px' }}
                     >
                       {/* Entry geo icon */}
                       <div className="w-[40px] h-[40px] flex-shrink-0 opacity-[0.3] group-hover:opacity-[0.5] transition-opacity">

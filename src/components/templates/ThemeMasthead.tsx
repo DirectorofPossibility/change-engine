@@ -1,4 +1,5 @@
 import { Geo } from '@/components/geo/sacred'
+import { darken, lighten } from '@/lib/colors'
 
 interface ThemeMastheadProps {
   themeName: string
@@ -126,14 +127,6 @@ export function ThemeMasthead({
   )
 }
 
-// Simple color helpers — no external deps
-function darken(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `#${Math.max(0, Math.floor(r * 0.35)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(g * 0.35)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(b * 0.35)).toString(16).padStart(2, '0')}`
-}
-
 function midTone(hex: string, dk: string): string {
   const r1 = parseInt(dk.slice(1, 3), 16)
   const g1 = parseInt(dk.slice(3, 5), 16)
@@ -142,11 +135,4 @@ function midTone(hex: string, dk: string): string {
   const g2 = parseInt(hex.slice(3, 5), 16)
   const b2 = parseInt(hex.slice(5, 7), 16)
   return `#${Math.floor((r1 + r2) / 2).toString(16).padStart(2, '0')}${Math.floor((g1 + g2) / 2).toString(16).padStart(2, '0')}${Math.floor((b1 + b2) / 2).toString(16).padStart(2, '0')}`
-}
-
-function lighten(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `#${Math.min(255, Math.floor(r + (255 - r) * 0.55)).toString(16).padStart(2, '0')}${Math.min(255, Math.floor(g + (255 - g) * 0.55)).toString(16).padStart(2, '0')}${Math.min(255, Math.floor(b + (255 - b) * 0.55)).toString(16).padStart(2, '0')}`
 }

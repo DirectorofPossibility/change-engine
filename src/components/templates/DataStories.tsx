@@ -17,12 +17,11 @@ export function DataStories({ stories, themeColor }: DataStoriesProps) {
   if (stories.length === 0) return null
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+    <div className="grid grid-cols-1 md:grid-cols-3 border-b border-rule-inner">
       {stories.map((s, i) => (
         <div
           key={i}
-          className="p-7 md:border-r border-rule last:border-r-0"
-          style={{ borderWidth: '1.5px' }}
+          className="p-7 md:border-r border-rule-inner last:border-r-0"
         >
           <span
             className="font-display font-black text-[2.8rem] leading-none block mb-1"

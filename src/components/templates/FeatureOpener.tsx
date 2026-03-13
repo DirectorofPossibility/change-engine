@@ -19,9 +19,9 @@ export function FeatureOpener({ lede, themeColor, dropCap, quotes }: FeatureOpen
   const restOfLede = dropCap ? lede : lede.slice(1)
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 border-b border-rule-inner">
       {/* Lede */}
-      <div className="py-10 pr-10 md:border-r border-rule" style={{ borderWidth: '1.5px' }}>
+      <div className="py-6 pr-10 md:border-r border-rule border-rule-inner">
         <p className="font-body text-[0.92rem] leading-[1.85] text-ink">
           <span
             className="font-display font-black text-[3.5rem] leading-[0.85] float-left mr-3 mt-1"
@@ -34,7 +34,7 @@ export function FeatureOpener({ lede, themeColor, dropCap, quotes }: FeatureOpen
       </div>
 
       {/* Pull quotes */}
-      <div className="py-10 md:pl-10 flex flex-col justify-center gap-6">
+      <div className="py-6 md:pl-10 flex flex-col justify-center gap-6">
         {quotes?.map((q, i) => (
           <div key={i}>
             <blockquote

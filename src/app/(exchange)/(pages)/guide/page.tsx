@@ -22,6 +22,7 @@ import {
   getPathwayCounts,
 } from '@/lib/data/exchange'
 import { THEMES } from '@/lib/constants'
+import { darken, lighten } from '@/lib/colors'
 import { GuidePage } from '@/components/exchange/GuidePage'
 import { PersonaSelector } from '@/components/exchange/PersonaSelector'
 import { Geo } from '@/components/geo/sacred'
@@ -35,21 +36,6 @@ const THEME_GEO: Record<string, string> = {
   THEME_05: 'golden_spiral',
   THEME_06: 'torus',
   THEME_07: 'metatron_cube',
-}
-
-// Simple color helpers
-function darken(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `#${Math.max(0, Math.floor(r * 0.25)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(g * 0.25)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(b * 0.25)).toString(16).padStart(2, '0')}`
-}
-
-function lighten(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `#${Math.min(255, Math.floor(r + (255 - r) * 0.55)).toString(16).padStart(2, '0')}${Math.min(255, Math.floor(g + (255 - g) * 0.55)).toString(16).padStart(2, '0')}${Math.min(255, Math.floor(b + (255 - b) * 0.55)).toString(16).padStart(2, '0')}`
 }
 
 export const revalidate = 600
@@ -197,7 +183,7 @@ export default async function GuidePageServer() {
       </div>
 
       {/* Persona selector */}
-      <div className="max-w-[1080px] mx-auto px-6 py-6 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+      <div className="max-w-[1080px] mx-auto px-6 py-6 border-b border-rule-inner">
         <PersonaSelector />
       </div>
 

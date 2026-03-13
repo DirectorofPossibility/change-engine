@@ -8,7 +8,6 @@ import { HeaderSearch } from './HeaderSearch'
 import { ArchetypeSelector } from './ArchetypeSelector'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
-import { SpiralProgress } from './SpiralProgress'
 import { SeedOfLife, FlowerOfLife } from '@/components/geo/sacred'
 import { THEMES } from '@/lib/constants'
 import { useTranslation } from '@/lib/use-translation'
@@ -24,6 +23,9 @@ function useCenters(t: (key: string) => string) {
         { href: '/organizations', label: t('d2nav.organizations') },
         { href: '/foundations', label: t('d2nav.foundations') },
         { href: '/calendar', label: t('d2nav.events_calendar') },
+        { href: '/adventures', label: t('ui.community_adventures') },
+        { href: '/goodthings', label: t('d2nav.three_good_things') },
+        { href: '/teens', label: t('d2nav.teen_hub') },
       ],
     },
     {
@@ -34,6 +36,8 @@ function useCenters(t: (key: string) => string) {
         { href: '/news', label: t('d2nav.news') },
         { href: '/pathways', label: t('d2nav.topics') },
         { href: '/chat', label: t('d2nav.ask_chance') },
+        { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
+        { href: '/compass', label: t('d2nav.civic_compass') },
       ],
     },
     {
@@ -43,6 +47,7 @@ function useCenters(t: (key: string) => string) {
         { href: '/services', label: t('d2nav.services') },
         { href: '/opportunities', label: t('d2nav.opportunities') },
         { href: '/help', label: t('d2nav.available_resources') },
+        { href: '/geography', label: t('discover.geography') },
       ],
     },
     {
@@ -54,6 +59,9 @@ function useCenters(t: (key: string) => string) {
         { href: '/policies', label: t('d2nav.policies') },
         { href: '/elections', label: t('d2nav.elections') },
         { href: '/tirz', label: t('d2nav.tirz_zones') },
+        { href: '/call-your-senators', label: t('d2nav.call_senators') },
+        { href: '/polling-places', label: t('d2nav.polling_places') },
+        { href: '/dashboard-live', label: t('d2nav.live_dashboard') },
       ],
     },
     {
@@ -67,20 +75,6 @@ function useCenters(t: (key: string) => string) {
   ]
 }
 
-function useDiscoverLinks(t: (key: string) => string) {
-  return [
-    { href: '/compass', label: t('d2nav.civic_compass') },
-    { href: '/dashboard-live', label: t('d2nav.live_dashboard') },
-    { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
-    { href: '/adventures', label: t('ui.community_adventures') },
-    { href: '/goodthings', label: t('d2nav.three_good_things') },
-    { href: '/teens', label: t('d2nav.teen_hub') },
-    { href: '/call-your-senators', label: t('d2nav.call_senators') },
-    { href: '/polling-places', label: t('d2nav.polling_places') },
-    { href: '/geography', label: t('discover.geography') },
-  ]
-}
-
 const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
   return { id, name: (t as any).name, color: (t as any).color, slug: (t as any).slug }
 })
@@ -91,12 +85,10 @@ export function D2Nav() {
   const { t } = useTranslation()
 
   const rawCenters = useCenters(t)
-  const rawDiscoverLinks = useDiscoverLinks(t)
 
   const centers = rawCenters
     .map(c => ({ ...c, items: filterNavItems(c.items) }))
     .filter(c => isSectionVisible(c.items))
-  const discoverLinks = filterNavItems(rawDiscoverLinks)
 
   const closeDrawer = useCallback(function () { setDrawerOpen(false) }, [])
 
@@ -291,6 +283,13 @@ export function D2Nav() {
                 )
               })}
 
+              {/* Centers = what you can do · Topics = what it's about */}
+              <div className="py-2 px-1">
+                <p className="font-mono text-[0.6rem] uppercase tracking-[0.06em] text-faint leading-relaxed">
+                  Centers organize by action. Topics organize by theme.
+                </p>
+              </div>
+
               {/* Topics (Pathways) */}
               <details open className="group border-b border-rule">
                 <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
@@ -316,30 +315,6 @@ export function D2Nav() {
                 </div>
               </details>
 
-              {/* Discover */}
-              <details className="group border-b border-rule">
-                <summary className="flex items-center gap-2 py-3 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <svg width="10" height="10" viewBox="0 0 10 10" className="text-faint transition-transform group-open:rotate-90" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 1l4 4-4 4" /></svg>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-faint group-open:text-blue transition-colors">
-                    {t('d2nav.discover')}
-                  </span>
-                </summary>
-                <div className="pb-3 grid grid-cols-2 gap-x-2 gap-y-0.5">
-                  {discoverLinks.map(function (item) {
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block px-2 py-1.5 font-body text-[.78rem] text-dim hover:text-blue transition-colors"
-                        onClick={closeDrawer}
-                      >
-                        {item.label}
-                      </Link>
-                    )
-                  })}
-                </div>
-              </details>
-
               {/* Account */}
               <div className="pt-3">
                 <Link
@@ -350,11 +325,6 @@ export function D2Nav() {
                 >
                   {t('d2nav.my_account')}
                 </Link>
-              </div>
-
-              {/* Spiral Progress */}
-              <div className="pt-3 pb-2">
-                <SpiralProgress variant="compact" />
               </div>
 
               {/* Support */}

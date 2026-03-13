@@ -33,13 +33,13 @@ export function CouchGrid({ items, themeColor, themeLt, geoType = 'seed_of_life'
   const lt = themeLt || `${themeColor}18`
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] border border-rule" style={{ borderWidth: '1.5px' }}>
+    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] border border-rule-inner">
       {/* Feature */}
-      <div className="md:row-span-2 md:border-r border-rule flex flex-col" style={{ borderWidth: '1.5px' }}>
+      <div className="md:row-span-2 md:border-r border-rule-inner flex flex-col">
         {/* Illustration */}
         <div
-          className="aspect-[3/2] flex items-center justify-center relative overflow-hidden border-b border-rule"
-          style={{ background: lt, borderWidth: '1.5px' }}
+          className="aspect-[3/2] flex items-center justify-center relative overflow-hidden border-b border-rule-inner"
+          style={{ background: lt }}
         >
           {feature.imageUrl ? (
             <Image

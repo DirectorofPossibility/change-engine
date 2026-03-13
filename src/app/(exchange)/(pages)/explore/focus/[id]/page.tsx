@@ -7,6 +7,7 @@ import {
   getSDGMap, getSDOHMap, getLangId, fetchTranslationsForTable,
 } from '@/lib/data/exchange'
 import { getRelatedServices } from '@/lib/data/services'
+import { darken } from '@/lib/colors'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { ContentCard } from '@/components/exchange/ContentCard'
@@ -424,7 +425,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
       {/* ═══ REMAINING ARTICLES (not in trail levels) ═══ */}
       {remainingContent.length > 0 && (
-        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t-2 border-ink">
+        <section className="max-w-[1080px] mx-auto px-6 py-6 border-t-2 border-ink">
           <SectionHeader
             kicker="More resources"
             heading="All"
@@ -455,7 +456,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
       {/* ═══ OPPORTUNITY MAP ═══ */}
       {opportunityMarkers.length > 0 && (
-        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+        <section className="max-w-[1080px] mx-auto px-6 py-6 border-t border-rule-inner">
           <SectionHeader
             kicker="Near you"
             heading="Opportunities"
@@ -469,19 +470,18 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
       {/* ═══ FOUNDATIONS ═══ */}
       {foundations.length > 0 && (
-        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+        <section className="max-w-[1080px] mx-auto px-6 py-6 border-t border-rule-inner">
           <SectionHeader
             kicker="Funders"
             heading="Foundations"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 border border-rule" style={{ borderWidth: '1.5px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 border border-rule-inner">
             {foundations.map(function (f: any) {
               return (
                 <Link
                   key={f.id}
                   href="/foundations"
-                  className="p-5 border-b border-r border-rule hover:bg-paper transition-colors"
-                  style={{ borderWidth: '1.5px' }}
+                  className="p-5 border-b border-r border-rule-inner hover:bg-paper transition-colors"
                 >
                   <span className="font-display text-[0.88rem] font-bold text-ink block">{f.name}</span>
                   <div className="flex items-center gap-3 mt-1">
@@ -501,20 +501,19 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
 
       {/* ═══ RELATED FOCUS AREAS ═══ */}
       {siblingFocusAreas.length > 0 && (
-        <section className="max-w-[1080px] mx-auto px-6 py-10 border-t-2 border-ink">
+        <section className="max-w-[1080px] mx-auto px-6 py-6 border-t-2 border-ink">
           <SectionHeader
             kicker="Also in this region"
             heading="Related"
             headingEm="Destinations"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border border-rule" style={{ borderWidth: '1.5px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border border-rule-inner">
             {siblingFocusAreas.map(function (sib) {
               return (
                 <Link
                   key={sib.focus_id}
                   href={'/explore/focus/' + sib.focus_id}
-                  className="group p-5 border-b border-r border-rule hover:bg-paper transition-colors"
-                  style={{ borderWidth: '1.5px' }}
+                  className="group p-5 border-b border-r border-rule-inner hover:bg-paper transition-colors"
                 >
                   <div className="w-[28px] h-[28px] mb-2 opacity-[0.3] group-hover:opacity-[0.5] transition-opacity">
                     <Geo type={focusGeo(sib.focus_area_name)} size={28} color={themeColor} />
@@ -530,7 +529,7 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
       )}
 
       {/* ═══ FOOTER CODA ═══ */}
-      <div className="border-t border-rule" style={{ borderWidth: '1.5px' }}>
+      <div className="border-t border-rule-inner">
         <div className="max-w-[1080px] mx-auto px-6 py-8 flex flex-wrap gap-6">
           <Link href="/explore" className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim hover:text-blue transition-colors">
             &larr; Back to Explore
@@ -546,10 +545,3 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
   )
 }
 
-// Simple color helper
-function darken(hex: string): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `#${Math.max(0, Math.floor(r * 0.3)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(g * 0.3)).toString(16).padStart(2, '0')}${Math.max(0, Math.floor(b * 0.3)).toString(16).padStart(2, '0')}`
-}

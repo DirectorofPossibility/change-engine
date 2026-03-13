@@ -198,7 +198,7 @@ export function GuidePage({
                 },
               ]}
             />
-            <div className="py-3 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+            <div className="py-3 border-b border-rule-inner">
               <Link
                 href={'/content/' + featuredContent.id}
                 className="font-mono text-[0.6875rem] tracking-[0.1em] uppercase text-blue hover:underline"
@@ -223,7 +223,7 @@ export function GuidePage({
 
         {/* ═══ COUCH GRID — Latest Content ═══ */}
         {couchItems.length > 0 && (
-          <section className="py-10">
+          <section className="py-6">
             <SectionHeader
               kicker="From the Exchange"
               heading="Latest"
@@ -240,7 +240,7 @@ export function GuidePage({
         )}
 
         {/* ═══ CIVIC DESK ═══ */}
-        <section className="py-10 border-t-2 border-ink">
+        <section className="py-6 border-t-2 border-ink">
           <SectionHeader
             kicker="Civic Intelligence"
             heading="The Civic"
@@ -249,13 +249,13 @@ export function GuidePage({
             allLabel="All civic"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border border-rule" style={{ borderWidth: '1.5px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border border-rule-inner">
             {/* Election countdown */}
             {upcomingElection && daysUntilElection > 0 && (
               <Link
                 href="/elections"
                 className="p-6 border-b border-rule hover:bg-paper transition-colors md:col-span-2"
-                style={{ borderWidth: '1.5px' }}
+
               >
                 <div className="flex items-center gap-4">
                   <Vote size={24} className="text-civic flex-shrink-0" />
@@ -283,7 +283,7 @@ export function GuidePage({
                   key={official.official_id}
                   href={'/officials/' + official.official_id}
                   className="flex items-center gap-3 p-5 border-b border-r border-rule hover:bg-paper transition-colors"
-                  style={{ borderWidth: '1.5px' }}
+  
                 >
                   <div
                     className="w-10 h-10 flex-shrink-0 flex items-center justify-center"
@@ -316,8 +316,8 @@ export function GuidePage({
               return (
                 <div
                   key={policy.policy_id}
-                  className="p-5 border-b border-r border-rule"
-                  style={{ borderWidth: '1.5px', borderLeft: `3px solid ${statusColor}` }}
+                  className="p-5 border-b border-r border-rule-inner"
+                  style={{ borderLeft: `3px solid ${statusColor}` }}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     {policy.bill_number && (
@@ -337,7 +337,7 @@ export function GuidePage({
         </section>
 
         {/* ═══ YOUR NEIGHBORHOOD ═══ */}
-        <section className="py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+        <section className="py-6 border-t border-rule border-rule-inner">
           <SectionHeader
             kicker="Near You"
             heading="Your"
@@ -375,14 +375,14 @@ export function GuidePage({
                   <span className="font-mono text-[0.6875rem] text-dim ml-2">{zip}</span>
                 </p>
               )}
-              <div className="grid grid-cols-1 md:grid-cols-2 border border-rule" style={{ borderWidth: '1.5px' }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 border border-rule-inner">
                 {nearbyServices.map(function (service) {
                   return (
                     <Link
                       key={service.service_id}
                       href={'/services/' + service.service_id}
                       className="block p-5 border-b border-r border-rule hover:bg-paper transition-colors"
-                      style={{ borderWidth: '1.5px' }}
+      
                     >
                       <p className="font-body text-[0.85rem] font-bold text-ink line-clamp-2">{service.service_name}</p>
                       {service.org_name && (
@@ -398,7 +398,7 @@ export function GuidePage({
 
         {/* ═══ LIFE IN HOUSTON ═══ */}
         {lifeSituations.length > 0 && (
-          <section className="py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+          <section className="py-6 border-t border-rule border-rule-inner">
             <SectionHeader
               kicker="When life happens"
               heading="Life in"
@@ -407,7 +407,7 @@ export function GuidePage({
               allLabel="All resources"
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 border border-rule" style={{ borderWidth: '1.5px' }}>
+            <div className="grid grid-cols-1 md:grid-cols-3 border border-rule-inner">
               {lifeSituations.slice(0, 6).map(function (sit: any) {
                 const urgencyColors: Record<string, string> = {
                   Critical: '#b03a2a', High: '#1b5e8a', Medium: '#4a2870', Low: '#1a6b56',
@@ -418,7 +418,7 @@ export function GuidePage({
                     key={sit.situation_id}
                     href={'/help/' + sit.situation_slug}
                     className="group p-5 border-b border-r border-rule hover:bg-paper transition-colors"
-                    style={{ borderWidth: '1.5px' }}
+    
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <span className="w-2 h-2 flex-shrink-0" style={{ background: color }} />
@@ -449,13 +449,13 @@ export function GuidePage({
         </section>
 
         {/* ═══ PATHWAY QUICK NAV ═══ */}
-        <section className="py-10 border-t border-rule" style={{ borderWidth: '1.5px' }}>
+        <section className="py-6 border-t border-rule border-rule-inner">
           <SectionHeader
             kicker="Navigate"
             heading="All"
             headingEm="Pathways"
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 border border-rule" style={{ borderWidth: '1.5px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 border border-rule-inner">
             {themeEntries.map(function ([id, theme]) {
               const count = pathwayCounts[id] ?? 0
               return (
@@ -463,7 +463,7 @@ export function GuidePage({
                   key={id}
                   href={'/pathways/' + theme.slug}
                   className="group flex items-center gap-4 p-5 border-b border-r border-rule hover:bg-paper transition-colors"
-                  style={{ borderWidth: '1.5px' }}
+  
                 >
                   <FlowerOfLife color={theme.color} size={28} className="flex-shrink-0" />
                   <div className="flex-1 min-w-0">

@@ -125,7 +125,7 @@ interface ControlPanelProps {
  */
 export function ControlPanel({ instruments, kicker, heading }: ControlPanelProps) {
   return (
-    <section className="py-10">
+    <section className="py-6">
       {(kicker || heading) && (
         <div className="mb-8">
           {kicker && (

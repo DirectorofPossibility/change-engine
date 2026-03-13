@@ -222,7 +222,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
         {/* From the Couch — editorial grid */}
         {couchItems.length > 0 && (
-          <section className="py-10 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+          <section className="py-10 border-b border-rule-inner">
             <SectionHeader
               kicker="From the Couch"
               heading="Latest"
@@ -239,9 +239,9 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
         )}
 
         {/* Four Desks — by center */}
-        <section className="py-10 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+        <section className="py-10 border-b border-rule-inner">
           <SectionHeader kicker="By Center" heading="Explore by Intent" />
-          <div className="grid grid-cols-1 md:grid-cols-2 border border-rule" style={{ borderWidth: '1.5px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 border border-rule-inner">
             <DeskBlock label="How can I understand?" color={CENTER_COLORS.Learning} position="tl">
               {byCenter.Learning.slice(0, 5).map(c => (
                 <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
@@ -328,7 +328,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
         {/* Civic Data */}
         {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id] && (
-          <section className="py-10 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+          <section className="py-10 border-b border-rule-inner">
             <SectionHeader kicker="Data" heading="See the Data" />
             <div className="flex flex-wrap gap-3">
               {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id].map(ref => (
@@ -337,8 +337,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
                   href={ref.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 py-2.5 px-4 border border-rule transition-colors hover:bg-paper"
-                  style={{ borderWidth: '1.5px' }}
+                  className="group inline-flex items-center gap-2 py-2.5 px-4 border border-rule-inner transition-colors hover:bg-paper"
                 >
                   <span className="font-body text-[0.85rem] group-hover:underline">{ref.label}</span>
                   <span className="font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-muted">{ref.source}</span>
@@ -350,15 +349,15 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
         {/* Quote */}
         {quote && (
-          <section className="py-10 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+          <section className="py-10 border-b border-rule-inner">
             <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={theme.color} />
           </section>
         )}
 
         {/* News Wire */}
         {newsCount > 0 && (
-          <section className="py-10 border-b border-rule" style={{ borderWidth: '1.5px' }}>
-            <div className="p-6 bg-paper border border-rule" style={{ borderWidth: '1.5px' }}>
+          <section className="py-10 border-b border-rule-inner">
+            <div className="p-6 bg-paper border border-rule-inner">
               <span className="font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-muted block mb-2">
                 The Wire
               </span>
@@ -377,7 +376,7 @@ export default async function SinglePathwayPage({ params }: { params: Promise<{ 
 
         {/* Deeper Reading */}
         {libraryNuggets.length > 0 && (
-          <section className="py-10 border-b border-rule" style={{ borderWidth: '1.5px' }}>
+          <section className="py-10 border-b border-rule-inner">
             <LibraryNugget
               nuggets={libraryNuggets}
               variant="sidebar"
@@ -428,7 +427,7 @@ function DeskBlock({ label, color, position, children }: {
   }
 
   return (
-    <div className={`p-6 border-rule ${borderClasses[position]}`} style={{ borderWidth: '1.5px' }}>
+    <div className={`p-6 border-rule-inner ${borderClasses[position]}`}>
       <div className="flex items-center gap-2 mb-4">
         <span className="w-2 h-2" style={{ backgroundColor: color }} />
         <span className="font-mono text-[0.6875rem] tracking-[0.12em] uppercase text-muted">
