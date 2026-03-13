@@ -10,7 +10,7 @@ import { getPathwayBridges } from './wayfinder'
  */
 export const getExchangeStats = cache(async function getExchangeStats(): Promise<ExchangeStats> {
   const supabase = await createClient()
-  const [newsItems, services, officials, paths, orgs, policies, opps, elections] = await Promise.all([
+  const [newsItems, services, officials, paths, orgs, policies, opps, elections, foundations] = await Promise.all([
     supabase.from('content_published').select('id', { count: 'exact', head: true }).eq('is_active', true),
     supabase.from('services_211').select('service_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
     supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }),
@@ -19,6 +19,7 @@ export const getExchangeStats = cache(async function getExchangeStats(): Promise
     supabase.from('policies').select('policy_id', { count: 'exact', head: true }),
     (supabase as any).from('opportunities').select('opportunity_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
     supabase.from('elections').select('election_id', { count: 'exact', head: true }),
+    supabase.from('foundations').select('id', { count: 'exact', head: true }),
   ])
   return {
     resources: newsItems.count ?? 0,
@@ -29,6 +30,7 @@ export const getExchangeStats = cache(async function getExchangeStats(): Promise
     policies: policies.count ?? 0,
     opportunities: opps.count ?? 0,
     elections: elections.count ?? 0,
+    foundations: foundations.count ?? 0,
   }
 })
 

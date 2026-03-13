@@ -41,6 +41,7 @@ export interface ExchangeStats {
   policies: number
   opportunities: number
   elections: number
+  foundations: number
 }
 
 /** Service row enriched with its parent organization's name and coordinates. */

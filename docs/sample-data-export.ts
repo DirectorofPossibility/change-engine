@@ -56,6 +56,7 @@ export const sampleExchangeStats: ExchangeStats = {
   policies: 63,
   opportunities: 186,
   elections: 8,
+  foundations: 112,
 }
 
 export const samplePathwayCounts: Record<string, number> = {

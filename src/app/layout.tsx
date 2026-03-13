@@ -1,6 +1,31 @@
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
+import { Fraunces, Libre_Baskerville, DM_Mono } from 'next/font/google'
 import './globals.css'
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['700', '900'],
+  style: ['normal', 'italic'],
+  axes: ['opsz'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const libreBaskerville = Libre_Baskerville({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const dmMono = DM_Mono({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.changeengine.us'),
@@ -52,7 +77,7 @@ export default async function RootLayout({
 
   return (
     <html lang={lang}>
-      <body>{children}</body>
+      <body className={`${fraunces.variable} ${libreBaskerville.variable} ${dmMono.variable}`}>{children}</body>
     </html>
   )
 }

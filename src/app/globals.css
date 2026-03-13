@@ -8,26 +8,22 @@
    DESIGN TOKENS — Single source of truth
    ───────────────────────────────────────────── */
 :root {
-  /* Fonts — Georgia and Courier New, no Google Fonts */
-  --font-display: Georgia, "Times New Roman", serif;
-  --font-body:    Georgia, "Times New Roman", serif;
-  --font-mono:    "Courier New", Courier, monospace;
+  /* Fonts — loaded via next/font/google, CSS vars injected on <body> */
+  /* Fallbacks only — actual fonts set by className on body */
 
   /* Layout */
   --max-width: 1080px;
   --content-padding: 1.5rem;
 
-  /* Locked editorial palette */
-  --color-ink:        #1A1A1A;
-  --color-parchment:  #F5F0E8;
-  --color-paper:      #F8F4EC;
-  --color-parchment-warm: #EDE7D8;
+  /* Locked editorial palette — cool tones */
+  --color-ink:        #0d1117;
+  --color-paper:      #f4f5f7;
   --color-white:      #ffffff;
   --color-clay:       #C4663A;
-  --color-blue:       #1a3460;
-  --color-muted:      #7a7265;
-  --color-faint:      #9a9189;
-  --color-rule:       rgba(196,102,58,0.3);
+  --color-blue:       #1b5e8a;
+  --color-muted:      #5c6474;
+  --color-faint:      #8a929e;
+  --color-rule:       #dde1e8;
 
   /* Pathway theme colors */
   --color-health:     #1a6b56;
@@ -71,7 +67,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 700;
   }
 
   /* Sharp corners everywhere — flat editorial design */
@@ -146,7 +142,7 @@
    SECTION & CARD PATTERNS
    ───────────────────────────────────────────── */
 
-/* Section divider — warm clay rule */
+/* Section divider — cool rule */
 .section-rule {
   border: none;
   height: 1px;
@@ -212,11 +208,11 @@
 
 /* ─────────────────────────────────────────────
    BUTTON CONSISTENCY
-   Three types: primary (clay), secondary (blue outline), ghost (clay text)
+   Three types: primary (blue), secondary (blue outline), ghost (blue text)
    ───────────────────────────────────────────── */
 
 .btn-primary {
-  background: var(--color-clay);
+  background: var(--color-blue);
   color: var(--color-white);
   padding: 0.625rem 1.25rem;
   font-family: var(--font-mono);
@@ -231,7 +227,7 @@
 .btn-primary:hover { opacity: 0.9; }
 
 .btn-secondary {
-  background: rgba(26,52,96,0.03);
+  background: rgba(27,94,138,0.03);
   color: var(--color-blue);
   padding: 0.625rem 1.25rem;
   font-family: var(--font-mono);
@@ -244,12 +240,12 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 .btn-secondary:hover {
-  background: rgba(26,52,96,0.08);
+  background: rgba(27,94,138,0.08);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--color-clay);
+  color: var(--color-blue);
   padding: 0.25rem 0;
   font-size: var(--text-sm);
   text-decoration: none;
