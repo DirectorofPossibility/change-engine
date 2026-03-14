@@ -56,22 +56,19 @@ type GeoScope = 'local' | 'regional' | 'national'
 
 function classifyScope(org: Org): GeoScope {
   const sa = (org.service_area || '').toLowerCase()
+
+  // Use service_area directly when set
+  if (sa === 'greater houston' || sa === 'houston metropolitan area') return 'local'
+  if (sa === 'texas') return 'regional'
   if (sa === 'national' || sa === 'international') return 'national'
 
+  // Fallback: infer from city/state
   const city = (org.city || '').toLowerCase().trim()
   const state = (org.state || '').toUpperCase().trim()
 
-  // Houston area
-  if (HOUSTON_AREA_CITIES.has(city)) return 'local'
-  if (city.includes('houston')) return 'local'
-
-  // Texas but not Houston area
+  if (HOUSTON_AREA_CITIES.has(city) || city.includes('houston')) return 'local'
   if (state === 'TX' || state === 'TEXAS') return 'regional'
 
-  // Has a city/state outside TX → national
-  if (city || state) return 'national'
-
-  // No geo data at all — default to national
   return 'national'
 }
 
