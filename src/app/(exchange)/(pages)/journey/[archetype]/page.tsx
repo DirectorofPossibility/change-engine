@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { THEMES } from '@/lib/constants'
 import { getEntitiesByPathways } from '@/lib/data/entity-graph'
 import { getNewsFeed } from '@/lib/data/content'
@@ -225,15 +226,21 @@ export async function generateMetadata({ params }: { params: Promise<{ archetype
 
 /* ═══════════════════════════════════════════════════════════ */
 
+export const dynamic = 'force-dynamic'
+
 export default async function JourneyPage({ params }: { params: Promise<{ archetype: string }> }) {
   const { archetype } = await params
   const guide = GUIDES[archetype]
   if (!guide) notFound()
 
-  // Fetch the full entity graph for this archetype's pathways
+  // Read the user's geography anchor from cookie
+  const cookieStore = await cookies()
+  const zip = cookieStore.get('zip')?.value || null
+
+  // Fetch the full entity graph for this archetype's pathways, anchored to geography
   const entities = await getEntitiesByPathways(guide.pathways, {
     content: 6, services: 6, orgs: 8, policies: 6, officials: 12, opportunities: 4,
-  })
+  }, zip)
 
   const recommendedThemes = guide.pathways.map(id => {
     const t = THEMES[id as keyof typeof THEMES]
@@ -284,8 +291,26 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
             {guide.openingNarrative.map((p, i) => <p key={i}>{p}</p>)}
           </div>
 
+          {/* Geography anchor */}
+          {entities.geo && (
+            <div className="flex items-center gap-2 mt-8 mb-4">
+              <MapPin size={14} style={{ color: guide.color }} />
+              <span className="text-[13px]" style={{ color: '#4A4A45' }}>
+                Your guide for <strong style={{ color: guide.color }}>{entities.geo.zip}</strong>
+                {entities.geo.neighborhoodName && <span> &mdash; {entities.geo.neighborhoodName}</span>}
+                {entities.geo.superNeighborhoodName && <span className="text-[11px]" style={{ color: '#6B6560' }}> ({entities.geo.superNeighborhoodName})</span>}
+              </span>
+            </div>
+          )}
+          {!entities.geo && (
+            <p className="mt-8 mb-4 text-[13px]" style={{ color: '#6B6560' }}>
+              <MapPin size={12} className="inline mr-1" />
+              <Link href="/geography" className="underline" style={{ color: guide.color }}>Enter your ZIP code</Link> to see what&rsquo;s available in your neighborhood.
+            </p>
+          )}
+
           {/* Entity counts strip */}
-          <div className="flex items-center gap-4 mt-8 flex-wrap">
+          <div className="flex items-center gap-4 flex-wrap">
             {entities.counts.organizations > 0 && (
               <span className="text-[11px] font-mono px-3 py-1.5" style={{ background: 'white', color: guide.color, border: `1px solid ${guide.color}30` }}>
                 {entities.counts.organizations} organizations

@@ -7,6 +7,7 @@ import { RoleRequestCard } from '@/components/exchange/RoleRequestCard'
 import { SubmissionTracker } from '@/components/exchange/SubmissionTracker'
 import { SpiralProgress } from '@/components/exchange/SpiralProgress'
 import { RedoOnboarding } from '@/components/exchange/RedoOnboarding'
+import { Bookmark } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -55,6 +56,12 @@ export default async function MyDashboardPage() {
     .eq('user_id', user.id)
     .order('action_date', { ascending: false })
     .limit(10)
+
+  const { data: bookmarks } = await (supabase.from('user_bookmarks' as any) as any)
+    .select('id, content_type, content_id, title, image_url, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(12)
 
   const pathNames: Record<string, string> = {}
   const pathSlugs: Record<string, string> = {}
@@ -224,6 +231,72 @@ export default async function MyDashboardPage() {
                         </div>
                         <div className="w-full h-2 bg-paper">
                           <div className="h-2 transition-all" style={{ width: pct + '%', background: '#1b5e8a' }} />
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
+            </section>
+
+            {/* Saved Items */}
+            <section>
+              <div className="flex items-baseline justify-between mb-1">
+                <h2 className="text-xl">Saved Items</h2>
+                <span style={{ color: '#5c6474' }} className="text-[11px]">{bookmarks?.length || 0} saved</span>
+              </div>
+              <div style={{ borderBottom: '2px dotted #dde1e8' }} className="mb-4" />
+              {(!bookmarks || bookmarks.length === 0) ? (
+                <div style={{ border: '1px solid #dde1e8' }} className="p-6 text-center">
+                  <Bookmark size={20} className="mx-auto mb-2" style={{ color: '#9B9590' }} />
+                  <p style={{ color: '#5c6474' }} className="mb-2">Nothing saved yet.</p>
+                  <p style={{ color: '#9B9590' }} className="text-[12px]">Bookmark articles, services, and opportunities to find them here.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {bookmarks.map(function (bm: any) {
+                    const typeColors: Record<string, string> = {
+                      content: '#1b5e8a',
+                      service: '#16a34a',
+                      opportunity: '#C75B2A',
+                      policy: '#4a2870',
+                      official: '#7a2018',
+                      organization: '#1a6b56',
+                      book: '#6a4e10',
+                    }
+                    const color = typeColors[bm.content_type] || '#6B6560'
+                    const hrefMap: Record<string, string> = {
+                      content: '/content/',
+                      service: '/services/',
+                      opportunity: '/opportunities/',
+                      policy: '/policies/',
+                      official: '/officials/',
+                      organization: '/organizations/',
+                      book: '/bookshelf/',
+                    }
+                    const href = (hrefMap[bm.content_type] || '/content/') + bm.content_id
+                    return (
+                      <Link
+                        key={bm.id}
+                        href={href}
+                        className="flex items-center gap-3 p-3 hover:opacity-80 transition-opacity group"
+                        style={{ border: '1px solid #dde1e8' }}
+                      >
+                        {bm.image_url ? (
+                          <Image src={bm.image_url} alt="" width={48} height={48} className="w-12 h-12 object-cover flex-shrink-0" />
+                        ) : (
+                          <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center" style={{ background: color + '12' }}>
+                            <Bookmark size={16} style={{ color }} />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate group-hover:underline">{bm.title || 'Untitled'}</p>
+                          <div className="flex items-center gap-2 text-[11px]" style={{ color: '#9B9590' }}>
+                            <span className="inline-block w-2 h-2 flex-shrink-0" style={{ background: color }} />
+                            <span className="capitalize">{bm.content_type}</span>
+                            <span>&middot;</span>
+                            <span>{new Date(bm.created_at).toLocaleDateString()}</span>
+                          </div>
                         </div>
                       </Link>
                     )

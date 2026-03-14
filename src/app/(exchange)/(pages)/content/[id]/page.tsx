@@ -21,6 +21,7 @@ import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
 import { CollapsibleSidebarSection } from '@/components/exchange/CollapsibleSidebarSection'
+import { BookmarkButton } from '@/components/exchange/BookmarkButton'
 
 /* ── Design Tokens ── */
 const RULE = '#dde1e8'
@@ -358,19 +359,27 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 </p>
               )}
 
-              {/* CTA */}
-              {item.source_url && (
-                <a
-                  href={item.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-white rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
-                  style={{ color: themeColor }}
-                >
-                  <ExternalLink size={16} />
-                  {contentType === 'video' ? 'Watch Now' : contentType === 'tool' ? 'Use the Tool' : contentType === 'podcast' ? 'Listen Now' : 'Read the Full Resource'}
-                </a>
-              )}
+              {/* CTA + Bookmark */}
+              <div className="flex items-center gap-3">
+                {item.source_url && (
+                  <a
+                    href={item.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-white rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    style={{ color: themeColor }}
+                  >
+                    <ExternalLink size={16} />
+                    {contentType === 'video' ? 'Watch Now' : contentType === 'tool' ? 'Use the Tool' : contentType === 'podcast' ? 'Listen Now' : 'Read the Full Resource'}
+                  </a>
+                )}
+                <BookmarkButton
+                  contentType="content"
+                  contentId={item.id}
+                  title={item.title_6th_grade || item.title}
+                  imageUrl={item.image_url}
+                />
+              </div>
 
               {/* Meta strip */}
               <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-6">

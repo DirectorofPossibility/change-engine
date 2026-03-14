@@ -711,6 +711,9 @@ async function AccountabilityCenter({ meta, centerColor }: { meta: typeof CENTER
    ═══════════════════════════════════════════════════════════════════════ */
 
 async function StandardCenter({ centerName, meta, centerColor }: { centerName: string; meta: typeof CENTER_META.Learning; centerColor: string }) {
+  const cookieStore = await cookies()
+  const zip = cookieStore.get('zip')?.value || null
+
   const entities = await getEntitiesByCenter(centerName, {
     content: 60,
     services: 8,
@@ -718,7 +721,7 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
     policies: 6,
     officials: 8,
     opportunities: 6,
-  })
+  }, zip)
 
   const items = entities.content as ContentPublished[]
   const featuredItem = items.find(item => item.image_url) || items[0] || null
@@ -772,8 +775,19 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
             {meta.description}
           </p>
 
+          {/* Geography anchor */}
+          {entities.geo && (
+            <div className="flex items-center gap-2 mt-6">
+              <MapPin size={14} style={{ color: centerColor }} />
+              <span className="text-[13px]" style={{ color: '#4A4A45' }}>
+                Showing resources for <strong style={{ color: centerColor }}>{entities.geo.zip}</strong>
+                {entities.geo.neighborhoodName && <span> &mdash; {entities.geo.neighborhoodName}</span>}
+              </span>
+            </div>
+          )}
+
           {/* Entity counts strip */}
-          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-8">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4">
             {[
               { label: 'Content', count: entities.counts.content, href: '#content' },
               { label: 'Organizations', count: entities.counts.organizations, href: '#organizations' },
