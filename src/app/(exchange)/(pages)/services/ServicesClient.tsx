@@ -59,9 +59,9 @@ export function ServicesClient({ services, translations = {}, categories, initia
     }
   }, [savedZip]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Filter services by search + ZIP
+  // Filter by search, sort local-ZIP services first (don't hide non-local)
   const filtered = useMemo(() => {
-    return services.filter((s) => {
+    const matched = services.filter((s) => {
       if (search) {
         const q = search.toLowerCase()
         const matchName = s.service_name.toLowerCase().includes(q)
@@ -69,9 +69,19 @@ export function ServicesClient({ services, translations = {}, categories, initia
         const matchDesc = s.description_5th_grade?.toLowerCase().includes(q)
         if (!matchName && !matchOrg && !matchDesc) return false
       }
-      if (zipFilter && s.zip_code !== zipFilter) return false
       return true
     })
+    // If ZIP entered, sort local services to top but keep everything visible
+    if (zipFilter && zipFilter.length === 5) {
+      const local: ServiceWithOrg[] = []
+      const rest: ServiceWithOrg[] = []
+      matched.forEach(s => {
+        if (s.zip_code === zipFilter) local.push(s)
+        else rest.push(s)
+      })
+      return [...local, ...rest]
+    }
+    return matched
   }, [services, search, zipFilter])
 
   // Group by category for phone book view
@@ -164,7 +174,9 @@ export function ServicesClient({ services, translations = {}, categories, initia
           maxLength={5}
         />
         <span className="text-sm text-brand-muted self-center whitespace-nowrap">
-          {filtered.length} services
+          {zipFilter && zipFilter.length === 5
+            ? `${filtered.filter(s => s.zip_code === zipFilter).length} local · ${filtered.length} total`
+            : `${filtered.length} services`}
         </span>
         {hasLocations && (
           <div className="flex gap-1 ml-auto bg-brand-bg p-1">
