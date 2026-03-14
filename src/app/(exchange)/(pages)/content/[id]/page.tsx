@@ -5,28 +5,36 @@ import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { getUIStrings } from '@/lib/i18n'
 import { THEMES, LANGUAGES } from '@/lib/constants'
-import { ThemePill } from '@/components/ui/ThemePill'
-import { CenterBadge } from '@/components/ui/CenterBadge'
-import { FocusAreaPills } from '@/components/exchange/FocusAreaPills'
 import { getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
+import { getSDGMap, getSDOHMap } from '@/lib/data/taxonomy'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
-import { ExternalLink, Globe, ArrowRight } from 'lucide-react'
-import { WayfinderTooltipPos } from '@/components/exchange/WayfinderTooltips'
+import { ExternalLink, Globe, ArrowRight, BookOpen, Users, Megaphone, GraduationCap, Rocket } from 'lucide-react'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
+import { CollapsibleSidebarSection } from '@/components/exchange/CollapsibleSidebarSection'
 
 /* ── Design Tokens ── */
-const PARCHMENT_LIGHT = '#f4f5f7'
+const RULE = '#dde1e8'
+const DIM = '#5c6474'
+const INK = '#0d1117'
+const SIDEBAR_BG = '#f4f5f7'
+
+const TRAIL_LEVELS = [
+  { name: 'Get Curious', subtitle: 'Learn', color: '#1b5e8a', icon: BookOpen },
+  { name: 'Find Your People', subtitle: 'Connect', color: '#1a6b56', icon: Users },
+  { name: 'Show Up', subtitle: 'Participate', color: '#4a2870', icon: Megaphone },
+  { name: 'Go Deeper', subtitle: 'Build skills & capacity', color: '#7a2018', icon: GraduationCap },
+  { name: 'Make Your Move', subtitle: 'Take action in whatever form fits you', color: '#0d1117', icon: Rocket },
+]
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -111,10 +119,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       .eq('content_id', item.inbox_id)
       .eq('language_id', langConfig.langId)
     if (translations) {
-      translations.forEach(function (t) {
-        if ((t.field_name === 'title' || t.field_name === 'title_6th_grade') && t.translated_text) { translatedTitle = t.translated_text; isTranslated = true }
-        if ((t.field_name === 'summary' || t.field_name === 'summary_6th_grade') && t.translated_text) { translatedSummary = t.translated_text; isTranslated = true }
-        if ((t.field_name === 'body') && t.translated_text) { translatedBody = t.translated_text; isTranslated = true }
+      translations.forEach(function (tr: any) {
+        if ((tr.field_name === 'title' || tr.field_name === 'title_6th_grade') && tr.translated_text) { translatedTitle = tr.translated_text; isTranslated = true }
+        if ((tr.field_name === 'summary' || tr.field_name === 'summary_6th_grade') && tr.translated_text) { translatedSummary = tr.translated_text; isTranslated = true }
+        if ((tr.field_name === 'body') && tr.translated_text) { translatedBody = tr.translated_text; isTranslated = true }
       })
     }
   }
@@ -124,37 +132,93 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     .from('content_focus_areas')
     .select('focus_id')
     .eq('content_id', item.id)
-  const focusAreaIds = (focusJunctions ?? []).map(j => j.focus_id)
+  const focusAreaIds = (focusJunctions ?? []).map((j: any) => j.focus_id)
   const focusAreas = focusAreaIds.length > 0 ? await getFocusAreasByIds(focusAreaIds) : []
+
+  // Taxonomy lookups
+  const sdgIds: string[] = (item as any).sdg_ids || []
+  const audienceIds: string[] = (item as any).audience_segments || []
+  const actionTypeIds: string[] = (item as any).action_type_ids || []
+  const timeCommitmentId: string | null = (item as any).time_commitment_id || null
+  const geoScope: string | null = (item as any).geographic_scope || null
+  const govLevel: string | null = (item as any).gov_level_id || null
+  const contentType: string | null = (item as any).content_type || null
 
   // Parallel fetches
   const pathwayThemeIds = item.pathway_primary ? [item.pathway_primary] : []
-  const [opportunities, policies, libraryNuggets] = await Promise.all([
+  const [opportunities, policies, libraryNuggets, sdgMap, sdohMap, orgData, audienceData, actionTypeData, timeData, govData] = await Promise.all([
     focusAreaIds.length > 0 ? getRelatedOpportunities(focusAreaIds) : Promise.resolve([]),
     focusAreaIds.length > 0 ? getRelatedPolicies(focusAreaIds) : Promise.resolve([]),
     getLibraryNuggets(pathwayThemeIds, focusAreaIds, 3),
+    getSDGMap(),
+    getSDOHMap(),
+    item.org_id ? supabase.from('organizations').select('org_id, org_name, website, description_5th_grade, logo_url, mission_statement').eq('org_id', item.org_id).single().then((r: any) => r.data) : Promise.resolve(null),
+    audienceIds.length > 0 ? supabase.from('audience_segments').select('segment_id, segment_name').in('segment_id', audienceIds).then((r: any) => r.data) : Promise.resolve([]),
+    actionTypeIds.length > 0 ? supabase.from('action_types').select('action_type_id, action_type_name').in('action_type_id', actionTypeIds).then((r: any) => r.data) : Promise.resolve([]),
+    timeCommitmentId ? supabase.from('time_commitments').select('time_id, time_name').eq('time_id', timeCommitmentId).single().then((r: any) => r.data) : Promise.resolve(null),
+    govLevel ? supabase.from('government_levels').select('gov_level_id, gov_level_name').eq('gov_level_id', govLevel).single().then((r: any) => r.data) : Promise.resolve(null),
   ])
 
-  // Officials connected to related policies (sponsors, committee members)
-  let responsibleOfficials: Array<{ official_id: string; official_name: string; title: string | null; party: string | null; level: string | null; photo_url: string | null }> = []
-  if (policies.length > 0) {
-    const policyIds = policies.map((p: any) => p.policy_id)
+  // Related policies via focus areas (for sidebar + action cards)
+  let relatedPolicies: any[] = []
+  if (focusAreaIds.length > 0) {
+    const { data: policyJunctions } = await supabase
+      .from('policy_focus_areas')
+      .select('policy_id')
+      .in('focus_id', focusAreaIds)
+      .limit(10)
+    if (policyJunctions && policyJunctions.length > 0) {
+      const pIds = Array.from(new Set(policyJunctions.map((j: any) => j.policy_id)))
+      const { data: pols } = await supabase
+        .from('policies')
+        .select('policy_id, policy_name, title_6th_grade, level, status')
+        .in('policy_id', pIds)
+        .eq('is_published', true)
+        .limit(4)
+      relatedPolicies = pols || []
+    }
+  }
+
+  // Related services via focus areas (211-style community resources)
+  let relatedServices: any[] = []
+  if (focusAreaIds.length > 0) {
+    const { data: svcJunctions } = await supabase
+      .from('service_focus_areas')
+      .select('service_id')
+      .in('focus_id', focusAreaIds)
+      .limit(10)
+    if (svcJunctions && svcJunctions.length > 0) {
+      const sIds = Array.from(new Set(svcJunctions.map((j: any) => j.service_id)))
+      const { data: svcs } = await supabase
+        .from('services_211')
+        .select('service_id, service_name, org_id, phone, address, city')
+        .in('service_id', sIds)
+        .eq('is_active', 'Yes')
+        .limit(4)
+      relatedServices = svcs || []
+    }
+  }
+
+  // Officials connected to related policies
+  let responsibleOfficials: any[] = []
+  if (policies.length > 0 || relatedPolicies.length > 0) {
+    const policyIds = [...policies.map((p: any) => p.policy_id), ...relatedPolicies.map((p: any) => p.policy_id)]
     const { data: officialJunctions } = await supabase
       .from('policy_officials')
       .select('official_id')
       .in('policy_id', policyIds)
     if (officialJunctions && officialJunctions.length > 0) {
-      const officialIds = Array.from(new Set(officialJunctions.map(j => j.official_id)))
+      const officialIds = Array.from(new Set(officialJunctions.map((j: any) => j.official_id)))
       const { data: officials } = await supabase
         .from('elected_officials')
         .select('official_id, official_name, title, party, level, photo_url')
         .in('official_id', officialIds)
-        .limit(8)
+        .limit(5)
       responsibleOfficials = officials || []
     }
   }
 
-  // Cross-references from AI classification
+  // AI classification data
   let crossRefIds: string[] = []
   let heroQuote: string | null = null
   let programs: Array<{ name: string; description: string }> = []
@@ -185,17 +249,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Org info
-  let orgInfo: { org_id: string; org_name: string; website: string | null } | null = null
-  if (item.org_id) {
-    const { data: org } = await supabase
-      .from('organizations')
-      .select('org_id, org_name, website')
-      .eq('org_id', item.org_id)
-      .single()
-    orgInfo = org
-  }
-
   // Related content scored by focus area overlap
   const { data: relatedCandidates } = await supabase
     .from('content_published')
@@ -220,10 +273,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     .slice(0, 6)
 
   const userProfile = await getUserProfile()
-  const [wayfinderData, quote] = await Promise.all([
-    getWayfinderContext('content', id, userProfile?.role),
-    getRandomQuote(item.pathway_primary || undefined),
-  ])
 
   const title = translatedTitle || item.title_6th_grade
   const summary = translatedSummary || item.summary_6th_grade
@@ -236,8 +285,15 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   let sectionNumber = 0
 
   const jsonLd = articleJsonLd(item as any)
-
   const sourceDomain = item.source_url ? (() => { try { return new URL(item.source_url).hostname } catch { return 'the source' } })() : null
+
+  const sdohCode = (item as any).sdoh_domain
+  const sdohEntry = sdohCode ? sdohMap[sdohCode] : null
+  const matchedSDGs = sdgIds.map(sid => sdgMap[sid]).filter(Boolean)
+
+  const currentLevel = (item as any).trail_level || 1
+  const actionItems = (item as any).action_items || {}
+  const hasActions = Object.values(actionItems).some(Boolean)
 
   return (
     <>
@@ -249,109 +305,125 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ── RESOURCE MASTHEAD — white, with type pill + geo mark ── */}
-      <section className="bg-white border-b-2 border-ink">
-        {/* Top color accent */}
-        <div style={{ height: 3, background: themeColor }} />
+      {/* ══════════════════════════════════════════════════════════════════
+          GRADIENT HERO
+         ══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, #C75B2A 100%)` }}
+      >
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
 
-        <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
-          {/* Breadcrumb */}
-          <nav className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim mb-5">
-            <Link href="/guide" className="hover:text-blue transition-colors">Guide</Link>
-            {themeEntry && (
-              <>
-                <span className="mx-1.5 text-faint">&rsaquo;</span>
-                <Link href={'/pathways/' + (themeSlug || '')} className="hover:text-blue transition-colors">{themeEntry.name}</Link>
-              </>
-            )}
-            {(item as any).content_type && (
-              <>
-                <span className="mx-1.5 text-faint">&rsaquo;</span>
-                <span className="text-blue">{(item as any).content_type}</span>
-              </>
-            )}
-          </nav>
+        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-10 items-center">
+            <div className="flex-1">
+              {/* Breadcrumb */}
+              <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+                <Link href="/guide" className="hover:text-white transition-colors">Guide</Link>
+                {themeEntry && (
+                  <>
+                    <span className="mx-1.5">&rsaquo;</span>
+                    <Link href={'/pathways/' + (themeSlug || '')} className="hover:text-white transition-colors">{themeEntry.name}</Link>
+                  </>
+                )}
+              </nav>
 
-          {/* Type pill + geo mark row */}
-          <div className="flex items-center gap-3 mb-4">
-            {/* Geo mark */}
-            <FlowerOfLife size={28} color={themeColor} opacity={0.5} className="flex-shrink-0" />
+              {/* Badge row */}
+              <div className="flex items-center gap-3 mb-5">
+                {contentType && (
+                  <span className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                    style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
+                  >
+                    {contentType}
+                  </span>
+                )}
+                {isTranslated && (
+                  <span className="inline-flex items-center gap-1 text-white/80 font-mono text-[0.65rem] uppercase tracking-[0.1em]">
+                    <Globe size={11} /> {t('content.translated')}
+                  </span>
+                )}
+              </div>
 
-            {/* Type pill */}
-            {(item as any).content_type && (
-              <span
-                className="font-mono text-[0.6rem] uppercase tracking-[0.14em] px-3 py-1"
-                style={{ color: themeColor, border: `1.5px solid ${themeColor}` }}
+              {/* Title */}
+              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
+                style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
               >
-                {(item as any).content_type}
-              </span>
-            )}
+                {title}
+              </h1>
 
-            {/* Theme name */}
-            {themeEntry && (
-              <span className="font-mono text-[0.6875rem] uppercase tracking-[0.1em]" style={{ color: themeColor }}>
-                {themeEntry.name}
-              </span>
-            )}
+              {/* Summary */}
+              {summary && (
+                <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.1rem' }}>
+                  {summary.length > 200 ? summary.slice(0, 200) + '...' : summary}
+                </p>
+              )}
 
-            {/* Translation indicator */}
-            {isTranslated && (
-              <span className="relative flex items-center gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-blue">
-                <Globe size={11} /> {t('content.translated')}
-                <WayfinderTooltipPos tipKey="translation_indicator" position="bottom" />
-              </span>
-            )}
-          </div>
+              {/* CTA */}
+              {item.source_url && (
+                <a
+                  href={item.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 bg-white rounded-full font-bold text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                  style={{ color: themeColor }}
+                >
+                  <ExternalLink size={16} />
+                  {contentType === 'video' ? 'Watch Now' : contentType === 'tool' ? 'Use the Tool' : contentType === 'podcast' ? 'Listen Now' : 'Read the Full Resource'}
+                </a>
+              )}
 
-          {/* Title */}
-          <h1
-            className="font-display font-black leading-[1.1] tracking-[-0.02em] text-ink"
-            style={{
-              fontSize: 'clamp(26px, 4vw, 42px)',
-              marginBottom: '1rem',
-            }}
-          >
-            {title}
-          </h1>
-
-          {/* Metadata strip */}
-          <div className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim flex flex-wrap items-center gap-x-3 gap-y-1">
-            {item.published_at && (
-              <span>{new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            )}
-            {item.last_updated && item.published_at && item.last_updated !== item.published_at && (
-              <span>&middot; Updated {new Date(item.last_updated).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-            )}
-            {sourceDomain && (
-              <>
-                <span>&middot;</span>
-                <span>{item.source_org_name || sourceDomain}</span>
-              </>
-            )}
-            {orgInfo && (
-              <>
-                <span>&middot;</span>
-                <span>{orgInfo.org_name}</span>
-              </>
-            )}
-          </div>
-
-          {/* Hero image */}
-          {item.image_url && (
-            <div className="mt-6" style={{ border: '1.5px solid #dde1e8' }}>
-              <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
+              {/* Meta strip */}
+              <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-6">
+                {item.published_at && (
+                  <span>{new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                )}
+                {orgData && (
+                  <>
+                    <span>&middot;</span>
+                    <span>{orgData.org_name}</span>
+                  </>
+                )}
+                {sourceDomain && (
+                  <>
+                    <span>&middot;</span>
+                    <span>{sourceDomain}</span>
+                  </>
+                )}
+              </div>
             </div>
-          )}
+
+            {/* Hero image */}
+            {item.image_url && (
+              <div className="w-full lg:w-[380px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30">
+                <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* ── TWO-COLUMN LAYOUT: Body + Sidebar ── */}
-      <section style={{ background: '#ffffff' }}>
-        <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
+      {/* ── QUOTE BANNER ── */}
+      {heroQuote && (
+        <section className="bg-white">
+          <div className="max-w-[1080px] mx-auto px-6 py-8">
+            <div className="rounded-r-2xl pl-6 py-6 pr-8" style={{ borderLeft: `5px solid ${themeColor}`, background: '#fafafa' }}>
+              <p className="italic leading-[1.7] text-slate-600" style={{ fontSize: '1.2rem' }}>
+                &ldquo;{heroQuote}&rdquo;
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+          TWO-COLUMN LAYOUT — Body + Taxonomy Wayfinder Sidebar
+         ══════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
           <div className="flex flex-col lg:flex-row gap-10">
 
-            {/* ── LEFT COLUMN: Article Body ── */}
-            <div className="flex-1 min-w-0" style={{ maxWidth: 700 }}>
+            {/* ── LEFT: Body Content ── */}
+            <div className="flex-1 min-w-0" style={{ maxWidth: 740 }}>
 
               {/* Video embed */}
               {(item as any).video_url && (() => {
@@ -360,7 +432,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 if (!videoId) return null
                 return (
                   <div className="mb-6">
-                    <div className="relative w-full overflow-hidden" style={{ paddingBottom: '56.25%', border: '1px solid #dde1e8' }}>
+                    <div className="relative w-full overflow-hidden rounded-lg" style={{ paddingBottom: '56.25%', border: `1px solid ${RULE}` }}>
                       <iframe
                         className="absolute inset-0 w-full h-full"
                         src={'https://www.youtube-nocookie.com/embed/' + videoId}
@@ -373,53 +445,71 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 )
               })()}
 
-              {/* Body */}
+              {/* Body blocks with numbered sections + highlight boxes */}
               {bodyBlocks.length > 0 ? (
                 <div className="space-y-5 font-body">
-                  <span className="block mb-2 font-mono" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.article')}</span>
                   {bodyBlocks.map(function (block, i) {
                     if (!block) return null
+
+                    {/* Section headers with numbered circle badges */}
                     if (block.startsWith('## ')) {
                       sectionNumber++
                       return (
-                        <div key={i} className="flex items-baseline gap-2.5 mt-8 first:mt-0 pb-2" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
+                        <div key={i} className="flex items-center gap-4 mt-10 first:mt-0 pb-3" style={{ borderBottom: `1px solid ${RULE}` }}>
                           <span
-                            className="flex-shrink-0 font-mono"
-                            style={{ fontSize: '0.75rem', fontWeight: 700, color: themeColor }}
+                            className="w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 text-white font-bold text-sm"
+                            style={{ background: `linear-gradient(135deg, ${themeColor} 0%, #C75B2A 100%)` }}
                           >
-                            {String(sectionNumber).padStart(2, '0')}
+                            {sectionNumber}
                           </span>
-                          <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 700 }}>{block.replace(/^## /, '')}</h2>
+                          <h2 className="font-display text-xl font-bold text-ink">{block.replace(/^## /, '')}</h2>
                         </div>
                       )
                     }
-                    if (block.match(/^[-\u2022*] /m)) {
-                      const items = block.split(/\n/).filter(function (l) { return l.trim() })
+
+                    {/* Blockquotes → Highlight boxes */}
+                    if (block.startsWith('> ')) {
+                      const quoteText = block.replace(/^> /gm, '').trim()
                       return (
-                        <ul key={i} className="space-y-1.5 ml-5" style={{ fontSize: '1.0625rem', lineHeight: 1.85, listStyleType: 'disc' }}>
-                          {items.map(function (li, j) {
-                            return <li key={j} style={{ color: "#1b5e8a" }}><span className="text-ink">{li.replace(/^[-\u2022*]\s*/, '').trim()}</span></li>
+                        <div key={i} className="rounded-r-xl py-5 px-6 my-4" style={{ background: '#fef3c7', borderLeft: '5px solid #F59E0B' }}>
+                          <p className="text-amber-900 leading-[1.7]" style={{ fontSize: '1rem' }}>{quoteText}</p>
+                        </div>
+                      )
+                    }
+
+                    {/* Bullet lists with arrow markers */}
+                    if (block.match(/^[-\u2022*] /m)) {
+                      const listItems = block.split(/\n/).filter(function (l) { return l.trim() })
+                      return (
+                        <ul key={i} className="space-y-2 my-4">
+                          {listItems.map(function (li, j) {
+                            return (
+                              <li key={j} className="flex gap-3 items-start" style={{ fontSize: '1.0625rem', lineHeight: 1.8 }}>
+                                <span className="flex-shrink-0 font-bold mt-0.5" style={{ color: themeColor }}>&rarr;</span>
+                                <span className="text-ink">{li.replace(/^[-\u2022*]\s*/, '').trim()}</span>
+                              </li>
+                            )
                           })}
                         </ul>
                       )
                     }
-                    // Drop cap on first regular paragraph
-                    const isFirstParagraph = i === bodyBlocks.findIndex(function (b) { return b && !b.startsWith('## ') && !b.match(/^[-\u2022*] /m) })
-                    if (isFirstParagraph && block.length > 40) {
+
+                    {/* Drop cap on first paragraph */}
+                    const isFirst = i === bodyBlocks.findIndex(function (b) { return b && !b.startsWith('## ') && !b.startsWith('> ') && !b.match(/^[-\u2022*] /m) })
+                    if (isFirst && block.length > 40) {
                       const firstChar = block.charAt(0)
                       const rest = block.slice(1)
                       return (
                         <p key={i} className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>
-                          <span
-                            className="float-left mr-2.5 mt-1 font-display"
-                            style={{ fontSize: '3.5rem', fontWeight: 900, lineHeight: 0.8, color: themeColor }}
-                          >
+                          <span className="float-left mr-2.5 mt-1 font-display" style={{ fontSize: '3.5rem', fontWeight: 900, lineHeight: 0.8, color: themeColor }}>
                             {firstChar}
                           </span>
                           {rest}
                         </p>
                       )
                     }
+
+                    {/* Bold parsing */}
                     if (block.match(/\*\*[^*]+\*\*/)) {
                       const parts = block.split(/(\*\*[^*]+\*\*)/)
                       return (
@@ -433,95 +523,59 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                         </p>
                       )
                     }
+
                     return <p key={i} className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>{block}</p>
                   })}
                 </div>
-              ) : (
-                <div className="space-y-6 font-body">
-                  {/* Show summary as body text when no body content */}
-                  {summary && (
-                    <div>
-                      <span className="block mb-2 font-mono" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.article')}</span>
-                      <p className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>{summary}</p>
-                    </div>
-                  )}
-                  {item.source_url && (
-                    <div className="p-5 flex items-center justify-between gap-4" style={{ border: '1px solid #dde1e8', background: '#f4f5f7' }}>
-                      <div>
-                        <p className="mb-1" style={{ fontSize: '0.6875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
-                          {(item as any).content_type === 'video' ? 'Watch the video' :
-                           (item as any).content_type === 'tool' ? 'Use the tool' :
-                           (item as any).content_type === 'podcast' ? 'Listen now' :
-                           'Read the full guide'}
-                        </p>
-                        <p style={{ fontSize: '0.9rem',  }}>
-                          We found this for you at <strong>{item.source_org_name || item.source_domain || sourceDomain}</strong>
-                        </p>
-                      </div>
-                      <a
-                        href={item.source_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90"
-                        style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, background: '#1b5e8a' }}
-                      >
-                        <ExternalLink size={14} /> Take me there
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
+              ) : summary ? (
+                <p className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>{summary}</p>
+              ) : null}
 
-              {/* Source CTA box — shown after body content */}
-              {item.source_url && bodyBlocks.length > 0 && (
-                <div className="mt-6 p-5 flex items-center justify-between gap-4" style={{ border: '1px solid #dde1e8', background: '#f4f5f7' }}>
+              {/* ── SOURCE CTA BOX ── */}
+              {item.source_url && (
+                <div className="mt-8 p-5 flex items-center justify-between gap-4 rounded-lg" style={{ border: `1px solid ${RULE}`, background: SIDEBAR_BG }}>
                   <div>
-                    <p className="mb-1" style={{ fontSize: '0.6875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#5c6474" }}>
-                      {(item as any).content_type === 'book' ? 'Read the book' :
-                       (item as any).content_type === 'course' ? 'Start the course' :
-                       (item as any).content_type === 'video' ? 'Watch the video' :
-                       (item as any).content_type === 'diy_kit' ? 'Get the kit' :
-                       (item as any).content_type === 'tool' ? 'Use the tool' :
-                       (item as any).content_type === 'podcast' ? 'Listen now' :
+                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.1em] mb-1" style={{ color: DIM }}>
+                      {contentType === 'video' ? 'Watch the video' :
+                       contentType === 'tool' ? 'Use the tool' :
+                       contentType === 'podcast' ? 'Listen now' :
+                       contentType === 'course' ? 'Start the course' :
                        'Go to this resource'}
                     </p>
-                    <p style={{ fontSize: '0.9rem',  }}>
+                    <p style={{ fontSize: '0.9rem' }}>
                       We found this for you at <strong>{item.source_org_name || item.source_domain || sourceDomain}</strong>
                     </p>
                   </div>
-                  <a
-                    href={item.source_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90"
-                    style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 600, background: '#1b5e8a' }}
+                  <a href={item.source_url} target="_blank" rel="noopener noreferrer"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90 rounded-full font-mono text-[0.7rem] uppercase tracking-[0.08em] font-bold"
+                    style={{ background: themeColor }}
                   >
                     <ExternalLink size={14} /> Take me there
                   </a>
                 </div>
               )}
 
-              {/* Break It Down */}
+              {/* ── Break It Down ── */}
               {(summary || item.body) && (
-                <div className="mt-6 p-5" style={{ border: '1px solid #dde1e8' }}>
-                  <p className="mb-1" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>AI Summary</p>
-                  <p className="mb-4" style={{ fontSize: '0.88rem', color: "#5c6474" }}>Let us break this down in plain language.</p>
+                <div className="mt-6 p-5 rounded-lg" style={{ border: `1px solid ${RULE}` }}>
+                  <p className="mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em]" style={{ color: DIM }}>AI Summary</p>
+                  <p className="mb-4 text-sm" style={{ color: DIM }}>Let us break this down in plain language.</p>
                   <BreakItDown title={title} summary={summary} type="content" accentColor={themeColor} />
                 </div>
               )}
 
-              {/* Programs */}
+              {/* ── PROGRAMS ── */}
               {programs.length > 0 && (
-                <div className="mt-8">
-                  <p className="mb-3" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>Programs</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="mt-10">
+                  <h3 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] mb-4" style={{ color: DIM }}>Programs</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {programs.map(function (prog, i) {
                       return (
-                        <div key={i} className="p-4 flex gap-3" style={{ border: '1px solid #dde1e8' }}>
-                          <div className="w-1 flex-shrink-0" style={{ backgroundColor: themeColor }} />
+                        <div key={i} className="p-5 rounded-lg flex gap-3" style={{ border: `1px solid ${RULE}`, background: 'white' }}>
+                          <div className="w-1 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
                           <div>
-                            <p className="font-semibold" style={{ fontSize: '0.9rem',  }}>{prog.name}</p>
-                            <p className="mt-1" style={{ fontSize: '0.8rem', lineHeight: 1.6, color: "#5c6474" }}>{prog.description}</p>
+                            <p className="font-semibold text-sm">{prog.name}</p>
+                            <p className="mt-1 text-sm leading-relaxed" style={{ color: DIM }}>{prog.description}</p>
                           </div>
                         </div>
                       )
@@ -529,115 +583,95 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   </div>
                 </div>
               )}
-            </div>
 
-            {/* ── RIGHT COLUMN: Sidebar ── */}
-            <aside className="w-full lg:w-[340px] flex-shrink-0 space-y-5">
-
-              {/* Trail Position — 5 named levels */}
-              {(() => {
-                const TRAIL_LEVELS = [
-                  { name: 'Get Curious', subtitle: 'Learn', color: '#1b5e8a' },
-                  { name: 'Find Your People', subtitle: 'Connect', color: '#1a6b56' },
-                  { name: 'Show Up', subtitle: 'Participate', color: '#4a2870' },
-                  { name: 'Go Deeper', subtitle: 'Build skills & capacity', color: '#7a2018' },
-                  { name: 'Make Your Move', subtitle: 'Take action in whatever form fits you', color: '#0d1117' },
-                ]
-                const currentLevel = (item as any).trail_level || 1
-                return (
-                  <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
-                    <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: '#0d1117' }}>Trail Position</p>
-                    <div className="space-y-0">
-                      {TRAIL_LEVELS.map(function (level, i) {
-                        const n = i + 1
-                        const isActive = n === currentLevel
-                        const isPast = n < currentLevel
-                        return (
-                          <div
-                            key={n}
-                            className="flex items-center gap-3 py-2"
-                            style={{ borderBottom: i < 4 ? '1px solid #dde1e8' : 'none', opacity: isActive ? 1 : isPast ? 0.7 : 0.4 }}
-                          >
-                            <div
-                              className="w-6 h-6 flex items-center justify-center flex-shrink-0 font-mono text-[0.6rem] font-bold"
-                              style={{
-                                background: isActive ? level.color : isPast ? level.color + '30' : '#dde1e8',
-                                color: isActive ? 'white' : isPast ? level.color : '#9B9590',
-                              }}
-                            >
-                              {n}
-                            </div>
-                            <div className="min-w-0">
-                              <span className={'block text-[0.8rem] leading-tight ' + (isActive ? 'font-bold text-ink' : 'font-medium')} style={{ color: isActive ? '#0d1117' : undefined }}>
-                                {level.name}
-                              </span>
-                              {isActive && (
-                                <span className="block text-[0.7rem] mt-0.5" style={{ color: '#5c6474' }}>{level.subtitle}</span>
-                              )}
-                            </div>
-                            {isActive && (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: level.color }} />
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
+              {/* ── ACTION CARDS ── */}
+              {(hasActions || relatedPolicies.length > 0) && (
+                <div className="mt-10">
+                  <h3 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] mb-5" style={{ color: DIM }}>Take Action</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {actionItems.volunteer_url && (
+                      <ActionCard href={actionItems.volunteer_url} icon="🤝" label="Volunteer" desc="Give your time and talent" cta="Show Up" themeColor={themeColor} />
+                    )}
+                    {actionItems.donate_url && (
+                      <ActionCard href={actionItems.donate_url} icon="💛" label="Donate" desc="Support this work" cta="Contribute" themeColor={themeColor} />
+                    )}
+                    {actionItems.signup_url && (
+                      <ActionCard href={actionItems.signup_url} icon="✍️" label="Sign Up" desc="Get involved today" cta="Join" themeColor={themeColor} />
+                    )}
+                    {actionItems.register_url && (
+                      <ActionCard href={actionItems.register_url} icon="📋" label="Register" desc="Reserve your spot" cta="Register" themeColor={themeColor} />
+                    )}
+                    {actionItems.attend_url && (
+                      <ActionCard href={actionItems.attend_url} icon="📍" label="Attend" desc="Show up in person" cta="Attend" themeColor={themeColor} />
+                    )}
+                    {relatedPolicies.length > 0 && (
+                      <Link href={'/policies/' + relatedPolicies[0].policy_id}
+                        className="block p-6 rounded-xl text-center border-[2px] border-gray-200 transition-all hover:-translate-y-1 hover:border-purple-400 hover:shadow-lg bg-white"
+                      >
+                        <span className="text-3xl block mb-3">📜</span>
+                        <h4 className="font-bold mb-2">Follow the Policy</h4>
+                        <p className="text-sm mb-4" style={{ color: DIM }}>Track related legislation</p>
+                        <span className="inline-block px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-wider"
+                          style={{ background: `linear-gradient(135deg, #4a2870, ${themeColor})` }}
+                        >Learn More &rarr;</span>
+                      </Link>
+                    )}
                   </div>
-                )
-              })()}
-
-              {/* At a Glance */}
-              <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
-                <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#0d1117' }}>{t('content.at_a_glance')}</p>
-                <div className="space-y-3">
-                  {orgInfo && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: '#0d1117' }}>Organization</span>
-                      <Link href={'/organizations/' + orgInfo.org_id} className="text-sm font-bold truncate ml-2 hover:underline transition-colors" style={{ color: "#1b5e8a" }}>{orgInfo.org_name}</Link>
-                    </div>
-                  )}
-                  {themeSlug && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: '#0d1117' }}>{t('content.pathway')}</span>
-                      <ThemePill themeId={item.pathway_primary} size="sm" />
-                    </div>
-                  )}
-                  {item.center && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold" style={{ color: '#0d1117' }}>Center</span>
-                      <CenterBadge center={item.center} />
-                    </div>
-                  )}
-                  {focusAreas.length > 0 && (
-                    <div className="pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
-                      <p className="mb-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em]" style={{ color: '#0d1117' }}>Focus Areas</p>
-                      <FocusAreaPills focusAreas={focusAreas} />
-                    </div>
-                  )}
                 </div>
-              </div>
+              )}
 
-              {/* Who Is Responsible */}
-              {responsibleOfficials.length > 0 && (
-                <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
-                  <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#0d1117' }}>Who Is Responsible</p>
+              {/* ── COMMUNITY RESOURCES (211-style) ── */}
+              {relatedServices.length > 0 && (
+                <div className="mt-10">
+                  <h3 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] mb-2" style={{ color: DIM }}>Community Resources</h3>
+                  <p className="text-sm mb-5" style={{ color: DIM }}>Services available in your community related to this topic</p>
                   <div className="space-y-3">
-                    {responsibleOfficials.slice(0, 5).map(function (o) {
+                    {relatedServices.map(function (svc: any) {
                       return (
-                        <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-3 group">
-                          <div className="w-10 h-10 overflow-hidden flex-shrink-0 bg-white" style={{ border: '1.5px solid #dde1e8' }}>
+                        <Link key={svc.service_id} href={'/services/' + svc.service_id}
+                          className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:border-emerald-400 hover:shadow-sm transition-all bg-white group"
+                        >
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: '#dcfce7', color: '#16a34a' }}
+                          >
+                            <Globe size={18} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="block text-sm font-bold group-hover:underline truncate">{svc.service_name}</span>
+                            {svc.phone && <span className="block text-xs mt-0.5" style={{ color: DIM }}>{svc.phone}</span>}
+                            {svc.address && <span className="block text-xs" style={{ color: DIM }}>{svc.address}{svc.city ? `, ${svc.city}` : ''}</span>}
+                          </div>
+                          <ArrowRight size={14} className="flex-shrink-0 text-gray-400 group-hover:text-emerald-500 transition-colors" />
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ── WHO IS RESPONSIBLE ── */}
+              {responsibleOfficials.length > 0 && (
+                <div className="mt-10">
+                  <h3 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] mb-5" style={{ color: DIM }}>Who Is Responsible</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {responsibleOfficials.map(function (o: any) {
+                      return (
+                        <Link key={o.official_id} href={'/officials/' + o.official_id}
+                          className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all group bg-white"
+                        >
+                          <div className="w-12 h-12 overflow-hidden flex-shrink-0 rounded-full border-2 border-gray-200">
                             {o.photo_url ? (
                               <img src={o.photo_url} alt="" className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center font-bold" style={{ fontSize: '0.85rem', color: themeColor, background: themeColor + '10' }}>
-                                {o.official_name?.charAt(0) || '?'}
+                              <div className="w-full h-full flex items-center justify-center font-bold text-sm" style={{ color: themeColor, background: themeColor + '15' }}>
+                                {o.official_name?.charAt(0)}
                               </div>
                             )}
                           </div>
                           <div className="min-w-0">
-                            <span className="block text-sm font-bold group-hover:underline truncate text-ink">{o.official_name}</span>
-                            <span className="block truncate font-medium" style={{ fontSize: '0.75rem', color: "#5c6474" }}>
-                              {[o.title, o.party, o.level].filter(Boolean).join(' / ')}
+                            <span className="block text-sm font-bold group-hover:underline truncate">{o.official_name}</span>
+                            <span className="block text-xs truncate" style={{ color: DIM }}>
+                              {[o.title, o.party, o.level].filter(Boolean).join(' · ')}
                             </span>
                           </div>
                         </Link>
@@ -646,74 +680,231 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   </div>
                 </div>
               )}
+            </div>
 
-              {/* Take Action */}
-              {(opportunities.length > 0 || policies.length > 0) && (
-                <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
-                  <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#0d1117' }}>{t('content.take_action')}</p>
-                  <div className="space-y-2.5">
-                    {opportunities.slice(0, 3).map(function (o: any) {
+            {/* ══════════════════════════════════════════════════════════════════
+                RIGHT: TAXONOMY WAYFINDER SIDEBAR
+               ══════════════════════════════════════════════════════════════════ */}
+            <aside className="w-full lg:w-[340px] flex-shrink-0">
+              <div className="lg:sticky lg:top-4 space-y-0 rounded-2xl overflow-hidden" style={{ border: '2px solid #1a1a1a', background: 'white' }}>
+
+                {/* Wayfinder Header */}
+                <div className="px-6 pt-6 pb-4" style={{ borderBottom: '3px solid transparent', borderImage: `linear-gradient(90deg, ${themeColor}, #C75B2A) 1` }}>
+                  <h2 className="font-display text-lg font-black uppercase tracking-[0.05em] mb-1"
+                    style={{ background: `linear-gradient(135deg, ${themeColor}, #C75B2A)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                  >
+                    Wayfinder
+                  </h2>
+                  <p className="text-xs" style={{ color: DIM }}>Navigate by topic to find related resources</p>
+                </div>
+
+                {/* Source Box */}
+                {item.source_url && (
+                  <div className="px-6 py-4" style={{ background: SIDEBAR_BG, borderBottom: `1px solid ${RULE}` }}>
+                    <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: DIM }}>Source</h4>
+                    <a href={item.source_url} target="_blank" rel="noopener noreferrer"
+                      className="text-sm font-semibold hover:underline block truncate" style={{ color: themeColor }}
+                    >
+                      {item.source_org_name || sourceDomain} &rarr;
+                    </a>
+                  </div>
+                )}
+
+                {/* Organization */}
+                {orgData && (
+                  <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: DIM }}>Organization</h4>
+                    <Link href={'/organizations/' + orgData.org_id} className="group">
+                      <span className="text-sm font-bold group-hover:underline block" style={{ color: INK }}>{orgData.org_name}</span>
+                      {orgData.description_5th_grade && (
+                        <span className="text-xs block mt-1 line-clamp-2" style={{ color: DIM }}>{orgData.description_5th_grade}</span>
+                      )}
+                    </Link>
+                  </div>
+                )}
+
+                {/* Your Journey */}
+                <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-3" style={{ color: DIM }}>Your Journey</h4>
+                  <div className="space-y-0">
+                    {TRAIL_LEVELS.map(function (level, i) {
+                      const n = i + 1
+                      const isActive = n === currentLevel
+                      const isPast = n < currentLevel
+                      const Icon = level.icon
                       return (
-                        <Link key={o.opportunity_id} href={'/opportunities/' + o.opportunity_id} className="block text-sm font-bold hover:underline" style={{ color: "#1b5e8a" }}>
-                          {o.opportunity_name}
-                        </Link>
-                      )
-                    })}
-                    {policies.slice(0, 3).map(function (p: any) {
-                      return (
-                        <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block text-sm font-bold hover:underline" style={{ color: "#1b5e8a" }}>
-                          {p.title_6th_grade || p.policy_name}
+                        <Link key={n} href={'/explore?engagement=' + encodeURIComponent(level.name)}
+                          className="flex items-center gap-2.5 py-1.5 group transition-opacity hover:!opacity-100"
+                          style={{ opacity: isActive ? 1 : isPast ? 0.7 : 0.35 }}
+                        >
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 rounded-full transition-colors"
+                            style={{ background: isActive ? level.color : 'transparent' }}
+                          >
+                            <Icon size={11} style={{ color: isActive ? 'white' : level.color }} strokeWidth={2.5} />
+                          </div>
+                          <span className={'text-xs leading-tight group-hover:underline ' + (isActive ? 'font-bold' : 'font-medium')}
+                            style={{ color: isActive ? INK : undefined }}
+                          >
+                            {level.name}
+                          </span>
+                          {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: level.color }} />}
                         </Link>
                       )
                     })}
                   </div>
                 </div>
-              )}
 
-              {/* Hero Quote in sidebar */}
-              {heroQuote && (
-                <div className="p-5" style={{ borderLeft: `4px solid ${themeColor}`, background: "#f4f5f7", border: '2px solid #dde1e8', borderLeftColor: themeColor, borderLeftWidth: 4 }}>
-                  <blockquote className="font-display" style={{ fontStyle: 'italic', fontSize: '1.1rem', lineHeight: 1.6, fontWeight: 600, color: '#0d1117' }}>
-                    &ldquo;{heroQuote}&rdquo;
-                  </blockquote>
-                </div>
-              )}
+                {/* Topic */}
+                {themeEntry && (
+                  <SidebarSection title="Topic">
+                    <Link href={'/pathways/' + (themeSlug || '')} className="flex items-center gap-2 group">
+                      <FlowerOfLife size={18} color={themeColor} opacity={0.7} />
+                      <span className="text-sm font-semibold group-hover:underline" style={{ color: themeColor }}>{themeEntry.name}</span>
+                    </Link>
+                  </SidebarSection>
+                )}
 
-              {/* Featured Promotion */}
-              <FeaturedPromo variant="card" />
+                {/* Focus Areas */}
+                {focusAreas.length > 0 && (
+                  <SidebarSection title="Focus Areas">
+                    {focusAreas.map(function (fa: any) {
+                      return (
+                        <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
+                          className="text-sm font-medium hover:underline block py-0.5" style={{ color: themeColor }}
+                        >
+                          {fa.focus_area_name}
+                        </Link>
+                      )
+                    })}
+                  </SidebarSection>
+                )}
+
+                {/* UN Sustainable Development Goals */}
+                {matchedSDGs.length > 0 && (
+                  <CollapsibleSidebarSection title="UN Sustainable Development Goals">
+                    {matchedSDGs.map(function (sdg) {
+                      return (
+                        <Link key={sdg.sdg_number} href={'/explore?sdg=SDG-' + String(sdg.sdg_number).padStart(2, '0')}
+                          className="flex items-center gap-2 py-0.5 group"
+                        >
+                          <span className="w-5 h-5 rounded-sm flex items-center justify-center text-white text-[0.6rem] font-bold flex-shrink-0"
+                            style={{ background: sdg.sdg_color || themeColor }}
+                          >
+                            {sdg.sdg_number}
+                          </span>
+                          <span className="text-sm font-medium group-hover:underline" style={{ color: themeColor }}>{sdg.sdg_name}</span>
+                        </Link>
+                      )
+                    })}
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* SDOH Domain */}
+                {sdohEntry && (
+                  <CollapsibleSidebarSection title="Social Determinant of Health">
+                    <span className="text-sm font-medium" style={{ color: themeColor }}>{sdohEntry.sdoh_name}</span>
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Audience */}
+                {audienceData && (audienceData as any[]).length > 0 && (
+                  <CollapsibleSidebarSection title="Audience">
+                    {(audienceData as any[]).map(function (seg: any) {
+                      return (
+                        <Link key={seg.segment_id} href={'/explore?audience=' + seg.segment_id}
+                          className="text-sm font-medium hover:underline block py-0.5" style={{ color: themeColor }}
+                        >
+                          {seg.segment_name}
+                        </Link>
+                      )
+                    })}
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Action Types */}
+                {actionTypeData && (actionTypeData as any[]).length > 0 && (
+                  <CollapsibleSidebarSection title="Action Types">
+                    {(actionTypeData as any[]).map(function (at: any) {
+                      return (
+                        <span key={at.action_type_id} className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mr-1.5 mb-1.5"
+                          style={{ background: themeColor + '15', color: themeColor }}
+                        >
+                          {at.action_type_name}
+                        </span>
+                      )
+                    })}
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Time Commitment */}
+                {timeData && (
+                  <CollapsibleSidebarSection title="Time Commitment">
+                    <span className="text-sm font-medium" style={{ color: themeColor }}>{(timeData as any).time_name}</span>
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Government Level */}
+                {govData && (
+                  <CollapsibleSidebarSection title="Government Level">
+                    <span className="text-sm font-medium" style={{ color: themeColor }}>{(govData as any).gov_level_name}</span>
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Geographic Scope */}
+                {geoScope && (
+                  <CollapsibleSidebarSection title="Location">
+                    <span className="text-sm font-medium" style={{ color: themeColor }}>{geoScope}</span>
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Content Type */}
+                {contentType && (
+                  <CollapsibleSidebarSection title="Content Type">
+                    <span className="text-sm font-medium capitalize" style={{ color: themeColor }}>{contentType}</span>
+                  </CollapsibleSidebarSection>
+                )}
+
+                {/* Related Policies */}
+                {relatedPolicies.length > 0 && (
+                  <CollapsibleSidebarSection title="Related Legislation">
+                    {relatedPolicies.map(function (p: any) {
+                      return (
+                        <Link key={p.policy_id} href={'/policies/' + p.policy_id}
+                          className="text-sm font-medium hover:underline block py-0.5" style={{ color: themeColor }}
+                        >
+                          {p.title_6th_grade || p.policy_name}
+                          {p.level && <span className="text-xs ml-1" style={{ color: DIM }}>({p.level})</span>}
+                        </Link>
+                      )
+                    })}
+                  </CollapsibleSidebarSection>
+                )}
+
+                <div className="h-4" />
+              </div>
             </aside>
           </div>
         </div>
       </section>
 
-      {/* ── RELATED CONTENT — dog-ear cards ── */}
+      {/* ── RELATED CONTENT ── */}
       {related && related.length > 0 && (
-        <section className="bg-paper border-t-2 border-ink">
+        <section className="bg-paper border-t border-gray-200">
           <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
-            <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-dim block mb-1">Related</span>
+            <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] block mb-1" style={{ color: DIM }}>Related</span>
             <h2 className="font-display text-[1.5rem] font-bold tracking-[-0.015em] mb-6">More to explore</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {related.map(function (r: any) {
                 const rTheme = r.pathway_primary ? (THEMES as Record<string, { name: string; color: string }>)[r.pathway_primary] : null
-                const rColor = rTheme?.color || themeColor
                 return (
                   <Link
                     key={r.id}
                     href={'/content/' + r.id}
-                    className="block group relative transition-colors hover:bg-paper"
-                    style={{ background: '#ffffff', border: '1.5px solid #dde1e8' }}
+                    className="block group relative transition-colors hover:bg-paper rounded-lg overflow-hidden"
+                    style={{ background: '#ffffff', border: `1.5px solid ${RULE}` }}
                   >
-                    {/* Dog-ear triangle */}
-                    <span
-                      className="absolute top-0 right-0 w-0 h-0 pointer-events-none"
-                      style={{
-                        borderStyle: 'solid',
-                        borderWidth: '0 14px 14px 0',
-                        borderColor: 'transparent #dde1e8 transparent transparent',
-                      }}
-                    />
                     {r.image_url ? (
-                      <div className="w-full h-36 overflow-hidden" style={{ borderBottom: '1.5px solid #dde1e8' }}>
+                      <div className="w-full h-36 overflow-hidden" style={{ borderBottom: `1.5px solid ${RULE}` }}>
                         <img src={r.image_url} alt="" className="w-full h-full object-cover" />
                       </div>
                     ) : (
@@ -721,13 +912,13 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     )}
                     <div className="p-4">
                       {rTheme && (
-                        <span className="font-mono text-[0.55rem] uppercase tracking-[0.14em] text-dim block mb-1.5">{rTheme.name}</span>
+                        <span className="font-mono text-[0.55rem] uppercase tracking-[0.14em] block mb-1.5" style={{ color: DIM }}>{rTheme.name}</span>
                       )}
                       <span className="font-display text-[0.85rem] font-bold leading-[1.3] block group-hover:underline mb-1">
                         {r.title_6th_grade}
                       </span>
                       {r.summary_6th_grade && (
-                        <span className="font-body text-[0.78rem] text-dim leading-relaxed block line-clamp-2">
+                        <span className="font-body text-[0.78rem] leading-relaxed block line-clamp-2" style={{ color: DIM }}>
                           {r.summary_6th_grade}
                         </span>
                       )}
@@ -740,63 +931,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         </section>
       )}
 
-      {/* ── FOCUS AREAS / DESTINATIONS ── */}
-      {focusAreas.length > 0 && (
-        <section style={{ background: '#f4f5f7' }}>
-          <div className="max-w-[1080px] mx-auto px-6 py-8 sm:py-10">
-            <p className="mb-5" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>
-              {t('content.also_part_of') || 'Also part of these destinations'}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
-              {focusAreas.slice(0, 4).map(function (fa: any) {
-                const faTheme = fa.theme_id ? (THEMES as Record<string, { color: string }>)[fa.theme_id] : null
-                const faColor = faTheme?.color || themeColor
-                return (
-                  <Link
-                    key={fa.focus_id}
-                    href={'/explore/focus/' + fa.focus_id}
-                    className="group flex items-center gap-3 p-4 transition-colors hover:bg-white"
-                    style={{ border: '1px solid #dde1e8' }}
-                  >
-                    <FlowerOfLife size={28} color={faColor} opacity={0.6} />
-                    <div>
-                      <span className="block" style={{ fontSize: '0.88rem', fontWeight: 600,  }}>
-                        {fa.focus_area_name}
-                      </span>
-                      {fa.theme_id && (THEMES as Record<string, { name: string }>)[fa.theme_id] && (
-                        <span style={{ fontSize: '0.6875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: faColor }}>
-                          {(THEMES as Record<string, { name: string }>)[fa.theme_id].name}
-                        </span>
-                      )}
-                    </div>
-                    <ArrowRight size={14} className="ml-auto transition-colors" style={{ color: "#5c6474" }} />
-                  </Link>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── QUOTE — only show if it matches this content's pathway ── */}
-      {quote && quote.pathway_id && item.pathway_primary && quote.pathway_id === item.pathway_primary && (
-        <section className="bg-paper">
-          <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
-            <blockquote style={{ fontStyle: 'italic', fontSize: 'clamp(18px, 2.5vw, 24px)', lineHeight: 1.6,  }}>
-              &ldquo;{quote.quote_text}&rdquo;
-            </blockquote>
-            {quote.attribution && (
-              <p className="mt-4" style={{ fontSize: '0.6875rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: "#5c6474" }}>
-                -- {quote.attribution}
-              </p>
-            )}
-          </div>
-        </section>
-      )}
-
       {/* ── LIBRARY NUGGETS ── */}
       {libraryNuggets.length > 0 && (
-        <section style={{ background: '#f4f5f7' }}>
+        <section style={{ background: SIDEBAR_BG }}>
           <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} />
           </div>
@@ -804,12 +941,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       )}
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: "#f4f5f7", borderTop: `1px solid ${'#dde1e8'}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/explore"
             className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
-            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: "#5c6474" }}
+            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
           >
             <ArrowRight size={14} className="rotate-180" /> Back to the Exchange
           </Link>
@@ -828,10 +965,40 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           { key: 'source_org_name', label: 'Source Org', type: 'text', value: (item as any).source_org_name },
           { key: 'image_url', label: 'Image URL', type: 'url', value: item.image_url },
           { key: 'pathway_primary', label: 'Primary Pathway', type: 'select', value: item.pathway_primary, options: Object.keys(THEMES) },
-          { key: 'content_type', label: 'Content Type', type: 'select', value: (item as any).content_type, options: ['news', 'resource', 'guide', 'story', 'report', 'tool', 'video', 'event'] },
+          { key: 'content_type', label: 'Content Type', type: 'select', value: (item as any).content_type, options: ['article', 'campaign', 'course', 'event', 'guide', 'news', 'opportunity', 'report', 'resource', 'story', 'tool', 'video'] },
           { key: 'is_active', label: 'Active', type: 'select', value: String((item as any).is_active), options: ['true', 'false'] },
         ] as EditField[]}
       />
     </>
+  )
+}
+
+/* ── Sidebar Section Component ── */
+function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+      <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2"
+        style={{ color: DIM }}
+      >
+        {title}
+      </h4>
+      <div>{children}</div>
+    </div>
+  )
+}
+
+/* ── Action Card Component ── */
+function ActionCard({ href, icon, label, desc, cta, themeColor }: { href: string; icon: string; label: string; desc: string; cta: string; themeColor: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer"
+      className="block p-6 rounded-xl text-center border-[2px] border-gray-200 transition-all hover:-translate-y-1 hover:border-orange-400 hover:shadow-lg bg-white"
+    >
+      <span className="text-3xl block mb-3">{icon}</span>
+      <h4 className="font-bold mb-2">{label}</h4>
+      <p className="text-sm mb-4" style={{ color: DIM }}>{desc}</p>
+      <span className="inline-block px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-wider"
+        style={{ background: `linear-gradient(135deg, ${themeColor}, #C75B2A)` }}
+      >{cta} &rarr;</span>
+    </a>
   )
 }

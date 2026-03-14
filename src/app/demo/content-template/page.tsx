@@ -6,7 +6,7 @@ import { getSDGMap, getSDOHMap } from '@/lib/data/taxonomy'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { ExternalLink, Globe, ArrowRight, BookOpen, Users, Megaphone, GraduationCap, Rocket } from 'lucide-react'
-import { CollapsibleSidebarSection } from './CollapsibleSection'
+import { CollapsibleSidebarSection } from '@/components/exchange/CollapsibleSidebarSection'
 
 /* ── Design Tokens ── */
 const SIDEBAR_BG = '#f4f5f7'
