@@ -33,7 +33,7 @@ export default async function OfficialsPage() {
 
   // Sort: City → County → State → Federal (user at center, expanding outward)
   const LEVEL_ORDER: Record<string, number> = { City: 0, County: 1, State: 2, Federal: 3 }
-  let sortedOfficials = [...officials].sort((a, b) => (LEVEL_ORDER[a.level] ?? 9) - (LEVEL_ORDER[b.level] ?? 9))
+  let sortedOfficials = [...officials].sort((a, b) => (LEVEL_ORDER[a.level || ''] ?? 9) - (LEVEL_ORDER[b.level || ''] ?? 9))
 
   // If ZIP available, put geo-matched officials first within each level
   if (zipOfficials) {
