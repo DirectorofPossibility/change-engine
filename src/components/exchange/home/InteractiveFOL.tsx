@@ -87,33 +87,33 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
             <circle
               key={'outer-' + i}
               cx={px} cy={py} r={R}
-              stroke="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.06)"
               strokeWidth="1.5"
-              fill="none"
+              fill="rgba(255,255,255,0.015)"
             />
           )
         })}
 
-        {/* Inner ring — 6 Seed of Life circles */}
+        {/* Inner ring — 6 Seed of Life circles with overlap fill */}
         {OUTER_ANGLES.map(function (angle, i) {
           const [px, py] = petalCenter(angle)
           return (
             <circle
               key={'geo-' + i}
               cx={px} cy={py} r={R}
-              stroke="rgba(255,255,255,0.09)"
+              stroke="rgba(255,255,255,0.12)"
               strokeWidth="2"
-              fill="none"
+              fill="rgba(255,255,255,0.03)"
             />
           )
         })}
 
-        {/* Center geometry circle */}
+        {/* Center geometry circle with overlap fill */}
         <circle
           cx={CX} cy={CY} r={R}
-          stroke="rgba(255,255,255,0.09)"
+          stroke="rgba(255,255,255,0.12)"
           strokeWidth="2"
-          fill="none"
+          fill="rgba(255,255,255,0.03)"
         />
 
         {/* Intermediate ring — 6 circles offset 30deg at R distance (adds density) */}
@@ -124,9 +124,9 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
             <circle
               key={'mid-' + i}
               cx={px} cy={py} r={R * 0.7}
-              stroke="rgba(255,255,255,0.04)"
+              stroke="rgba(255,255,255,0.05)"
               strokeWidth="1.2"
-              fill="none"
+              fill="rgba(255,255,255,0.02)"
             />
           )
         })}
