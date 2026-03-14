@@ -6,8 +6,8 @@ import { THEMES } from '@/lib/constants'
 
 /**
  * Interactive Flower of Life navigation — 7 petals, each a pathway.
- * Seed of Life geometry: 1 center + 6 surrounding circles.
- * "The Bigger We" occupies center, the other 6 radiate outward.
+ * Full FOL geometry: center + inner ring (6) + outer ring (12) = 19 circles.
+ * Labels hidden by default, appear on hover.
  */
 
 const CX = 200
@@ -18,8 +18,6 @@ const R = 58 // petal radius
 const OUTER_ANGLES = [-90, -30, 30, 90, 150, 210]
 
 // Map THEME_IDs to petal positions
-// Center: The Bigger We (THEME_07)
-// Ring: Health, Families, Neighborhood, Voice, Money, Planet
 const PETAL_MAP = [
   { themeId: 'THEME_01', angle: -90 },   // Health — top
   { themeId: 'THEME_02', angle: -30 },   // Families — top right
@@ -29,12 +27,16 @@ const PETAL_MAP = [
   { themeId: 'THEME_06', angle: 210 },   // Planet — top left
 ]
 
-const CENTER_THEME_ID = 'THEME_07' as keyof typeof THEMES // The Bigger We
+const CENTER_THEME_ID = 'THEME_07' as keyof typeof THEMES
 
-function petalCenter(angle: number): [number, number] {
+function petalCenter(angle: number, dist: number = R): [number, number] {
   const rad = (angle * Math.PI) / 180
-  return [CX + R * Math.cos(rad), CY + R * Math.sin(rad)]
+  return [CX + dist * Math.cos(rad), CY + dist * Math.sin(rad)]
 }
+
+// Outer ring: 12 circles at distance R * sqrt(3) ≈ R * 1.732
+const OUTER_RING_DIST = R * Math.sqrt(3)
+const OUTER_RING_ANGLES = Array.from({ length: 12 }, (_, i) => -90 + i * 30)
 
 interface InteractiveFOLProps {
   pathwayCounts?: Record<string, number>
@@ -50,10 +52,10 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
     router.push('/pathways/' + slug)
   }
 
-  // Label position offset — push labels outward from center
+  // Label position — push labels outward from center
   function labelPos(angle: number): [number, number] {
     const rad = (angle * Math.PI) / 180
-    const dist = R * 1.65
+    const dist = R * 1.75
     return [CX + dist * Math.cos(rad), CY + dist * Math.sin(rad)]
   }
 
@@ -64,33 +66,70 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
         className="w-full h-auto"
         aria-label="Flower of Life pathway navigation"
       >
-        {/* Outer boundary circle */}
+        {/* Outermost boundary circle */}
+        <circle
+          cx={CX} cy={CY} r={R * 2.6}
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1.5"
+          fill="none"
+        />
         <circle
           cx={CX} cy={CY} r={R * 2.3}
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth="1"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth="2"
           fill="none"
         />
 
-        {/* Seed of Life geometry — decorative connecting circles */}
+        {/* Outer ring — 12 decorative circles (Flower of Life layer 2) */}
+        {OUTER_RING_ANGLES.map(function (angle, i) {
+          const [px, py] = petalCenter(angle, OUTER_RING_DIST)
+          return (
+            <circle
+              key={'outer-' + i}
+              cx={px} cy={py} r={R}
+              stroke="rgba(255,255,255,0.05)"
+              strokeWidth="1.5"
+              fill="none"
+            />
+          )
+        })}
+
+        {/* Inner ring — 6 Seed of Life circles */}
         {OUTER_ANGLES.map(function (angle, i) {
           const [px, py] = petalCenter(angle)
           return (
             <circle
               key={'geo-' + i}
               cx={px} cy={py} r={R}
-              stroke="rgba(255,255,255,0.06)"
-              strokeWidth="0.8"
+              stroke="rgba(255,255,255,0.09)"
+              strokeWidth="2"
               fill="none"
             />
           )
         })}
+
+        {/* Center geometry circle */}
         <circle
           cx={CX} cy={CY} r={R}
-          stroke="rgba(255,255,255,0.06)"
-          strokeWidth="0.8"
+          stroke="rgba(255,255,255,0.09)"
+          strokeWidth="2"
           fill="none"
         />
+
+        {/* Intermediate ring — 6 circles offset 30deg at R distance (adds density) */}
+        {OUTER_ANGLES.map(function (angle, i) {
+          const offsetAngle = angle + 30
+          const [px, py] = petalCenter(offsetAngle, R * 1.15)
+          return (
+            <circle
+              key={'mid-' + i}
+              cx={px} cy={py} r={R * 0.7}
+              stroke="rgba(255,255,255,0.04)"
+              strokeWidth="1.2"
+              fill="none"
+            />
+          )
+        })}
 
         {/* 6 outer petals — clickable */}
         {PETAL_MAP.map(function ({ themeId, angle }) {
@@ -118,13 +157,13 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
                 r={isHovered ? R * 0.52 : R * 0.45}
                 fill={isHovered ? theme.color + '30' : theme.color + '15'}
                 stroke={theme.color}
-                strokeWidth={isHovered ? 2 : 1.2}
+                strokeWidth={isHovered ? 3 : 2}
                 style={{ transition: 'all 0.25s ease' }}
               />
               {/* Inner dot */}
               <circle
                 cx={px} cy={py}
-                r={isHovered ? 6 : 4}
+                r={isHovered ? 7 : 5}
                 fill={theme.color}
                 style={{ transition: 'all 0.25s ease' }}
               />
@@ -148,21 +187,21 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
             r={hovered === CENTER_THEME_ID ? R * 0.52 : R * 0.45}
             fill={hovered === CENTER_THEME_ID ? centerTheme.color + '30' : centerTheme.color + '15'}
             stroke={centerTheme.color}
-            strokeWidth={hovered === CENTER_THEME_ID ? 2 : 1.2}
+            strokeWidth={hovered === CENTER_THEME_ID ? 3 : 2}
             style={{ transition: 'all 0.25s ease' }}
           />
           {/* "You" dot at center */}
           <circle
             cx={CX} cy={CY}
-            r={hovered === CENTER_THEME_ID ? 8 : 6}
+            r={hovered === CENTER_THEME_ID ? 9 : 7}
             fill="white"
             stroke={centerTheme.color}
-            strokeWidth="1.5"
+            strokeWidth="2"
             style={{ transition: 'all 0.25s ease' }}
           />
         </g>
 
-        {/* Labels — outside the circles */}
+        {/* Hover labels — only visible on hover */}
         {PETAL_MAP.map(function ({ themeId, angle }) {
           const theme = THEMES[themeId as keyof typeof THEMES]
           if (!theme) return null
@@ -170,7 +209,8 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
           const isHovered = hovered === themeId
           const count = pathwayCounts[themeId] || 0
 
-          // Text anchor based on position
+          if (!isHovered) return null
+
           let anchor: 'start' | 'middle' | 'end' = 'middle'
           if (angle > -80 && angle < 80) anchor = 'start'
           if (angle > 100 && angle < 260) anchor = 'end'
@@ -184,16 +224,16 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
                 dominantBaseline="central"
                 className="pointer-events-none select-none"
                 style={{
-                  fill: isHovered ? 'white' : 'rgba(255,255,255,0.7)',
-                  fontSize: isHovered ? 14 : 12,
+                  fill: 'white',
+                  fontSize: 14,
                   fontFamily: 'var(--font-body)',
-                  fontWeight: isHovered ? 700 : 400,
+                  fontWeight: 700,
                   transition: 'all 0.25s ease',
                 }}
               >
                 {theme.name}
               </text>
-              {isHovered && count > 0 && (
+              {count > 0 && (
                 <text
                   x={lx} y={ly + 16}
                   textAnchor={anchor}
@@ -212,37 +252,22 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
           )
         })}
 
-        {/* Center label */}
-        <text
-          x={CX} y={CY + R * 0.75}
-          textAnchor="middle"
-          className="pointer-events-none select-none"
-          style={{
-            fill: hovered === CENTER_THEME_ID ? 'white' : 'rgba(255,255,255,0.55)',
-            fontSize: hovered === CENTER_THEME_ID ? 12 : 10,
-            fontFamily: 'var(--font-mono)',
-            fontWeight: hovered === CENTER_THEME_ID ? 700 : 400,
-            transition: 'all 0.25s ease',
-          }}
-        >
-          The Bigger We
-        </text>
-
-        {/* "You" label at center */}
-        <text
-          x={CX} y={CY - R * 0.6}
-          textAnchor="middle"
-          className="pointer-events-none select-none"
-          style={{
-            fill: 'rgba(255,255,255,0.35)',
-            fontSize: 9,
-            fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase' as const,
-          }}
-        >
-          YOU ARE HERE
-        </text>
+        {/* Center label — only on hover */}
+        {hovered === CENTER_THEME_ID && (
+          <text
+            x={CX} y={CY + R * 0.75}
+            textAnchor="middle"
+            className="pointer-events-none select-none"
+            style={{
+              fill: 'white',
+              fontSize: 12,
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 700,
+            }}
+          >
+            The Bigger We
+          </text>
+        )}
       </svg>
 
       {/* Mobile fallback — simple list below md */}
