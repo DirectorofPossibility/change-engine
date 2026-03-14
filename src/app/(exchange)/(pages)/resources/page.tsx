@@ -162,8 +162,8 @@ export default async function ResourceCenterPage() {
             <div className="flex items-center gap-3">
               <LifeBuoy size={20} style={{ color: '#16a34a' }} />
               <div>
-                <h2 className="font-serif text-2xl" style={{ color: '#2D2D2A' }}>What Do You Need?</h2>
-                <p className="text-[13px]" style={{ color: '#9B9590' }}>Start from your situation &mdash; we will find the resources</p>
+                <h2 className="font-serif text-2xl" style={{ color: '#2D2D2A' }}>Start From Your Situation</h2>
+                <p className="text-[13px]" style={{ color: '#9B9590' }}>Every situation has resources ready &mdash; here is what exists for yours</p>
               </div>
             </div>
             <Link href="/help" className="hidden sm:inline-flex items-center gap-1 text-[13px] font-semibold" style={{ color: '#16a34a' }}>
@@ -208,10 +208,10 @@ export default async function ResourceCenterPage() {
           <div className="mt-4 p-4 flex items-center justify-between flex-wrap gap-3" style={{ background: '#fef2f2', border: '1px solid #fecaca' }}>
             <div className="flex items-center gap-2">
               <Phone size={14} style={{ color: '#dc2626' }} />
-              <span className="text-[12px] font-semibold" style={{ color: '#dc2626' }}>Immediate Support</span>
+              <span className="text-[12px] font-semibold" style={{ color: '#dc2626' }}>Always Available</span>
             </div>
             <div className="flex items-center gap-5 text-[12px]" style={{ color: '#6B6560' }}>
-              <span>Crisis: <strong style={{ color: '#2D2D2A' }}>988</strong></span>
+              <span>24/7 Support: <strong style={{ color: '#2D2D2A' }}>988</strong></span>
               <span>City: <strong style={{ color: '#2D2D2A' }}>311</strong></span>
               <span>Social: <strong style={{ color: '#2D2D2A' }}>211</strong></span>
               <span>DV: <strong style={{ color: '#2D2D2A' }}>713-528-2121</strong></span>
@@ -270,7 +270,7 @@ export default async function ResourceCenterPage() {
           >
             <MapPin size={18} style={{ color: '#16a34a' }} />
             <span className="text-[14px] font-bold" style={{ color: '#16a34a' }}>Search All Services</span>
-            <span className="text-[12px]" style={{ color: '#6B6560' }}>Find what is near you by ZIP code</span>
+            <span className="text-[12px]" style={{ color: '#6B6560' }}>Explore what is available near you by ZIP code</span>
             <ArrowRight size={14} style={{ color: '#16a34a' }} className="ml-auto" />
           </Link>
         </section>
@@ -350,7 +350,7 @@ export default async function ResourceCenterPage() {
                     <div className="flex-1">
                       <h3 className="text-[15px] font-bold group-hover:underline" style={{ color: '#2D2D2A' }}>Geography Explorer</h3>
                       <p className="text-[12px] mt-1 leading-relaxed" style={{ color: '#6B6560' }}>
-                        Interactive maps of neighborhoods, districts, and boundaries. Find what is near you.
+                        Interactive maps of neighborhoods, districts, and boundaries. See what is around you.
                       </p>
                     </div>
                   </div>
@@ -364,7 +364,7 @@ export default async function ResourceCenterPage() {
                     <div className="flex-1">
                       <h3 className="text-[15px] font-bold group-hover:underline" style={{ color: '#2D2D2A' }}>Ask Chance</h3>
                       <p className="text-[12px] mt-1 leading-relaxed" style={{ color: '#6B6560' }}>
-                        Tell our AI guide what you need — get matched with services, organizations, and next steps.
+                        Share your situation with our AI guide — discover services, organizations, and next steps already available to you.
                       </p>
                       <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] font-semibold" style={{ color: '#16a34a' }}>
                         <span className="relative flex h-2 w-2">
@@ -413,7 +413,7 @@ export default async function ResourceCenterPage() {
               Everything here already exists. We just made it findable.
             </p>
             <p className="text-[13px] mt-2 relative z-10 max-w-md mx-auto" style={{ color: '#6B6560' }}>
-              Houston has a deep network of services and organizations dedicated to your well-being. Start from your situation, or search by what you need.
+              Houston has a deep network of services and organizations dedicated to your well-being. Start from your situation, or explore by topic.
             </p>
             <div className="flex items-center justify-center gap-3 mt-6 relative z-10 flex-wrap">
               <Link href="/help" className="inline-flex items-center gap-2 px-6 py-2.5 text-[13px] font-semibold text-white transition-all hover:shadow-md" style={{ background: '#16a34a' }}>
