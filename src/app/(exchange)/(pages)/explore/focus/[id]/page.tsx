@@ -286,10 +286,53 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
             </Link>
           )}
 
-          {/* Headline with geo mark */}
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-[50px] h-[50px] flex-shrink-0 opacity-[0.6]">
-              <Geo type={geoType} size={50} color="#ffffff" />
+          {/* Headline with instrument-style geo mark */}
+          <div className="flex items-center gap-5 mb-4">
+            <div className="w-[72px] h-[72px] flex-shrink-0 relative">
+              {/* Progress ring wrapping around the geometry */}
+              <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+                {/* Track ring */}
+                <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="2.5" />
+                {/* Progress arc — shows trail depth */}
+                {trailDepth > 0 && (
+                  <circle
+                    cx="50" cy="50" r="46"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.7)"
+                    strokeWidth="2.5"
+                    strokeDasharray={2 * Math.PI * 46}
+                    strokeDashoffset={2 * Math.PI * 46 * (1 - trailDepth / 5)}
+                    strokeLinecap="round"
+                    transform="rotate(-90 50 50)"
+                  />
+                )}
+                {/* Tick marks */}
+                {[0,1,2,3,4].map(function (i) {
+                  const angle = -90 + (i / 5) * 360
+                  const rad = (angle * Math.PI) / 180
+                  const filled = trailLevels.some(l => l.level === i + 1)
+                  const innerR = 49
+                  const outerR = filled ? 56 : 53
+                  return (
+                    <line
+                      key={i}
+                      x1={50 + innerR * Math.cos(rad)}
+                      y1={50 + innerR * Math.sin(rad)}
+                      x2={50 + outerR * Math.cos(rad)}
+                      y2={50 + outerR * Math.sin(rad)}
+                      stroke={filled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.25)'}
+                      strokeWidth={filled ? '2' : '1.5'}
+                      strokeLinecap="round"
+                    />
+                  )
+                })}
+              </svg>
+              {/* Sacred geometry centered inside ring */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-[55%]">
+                  <Geo type={geoType} size={40} color="#ffffff" opacity={0.8} />
+                </div>
+              </div>
             </div>
             <h1
               className="font-display font-black text-white leading-[0.95] tracking-[-0.02em]"
@@ -398,8 +441,16 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
       ) : (
         /* Empty state */
         <div className="max-w-[1080px] mx-auto px-6 py-16 text-center">
-          <div className="w-[80px] h-[80px] mx-auto mb-6 opacity-[0.15]">
-            <Geo type={geoType} size={80} color={themeColor} />
+          <div className="w-[100px] h-[100px] mx-auto mb-6 relative">
+            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+              <circle cx="50" cy="50" r="46" fill="none" stroke={`${themeColor}18`} strokeWidth="2.5" />
+              <circle cx="50" cy="50" r="42" fill="none" stroke={`${themeColor}08`} strokeWidth="1" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center opacity-20">
+              <div className="w-[55%]">
+                <Geo type={geoType} size={55} color={themeColor} opacity={1} />
+              </div>
+            </div>
           </div>
           <p className="font-display text-[1.2rem] font-bold text-ink mb-2">
             We&apos;re building out resources for {fa.focus_area_name}.
@@ -516,14 +567,22 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 border border-rule-inner">
             {siblingFocusAreas.map(function (sib) {
+              const sibGeo = focusGeo(sib.focus_area_name)
               return (
                 <Link
                   key={sib.focus_id}
                   href={'/explore/focus/' + sib.focus_id}
-                  className="group p-5 border-b border-r border-rule-inner hover:bg-paper transition-colors"
+                  className="group p-5 border-b border-r border-rule-inner hover:bg-paper transition-all hover:-translate-y-0.5"
                 >
-                  <div className="w-[28px] h-[28px] mb-2 opacity-[0.3] group-hover:opacity-[0.5] transition-opacity">
-                    <Geo type={focusGeo(sib.focus_area_name)} size={28} color={themeColor} />
+                  <div className="w-[40px] h-[40px] mb-3 relative">
+                    <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+                      <circle cx="50" cy="50" r="46" fill="none" stroke={`${themeColor}20`} strokeWidth="2.5" />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-40 group-hover:opacity-70 transition-opacity">
+                      <div className="w-[55%]">
+                        <Geo type={sibGeo} size={22} color={themeColor} opacity={1} />
+                      </div>
+                    </div>
                   </div>
                   <span className="font-display text-[0.82rem] font-bold text-ink group-hover:text-blue transition-colors block">
                     {sib.focus_area_name}

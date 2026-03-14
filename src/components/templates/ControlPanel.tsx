@@ -17,98 +17,126 @@ interface InstrumentProps {
 
 /**
  * Single instrument in the Control Panel grid.
- * Shows sacred geometry gauge + destination label.
+ * Sacred geometry centered with outer progress ring — the circle wraps the geometry.
  */
 function Instrument({
   name,
   href,
   geoType = 'seed_of_life',
   themeColor,
-  themeLt,
   levelsFilled = 0,
   totalLevels = 5,
   statusText,
   isHot,
 }: InstrumentProps) {
-  const lt = themeLt || `${themeColor}18`
-  const circumference = 2 * Math.PI * 42
   const fillPct = totalLevels > 0 ? levelsFilled / totalLevels : 0
+  // Progress ring math
+  const ringR = 46
+  const circumference = 2 * Math.PI * ringR
   const dashoffset = circumference * (1 - fillPct)
 
   return (
     <Link
       href={href}
-      className="group block border-r-2 border-b-2 border-ink relative overflow-hidden transition-colors"
-      style={{ background: 'white' }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = lt }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'white' }}
+      className="group block relative overflow-hidden transition-all duration-300 hover:-translate-y-1"
+      style={{ background: 'white', border: '1px solid var(--color-rule, #dde1e8)' }}
     >
-      {/* Gauge face */}
-      <div
-        className="aspect-square flex items-center justify-center relative overflow-hidden"
-        style={{ borderBottom: '1px solid var(--color-rule)', background: lt }}
-      >
-        {/* Geo SVG background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div
-            className="w-[85%] transition-all duration-300 group-hover:opacity-[0.22] group-hover:rotate-[15deg] group-hover:scale-105"
-            style={{ opacity: 0.14 }}
-          >
-            <Geo type={geoType} color={themeColor} opacity={1} />
-          </div>
-        </div>
+      {/* Top color accent */}
+      <div className="h-1" style={{ background: `linear-gradient(90deg, ${themeColor}, ${themeColor}66)` }} />
 
-        {/* Status arc SVG */}
-        <svg viewBox="0 0 100 100" className="absolute w-[70%] aspect-square">
-          {/* Track */}
+      {/* Gauge face */}
+      <div className="aspect-square flex items-center justify-center relative p-4">
+        {/* Subtle radial background */}
+        <div
+          className="absolute inset-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            opacity: 0.4,
+            background: `radial-gradient(circle at center, ${themeColor}08 0%, ${themeColor}03 50%, transparent 70%)`,
+          }}
+        />
+
+        {/* Outer progress ring — wraps AROUND the geometry */}
+        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" style={{ padding: '6%' }}>
+          {/* Track ring */}
           <circle
-            cx="50" cy="50" r="42"
+            cx="50" cy="50" r={ringR}
             fill="none"
-            stroke="var(--color-rule)"
-            strokeWidth="4"
+            stroke={`${themeColor}15`}
+            strokeWidth="2.5"
           />
-          {/* Fill arc */}
+          {/* Progress arc */}
           {fillPct > 0 && (
             <circle
-              cx="50" cy="50" r="42"
+              cx="50" cy="50" r={ringR}
               fill="none"
               stroke={themeColor}
-              strokeWidth="4"
+              strokeWidth="2.5"
               strokeDasharray={circumference}
               strokeDashoffset={dashoffset}
-              strokeLinecap="butt"
+              strokeLinecap="round"
               transform="rotate(-90 50 50)"
+              className="transition-all duration-500"
+              style={{ opacity: 0.7 }}
             />
           )}
+          {/* Tick marks around the ring */}
+          {Array.from({ length: totalLevels }).map((_, i) => {
+            const angle = -90 + (i / totalLevels) * 360
+            const rad = (angle * Math.PI) / 180
+            const filled = i < levelsFilled
+            const innerR = ringR + 3
+            const outerR = ringR + (filled ? 7 : 5)
+            return (
+              <line
+                key={i}
+                x1={50 + innerR * Math.cos(rad)}
+                y1={50 + innerR * Math.sin(rad)}
+                x2={50 + outerR * Math.cos(rad)}
+                y2={50 + outerR * Math.sin(rad)}
+                stroke={filled ? themeColor : `${themeColor}30`}
+                strokeWidth={filled ? '2' : '1.5'}
+                strokeLinecap="round"
+              />
+            )
+          })}
         </svg>
+
+        {/* Sacred geometry — centered inside the ring */}
+        <div
+          className="relative z-10 w-[58%] transition-all duration-300 group-hover:scale-110 group-hover:opacity-90"
+          style={{ opacity: 0.65 }}
+        >
+          <Geo type={geoType} color={themeColor} opacity={1} />
+        </div>
       </div>
 
       {/* Label panel */}
-      <div className="px-3 py-3">
-        <span className="font-display text-[0.85rem] font-bold leading-tight block mb-1">
+      <div className="px-4 py-3 border-t" style={{ borderColor: `${themeColor}15` }}>
+        <span className="font-display text-[0.82rem] font-bold leading-tight block mb-2 group-hover:underline">
           {name}
         </span>
         <div className="flex items-center justify-between">
-          {/* Level dots */}
-          <div className="flex gap-[2.5px]">
+          {/* Level indicator — mini bar */}
+          <div className="flex gap-[3px]">
             {Array.from({ length: totalLevels }).map((_, i) => (
               <span
                 key={i}
-                className="w-[5px] h-[5px] rounded-full"
-                style={{ background: i < levelsFilled ? themeColor : 'var(--color-rule)' }}
+                className="h-[6px] rounded-full transition-all duration-300"
+                style={{
+                  width: i < levelsFilled ? 14 : 8,
+                  background: i < levelsFilled ? themeColor : `${themeColor}20`,
+                }}
               />
             ))}
           </div>
           {/* Status */}
           <span
-            className={`font-mono text-[0.6875rem] tracking-[0.1em] uppercase ${isHot ? 'text-civic font-semibold' : 'text-dim'}`}
+            className={`font-mono text-[0.625rem] tracking-[0.1em] uppercase ${isHot ? 'font-bold' : ''}`}
+            style={{ color: isHot ? themeColor : 'var(--color-dim, #8a929e)' }}
           >
-            {statusText || `${levelsFilled} of ${totalLevels}`}
+            {statusText || `${levelsFilled}/${totalLevels}`}
           </span>
         </div>
-        <span className="font-mono text-[0.6875rem] tracking-[0.1em] uppercase text-blue block mt-1">
-          Explore →
-        </span>
       </div>
     </Link>
   )
@@ -122,12 +150,11 @@ interface ControlPanelProps {
 
 /**
  * Control Panel — grid of focus area instruments.
- * Matches the .cp-grid spec: 4 cols desktop, 3 tablet, 2 mobile.
- * Outer border: 2px solid ink. Inner borders on each instrument.
+ * 4 cols desktop, 3 tablet, 2 mobile.
  */
 export function ControlPanel({ instruments, kicker, heading }: ControlPanelProps) {
   return (
-    <section className="py-6">
+    <section className="py-10 border-b border-rule-inner">
       {(kicker || heading) && (
         <div className="mb-8">
           {kicker && (
@@ -142,7 +169,7 @@ export function ControlPanel({ instruments, kicker, heading }: ControlPanelProps
           )}
         </div>
       )}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-l-2 border-t-2 border-ink">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {instruments.map((inst, i) => (
           <Instrument key={i} {...inst} />
         ))}
