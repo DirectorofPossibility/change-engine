@@ -15,6 +15,7 @@ import { getExchangeStats, getLatestContent, getPathwayCounts } from '@/lib/data
 import { THEMES, THREE_CENTERS } from '@/lib/constants'
 import { FolFallback } from '@/components/ui/FolFallback'
 import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
+import { HeroSearch } from '@/components/exchange/home/HeroSearch'
 
 export const revalidate = 600
 
@@ -27,14 +28,6 @@ const THEME_LIST = Object.entries(THEMES).map(function ([id, t]) { return { id, 
 
 const CENTER_LIST = Object.values(THREE_CENTERS)
 
-const SEARCH_SUGGESTIONS = [
-  { label: 'food assistance', href: '/search?q=food+assistance' },
-  { label: 'voter registration', href: '/search?q=voter+registration' },
-  { label: 'mental health', href: '/search?q=mental+health' },
-  { label: 'job training', href: '/search?q=job+training' },
-  { label: 'childcare', href: '/search?q=childcare' },
-  { label: 'legal resources', href: '/search?q=legal+resources' },
-]
 
 export default async function ExchangeHomePage() {
   const [stats, latestContent, pathwayCounts] = await Promise.all([
@@ -74,26 +67,8 @@ export default async function ExchangeHomePage() {
                 Seven pathways into the resources, services, and civic power that make Houston stronger
               </p>
 
-              {/* Search bar */}
-              <Link
-                href="/search"
-                className="flex items-center gap-3 max-w-[520px] px-4 py-4 mb-4"
-                style={{ background: 'white' }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                <span className="text-[14px]" style={{ color: 'rgba(107,101,96,0.6)' }}>Search resources, services, officials...</span>
-              </Link>
-
-              <p className="text-[12px] mb-8" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                Try: {SEARCH_SUGGESTIONS.map(function (s, i) {
-                  return (
-                    <span key={s.label}>
-                      {i > 0 && <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 6px' }}>/</span>}
-                      <Link href={s.href} className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}>{s.label}</Link>
-                    </span>
-                  )
-                })}
-              </p>
+              {/* Search bar — inline, submits to /search */}
+              <HeroSearch />
 
               <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
                 Choose a pathway to explore &rarr;
