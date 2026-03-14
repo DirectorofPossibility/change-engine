@@ -22,6 +22,7 @@ const CROSS_LINK_PRESETS: Record<string, CrossLink[]> = {
     { href: '/news', title: 'News', description: 'Latest articles and reports' },
     { href: '/library', title: 'Library', description: 'In-depth guides and resources' },
     { href: '/pathways', title: 'Topics', description: 'Browse by community theme' },
+    { href: '/sdgs', title: 'UN SDGs', description: 'Global goals, local action' },
   ],
   community: [
     { href: '/organizations', title: 'Organizations', description: 'Community groups doing the work' },

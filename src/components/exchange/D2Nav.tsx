@@ -39,6 +39,7 @@ function useCenters(t: (key: string) => string) {
         { href: '/chat', label: t('d2nav.ask_chance') },
         { href: '/knowledge-graph', label: t('d2nav.knowledge_graph') },
         { href: '/compass', label: t('d2nav.civic_compass') },
+        { href: '/sdgs', label: 'UN SDGs' },
       ],
     },
     {

@@ -47,6 +47,122 @@ export async function getSDGMap(): Promise<Record<string, { sdg_number: number; 
 }
 
 
+/** SDG dashboard: counts of content, services, policies, officials, orgs per SDG via junction tables. */
+export async function getSDGDashboard() {
+  const supabase = await createClient()
+
+  const [
+    { data: sdgs },
+    { data: contentJunctions },
+    { data: serviceJunctions },
+    { data: policyJunctions },
+    { data: officialJunctions },
+    { data: orgJunctions },
+    { data: opportunityJunctions },
+  ] = await Promise.all([
+    supabase.from('sdgs').select('*').order('sdg_number'),
+    (supabase as any).from('content_sdgs').select('sdg_id'),
+    (supabase as any).from('service_sdgs').select('sdg_id'),
+    (supabase as any).from('policy_sdgs').select('sdg_id'),
+    (supabase as any).from('official_sdgs').select('sdg_id'),
+    (supabase as any).from('organization_sdgs').select('sdg_id'),
+    (supabase as any).from('opportunity_sdgs').select('sdg_id'),
+  ])
+
+  // Count per SDG
+  type Counts = { content: number; services: number; policies: number; officials: number; organizations: number; opportunities: number }
+  const counts: Record<string, Counts> = {}
+  function inc(sdgId: string, key: keyof Counts) {
+    if (!counts[sdgId]) counts[sdgId] = { content: 0, services: 0, policies: 0, officials: 0, organizations: 0, opportunities: 0 }
+    counts[sdgId][key]++
+  }
+  for (const r of contentJunctions ?? []) inc(r.sdg_id, 'content')
+  for (const r of serviceJunctions ?? []) inc(r.sdg_id, 'services')
+  for (const r of policyJunctions ?? []) inc(r.sdg_id, 'policies')
+  for (const r of officialJunctions ?? []) inc(r.sdg_id, 'officials')
+  for (const r of orgJunctions ?? []) inc(r.sdg_id, 'organizations')
+  for (const r of opportunityJunctions ?? []) inc(r.sdg_id, 'opportunities')
+
+  const goals = (sdgs ?? []).map(function (s: any) {
+    return {
+      sdg_id: s.sdg_id as string,
+      sdg_number: s.sdg_number as number,
+      sdg_name: s.sdg_name as string,
+      sdg_color: (s.sdg_color || '#6a4e10') as string,
+      counts: counts[s.sdg_id] || { content: 0, services: 0, policies: 0, officials: 0, organizations: 0, opportunities: 0 },
+    }
+  })
+
+  const totals = goals.reduce(function (acc, g) {
+    acc.content += g.counts.content
+    acc.services += g.counts.services
+    acc.policies += g.counts.policies
+    acc.officials += g.counts.officials
+    acc.organizations += g.counts.organizations
+    acc.opportunities += g.counts.opportunities
+    return acc
+  }, { content: 0, services: 0, policies: 0, officials: 0, organizations: 0, opportunities: 0 })
+
+  return { goals, totals }
+}
+
+/** Fetch content, services, policies, officials linked to a specific SDG via junction tables. */
+export async function getSDGEntities(sdgId: string) {
+  const supabase = await createClient()
+
+  const [
+    { data: contentIds },
+    { data: serviceIds },
+    { data: policyIds },
+    { data: officialIds },
+    { data: orgIds },
+  ] = await Promise.all([
+    (supabase as any).from('content_sdgs').select('content_id').eq('sdg_id', sdgId),
+    (supabase as any).from('service_sdgs').select('service_id').eq('sdg_id', sdgId),
+    (supabase as any).from('policy_sdgs').select('policy_id').eq('sdg_id', sdgId),
+    (supabase as any).from('official_sdgs').select('official_id').eq('sdg_id', sdgId),
+    (supabase as any).from('organization_sdgs').select('org_id').eq('sdg_id', sdgId),
+  ])
+
+  const cIds = (contentIds ?? []).map((r: any) => r.content_id).slice(0, 20)
+  const sIds = (serviceIds ?? []).map((r: any) => r.service_id).slice(0, 20)
+  const pIds = (policyIds ?? []).map((r: any) => r.policy_id).slice(0, 20)
+  const oIds = (officialIds ?? []).map((r: any) => r.official_id).slice(0, 12)
+  const orgIdList = (orgIds ?? []).map((r: any) => r.org_id).slice(0, 12)
+
+  const [
+    { data: content },
+    { data: services },
+    { data: policies },
+    { data: officials },
+    { data: orgs },
+  ] = await Promise.all([
+    cIds.length > 0
+      ? supabase.from('content_published').select('id, inbox_id, title_6th_grade, summary_6th_grade, pathway_primary, image_url, source_url, published_at').in('id', cIds).order('published_at', { ascending: false })
+      : Promise.resolve({ data: [] as any[] }),
+    sIds.length > 0
+      ? supabase.from('services_211').select('service_id, service_name, org_id, description_5th_grade, phone, address, city, state, zip_code, website').in('service_id', sIds)
+      : Promise.resolve({ data: [] as any[] }),
+    pIds.length > 0
+      ? supabase.from('policies').select('policy_id, policy_name, summary_6th_grade, bill_number, status, level, source_url, last_action_date').in('policy_id', pIds)
+      : Promise.resolve({ data: [] as any[] }),
+    oIds.length > 0
+      ? supabase.from('elected_officials').select('official_id, official_name, title, party, level, email, office_phone, website').in('official_id', oIds)
+      : Promise.resolve({ data: [] as any[] }),
+    orgIdList.length > 0
+      ? supabase.from('organizations').select('org_id, org_name, website, description_5th_grade, logo_url').in('org_id', orgIdList)
+      : Promise.resolve({ data: [] as any[] }),
+  ])
+
+  return {
+    content: content ?? [],
+    services: services ?? [],
+    policies: policies ?? [],
+    officials: officials ?? [],
+    organizations: orgs ?? [],
+  }
+}
+
 export async function getSDOHDomains(): Promise<SDOHDomain[]> {
   const supabase = await createClient()
   const { data } = await supabase.from('sdoh_domains').select('*')
