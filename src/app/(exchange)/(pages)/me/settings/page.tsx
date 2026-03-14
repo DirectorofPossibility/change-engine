@@ -144,10 +144,10 @@ export default function SettingsPage() {
 
     const supabase = createClient()
     const ext = file.name.split('.').pop() || 'jpg'
-    const path = userId + '/avatar.' + ext
+    const path = 'avatars/' + userId + '.' + ext
 
     const { error: uploadErr } = await supabase.storage
-      .from('profile-pictures')
+      .from('Images')
       .upload(path, file, { upsert: true, contentType: file.type })
 
     if (uploadErr) {
@@ -156,7 +156,7 @@ export default function SettingsPage() {
       return
     }
 
-    const { data: urlData } = supabase.storage.from('profile-pictures').getPublicUrl(path)
+    const { data: urlData } = supabase.storage.from('Images').getPublicUrl(path)
     const newUrl = urlData.publicUrl + '?t=' + Date.now()
 
     // Sync avatar URL to auth metadata and user_profiles
