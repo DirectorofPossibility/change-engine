@@ -19,13 +19,15 @@ export function ContentImage({ src, alt, themeColor, pathway }: ContentImageProp
   }
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      className="w-full h-72 object-cover"
-      width={800}
-      height={288}
-      onError={() => setError(true)}
-    />
+    <div className="w-full h-72 flex items-center justify-center bg-white/10">
+      <Image
+        src={src}
+        alt={alt}
+        className="max-w-full max-h-full w-auto h-auto object-contain"
+        width={800}
+        height={600}
+        onError={() => setError(true)}
+      />
+    </div>
   )
 }
