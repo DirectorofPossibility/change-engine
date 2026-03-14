@@ -4,13 +4,12 @@ import { createClient } from '@/lib/supabase/server'
 import { requirePageEnabled } from '@/lib/data/page-gate'
 import { CompassClient } from './CompassClient'
 import { THEMES } from '@/lib/constants'
-import { getNewsFeed } from '@/lib/data/exchange'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Civic Compass — Change Engine',
-  description: 'Your personal civic mission control for Houston.',
+  title: 'Your Civic Compass — Change Engine',
+  description: 'A personalized guide to the organizations, policies, leaders, and services aligned with what matters to you.',
 }
 
 export default async function CompassPage() {
@@ -33,21 +32,20 @@ export default async function CompassPage() {
         selectedThemes={[]}
         archetype={archetype}
         themeColors={themeColors}
-        yourOfficials={[]}
-        nearbyServices={[]}
-        yourPolicies={[]}
-        nextEvents={[]}
-        pathwayContent={[]}
-        recentNews={[]}
+        guideOrgs={[]}
+        guideContent={[]}
+        guidePolicies={[]}
+        guideOfficials={[]}
+        guideServices={[]}
+        guideEvents={[]}
         pathwayStats={{}}
-        platformStats={{ content: 0, services: 0, officials: 0, policies: 0, organizations: 0, opportunities: 0 }}
       />
     )
   }
 
   const supabase = await createClient()
 
-  // Resolve user's districts from ZIP
+  // ── Resolve user's districts from ZIP ──
   const districtLookup = zip ? (async () => {
     const { data: zipData } = await supabase
       .from('zip_codes')
@@ -73,6 +71,13 @@ export default async function CompassPage() {
 
   const { districts, councilDistrict, countyId } = await districtLookup
 
+  // ── Focus area IDs for user's themes ──
+  const { data: focusAreaRows } = await supabase
+    .from('focus_areas')
+    .select('focus_id, theme_id')
+    .in('theme_id', selectedThemes)
+  const focusIds = (focusAreaRows || []).map(f => f.focus_id)
+
   // Build officials filter
   let officialFilter = districts.map(d => 'district_id.eq.' + d).join(',')
   officialFilter += ',district_id.eq.TX-SEN'
@@ -80,25 +85,68 @@ export default async function CompassPage() {
   officialFilter += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
   if (countyId) officialFilter += ',counties_served.like.%' + countyId + '%'
 
-  // Focus area IDs for user's themes
-  const { data: focusAreaRows } = await supabase
-    .from('focus_areas')
-    .select('focus_id')
-    .in('theme_id', selectedThemes)
-  const focusIds = (focusAreaRows || []).map(f => f.focus_id)
-
-  // Fetch everything in parallel
+  // ── Fetch everything in parallel ──
   const [
+    orgsResult,
+    contentResult,
+    policiesResult,
     officialsResult,
     servicesResult,
-    policiesResult,
     eventsResult,
-    contentResult,
-    recentNews,
     pathwayStatsResult,
-    platformStatsResult,
   ] = await Promise.all([
-    // All officials for user's ZIP (city → county → state → federal)
+
+    // 1. ORGANIZATIONS — aligned to user's pathways via focus area junctions
+    (async () => {
+      if (focusIds.length === 0) return []
+      const { data: junctions } = await supabase
+        .from('organization_focus_areas')
+        .select('org_id')
+        .in('focus_id', focusIds)
+      const orgIds = Array.from(new Set((junctions || []).map(j => j.org_id)))
+      if (orgIds.length === 0) return []
+      const { data } = await supabase
+        .from('organizations')
+        .select('org_id, org_name, description_5th_grade, logo_url, website, phone, city, theme_id, mission_statement')
+        .in('org_id', orgIds.slice(0, 100))
+        .order('org_name')
+        .limit(12)
+      return data || []
+    })(),
+
+    // 2. CONTENT — from user's selected pathways
+    (async () => {
+      const { data } = await supabase
+        .from('content_published')
+        .select('id, title_6th_grade, summary_6th_grade, pathway_primary, source_org_name, published_at, image_url, content_type')
+        .in('pathway_primary', selectedThemes)
+        .eq('is_active', true)
+        .order('published_at', { ascending: false })
+        .limit(8)
+      return data || []
+    })(),
+
+    // 3. POLICIES — aligned via focus area junctions
+    (async () => {
+      if (focusIds.length === 0) return []
+      const { data: junctions } = await supabase
+        .from('policy_focus_areas')
+        .select('policy_id')
+        .in('focus_id', focusIds)
+        .limit(40)
+      const policyIds = Array.from(new Set((junctions || []).map(j => j.policy_id)))
+      if (policyIds.length === 0) return []
+      const { data } = await supabase
+        .from('policies')
+        .select('policy_id, policy_name, title_6th_grade, summary_5th_grade, level, status, bill_number')
+        .in('policy_id', policyIds)
+        .eq('is_published', true)
+        .order('last_action_date', { ascending: false })
+        .limit(6)
+      return data || []
+    })(),
+
+    // 4. OFFICIALS — for user's ZIP, City → County → State → Federal
     zip ? (async () => {
       const { data } = await supabase
         .from('elected_officials')
@@ -110,7 +158,7 @@ export default async function CompassPage() {
       return all.sort((a, b) => (LEVEL_ORDER[a.level || ''] ?? 9) - (LEVEL_ORDER[b.level || ''] ?? 9))
     })() : Promise.resolve([]),
 
-    // Services near user + theme-relevant
+    // 5. 211 SERVICES — theme-aligned + local
     zip ? (async () => {
       if (focusIds.length === 0) {
         const { data } = await supabase
@@ -126,56 +174,26 @@ export default async function CompassPage() {
         .select('service_id')
         .in('focus_id', focusIds)
       const serviceIds = Array.from(new Set((junctions || []).map(j => j.service_id)))
-      if (serviceIds.length === 0) {
-        const { data } = await supabase
-          .from('services_211')
-          .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
-          .eq('zip_code', zip)
-          .eq('is_active', 'Yes')
-          .limit(6)
-        return data || []
-      }
-      // Get theme-matched services in ZIP, then fill with any ZIP services
+      // Theme-matched first, then local fill
       const { data: themed } = await supabase
         .from('services_211')
         .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
-        .in('service_id', serviceIds.slice(0, 50))
-        .eq('zip_code', zip)
+        .in('service_id', serviceIds.length > 0 ? serviceIds.slice(0, 50) : ['_none_'])
         .eq('is_active', 'Yes')
         .limit(6)
-      if ((themed || []).length >= 3) return themed || []
+      if ((themed || []).length >= 4) return themed || []
+      // Fill with local ZIP services
       const themedIds = new Set((themed || []).map(s => s.service_id))
-      const { data: extra } = await supabase
+      const { data: local } = await supabase
         .from('services_211')
         .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
         .eq('zip_code', zip)
         .eq('is_active', 'Yes')
         .limit(6)
-      const combined = [...(themed || []), ...(extra || []).filter(s => !themedIds.has(s.service_id))]
-      return combined.slice(0, 6)
+      return [...(themed || []), ...(local || []).filter(s => !themedIds.has(s.service_id))].slice(0, 6)
     })() : Promise.resolve([]),
 
-    // Multiple policies relevant to user's themes
-    (async () => {
-      if (focusIds.length === 0) return []
-      const { data: junctions } = await supabase
-        .from('policy_focus_areas')
-        .select('policy_id')
-        .in('focus_id', focusIds)
-        .limit(30)
-      const policyIds = Array.from(new Set((junctions || []).map(j => j.policy_id)))
-      if (policyIds.length === 0) return []
-      const { data } = await supabase
-        .from('policies')
-        .select('policy_id, policy_name, title_6th_grade, summary_5th_grade, level, status, bill_number')
-        .in('policy_id', policyIds)
-        .eq('is_published', true)
-        .order('last_action_date', { ascending: false })
-        .limit(5)
-      return data || []
-    })(),
-
-    // Upcoming events/opportunities
+    // 6. EVENTS / OPPORTUNITIES
     (async () => {
       const now = new Date().toISOString()
       const { data } = await supabase
@@ -187,69 +205,46 @@ export default async function CompassPage() {
       return data || []
     })(),
 
-    // Multiple content pieces from selected themes
+    // Per-pathway stats
     (async () => {
-      const { data } = await supabase
-        .from('content_published')
-        .select('id, slug, title_6th_grade, summary_6th_grade, pathway_primary, source_org_name, published_at, image_url, content_type')
-        .in('pathway_primary', selectedThemes)
-        .eq('is_active', true)
-        .order('published_at', { ascending: false })
-        .limit(8)
-      return data || []
-    })(),
-
-    getNewsFeed(undefined, 6),
-
-    // Per-pathway content/service counts
-    (async () => {
-      const stats: Record<string, { content: number; services: number; policies: number }> = {}
-      for (const themeId of selectedThemes) {
-        const { count: contentCount } = await supabase
-          .from('content_published')
-          .select('id', { count: 'exact', head: true })
-          .eq('pathway_primary', themeId)
-          .eq('is_active', true)
-        stats[themeId] = { content: contentCount || 0, services: 0, policies: 0 }
+      const stats: Record<string, { content: number; orgs: number; policies: number }> = {}
+      // Content counts per theme
+      const contentCounts = await Promise.all(
+        selectedThemes.map(async (themeId) => {
+          const { count } = await supabase
+            .from('content_published')
+            .select('id', { count: 'exact', head: true })
+            .eq('pathway_primary', themeId)
+            .eq('is_active', true)
+          return { themeId, count: count || 0 }
+        })
+      )
+      for (const { themeId, count } of contentCounts) {
+        stats[themeId] = { content: count, orgs: 0, policies: 0 }
       }
-      // Service counts via focus area junctions
+      // Org counts per theme
       if (focusIds.length > 0) {
-        const { data: svcJunctions } = await supabase
-          .from('service_focus_areas')
-          .select('service_id, focus_id')
-          .in('focus_id', focusIds)
         const focusToTheme: Record<string, string> = {}
         for (const row of (focusAreaRows || [])) {
-          // Map focus back to theme — we need the theme_id
-          const { data: fa } = await supabase.from('focus_areas').select('theme_id').eq('focus_id', row.focus_id).single()
-          if (fa?.theme_id) focusToTheme[row.focus_id] = fa.theme_id
+          if (row.theme_id) focusToTheme[row.focus_id] = row.theme_id
         }
-        for (const j of (svcJunctions || [])) {
+        const { data: orgJunctions } = await supabase
+          .from('organization_focus_areas')
+          .select('org_id, focus_id')
+          .in('focus_id', focusIds)
+        const orgsByTheme: Record<string, Set<string>> = {}
+        for (const j of (orgJunctions || [])) {
           const theme = focusToTheme[j.focus_id]
-          if (theme && stats[theme]) stats[theme].services++
+          if (theme) {
+            if (!orgsByTheme[theme]) orgsByTheme[theme] = new Set()
+            orgsByTheme[theme].add(j.org_id)
+          }
+        }
+        for (const [theme, orgSet] of Object.entries(orgsByTheme)) {
+          if (stats[theme]) stats[theme].orgs = orgSet.size
         }
       }
       return stats
-    })(),
-
-    // Platform-wide totals
-    (async () => {
-      const [c1, c2, c3, c4, c5, c6] = await Promise.all([
-        supabase.from('content_published').select('id', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('services_211').select('service_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
-        supabase.from('elected_officials').select('official_id', { count: 'exact', head: true }),
-        supabase.from('policies').select('policy_id', { count: 'exact', head: true }).eq('is_published', true),
-        supabase.from('organizations').select('org_id', { count: 'exact', head: true }),
-        supabase.from('opportunities').select('opportunity_id', { count: 'exact', head: true }),
-      ])
-      return {
-        content: c1.count || 0,
-        services: c2.count || 0,
-        officials: c3.count || 0,
-        policies: c4.count || 0,
-        organizations: c5.count || 0,
-        opportunities: c6.count || 0,
-      }
     })(),
   ])
 
@@ -260,14 +255,13 @@ export default async function CompassPage() {
       selectedThemes={selectedThemes}
       archetype={archetype}
       themeColors={themeColors}
-      yourOfficials={officialsResult}
-      nearbyServices={servicesResult}
-      yourPolicies={policiesResult}
-      nextEvents={eventsResult}
-      pathwayContent={contentResult}
-      recentNews={recentNews}
+      guideOrgs={orgsResult}
+      guideContent={contentResult}
+      guidePolicies={policiesResult}
+      guideOfficials={officialsResult}
+      guideServices={servicesResult}
+      guideEvents={eventsResult}
       pathwayStats={pathwayStatsResult}
-      platformStats={platformStatsResult}
     />
   )
 }
