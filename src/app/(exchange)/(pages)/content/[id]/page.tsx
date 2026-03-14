@@ -918,8 +918,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                         {r.title_6th_grade}
                       </span>
                       {r.summary_6th_grade && (
-                        <span className="font-body text-[0.78rem] leading-relaxed block line-clamp-2" style={{ color: DIM }}>
-                          {r.summary_6th_grade}
+                        <span className="font-body text-[0.78rem] leading-relaxed block line-clamp-3" style={{ color: DIM }}>
+                          {r.summary_6th_grade.length > 150 ? r.summary_6th_grade.slice(0, 150) + '...' : r.summary_6th_grade}
                         </span>
                       )}
                     </div>

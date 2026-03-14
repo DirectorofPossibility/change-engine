@@ -123,15 +123,35 @@ ${systemPrompt}
 
 Also produce:
 - "body_6th_grade": structured markdown (200-500 words, 6th-grade level, asset-based language) with sections: ## Overview, ## Why It Matters, ## How It Works. Omit sections that don't apply.
-- "hero_quote": A short inspirational quote from the source. Null if none found.
+- "subtitle": Tagline or sub-heading from the page, or null.
+- "author": Author name(s) if listed, or null.
+- "publication_date": ISO 8601 date (YYYY-MM-DD) if found, or null.
+- "hero_quote": Exact pull quote from the source (no quotation marks). Null if none found.
+- "hero_quote_attribution": Name and title/org of the person quoted. Null if no quote.
+- "key_stats": Array of {"value":"6","label":"States in pilot"} — key numbers/metrics from the page. Max 4. Empty array if none.
+- "sections": Array of {"number":1,"heading":"Section heading","summary":"1-2 sentence plain-language summary at 6th-grade level."} for each major section of the content. Max 8. Empty array if none.
 - "programs": Array of {"name":"...","description":"..."} for key programs mentioned. Max 4. Empty array if none.
+- "partner_organizations": Array of {"name":"Org name","url":"https://..."} for collaborating/featured orgs (NOT the source org). Max 6. Empty array if none.
+- "structured_actions": Array of {"title":"Action card title","description":"Short description","cta_text":"Button label","cta_url":"https://..."} for each distinct call-to-action found on the page. Max 6. Empty array if none.
 - "action_items": {"donate_url":null,"volunteer_url":null,"signup_url":null,"phone":null,"apply_url":null,"register_url":null,"attend_url":null}
+- "download_url": Direct URL to a PDF or file download, or null.
+- "cost": "Free" | "Paid" | "Sliding Scale" — cost to access this resource. Null if unknown.
+- "raw_tags": Every tag, category, or label found on the page, exactly as written. Empty array if none.
 - "event_start_date": ISO 8601 datetime string if this is an event with a specific date/time. Null otherwise.
 - "event_end_date": ISO 8601 datetime string if the event has an end date/time. Null otherwise.
+- "expires_at": ISO 8601 datetime when this content should expire. Events expire after their end date. Time-limited opportunities/resources expire on their deadline. Null for evergreen content.
+
+RULES:
+- Never invent data. Only extract what is on the page.
+- OMIT any field you cannot determine from the page content — do not include null values or empty arrays. Exception: always include "cost" (use "Free" if unclear).
+- hero_quote must be the exact quote — do not paraphrase.
+- summary_6th_grade and section summaries must be rewritten at 6th-grade level.
+- Use asset-based language — focus on strengths, opportunities, and what's available.
+- For expires_at: events expire after their end date, time-limited opportunities/resources expire on their deadline. Omit for evergreen content.
 
 Return JSON only. No markdown fences.`;
 
-    const userContent = `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON with: theme_primary, theme_secondary, focus_area_ids, sdg_ids, sdoh_code, ntee_codes, airs_codes, center, resource_type_id, content_type, audience_segment_ids, life_situation_ids, service_cat_ids, skill_ids, time_commitment_id, action_type_ids, gov_level_id, title_6th_grade, summary_6th_grade, body_6th_grade, hero_quote, programs, action_items, event_start_date, event_end_date, geographic_scope, confidence, reasoning`;
+    const userContent = `Title: ${pageTitle}\nURL: ${url || 'N/A'}\nSource: ${sourceDomain || 'manual'}\nContent: ${(pageText || '').substring(0, 2500)}${extractedBody ? `\n\nFull page text:\n${extractedBody.substring(0, 5000)}` : ''}\n\nReturn JSON with: theme_primary, theme_secondary, focus_area_ids, sdg_ids, sdoh_code, ntee_codes, airs_codes, center, resource_type_id, content_type, audience_segment_ids, life_situation_ids, service_cat_ids, skill_ids, time_commitment_id, action_type_ids, gov_level_id, title_6th_grade, summary_6th_grade, body_6th_grade, hero_quote, programs, action_items, event_start_date, event_end_date, expires_at, geographic_scope, confidence, reasoning`;
 
     const rawText = await callClaude(contentPrompt, userContent, ANTHROPIC_KEY, 3000);
 

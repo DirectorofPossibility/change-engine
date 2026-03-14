@@ -1,19 +1,26 @@
 import { cache } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import type { FocusArea } from '@/lib/types/exchange'
+
+/** Apply expiration filter: exclude items where expires_at is in the past. */
+function applyExpiryFilter(q: any) {
+  return q.or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+}
 /**
  * Most recently published newsfeed items.
  * These are NEWS articles/videos/reports, not community resources.
  */
 export const getLatestContent = cache(async function getLatestContent(limit = 6) {
   const supabase = await createClient()
-  const { data } = await supabase
+  let q = supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
     .not('content_type', 'in', '("article","report","announcement","event")')
     .order('published_at', { ascending: false })
     .limit(limit)
+  q = applyExpiryFilter(q)
+  const { data } = await q
   return data ?? []
 })
 
@@ -36,6 +43,7 @@ export const getNewsFeed = cache(async function getNewsFeed(pathway?: string, li
     q = q.eq('content_type', contentType)
   }
   if (pathway) q = q.eq('pathway_primary', pathway)
+  q = applyExpiryFilter(q)
   const { data } = await q
   return data ?? []
 })
@@ -65,13 +73,15 @@ export async function getPathwayNewsCount(themeId: string) {
  */
 export async function getResourceFeed(limit = 20) {
   const supabase = await createClient()
-  const { data } = await supabase
+  let q = supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
     .in('content_type', ['guide', 'course', 'tool', 'video', 'opportunity', 'campaign'])
     .order('published_at', { ascending: false })
     .limit(limit)
+  q = applyExpiryFilter(q)
+  const { data } = await q
   return data ?? []
 }
 
@@ -86,20 +96,24 @@ export async function getResourceFeed(limit = 20) {
  */
 export const getFeaturedContent = cache(async function getFeaturedContent() {
   const supabase = await createClient()
-  const { data: featured } = await supabase
+  let q1 = supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
     .eq('is_featured', true)
     .order('published_at', { ascending: false })
     .limit(1)
+  q1 = applyExpiryFilter(q1)
+  const { data: featured } = await q1
   if (featured && featured.length > 0) return featured[0]
-  const { data: latest } = await supabase
+  let q2 = supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
     .order('published_at', { ascending: false })
     .limit(1)
+  q2 = applyExpiryFilter(q2)
+  const { data: latest } = await q2
   return latest?.[0] ?? null
 })
 

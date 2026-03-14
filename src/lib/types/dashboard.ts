@@ -143,14 +143,36 @@ export interface AiClassification {
   gov_level_id?: string | null
   /** Organizations mentioned or responsible. */
   organizations?: Array<{ name: string; url: string; description?: string }>
+  /** Partner organizations featured or collaborating (distinct from source org). */
+  partner_organizations?: Array<{ name: string; url: string }>
   /** Locations identified (neighborhoods, ZIP codes, districts). */
   locations?: { neighborhoods?: string[]; zip_codes?: string[]; city?: string; district?: string }
   /** Rewritten title at 6th-grade reading level. */
   title_6th_grade: string
+  /** Subtitle or tagline extracted from the page, or null. */
+  subtitle?: string | null
   /** Rewritten summary at 6th-grade reading level (150–300 words). */
   summary_6th_grade: string
+  /** Author name(s) if listed, or null. */
+  author?: string | null
+  /** Publication date in ISO 8601 (YYYY-MM-DD) if found, or null. */
+  publication_date?: string | null
   /** Actionable URLs extracted from the content. */
   action_items: Record<string, string | null>
+  /** Structured action cards with title, description, CTA text, and URL. */
+  structured_actions?: Array<{ title: string; description: string; cta_text: string; cta_url: string }>
+  /** Key statistics extracted from the content as value/label pairs. */
+  key_stats?: Array<{ value: string; label: string }>
+  /** Structured sections with numbered headings and plain-language summaries. */
+  sections?: Array<{ number: number; heading: string; summary: string }>
+  /** Exact pull quote from the source with attribution. */
+  hero_quote?: string | null
+  /** Attribution for the hero quote (name and title/org). */
+  hero_quote_attribution?: string | null
+  /** Direct URL to a downloadable PDF or file, or null. */
+  download_url?: string | null
+  /** Cost to access: Free | Paid | Sliding Scale, or null. */
+  cost?: string | null
   /** Geographic scope: Houston | Harris County | Texas | National | Global. */
   geographic_scope: string
   /** Classifier confidence (0.0–1.0). */
@@ -159,6 +181,10 @@ export interface AiClassification {
   reasoning: string
   /** Extracted keywords. */
   keywords?: string[]
+  /** Every tag found on the page, exactly as written. */
+  raw_tags?: string[]
+  /** ISO 8601 datetime when this content expires. Null for evergreen content. */
+  expires_at?: string | null
   _enriched_focus_areas?: Array<{
     id: string; name: string; theme: string
     sdg: string; ntee: string; airs: string; sdoh: string; bridging: boolean
@@ -186,6 +212,7 @@ export const CRON_JOBS: CronJob[] = [
   { name: 'rss-poll', schedule: 'Every hour', description: 'Poll RSS feeds for new content' },
   { name: 'auto-publish', schedule: 'Every 30 min', description: 'Publish auto-approved content' },
   { name: 'batch-translate', schedule: 'Daily 2am CT', description: 'Translate new content to ES/VI' },
+  { name: 'expire-content', schedule: 'Daily 6:30pm CT', description: 'Archive expired events and time-limited content' },
 ]
 
 // ── Entity Fidelity types ─────────────────────────────────────────
