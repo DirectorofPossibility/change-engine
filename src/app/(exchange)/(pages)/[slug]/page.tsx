@@ -1,28 +1,27 @@
 /**
  * @fileoverview Pathway Chapter — the core page of the field guide.
  *
- * Each pathway (health, families, neighborhood, voice, money, planet, the-bigger-we)
- * is a chapter containing:
- *   1. Chapter header with pathway color + geo context
- *   2. In This Chapter nav (sticky sidebar on desktop)
- *   3. Start Here — curated top picks
- *   4. Organizations — the spine
- *   5. Services — what's available near you
- *   6. Who Represents You — officials by district
- *   7. Policy Tracker — legislation on this topic
- *   8. Opportunities — get involved
- *   9. From the Guide — articles, reports, videos
- *   10. Related Pathways — cross-links
+ * Each pathway is a chapter: ThemeMasthead hero, editorial photo,
+ * organizations as the spine, services/officials/policies woven between,
+ * content in CouchGrid, trail level CTA.
+ *
+ * Uses the design system: sharp corners, no shadows, sacred geometry,
+ * pathway gradients, monospace labels, editorial typography.
  *
  * @route GET /health, /families, /neighborhood, /voice, /money, /planet, /the-bigger-we
  */
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { THEMES } from '@/lib/constants'
 import { getEntitiesByPathways, resolveUserGeo } from '@/lib/data/entity-graph'
+import { ThemeMasthead } from '@/components/templates/ThemeMasthead'
+import { CouchGrid } from '@/components/templates/CouchGrid'
+import { FolFallback } from '@/components/ui/FolFallback'
+import { Geo } from '@/components/geo/sacred'
 
 // Build lookup from slug → theme
 const PATHWAY_BY_SLUG: Record<string, { id: string; name: string; color: string; slug: string; description: string }> = {}
@@ -30,8 +29,29 @@ for (const [id, t] of Object.entries(THEMES)) {
   PATHWAY_BY_SLUG[t.slug] = { id, name: t.name, color: t.color, slug: t.slug, description: t.description }
 }
 
-// Valid pathway slugs for generateStaticParams
 const VALID_SLUGS: string[] = Object.values(THEMES).map((t) => t.slug)
+
+// Map pathway IDs to their sacred geometry types
+const PATHWAY_GEO: Record<string, string> = {
+  THEME_01: 'seed_of_life',
+  THEME_02: 'nested_circles',
+  THEME_03: 'hex_grid',
+  THEME_04: 'compass_rose',
+  THEME_05: 'golden_spiral',
+  THEME_06: 'flower_of_life',
+  THEME_07: 'metatron_cube',
+}
+
+// Map pathway IDs to editorial photos
+const PATHWAY_PHOTOS: Record<string, string> = {
+  THEME_01: '/images/editorial/health-fair.jpg',
+  THEME_02: '/images/editorial/two-people-talking.jpg',
+  THEME_03: '/images/editorial/neighborhood.jpg',
+  THEME_04: '/images/editorial/town-hall.jpg',
+  THEME_05: '/images/editorial/organizing.jpg',
+  THEME_06: '/images/editorial/cleanup.jpg',
+  THEME_07: '/images/editorial/community-meeting.jpg',
+}
 
 export function generateStaticParams() {
   return VALID_SLUGS.map((slug) => ({ slug }))
@@ -41,7 +61,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const pathway = PATHWAY_BY_SLUG[slug]
   if (!pathway) return {}
-
   return {
     title: `${pathway.name} — Change Engine`,
     description: pathway.description,
@@ -65,374 +84,449 @@ export default async function PathwayChapterPage({ params }: { params: Promise<{
   )
 
   const geo = entities.geo
+  const geoType = PATHWAY_GEO[pathway.id] || 'seed_of_life'
+  const photoUrl = PATHWAY_PHOTOS[pathway.id] || '/images/editorial/community-meeting.jpg'
 
   // Related pathways (all except current)
   const related = Object.entries(THEMES)
     .filter(([id]) => id !== pathway.id)
     .slice(0, 3)
-    .map(([, t]) => t)
+    .map(([id, t]) => ({ id, ...t }))
+
+  // Format content for CouchGrid
+  const couchItems = entities.content.map((item: any, i: number) => ({
+    id: item.id,
+    href: `/content/${item.id}`,
+    title: item.title_6th_grade || 'Untitled',
+    dek: item.summary_6th_grade || undefined,
+    type: item.classification_v2?.content_type || 'article',
+    meta: item.source_domain || undefined,
+    imageUrl: item.image_url || undefined,
+    isFeature: i === 0,
+  }))
 
   return (
     <div>
       {/* ═══════════════════════════════════════════════════════════════════
-          CHAPTER HEADER
+          CHAPTER HEADER — ThemeMasthead
           ═══════════════════════════════════════════════════════════════ */}
-      <section
-        className="relative border-b border-[#dde1e8]"
-        style={{ borderTop: `4px solid ${pathway.color}` }}
-      >
-        {/* Pathway header image placeholder — replace with pathways/[slug]-header.webp */}
-        <div className="absolute inset-0 bg-[#f4f5f7]" />
+      <ThemeMasthead
+        themeName={pathway.name}
+        themeColor={pathway.color}
+        description={pathway.description}
+        geoType={geoType}
+        dateline={`Pathway ${VALID_SLUGS.indexOf(slug) + 1} of 7`}
+        stats={[
+          { num: entities.counts.organizations.toString(), desc: 'Organizations' },
+          { num: entities.counts.services.toString(), desc: 'Services' },
+          { num: entities.counts.officials.toString(), desc: 'Officials' },
+          { num: entities.counts.content.toString(), desc: 'Articles' },
+        ]}
+      />
 
-        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-12 md:py-16">
-          <p className="text-[10px] uppercase tracking-[0.15em] mb-4" style={{ color: pathway.color }}>
-            Pathway {VALID_SLUGS.indexOf(slug) + 1} of 7
-          </p>
+      {/* Spectrum bar */}
+      <div className="spectrum-bar">
+        {Object.entries(THEMES).map(([id, t]) => (
+          <div key={id} style={{ background: id === pathway.id ? t.color : `${t.color}33` }} />
+        ))}
+      </div>
 
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#0d1117]">
-            {pathway.name}
-          </h1>
-
-          <p className="mt-4 text-[#5c6474] max-w-[520px] leading-relaxed">
-            {pathway.description}
-          </p>
-
-          {/* Geo anchor */}
+      {/* Geo anchor */}
+      <div className="border-b border-rule">
+        <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-3 flex items-center justify-between">
           {geo ? (
-            <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded border border-[#dde1e8] text-xs text-[#5c6474]">
+            <span className="font-mono text-micro uppercase tracking-[0.1em] text-faint flex items-center gap-2">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                 <circle cx="12" cy="10" r="3" />
               </svg>
               Filtered to {geo.zip}{geo.neighborhoodName ? ` — ${geo.neighborhoodName}` : ''}
-            </div>
+            </span>
           ) : (
-            <p className="mt-6 text-xs text-[#8a929e]">
-              <Link href="/my-plan/settings" className="text-[#1b5e8a] hover:underline">Enter your ZIP</Link>
-              {' '}to see what&apos;s near you.
-            </p>
+            <span className="font-mono text-micro text-faint">
+              <Link href="/my-plan/settings" className="text-blue hover:underline">Enter your ZIP</Link>
+              {' '}to see what's near you
+            </span>
           )}
+          <nav className="hidden md:flex items-center gap-4 font-mono text-micro uppercase tracking-[0.1em] text-faint">
+            {entities.organizations.length > 0 && <a href="#organizations" className="hover:text-ink transition-colors">Orgs</a>}
+            {entities.services.length > 0 && <a href="#services" className="hover:text-ink transition-colors">Services</a>}
+            {entities.officials.length > 0 && <a href="#officials" className="hover:text-ink transition-colors">Officials</a>}
+            {entities.policies.length > 0 && <a href="#policies" className="hover:text-ink transition-colors">Policies</a>}
+            {entities.content.length > 0 && <a href="#from-the-guide" className="hover:text-ink transition-colors">Articles</a>}
+          </nav>
+        </div>
+      </div>
 
-          {/* Entity counts */}
-          <div className="mt-6 flex flex-wrap gap-4 text-xs text-[#5c6474]">
-            <span><strong className="text-[#0d1117]">{entities.counts.organizations}</strong> organizations</span>
-            <span><strong className="text-[#0d1117]">{entities.counts.services}</strong> services</span>
-            <span><strong className="text-[#0d1117]">{entities.counts.officials}</strong> officials</span>
-            <span><strong className="text-[#0d1117]">{entities.counts.policies}</strong> policies</span>
-            <span><strong className="text-[#0d1117]">{entities.counts.opportunities}</strong> opportunities</span>
+      {/* ═══════════════════════════════════════════════════════════════════
+          EDITORIAL PHOTO + INTRO
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12">
+        <div className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-8 items-start">
+          <div className="relative border border-rule overflow-hidden">
+            <Image
+              src={photoUrl}
+              alt={`${pathway.name} in Houston`}
+              width={700}
+              height={420}
+              className="w-full h-auto object-cover"
+            />
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-ink/30 to-transparent" />
+          </div>
+          <div>
+            <span className="font-mono text-micro uppercase tracking-[0.18em] block mb-3" style={{ color: pathway.color }}>
+              About this pathway
+            </span>
+            <p className="font-body italic text-base leading-[1.8] text-dim">
+              {pathway.description}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/start" className="btn-primary">
+                Find what you need →
+              </Link>
+              <Link href="/map" className="btn-secondary">
+                View on map
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="max-w-[1200px] mx-auto px-6 py-12">
+      <hr className="section-rule" />
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            ORGANIZATIONS — The Spine
-            ═══════════════════════════════════════════════════════════════ */}
-        {entities.organizations.length > 0 && (
-          <section className="mb-16" id="organizations">
-            <div className="flex items-end justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-serif font-bold">Organizations</h2>
-                <p className="mt-1 text-sm text-[#5c6474]">
-                  {entities.counts.organizations} organizations on this pathway
-                  {geo ? ` near ${geo.zip}` : ''}
-                </p>
-              </div>
-              <Link href={`/orgs?pathway=${slug}`} className="text-sm text-[#1b5e8a] hover:underline">
-                View all &rarr;
-              </Link>
+      {/* ═══════════════════════════════════════════════════════════════════
+          ORGANIZATIONS — The Spine
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.organizations.length > 0 && (
+        <section className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12" id="organizations">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-2">
+                The spine of the guide
+              </span>
+              <h2 className="font-display text-title font-black text-ink">
+                Organizations
+              </h2>
+              <p className="font-body italic text-sm text-dim mt-1">
+                {entities.counts.organizations} organizations on this pathway
+                {geo ? ` near ${geo.zip}` : ''}
+              </p>
             </div>
+            <Link href={`/orgs?pathway=${slug}`} className="font-mono text-micro uppercase tracking-[0.1em] text-blue hover:underline">
+              View all →
+            </Link>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {entities.organizations.map((org: any) => (
-                <Link
-                  key={org.org_id}
-                  href={`/orgs/${org.org_id}`}
-                  className="group flex gap-4 p-4 border border-[#dde1e8] rounded-lg hover:border-[#1b5e8a] hover:shadow-sm transition-all"
-                >
-                  {/* Logo placeholder */}
-                  <div className="w-12 h-12 rounded bg-[#f4f5f7] flex items-center justify-center flex-shrink-0">
-                    {org.logo_url ? (
-                      <img src={org.logo_url} alt="" className="w-10 h-10 object-contain rounded" />
-                    ) : (
-                      <span className="text-[#8a929e] text-lg font-serif">{(org.org_name || '?')[0]}</span>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-medium text-[#0d1117] group-hover:text-[#1b5e8a] transition-colors truncate">
-                      {org.org_name}
-                    </h3>
-                    <p className="mt-1 text-xs text-[#5c6474] line-clamp-2">
-                      {org.description_5th_grade || org.mission_statement || 'Community organization'}
-                    </p>
+          <div className="border border-rule divide-y divide-rule">
+            {entities.organizations.map((org: any) => (
+              <Link
+                key={org.org_id}
+                href={`/orgs/${org.org_id}`}
+                className="group flex gap-5 p-5 hover:bg-paper transition-colors"
+              >
+                {/* Logo */}
+                <div className="w-14 h-14 border border-rule flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {org.logo_url ? (
+                    <img src={org.logo_url} alt="" className="w-12 h-12 object-contain" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center" style={{ background: `${pathway.color}10` }}>
+                      <span className="font-display text-xl font-bold" style={{ color: pathway.color }}>
+                        {(org.org_name || '?')[0]}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-display text-base font-bold text-ink group-hover:text-blue transition-colors">
+                    {org.org_name}
+                  </h3>
+                  <p className="font-body text-sm text-dim line-clamp-2 mt-1 leading-relaxed">
+                    {org.description_5th_grade || org.mission_statement || 'Community organization'}
+                  </p>
+                  <div className="flex items-center gap-4 mt-2">
                     {org.zip_code && (
-                      <p className="mt-1 text-[11px] text-[#8a929e]">
+                      <span className="font-mono text-micro text-faint">
                         {org.city || 'Houston'}, {org.zip_code}
-                      </p>
+                      </span>
+                    )}
+                    {org.website_url && (
+                      <span className="font-mono text-micro text-faint">
+                        {new URL(org.website_url).hostname.replace('www.', '')}
+                      </span>
                     )}
                   </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+                </div>
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            SERVICES — What's Available
-            ═══════════════════════════════════════════════════════════════ */}
-        {entities.services.length > 0 && (
-          <section className="mb-16" id="services">
-            <div className="flex items-end justify-between mb-6">
+                <span className="font-mono text-blue flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity self-center">
+                  →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <hr className="section-rule" />
+
+      {/* ═══════════════════════════════════════════════════════════════════
+          SERVICES — What's Available
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.services.length > 0 && (
+        <section className="bg-paper">
+          <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12" id="services">
+            <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-xl font-serif font-bold">Services</h2>
-                <p className="mt-1 text-sm text-[#5c6474]">
-                  {entities.counts.services} services available
-                  {geo ? ` near ${geo.zip}` : ''}
-                </p>
+                <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-2">
+                  What&apos;s available
+                </span>
+                <h2 className="font-display text-title font-black text-ink">Services</h2>
               </div>
-              <Link href={`/services?pathway=${slug}`} className="text-sm text-[#1b5e8a] hover:underline">
-                View all &rarr;
+              <Link href={`/services?pathway=${slug}`} className="font-mono text-micro uppercase tracking-[0.1em] text-blue hover:underline">
+                View all →
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {entities.services.map((svc: any) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-rule">
+              {entities.services.map((svc: any, i: number) => (
                 <Link
                   key={svc.service_id}
                   href={`/services/${svc.service_id}`}
-                  className="group p-4 border border-[#dde1e8] rounded-lg hover:border-[#1b5e8a] hover:shadow-sm transition-all"
+                  className="group p-5 border-b border-r border-rule hover:bg-white transition-colors"
                 >
-                  <h3 className="text-sm font-medium text-[#0d1117] group-hover:text-[#1b5e8a] transition-colors">
+                  <span className="font-mono text-micro uppercase tracking-[0.14em] text-faint block mb-1">
+                    {svc.org_name || 'Service'}
+                  </span>
+                  <h3 className="font-display text-sm font-bold text-ink group-hover:text-blue transition-colors leading-tight">
                     {svc.service_name}
                   </h3>
-                  <p className="mt-1 text-xs text-[#5c6474] line-clamp-2">
+                  <p className="font-body text-sm text-dim line-clamp-2 mt-2">
                     {svc.description_5th_grade || 'Community service'}
                   </p>
-                  <div className="mt-2 flex items-center gap-3 text-[11px] text-[#8a929e]">
-                    {svc.org_name && <span>{svc.org_name}</span>}
-                    {svc.zip_code && <span>{svc.city || 'Houston'}, {svc.zip_code}</span>}
-                  </div>
+                  {svc.zip_code && (
+                    <span className="font-mono text-micro text-faint block mt-2">
+                      {svc.city || 'Houston'}, {svc.zip_code}
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            OFFICIALS — Who Represents You
-            ═══════════════════════════════════════════════════════════════ */}
-        {entities.officials.length > 0 && (
-          <section className="mb-16" id="officials">
-            <div className="flex items-end justify-between mb-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          OFFICIALS — Who Represents You
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.officials.length > 0 && (
+        <section className="border-t border-rule">
+          <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12" id="officials">
+            <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-xl font-serif font-bold">Who represents you</h2>
-                <p className="mt-1 text-sm text-[#5c6474]">
-                  {geo ? `Officials for ${geo.zip}` : 'Elected officials'} on {pathway.name.toLowerCase()} policy
-                </p>
+                <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-2">
+                  {geo ? `Your representatives` : 'Elected officials'}
+                </span>
+                <h2 className="font-display text-title font-black text-ink">
+                  Who represents you
+                </h2>
               </div>
-              <Link href="/officials" className="text-sm text-[#1b5e8a] hover:underline">
-                All officials &rarr;
+              <Link href="/officials" className="font-mono text-micro uppercase tracking-[0.1em] text-blue hover:underline">
+                All officials →
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border border-rule">
               {entities.officials.map((off: any) => (
                 <Link
                   key={off.official_id}
                   href={`/officials/${off.official_id}`}
-                  className="group flex items-center gap-3 p-4 border border-[#dde1e8] rounded-lg hover:border-[#1b5e8a] hover:shadow-sm transition-all"
+                  className="group flex items-center gap-4 p-5 border-b border-r border-rule hover:bg-paper transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#f4f5f7] flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {/* Photo */}
+                  <div className="w-12 h-12 rounded-full border border-rule flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {off.photo_url ? (
                       <img src={off.photo_url} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-[#8a929e] text-sm font-serif">
+                      <span className="font-display text-lg font-bold text-faint">
                         {(off.official_name || '?')[0]}
                       </span>
                     )}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-medium text-[#0d1117] group-hover:text-[#1b5e8a] transition-colors truncate">
+                    <h3 className="font-display text-sm font-bold text-ink group-hover:text-blue transition-colors truncate">
                       {off.official_name}
                     </h3>
-                    <p className="text-[11px] text-[#8a929e] truncate">
+                    <span className="font-mono text-micro text-faint truncate block">
                       {off.title || off.level || 'Official'}
-                    </p>
+                    </span>
                   </div>
                 </Link>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            POLICIES — Policy Tracker
-            ═══════════════════════════════════════════════════════════════ */}
-        {entities.policies.length > 0 && (
-          <section className="mb-16" id="policies">
-            <div className="flex items-end justify-between mb-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          POLICIES — Policy Tracker
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.policies.length > 0 && (
+        <section className="bg-paper border-t border-rule">
+          <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12" id="policies">
+            <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-xl font-serif font-bold">Policy tracker</h2>
-                <p className="mt-1 text-sm text-[#5c6474]">
-                  {entities.counts.policies} policies on {pathway.name.toLowerCase()}
-                </p>
+                <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-2">
+                  Legislation
+                </span>
+                <h2 className="font-display text-title font-black text-ink">Policy Tracker</h2>
               </div>
-              <Link href={`/policies?pathway=${slug}`} className="text-sm text-[#1b5e8a] hover:underline">
-                All policies &rarr;
+              <Link href={`/policies?pathway=${slug}`} className="font-mono text-micro uppercase tracking-[0.1em] text-blue hover:underline">
+                All policies →
               </Link>
             </div>
 
-            <div className="space-y-3">
+            <div className="border border-rule divide-y divide-rule bg-white">
               {entities.policies.map((pol: any) => (
                 <Link
                   key={pol.policy_id}
                   href={`/policies/${pol.policy_id}`}
-                  className="group block p-4 border border-[#dde1e8] rounded-lg hover:border-[#1b5e8a] hover:shadow-sm transition-all"
+                  className="group flex items-start justify-between gap-6 p-5 hover:bg-paper transition-colors"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h3 className="text-sm font-medium text-[#0d1117] group-hover:text-[#1b5e8a] transition-colors">
-                        {pol.title_6th_grade || pol.policy_name}
-                      </h3>
-                      <p className="mt-1 text-xs text-[#5c6474] line-clamp-2">
-                        {pol.summary_5th_grade || pol.summary_6th_grade || ''}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0 text-right">
-                      {pol.bill_number && (
-                        <span className="text-[11px] font-mono text-[#8a929e]">{pol.bill_number}</span>
-                      )}
-                      {pol.status && (
-                        <p className="text-[10px] uppercase tracking-wider text-[#8a929e] mt-1">{pol.status}</p>
-                      )}
-                    </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-display text-sm font-bold text-ink group-hover:text-blue transition-colors">
+                      {pol.title_6th_grade || pol.policy_name}
+                    </h3>
+                    <p className="font-body text-sm text-dim line-clamp-2 mt-1">
+                      {pol.summary_5th_grade || pol.summary_6th_grade || ''}
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 text-right">
+                    {pol.bill_number && (
+                      <span className="font-mono text-micro text-faint block">{pol.bill_number}</span>
+                    )}
+                    {pol.status && (
+                      <span className="effort-tag mt-1 inline-block">{pol.status}</span>
+                    )}
                   </div>
                 </Link>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            OPPORTUNITIES — Get Involved
-            ═══════════════════════════════════════════════════════════════ */}
-        {entities.opportunities.length > 0 && (
-          <section className="mb-16" id="opportunities">
-            <div className="flex items-end justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-serif font-bold">Get involved</h2>
-                <p className="mt-1 text-sm text-[#5c6474]">
-                  {entities.counts.opportunities} opportunities to participate
-                </p>
-              </div>
-              <Link href={`/opportunities?pathway=${slug}`} className="text-sm text-[#1b5e8a] hover:underline">
-                All opportunities &rarr;
-              </Link>
+      {/* ═══════════════════════════════════════════════════════════════════
+          OPPORTUNITIES — Get Involved
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.opportunities.length > 0 && (
+        <section className="border-t border-rule">
+          <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12" id="opportunities">
+            <div className="mb-8">
+              <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-2">
+                Take action
+              </span>
+              <h2 className="font-display text-title font-black text-ink">Get Involved</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border border-rule">
               {entities.opportunities.map((opp: any) => (
                 <div
                   key={opp.opportunity_id}
-                  className="p-4 border border-[#dde1e8] rounded-lg"
+                  className="p-5 border-b border-r border-rule"
                 >
-                  <h3 className="text-sm font-medium text-[#0d1117]">
+                  <h3 className="font-display text-sm font-bold text-ink">
                     {opp.opportunity_name}
                   </h3>
-                  <p className="mt-1 text-xs text-[#5c6474] line-clamp-2">
+                  <p className="font-body text-sm text-dim line-clamp-2 mt-1">
                     {opp.description_5th_grade || ''}
                   </p>
-                  <div className="mt-3 flex items-center gap-3">
+                  <div className="mt-3 flex items-center gap-4">
                     {opp.registration_url && (
                       <a
                         href={opp.registration_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-[#1b5e8a] hover:underline"
+                        className="font-mono text-micro uppercase tracking-[0.1em] text-blue hover:underline"
                       >
-                        Sign up &rarr;
+                        Sign up →
                       </a>
                     )}
                     {opp.is_virtual === 'Yes' && (
-                      <span className="text-[10px] text-[#8a929e] uppercase tracking-wider">Virtual</span>
+                      <span className="effort-tag">Virtual</span>
                     )}
                   </div>
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {/* ═══════════════════════════════════════════════════════════════════
-            FROM THE GUIDE — Articles, Reports, Videos
-            ═══════════════════════════════════════════════════════════════ */}
-        {entities.content.length > 0 && (
-          <section className="mb-16" id="from-the-guide">
-            <div className="flex items-end justify-between mb-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          FROM THE GUIDE — CouchGrid Magazine Layout
+          ═══════════════════════════════════════════════════════════════ */}
+      {couchItems.length > 0 && (
+        <section className="bg-paper border-t border-rule">
+          <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12" id="from-the-guide">
+            <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-xl font-serif font-bold">From the guide</h2>
-                <p className="mt-1 text-sm text-[#5c6474]">
-                  Articles, reports, and videos on {pathway.name.toLowerCase()}
-                </p>
+                <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-2">
+                  Reading
+                </span>
+                <h2 className="font-display text-title font-black text-ink">From the Guide</h2>
               </div>
-              <Link href={`/news?pathway=${slug}`} className="text-sm text-[#1b5e8a] hover:underline">
-                All content &rarr;
+              <Link href={`/news?pathway=${slug}`} className="font-mono text-micro uppercase tracking-[0.1em] text-blue hover:underline">
+                All content →
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {entities.content.map((item: any) => {
-                const classification = item.classification_v2 || {}
-                const contentType = classification.content_type || 'article'
+            <CouchGrid
+              items={couchItems}
+              themeColor={pathway.color}
+              geoType={geoType}
+            />
+          </div>
+        </section>
+      )}
 
-                return (
-                  <Link
-                    key={item.id}
-                    href={`/content/${item.id}`}
-                    className="group bg-white rounded-lg border border-[#dde1e8] overflow-hidden hover:shadow-md transition-all"
-                  >
-                    {item.image_url ? (
-                      <div
-                        className="h-32 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${item.image_url})` }}
-                      />
-                    ) : (
-                      <div className="h-32 flex items-center justify-center" style={{ background: pathway.color }}>
-                        <span className="text-white/30 text-xs uppercase tracking-wider">{contentType}</span>
-                      </div>
-                    )}
-                    <div className="p-3">
-                      <span className="text-[10px] uppercase tracking-wider text-[#8a929e]">{contentType}</span>
-                      <h3 className="mt-1 text-sm font-medium text-[#0d1117] line-clamp-2 group-hover:text-[#1b5e8a] transition-colors">
-                        {item.title_6th_grade || 'Untitled'}
-                      </h3>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* ═══════════════════════════════════════════════════════════════════
-            RELATED PATHWAYS
-            ═══════════════════════════════════════════════════════════════ */}
-        <section className="pt-8 border-t border-[#dde1e8]">
-          <h2 className="text-lg font-serif font-bold mb-4">Related pathways</h2>
-          <div className="flex flex-wrap gap-3">
+      {/* ═══════════════════════════════════════════════════════════════════
+          RELATED PATHWAYS
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="border-t border-rule">
+        <div className="max-w-[var(--max-width)] mx-auto px-[var(--content-padding)] py-12">
+          <span className="font-mono text-micro uppercase tracking-[0.18em] text-dim block mb-4">
+            Continue exploring
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 border border-rule">
             {related.map((r) => (
               <Link
                 key={r.slug}
                 href={`/${r.slug}`}
-                className="flex items-center gap-2 px-4 py-2 border border-[#dde1e8] rounded hover:border-transparent hover:shadow-sm transition-all"
+                className="group flex flex-col border-b border-r border-rule hover:bg-paper transition-colors"
               >
-                <span className="w-2 h-2 rounded-sm" style={{ background: r.color }} />
-                <span className="text-sm">{r.name}</span>
+                <FolFallback pathway={r.id} height="h-20" />
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="w-[6px] h-[6px]" style={{ background: r.color }} />
+                    <span className="font-mono text-micro uppercase tracking-[0.1em]" style={{ color: r.color }}>
+                      Pathway
+                    </span>
+                  </div>
+                  <h3 className="font-display text-base font-bold text-ink group-hover:text-blue transition-colors">
+                    {r.name}
+                  </h3>
+                </div>
               </Link>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* Spectrum bar */}
+      <div className="spectrum-bar">
+        {Object.entries(THEMES).map(([id, t]) => (
+          <div key={id} style={{ background: t.color }} />
+        ))}
       </div>
     </div>
   )
