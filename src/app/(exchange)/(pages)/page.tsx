@@ -1,8 +1,8 @@
 /**
  * @fileoverview Homepage — The Community Exchange.
  *
- * Dev 1 launch: Flower of Life motif, 7 pathways, persona selector,
- * 4 centers doorways, and magazine-style latest content.
+ * V2: Pathway-first design with Interactive Flower of Life as hero navigation,
+ * 3 Centers grid (Resource, Action, Library), and magazine-style latest content.
  *
  * @route GET /
  * @caching ISR with revalidate = 600 (10 minutes)
@@ -12,26 +12,20 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getExchangeStats, getLatestContent, getPathwayCounts } from '@/lib/data/exchange'
-import { THEMES, CENTERS, CENTER_COLORS } from '@/lib/constants'
+import { THEMES, THREE_CENTERS } from '@/lib/constants'
 import { FolFallback } from '@/components/ui/FolFallback'
+import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
 
 export const revalidate = 600
 
 export const metadata: Metadata = {
   title: 'Community Exchange — Houston, Texas | The Change Engine',
-  description: 'Your culture guide to Houston — find services, know who represents you, and get involved in your community.',
+  description: 'Your culture guide to Houston — explore resources, services, and civic power across seven community pathways.',
 }
 
 const THEME_LIST = Object.entries(THEMES).map(function ([id, t]) { return { id, ...t } })
 
-const PERSONAS = [
-  { name: 'Seeker', question: '"I\u2019m looking for something specific"', color: '#C75B2A', tags: ['Resource', 'Action'] },
-  { name: 'Learner', question: '"I want to understand what\'s happening"', color: '#3182ce', tags: ['Learning', 'Resource'] },
-  { name: 'Builder', question: '"I want to make something better"', color: '#38a169', tags: ['Action', 'Learning'] },
-  { name: 'Watchdog', question: '"I want to hold leaders accountable"', color: '#805ad5', tags: ['Accountability', 'Learning'] },
-  { name: 'Partner', question: '"I represent an organization"', color: '#d69e2e', tags: ['Action', 'Resource'] },
-  { name: 'Explorer', question: '"I\'m just curious about my community"', color: '#319795', tags: ['Learning', 'Action'] },
-]
+const CENTER_LIST = Object.values(THREE_CENTERS)
 
 const SEARCH_SUGGESTIONS = [
   { label: 'food assistance', href: '/search?q=food+assistance' },
@@ -39,12 +33,8 @@ const SEARCH_SUGGESTIONS = [
   { label: 'mental health', href: '/search?q=mental+health' },
   { label: 'job training', href: '/search?q=job+training' },
   { label: 'childcare', href: '/search?q=childcare' },
-  { label: 'legal help', href: '/search?q=legal+help' },
+  { label: 'legal resources', href: '/search?q=legal+resources' },
 ]
-
-const CENTER_LIST = Object.entries(CENTERS).map(function ([name, config]) {
-  return { name, ...config, color: CENTER_COLORS[name] || '#8B7E74' }
-})
 
 export default async function ExchangeHomePage() {
   const [stats, latestContent, pathwayCounts] = await Promise.all([
@@ -56,89 +46,69 @@ export default async function ExchangeHomePage() {
   const featured = latestContent?.[0]
   const sideItems = latestContent?.slice(1, 4) || []
 
+  const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
+
   return (
     <div>
-      {/* ── HERO with Flower of Life ── */}
+      {/* ── HERO — Flower of Life Navigation ── */}
       <section className="relative overflow-hidden" style={{ background: '#1a1a2e' }}>
-        {/* Flower of Life watermark — left */}
+        {/* Subtle FOL watermarks */}
         <div className="absolute left-[-120px] top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
-          <Image
-            src="/images/fol/flower-full.svg"
-            alt=""
-            width={500}
-            height={500}
-            className="opacity-[0.06]"
-          />
+          <Image src="/images/fol/flower-full.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
-        {/* Flower of Life watermark — right */}
         <div className="absolute right-[-120px] top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
-          <Image
-            src="/images/fol/flower-full.svg"
-            alt=""
-            width={500}
-            height={500}
-            className="opacity-[0.04]"
-          />
+          <Image src="/images/fol/flower-full.svg" alt="" width={500} height={500} className="opacity-[0.03]" />
         </div>
 
-        <div className="relative z-10 max-w-[1152px] mx-auto px-8 py-16">
-          {/* Seed of Life icon */}
-          <div className="mb-6">
-            <Image
-              src="/images/fol/seed-of-life.svg"
-              alt=""
-              width={48}
-              height={48}
-              className="opacity-40"
-            />
+        <div className="relative z-10 max-w-[1152px] mx-auto px-8 py-12 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_420px] gap-8 items-center">
+            {/* Left — copy + search */}
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Houston, Texas
+              </p>
+              <h1 className="font-serif text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight mb-4" style={{ color: 'white' }}>
+                Community life, <span style={{ color: '#C75B2A' }}>organized.</span>
+              </h1>
+              <p className="font-serif text-xl italic mb-8" style={{ color: 'rgba(255,255,255,0.7)' }}>
+                Seven pathways into the resources, services, and civic power that make Houston stronger
+              </p>
+
+              {/* Search bar */}
+              <Link
+                href="/search"
+                className="flex items-center gap-3 max-w-[520px] px-4 py-4 mb-4"
+                style={{ background: 'white' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <span className="text-[14px]" style={{ color: 'rgba(107,101,96,0.6)' }}>Search resources, services, officials...</span>
+              </Link>
+
+              <p className="text-[12px] mb-8" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Try: {SEARCH_SUGGESTIONS.map(function (s, i) {
+                  return (
+                    <span key={s.label}>
+                      {i > 0 && <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 6px' }}>/</span>}
+                      <Link href={s.href} className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}>{s.label}</Link>
+                    </span>
+                  )
+                })}
+              </p>
+
+              <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                Choose a pathway to explore &rarr;
+              </p>
+            </div>
+
+            {/* Right — Interactive Flower of Life */}
+            <div className="hidden md:block">
+              <InteractiveFOL pathwayCounts={pathwayCounts} />
+            </div>
           </div>
 
-          <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Houston, Texas
-          </p>
-          <h1 className="font-serif text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight mb-4" style={{ color: 'white' }}>
-            Community life, <span style={{ color: '#C75B2A' }}>organized.</span>
-          </h1>
-          <p className="font-serif text-xl italic mb-10" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Resources, services, and civic power for every Houstonian
-          </p>
-
-          {/* Search bar */}
-          <Link
-            href="/search"
-            className="flex items-center gap-3 max-w-[520px] px-4 py-4 rounded-lg mb-5"
-            style={{ background: 'white', boxShadow: '0 8px 30px rgba(0,0,0,0.15)' }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B6560" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            <span className="text-[14px]" style={{ color: 'rgba(107,101,96,0.6)' }}>Search resources, services, officials...</span>
-          </Link>
-
-          {/* Search suggestions */}
-          <p className="text-[12px] mb-10" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            Try: {SEARCH_SUGGESTIONS.map(function (s, i) {
-              return (
-                <span key={s.label}>
-                  {i > 0 && <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 6px' }}>/</span>}
-                  <Link href={s.href} className="hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }}>{s.label}</Link>
-                </span>
-              )
-            })}
-          </p>
-
-          {/* Quick links */}
-          <div className="flex flex-wrap gap-3">
-            <Link href="/explore" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-[14px] font-medium text-white transition-colors" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              Available Resources
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-            </Link>
-            <Link href="/services" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-[14px] font-medium text-white transition-colors" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              Find Services
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-            </Link>
-            <Link href="/officials" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-[14px] font-medium text-white transition-colors" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
-              Your Representatives
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-            </Link>
+          {/* Mobile FOL — full width below md */}
+          <div className="md:hidden mt-8">
+            <InteractiveFOL pathwayCounts={pathwayCounts} />
           </div>
         </div>
 
@@ -155,7 +125,7 @@ export default async function ExchangeHomePage() {
         <div className="max-w-[1152px] mx-auto px-8 py-5 flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-6">
             <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{((stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)).toLocaleString()}</span>
+              <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{totalResources.toLocaleString()}</span>
               <span className="text-[12px]" style={{ color: '#6B6560' }}>Resources</span>
             </div>
             <div className="w-px h-8" style={{ background: '#E2DDD5' }} />
@@ -181,114 +151,30 @@ export default async function ExchangeHomePage() {
 
       <div className="max-w-[1152px] mx-auto px-8">
 
-        {/* ── FOUR CENTERS ── */}
+        {/* ── THREE CENTERS ── */}
         <section className="py-12">
           <div className="flex items-end justify-between mb-6">
             <div>
-              <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>Four Centers</h2>
-              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Four doorways into community life — each answers a different question</p>
+              <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>Three Centers</h2>
+              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Every pathway leads to one of these doorways</p>
             </div>
-            <Link href="/centers" className="inline-flex items-center gap-1 text-[14px] font-semibold" style={{ color: '#C75B2A' }}>
-              Explore all <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-            </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {CENTER_LIST.map(function (c) {
               return (
                 <Link
-                  key={c.name}
-                  href={'/centers/' + c.slug}
-                  className="bg-white rounded-xl border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
+                  key={c.slug}
+                  href={c.href}
+                  className="bg-white border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
                   style={{ borderColor: '#E2DDD5' }}
                 >
                   <div className="h-1.5" style={{ background: c.color }} />
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-lg">{c.emoji}</span>
-                      <h3 className="text-[14px] font-bold" style={{ color: '#1A1A1A' }}>{c.name}</h3>
-                    </div>
-                    <p className="text-[13px] italic leading-relaxed mb-3" style={{ color: '#6B6560' }}>{c.question}</p>
+                  <div className="p-5">
+                    <h3 className="text-[16px] font-bold mb-1" style={{ color: '#1A1A1A' }}>{c.name}</h3>
+                    <p className="text-[13px] italic mb-2" style={{ color: c.color }}>{c.tagline}</p>
+                    <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#6B6560' }}>{c.description}</p>
                     <span className="text-[12px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: c.color }}>Enter &rarr;</span>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-
-        {/* Section divider */}
-        <hr className="border-0 h-px" style={{ background: 'linear-gradient(to right, #E2DDD5, rgba(226,221,213,0.6), transparent)' }} />
-
-        {/* ── SEVEN PATHWAYS ── */}
-        <section className="py-12">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <Image src="/images/fol/seed-of-life.svg" alt="" width={28} height={28} className="opacity-30" />
-                <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>Seven Pathways</h2>
-              </div>
-              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Explore community life through the lens that matters to you</p>
-            </div>
-            <Link href="/pathways" className="inline-flex items-center gap-1 text-[14px] font-semibold" style={{ color: '#C75B2A' }}>
-              See all <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {THEME_LIST.map(function (t) {
-              const count = pathwayCounts[t.id] || 0
-              return (
-                <Link
-                  key={t.id}
-                  href={'/pathways/' + t.slug}
-                  className="bg-white rounded-xl border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
-                  style={{ borderColor: '#E2DDD5' }}
-                >
-                  <div className="h-1.5" style={{ background: t.color }} />
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: t.color }} />
-                      <h3 className="text-[14px] font-bold" style={{ color: '#1A1A1A' }}>{t.name}</h3>
-                    </div>
-                    <p className="text-[12px] leading-relaxed line-clamp-2 mb-3" style={{ color: '#6B6560' }}>{t.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[12px]" style={{ color: '#9B9590' }}>{count} resources</span>
-                      <span className="text-[12px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: t.color }}>Explore &rarr;</span>
-                    </div>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-
-        {/* Section divider */}
-        <hr className="border-0 h-px" style={{ background: 'linear-gradient(to right, #E2DDD5, rgba(226,221,213,0.6), transparent)' }} />
-
-        {/* ── PERSONA SELECTOR ── */}
-        <section className="py-12">
-          <h2 className="font-serif text-2xl mb-1" style={{ color: '#1A1A1A' }}>Not sure where to start?</h2>
-          <p className="text-[14px] mb-6" style={{ color: '#6B6560' }}>Pick the one that sounds like you.</p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {PERSONAS.map(function (p) {
-              return (
-                <Link
-                  key={p.name}
-                  href="/chat"
-                  className="bg-white rounded-xl border relative overflow-hidden p-4 pl-5 transition-all hover:shadow-md hover:translate-y-[-1px]"
-                  style={{ borderColor: '#E2DDD5' }}
-                >
-                  <div className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ background: p.color }} />
-                  <div className="text-[14px] font-bold" style={{ color: '#1A1A1A' }}>{p.name}</div>
-                  <div className="text-[12px] italic mt-1" style={{ color: '#6B6560' }}>{p.question}</div>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {p.tags.map(function (tag) {
-                      return (
-                        <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: '#FAF8F5', color: '#6B6560' }}>{tag}</span>
-                      )
-                    })}
                   </div>
                 </Link>
               )
@@ -316,7 +202,7 @@ export default async function ExchangeHomePage() {
             {featured && (
               <Link
                 href={'/content/' + featured.id}
-                className="bg-white rounded-xl border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px]"
+                className="bg-white border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px]"
                 style={{ borderColor: '#E2DDD5' }}
               >
                 {featured.image_url ? (
@@ -359,7 +245,7 @@ export default async function ExchangeHomePage() {
                   <Link
                     key={item.id}
                     href={'/content/' + item.id}
-                    className="flex bg-white rounded-xl border overflow-hidden transition-all hover:shadow-md group"
+                    className="flex bg-white border overflow-hidden transition-all hover:shadow-md group"
                     style={{ borderColor: '#E2DDD5' }}
                   >
                     {item.image_url ? (

@@ -18,11 +18,11 @@ interface ZipResults {
   city: ElectedOfficial[]
 }
 
-const LEVEL_CONFIG: { key: keyof ZipResults; label: string; icon: LucideIcon }[] = [
-  { key: 'federal', label: 'Federal', icon: Landmark },
-  { key: 'state', label: 'State', icon: Star },
-  { key: 'county', label: 'County', icon: Home },
-  { key: 'city', label: 'City', icon: Building2 },
+const LEVEL_CONFIG: { key: keyof ZipResults; label: string; subtitle: string; icon: LucideIcon }[] = [
+  { key: 'city', label: 'City of Houston', subtitle: 'Mayor, Council, Controller', icon: Building2 },
+  { key: 'county', label: 'Harris County', subtitle: 'Commissioners Court, County Officials', icon: Home },
+  { key: 'state', label: 'State of Texas', subtitle: 'Governor, Legislature, Statewide', icon: Star },
+  { key: 'federal', label: 'United States', subtitle: 'President, Congress, Senate', icon: Landmark },
 ]
 
 interface Props {
@@ -180,14 +180,21 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
             </button>
           </div>
 
-          {LEVEL_CONFIG.map(function ({ key, label, icon: Icon }) {
+          {LEVEL_CONFIG.map(function ({ key, label, subtitle, icon: Icon }) {
             const group = zipResults[key]
             if (group.length === 0) return null
             return (
-              <div key={key} className="mb-6">
-                <h3 className="flex items-center gap-2 mb-3" style={{ fontSize: '1.1rem',  }}>
-                  <Icon size={18} style={{ color: "#5c6474" }} /> {label}
-                </h3>
+              <div key={key} className="mb-8">
+                <div className="flex items-center gap-3 mb-4 pb-2 border-b-2 border-rule">
+                  <div className="w-8 h-8 flex items-center justify-center bg-ink/5">
+                    <Icon size={18} className="text-ink" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-ink leading-tight">{label}</h3>
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted">{subtitle}</p>
+                  </div>
+                  <span className="ml-auto font-mono text-xs text-faint">{group.length}</span>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {group.map(function (o) {
                     const t = translations[o.official_id]

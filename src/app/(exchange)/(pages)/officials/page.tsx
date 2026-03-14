@@ -31,12 +31,15 @@ export default async function OfficialsPage() {
     userZip ? getOfficialsByZip(userZip) : Promise.resolve(null),
   ])
 
-  // If ZIP available, put geo-matched officials first
-  let sortedOfficials = officials
+  // Sort: City → County → State → Federal (user at center, expanding outward)
+  const LEVEL_ORDER: Record<string, number> = { City: 0, County: 1, State: 2, Federal: 3 }
+  let sortedOfficials = [...officials].sort((a, b) => (LEVEL_ORDER[a.level] ?? 9) - (LEVEL_ORDER[b.level] ?? 9))
+
+  // If ZIP available, put geo-matched officials first within each level
   if (zipOfficials) {
-    const zipMatched = [...zipOfficials.federal, ...zipOfficials.state, ...zipOfficials.county, ...zipOfficials.city]
+    const zipMatched = [...zipOfficials.city, ...zipOfficials.county, ...zipOfficials.state, ...zipOfficials.federal]
     const zipMatchedIds = new Set(zipMatched.map((o: any) => o.official_id))
-    const rest = officials.filter((o: any) => !zipMatchedIds.has(o.official_id))
+    const rest = sortedOfficials.filter((o: any) => !zipMatchedIds.has(o.official_id))
     sortedOfficials = [...zipMatched, ...rest]
   }
 
@@ -52,13 +55,13 @@ export default async function OfficialsPage() {
     <div className="bg-paper min-h-screen">
       <IndexPageHero
         title="Who Represents You"
-        subtitle="The people making decisions about your city, your state, and your country. Look them up. Reach out."
+        subtitle="Starting from your neighborhood and reaching to the Capitol — these are the people making decisions on your behalf."
         color="#7a2018"
         stats={[
           { value: sortedOfficials.length, label: 'Officials' },
-          { value: federalCount, label: 'Federal' },
-          { value: stateCount, label: 'State' },
           { value: localCount, label: 'Local' },
+          { value: stateCount, label: 'State' },
+          { value: federalCount, label: 'Federal' },
         ]}
       />
 
