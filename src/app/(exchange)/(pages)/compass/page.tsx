@@ -158,7 +158,7 @@ export default async function CompassPage() {
       return all.sort((a, b) => (LEVEL_ORDER[a.level || ''] ?? 9) - (LEVEL_ORDER[b.level || ''] ?? 9))
     })() : Promise.resolve([]),
 
-    // 5. 211 SERVICES — theme-aligned + local
+    // 5. 211 SERVICES — theme-aligned + local (parallel fetch)
     zip ? (async () => {
       if (focusIds.length === 0) {
         const { data } = await supabase
@@ -174,22 +174,23 @@ export default async function CompassPage() {
         .select('service_id')
         .in('focus_id', focusIds)
       const serviceIds = Array.from(new Set((junctions || []).map(j => j.service_id)))
-      // Theme-matched first, then local fill
-      const { data: themed } = await supabase
-        .from('services_211')
-        .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
-        .in('service_id', serviceIds.length > 0 ? serviceIds.slice(0, 50) : ['_none_'])
-        .eq('is_active', 'Yes')
-        .limit(6)
+      // Fetch themed + local in parallel instead of sequentially
+      const [{ data: themed }, { data: local }] = await Promise.all([
+        supabase
+          .from('services_211')
+          .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
+          .in('service_id', serviceIds.length > 0 ? serviceIds.slice(0, 50) : ['_none_'])
+          .eq('is_active', 'Yes')
+          .limit(6),
+        supabase
+          .from('services_211')
+          .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
+          .eq('zip_code', zip)
+          .eq('is_active', 'Yes')
+          .limit(6),
+      ])
       if ((themed || []).length >= 4) return themed || []
-      // Fill with local ZIP services
       const themedIds = new Set((themed || []).map(s => s.service_id))
-      const { data: local } = await supabase
-        .from('services_211')
-        .select('service_id, service_name, phone, address, city, description_5th_grade, org_id')
-        .eq('zip_code', zip)
-        .eq('is_active', 'Yes')
-        .limit(6)
       return [...(themed || []), ...(local || []).filter(s => !themedIds.has(s.service_id))].slice(0, 6)
     })() : Promise.resolve([]),
 
@@ -205,22 +206,23 @@ export default async function CompassPage() {
       return data || []
     })(),
 
-    // Per-pathway stats
+    // Per-pathway stats — single query instead of N+1
     (async () => {
       const stats: Record<string, { content: number; orgs: number; policies: number }> = {}
-      // Content counts per theme
-      const contentCounts = await Promise.all(
-        selectedThemes.map(async (themeId) => {
-          const { count } = await supabase
-            .from('content_published')
-            .select('id', { count: 'exact', head: true })
-            .eq('pathway_primary', themeId)
-            .eq('is_active', true)
-          return { themeId, count: count || 0 }
-        })
-      )
-      for (const { themeId, count } of contentCounts) {
-        stats[themeId] = { content: count, orgs: 0, policies: 0 }
+      // Initialize all selected themes
+      for (const themeId of selectedThemes) {
+        stats[themeId] = { content: 0, orgs: 0, policies: 0 }
+      }
+      // Content counts: fetch pathway_primary for selected themes in one query, count in memory
+      const { data: contentRows } = await supabase
+        .from('content_published')
+        .select('pathway_primary')
+        .in('pathway_primary', selectedThemes)
+        .eq('is_active', true)
+      for (const row of (contentRows || [])) {
+        if (row.pathway_primary && stats[row.pathway_primary]) {
+          stats[row.pathway_primary].content++
+        }
       }
       // Org counts per theme
       if (focusIds.length > 0) {

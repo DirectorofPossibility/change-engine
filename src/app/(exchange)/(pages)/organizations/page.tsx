@@ -18,7 +18,7 @@ export default async function OrganizationsPage() {
   const cookieStore = await cookies()
   const userZip = cookieStore.get('zip')?.value || ''
 
-  const organizations = await getOrganizations({ limit: 1000 })
+  const organizations = await getOrganizations({ limit: 200 })
 
   return (
     <div className="bg-paper min-h-screen">

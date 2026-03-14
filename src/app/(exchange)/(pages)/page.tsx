@@ -17,7 +17,7 @@ import { FolFallback } from '@/components/ui/FolFallback'
 import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
 import { HeroSearch } from '@/components/exchange/home/HeroSearch'
 
-export const revalidate = 600
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Community Exchange — Houston, Texas | The Change Engine',
