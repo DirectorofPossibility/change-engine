@@ -390,7 +390,7 @@ export function VotingDashboardClient({
         <ChapterHeading number="III" title="How to Participate" />
 
         <p className="mt-3 max-w-[560px]" style={{ fontSize: 15, lineHeight: 1.7, color: "#5c6474" }}>
-          Voting is one of the most direct ways to shape your community. Here's what you need.
+          Voting is one of the most direct ways to shape your community. Here's how to participate.
         </p>
 
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">

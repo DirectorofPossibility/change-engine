@@ -417,7 +417,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
 
             {/* Crisis line — minimal */}
             <p className="text-[10px] text-brand-muted px-1">
-              Need help? <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
+              24/7 lines: <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
             </p>
           </aside>
         </div>

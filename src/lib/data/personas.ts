@@ -30,7 +30,7 @@ export const PERSONAS: Persona[] = [
   },
   {
     id: 'find-resources',
-    name: 'I need resources',
+    name: 'I\u2019m exploring resources',
     question: 'What\'s available for me and my family?',
     color: '#7A6E8A',
     matchedPathways: [themeIndex(4), themeIndex(0), themeIndex(1)], // Money, Health, Families

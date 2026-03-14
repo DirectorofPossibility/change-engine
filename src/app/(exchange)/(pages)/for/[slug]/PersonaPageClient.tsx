@@ -298,7 +298,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             {/* Help numbers */}
             <div className="px-4 py-3 bg-brand-bg border border-brand-border">
               <p className="text-[10px] font-mono font-bold text-brand-muted">
-                Need help? <span className="text-brand-text">211</span> / <span className="text-brand-text">311</span> / <span className="text-brand-text">988</span>
+                24/7 lines: <span className="text-brand-text">211</span> / <span className="text-brand-text">311</span> / <span className="text-brand-text">988</span>
               </p>
             </div>
           </aside>

@@ -653,7 +653,7 @@ export function CompassClient({
         <div className="max-w-[740px] mx-auto px-4 sm:px-6 py-6">
           {/* Crisis hotlines */}
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1" style={{ fontSize: 11, color: "#5c6474" }}>
-            <span className="font-bold uppercase tracking-wider" style={{  }}>Need help now?</span>
+            <span className="font-bold uppercase tracking-wider" style={{  }}>24/7 Lines</span>
             <span>Crisis: <strong style={{  }}>988</strong></span>
             <span>City: <strong style={{  }}>311</strong></span>
             <span>Social Services: <strong style={{  }}>211</strong></span>

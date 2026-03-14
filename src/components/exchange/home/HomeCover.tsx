@@ -42,7 +42,7 @@ export function HomeCover({ stats }: HomeCoverProps) {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
           <a href="/help" className="font-mono text-[0.7rem] font-semibold uppercase tracking-wider bg-blue text-white px-5 py-2.5 hover:opacity-90 transition-opacity">
-            Find Help
+            Explore Resources
           </a>
           <a href="/compass" className="font-mono text-[0.7rem] font-semibold uppercase tracking-wider border-2 border-ink text-ink px-5 py-2.5 hover:bg-ink hover:text-white transition-colors">
             New Here? Start Here

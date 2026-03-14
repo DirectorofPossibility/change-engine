@@ -36,7 +36,7 @@ const CENTER_META: Record<string, {
   Resource: {
     motif: '/images/fol/seed-of-life.svg',
     tagline: 'Your community has resources waiting.',
-    description: 'Access what you need. Find services, benefits, hotlines, and organizations that provide direct support.',
+    description: 'Discover what\u2019s available. Services, benefits, hotlines, and organizations ready to support you.',
     bg: '#f4f5f7',
   },
   Action: {

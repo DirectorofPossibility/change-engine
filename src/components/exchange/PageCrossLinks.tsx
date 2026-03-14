@@ -14,7 +14,7 @@ const CROSS_LINK_PRESETS: Record<string, CrossLink[]> = {
     { href: '/policies', title: 'Policies', description: 'Legislation and ordinances' },
   ],
   resources: [
-    { href: '/help', title: 'Find Help', description: 'Resources for food, housing, jobs, and more' },
+    { href: '/help', title: 'What\u2019s Available', description: 'Resources for food, housing, jobs, and more' },
     { href: '/services', title: 'Service Directory', description: 'Browse 211 services by category' },
     { href: '/opportunities', title: 'Get Involved', description: 'Volunteer and community opportunities' },
   ],

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 const THEME_LIST = Object.entries(THEMES).map(function ([id, t]) { return { id, ...t } })
 
 const PERSONAS = [
-  { name: 'Seeker', question: '"I need something specific right now"', color: '#C75B2A', tags: ['Resource', 'Action'] },
+  { name: 'Seeker', question: '"I\u2019m looking for something specific"', color: '#C75B2A', tags: ['Resource', 'Action'] },
   { name: 'Learner', question: '"I want to understand what\'s happening"', color: '#3182ce', tags: ['Learning', 'Resource'] },
   { name: 'Builder', question: '"I want to make something better"', color: '#38a169', tags: ['Action', 'Learning'] },
   { name: 'Watchdog', question: '"I want to hold leaders accountable"', color: '#805ad5', tags: ['Accountability', 'Learning'] },
