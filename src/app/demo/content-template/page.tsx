@@ -6,6 +6,7 @@ import { getSDGMap, getSDOHMap } from '@/lib/data/taxonomy'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { ExternalLink, Globe, ArrowRight, BookOpen, Users, Megaphone, GraduationCap, Rocket } from 'lucide-react'
+import { CollapsibleSidebarSection } from './CollapsibleSection'
 
 /* ── Design Tokens ── */
 const SIDEBAR_BG = '#f4f5f7'
@@ -566,9 +567,9 @@ export default async function ContentTemplateDemo() {
                   </div>
                 )}
 
-                {/* Trail Position */}
+                {/* Your Journey */}
                 <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
-                  <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-3" style={{ color: DIM }}>Trail Position</h4>
+                  <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-3" style={{ color: DIM }}>Your Journey</h4>
                   <div className="space-y-0">
                     {TRAIL_LEVELS.map(function (level, i) {
                       const n = i + 1
@@ -576,29 +577,30 @@ export default async function ContentTemplateDemo() {
                       const isPast = n < currentLevel
                       const Icon = level.icon
                       return (
-                        <div key={n} className="flex items-center gap-2.5 py-1.5"
+                        <Link key={n} href={'/explore?engagement=' + encodeURIComponent(level.name)}
+                          className="flex items-center gap-2.5 py-1.5 group transition-opacity hover:!opacity-100"
                           style={{ opacity: isActive ? 1 : isPast ? 0.7 : 0.35 }}
                         >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 rounded-full"
+                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 rounded-full transition-colors"
                             style={{ background: isActive ? level.color : 'transparent' }}
                           >
                             <Icon size={11} style={{ color: isActive ? 'white' : level.color }} strokeWidth={2.5} />
                           </div>
-                          <span className={'text-xs leading-tight ' + (isActive ? 'font-bold' : 'font-medium')}
+                          <span className={'text-xs leading-tight group-hover:underline ' + (isActive ? 'font-bold' : 'font-medium')}
                             style={{ color: isActive ? INK : undefined }}
                           >
                             {level.name}
                           </span>
                           {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: level.color }} />}
-                        </div>
+                        </Link>
                       )
                     })}
                   </div>
                 </div>
 
-                {/* Pathway */}
+                {/* Topic */}
                 {themeEntry && (
-                  <SidebarSection title="Pathway">
+                  <SidebarSection title="Topic">
                     <Link href={'/pathways/' + themeSlug} className="flex items-center gap-2 group">
                       <FlowerOfLife size={18} color={themeColor} opacity={0.7} />
                       <span className="text-sm font-semibold group-hover:underline" style={{ color: themeColor }}>{themeEntry.name}</span>
@@ -623,7 +625,7 @@ export default async function ContentTemplateDemo() {
 
                 {/* UN Sustainable Development Goals */}
                 {matchedSDGs.length > 0 && (
-                  <SidebarSection title="UN Sustainable Development Goals">
+                  <CollapsibleSidebarSection title="UN Sustainable Development Goals">
                     {matchedSDGs.map(function (sdg) {
                       return (
                         <Link key={sdg.sdg_number} href={'/explore?sdg=SDG-' + String(sdg.sdg_number).padStart(2, '0')}
@@ -638,19 +640,19 @@ export default async function ContentTemplateDemo() {
                         </Link>
                       )
                     })}
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* SDOH Domain */}
                 {sdohEntry && (
-                  <SidebarSection title="Social Determinant of Health">
+                  <CollapsibleSidebarSection title="Social Determinant of Health">
                     <span className="text-sm font-medium" style={{ color: themeColor }}>{sdohEntry.sdoh_name}</span>
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Audience */}
                 {audienceData && (audienceData as any[]).length > 0 && (
-                  <SidebarSection title="Audience">
+                  <CollapsibleSidebarSection title="Audience">
                     {(audienceData as any[]).map(function (seg: any) {
                       return (
                         <Link key={seg.segment_id} href={'/explore?audience=' + seg.segment_id}
@@ -660,12 +662,12 @@ export default async function ContentTemplateDemo() {
                         </Link>
                       )
                     })}
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Action Types */}
                 {actionTypeData && (actionTypeData as any[]).length > 0 && (
-                  <SidebarSection title="Action Types">
+                  <CollapsibleSidebarSection title="Action Types">
                     {(actionTypeData as any[]).map(function (at: any) {
                       return (
                         <span key={at.action_type_id} className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mr-1.5 mb-1.5"
@@ -675,40 +677,40 @@ export default async function ContentTemplateDemo() {
                         </span>
                       )
                     })}
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Time Commitment */}
                 {timeData && (
-                  <SidebarSection title="Time Commitment">
+                  <CollapsibleSidebarSection title="Time Commitment">
                     <span className="text-sm font-medium" style={{ color: themeColor }}>{(timeData as any).time_name}</span>
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Government Level */}
                 {govData && (
-                  <SidebarSection title="Government Level">
+                  <CollapsibleSidebarSection title="Government Level">
                     <span className="text-sm font-medium" style={{ color: themeColor }}>{(govData as any).gov_level_name}</span>
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Geographic Scope */}
                 {geoScope && (
-                  <SidebarSection title="Location">
+                  <CollapsibleSidebarSection title="Location">
                     <span className="text-sm font-medium" style={{ color: themeColor }}>{geoScope}</span>
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Content Type */}
                 {contentType && (
-                  <SidebarSection title="Content Type">
+                  <CollapsibleSidebarSection title="Content Type">
                     <span className="text-sm font-medium capitalize" style={{ color: themeColor }}>{contentType}</span>
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Related Policies */}
                 {relatedPolicies.length > 0 && (
-                  <SidebarSection title="Related Legislation">
+                  <CollapsibleSidebarSection title="Related Legislation">
                     {relatedPolicies.map(function (p: any) {
                       return (
                         <Link key={p.policy_id} href={'/policies/' + p.policy_id}
@@ -719,7 +721,7 @@ export default async function ContentTemplateDemo() {
                         </Link>
                       )
                     })}
-                  </SidebarSection>
+                  </CollapsibleSidebarSection>
                 )}
 
                 {/* Bottom padding */}
