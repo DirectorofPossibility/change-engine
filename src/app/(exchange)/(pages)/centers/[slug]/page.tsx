@@ -21,6 +21,7 @@ import { getLangId, fetchTranslationsForTable, getNextElection } from '@/lib/dat
 import { getOfficialsByZip } from '@/lib/data/officials'
 import { getPoliciesByZip } from '@/lib/data/policies'
 import { getUpcomingEvents } from '@/lib/data/events'
+import { getEntitiesByCenter } from '@/lib/data/entity-graph'
 import type { ContentPublished } from '@/lib/types/exchange'
 import { ZipInput } from '@/components/exchange/ZipInput'
 import {
@@ -710,16 +711,16 @@ async function AccountabilityCenter({ meta, centerColor }: { meta: typeof CENTER
    ═══════════════════════════════════════════════════════════════════════ */
 
 async function StandardCenter({ centerName, meta, centerColor }: { centerName: string; meta: typeof CENTER_META.Learning; centerColor: string }) {
-  const supabase = await createClient()
-  const { data: content } = await supabase
-    .from('content_published')
-    .select('*')
-    .eq('is_active', true)
-    .eq('center', centerName)
-    .order('published_at', { ascending: false })
-    .limit(60)
+  const entities = await getEntitiesByCenter(centerName, {
+    content: 60,
+    services: 8,
+    orgs: 12,
+    policies: 6,
+    officials: 8,
+    opportunities: 6,
+  })
 
-  const items = (content ?? []) as ContentPublished[]
+  const items = entities.content as ContentPublished[]
   const featuredItem = items.find(item => item.image_url) || items[0] || null
 
   const byPathway: Record<string, ContentPublished[]> = {}
@@ -733,6 +734,12 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
   const langId = await getLangId()
   const inboxIds = items.map(i => i.inbox_id).filter((id): id is string => id != null)
   const translations = langId && inboxIds.length > 0 ? await fetchTranslationsForTable('content_published', inboxIds, langId) : {}
+
+  // Content type badges
+  const CONTENT_TYPE_LABELS: Record<string, string> = {
+    article: 'Articles', report: 'Reports', video: 'Videos', event: 'Events',
+    tool: 'Tools', course: 'Courses', guide: 'Guides', campaign: 'Campaigns',
+  }
 
   return (
     <div style={{ background: '#ffffff' }}>
@@ -753,7 +760,7 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
             </p>
           </nav>
           <p className="mt-8" style={{ fontSize: 12, letterSpacing: '0.12em', color: centerColor, textTransform: 'uppercase' }}>
-            {centerName} Center &middot; {items.length} resources
+            {centerName} Center &middot; {entities.counts.total.toLocaleString()} resources
           </p>
           <h1 className="mt-4" style={{ fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1.15, maxWidth: 600 }}>
             {meta.question}
@@ -764,9 +771,45 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
           <p className="mt-6" style={{ fontSize: 16, lineHeight: 1.7, maxWidth: 560, opacity: 0.85 }}>
             {meta.description}
           </p>
-          <div className="mt-8" style={{ width: 60, height: 2, background: centerColor }} />
+
+          {/* Entity counts strip */}
+          <div className="flex flex-wrap gap-x-6 gap-y-2 mt-8">
+            {[
+              { label: 'Content', count: entities.counts.content, href: '#content' },
+              { label: 'Organizations', count: entities.counts.organizations, href: '#organizations' },
+              { label: 'Services', count: entities.counts.services, href: '#services' },
+              { label: 'Policies', count: entities.counts.policies, href: '#policies' },
+              { label: 'Officials', count: entities.counts.officials, href: '#officials' },
+              { label: 'Opportunities', count: entities.counts.opportunities, href: '#opportunities' },
+            ].filter(s => s.count > 0).map(s => (
+              <a key={s.label} href={s.href} className="flex items-baseline gap-1.5 hover:underline" style={{ color: centerColor }}>
+                <span className="text-xl font-bold">{s.count}</span>
+                <span className="text-[11px] uppercase tracking-wider" style={{ color: '#5c6474' }}>{s.label}</span>
+              </a>
+            ))}
+          </div>
+
+          <div className="mt-6" style={{ width: 60, height: 2, background: centerColor }} />
         </div>
       </section>
+
+      {/* Content type breakdown */}
+      {Object.keys(entities.contentByType).length > 1 && (
+        <section style={{ background: "#f4f5f7", borderBottom: `1px solid ${'#dde1e8'}` }}>
+          <div className="max-w-[1000px] mx-auto px-6 py-4">
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(entities.contentByType)
+                .sort((a, b) => b[1].length - a[1].length)
+                .map(([type, items]) => (
+                  <span key={type} className="inline-flex items-center gap-1 text-xs border px-2.5 py-1" style={{ borderColor: '#dde1e8' }}>
+                    <span className="font-bold">{items.length}</span>
+                    <span style={{ color: '#5c6474' }}>{CONTENT_TYPE_LABELS[type] || type}</span>
+                  </span>
+                ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Featured lead */}
       {featuredItem && (
@@ -781,6 +824,7 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
                   {featuredItem.pathway_primary && THEMES[featuredItem.pathway_primary as keyof typeof THEMES] && (
                     <p className="mb-3" style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: THEMES[featuredItem.pathway_primary as keyof typeof THEMES].color }}>
                       {THEMES[featuredItem.pathway_primary as keyof typeof THEMES].name}
+                      {featuredItem.content_type && <span> &middot; {featuredItem.content_type}</span>}
                     </p>
                   )}
                   <h2 className="group-hover:underline" style={{ fontSize: 'clamp(22px, 3vw, 30px)', lineHeight: 1.25, marginBottom: 12 }}>
@@ -806,30 +850,203 @@ async function StandardCenter({ centerName, meta, centerColor }: { centerName: s
         </section>
       )}
 
-      {/* Pathway index */}
-      <section style={{ background: "#f4f5f7", borderBottom: `1px solid ${'#dde1e8'}` }}>
-        <div className="max-w-[1000px] mx-auto px-6 py-12">
-          <p style={{ fontSize: 11, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 24 }}>Browse by pathway</p>
-          <div className="space-y-0">
-            {sortedPathways.map(([themeId, pwItems]) => {
-              const theme = THEMES[themeId as keyof typeof THEMES]
-              if (!theme) return null
+      {/* ═══════════════════════════════════════════════════════════════
+          ORGANIZATIONS — the primary objects
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.organizations.length > 0 && (
+        <section className="max-w-[1100px] mx-auto px-6 py-12" id="organizations" style={{ borderBottom: '1px solid #dde1e8' }}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: centerColor }}>
+                Organizations
+              </p>
+              <h2 className="mt-1" style={{ fontSize: 'clamp(20px, 3vw, 28px)' }}>
+                Who&rsquo;s Doing the Work
+              </h2>
+            </div>
+            <Link href="/organizations" className="inline-flex items-center gap-1 transition-colors hover:opacity-70" style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#1b5e8a' }}>
+              All organizations <ArrowRight size={12} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {entities.organizations.map((org: any) => {
+              const theme = org.theme_id ? (THEMES as any)[org.theme_id] : null
               return (
-                <Link key={themeId} href={'#pathway-' + themeId} className="group flex items-baseline gap-3 py-3 transition-colors" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
-                  <span className="w-2.5 h-2.5 flex-shrink-0" style={{ background: theme.color, marginTop: 4 }} />
-                  <span className="flex-1 group-hover:underline" style={{ fontSize: 18,  }}>{theme.name}</span>
-                  <span className="flex-1 border-b border-dotted" style={{ borderColor: '#dde1e8', minWidth: 40 }} />
-                  <span style={{ fontSize: 13, color: "#5c6474" }}>{pwItems.length}</span>
+                <Link key={org.org_id} href={'/organizations/' + org.org_id} className="group block transition-colors" style={{ background: '#fff', border: '1px solid #dde1e8' }}>
+                  <div className="h-1.5" style={{ background: theme?.color || centerColor }} />
+                  <div className="p-4">
+                    <div className="flex items-start gap-3">
+                      {org.logo_url ? (
+                        <div className="w-10 h-10 flex-shrink-0 overflow-hidden bg-paper">
+                          <Image src={org.logo_url} alt="" width={40} height={40} className="w-full h-full object-contain" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-paper" style={{ fontSize: 16, fontWeight: 700, color: '#5c6474' }}>
+                          {org.org_name?.charAt(0)}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <span className="block group-hover:underline truncate" style={{ fontSize: 15, fontWeight: 600 }}>{org.org_name}</span>
+                        {org.city && <span className="block text-[11px]" style={{ color: '#5c6474' }}>{org.city}</span>}
+                      </div>
+                    </div>
+                    {org.description_5th_grade && (
+                      <p className="mt-2 line-clamp-2" style={{ fontSize: 13, lineHeight: 1.5, color: '#5c6474' }}>{org.description_5th_grade}</p>
+                    )}
+                  </div>
                 </Link>
               )
             })}
           </div>
-          <p className="mt-6" style={{ fontSize: 11, color: "#5c6474" }}>{items.length} total resources in {centerName}</p>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Content shelves */}
-      <section className="max-w-[1100px] mx-auto px-6 py-12">
+      {/* ═══════════════════════════════════════════════════════════════
+          SERVICES
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.services.length > 0 && (
+        <section className="max-w-[1100px] mx-auto px-6 py-12" id="services" style={{ borderBottom: '1px solid #dde1e8' }}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: centerColor }}>
+                211 Services
+              </p>
+              <h2 className="mt-1" style={{ fontSize: 'clamp(20px, 3vw, 28px)' }}>
+                Available Right Now
+              </h2>
+            </div>
+            <Link href="/services" className="inline-flex items-center gap-1 transition-colors hover:opacity-70" style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#1b5e8a' }}>
+              All services <ArrowRight size={12} />
+            </Link>
+          </div>
+          <div className="space-y-0" style={{ border: '1px solid #dde1e8' }}>
+            {entities.services.map((svc: any, i: number) => (
+              <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block p-4 group transition-colors" style={{ background: '#fff', borderTop: i > 0 ? '1px solid #dde1e8' : undefined }}>
+                <span className="block group-hover:underline" style={{ fontSize: 15, fontWeight: 600 }}>{svc.service_name}</span>
+                {svc.description_5th_grade && (
+                  <span className="block mt-1 line-clamp-2" style={{ fontSize: 13, lineHeight: 1.5, color: '#5c6474' }}>{svc.description_5th_grade}</span>
+                )}
+                <div className="flex items-center gap-3 mt-1.5" style={{ fontSize: 11, color: '#5c6474' }}>
+                  {svc.city && <span>{svc.city}</span>}
+                  {svc.phone && <span className="inline-flex items-center gap-1"><Phone size={9} /> {svc.phone}</span>}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          POLICIES + OFFICIALS (two-column)
+          ═══════════════════════════════════════════════════════════════ */}
+      {(entities.policies.length > 0 || entities.officials.length > 0) && (
+        <section className="max-w-[1100px] mx-auto px-6 py-12" id="policies" style={{ borderBottom: '1px solid #dde1e8' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Policies */}
+            {entities.policies.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: centerColor }}>Policies</p>
+                    <h3 className="mt-1" style={{ fontSize: 20 }}>What&rsquo;s Being Decided</h3>
+                  </div>
+                  <Link href="/policies" className="inline-flex items-center gap-1 hover:opacity-70" style={{ fontSize: 11, textTransform: 'uppercase', color: '#1b5e8a' }}>
+                    All <ArrowRight size={12} />
+                  </Link>
+                </div>
+                <div style={{ border: '1px solid #dde1e8' }}>
+                  {entities.policies.map((p: any, i: number) => (
+                    <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-3 group" style={{ borderTop: i > 0 ? '1px solid #dde1e8' : undefined }}>
+                      <span className="block group-hover:underline" style={{ fontSize: 14, fontWeight: 600 }}>{p.title_6th_grade || p.policy_name}</span>
+                      <div className="flex items-center gap-2 mt-1" style={{ fontSize: 10, color: '#5c6474' }}>
+                        <span className="uppercase">{p.level}</span>
+                        {p.status && <span className="px-1 py-0.5" style={{ background: '#1a6b5618', color: '#1a6b56', fontWeight: 600 }}>{p.status}</span>}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Officials */}
+            {entities.officials.length > 0 && (
+              <div id="officials">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: centerColor }}>Officials</p>
+                    <h3 className="mt-1" style={{ fontSize: 20 }}>Who&rsquo;s Responsible</h3>
+                  </div>
+                  <Link href="/officials" className="inline-flex items-center gap-1 hover:opacity-70" style={{ fontSize: 11, textTransform: 'uppercase', color: '#1b5e8a' }}>
+                    All <ArrowRight size={12} />
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {entities.officials.map((o: any) => (
+                    <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-2 p-3 group" style={{ background: '#fff', border: '1px solid #dde1e8' }}>
+                      <div className="w-9 h-9 flex-shrink-0 overflow-hidden bg-paper">
+                        {o.photo_url ? (
+                          <Image src={o.photo_url} alt="" width={36} height={36} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center" style={{ fontSize: 14, fontWeight: 700, color: '#5c6474' }}>{o.official_name?.charAt(0)}</div>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="block group-hover:underline truncate" style={{ fontSize: 13, fontWeight: 600 }}>{o.official_name}</span>
+                        <span className="block truncate" style={{ fontSize: 10, color: '#5c6474' }}>{o.title}{o.party ? ' · ' + o.party : ''}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          OPPORTUNITIES
+          ═══════════════════════════════════════════════════════════════ */}
+      {entities.opportunities.length > 0 && (
+        <section className="max-w-[1100px] mx-auto px-6 py-12" id="opportunities" style={{ borderBottom: '1px solid #dde1e8' }}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: centerColor }}>Opportunities</p>
+              <h2 className="mt-1" style={{ fontSize: 'clamp(20px, 3vw, 28px)' }}>Ways to Get Involved</h2>
+            </div>
+            <Link href="/opportunities" className="inline-flex items-center gap-1 hover:opacity-70" style={{ fontSize: 11, textTransform: 'uppercase', color: '#1b5e8a' }}>
+              All opportunities <ArrowRight size={12} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {entities.opportunities.map((opp: any) => (
+              <div key={opp.opportunity_id} className="p-4" style={{ background: '#fff', border: '1px solid #dde1e8' }}>
+                <span className="block" style={{ fontSize: 15, fontWeight: 600 }}>{opp.opportunity_name}</span>
+                {opp.description_5th_grade && (
+                  <span className="block mt-1 line-clamp-2" style={{ fontSize: 13, color: '#5c6474' }}>{opp.description_5th_grade}</span>
+                )}
+                <div className="flex items-center gap-2 mt-2" style={{ fontSize: 11, color: '#5c6474' }}>
+                  {opp.city && <span>{opp.city}</span>}
+                  {opp.is_virtual === 'Yes' && <span style={{ color: '#1b5e8a' }}>Virtual</span>}
+                  {opp.start_date && <span>{new Date(opp.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>}
+                </div>
+                {opp.registration_url && (
+                  <a href={opp.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 mt-2 hover:underline" style={{ fontSize: 12, color: '#1b5e8a' }}>
+                    Register <ExternalLink size={10} />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          CONTENT — organized by pathway, all types (articles, videos, reports, etc.)
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-[1100px] mx-auto px-6 py-12" id="content">
+        <p className="mb-2" style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: centerColor }}>
+          Content &middot; All Types
+        </p>
         <div className="space-y-10">
           {sortedPathways.map(([themeId, pwItems]) => {
             const theme = THEMES[themeId as keyof typeof THEMES]

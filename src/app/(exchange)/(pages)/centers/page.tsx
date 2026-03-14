@@ -15,6 +15,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import { CENTERS, CENTER_COLORS, THEMES } from '@/lib/constants'
+import { getCenterEntityCounts } from '@/lib/data/entity-graph'
 
 // ── Design tokens (locked — matches CommunityGuide.tsx) ─────────────────
 
@@ -64,18 +65,19 @@ export default async function CentersIndexPage() {
   const supabase = await createClient()
 
   const centerNames = Object.keys(CENTERS)
-  const { data: allContent } = await supabase
-    .from('content_published')
-    .select('center, pathway_primary')
-    .eq('is_active', true)
+  const [{ data: allContent }, entityCounts] = await Promise.all([
+    supabase
+      .from('content_published')
+      .select('center, pathway_primary')
+      .eq('is_active', true),
+    getCenterEntityCounts(),
+  ])
 
-  // Compute counts and top pathways
-  const counts: Record<string, number> = {}
+  // Compute pathway breakdown per center
   const pwCountsByCenter: Record<string, Record<string, number>> = {}
 
   for (const row of (allContent ?? [])) {
     const c = row.center || 'Learning'
-    counts[c] = (counts[c] || 0) + 1
     if (row.pathway_primary) {
       if (!pwCountsByCenter[c]) pwCountsByCenter[c] = {}
       pwCountsByCenter[c][row.pathway_primary] = (pwCountsByCenter[c][row.pathway_primary] || 0) + 1
@@ -94,7 +96,7 @@ export default async function CentersIndexPage() {
       })
   }
 
-  const totalResources = Object.values(counts).reduce(function (a, b) { return a + b }, 0)
+  const totalResources = Object.values(entityCounts).reduce(function (sum, c) { return sum + c.total }, 0)
 
   return (
     <div style={{ background: '#ffffff' }}>
@@ -166,7 +168,8 @@ export default async function CentersIndexPage() {
           const config = CENTERS[name]
           const meta = CENTER_META[name]
           const color = CENTER_COLORS[name] || '#8B7E74'
-          const count = counts[name] || 0
+          const ec = entityCounts[name] || { content: 0, services: 0, orgs: 0, total: 0 }
+          const count = ec.total
           const pathways = topPathways[name] || []
           if (!meta) return null
 

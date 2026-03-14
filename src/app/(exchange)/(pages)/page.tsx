@@ -11,7 +11,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getExchangeStats, getLatestContent, getPathwayCounts } from '@/lib/data/exchange'
+import { getExchangeStats, getLatestContent } from '@/lib/data/exchange'
+import { getPathwayCounts as getEntityPathwayCounts } from '@/lib/data/entity-graph'
 import { THEMES, THREE_CENTERS } from '@/lib/constants'
 import { Geo } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
@@ -31,11 +32,17 @@ const CENTER_LIST = Object.values(THREE_CENTERS)
 
 
 export default async function ExchangeHomePage() {
-  const [stats, latestContent, pathwayCounts] = await Promise.all([
+  const [stats, latestContent, entityPathwayCounts] = await Promise.all([
     getExchangeStats(),
     getLatestContent(4),
-    getPathwayCounts(),
+    getEntityPathwayCounts(),
   ])
+
+  // Flatten entity counts to total per pathway for FOL and directory
+  const pathwayCounts: Record<string, number> = {}
+  for (const [id, counts] of Object.entries(entityPathwayCounts)) {
+    pathwayCounts[id] = counts.total
+  }
 
   const featured = latestContent?.[0]
   const sideItems = latestContent?.slice(1, 4) || []
