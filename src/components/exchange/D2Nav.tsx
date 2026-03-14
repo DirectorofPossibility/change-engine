@@ -34,6 +34,7 @@ function useCenters(t: (key: string) => string) {
       href: '/learning',
       items: [
         { href: '/library', label: t('d2nav.library') },
+        { href: '/bookshelf', label: 'Bookshelf' },
         { href: '/news', label: t('d2nav.news') },
         { href: '/pathways', label: t('d2nav.topics') },
         { href: '/chat', label: t('d2nav.ask_chance') },

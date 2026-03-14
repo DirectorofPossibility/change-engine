@@ -1,12 +1,8 @@
 /**
  * @fileoverview Library document detail — editorial research paper layout.
  *
- * Full-page treatment for a research document: parchment hero with title
- * and summary, metadata strip, key takeaways as numbered editorial list,
- * PDF download, "Ask about this" chat link, related research, and tags.
- *
- * Design system: Georgia serif, Courier New mono, parchment palette,
- * zero border-radius, no emojis, no shadows.
+ * Uses the shared DetailPageLayout template for consistency across the site.
+ * Includes key takeaways, PDF download, chat link, related research, and tags.
  *
  * @route GET /library/doc/:id
  * @caching ISR with revalidate = 300 (5 minutes)
@@ -14,12 +10,15 @@
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getDocumentById, getRelatedDocuments } from '@/lib/data/library'
 import { THEMES } from '@/lib/constants'
 import { LibraryCard } from '@/components/exchange/LibraryCard'
+import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+import { getWayfinderContext } from '@/lib/data/exchange'
+import { getUserProfile } from '@/lib/auth/roles'
 import { ArticleVoting } from './ArticleVoting'
+import { FileText, MessageSquare, Download } from 'lucide-react'
 
 
 export const revalidate = 300
@@ -53,262 +52,68 @@ export default async function DocumentDetailPage(
     })
     .filter(Boolean) as { id: string; color: string; name: string; slug: string }[]
 
-  const primaryTheme = themeInfo[0] || { id: '', color: "#1b5e8a", name: 'Research', slug: '' }
+  const primaryTheme = themeInfo[0] || { id: '', color: '#1b5e8a', name: 'Research', slug: '' }
   const fileSizeMB = (doc.file_size / (1024 * 1024)).toFixed(1)
   const pdfUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kb-documents/${doc.file_path}`
 
-  return (
-    <div style={{ background: '#ffffff' }}>
+  const userProfile = await getUserProfile()
+  const wayfinderData = await getWayfinderContext('document', id, userProfile?.role)
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          HERO — Parchment banner with document title
-          ═══════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden bg-paper">
-        {/* Sacred geometry watermark */}
-        <div className="absolute inset-0 flex items-center justify-end pointer-events-none" aria-hidden="true">
-          <Image
-            src="/images/fol/seed-of-life.svg"
-            alt=""
-            width={400}
-            height={400}
-            className="opacity-[0.05] mr-[-40px]"
-          />
-        </div>
+  const breadcrumbs = [
+    { label: 'Home', href: '/' },
+    { label: 'Library', href: '/library' },
+    ...(primaryTheme.slug ? [{ label: primaryTheme.name, href: '/library/category/' + primaryTheme.slug }] : []),
+    { label: doc.title },
+  ]
 
-        {/* Theme color top bar */}
-        <div style={{ height: 3, background: primaryTheme.color }} />
-
-        <div className="relative z-10 max-w-[820px] mx-auto px-6 py-14 md:py-20">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb">
-            <p className="uppercase" style={{ fontSize: 11, letterSpacing: '0.1em' }}>
-              <Link href="/exchange" className="hover:underline text-muted">
-                The Exchange
-              </Link>
-              <span className="text-muted"> / </span>
-              <Link href="/library" className="hover:underline text-muted">
-                Library
-              </Link>
-              {primaryTheme.slug && (
-                <>
-                  <span className="text-muted"> / </span>
-                  <Link href={'/library/category/' + primaryTheme.slug} className="hover:underline" style={{ color: primaryTheme.color }}>
-                    {primaryTheme.name}
-                  </Link>
-                </>
-              )}
-            </p>
-          </nav>
-
-          {/* Document type label */}
-          <p
-            className="mt-8 text-blue uppercase"
-            style={{ fontSize: 11, letterSpacing: '0.12em' }}
+  const eyebrowMeta = themeInfo.length > 0 ? (
+    <div className="flex items-center gap-3 flex-wrap">
+      {themeInfo.map(function (theme) {
+        return (
+          <Link
+            key={theme.id}
+            href={'/library/category/' + theme.slug}
+            className="inline-flex items-center gap-1.5 hover:underline text-[0.7rem]"
+            style={{ color: theme.color }}
           >
-            Research Document
-          </p>
+            <span className="w-2 h-2 flex-shrink-0" style={{ background: theme.color }} />
+            {theme.name}
+          </Link>
+        )
+      })}
+    </div>
+  ) : undefined
 
-          {/* Themes */}
-          {themeInfo.length > 0 && (
-            <div className="flex items-center gap-4 mt-4 flex-wrap">
-              {themeInfo.map(function (theme) {
-                return (
-                  <Link
-                    key={theme.id}
-                    href={'/library/category/' + theme.slug}
-                    className="inline-flex items-center gap-1.5 hover:underline"
-                    style={{ fontSize: 11, color: theme.color }}
-                  >
-                    <span className="w-2 h-2 flex-shrink-0" style={{ background: theme.color }} />
-                    {theme.name}
-                  </Link>
-                )
-              })}
-            </div>
-          )}
-
-          {/* Title */}
-          <h1
-            className="mt-5"
-            style={{
-                            fontSize: 'clamp(26px, 4.5vw, 44px)',
-                            lineHeight: 1.15,
-              fontWeight: 'normal',
-            }}
-          >
-            {doc.title}
-          </h1>
-
-          {/* Summary */}
-          {doc.summary && (
-            <p
-              className="mt-5 text-muted"
-              style={{
-                                fontSize: 'clamp(15px, 2vw, 18px)',
-                lineHeight: 1.7,
-              }}
-            >
-              {doc.summary}
-            </p>
-          )}
-
-          {/* Metadata strip */}
-          <div className="mt-8 flex items-center gap-4 flex-wrap text-muted" style={{ fontSize: 12 }}>
-            {doc.page_count > 0 && (
-              <span>{doc.page_count} pages</span>
-            )}
-            {doc.file_size > 0 && (
-              <>
-                <span style={{ color: '#dde1e8' }}>|</span>
-                <span>{fileSizeMB} MB</span>
-              </>
-            )}
-            {doc.published_at && (
-              <>
-                <span style={{ color: '#dde1e8' }}>|</span>
-                <span>{new Date(doc.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-              </>
-            )}
-          </div>
-
-          {/* Rule */}
-          <div className="mt-8" style={{ width: 60, height: 2, background: primaryTheme.color }} />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          ACTIONS — PDF download + Ask AI
-          ═══════════════════════════════════════════════════════════════ */}
-      <section className="bg-paper border-b border-rule">
-        <div className="max-w-[820px] mx-auto px-6 py-6">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href={pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 transition-all bg-white border border-[#dde1e8] hover:border-[#1b5e8a]"
-              style={{
-                                fontSize: 13,
-                letterSpacing: '0.04em',
-                              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Download PDF
-            </a>
-
-            <Link
-              href={'/library/chat?doc=' + doc.id}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-6 text-white transition-all bg-[#1b5e8a] hover:bg-[#a8522e]"
-              style={{
-                                fontSize: 13,
-                letterSpacing: '0.04em',
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              Ask About This Document
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          KEY TAKEAWAYS — Numbered editorial list
-          ═══════════════════════════════════════════════════════════════ */}
-      {doc.key_points.length > 0 && (
-        <section style={{ background: '#ffffff' }}>
-          <div className="max-w-[820px] mx-auto px-6 py-14">
-            <p className="text-blue uppercase" style={{ fontSize: 11, letterSpacing: '0.1em', marginBottom: 24 }}>
-              Key Takeaways
-            </p>
-
-            <div className="space-y-0">
-              {doc.key_points.map(function (point, i) {
-                return (
-                  <div
-                    key={i}
-                    className="flex items-start gap-5 py-5"
-                    style={{ borderBottom: i < doc.key_points.length - 1 ? `1px solid ${'#dde1e8'}` : 'none' }}
-                  >
-                    {/* Number */}
-                    <span
-                      className="flex-shrink-0 w-8 h-8 flex items-center justify-center"
-                      style={{
-                                                fontSize: 18,
-                        fontWeight: 'bold',
-                        color: primaryTheme.color,
-                        border: `2px solid ${primaryTheme.color}`,
-                      }}
-                    >
-                      {i + 1}
-                    </span>
-
-                    {/* Point text */}
-                    <p style={{ fontSize: 16, lineHeight: 1.7 }}>
-                      {point}
-                    </p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+  const metaRow = (
+    <div className="flex flex-wrap items-center gap-4 text-muted text-[0.8rem]">
+      {doc.page_count > 0 && (
+        <span className="flex items-center gap-1.5">
+          <FileText size={14} /> {doc.page_count} pages
+        </span>
       )}
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          TAGS — Compact keyword strip
-          ═══════════════════════════════════════════════════════════════ */}
-      {doc.tags.length > 0 && (
-        <section className="bg-paper border-t border-b border-rule">
-          <div className="max-w-[820px] mx-auto px-6 py-6">
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-muted uppercase" style={{ fontSize: 10, letterSpacing: '0.1em' }}>
-                Keywords
-              </span>
-              <span style={{ color: '#dde1e8' }}>|</span>
-              {doc.tags.map(function (tag) {
-                return (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-1 text-muted border border-rule"
-                    style={{
-                                            fontSize: 11,
-                      background: '#ffffff',
-                    }}
-                  >
-                    {tag}
-                  </span>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+      {doc.file_size > 0 && (
+        <span>{fileSizeMB} MB</span>
       )}
+      {doc.published_at && (
+        <span>{new Date(doc.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+      )}
+    </div>
+  )
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          FEEDBACK — Was this helpful?
-          ═══════════════════════════════════════════════════════════════ */}
-      <section style={{ background: '#ffffff' }}>
-        <div className="max-w-[820px] mx-auto px-6 py-10">
-          <ArticleVoting documentId={doc.id} />
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════════
-          RELATED RESEARCH — Editorial card grid
-          ═══════════════════════════════════════════════════════════════ */}
+  const footerContent = (
+    <>
+      {/* Related Research */}
       {related.length > 0 && (
         <section className="bg-paper border-t border-rule">
-          <div className="max-w-[1000px] mx-auto px-6 py-14">
-            <p className="text-blue uppercase" style={{ fontSize: 11, letterSpacing: '0.1em', marginBottom: 8 }}>
-              Related Research
-            </p>
-            <p className="italic text-muted" style={{ fontSize: 14, marginBottom: 24 }}>
+          <div className="max-w-[900px] mx-auto px-6 py-14">
+            <div className="flex items-baseline justify-between mb-1">
+              <h2 className="text-2xl">Related Research</h2>
+              <Link href="/library" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.65rem] uppercase tracking-wider text-blue">
+                Full Library
+              </Link>
+            </div>
+            <div className="h-px border-b border-dotted border-rule mb-6" />
+            <p className="italic text-muted text-[0.9rem] mb-6">
               More from the library on similar topics
             </p>
 
@@ -325,14 +130,13 @@ export default async function DocumentDetailPage(
                   <Link
                     key={rel.id}
                     href={'/library/doc/' + rel.id}
-                    className="group block p-6 transition-all bg-white border border-[#dde1e8] hover:border-[#1b5e8a]"
+                    className="group block p-6 transition-all bg-white border border-rule hover:border-blue"
                   >
-                    {/* Theme indicators */}
                     {relThemes.length > 0 && (
                       <div className="flex items-center gap-3 mb-3">
                         {relThemes.slice(0, 3).map(function (t) {
                           return (
-                            <span key={t.name} className="inline-flex items-center gap-1" style={{ fontSize: 10, color: t.color }}>
+                            <span key={t.name} className="inline-flex items-center gap-1 text-[0.6rem]" style={{ color: t.color }}>
                               <span className="w-1.5 h-1.5" style={{ background: t.color }} />
                               {t.name}
                             </span>
@@ -341,24 +145,21 @@ export default async function DocumentDetailPage(
                       </div>
                     )}
 
-                    <h3
-                      className="group-hover:underline line-clamp-2"
-                      style={{ fontSize: 17, lineHeight: 1.3, marginBottom: 8 }}
-                    >
+                    <h3 className="group-hover:underline line-clamp-2 text-[1rem] leading-snug font-bold mb-2">
                       {rel.title}
                     </h3>
 
                     {rel.summary && (
-                      <p className="line-clamp-2 text-muted" style={{ fontSize: 14, lineHeight: 1.6 }}>
-                        {rel.summary}
+                      <p className="line-clamp-2 text-muted text-[0.85rem] leading-relaxed">
+                        {rel.summary.length > 150 ? rel.summary.slice(0, 150) + '...' : rel.summary}
                       </p>
                     )}
 
-                    <div className="mt-4 flex items-center gap-3 text-muted" style={{ fontSize: 11 }}>
+                    <div className="mt-3 flex items-center gap-3 text-muted text-[0.7rem]">
                       {rel.page_count > 0 && <span>{rel.page_count} pages</span>}
                       {rel.tags.length > 0 && (
                         <>
-                          <span style={{ color: '#dde1e8' }}>|</span>
+                          <span className="text-rule">|</span>
                           <span>{rel.tags.slice(0, 2).join(', ')}</span>
                         </>
                       )}
@@ -367,32 +168,118 @@ export default async function DocumentDetailPage(
                 )
               })}
             </div>
-
-            <div className="mt-8 text-center">
-              <Link
-                href="/library"
-                className="hover:underline italic text-blue"
-                style={{ fontSize: 14 }}
-              >
-                Browse the full library &rarr;
-              </Link>
-            </div>
           </div>
         </section>
       )}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          FOOTER CODA
-          ═══════════════════════════════════════════════════════════════ */}
-      <div className="text-center py-10 bg-paper">
-        <Link
-          href="/exchange"
-          className="hover:underline italic text-blue"
-          style={{ fontSize: 14 }}
-        >
-          &larr; Back to The Community Exchange
+      {/* Back to Library */}
+      <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="h-px bg-rule mb-10" />
+        <Link href="/library" className="italic text-blue text-[0.95rem] hover:underline">
+          Back to Library
         </Link>
       </div>
-    </div>
+    </>
+  )
+
+  const sidebarContent = (
+    <>
+      {/* Tags */}
+      {doc.tags.length > 0 && (
+        <div>
+          <p className="font-mono text-micro uppercase tracking-wider text-muted mb-3">Keywords</p>
+          <div className="flex flex-wrap gap-2">
+            {doc.tags.map(function (tag) {
+              return (
+                <span
+                  key={tag}
+                  className="px-2.5 py-1 text-muted border border-rule text-[0.7rem] bg-white"
+                >
+                  {tag}
+                </span>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Voting */}
+      <ArticleVoting documentId={doc.id} />
+    </>
+  )
+
+  return (
+    <DetailPageLayout
+      title={doc.title}
+      subtitle={doc.summary}
+      eyebrow={{ text: 'Research Document' }}
+      eyebrowMeta={eyebrowMeta}
+      breadcrumbs={breadcrumbs}
+      themeColor={primaryTheme.color}
+      mastheadBorderTop={`3px solid ${primaryTheme.color}`}
+      metaRow={metaRow}
+      wayfinderData={wayfinderData}
+      wayfinderType="document"
+      wayfinderEntityId={id}
+      userRole={userProfile?.role}
+      footer={footerContent}
+      sidebar={sidebarContent}
+    >
+      {/* Actions — PDF download + Ask AI */}
+      <div className="mb-10 p-6 border border-blue bg-faint">
+        <p className="font-mono text-micro uppercase tracking-wider text-muted mb-3">
+          Access this document
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href={pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90 font-mono text-micro uppercase tracking-wider font-semibold bg-blue"
+          >
+            <Download size={14} /> Download PDF
+          </a>
+          <Link
+            href={'/library/chat?doc=' + doc.id}
+            className="inline-flex items-center gap-2 px-5 py-2.5 transition-colors font-mono text-micro uppercase tracking-wider font-semibold border border-blue text-blue"
+          >
+            <MessageSquare size={14} /> Ask About This Document
+          </Link>
+        </div>
+      </div>
+
+      {/* Key Takeaways */}
+      {doc.key_points.length > 0 && (
+        <section className="mb-10">
+          <div className="flex items-baseline justify-between mb-1">
+            <h2 className="text-2xl">Key Takeaways</h2>
+            <span className="font-mono text-[0.65rem] text-muted">{doc.key_points.length}</span>
+          </div>
+          <div className="h-px border-b border-dotted border-rule mb-4" />
+          <div className="space-y-0">
+            {doc.key_points.map(function (point, i) {
+              return (
+                <div
+                  key={i}
+                  className="flex items-start gap-5 py-5"
+                  style={{ borderBottom: i < doc.key_points.length - 1 ? '1px solid var(--color-rule, #dde1e8)' : 'none' }}
+                >
+                  <span
+                    className="flex-shrink-0 w-8 h-8 flex items-center justify-center text-[1.1rem] font-bold"
+                    style={{
+                      color: primaryTheme.color,
+                      border: `2px solid ${primaryTheme.color}`,
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <p className="text-[0.95rem] leading-relaxed">{point}</p>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+    </DetailPageLayout>
   )
 }
