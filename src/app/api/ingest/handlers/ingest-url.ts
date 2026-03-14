@@ -1,13 +1,100 @@
 /**
- * Full URL ingestion pipeline (10 steps):
- * dedup → scrape → inbox → classify → multi-item → validate → review → translate → orgs → log
+ * Full URL ingestion pipeline — org-first architecture:
+ * dedup → scrape → RESOLVE ORG → inbox → classify → multi-item → validate → review → junctions → translate → log
+ *
+ * Every piece of content gets an org_id BEFORE classification.
+ * Domain intelligence is cached for future ingestion.
  */
 
 import { scrapeUrl } from './scraper'
 import { callClaude, parseClaudeJson, translateItem } from './claude'
 import { supaRest, supaUpsert, populateJunctionTables, junctionErrors } from './supabase-helpers'
-import { extractMultipleEvents, extractMultipleArticles } from './multi-item-extraction'
+import { extractMultipleEvents, extractMultipleArticles, extractMultipleResources, looksLikeListingPage } from './multi-item-extraction'
 import type { Taxonomy } from './taxonomy'
+
+/**
+ * Normalize a domain: strip www., lowercase
+ */
+function normalizeDomain(domain: string): string {
+  return domain.toLowerCase().replace(/^www\./, '')
+}
+
+/**
+ * Resolve or create an organization from a domain.
+ * Returns org_id — never null. Every domain gets an org.
+ */
+async function resolveOrgFromDomain(
+  domain: string,
+  meta: { title: string; description: string },
+  classification?: any,
+): Promise<{ orgId: string; orgName: string; isNew: boolean }> {
+  const normalized = normalizeDomain(domain)
+
+  // Check domain_profiles first (fastest, has cached org linkage)
+  const profile = await supaRest('GET', `domain_profiles?domain=eq.${encodeURIComponent(normalized)}&select=org_id,org_name`).catch(() => [])
+  if (profile && profile.length > 0 && profile[0].org_id) {
+    return { orgId: profile[0].org_id, orgName: profile[0].org_name || '', isNew: false }
+  }
+
+  // Check org_domains (also check www. variant)
+  const domainMatch = await supaRest('GET', `org_domains?or=(domain.eq.${encodeURIComponent(domain)},domain.eq.${encodeURIComponent(normalized)},domain.eq.www.${encodeURIComponent(normalized)})&select=org_id`).catch(() => [])
+  if (domainMatch && domainMatch.length > 0) {
+    const orgId = domainMatch[0].org_id
+    // Look up org name
+    const org = await supaRest('GET', `organizations?org_id=eq.${encodeURIComponent(orgId)}&select=org_name`).catch(() => [])
+    const orgName = org?.[0]?.org_name || ''
+
+    // Cache in domain_profiles for next time
+    await supaRest('POST', 'domain_profiles', {
+      domain: normalized,
+      org_id: orgId,
+      org_name: orgName,
+      trust_level: 'known',
+    }).catch(() => {})
+
+    return { orgId, orgName, isNew: false }
+  }
+
+  // No org found — create one from the domain
+  const orgName = classification?.organizations?.[0]?.name
+    || classification?.source_org_name
+    || meta.title.split(/[|\-–—]/).pop()?.trim()
+    || normalized
+  const orgId = 'ORG_ING_' + normalized.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30).toUpperCase()
+
+  try {
+    await supaRest('POST', 'organizations', {
+      org_id: orgId,
+      org_name: orgName,
+      website: `https://${normalized}`,
+      description_5th_grade: classification?.organizations?.[0]?.description || '',
+      data_source: domain,
+    })
+    await supaRest('POST', 'org_domains', { org_id: orgId, domain: normalized }).catch(() => {})
+    // Also register www variant
+    if (domain !== normalized) {
+      await supaRest('POST', 'org_domains', { org_id: orgId, domain }).catch(() => {})
+    }
+    // Cache in domain_profiles
+    await supaRest('POST', 'domain_profiles', {
+      domain: normalized,
+      org_id: orgId,
+      org_name: orgName,
+      trust_level: 'new',
+    }).catch(() => {})
+  } catch (e) {
+    const msg = (e as Error).message || ''
+    if (msg.includes('duplicate') || msg.includes('23505')) {
+      // Race condition — org was created by another request, look it up
+      const retry = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(normalized)}&select=org_id`).catch(() => [])
+      if (retry && retry.length > 0) {
+        return { orgId: retry[0].org_id, orgName, isNew: false }
+      }
+    }
+  }
+
+  return { orgId, orgName, isNew: true }
+}
 
 export async function ingestUrl(
   url: string,
@@ -35,7 +122,10 @@ export async function ingestUrl(
     return { success: false, stage: 'scrape', error: 'Insufficient content extracted (< 100 chars)' }
   }
 
-  // Step 3: Create inbox entry
+  // Step 3: Resolve organization FIRST — before anything else
+  const { orgId: resolvedOrgId, orgName: resolvedOrgName, isNew: isNewOrg } = await resolveOrgFromDomain(meta.domain, meta)
+
+  // Step 4: Create inbox entry (with org_id already set)
   const inboxId = crypto.randomUUID()
   await supaRest('POST', 'content_inbox', {
     id: inboxId,
@@ -44,6 +134,7 @@ export async function ingestUrl(
     title: meta.title,
     description: meta.description,
     image_url: meta.image || null,
+    org_id: resolvedOrgId,
     extracted_text: JSON.stringify({
       full_text: fullText,
       tags: [],
@@ -54,10 +145,12 @@ export async function ingestUrl(
     status: 'pending',
   })
 
-  // Step 4: Classify with Claude
+  // Step 5: Classify with Claude (with org context)
   const systemPrompt = `You are the Change Engine v3 knowledge graph enricher for Houston, Texas civic content.
 
 CRITICAL: You are classifying NEWSFEED content — articles, videos, research, reports, DIY activities, courses. This is NOT community resource classification. News flows as a per-pathway feed. Resources are separate entity types (services, organizations, benefits).
+
+SOURCE ORGANIZATION: "${resolvedOrgName}" (${meta.domain})
 
 You have the FULL article text. Your job is to identify EVERY dimension:
 1. Write a clear, engaging title at 6th-grade reading level (max 80 chars)
@@ -101,6 +194,7 @@ ${taxonomyPrompt}`
   const userPrompt = `Title: ${meta.title}
 URL: ${url}
 Source: ${meta.domain}
+Organization: ${resolvedOrgName}
 
 FULL TEXT (${fullText.length} chars):
 ${fullText.substring(0, 6000)}
@@ -142,6 +236,7 @@ Return JSON:
   "key_stats": [{"value":"6","label":"States in pilot"}],
   "sections": [{"number":1,"heading":"...","summary":"..."}],
   "partner_organizations": [{"name":"...","url":"https://..."}],
+  "video_url": "YouTube or Vimeo embed URL if this content has a video (e.g. https://www.youtube.com/watch?v=XXX or https://vimeo.com/XXX), null otherwise",
   "download_url": "Direct PDF/file URL or null",
   "cost": "Free|Paid|Sliding Scale or null",
   "raw_tags": ["tag1","tag2"],
@@ -170,27 +265,55 @@ Return JSON:
     return { success: false, stage: 'classify', error: `Classification failed: ${errMsg}`, inbox_id: inboxId }
   }
 
-  // Step 4b: Multi-item extraction
-  let earlyOrgId: string | null = null
-  const earlyDomainMatch = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(meta.domain)}&select=org_id`).catch(() => [])
-  if (earlyDomainMatch && earlyDomainMatch.length > 0) {
-    earlyOrgId = earlyDomainMatch[0].org_id
+  // Step 5b: Update org with classification data if it was auto-created
+  if (isNewOrg && classification.organizations?.length > 0) {
+    const primaryOrg = classification.organizations[0]
+    if (primaryOrg.description) {
+      await supaRest('PATCH', `organizations?org_id=eq.${encodeURIComponent(resolvedOrgId)}`, {
+        description_5th_grade: primaryOrg.description,
+        org_name: primaryOrg.name || resolvedOrgName,
+      }).catch(() => {})
+      // Update domain_profiles too
+      await supaRest('PATCH', `domain_profiles?domain=eq.${encodeURIComponent(normalizeDomain(meta.domain))}`, {
+        org_name: primaryOrg.name || resolvedOrgName,
+      }).catch(() => {})
+    }
   }
 
-  const isEventListing = classification.content_type === 'event'
-  const isNewsListing = classification.content_type === 'article' && fullText.length > 3000
-  if (isEventListing || isNewsListing) {
+  // Step 6: Multi-item extraction (children inherit org_id)
+  const detectedType = classification.content_type || ''
+  const isEventListing = detectedType === 'event'
+  const isNewsListing = detectedType === 'article' && fullText.length > 3000
+  const isResourceListing = looksLikeListingPage(fullText, internalLinks, detectedType)
+
+  if (isEventListing || isNewsListing || isResourceListing) {
     try {
-      const multiResult = isEventListing
-        ? await extractMultipleEvents(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds, earlyOrgId)
-        : await extractMultipleArticles(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds, earlyOrgId)
+      let multiResult = null
+      let listingType = 'resource_listing'
+      let stageName = 'multi_resource'
+
+      if (isEventListing) {
+        multiResult = await extractMultipleEvents(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds, resolvedOrgId)
+        listingType = 'event_listing'
+        stageName = 'multi_event'
+      } else if (isNewsListing) {
+        multiResult = await extractMultipleArticles(fullText, meta, url, taxonomy, taxonomyPrompt, inboxId, validFocusIds, resolvedOrgId)
+        listingType = 'news_listing'
+        stageName = 'multi_article'
+      } else {
+        multiResult = await extractMultipleResources(fullText, meta, url, internalLinks, detectedType, inboxId, resolvedOrgId)
+        listingType = `${detectedType}_listing`
+        stageName = 'multi_resource'
+      }
+
       if (multiResult) {
-        const listingType = isEventListing ? 'event_listing' : 'news_listing'
         await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status: 'processed', content_type: listingType })
         return {
           success: true,
           inbox_id: inboxId,
-          stage: isEventListing ? 'multi_event' : 'multi_article',
+          org_id: resolvedOrgId,
+          org_name: resolvedOrgName,
+          stage: stageName,
           title: meta.title,
           items_extracted: multiResult.length,
           items: multiResult,
@@ -201,7 +324,7 @@ Return JSON:
     }
   }
 
-  // Step 5: Validate + enrich focus areas
+  // Step 7: Validate + enrich focus areas
   const enrichedFocusAreas: any[] = []
   const inheritedSdgs = new Set<string>()
   const inheritedNtee = new Set<string>()
@@ -231,7 +354,7 @@ Return JSON:
   const status = 'needs_review'
   const reviewStatus = 'pending'
 
-  // Step 6: Update inbox + create review queue entry
+  // Step 8: Update inbox + create review queue entry
   await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { status, content_type: classification.content_type || null })
 
   const enrichedClassification = {
@@ -247,7 +370,7 @@ Return JSON:
     _keywords: classification.keywords || [],
     _external_orgs: classification.organizations || [],
     _download_links: downloadLinks.map(l => ({ url: l.url, anchor_text: l.anchor })),
-    _version: 'v3-deep-enrich',
+    _version: 'v4-org-first',
   }
 
   await supaRest('POST', 'content_review_queue', {
@@ -255,12 +378,13 @@ Return JSON:
     ai_classification: enrichedClassification,
     confidence,
     review_status: reviewStatus,
+    org_id: resolvedOrgId,
   })
 
-  // Step 7: Populate junction tables
+  // Step 9: Populate junction tables
   await populateJunctionTables(inboxId, enrichedClassification)
 
-  // Step 8: Translate to Spanish + Vietnamese
+  // Step 10: Translate to Spanish + Vietnamese
   const translations: Record<string, any> = {}
   const title6 = classification.title_6th_grade || meta.title
   const summary6 = classification.summary_6th_grade || meta.description
@@ -312,31 +436,22 @@ Return JSON:
     }
   }
 
-  // Step 9: Create organization entries
-  const orgsCreated: string[] = []
-  let resolvedOrgId: string | null = null
-
-  const sourceDomainMatch = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(meta.domain)}&select=org_id`).catch(() => [])
-  if (sourceDomainMatch && sourceDomainMatch.length > 0) {
-    resolvedOrgId = sourceDomainMatch[0].org_id
-  }
+  // Step 11: Create/link additional organizations from classification
+  const orgsCreated: string[] = [isNewOrg ? `${resolvedOrgName} (NEW)` : `${resolvedOrgName} (source)`]
 
   for (const org of (classification.organizations || [])) {
     if (!org.name) continue
     const orgUrl = org.url || ''
-    const domain = orgUrl.match(/https?:\/\/([^/]+)/)?.[1] || ''
-    if (!domain) continue
+    const orgDomain = orgUrl.match(/https?:\/\/([^/]+)/)?.[1] || ''
+    if (!orgDomain || normalizeDomain(orgDomain) === normalizeDomain(meta.domain)) continue
 
-    const domainCheck = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(domain)}&select=org_id`).catch(() => [])
+    const domainCheck = await supaRest('GET', `org_domains?domain=eq.${encodeURIComponent(normalizeDomain(orgDomain))}&select=org_id`).catch(() => [])
     if (domainCheck && domainCheck.length > 0) {
       orgsCreated.push(`${org.name} (exists)`)
-      if (!resolvedOrgId && domain === meta.domain) {
-        resolvedOrgId = domainCheck[0].org_id
-      }
       continue
     }
 
-    const orgId = 'ORG_ING_' + domain.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30).toUpperCase()
+    const orgId = 'ORG_ING_' + normalizeDomain(orgDomain).replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30).toUpperCase()
     try {
       await supaRest('POST', 'organizations', {
         org_id: orgId,
@@ -346,7 +461,13 @@ Return JSON:
         focus_area_ids: validFocusAreaIds.join(','),
         data_source: meta.domain,
       })
-      await supaRest('POST', 'org_domains', { org_id: orgId, domain }).catch(() => {})
+      await supaRest('POST', 'org_domains', { org_id: orgId, domain: normalizeDomain(orgDomain) }).catch(() => {})
+      await supaRest('POST', 'domain_profiles', {
+        domain: normalizeDomain(orgDomain),
+        org_id: orgId,
+        org_name: org.name,
+        trust_level: 'new',
+      }).catch(() => {})
 
       for (const focusId of validFocusAreaIds) {
         await supaRest('POST', 'organization_focus_areas', {
@@ -356,7 +477,6 @@ Return JSON:
       }
 
       orgsCreated.push(`${org.name} (NEW: ${orgId})`)
-      if (!resolvedOrgId) resolvedOrgId = orgId
     } catch (e) {
       const msg = (e as Error).message || ''
       if (msg.includes('duplicate') || msg.includes('23505')) {
@@ -365,13 +485,7 @@ Return JSON:
     }
   }
 
-  // Step 9b: Link resolved org to this content
-  if (resolvedOrgId) {
-    await supaRest('PATCH', `content_inbox?id=eq.${inboxId}`, { org_id: resolvedOrgId }).catch(() => {})
-    await supaRest('PATCH', `content_review_queue?inbox_id=eq.${inboxId}`, { org_id: resolvedOrgId }).catch(() => {})
-  }
-
-  // Step 10: Log
+  // Step 12: Log
   const junctionIssues = junctionErrors.length > 0
     ? ` | junction_errors: ${junctionErrors.map(e => e.table).join(', ')}`
     : ''
@@ -389,13 +503,15 @@ Return JSON:
     source: meta.domain,
     source_url: url,
     status: junctionIssues || translationNote ? 'partial' : 'success',
-    message: `Full pipeline: ${validFocusAreaIds.length}FA ${allSdgIds.length}SDG | conf:${confidence} | ${Object.keys(translations).length} translations | ${orgsCreated.length} orgs${junctionIssues}${translationNote}`,
+    message: `v4-org-first | org:${resolvedOrgId} | ${validFocusAreaIds.length}FA ${allSdgIds.length}SDG | conf:${confidence} | ${Object.keys(translations).length} translations | ${orgsCreated.length} orgs${junctionIssues}${translationNote}`,
     item_count: 1,
   })
 
   return {
     success: true,
     inbox_id: inboxId,
+    org_id: resolvedOrgId,
+    org_name: resolvedOrgName,
     stage: status,
     title: classification.title_6th_grade,
     confidence,

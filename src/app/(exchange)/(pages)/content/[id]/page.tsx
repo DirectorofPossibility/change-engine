@@ -425,17 +425,23 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* ── LEFT: Body Content ── */}
             <div className="flex-1 min-w-0" style={{ maxWidth: 740 }}>
 
-              {/* Video embed */}
+              {/* Video embed — YouTube + Vimeo */}
               {(item as any).video_url && (() => {
-                const match = (item as any).video_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
-                const videoId = match ? match[1] : null
-                if (!videoId) return null
+                const vurl = (item as any).video_url as string
+                const ytMatch = vurl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^?&]+)/)
+                const vimeoMatch = vurl.match(/vimeo\.com\/(\d+)/)
+                const embedSrc = ytMatch
+                  ? 'https://www.youtube-nocookie.com/embed/' + ytMatch[1]
+                  : vimeoMatch
+                    ? 'https://player.vimeo.com/video/' + vimeoMatch[1]
+                    : null
+                if (!embedSrc) return null
                 return (
                   <div className="mb-6">
                     <div className="relative w-full overflow-hidden rounded-lg" style={{ paddingBottom: '56.25%', border: `1px solid ${RULE}` }}>
                       <iframe
                         className="absolute inset-0 w-full h-full"
-                        src={'https://www.youtube-nocookie.com/embed/' + videoId}
+                        src={embedSrc}
                         title={t('content.video')}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen

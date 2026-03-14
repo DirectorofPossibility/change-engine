@@ -1,8 +1,9 @@
 /**
- * Multi-event and multi-article extraction from listing pages.
+ * Multi-item extraction from listing/directory pages.
  *
- * Detects pages that contain multiple distinct events or articles
- * and creates separate inbox + review queue entries for each.
+ * Detects pages that contain multiple distinct items (events, articles,
+ * videos, resources, tools, courses, etc.) and creates separate inbox +
+ * review queue entries for each.
  */
 
 import { callClaude, parseClaudeJson } from './claude'
@@ -79,8 +80,8 @@ ${fullText.substring(0, 8000)}`
         external_links: [],
         internal_links: [],
         download_links: [],
-        parent_inbox_id: parentInboxId,
       }),
+      parent_inbox_id: parentInboxId,
       status: 'needs_review',
       content_type: 'event',
       ...(orgId ? { org_id: orgId } : {}),
@@ -197,8 +198,8 @@ ${fullText.substring(0, 8000)}`
         external_links: [],
         internal_links: [],
         download_links: [],
-        parent_inbox_id: parentInboxId,
       }),
+      parent_inbox_id: parentInboxId,
       status: 'needs_review',
       content_type: 'article',
       ...(orgId ? { org_id: orgId } : {}),
@@ -239,4 +240,166 @@ ${fullText.substring(0, 8000)}`
   })
 
   return results
+}
+
+/**
+ * Generalized listing/directory page extraction.
+ *
+ * Handles ANY content type (videos, resources, tools, courses, guides, etc.)
+ * by asking Claude to detect whether the page is a directory and extract
+ * each child item with its URL, title, and description.
+ */
+export async function extractMultipleResources(
+  fullText: string,
+  meta: { title: string; description: string; image: string; domain: string },
+  sourceUrl: string,
+  internalLinks: Array<{ url: string; anchor: string; slug: string }>,
+  contentType: string,
+  parentInboxId: string,
+  orgId?: string | null,
+): Promise<Array<{ inbox_id: string; title: string; source_url?: string }> | null> {
+  const extractPrompt = `You are analyzing a web page to determine if it is a LISTING or DIRECTORY page — a page whose primary purpose is to link to multiple child resources.
+
+Examples of listing pages:
+- A video library page listing 20+ individual videos
+- A resource hub linking to tools, guides, or downloads
+- A course catalog with individual course pages
+- An organization directory with links to each org
+- A publications page listing reports or briefs
+
+Examples that are NOT listing pages:
+- A single article, even if long
+- A page with a sidebar of related links
+- A homepage with featured content
+
+Analyze the page text and internal links provided. Determine:
+1. Is this page primarily a LISTING/DIRECTORY of multiple distinct resources?
+2. If yes, extract EACH child item.
+
+If this is NOT a listing page, return: {"is_listing": false}
+
+If this IS a listing page, return:
+{
+  "is_listing": true,
+  "listing_type": "video|resource|tool|course|guide|report|organization|mixed",
+  "items": [
+    {
+      "title_6th_grade": "Clear, simple title (max 80 chars, 6th-grade level)",
+      "summary_6th_grade": "What this item is about in 1-3 sentences at 6th-grade level",
+      "source_url": "Direct URL to the individual item page (from internal links), or null",
+      "image_url": "Thumbnail URL if visible, or null",
+      "content_type": "video|report|guide|tool|course|article"
+    }
+  ]
+}
+
+RULES:
+- Extract up to 30 items.
+- Match items to their URLs from the INTERNAL LINKS list when possible.
+- Write summaries in asset-based language (strengths, opportunities, what's available).
+- If you can't determine a meaningful title/summary for an item, skip it.
+- Return JSON only.`
+
+  const userMsg = `Page title: ${meta.title}
+URL: ${sourceUrl}
+Source: ${meta.domain}
+Claude classified this page as content_type: "${contentType}"
+
+PAGE TEXT (${fullText.length} chars):
+${fullText.substring(0, 8000)}
+
+INTERNAL LINKS (${internalLinks.length} links to same domain):
+${internalLinks.slice(0, 50).map(l => `[${l.anchor}] → ${l.url}`).join('\n')}`
+
+  const rawResponse = await callClaude(extractPrompt, userMsg, 4000)
+  const parsed = parseClaudeJson(rawResponse)
+
+  if (!parsed.is_listing || !parsed.items || !Array.isArray(parsed.items) || parsed.items.length < 2) {
+    return null
+  }
+
+  const results: Array<{ inbox_id: string; title: string; source_url?: string }> = []
+  const listingType = parsed.listing_type || 'resource'
+
+  for (const item of parsed.items) {
+    const itemInboxId = crypto.randomUUID()
+    const itemTitle = item.title_6th_grade || 'Untitled'
+    const itemSummary = item.summary_6th_grade || ''
+    const itemUrl = item.source_url || sourceUrl
+    const itemType = item.content_type || contentType || 'resource'
+
+    await supaRest('POST', 'content_inbox', {
+      id: itemInboxId,
+      source_url: itemUrl,
+      source_domain: meta.domain,
+      title: itemTitle,
+      description: itemSummary,
+      image_url: item.image_url || meta.image || null,
+      extracted_text: JSON.stringify({
+        full_text: `${itemTitle}\n\n${itemSummary}`,
+        tags: [],
+        external_links: [],
+        internal_links: [],
+        download_links: [],
+      }),
+      parent_inbox_id: parentInboxId,
+      status: 'needs_review',
+      content_type: itemType,
+      ...(orgId ? { org_id: orgId } : {}),
+    })
+
+    const itemClassification: any = {
+      title_6th_grade: itemTitle,
+      summary_6th_grade: itemSummary,
+      content_type: itemType,
+      geographic_scope: 'National',
+      confidence: 0.70,
+      reasoning: `Extracted from ${listingType} listing page: ${meta.title}`,
+      _version: 'v3-multi-resource',
+    }
+
+    await supaRest('POST', 'content_review_queue', {
+      inbox_id: itemInboxId,
+      ai_classification: itemClassification,
+      confidence: 0.70,
+      review_status: 'pending',
+      ...(orgId ? { org_id: orgId } : {}),
+    })
+
+    results.push({ inbox_id: itemInboxId, title: itemTitle, source_url: itemUrl })
+
+    if (results.length < parsed.items.length) {
+      await new Promise(r => setTimeout(r, 300))
+    }
+  }
+
+  await supaRest('POST', 'ingestion_log', {
+    event_type: 'multi_resource_extract',
+    source: meta.domain,
+    source_url: sourceUrl,
+    status: 'success',
+    message: `Extracted ${results.length} ${listingType} items from listing page: ${meta.title}`,
+    item_count: results.length,
+  })
+
+  return results
+}
+
+/**
+ * Heuristic: should we try listing page extraction?
+ * Returns true if the page looks like a directory based on
+ * internal link count and text length.
+ */
+export function looksLikeListingPage(
+  fullText: string,
+  internalLinks: Array<{ url: string; anchor: string; slug: string }>,
+  contentType: string,
+): boolean {
+  // Already handled by event/article extractors
+  if (contentType === 'event' || contentType === 'article') return false
+  // Pages with many internal links and substantial text
+  if (internalLinks.length >= 8 && fullText.length > 2000) return true
+  // Long pages that Claude classified as video/course/tool/guide/resource
+  if (fullText.length > 3000 && ['video', 'course', 'tool', 'guide', 'resource'].includes(contentType)) return true
+  return false
 }
