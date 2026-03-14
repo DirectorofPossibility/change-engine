@@ -218,6 +218,9 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
         wayfinderType="official"
         wayfinderEntityId={id}
         userRole={userProfile?.role}
+        actions={{
+          bookmark: { contentType: 'official', contentId: official.official_id, title: official.official_name, imageUrl: official.photo_url },
+        }}
         feedbackType="official"
         feedbackId={official.official_id}
         feedbackName={official.official_name}

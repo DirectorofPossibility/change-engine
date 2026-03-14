@@ -5,6 +5,7 @@ import { ShareButtons } from './ShareButtons'
 import { FeedbackLoop } from './FeedbackLoop'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { Breadcrumb } from './Breadcrumb'
+import { BookmarkButton } from './BookmarkButton'
 
 /**
  * DetailPageLayout — shared template for all entity detail pages.
@@ -41,6 +42,7 @@ interface DetailPageLayoutProps {
   actions?: {
     translate?: { isTranslated: boolean; contentType: string; contentId: string }
     share?: { title?: string; url: string; via?: string }
+    bookmark?: { contentType: string; contentId: string; title?: string; imageUrl?: string | null }
   }
 
   // Masthead — styling
@@ -201,6 +203,15 @@ export function DetailPageLayout({
                 via={actions.share.via}
                 url={actions.share.url}
                 compact
+              />
+            )}
+            {actions?.bookmark && (
+              <BookmarkButton
+                contentType={actions.bookmark.contentType}
+                contentId={actions.bookmark.contentId}
+                title={actions.bookmark.title}
+                imageUrl={actions.bookmark.imageUrl}
+                variant="pill"
               />
             )}
           </div>

@@ -143,6 +143,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         wayfinderEntityId={id}
         userRole={userProfile?.role}
         jsonLd={jsonLd || undefined}
+        actions={{
+          bookmark: { contentType: 'service', contentId: service.service_id, title: displayName },
+        }}
         feedbackType="service"
         feedbackId={service.service_id}
         feedbackName={displayName}

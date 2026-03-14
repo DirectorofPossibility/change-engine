@@ -198,6 +198,9 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         wayfinderEntityId={id}
         userRole={userProfile?.role}
         footer={footerContent}
+        actions={{
+          bookmark: { contentType: 'policy', contentId: id, title: displayName },
+        }}
         feedbackType="policy"
         feedbackId={id}
         feedbackName={displayName}

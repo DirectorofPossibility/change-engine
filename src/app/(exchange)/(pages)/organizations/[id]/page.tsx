@@ -149,6 +149,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         wayfinderType="organization"
         wayfinderEntityId={id}
         userRole={userProfile?.role}
+        actions={{
+          bookmark: { contentType: 'organization', contentId: id, title: displayOrgName, imageUrl: org.logo_url },
+        }}
         feedbackType="organization"
         feedbackId={id}
         feedbackName={displayOrgName}

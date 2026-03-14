@@ -222,6 +222,9 @@ export default async function DocumentDetailPage(
       wayfinderType="document"
       wayfinderEntityId={id}
       userRole={userProfile?.role}
+      actions={{
+        bookmark: { contentType: 'content', contentId: id, title: doc.title },
+      }}
       footer={footerContent}
       sidebar={sidebarContent}
     >

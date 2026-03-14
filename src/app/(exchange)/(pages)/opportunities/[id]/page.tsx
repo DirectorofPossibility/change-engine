@@ -160,6 +160,9 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
         wayfinderType="opportunity"
         wayfinderEntityId={id}
         userRole={userProfile?.role}
+        actions={{
+          bookmark: { contentType: 'opportunity', contentId: id, title: displayName },
+        }}
         feedbackType="opportunity"
         feedbackId={id}
         feedbackName={displayName}
