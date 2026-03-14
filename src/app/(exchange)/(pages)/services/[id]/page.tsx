@@ -352,16 +352,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         fields={[
           { key: 'service_name', label: 'Service Name', type: 'text', value: service.service_name },
           { key: 'description_5th_grade', label: 'Description', type: 'textarea', value: service.description_5th_grade },
+          { key: 'org_id', label: 'Parent Organization', type: 'search', value: service.org_id, displayValue: org?.org_name || null, searchEndpoint: '/api/admin/search-orgs' },
+          { key: 'is_active', label: 'Active', type: 'select', options: ['Yes', 'No'], value: (service as any).is_active },
           { key: 'phone', label: 'Phone', type: 'text', value: service.phone },
           { key: 'website', label: 'Website', type: 'url', value: service.website },
           { key: 'address', label: 'Address', type: 'text', value: service.address },
           { key: 'city', label: 'City', type: 'text', value: service.city },
           { key: 'state', label: 'State', type: 'text', value: service.state },
           { key: 'zip_code', label: 'ZIP Code', type: 'text', value: service.zip_code },
+          { key: 'hours', label: 'Hours', type: 'text', value: service.hours },
           { key: 'eligibility', label: 'Eligibility', type: 'textarea', value: (service as any).eligibility },
-          { key: 'fee_structure', label: 'Fee Structure', type: 'text', value: (service as any).fee_structure },
-          { key: 'hours_of_operation', label: 'Hours of Operation', type: 'text', value: (service as any).hours_of_operation },
-          { key: 'service_area', label: 'Service Area', type: 'text', value: (service as any).service_area },
+          { key: 'fees', label: 'Fees', type: 'text', value: (service as any).fees },
+          { key: 'languages', label: 'Languages', type: 'text', value: (service as any).languages },
+          { key: 'engagement_level', label: 'Engagement Level', type: 'select', options: ['Get Curious', 'Find Your People', 'Show Up', 'Go Deeper', 'Make Your Move'], value: (service as any).engagement_level },
         ] as EditField[]}
       />
     </>

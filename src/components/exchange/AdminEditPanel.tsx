@@ -1,14 +1,123 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { Pencil, X, Save, Loader2 } from 'lucide-react'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { Pencil, X, Save, Loader2, Search } from 'lucide-react'
 
 export interface EditField {
   key: string
   label: string
-  type: 'text' | 'textarea' | 'number' | 'url' | 'select'
+  type: 'text' | 'textarea' | 'number' | 'url' | 'select' | 'search'
   options?: string[]
   value: string | number | null | undefined
+  displayValue?: string | null
+  searchEndpoint?: string
+}
+
+function SearchField({ field, value, displayValue, onChange }: {
+  field: EditField
+  value: string | number | null
+  displayValue?: string | null
+  onChange: (id: string | null, label: string | null) => void
+}) {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<Array<{ id: string; label: string }>>([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [searching, setSearching] = useState(false)
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(displayValue || null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const endpoint = field.searchEndpoint || '/api/admin/search-orgs'
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  function handleInput(q: string) {
+    setQuery(q)
+    if (timerRef.current) clearTimeout(timerRef.current)
+    if (q.length < 2) {
+      setResults([])
+      setShowDropdown(false)
+      return
+    }
+    timerRef.current = setTimeout(async () => {
+      setSearching(true)
+      try {
+        const res = await fetch(endpoint + '?q=' + encodeURIComponent(q))
+        const data = await res.json()
+        setResults(data.results || [])
+        setShowDropdown(true)
+      } catch {
+        setResults([])
+      } finally {
+        setSearching(false)
+      }
+    }, 300)
+  }
+
+  function handleSelect(item: { id: string; label: string }) {
+    setSelectedLabel(item.label)
+    setQuery('')
+    setShowDropdown(false)
+    onChange(item.id, item.label)
+  }
+
+  function handleClear() {
+    setSelectedLabel(null)
+    setQuery('')
+    onChange(null, null)
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      {selectedLabel || value ? (
+        <div className="flex items-center gap-2 px-3 py-2 text-sm border border-brand-border bg-white">
+          <span className="flex-1 text-brand-text">{selectedLabel || value}</span>
+          <button onClick={handleClear} className="text-brand-muted hover:text-red-600 transition-colors" type="button">
+            <X size={14} />
+          </button>
+        </div>
+      ) : (
+        <div className="relative">
+          <input
+            type="text"
+            value={query}
+            onChange={e => handleInput(e.target.value)}
+            placeholder="Search..."
+            className="w-full pl-8 pr-3 py-2 text-sm border border-brand-border bg-white text-brand-text focus:outline-none focus:border-brand-accent"
+          />
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-brand-muted" />
+          {searching && <Loader2 size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-brand-muted animate-spin" />}
+        </div>
+      )}
+      {showDropdown && results.length > 0 && (
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 max-h-[200px] overflow-y-auto bg-white border border-brand-border shadow-lg">
+          {results.map(r => (
+            <button
+              key={r.id}
+              onClick={() => handleSelect(r)}
+              className="w-full text-left px-3 py-2 text-sm hover:bg-brand-cream transition-colors border-b border-brand-border last:border-0"
+              type="button"
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {showDropdown && results.length === 0 && !searching && query.length >= 2 && (
+        <div className="absolute z-50 left-0 right-0 top-full mt-1 px-3 py-2 bg-white border border-brand-border text-sm text-brand-muted">
+          No results found
+        </div>
+      )}
+    </div>
+  )
 }
 
 interface AdminEditPanelProps {
@@ -110,7 +219,14 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
                     <label className="block font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">
                       {field.label}
                     </label>
-                    {field.type === 'textarea' ? (
+                    {field.type === 'search' ? (
+                      <SearchField
+                        field={field}
+                        value={val as string | null}
+                        displayValue={field.displayValue}
+                        onChange={(id) => setValues(prev => ({ ...prev, [field.key]: id }))}
+                      />
+                    ) : field.type === 'textarea' ? (
                       <textarea
                         value={String(val)}
                         onChange={e => setValues(prev => ({ ...prev, [field.key]: e.target.value }))}
