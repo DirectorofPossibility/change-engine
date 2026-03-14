@@ -550,7 +550,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
       )}
 
       {/* ════════════════════════════════════════════════════════════
-          NEED HELP? — Services reframed as strength-based support
+          RESOURCES — Services as strength-based support
           Psychology: Asset-based framing + Competence
          ════════════════════════════════════════════════════════════ */}
       {services.length > 0 && (
@@ -562,7 +562,7 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
           <div className="max-w-5xl mx-auto">
             <SectionLabel text="Got You" />
             <h2 className="text-3xl sm:text-5xl font-black text-white mt-4 leading-tight">
-              Need something? We got you.
+              We've got resources for you.
             </h2>
             <p className="text-white/40 mt-3 text-lg max-w-xl">
               Free services and support available to young people in Houston.

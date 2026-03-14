@@ -35,7 +35,7 @@ export const PAGE_INTROS = {
   search: 'Search everything — officials, services, organizations, news, policies, opportunities. Use the tabs to narrow it down, or search across all of it at once.',
   explore: 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
   elections: 'Your voting dashboard — see what just happened, what\'s coming up, who represents you, and where to vote. Start with your ZIP code to personalize your experience.',
-  availableResources: 'No matter what you are facing, Houston has resources ready for you. Browse by urgency or life situation to find support, services, and next steps.',
+  availableResources: 'Houston has resources ready for you. Browse by urgency or life situation to find services, support, and next steps.',
   organizations: 'Houston is powered by hundreds of nonprofits, foundations, agencies, and community groups working to strengthen neighborhoods. Browse, search, and connect with the organizations serving your community.',
   geography: 'Explore Houston through its neighborhoods, districts, and civic boundaries. Toggle boundary layers, click any area, or search by ZIP code to discover services, officials, organizations, and foundations near you.',
 } as const;

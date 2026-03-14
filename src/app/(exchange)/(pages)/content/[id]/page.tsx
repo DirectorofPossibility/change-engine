@@ -534,51 +534,83 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* ── RIGHT COLUMN: Sidebar ── */}
             <aside className="w-full lg:w-[340px] flex-shrink-0 space-y-5">
 
-              {/* Trail Position */}
-              <div className="p-5" style={{ background: '#f4f5f7', border: '1.5px solid #dde1e8' }}>
-                <span className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-dim block mb-3">Trail Position</span>
-                <div className="flex items-center gap-2 mb-3">
-                  {[1,2,3,4,5].map(function (n) {
-                    const isActive = n <= ((item as any).trail_level || 1)
-                    return (
-                      <span
-                        key={n}
-                        className="w-[6px] h-[6px]"
-                        style={{ background: isActive ? themeColor : '#dde1e8' }}
-                      />
-                    )
-                  })}
-                  <span className="font-mono text-[0.6rem] text-faint ml-1">
-                    Level {(item as any).trail_level || 1} of 5
-                  </span>
-                </div>
-              </div>
+              {/* Trail Position — 5 named levels */}
+              {(() => {
+                const TRAIL_LEVELS = [
+                  { name: 'Before You Go', subtitle: 'News, data, explainers', color: '#1b5e8a' },
+                  { name: 'Packing List', subtitle: 'Guides, tools, self-study', color: '#1a6b56' },
+                  { name: 'Day Trips', subtitle: 'Classes, events near you', color: '#4a2870' },
+                  { name: 'Local Guides', subtitle: 'Organizations & services', color: '#7a2018' },
+                  { name: 'The Deep Journey', subtitle: 'Ongoing commitments', color: '#0d1117' },
+                ]
+                const currentLevel = (item as any).trail_level || 1
+                return (
+                  <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
+                    <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-4" style={{ color: '#0d1117' }}>Trail Position</p>
+                    <div className="space-y-0">
+                      {TRAIL_LEVELS.map(function (level, i) {
+                        const n = i + 1
+                        const isActive = n === currentLevel
+                        const isPast = n < currentLevel
+                        return (
+                          <div
+                            key={n}
+                            className="flex items-center gap-3 py-2"
+                            style={{ borderBottom: i < 4 ? '1px solid #dde1e8' : 'none', opacity: isActive ? 1 : isPast ? 0.7 : 0.4 }}
+                          >
+                            <div
+                              className="w-6 h-6 flex items-center justify-center flex-shrink-0 font-mono text-[0.6rem] font-bold"
+                              style={{
+                                background: isActive ? level.color : isPast ? level.color + '30' : '#dde1e8',
+                                color: isActive ? 'white' : isPast ? level.color : '#9B9590',
+                              }}
+                            >
+                              {n}
+                            </div>
+                            <div className="min-w-0">
+                              <span className={'block text-[0.8rem] leading-tight ' + (isActive ? 'font-bold text-ink' : 'font-medium')} style={{ color: isActive ? '#0d1117' : undefined }}>
+                                {level.name}
+                              </span>
+                              {isActive && (
+                                <span className="block text-[0.7rem] mt-0.5" style={{ color: '#5c6474' }}>{level.subtitle}</span>
+                              )}
+                            </div>
+                            {isActive && (
+                              <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: level.color }} />
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })()}
 
               {/* At a Glance */}
-              <div className="p-5" style={{ background: '#f4f5f7', border: '1.5px solid #dde1e8' }}>
-                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-dim mb-3">{t('content.at_a_glance')}</p>
-                <div className="space-y-2.5">
+              <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
+                <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#0d1117' }}>{t('content.at_a_glance')}</p>
+                <div className="space-y-3">
                   {orgInfo && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span style={{ color: "#5c6474" }}>Organization</span>
-                      <Link href={'/organizations/' + orgInfo.org_id} className="font-semibold truncate ml-2 hover:text-[#1b5e8a] transition-colors" style={{ color: "#1b5e8a" }}>{orgInfo.org_name}</Link>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold" style={{ color: '#0d1117' }}>Organization</span>
+                      <Link href={'/organizations/' + orgInfo.org_id} className="text-sm font-bold truncate ml-2 hover:underline transition-colors" style={{ color: "#1b5e8a" }}>{orgInfo.org_name}</Link>
                     </div>
                   )}
                   {themeSlug && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span style={{ color: "#5c6474" }}>{t('content.pathway')}</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold" style={{ color: '#0d1117' }}>{t('content.pathway')}</span>
                       <ThemePill themeId={item.pathway_primary} size="sm" />
                     </div>
                   )}
                   {item.center && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span style={{ color: "#5c6474" }}>Center</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold" style={{ color: '#0d1117' }}>Center</span>
                       <CenterBadge center={item.center} />
                     </div>
                   )}
                   {focusAreas.length > 0 && (
-                    <div className="pt-2.5" style={{ borderTop: `1px solid ${'#dde1e8'}` }}>
-                      <p className="mb-2" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>Focus Areas</p>
+                    <div className="pt-3" style={{ borderTop: '1px solid #dde1e8' }}>
+                      <p className="mb-2 font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em]" style={{ color: '#0d1117' }}>Focus Areas</p>
                       <FocusAreaPills focusAreas={focusAreas} />
                     </div>
                   )}
@@ -587,24 +619,24 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
               {/* Who Is Responsible */}
               {responsibleOfficials.length > 0 && (
-                <div className="p-5" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
-                  <p className="mb-3" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>Who Is Responsible</p>
+                <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
+                  <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#0d1117' }}>Who Is Responsible</p>
                   <div className="space-y-3">
                     {responsibleOfficials.slice(0, 5).map(function (o) {
                       return (
                         <Link key={o.official_id} href={'/officials/' + o.official_id} className="flex items-center gap-3 group">
-                          <div className="w-9 h-9 overflow-hidden flex-shrink-0 bg-paper">
+                          <div className="w-10 h-10 overflow-hidden flex-shrink-0 bg-white" style={{ border: '1.5px solid #dde1e8' }}>
                             {o.photo_url ? (
                               <img src={o.photo_url} alt="" className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center" style={{ fontWeight: 700, fontSize: '0.75rem', color: "#5c6474" }}>
+                              <div className="w-full h-full flex items-center justify-center font-bold" style={{ fontSize: '0.85rem', color: themeColor, background: themeColor + '10' }}>
                                 {o.official_name?.charAt(0) || '?'}
                               </div>
                             )}
                           </div>
                           <div className="min-w-0">
-                            <span className="block text-sm font-medium group-hover:underline truncate" style={{  }}>{o.official_name}</span>
-                            <span className="block truncate" style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+                            <span className="block text-sm font-bold group-hover:underline truncate text-ink">{o.official_name}</span>
+                            <span className="block truncate font-medium" style={{ fontSize: '0.75rem', color: "#5c6474" }}>
                               {[o.title, o.party, o.level].filter(Boolean).join(' / ')}
                             </span>
                           </div>
@@ -617,19 +649,19 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
               {/* Take Action */}
               {(opportunities.length > 0 || policies.length > 0) && (
-                <div className="p-5" style={{ background: '#f4f5f7', border: '1px solid #dde1e8' }}>
-                  <p className="mb-3" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.take_action')}</p>
-                  <div className="space-y-2">
+                <div className="p-5" style={{ background: '#f4f5f7', border: '2px solid #dde1e8' }}>
+                  <p className="font-mono text-[0.6875rem] font-bold uppercase tracking-[0.2em] mb-3" style={{ color: '#0d1117' }}>{t('content.take_action')}</p>
+                  <div className="space-y-2.5">
                     {opportunities.slice(0, 3).map(function (o: any) {
                       return (
-                        <Link key={o.opportunity_id} href={'/opportunities/' + o.opportunity_id} className="block text-sm font-medium hover:underline" style={{ color: "#1b5e8a" }}>
+                        <Link key={o.opportunity_id} href={'/opportunities/' + o.opportunity_id} className="block text-sm font-bold hover:underline" style={{ color: "#1b5e8a" }}>
                           {o.opportunity_name}
                         </Link>
                       )
                     })}
                     {policies.slice(0, 3).map(function (p: any) {
                       return (
-                        <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block text-sm font-medium hover:underline" style={{ color: "#1b5e8a" }}>
+                        <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block text-sm font-bold hover:underline" style={{ color: "#1b5e8a" }}>
                           {p.title_6th_grade || p.policy_name}
                         </Link>
                       )
@@ -640,8 +672,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
               {/* Hero Quote in sidebar */}
               {heroQuote && (
-                <div className="p-5" style={{ borderLeft: `3px solid ${themeColor}`, background: "#f4f5f7" }}>
-                  <blockquote style={{ fontStyle: 'italic', fontSize: '1.05rem', lineHeight: 1.6,  }}>
+                <div className="p-5" style={{ borderLeft: `4px solid ${themeColor}`, background: "#f4f5f7", border: '2px solid #dde1e8', borderLeftColor: themeColor, borderLeftWidth: 4 }}>
+                  <blockquote className="font-display" style={{ fontStyle: 'italic', fontSize: '1.1rem', lineHeight: 1.6, fontWeight: 600, color: '#0d1117' }}>
                     &ldquo;{heroQuote}&rdquo;
                   </blockquote>
                 </div>

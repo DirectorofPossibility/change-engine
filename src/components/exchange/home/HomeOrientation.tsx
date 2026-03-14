@@ -5,9 +5,9 @@ const CENTERS = [
   {
     href: '/centers/resources',
     motif: '/images/fol/seed-of-life.svg',
-    q: 'I need something.',
+    q: 'What\u2019s available to me?',
     name: 'Resource Center',
-    voice: 'Services, benefits, organizations, and help — find what is available to you.',
+    voice: 'Services, benefits, organizations — discover what your community offers.',
   },
   {
     href: '/centers/learning',
@@ -52,7 +52,7 @@ export function HomeOrientation() {
             How to use this guide
           </p>
           <p className="font-display text-[clamp(20px,3vw,28px)] leading-snug mb-2">
-            Start with what you need right now.
+            Start with what matters to you right now.
           </p>
           <p className="font-body text-[15px] text-muted leading-relaxed mb-8">
             This guide is organized four ways. Pick the one that matches where you are today.

@@ -39,7 +39,7 @@ export default async function BenefitsPage() {
             Benefit Programs
           </h1>
           <p style={{ fontSize: '1.1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
-            Government programs that provide financial assistance, food, healthcare, and other support to eligible Houston-area residents.
+            Government programs offering food, healthcare, income support, and other resources to Houston-area residents.
           </p>
           {allBenefits.length > 0 && (
             <div className="flex flex-wrap gap-8 mt-8">
@@ -80,7 +80,7 @@ export default async function BenefitsPage() {
                 <div className="flex flex-wrap gap-3 mt-2" style={{  }}>
                   {b.benefit_type && <span style={{ color: "#5c6474", fontSize: '0.7rem' }}>{b.benefit_type}</span>}
                   {b.benefit_amount && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>{b.benefit_amount}</span>}
-                  {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>Apply online</span>}
+                  {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>Get started</span>}
                 </div>
               </Link>
             )
@@ -103,7 +103,7 @@ export default async function BenefitsPage() {
                     <div className="flex flex-wrap gap-3 mt-2" style={{  }}>
                       {b.benefit_type && <span style={{ color: "#5c6474", fontSize: '0.7rem' }}>{b.benefit_type}</span>}
                       {b.benefit_amount && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>{b.benefit_amount}</span>}
-                      {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>Apply online</span>}
+                      {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>Get started</span>}
                     </div>
                   </Link>
                 )

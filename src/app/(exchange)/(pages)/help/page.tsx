@@ -20,8 +20,8 @@ export const revalidate = 300
 
 
 export const metadata: Metadata = {
-  title: 'Find Help — Change Engine',
-  description: 'Find services and resources for food, housing, healthcare, jobs, and more in Houston.',
+  title: 'What\u2019s Available — Change Engine',
+  description: 'Services and resources for food, housing, healthcare, jobs, and more available in Houston.',
 }
 
 export default async function HelpPage() {
@@ -44,10 +44,10 @@ export default async function HelpPage() {
             Change Engine
           </p>
           <h1 className="font-display text-4xl sm:text-5xl mb-4">
-            Find Help
+            What's Available
           </h1>
           <p className="font-body text-lg text-muted max-w-xl mx-auto leading-relaxed">
-            Search for food, housing, healthcare, jobs, and more in Houston. Type what you need below.
+            Food, housing, healthcare, jobs, and more — explore what Houston has for you.
           </p>
         </div>
       </section>
@@ -57,7 +57,7 @@ export default async function HelpPage() {
         <nav className="font-mono text-micro text-muted">
           <Link href="/" className="text-blue hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <span>Find Help</span>
+          <span>What's Available</span>
         </nav>
       </div>
 

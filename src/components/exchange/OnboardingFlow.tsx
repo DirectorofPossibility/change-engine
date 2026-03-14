@@ -9,7 +9,7 @@ import Image from 'next/image'
 import { GradientFOL } from './GradientFOL'
 
 const PERSONAS = [
-  { slug: 'seeker', label: 'Find Help', desc: 'I need services or resources.', color: '#4a2870', fol: '/images/fol/seed-of-life.svg' },
+  { slug: 'seeker', label: 'Explore Resources', desc: 'I want to see what\u2019s available.', color: '#4a2870', fol: '/images/fol/seed-of-life.svg' },
   { slug: 'learner', label: 'Learn', desc: 'I want to understand what\'s happening.', color: '#1b5e8a', fol: '/images/fol/vesica-piscis.svg' },
   { slug: 'builder', label: 'Take Action', desc: 'I want to volunteer or contribute.', color: '#1a6b56', fol: '/images/fol/tripod-of-life.svg' },
   { slug: 'watchdog', label: 'Hold Accountable', desc: 'I want to follow who makes decisions.', color: '#4a2870', fol: '/images/fol/metatrons-cube.svg' },

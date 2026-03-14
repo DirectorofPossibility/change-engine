@@ -38,7 +38,7 @@ export function HelpListClient({ situations, translations }: HelpListClientProps
       {filtered.length === 0 && (
         <div className="text-center py-12 border border-dashed border-rule">
           <p className="font-body text-muted">No resources match your search.</p>
-          <p className="font-body text-sm text-faint mt-1">Try a different term, or call <a href="tel:211" className="text-blue font-semibold hover:underline">211</a> for help.</p>
+          <p className="font-body text-sm text-faint mt-1">Try a different term, or call <a href="tel:211" className="text-blue font-semibold hover:underline">211</a> to explore options.</p>
         </div>
       )}
 

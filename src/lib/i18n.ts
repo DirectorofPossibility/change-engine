@@ -87,7 +87,7 @@ const en: Record<string, string> = {
   // Help page
   'help.title': 'Field Guide',
   'help.subtitle': 'Whatever you\u2019re dealing with, Houston has something for you. Go at your own pace.',
-  'help.emergency': 'Need help right now?',
+  'help.emergency': 'Immediate resources available',
   'help.crisis_911': '911 for emergencies',
   'help.crisis_988': '988 for mental health crisis',
   'help.crisis_dv': '1-800-799-7233 for domestic violence',
@@ -100,7 +100,7 @@ const en: Record<string, string> = {
   // Services page
   'services.title': 'Local Services',
   'services.subtitle': 'What\u2019s available near you — mapped, searchable, and free to browse.',
-  'services.intro': 'Houston runs on a deep network of services and organizations. Browse by category, search by need, or explore the map to find what\u2019s in your corner of the city.',
+  'services.intro': 'Houston runs on a deep network of services and organizations. Browse by category, explore the map, or search by topic to find what\u2019s in your corner of the city.',
 
   // Officials page
   'officials.title': 'Who Runs This',
@@ -642,12 +642,12 @@ const en: Record<string, string> = {
   'guide.label': 'Change Engine',
   'guide.houston': 'Houston, Texas',
   'guide.title': 'Hey neighbor. Need anything?',
-  'guide.subtitle': 'Services, officials, events, resources \u2014 we put it all in one place so you don\u2019t have to chase it down. Just tell us what you need.',
+  'guide.subtitle': 'Services, officials, events, resources \u2014 we put it all in one place so you don\u2019t have to chase it down. Just tell us what you\u2019re looking for.',
   'guide.search_placeholder': 'Search the guide...',
   'guide.stat_services': 'services listed',
   'guide.stat_organizations': 'local orgs',
   'guide.stat_officials': 'elected officials',
-  'guide.help_title': 'Need something? We got you.',
+  'guide.help_title': 'Your community has options.',
   'guide.help_description': 'Food, housing, clinics, job training \u2014 hundreds of free services right here in your neighborhood. We\u2019ll walk you to the door.',
   'guide.211_description': 'Dial 211 for free, confidential referrals — food, housing, health care, crisis support. 24/7, 150+ languages.',
   'guide.call_211': 'Call 211',
@@ -655,7 +655,7 @@ const en: Record<string, string> = {
   'guide.cat_food': 'Food',
   'guide.cat_health': 'Health',
   'guide.cat_jobs': 'Jobs & Training',
-  'guide.cat_legal': 'Legal Help',
+  'guide.cat_legal': 'Legal Resources',
   'guide.cat_youth': 'Youth',
   'guide.browse_services': 'Browse all services',
   'guide.browse_organizations': 'See all orgs',

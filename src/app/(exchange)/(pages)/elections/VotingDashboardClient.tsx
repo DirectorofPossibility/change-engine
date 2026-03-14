@@ -412,7 +412,7 @@ export function VotingDashboardClient({
             href="https://www.votetexas.gov/voting/vote-by-mail.html"
             external
             label="Vote by Mail"
-            description="See if you qualify and request a mail-in ballot"
+            description="Request a mail-in ballot for upcoming elections"
             mono="votetexas.gov"
           />
           <ResourceLink

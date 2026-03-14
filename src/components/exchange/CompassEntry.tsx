@@ -19,7 +19,7 @@ const FOL_PATTERNS: Record<string, string> = {
 }
 
 const ADVENTURE_PROMPTS: Record<string, string> = {
-  Resource: 'You need something. A service, a benefit, a helping hand. Your community has resources waiting for you.',
+  Resource: 'Your community has resources waiting for you. Services, benefits, and organizations ready when you are.',
   Learning: 'You want to understand. How does this work? What are your rights? Knowledge is the first step.',
   Action: 'You\'re ready to do something. Volunteer, organize, show up. Your energy can change things.',
   Accountability: 'You want answers. Who represents you? What policies affect your life? Follow the trail.',
