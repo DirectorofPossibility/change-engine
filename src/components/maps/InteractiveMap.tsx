@@ -5,7 +5,7 @@ import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { HoustonMap } from './HoustonMap'
-import { MapMarker, type MarkerData } from './MapMarker'
+import { MapMarker, type MarkerData, type MarkerType } from './MapMarker'
 import { MapLegend } from './MapLegend'
 import { GeoJsonLayer } from './GeoJsonLayer'
 import { LayerControl, type LayerOption } from './LayerControl'
@@ -30,6 +30,22 @@ interface InteractiveMapProps {
 interface SelectedFeature {
   properties: GeoFeatureProperties
   layerConfig: GeoLayerConfig
+}
+
+/** Marker type display config for layer control */
+const MARKER_TYPE_META: Record<MarkerType, { label: string; color: string }> = {
+  service:      { label: 'Services',           color: '#1b5e8a' },
+  voting:       { label: 'Voting Locations',   color: '#7a2018' },
+  organization: { label: 'Organizations',      color: '#1a6b56' },
+  distribution: { label: 'Distribution Sites', color: '#4a2870' },
+  opportunity:  { label: 'Opportunities',      color: '#4a2870' },
+  park:         { label: 'Parks',              color: '#1a6b56' },
+  police:       { label: 'Police',             color: '#1b5e8a' },
+  fire:         { label: 'Fire Stations',      color: '#7a2018' },
+  school:       { label: 'Schools',            color: '#1e4d7a' },
+  medical:      { label: 'Medical',            color: '#4a2870' },
+  library:      { label: 'Libraries',          color: '#1e4d7a' },
+  official:     { label: 'Officials',          color: '#1a5030' },
 }
 
 /** Zoom thresholds for progressive detail */
@@ -115,8 +131,20 @@ function InteractiveMapInner({
     new Set(defaultVisibleLayers)
   )
   const [selectedFeature, setSelectedFeature] = useState<SelectedFeature | null>(null)
+  const [hiddenMarkerTypes, setHiddenMarkerTypes] = useState<Set<string>>(new Set())
 
   const handleToggleLayer = useCallback((layerId: string) => {
+    // Check if this is a marker type toggle (prefixed with 'markers:')
+    if (layerId.startsWith('markers:')) {
+      const markerType = layerId.slice(8)
+      setHiddenMarkerTypes(prev => {
+        const next = new Set(prev)
+        if (next.has(markerType)) next.delete(markerType)
+        else next.add(markerType)
+        return next
+      })
+      return
+    }
     setVisibleLayerIds(prev => {
       const next = new Set(prev)
       if (next.has(layerId)) next.delete(layerId)
@@ -133,19 +161,37 @@ function InteractiveMapInner({
     [onFeatureClick]
   )
 
-  const layerOptions: LayerOption[] = useMemo(
-    () => layers.map(layer => ({
-      id: layer.id,
-      label: layer.label,
-      color: layer.color,
-      visible: visibleLayerIds.has(layer.id),
-    })),
-    [layers, visibleLayerIds]
-  )
-
   const markerTypes = useMemo(
     () => Array.from(new Set(markers.map(m => m.type))),
     [markers]
+  )
+
+  const layerOptions: LayerOption[] = useMemo(
+    () => {
+      const geoOptions = layers.map(layer => ({
+        id: layer.id,
+        label: layer.label,
+        color: layer.color,
+        visible: visibleLayerIds.has(layer.id),
+      }))
+      // Add marker type toggles when there are multiple types
+      if (markerTypes.length > 1) {
+        const markerOptions = markerTypes.map(type => ({
+          id: 'markers:' + type,
+          label: MARKER_TYPE_META[type]?.label ?? type,
+          color: MARKER_TYPE_META[type]?.color ?? '#718096',
+          visible: !hiddenMarkerTypes.has(type),
+        }))
+        return [...markerOptions, ...geoOptions]
+      }
+      return geoOptions
+    },
+    [layers, visibleLayerIds, markerTypes, hiddenMarkerTypes]
+  )
+
+  const filteredMarkers = useMemo(
+    () => hiddenMarkerTypes.size === 0 ? markers : markers.filter(m => !hiddenMarkerTypes.has(m.type)),
+    [markers, hiddenMarkerTypes]
   )
 
   const showBoundaries = currentZoom >= ZOOM_SHOW_BOUNDARIES
@@ -159,7 +205,7 @@ function InteractiveMapInner({
           center={center}
         >
           <ZoomReporter onZoomChange={handleZoom} />
-          {markers.length > 0 && <FitBounds markers={markers} />}
+          {filteredMarkers.length > 0 && <FitBounds markers={filteredMarkers} />}
 
           {/* GeoJSON boundary layers — fade in at neighborhood zoom */}
           {showBoundaries && layers.map(layer => (
@@ -185,14 +231,14 @@ function InteractiveMapInner({
             showCoverageOnHover={false}
             disableClusteringAtZoom={ZOOM_SHOW_MARKERS}
           >
-            {markers.map(m => (
+            {filteredMarkers.map(m => (
               <MapMarker key={m.id} marker={m} onClick={onMarkerClick} />
             ))}
           </MarkerClusterGroup>
         </HoustonMap>
 
         {/* Layer toggle control */}
-        {layers.length > 0 && (
+        {layerOptions.length > 0 && (
           <LayerControl layers={layerOptions} onToggle={handleToggleLayer} />
         )}
 

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 interface NewsItem {
   id: string
@@ -8,6 +9,7 @@ interface NewsItem {
   source_domain?: string | null
   published_at?: string | null
   content_type?: string | null
+  pathway_primary?: string | null
 }
 
 interface LatestContentItem {
@@ -17,6 +19,7 @@ interface LatestContentItem {
   summary_6th_grade?: string | null
   image_url?: string | null
   source_domain?: string | null
+  pathway_primary?: string | null
   [key: string]: unknown
 }
 
@@ -41,11 +44,13 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
           {newsFeed[0] && (
             <div className="mb-10">
               <Link href={'/content/' + newsFeed[0].id} className="group block">
-                {newsFeed[0].image_url && (
-                  <div className="mb-5 overflow-hidden">
+                <div className="mb-5 overflow-hidden">
+                  {newsFeed[0].image_url ? (
                     <img src={newsFeed[0].image_url} alt="" className="w-full object-cover max-h-[340px]" />
-                  </div>
-                )}
+                  ) : (
+                    <FolFallback pathway={newsFeed[0].pathway_primary} size="hero" />
+                  )}
+                </div>
                 <h3 className="font-display text-[clamp(22px,3vw,30px)] leading-tight mb-2.5 group-hover:text-blue transition-colors">
                   {newsFeed[0].title_6th_grade}
                 </h3>
@@ -82,8 +87,12 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                     </p>
                   )}
                 </div>
-                {item.image_url && (
+                {item.image_url ? (
                   <img src={item.image_url} alt="" className="w-[72px] h-[72px] object-cover shrink-0" />
+                ) : (
+                  <div className="w-[72px] h-[72px] shrink-0 overflow-hidden">
+                    <FolFallback pathway={item.pathway_primary} height="h-full" />
+                  </div>
                 )}
               </Link>
             )
@@ -135,8 +144,12 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                       </p>
                     )}
                   </div>
-                  {item.image_url && (
+                  {item.image_url ? (
                     <img src={item.image_url as string} alt="" className="w-20 h-20 object-cover shrink-0" />
+                  ) : (
+                    <div className="w-20 h-20 shrink-0 overflow-hidden">
+                      <FolFallback pathway={item.pathway_primary} height="h-full" />
+                    </div>
                   )}
                 </Link>
               )

@@ -13,7 +13,8 @@ import Link from 'next/link'
 import { ContentCard } from '@/components/exchange/ContentCard'
 import { OpportunityCard } from '@/components/exchange/OpportunityCard'
 import { PolicyCard } from '@/components/exchange/PolicyCard'
-import { ClusteredMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import { Geo } from '@/components/geo/sacred'
 import { FocusTrail, LEVEL_META } from '@/components/templates/FocusTrail'
@@ -463,7 +464,13 @@ export default async function FocusAreaDetailPage({ params }: { params: Promise<
             headingEm="Map"
           />
           <div style={{ border: '1.5px solid var(--color-rule, #dde1e8)' }}>
-            <ClusteredMap markers={opportunityMarkers} className="w-full h-[280px]" showLegend={false} />
+            <InteractiveMap
+              markers={opportunityMarkers}
+              layers={[GEO_LAYERS.superNeighborhoods]}
+              defaultVisibleLayers={[]}
+              className="w-full h-[280px]"
+              showLegend={false}
+            />
           </div>
         </section>
       )}

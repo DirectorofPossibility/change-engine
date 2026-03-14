@@ -5,7 +5,8 @@ import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import { getUIStrings } from '@/lib/i18n'
 import { Phone, Globe, MapPin, Clock, ArrowRight } from 'lucide-react'
-import { SingleLocationMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getRelatedServices } from '@/lib/data/services'
 import { getUserProfile } from '@/lib/auth/roles'
@@ -253,16 +254,22 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         {/* Location Map */}
         {(service as any).latitude != null && (service as any).longitude != null && (
           <div className="mb-10 border border-rule">
-            <SingleLocationMap
-              marker={{
+            <InteractiveMap
+              markers={[{
                 id: service.service_id,
                 lat: (service as any).latitude as number,
                 lng: (service as any).longitude as number,
                 title: service.service_name,
-                type: 'service',
+                type: 'service' as const,
                 address: fullAddress || null,
                 phone: service.phone,
-              }}
+              }]}
+              layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
+              defaultVisibleLayers={[]}
+              zoom={14}
+              center={{ lat: (service as any).latitude as number, lng: (service as any).longitude as number }}
+              showLegend={false}
+              className="w-full h-[250px]"
             />
           </div>
         )}

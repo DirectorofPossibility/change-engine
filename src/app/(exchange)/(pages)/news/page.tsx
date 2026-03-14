@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
 import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 
 export const metadata: Metadata = {
@@ -238,8 +239,8 @@ export default async function NewsPage({
                       {hasValidImage(item) ? (
                         <Image src={item.image_url!} alt="" className="w-28 h-20 object-cover flex-shrink-0" width={112} height={80} />
                       ) : (
-                        <div className="w-28 h-20 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f4f5f7' }}>
-                          <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
+                        <div className="w-28 h-20 flex-shrink-0 overflow-hidden">
+                          <FolFallback pathway={item.pathway_primary} height="h-full" />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -282,8 +283,8 @@ export default async function NewsPage({
                           {hasValidImage(item) ? (
                             <Image src={item.image_url!} alt="" className="w-20 h-14 object-cover flex-shrink-0" width={80} height={56} />
                           ) : (
-                            <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f4f5f7' }}>
-                              <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
+                            <div className="w-20 h-14 flex-shrink-0 overflow-hidden">
+                              <FolFallback pathway={item.pathway_primary} height="h-full" />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">

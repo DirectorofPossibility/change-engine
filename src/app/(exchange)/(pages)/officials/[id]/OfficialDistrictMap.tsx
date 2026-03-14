@@ -50,12 +50,20 @@ export function OfficialDistrictMap({ districtType, districtId }: OfficialDistri
 
   const featureId = extractFeatureId(districtId, districtType)
 
+  // Build context layers — show the official's district plus other boundary layers for context
+  const contextLayers = [layer]
+  const defaultVisible = [layer.id]
+
+  // Add super neighborhoods and council districts as optional context layers
+  if (layer.id !== 'councilDistricts') contextLayers.push(GEO_LAYERS.councilDistricts)
+  if (layer.id !== 'superNeighborhoods') contextLayers.push(GEO_LAYERS.superNeighborhoods)
+
   return (
     <div>
       <h3 className="text-sm font-semibold text-brand-text mb-2 uppercase tracking-wide">District Map</h3>
       <InteractiveMap
-        layers={[layer]}
-        defaultVisibleLayers={[layer.id]}
+        layers={contextLayers}
+        defaultVisibleLayers={defaultVisible}
         highlightLayerId={layer.id}
         highlightFeatureId={featureId}
         showLegend={false}

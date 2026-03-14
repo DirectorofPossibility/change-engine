@@ -23,6 +23,7 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
 import { FlowerOfLife } from '@/components/geo/sacred'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 /* ── Design Tokens ── */
 const PARCHMENT_LIGHT = '#f4f5f7'
@@ -698,7 +699,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                         <img src={r.image_url} alt="" className="w-full h-full object-cover" />
                       </div>
                     ) : (
-                      <div className="w-full h-2" style={{ background: rColor }} />
+                      <FolFallback pathway={r.pathway_primary} height="h-20" />
                     )}
                     <div className="p-4">
                       {rTheme && (

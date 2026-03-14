@@ -1,6 +1,7 @@
 'use client'
 
-import { ClusteredMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import type { MarkerData } from '@/components/maps/MapMarker'
 
 interface VotingLocationData {
@@ -32,7 +33,12 @@ export function VotingLocationsMap({ locations }: VotingLocationsMapProps) {
 
   return (
     <div className="mb-6">
-      <ClusteredMap markers={markers} showLegend={false} />
+      <InteractiveMap
+        markers={markers}
+        layers={[GEO_LAYERS.councilDistricts, GEO_LAYERS.superNeighborhoods]}
+        defaultVisibleLayers={[]}
+        showLegend={false}
+      />
     </div>
   )
 }

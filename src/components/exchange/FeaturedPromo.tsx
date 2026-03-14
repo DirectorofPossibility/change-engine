@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Megaphone } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Image from 'next/image'
+import { FolFallback } from '@/components/ui/FolFallback'
 import { useSiteConfig } from '@/lib/contexts/SiteConfigContext'
 
 interface Promotion {
@@ -102,8 +103,8 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
           ) : promo.logo_url ? (
             <Image src={promo.logo_url} alt="" className="w-16 h-16 object-contain flex-shrink-0 bg-white p-1 border border-rule"  width={48} height={64} />
           ) : (
-            <div className="w-16 h-16 flex items-center justify-center flex-shrink-0 bg-paper border border-rule">
-              <Megaphone size={24} className="text-blue" />
+            <div className="w-16 h-16 flex-shrink-0 overflow-hidden border border-rule">
+              <FolFallback height="h-full" />
             </div>
           )}
           <div className="flex-1 min-w-0">

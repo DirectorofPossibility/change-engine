@@ -209,7 +209,25 @@ async function approveItemCore(
 
   await Promise.allSettled(junctionInserts)
 
-  // Step 6: Bridge research content to kb_documents (library)
+  // Step 6: Trigger translation immediately (fire and forget)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY
+  if (supabaseUrl && supabaseKey) {
+    fetch(`${supabaseUrl}/functions/v1/translate-content`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+      body: JSON.stringify({
+        inbox_id: inboxId,
+        languages: ['es', 'vi'],
+        mode: 'single',
+      }),
+    }).catch(function () { /* non-blocking */ })
+  }
+
+  // Step 7: Bridge research content to kb_documents (library)
   const LIBRARY_TYPES = ['report', 'guide', 'tool']
   if (LIBRARY_TYPES.includes(contentType)) {
     const keyPoints = (classification as any).key_points || []

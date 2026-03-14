@@ -13,6 +13,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getExchangeStats, getLatestContent, getPathwayCounts } from '@/lib/data/exchange'
 import { THEMES, CENTERS, CENTER_COLORS } from '@/lib/constants'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 export const revalidate = 600
 
@@ -323,9 +324,7 @@ export default async function ExchangeHomePage() {
                     <Image src={featured.image_url} alt="" className="w-full h-full object-cover" width={800} height={400} />
                   </div>
                 ) : (
-                  <div className="h-[220px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(199,91,42,0.08), rgba(199,91,42,0.16))' }}>
-                    <Image src="/images/fol/seed-of-life.svg" alt="" width={64} height={64} className="opacity-20" />
-                  </div>
+                  <FolFallback pathway={featured.pathway_primary} size="hero" />
                 )}
                 <div className="p-4">
                   <h4 className="font-serif text-[16px] font-bold leading-snug mb-1.5" style={{ color: '#1A1A1A' }}>
@@ -368,8 +367,8 @@ export default async function ExchangeHomePage() {
                         <Image src={item.image_url} alt="" className="w-full h-full object-cover" width={800} height={400} />
                       </div>
                     ) : (
-                      <div className="w-[110px] flex-shrink-0 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${theme?.color || '#C75B2A'}15, ${theme?.color || '#C75B2A'}30)` }}>
-                        <Image src="/images/fol/seed-of-life.svg" alt="" width={32} height={32} className="opacity-20" />
+                      <div className="w-[110px] flex-shrink-0 overflow-hidden">
+                        <FolFallback pathway={item.pathway_primary} height="h-full" />
                       </div>
                     )}
                     <div className="flex-1 p-3.5 min-w-0">

@@ -1,6 +1,7 @@
 'use client'
 
-import { ClusteredMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg } from '@/lib/types/exchange'
 
@@ -40,7 +41,12 @@ export function HelpMap({ services, opportunities }: HelpMapProps) {
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold text-brand-text mb-4">Nearby Resources</h2>
-      <ClusteredMap markers={markers} className="w-full h-[350px]" />
+      <InteractiveMap
+        markers={markers}
+        layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
+        defaultVisibleLayers={[]}
+        className="w-full h-[350px]"
+      />
     </div>
   )
 }

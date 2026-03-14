@@ -1,6 +1,7 @@
 'use client'
 
-import { ClusteredMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import type { MarkerData, MarkerType } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg, MapMarkerData } from '@/lib/types/exchange'
 
@@ -80,7 +81,12 @@ export function NeighborhoodMap({ services, votingLocations, distributionSites, 
         Neighborhood Map
       </span>
       <div style={{ border: '1px solid #dde1e8' }}>
-        <ClusteredMap markers={markers} className="w-full h-[400px]" />
+        <InteractiveMap
+          markers={markers}
+          layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
+          defaultVisibleLayers={['superNeighborhoods']}
+          className="w-full h-[400px]"
+        />
       </div>
     </div>
   )

@@ -13,6 +13,7 @@ import { CompactCircleGraph } from './CompactCircleGraph'
 import { WayfinderTooltipPos } from './WayfinderTooltips'
 import { WayfinderTracker } from './WayfinderTracker'
 import Image from 'next/image'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 interface DetailWayfinderProps {
   data: WayfinderData
@@ -362,7 +363,9 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
               {c.image_url ? (
                 <Image src={c.image_url} alt="" className="w-12 h-9 rounded object-contain bg-brand-bg flex-shrink-0" width={200} height={36} />
               ) : (
-                <div className="w-12 h-9 rounded flex-shrink-0" style={{ backgroundColor: (color || '#6B6560') + '20' }} />
+                <div className="w-12 h-9 rounded flex-shrink-0 overflow-hidden">
+                  <FolFallback pathway={c.pathway_primary} height="h-full" />
+                </div>
               )}
               <div className="min-w-0">
                 <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ backgroundColor: color || '#6B6560' }} />

@@ -4,7 +4,8 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { SearchBar } from '@/components/exchange/SearchBar'
 import { ServiceCard } from '@/components/exchange/ServiceCard'
-import { ClusteredMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg, TranslationMap } from '@/lib/types/exchange'
@@ -187,7 +188,13 @@ export function ServicesClient({ services, translations = {}, categories, initia
 
       {view === 'map' ? (
         markers.length > 0 ? (
-          <ClusteredMap markers={markers} showLegend={false} className="w-full h-[500px]" />
+          <InteractiveMap
+            markers={markers}
+            layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
+            defaultVisibleLayers={[]}
+            showLegend={false}
+            className="w-full h-[500px]"
+          />
         ) : (
           <p className="text-center text-brand-muted py-12">No services with location data found.</p>
         )

@@ -1,6 +1,7 @@
 'use client'
 
-import { ClusteredMap } from '@/components/maps/dynamic'
+import { InteractiveMap } from '@/components/maps/dynamic'
+import { GEO_LAYERS } from '@/lib/constants'
 import type { MarkerData } from '@/components/maps/MapMarker'
 import type { ServiceWithOrg } from '@/lib/types/exchange'
 
@@ -32,7 +33,13 @@ export function DashboardCoverageMap({ services }: DashboardCoverageMapProps) {
       <p className="text-sm text-brand-muted mb-4">
         {markers.length} services with verified locations across Houston
       </p>
-      <ClusteredMap markers={markers} showLegend={false} className="w-full h-[400px]" />
+      <InteractiveMap
+        markers={markers}
+        layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
+        defaultVisibleLayers={[]}
+        showLegend={false}
+        className="w-full h-[400px]"
+      />
     </div>
   )
 }

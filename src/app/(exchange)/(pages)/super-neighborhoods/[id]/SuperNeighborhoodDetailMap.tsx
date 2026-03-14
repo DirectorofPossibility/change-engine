@@ -9,7 +9,7 @@ interface SuperNeighborhoodDetailMapProps {
   snId: string
 }
 
-const layers = [GEO_LAYERS.superNeighborhoods]
+const layers = [GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts, GEO_LAYERS.zipCodes]
 
 export function SuperNeighborhoodDetailMap({ markers, snId }: SuperNeighborhoodDetailMapProps) {
   return (
