@@ -17,17 +17,17 @@ import Link from 'next/link'
 
 // ── Shared gradient animation ─────────────────────────────────────
 
-const BRAND_COLORS = '#C75B2A;#1b5e8a;#6a4e10;#7a2018;#4a2870;#C75B2A'
+const BRAND_COLORS = '#1a6b56;#1b5e8a;#3a4a2a;#5c2d3e;#4a2870;#1a6b56'
 
 function AnimatedGradient({ id, dur = 8 }: { id: string; dur?: number }) {
   return (
     <defs>
       <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#C75B2A">
+        <stop offset="0%" stopColor="#1a6b56">
           <animate attributeName="stop-color" values={BRAND_COLORS} dur={`${dur}s`} repeatCount="indefinite" />
         </stop>
-        <stop offset="100%" stopColor="#6a4e10">
-          <animate attributeName="stop-color" values="#6a4e10;#7a2018;#4a2870;#C75B2A;#1b5e8a;#6a4e10" dur={`${dur}s`} repeatCount="indefinite" />
+        <stop offset="100%" stopColor="#3a4a2a">
+          <animate attributeName="stop-color" values="#3a4a2a;#5c2d3e;#4a2870;#1a6b56;#1b5e8a;#3a4a2a" dur={`${dur}s`} repeatCount="indefinite" />
         </stop>
       </linearGradient>
     </defs>

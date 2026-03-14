@@ -70,33 +70,41 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       )}
 
       {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
+      <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1b5e8a, #1b5e8a55)' }}>
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" fill="none">
+          <g opacity="0.1">
+            {[0, 1, 2, 3, 4, 5, 6].map(i => {
+              const r = 10; const cx = 100; const cy = 50
+              const offsets = [[0, 0], [r, 0], [-r, 0], [r / 2, -r * 0.866], [-r / 2, -r * 0.866], [r / 2, r * 0.866], [-r / 2, r * 0.866]]
+              const [dx, dy] = offsets[i]
+              return <circle key={i} cx={cx + dx} cy={cy + dy} r={r} stroke="white" strokeWidth="0.4" />
+            })}
+            <circle cx={100} cy={50} r={22} stroke="white" strokeWidth="0.25" />
+          </g>
+        </svg>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "rgba(255,255,255,0.7)", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex flex-wrap items-center gap-3 mt-3">
             {event.event_type && (
-              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "#5c6474" }}>{event.event_type}</span>
+              <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: "rgba(255,255,255,0.7)" }}>{event.event_type}</span>
             )}
             {event.is_free === 'true' && (
-              <span style={{ fontSize: '0.65rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 500, color: '#a3d9a3' }}>Free</span>
             )}
             {event.is_virtual === 'true' && (
-              <span className="flex items-center gap-1" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1" style={{ fontSize: '0.65rem', color: "rgba(255,255,255,0.7)" }}>
                 <Video className="w-3 h-3" /> Virtual
               </span>
             )}
           </div>
-          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem', color: '#ffffff' }}>
             {event.event_name}
           </h1>
           <div className="flex flex-wrap items-center gap-4 mt-4">
             {startDate && (
-              <span className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-2" style={{ fontSize: '0.9rem', color: "rgba(255,255,255,0.8)" }}>
                 <Clock className="w-4 h-4" />
                 {startDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                 {' at '}

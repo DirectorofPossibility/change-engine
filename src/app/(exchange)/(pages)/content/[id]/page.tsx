@@ -310,7 +310,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
          ══════════════════════════════════════════════════════════════════ */}
       <section
         className="relative overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, #C75B2A 100%)` }}
+        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, ${themeColor}55 100%)` }}
       >
         <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
 
@@ -458,7 +458,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                         <div key={i} className="flex items-center gap-4 mt-10 first:mt-0 pb-3" style={{ borderBottom: `1px solid ${RULE}` }}>
                           <span
                             className="w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 text-white font-bold text-sm"
-                            style={{ background: `linear-gradient(135deg, ${themeColor} 0%, #C75B2A 100%)` }}
+                            style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}88 100%)` }}
                           >
                             {sectionNumber}
                           </span>
@@ -689,9 +689,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               <div className="lg:sticky lg:top-4 space-y-0 rounded-2xl overflow-hidden" style={{ border: '2px solid #1a1a1a', background: 'white' }}>
 
                 {/* Wayfinder Header */}
-                <div className="px-6 pt-6 pb-4" style={{ borderBottom: '3px solid transparent', borderImage: `linear-gradient(90deg, ${themeColor}, #C75B2A) 1` }}>
+                <div className="px-6 pt-6 pb-4" style={{ borderBottom: '3px solid transparent', borderImage: `linear-gradient(90deg, ${themeColor}, ${themeColor}66) 1` }}>
                   <h2 className="font-display text-lg font-black uppercase tracking-[0.05em] mb-1"
-                    style={{ background: `linear-gradient(135deg, ${themeColor}, #C75B2A)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                    style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}88)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
                   >
                     Wayfinder
                   </h2>
@@ -997,7 +997,7 @@ function ActionCard({ href, icon, label, desc, cta, themeColor }: { href: string
       <h4 className="font-bold mb-2">{label}</h4>
       <p className="text-sm mb-4" style={{ color: DIM }}>{desc}</p>
       <span className="inline-block px-5 py-2 rounded-full text-white text-xs font-bold uppercase tracking-wider"
-        style={{ background: `linear-gradient(135deg, ${themeColor}, #C75B2A)` }}
+        style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}88)` }}
       >{cta} &rarr;</span>
     </a>
   )

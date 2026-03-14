@@ -20,8 +20,8 @@ const PATHWAY_GRADIENTS: Record<string, { from: string; to: string; angle: numbe
   THEME_01: { from: '#1a6b56', to: '#0a2a22', angle: 135 },
   THEME_02: { from: '#1e4d7a', to: '#0e2a45', angle: 150 },
   THEME_03: { from: '#4a2870', to: '#2a1640', angle: 120 },
-  THEME_04: { from: '#7a2018', to: '#4a1210', angle: 160 },
-  THEME_05: { from: '#6a4e10', to: '#3a2a08', angle: 140 },
+  THEME_04: { from: '#5c2d3e', to: '#2a1520', angle: 160 },
+  THEME_05: { from: '#3a4a2a', to: '#1a2812', angle: 140 },
   THEME_06: { from: '#1a5030', to: '#0a2818', angle: 130 },
   THEME_07: { from: '#1b5e8a', to: '#0a1a30', angle: 145 },
 }

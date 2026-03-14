@@ -69,13 +69,14 @@ export function ContentCard({
   return (
     <Wrapper {...wrapperProps as any}>
       {imageUrl ? (
-        <div className="w-full h-36 relative border-b border-rule">
+        <div className="w-full h-36 relative border-b border-rule flex items-center justify-center overflow-hidden">
+          <FolFallback pathway={pathway} className="absolute inset-0" />
           <Image
             src={imageUrl}
             alt={displayTitle}
             width={400}
             height={144}
-            className="w-full h-full object-cover"
+            className="max-w-full max-h-full w-auto h-auto object-contain relative z-10"
           />
         </div>
       ) : (

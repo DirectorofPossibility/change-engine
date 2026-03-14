@@ -101,10 +101,38 @@ export function DetailPageLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
-      {/* ── HERO IMAGE — full bleed ── */}
-      {heroImage && (
+      {/* ── HERO IMAGE — full bleed, or FOL fallback ── */}
+      {heroImage ? (
         <div className="w-full">
           {heroImage}
+        </div>
+      ) : (
+        <div
+          className="w-full h-24 relative overflow-hidden"
+          style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}55)` }}
+        >
+          <svg
+            className="absolute inset-0 w-full h-full"
+            viewBox="0 0 200 50"
+            preserveAspectRatio="xMidYMid slice"
+            fill="none"
+          >
+            <g opacity="0.12">
+              {[0, 1, 2, 3, 4, 5, 6].map(i => {
+                const r = 8
+                const cx = 100
+                const cy = 25
+                const offsets = [
+                  [0, 0], [r, 0], [-r, 0],
+                  [r / 2, -r * 0.866], [-r / 2, -r * 0.866],
+                  [r / 2, r * 0.866], [-r / 2, r * 0.866],
+                ]
+                const [dx, dy] = offsets[i]
+                return <circle key={i} cx={cx + dx} cy={cy + dy} r={r} stroke="white" strokeWidth="0.4" />
+              })}
+              <circle cx={100} cy={25} r={18} stroke="white" strokeWidth="0.25" />
+            </g>
+          </svg>
         </div>
       )}
 

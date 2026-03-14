@@ -107,15 +107,23 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       <SpiralTracker action="view_opportunity" />
 
       {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
+      <div className="relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${themeColor || '#1b5e8a'}, ${themeColor || '#1b5e8a'}55)` }}>
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid slice" fill="none">
+          <g opacity="0.1">
+            {[0, 1, 2, 3, 4, 5, 6].map(i => {
+              const r = 10; const cx = 100; const cy = 50
+              const offsets = [[0, 0], [r, 0], [-r, 0], [r / 2, -r * 0.866], [-r / 2, -r * 0.866], [r / 2, r * 0.866], [-r / 2, r * 0.866]]
+              const [dx, dy] = offsets[i]
+              return <circle key={i} cx={cx + dx} cy={cy + dy} r={r} stroke="white" strokeWidth="0.4" />
+            })}
+            <circle cx={100} cy={50} r={22} stroke="white" strokeWidth="0.25" />
+          </g>
+        </svg>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "rgba(255,255,255,0.7)", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
+          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem', color: '#ffffff' }}>
             {displayName}
           </h1>
           {org && (
@@ -123,24 +131,24 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               {org.logo_url && (
                 <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0" style={{ border: '1px solid #dde1e8' }} width={48} height={48} />
               )}
-              <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ fontSize: '0.95rem', color: "#1b5e8a" }}>
+              <Link href={'/organizations/' + org.org_id} className="hover:underline" style={{ fontSize: '0.95rem', color: "rgba(255,255,255,0.9)" }}>
                 {org.org_name}
               </Link>
             </div>
           )}
           <div className="flex flex-wrap gap-4 mt-4">
             {opportunity.start_date && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.65rem', color: "rgba(255,255,255,0.7)" }}>
                 <Calendar size={14} /> Starts {new Date(opportunity.start_date).toLocaleDateString()}
               </span>
             )}
             {opportunity.end_date && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.65rem', color: "rgba(255,255,255,0.7)" }}>
                 <Calendar size={14} /> Ends {new Date(opportunity.end_date).toLocaleDateString()}
               </span>
             )}
             {displayLocation && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.65rem', color: "rgba(255,255,255,0.7)" }}>
                 <MapPin size={14} /> {displayLocation}
               </span>
             )}

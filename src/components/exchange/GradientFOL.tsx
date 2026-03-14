@@ -27,7 +27,7 @@ interface GradientFOLProps {
   strokeOpacity?: number
 }
 
-const BRAND_COLORS = '#C75B2A;#1b5e8a;#6a4e10;#7a2018;#4a2870;#C75B2A'
+const BRAND_COLORS = '#1a6b56;#1b5e8a;#3a4a2a;#5c2d3e;#4a2870;#1a6b56'
 
 function shiftColors(colors: string, offset: number): string {
   const parts = colors.split(';')
@@ -145,7 +145,7 @@ function FOLDivider({
   className: string
 }) {
   // 7 overlapping circles in a row (one per pathway color)
-  const PATHWAY_COLORS = ['#1a6b56', '#1e4d7a', '#4a2870', '#7a2018', '#6a4e10', '#1a5030', '#1b5e8a']
+  const PATHWAY_COLORS = ['#1a6b56', '#1e4d7a', '#4a2870', '#5c2d3e', '#3a4a2a', '#1a5030', '#1b5e8a']
   const circleR = 8
   const spacing = 13
   const totalW = spacing * 6 + circleR * 2
