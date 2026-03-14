@@ -12,6 +12,7 @@ import {
   ChevronDown, Scale, Megaphone, MapPin,
   Tag, Network, Linkedin, CircleDot, Map,
   Layers, Activity, SlidersHorizontal, Settings,
+  TrendingUp, HeartPulse, Clock, BarChart3,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -63,6 +64,16 @@ const ADMIN_GROUPS: NavGroup[] = [
       { href: '/dashboard/circles', label: 'Circle Graph', icon: CircleDot },
       { href: '/dashboard/fidelity', label: 'Fidelity Check', icon: Layers },
       { href: '/dashboard/analytics', label: 'Engagement', icon: Activity },
+    ],
+  },
+  {
+    label: 'Operations',
+    items: [
+      { href: '/dashboard/content-performance', label: 'Content Performance', icon: TrendingUp },
+      { href: '/dashboard/sync-health', label: 'Sync Health', icon: HeartPulse },
+      { href: '/dashboard/translation-coverage', label: 'Translation Coverage', icon: Languages },
+      { href: '/dashboard/data-freshness', label: 'Data Freshness', icon: Clock },
+      { href: '/dashboard/traffic', label: 'Traffic & SEO', icon: BarChart3 },
     ],
   },
   {
