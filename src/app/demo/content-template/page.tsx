@@ -732,30 +732,7 @@ export default async function ContentTemplateDemo() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════════
-          SECTION 3: CTA FOOTER
-         ══════════════════════════════════════════════════════════════════ */}
-      <section style={{ background: INK }} className="text-center">
-        <div className="max-w-[820px] mx-auto px-6 py-12">
-          <h2 className="font-display text-2xl font-black text-white mb-3">Ready to go deeper?</h2>
-          <p className="text-white/70 mb-6">Explore more resources along this pathway or find community organizations working on these issues.</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            {themeSlug && (
-              <Link href={'/pathways/' + themeSlug}
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-white text-sm font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
-                style={{ background: `linear-gradient(135deg, ${themeColor}, #C75B2A)` }}
-              >
-                Explore {themeEntry?.name} &rarr;
-              </Link>
-            )}
-            <Link href="/explore"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-full border-2 border-white/30 text-white text-sm font-bold transition-all hover:border-white/60"
-            >
-              Browse All Resources
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Site footer is rendered by the layout */}
     </>
   )
 }
