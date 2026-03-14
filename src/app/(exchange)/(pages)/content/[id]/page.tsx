@@ -308,25 +308,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             className="font-display font-black leading-[1.1] tracking-[-0.02em] text-ink"
             style={{
               fontSize: 'clamp(26px, 4vw, 42px)',
-              marginBottom: summary ? '0.75rem' : '1rem',
+              marginBottom: '1rem',
             }}
           >
             {title}
           </h1>
-
-          {/* Summary / deck */}
-          {summary && (
-            <p
-              className="font-body italic leading-[1.7] max-w-[700px]"
-              style={{
-                fontSize: 'clamp(15px, 2vw, 18px)',
-                color: '#5c6474',
-                marginBottom: '1rem',
-              }}
-            >
-              {summary}
-            </p>
-          )}
 
           {/* Metadata strip */}
           <div className="font-mono text-[0.6875rem] uppercase tracking-[0.1em] text-dim flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -389,30 +375,30 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
               {/* Body */}
               {bodyBlocks.length > 0 ? (
-                <div className="space-y-4">
-                  <span className="block mb-2" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.article')}</span>
+                <div className="space-y-5 font-body">
+                  <span className="block mb-2 font-mono" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.article')}</span>
                   {bodyBlocks.map(function (block, i) {
                     if (!block) return null
                     if (block.startsWith('## ')) {
                       sectionNumber++
                       return (
-                        <div key={i} className="flex items-baseline gap-2.5 mt-6 first:mt-0 pb-1.5" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
+                        <div key={i} className="flex items-baseline gap-2.5 mt-8 first:mt-0 pb-2" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
                           <span
-                            className="flex-shrink-0"
+                            className="flex-shrink-0 font-mono"
                             style={{ fontSize: '0.75rem', fontWeight: 700, color: themeColor }}
                           >
                             {String(sectionNumber).padStart(2, '0')}
                           </span>
-                          <h2 style={{ fontSize: '1.15rem', fontWeight: 700,  }}>{block.replace(/^## /, '')}</h2>
+                          <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 700 }}>{block.replace(/^## /, '')}</h2>
                         </div>
                       )
                     }
                     if (block.match(/^[-\u2022*] /m)) {
                       const items = block.split(/\n/).filter(function (l) { return l.trim() })
                       return (
-                        <ul key={i} className="space-y-1 ml-5" style={{ fontSize: 16, lineHeight: 1.8, listStyleType: 'disc' }}>
+                        <ul key={i} className="space-y-1.5 ml-5" style={{ fontSize: '1.0625rem', lineHeight: 1.85, listStyleType: 'disc' }}>
                           {items.map(function (li, j) {
-                            return <li key={j} style={{ color: "#1b5e8a" }}><span style={{  }}>{li.replace(/^[-\u2022*]\s*/, '').trim()}</span></li>
+                            return <li key={j} style={{ color: "#1b5e8a" }}><span className="text-ink">{li.replace(/^[-\u2022*]\s*/, '').trim()}</span></li>
                           })}
                         </ul>
                       )
@@ -423,9 +409,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                       const firstChar = block.charAt(0)
                       const rest = block.slice(1)
                       return (
-                        <p key={i} style={{ fontSize: 16, lineHeight: 1.8 }}>
+                        <p key={i} className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>
                           <span
-                            className="float-left mr-2 mt-1"
+                            className="float-left mr-2.5 mt-1 font-display"
                             style={{ fontSize: '3.5rem', fontWeight: 900, lineHeight: 0.8, color: themeColor }}
                           >
                             {firstChar}
@@ -437,7 +423,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     if (block.match(/\*\*[^*]+\*\*/)) {
                       const parts = block.split(/(\*\*[^*]+\*\*)/)
                       return (
-                        <p key={i} style={{ fontSize: 16, lineHeight: 1.8 }}>
+                        <p key={i} className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>
                           {parts.map(function (part, j) {
                             if (part.startsWith('**') && part.endsWith('**')) {
                               return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>
@@ -447,16 +433,16 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                         </p>
                       )
                     }
-                    return <p key={i} style={{ fontSize: 16, lineHeight: 1.8 }}>{block}</p>
+                    return <p key={i} className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>{block}</p>
                   })}
                 </div>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-6 font-body">
                   {/* Show summary as body text when no body content */}
                   {summary && (
                     <div>
-                      <span className="block mb-2" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.article')}</span>
-                      <p style={{ fontSize: 16, lineHeight: 1.8 }}>{summary}</p>
+                      <span className="block mb-2 font-mono" style={{ fontSize: '0.6875rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: "#5c6474" }}>{t('content.article')}</span>
+                      <p className="text-ink" style={{ fontSize: '1.0625rem', lineHeight: 1.85 }}>{summary}</p>
                     </div>
                   )}
                   {item.source_url && (

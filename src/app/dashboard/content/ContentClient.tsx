@@ -286,13 +286,19 @@ export function ContentClient({ initialItems }: { initialItems: ContentPublished
                 <label className="block text-sm font-medium mb-1">Content Type</label>
                 <select name="content_type" defaultValue={(editing as any).content_type || ''} className="w-full border border-brand-border rounded-lg px-3 py-2 text-sm">
                   <option value="">--</option>
-                  <option value="news">News</option>
-                  <option value="event">Event</option>
-                  <option value="resource">Resource</option>
-                  <option value="guide">Guide</option>
-                  <option value="report">Report</option>
-                  <option value="opinion">Opinion</option>
                   <option value="announcement">Announcement</option>
+                  <option value="article">Article</option>
+                  <option value="campaign">Campaign</option>
+                  <option value="course">Course</option>
+                  <option value="event">Event</option>
+                  <option value="guide">Guide</option>
+                  <option value="news">News</option>
+                  <option value="opportunity">Opportunity</option>
+                  <option value="opinion">Opinion</option>
+                  <option value="report">Report</option>
+                  <option value="resource">Resource</option>
+                  <option value="tool">Tool</option>
+                  <option value="video">Video</option>
                 </select>
               </div>
               <div>
