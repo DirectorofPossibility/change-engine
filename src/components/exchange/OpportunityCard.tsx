@@ -36,7 +36,7 @@ export function OpportunityCard({
     >
       <h4 className="font-semibold text-ink text-sm mb-2 line-clamp-2">{displayName}</h4>
       {displayDesc && (
-        <p className="text-xs text-muted mb-3 line-clamp-2">{displayDesc}</p>
+        <p className="text-xs text-muted mb-3 line-clamp-2">{displayDesc.length > 150 ? displayDesc.slice(0, 150) + '...' : displayDesc}</p>
       )}
       <div className="space-y-1.5 text-xs text-muted">
         {startDate && (

@@ -68,7 +68,7 @@ export function LibraryCard({
           {/* Summary */}
           {summary && (
             <p className="text-sm text-brand-muted mt-2 line-clamp-3 leading-relaxed flex-1">
-              {summary}
+              {summary.length > 150 ? summary.slice(0, 150) + '...' : summary}
             </p>
           )}
 

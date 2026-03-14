@@ -172,7 +172,7 @@ function ContentVariant(props: ContentProps) {
   const { t } = useTranslation()
   const displayTitle = props.translatedTitle || props.title
   const raw = props.translatedSummary || props.summary
-  const displaySummary = raw.length > 300 ? raw.slice(0, 300) + '...' : raw
+  const displaySummary = raw.length > 150 ? raw.slice(0, 150) + '...' : raw
 
   return (
     <CardShell href={props.onSelect ? undefined : (props.href || '/content/' + props.id)} onSelect={props.onSelect}>

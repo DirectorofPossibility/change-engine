@@ -32,7 +32,7 @@ export function CandidateCard({
         {officeSought && <span>{officeSought}</span>}
         {district && <span>({district})</span>}
       </div>
-      {bioSummary && <p className="text-sm text-muted mb-2 line-clamp-3">{bioSummary}</p>}
+      {bioSummary && <p className="text-sm text-muted mb-2 line-clamp-3">{bioSummary.length > 150 ? bioSummary.slice(0, 150) + '...' : bioSummary}</p>}
       {policyPositions && <p className="text-xs text-muted mb-2 line-clamp-2">Positions: {policyPositions}</p>}
       {endorsements && <p className="text-xs text-muted mb-2 line-clamp-1">Endorsements: {endorsements}</p>}
       <div className="flex items-center gap-3 flex-wrap">

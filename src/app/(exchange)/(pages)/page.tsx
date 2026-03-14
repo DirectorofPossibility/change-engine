@@ -217,7 +217,7 @@ export default async function ExchangeHomePage() {
                     {featured.title_6th_grade || (featured as any).title}
                   </h4>
                   {(featured as any).summary_6th_grade && (
-                    <p className="text-[14px] line-clamp-2" style={{ color: '#6B6560' }}>{(featured as any).summary_6th_grade}</p>
+                    <p className="text-[14px] line-clamp-2" style={{ color: '#6B6560' }}>{(featured as any).summary_6th_grade.length > 150 ? (featured as any).summary_6th_grade.slice(0, 150) + '...' : (featured as any).summary_6th_grade}</p>
                   )}
                   <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid rgba(226,221,213,0.5)' }}>
                     <div className="flex items-center gap-1.5">
@@ -267,7 +267,7 @@ export default async function ExchangeHomePage() {
                         {item.title_6th_grade || item.title}
                       </h4>
                       {item.summary_6th_grade && (
-                        <p className="text-[13px] mt-1 line-clamp-2" style={{ color: '#6B6560' }}>{item.summary_6th_grade}</p>
+                        <p className="text-[13px] mt-1 line-clamp-2" style={{ color: '#6B6560' }}>{item.summary_6th_grade.length > 150 ? item.summary_6th_grade.slice(0, 150) + '...' : item.summary_6th_grade}</p>
                       )}
                       <div className="flex items-center justify-between mt-2">
                         <span className="text-[12px]" style={{ color: '#6B6560' }}>{item.source_domain || ''}</span>

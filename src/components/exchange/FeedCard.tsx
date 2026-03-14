@@ -128,7 +128,7 @@ function ResourceCard({ item, variant, t }: { item: FeedItem; variant: 'grid' | 
           </h4>
           {item.summary && (
             <p className="text-sm text-brand-muted mt-1.5 leading-relaxed line-clamp-2">
-              {item.summary}
+              {item.summary.length > 150 ? item.summary.slice(0, 150) + '...' : item.summary}
             </p>
           )}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-brand-border/50">

@@ -77,7 +77,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
         <h4 className="font-bold text-ink text-sm mb-1.5 line-clamp-2 leading-snug group-hover:text-blue transition-colors">{displayName}</h4>
 
         {displaySummary && (
-          <p className="text-xs text-muted mb-2 line-clamp-2 leading-relaxed">{displaySummary}</p>
+          <p className="text-xs text-muted mb-2 line-clamp-2 leading-relaxed">{displaySummary.length > 150 ? displaySummary.slice(0, 150) + '...' : displaySummary}</p>
         )}
 
         {impactPreview && (

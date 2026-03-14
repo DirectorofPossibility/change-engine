@@ -61,7 +61,7 @@ export function ContentCard({
   const { t } = useTranslation()
   const displayTitle = translatedTitle || title
   const rawSummary = translatedSummary || summary
-  const displaySummary = rawSummary.length > 300 ? rawSummary.slice(0, 300) + '...' : rawSummary
+  const displaySummary = rawSummary.length > 150 ? rawSummary.slice(0, 150) + '...' : rawSummary
   const Wrapper = onSelect ? 'div' : Link
   const wrapperProps = onSelect
     ? { role: 'button' as const, tabIndex: 0, onClick: onSelect, onKeyDown: function (e: React.KeyboardEvent) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect() } }, className: 'block bg-white border border-rule overflow-hidden hover:border-ink transition-colors cursor-pointer' }
