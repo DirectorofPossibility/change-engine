@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { getOrganizations } from '@/lib/data/exchange'
-import { getOrganizationsWithCoords } from '@/lib/data/organizations'
+import { getOrganizations } from '@/lib/data/organizations'
 import { OrganizationsClient } from './OrganizationsClient'
 import { IndexPageHero } from '@/components/exchange/IndexPageHero'
 import { Breadcrumb } from '@/components/exchange/Breadcrumb'
@@ -20,24 +18,7 @@ export default async function OrganizationsPage() {
   const cookieStore = await cookies()
   const userZip = cookieStore.get('zip')?.value || ''
 
-  const [allOrgs, localOrgs] = await Promise.all([
-    getOrganizations(),
-    userZip ? getOrganizationsWithCoords(userZip) : Promise.resolve([]),
-  ])
-
-  // If ZIP available, put local orgs first via server-side query
-  let organizations: typeof allOrgs
-  if (localOrgs.length > 0) {
-    const localIds = new Set(localOrgs.map((o: any) => o.org_id))
-    const rest = allOrgs.filter((o: any) => !localIds.has(o.org_id))
-    // Map local orgs to match allOrgs shape, then append rest
-    organizations = [
-      ...allOrgs.filter((o: any) => localIds.has(o.org_id)),
-      ...rest,
-    ]
-  } else {
-    organizations = allOrgs
-  }
+  const organizations = await getOrganizations({ limit: 1000 })
 
   return (
     <div className="bg-paper min-h-screen">
@@ -52,7 +33,7 @@ export default async function OrganizationsPage() {
 
       {/* Main content */}
       <div className="max-w-[900px] mx-auto px-6 py-8">
-        <OrganizationsClient organizations={organizations} />
+        <OrganizationsClient organizations={organizations} userZip={userZip} />
         <PageCrossLinks preset="resources" />
       </div>
     </div>
