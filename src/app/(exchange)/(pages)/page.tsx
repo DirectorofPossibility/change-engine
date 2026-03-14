@@ -62,7 +62,7 @@ export default async function ExchangeHomePage() {
         </div>
 
         <div className="relative z-10 max-w-[1152px] mx-auto px-8 py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_420px] gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_540px] gap-8 items-center">
             {/* Left — copy + search */}
             <div>
               <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>

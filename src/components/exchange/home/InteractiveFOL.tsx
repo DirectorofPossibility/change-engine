@@ -102,7 +102,7 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
   const avatarR = 18
 
   return (
-    <div className="relative w-full max-w-[504px] mx-auto">
+    <div className="relative w-full max-w-[620px] mx-auto">
       <svg
         viewBox="0 0 400 400"
         className="w-full h-auto"
