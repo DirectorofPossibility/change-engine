@@ -121,16 +121,26 @@ export function CompassClient({
         </div>
 
         <div className="max-w-[640px] mx-auto px-4 sm:px-6 py-12">
-          <div className="flex items-center gap-3 mb-10">
-            {[1, 2, 3].map(s => (
-              <div key={s} className="flex items-center gap-2">
-                <div className="w-7 h-7 flex items-center justify-center text-xs font-bold font-mono" style={{ background: step >= s ? '#0d1117' : 'transparent', color: step >= s ? '#f4f5f7' : '#5c6474', border: `2px solid ${step >= s ? '#0d1117' : '#dde1e8'}` }}>
-                  {s}
+          <div className="mb-10">
+            <div className="flex items-center gap-2">
+              {[
+                { num: 1, label: 'Topics' },
+                { num: 2, label: 'Location' },
+                { num: 3, label: 'Style' },
+              ].map(s => (
+                <div key={s.num} className="flex items-center gap-2">
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="w-8 h-8 flex items-center justify-center text-xs font-bold font-mono" style={{ background: step >= s.num ? '#0d1117' : 'transparent', color: step >= s.num ? '#f4f5f7' : '#5c6474', border: `2px solid ${step >= s.num ? '#0d1117' : '#dde1e8'}`, transition: 'all 0.2s ease' }}>
+                      {step > s.num ? '\u2713' : s.num}
+                    </div>
+                  </div>
+                  {s.num < 3 && <div className="w-8 sm:w-12 h-[2px]" style={{ background: step > s.num ? '#0d1117' : '#dde1e8', transition: 'background 0.2s ease' }} />}
                 </div>
-                {s < 3 && <div className="w-10 h-[2px]" style={{ background: step > s ? '#0d1117' : '#dde1e8' }} />}
-              </div>
-            ))}
-            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted ml-2">Step {step} of 3</span>
+              ))}
+              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted ml-3">
+                {step === 1 ? 'Pick your topics' : step === 2 ? 'Set your location' : 'Choose your style'}
+              </span>
+            </div>
           </div>
 
           {step === 1 && (

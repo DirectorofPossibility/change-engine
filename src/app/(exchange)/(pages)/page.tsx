@@ -13,6 +13,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getExchangeStats, getLatestContent, getPathwayCounts } from '@/lib/data/exchange'
 import { THEMES, THREE_CENTERS } from '@/lib/constants'
+import { Geo } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
 import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
 import { HeroSearch } from '@/components/exchange/home/HeroSearch'
@@ -40,6 +41,13 @@ export default async function ExchangeHomePage() {
   const sideItems = latestContent?.slice(1, 4) || []
 
   const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
+
+  // Map entity counts to centers for display
+  const centerCounts: Record<string, number> = {
+    resources: (stats.services || 0) + (stats.organizations || 0),
+    action: (stats.opportunities || 0) + (stats.officials || 0),
+    learning: (stats.resources || 0) + (stats.policies || 0),
+  }
 
   return (
     <div>
@@ -95,32 +103,52 @@ export default async function ExchangeHomePage() {
         </div>
       </section>
 
-      {/* ── STATS BAR ── */}
+      {/* ── TRUST STRIP ── */}
       <div style={{ background: 'white', borderBottom: '1px solid #E2DDD5' }}>
-        <div className="max-w-[1152px] mx-auto px-8 py-5 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-6">
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{totalResources.toLocaleString()}</span>
-              <span className="text-[12px]" style={{ color: '#6B6560' }}>Resources</span>
+        <div className="max-w-[1152px] mx-auto px-8 py-4">
+          {/* Primary stats row */}
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-5 flex-wrap">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{totalResources.toLocaleString()}</span>
+                <span className="text-[12px]" style={{ color: '#6B6560' }}>resources</span>
+              </div>
+              <div className="w-px h-6 hidden sm:block" style={{ background: '#E2DDD5' }} />
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{stats.officials || 0}</span>
+                <span className="text-[12px]" style={{ color: '#6B6560' }}>officials</span>
+              </div>
+              <div className="w-px h-6 hidden sm:block" style={{ background: '#E2DDD5' }} />
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{stats.organizations || 0}</span>
+                <span className="text-[12px]" style={{ color: '#6B6560' }}>organizations</span>
+              </div>
+              <div className="w-px h-6 hidden sm:block" style={{ background: '#E2DDD5' }} />
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>7</span>
+                <span className="text-[12px]" style={{ color: '#6B6560' }}>pathways</span>
+              </div>
             </div>
-            <div className="w-px h-8" style={{ background: '#E2DDD5' }} />
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{stats.officials || 0}</span>
-              <span className="text-[12px]" style={{ color: '#6B6560' }}>Officials</span>
-            </div>
-            <div className="w-px h-8" style={{ background: '#E2DDD5' }} />
-            <div className="flex items-baseline gap-1.5">
-              <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{stats.organizations || 0}</span>
-              <span className="text-[12px]" style={{ color: '#6B6560' }}>Organizations</span>
-            </div>
-          </div>
-          <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold" style={{ color: '#2D8659' }}>
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full rounded-full opacity-40 animate-ping" style={{ background: '#2D8659' }} />
-              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#2D8659' }} />
+            <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold" style={{ color: '#2D8659' }}>
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full opacity-40 animate-ping" style={{ background: '#2D8659' }} />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#2D8659' }} />
+              </span>
+              Updated daily
             </span>
-            Updated daily
-          </span>
+          </div>
+          {/* Civic credibility strip */}
+          <div className="flex items-center gap-3 mt-2 flex-wrap text-[11px]" style={{ color: '#9B9590' }}>
+            <span>4 levels of government</span>
+            <span style={{ color: '#D5D0CA' }}>&middot;</span>
+            <span>3 languages</span>
+            <span style={{ color: '#D5D0CA' }}>&middot;</span>
+            <span>6th-grade reading level</span>
+            <span style={{ color: '#D5D0CA' }}>&middot;</span>
+            <span>Zero ads</span>
+            <span style={{ color: '#D5D0CA' }}>&middot;</span>
+            <span>Free forever</span>
+          </div>
         </div>
       </div>
 
@@ -137,16 +165,69 @@ export default async function ExchangeHomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {CENTER_LIST.map(function (c) {
+              const count = centerCounts[c.slug] || 0
               return (
                 <Link
                   key={c.slug}
                   href={c.href}
-                  className="bg-white border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
+                  className="relative bg-white border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
                   style={{ borderColor: '#E2DDD5' }}
                 >
+                  {/* Color accent top */}
                   <div className="h-1.5" style={{ background: c.color }} />
-                  <div className="p-5">
-                    <h3 className="text-[16px] font-bold mb-1" style={{ color: '#1A1A1A' }}>{c.name}</h3>
+
+                  {/* FOL background graphic */}
+                  <div className="absolute top-0 right-0 w-[180px] h-[180px] pointer-events-none" aria-hidden="true">
+                    <div
+                      className="absolute inset-0 transition-all duration-500 group-hover:scale-110 group-hover:opacity-[0.12]"
+                      style={{ opacity: 0.06, transform: 'translate(30%, -20%)' }}
+                    >
+                      <Geo type={c.geoType} color={c.color} opacity={1} />
+                    </div>
+                  </div>
+
+                  {/* Radial glow on hover */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(circle at 80% 20%, ${c.color}10 0%, transparent 60%)`,
+                    }}
+                  />
+
+                  <div className="relative z-10 p-5">
+                    {/* Instrument-style geo mark with ring */}
+                    <div className="w-[52px] h-[52px] mb-4 relative">
+                      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+                        {/* Outer ring */}
+                        <circle cx="50" cy="50" r="46" fill="none" stroke={`${c.color}20`} strokeWidth="2" />
+                        {/* Inner ring */}
+                        <circle cx="50" cy="50" r="38" fill="none" stroke={`${c.color}10`} strokeWidth="1" />
+                        {/* Decorative dots at cardinal points */}
+                        {[0, 90, 180, 270].map(function (angle) {
+                          const rad = (angle * Math.PI) / 180
+                          return (
+                            <circle
+                              key={angle}
+                              cx={50 + 46 * Math.cos(rad)}
+                              cy={50 + 46 * Math.sin(rad)}
+                              r="2"
+                              fill={`${c.color}30`}
+                            />
+                          )
+                        })}
+                      </svg>
+                      {/* Sacred geometry centered inside */}
+                      <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110" style={{ opacity: 0.5 }}>
+                        <div className="w-[55%]">
+                          <Geo type={c.geoType} color={c.color} opacity={1} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-baseline justify-between mb-1">
+                      <h3 className="text-[16px] font-bold" style={{ color: '#1A1A1A' }}>{c.name}</h3>
+                      {count > 0 && <span className="text-[11px] font-mono" style={{ color: '#9B9590' }}>{count.toLocaleString()}</span>}
+                    </div>
                     <p className="text-[13px] italic mb-2" style={{ color: c.color }}>{c.tagline}</p>
                     <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#6B6560' }}>{c.description}</p>
                     <span className="text-[12px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: c.color }}>Enter &rarr;</span>
@@ -253,6 +334,42 @@ export default async function ExchangeHomePage() {
                 )
               })}
             </div>
+          </div>
+        </section>
+
+        {/* ── PATHWAY DIRECTORY ── */}
+        <section className="py-12 pb-20">
+          <div className="flex items-end justify-between mb-6">
+            <div>
+              <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>Seven Pathways</h2>
+              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Every issue connects to a pathway. Pick one to start exploring.</p>
+            </div>
+            <Link href="/compass" className="inline-flex items-center gap-1 text-[14px] font-semibold" style={{ color: '#1b5e8a' }}>
+              Take the Compass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {THEME_LIST.map(function (t) {
+              const count = pathwayCounts[t.id] || 0
+              return (
+                <Link
+                  key={t.id}
+                  href={'/pathways/' + t.slug}
+                  className="flex items-center gap-3 bg-white border px-4 py-3.5 transition-all hover:shadow-md hover:translate-y-[-1px] group"
+                  style={{ borderColor: '#E2DDD5' }}
+                >
+                  <div className="w-3 h-3 flex-shrink-0" style={{ background: t.color }} />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[14px] font-bold block" style={{ color: '#1A1A1A' }}>{t.name}</span>
+                    <span className="text-[12px] line-clamp-1" style={{ color: '#6B6560' }}>{t.description.split('.')[0]}.</span>
+                  </div>
+                  {count > 0 && (
+                    <span className="text-[11px] font-mono flex-shrink-0" style={{ color: '#9B9590' }}>{count}</span>
+                  )}
+                </Link>
+              )
+            })}
           </div>
         </section>
 

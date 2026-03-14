@@ -340,13 +340,14 @@ export const CENTER_COLORS: Record<string, string> = {
  * the authoritative classification taxonomy in the pipeline.
  */
 export const THREE_CENTERS = {
-  Resource: {
-    name: 'Resource Center',
-    slug: 'resources',
-    tagline: 'What\'s available to you',
-    description: 'Services, benefits, organizations, and support systems ready for Houston families.',
-    color: '#16a34a',
-    href: '/resources',
+  Learning: {
+    name: 'Learning Center',
+    slug: 'learning',
+    tagline: 'Understand what\'s happening',
+    description: 'News, research, policies, and context — the story behind community life in Houston.',
+    color: '#2563eb',
+    href: '/learning',
+    geoType: 'flower_of_life',
   },
   Action: {
     name: 'Action Center',
@@ -355,14 +356,16 @@ export const THREE_CENTERS = {
     description: 'Volunteer, vote, attend, organize — ways to show up for your community right now.',
     color: '#dc2626',
     href: '/action',
+    geoType: 'compass_rose',
   },
-  Library: {
-    name: 'Library',
-    slug: 'library',
-    tagline: 'Understand what\'s happening',
-    description: 'News, policies, data, and context — the story behind community life in Houston.',
-    color: '#2563eb',
-    href: '/library',
+  Resource: {
+    name: 'Resource Center',
+    slug: 'resources',
+    tagline: 'What\'s available to you',
+    description: 'Services, benefits, organizations, and support systems ready for Houston families.',
+    color: '#16a34a',
+    href: '/resources',
+    geoType: 'seed_of_life',
   },
 } as const;
 
