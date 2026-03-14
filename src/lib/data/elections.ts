@@ -27,7 +27,7 @@ async function getOfficialsByZipForElections(supabase: SupabaseClient, zip: stri
   const councilDistrict = hoodRows?.[0]?.council_district || null
 
   let filterParts = districts.map(function (d) { return 'district_id.eq.' + d }).join(',')
-  filterParts += ',and(level.eq.Federal,district_id.is.null)'
+  filterParts += ',district_id.eq.TX-SEN'
   if (councilDistrict) filterParts += ',district_id.eq.' + councilDistrict
   filterParts += ',district_id.like.AL%,and(level.eq.City,district_id.is.null)'
   if (zipData.county_id) filterParts += ',counties_served.like.%' + zipData.county_id + '%'

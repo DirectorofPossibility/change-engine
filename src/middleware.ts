@@ -74,12 +74,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(comingSoonUrl)
   }
 
-  // Logged-in users hitting splash → send to exchange editorial home
-  if (pathname === '/' && user) {
-    const exchangeUrl = request.nextUrl.clone()
-    exchangeUrl.pathname = '/exchange'
-    return NextResponse.redirect(exchangeUrl)
-  }
+  // Homepage is now at / — no redirect needed
 
   // Beta gate — TEMPORARILY DISABLED
   // To re-enable, uncomment the block below:
