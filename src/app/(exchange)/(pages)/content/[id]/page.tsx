@@ -537,11 +537,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               {/* Trail Position — 5 named levels */}
               {(() => {
                 const TRAIL_LEVELS = [
-                  { name: 'Before You Go', subtitle: 'News, data, explainers', color: '#1b5e8a' },
-                  { name: 'Packing List', subtitle: 'Guides, tools, self-study', color: '#1a6b56' },
-                  { name: 'Day Trips', subtitle: 'Classes, events near you', color: '#4a2870' },
-                  { name: 'Local Guides', subtitle: 'Organizations & services', color: '#7a2018' },
-                  { name: 'The Deep Journey', subtitle: 'Ongoing commitments', color: '#0d1117' },
+                  { name: 'Get Curious', subtitle: 'Learn', color: '#1b5e8a' },
+                  { name: 'Find Your People', subtitle: 'Connect', color: '#1a6b56' },
+                  { name: 'Show Up', subtitle: 'Participate', color: '#4a2870' },
+                  { name: 'Go Deeper', subtitle: 'Build skills & capacity', color: '#7a2018' },
+                  { name: 'Make Your Move', subtitle: 'Take action in whatever form fits you', color: '#0d1117' },
                 ]
                 const currentLevel = (item as any).trail_level || 1
                 return (

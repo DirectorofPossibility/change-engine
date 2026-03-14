@@ -380,7 +380,7 @@ async function insertService(
     is_active: 'Yes',
     data_source: domain,
     last_updated: new Date().toISOString(),
-    engagement_level: 'Resource',
+    engagement_level: 'Find Your People',
   })
   return entityId
 }
@@ -406,7 +406,7 @@ async function insertEvent(
     is_active: 'Yes',
     data_source: domain,
     last_updated: new Date().toISOString(),
-    engagement_level: 'Action',
+    engagement_level: 'Show Up',
   })
   return entityId
 }
@@ -428,7 +428,7 @@ async function insertOpportunity(
     is_active: 'Yes',
     data_source: domain,
     last_updated: new Date().toISOString(),
-    engagement_level: 'Action',
+    engagement_level: 'Show Up',
   })
   return entityId
 }
@@ -446,7 +446,7 @@ async function insertCampaign(
     status: 'Active',
     data_source: domain,
     last_updated: new Date().toISOString(),
-    engagement_level: 'Action',
+    engagement_level: 'Show Up',
   })
   return entityId
 }
@@ -465,7 +465,7 @@ async function insertBenefit(
     is_active: 'Yes',
     data_source: domain,
     last_updated: new Date().toISOString(),
-    engagement_level: 'Resource',
+    engagement_level: 'Find Your People',
   })
   return entityId
 }

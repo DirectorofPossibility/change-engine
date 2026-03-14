@@ -313,11 +313,17 @@ export const URGENCY_CONFIG: Record<string, { key: string; color: string }> = {
   Low:      { key: 'help.urgency_low', color: 'text-green-700 border-green-300 bg-green-50' },
 }
 
-/** Guide engagement level → Tailwind badge classes. */
+/** Trail level engagement → Tailwind badge classes. */
 export const ENGAGEMENT_LEVEL_COLORS: Record<string, string> = {
-  'On the Couch': 'bg-green-100 text-green-800',
-  'Off the Couch': 'bg-blue-100 text-blue-800',
-  'Use Your Superpower': 'bg-purple-100 text-purple-800',
+  'Get Curious': 'bg-sky-100 text-sky-800',
+  'Find Your People': 'bg-emerald-100 text-emerald-800',
+  'Show Up': 'bg-purple-100 text-purple-800',
+  'Go Deeper': 'bg-rose-100 text-rose-800',
+  'Make Your Move': 'bg-gray-900 text-white',
+  // Legacy values — kept for backward compatibility during migration
+  'On the Couch': 'bg-sky-100 text-sky-800',
+  'Off the Couch': 'bg-purple-100 text-purple-800',
+  'Use Your Superpower': 'bg-gray-900 text-white',
 }
 
 /** Center → hex color. Used by FeedCard, CentersGrid, etc. */
@@ -327,6 +333,38 @@ export const CENTER_COLORS: Record<string, string> = {
   Resource: '#16a34a',
   Accountability: '#9333ea',
 }
+
+/**
+ * The 3 Centers — homepage-only model for pathway-first navigation.
+ * These replace the 4-center grid on the homepage while CENTERS remains
+ * the authoritative classification taxonomy in the pipeline.
+ */
+export const THREE_CENTERS = {
+  Resource: {
+    name: 'Resource Center',
+    slug: 'resources',
+    tagline: 'What\'s available to you',
+    description: 'Services, benefits, organizations, and support systems ready for Houston families.',
+    color: '#16a34a',
+    href: '/resources',
+  },
+  Action: {
+    name: 'Action Center',
+    slug: 'action',
+    tagline: 'How you can participate',
+    description: 'Volunteer, vote, attend, organize — ways to show up for your community right now.',
+    color: '#dc2626',
+    href: '/action',
+  },
+  Library: {
+    name: 'Library',
+    slug: 'library',
+    tagline: 'Understand what\'s happening',
+    description: 'News, policies, data, and context — the story behind community life in Houston.',
+    color: '#2563eb',
+    href: '/library',
+  },
+} as const;
 
 /** Compass entry card prompts — maps center keys to i18n keys. */
 export const COMPASS_PROMPTS: Record<string, { i18nKey: string; center: string }> = {

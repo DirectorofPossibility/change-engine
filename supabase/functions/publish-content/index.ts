@@ -160,9 +160,9 @@ Deno.serve(async (req: Request) => {
           'The Bigger We': 'T7',
         };
         const engagementMap: Record<string, string> = {
-          'Learn': 'On the Couch',
-          'Act': 'Off the Couch',
-          'Lead': 'Use Your Superpower',
+          'Learn': 'Get Curious',
+          'Act': 'Show Up',
+          'Lead': 'Make Your Move',
         };
 
         publishData = {
@@ -178,7 +178,7 @@ Deno.serve(async (req: Request) => {
           focus_area_ids: c.focus_areas || [],
           center: c.engagement_level === 'Learn' ? 'Learning'
             : c.engagement_level === 'Lead' ? 'Action' : 'Resource',
-          engagement_level: engagementMap[c.engagement_level] || 'On the Couch',
+          engagement_level: engagementMap[c.engagement_level] || 'Get Curious',
           sdg_ids: (c.sdg_ids || []).map((id: string) => `SDG-${id}`),
           sdoh_domain: c.sdoh_domain || null,
           audience_segments: c.audience_segments || [],

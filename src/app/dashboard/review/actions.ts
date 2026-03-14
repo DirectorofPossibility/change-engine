@@ -128,7 +128,7 @@ async function approveItemCore(
     pathway_secondary: classification.theme_secondary || [],
     focus_area_ids: classification.focus_area_ids || [],
     center: classification.center || 'Learning',
-    engagement_level: classification.center || 'Learning',
+    engagement_level: ({ Learning: 'Get Curious', Action: 'Show Up', Resource: 'Find Your People', Accountability: 'Go Deeper' } as Record<string, string>)[classification.center] || 'Get Curious',
     sdg_ids: classification.sdg_ids || [],
     sdoh_domain: classification.sdoh_code || null,
     audience_segments: classification.audience_segment_ids || [],

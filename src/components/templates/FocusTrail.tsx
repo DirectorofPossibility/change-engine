@@ -12,11 +12,11 @@ const LEVEL_META: Record<number, {
   color: string
   geoType: string
 }> = {
-  1: { name: 'Before You Go', subtitle: 'News, data, explainers', actionType: 'Read, watch, listen from home', color: '#1b5e8a', geoType: 'compass_rose' },
-  2: { name: 'Packing List', subtitle: 'Guides, tools, self-study', actionType: 'Do something, from home', color: '#1a6b56', geoType: 'vesica_piscis' },
-  3: { name: 'Day Trips', subtitle: 'Classes, events near you', actionType: 'Leave the house, come back', color: '#4a2870', geoType: 'hex_grid' },
-  4: { name: 'Local Guides', subtitle: 'Organizations & services', actionType: 'Connect, volunteer, get help', color: '#7a2018', geoType: 'flower_of_life' },
-  5: { name: 'The Deep Journey', subtitle: 'Ongoing commitments', actionType: 'Long-term involvement', color: '#0d1117', geoType: 'metatron_cube' },
+  1: { name: 'Get Curious', subtitle: 'Learn', actionType: 'Read, watch, explore', color: '#1b5e8a', geoType: 'compass_rose' },
+  2: { name: 'Find Your People', subtitle: 'Connect', actionType: 'Meet orgs, neighbors, groups', color: '#1a6b56', geoType: 'vesica_piscis' },
+  3: { name: 'Show Up', subtitle: 'Participate', actionType: 'Events, meetings, volunteering', color: '#4a2870', geoType: 'hex_grid' },
+  4: { name: 'Go Deeper', subtitle: 'Build skills & capacity', actionType: 'Training, sustained involvement', color: '#7a2018', geoType: 'flower_of_life' },
+  5: { name: 'Make Your Move', subtitle: 'Take action in whatever form fits you', actionType: 'Advocacy, organizing, creating', color: '#0d1117', geoType: 'metatron_cube' },
 }
 
 interface TrailEntry {
