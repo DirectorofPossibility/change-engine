@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getCircleGraphData } from '@/lib/data/exchange'
-import CircleKnowledgeGraph from '@/components/exchange/CircleKnowledgeGraph'
+import CircleKnowledgeGraph from '@/components/ui/CircleKnowledgeGraph'
 
 export const metadata: Metadata = {
   title: 'Circle Knowledge Graph — Pipeline Admin',

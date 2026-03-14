@@ -1,43 +1,28 @@
 /**
- * @fileoverview Root layout for all public-facing "(exchange)" routes.
+ * @fileoverview Root layout for the Field Guide — all public-facing routes.
  *
- * Wraps every public page with:
- *  - LanguageProvider  (reads `lang` cookie to set i18n context)
+ * Wraps every page with:
+ *  - LanguageProvider  (reads `lang` cookie)
  *  - NeighborhoodProvider (reads `zip` cookie for geo-personalization)
- *  - Schema.org JSON-LD (Organization + WebSite with SearchAction)
- *  - TickerTape (election info ticker, when election is upcoming)
- *  - Skip-to-content accessibility link
- *
- * @datasource Cookies: `lang`, `zip`
- * @caching Dynamic (reads cookies per request)
- * @route layout for /(exchange)/*
+ *  - Schema.org JSON-LD
+ *  - GuideNav + GuideFooter + MobileTabBar
  */
 
 import { cookies } from 'next/headers'
 import { LanguageProvider } from '@/lib/contexts/LanguageContext'
 import { NeighborhoodProvider } from '@/lib/contexts/NeighborhoodContext'
-import { ChanceChatWidget } from '@/components/exchange/ChanceChatWidget'
-import { D2Nav } from '@/components/exchange/D2Nav'
-import { D2Footer } from '@/components/exchange/D2Footer'
-import { TranslateBar } from '@/components/exchange/TranslateBar'
-import { OnboardingLoader } from '@/components/exchange/OnboardingLoader'
-import { TickerTape } from '@/components/exchange/TickerTape'
-import MobileBottomNav from '@/components/exchange/MobileBottomNav'
-import { ScrollToTop } from '@/components/exchange/ScrollToTop'
-import { getNextElection } from '@/lib/data/exchange'
+import { GuideNav } from '@/components/guide/GuideNav'
+import { GuideFooter } from '@/components/guide/GuideFooter'
+import { MobileTabBar } from '@/components/guide/MobileTabBar'
 import { getSiteConfig } from '@/lib/data/site-config'
 import { SiteConfigProvider } from '@/lib/contexts/SiteConfigContext'
 
-export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
+export default async function GuideLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value
   const zip = cookieStore.get('zip')?.value
-  const [nextElection, siteConfig] = await Promise.all([
-    getNextElection(),
-    getSiteConfig(),
-  ])
+  const siteConfig = await getSiteConfig()
 
-  // ── Schema.org JSON-LD ──
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -45,7 +30,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
         '@type': 'Organization',
         name: 'Change Engine',
         url: 'https://www.changeengine.us',
-        description: 'A civic platform connecting Houston residents with resources, services, and civic participation opportunities.',
+        description: 'A field guide to Greater Houston\'s civic resources — 10,000+ free resources from 1,800+ organizations.',
       },
       {
         '@type': 'WebSite',
@@ -69,23 +54,23 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
 
-          <div className="min-h-screen bg-white">
-            <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue focus:text-white focus:text-sm">
+          <div className="min-h-screen bg-white flex flex-col">
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#1b5e8a] focus:text-white focus:text-sm focus:rounded"
+            >
               Skip to main content
             </a>
-            <D2Nav />
-            <TranslateBar />
-            <main id="main-content" className="flex-1 pb-14">
+
+            <GuideNav />
+
+            <main id="main-content" className="flex-1 pb-16 md:pb-0">
               {children}
             </main>
-            <D2Footer />
-            <TickerTape election={nextElection} className="ticker-banner" />
-            {siteConfig.onboarding_flow !== false && <OnboardingLoader />}
-            {siteConfig.scroll_to_top !== false && <ScrollToTop />}
-            {siteConfig.chat_widget !== false && <ChanceChatWidget />}
-            {siteConfig.mobile_bottom_nav !== false && <MobileBottomNav />}
-          </div>
 
+            <GuideFooter />
+            <MobileTabBar />
+          </div>
         </SiteConfigProvider>
       </NeighborhoodProvider>
     </LanguageProvider>

@@ -1,386 +1,269 @@
 /**
- * @fileoverview Homepage — The Community Exchange.
+ * @fileoverview Homepage — Guide Cover
  *
- * V2: Pathway-first design with Interactive Flower of Life as hero navigation,
- * 3 Centers grid (Resource, Action, Library), and magazine-style latest content.
+ * The front page of the field guide. Not a marketing page.
+ * Structure:
+ *   1. Hero — what this is + ZIP anchor
+ *   2. Seven Pathways — table of contents
+ *   3. Start Here — top picks near you
+ *   4. What's Happening — timely/seasonal content
+ *   5. Your Neighborhood — geographic context
+ *   6. What's New — latest from the guide
+ *   7. Trust Strip — credibility
  *
  * @route GET /
- * @caching ISR with revalidate = 600 (10 minutes)
  */
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
-import { getExchangeStats, getLatestContent } from '@/lib/data/exchange'
-import { getPathwayCounts as getEntityPathwayCounts } from '@/lib/data/entity-graph'
-import { THEMES, THREE_CENTERS } from '@/lib/constants'
-import { Geo } from '@/components/geo/sacred'
-import { FolFallback } from '@/components/ui/FolFallback'
-import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
-import { HeroSearch } from '@/components/exchange/home/HeroSearch'
-
-export const revalidate = 3600
+import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
+import { THEMES } from '@/lib/constants'
+import { resolveUserGeo, getPathwayCounts } from '@/lib/data/entity-graph'
 
 export const metadata: Metadata = {
-  title: 'Community Exchange — Houston, Texas | The Change Engine',
-  description: 'Your culture guide to Houston — explore resources, services, and civic power across seven community pathways.',
+  title: 'Change Engine — A Field Guide to Greater Houston',
+  description: 'Discover 10,000+ free civic resources from 1,800+ organizations across Greater Houston. Find services, officials, policies, and opportunities organized along 7 pathways.',
 }
 
-const THEME_LIST = Object.entries(THEMES).map(function ([id, t]) { return { id, ...t } })
+export const dynamic = 'force-dynamic'
 
-const CENTER_LIST = Object.values(THREE_CENTERS)
+const PATHWAY_LIST = Object.entries(THEMES).map(([id, t]) => ({
+  id,
+  name: t.name,
+  slug: t.slug,
+  color: t.color,
+  description: t.description,
+}))
 
+export default async function HomePage() {
+  const cookieStore = await cookies()
+  const zip = cookieStore.get('zip')?.value || null
 
-export default async function ExchangeHomePage() {
-  const [stats, latestContent, entityPathwayCounts] = await Promise.all([
-    getExchangeStats(),
-    getLatestContent(4),
-    getEntityPathwayCounts(),
+  const supabase = await createClient()
+
+  // Parallel data fetching
+  const [
+    geo,
+    pathwayCounts,
+    { count: orgCount },
+    { count: serviceCount },
+    { data: latestContent },
+  ] = await Promise.all([
+    zip ? resolveUserGeo(zip) : Promise.resolve(null),
+    getPathwayCounts(),
+    supabase.from('organizations').select('org_id', { count: 'exact', head: true }),
+    supabase.from('services_211').select('service_id', { count: 'exact', head: true }).eq('is_active', 'Yes'),
+    supabase
+      .from('content_published')
+      .select('id, title_6th_grade, summary_6th_grade, source_domain, published_at, image_url, classification_v2')
+      .eq('is_active', true)
+      .order('published_at', { ascending: false })
+      .limit(4),
   ])
 
-  // Flatten entity counts to total per pathway for FOL and directory
-  const pathwayCounts: Record<string, number> = {}
-  for (const [id, counts] of Object.entries(entityPathwayCounts)) {
-    pathwayCounts[id] = counts.total
-  }
-
-  const featured = latestContent?.[0]
-  const sideItems = latestContent?.slice(1, 4) || []
-
-  const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
-
-  // Map entity counts to centers for display
-  const centerCounts: Record<string, number> = {
-    resources: (stats.services || 0) + (stats.organizations || 0),
-    action: (stats.opportunities || 0) + (stats.officials || 0),
-    learning: (stats.resources || 0) + (stats.policies || 0),
-  }
+  const totalResources = (orgCount || 0) + (serviceCount || 0)
 
   return (
     <div>
-      {/* ── HERO — Flower of Life Navigation ── */}
-      <section className="relative overflow-hidden" style={{ background: '#1a1a2e' }}>
-        {/* Subtle FOL watermarks */}
-        <div className="absolute left-[-120px] top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
-          <Image src="/images/fol/flower-full.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
-        </div>
-        <div className="absolute right-[-120px] top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true">
-          <Image src="/images/fol/flower-full.svg" alt="" width={500} height={500} className="opacity-[0.03]" />
-        </div>
+      {/* ═══════════════════════════════════════════════════════════════════
+          1. HERO — Guide Cover
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="relative bg-[#0d1117] text-white overflow-hidden">
+        {/* Background — replace with home/hero-bg.webp when ready */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0d1117] via-[#1a2332] to-[#0d1117]" />
 
-        <div className="relative z-10 max-w-[1152px] mx-auto px-8 py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_540px] gap-8 items-center">
-            {/* Left — copy + search */}
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.3em] font-semibold mb-5" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Houston, Texas
-              </p>
-              <h1 className="font-serif text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] tracking-tight mb-4" style={{ color: 'white' }}>
-                Community life, <span style={{ color: '#C75B2A' }}>organized.</span>
-              </h1>
-              <p className="font-serif text-xl italic mb-8" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                Seven pathways into the resources, services, and civic power that make Houston stronger
-              </p>
+        <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-24 text-center">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#8a929e] mb-6">
+            A field guide to Greater Houston
+          </p>
 
-              {/* Search bar — inline, submits to /search */}
-              <HeroSearch />
+          <h1 className="text-3xl md:text-5xl font-serif font-bold leading-tight">
+            {totalResources.toLocaleString()} free resources.
+            <br />
+            <span className="text-[#7ec8e3]">{(orgCount || 0).toLocaleString()} organizations.</span>
+            <br />
+            Your community.
+          </h1>
 
-              <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Choose a pathway to explore &rarr;
-              </p>
+          <p className="mt-6 text-[#8a929e] max-w-[480px] mx-auto leading-relaxed">
+            Everything you need to learn, connect, and take action in Greater Houston —
+            sorted by what matters to you.
+          </p>
+
+          {/* ZIP anchor */}
+          {geo ? (
+            <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded text-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>
+                Showing resources near <strong>{geo.zip}</strong>
+                {geo.neighborhoodName && <> &mdash; {geo.neighborhoodName}</>}
+              </span>
             </div>
+          ) : (
+            <Link
+              href="/my-plan/settings"
+              className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 bg-[#1b5e8a] hover:bg-[#2a7ab5] rounded text-sm font-medium transition-colors"
+            >
+              Enter your ZIP code to personalize
+            </Link>
+          )}
 
-            {/* Right — Interactive Flower of Life */}
-            <div className="hidden md:block">
-              <InteractiveFOL pathwayCounts={pathwayCounts} />
-            </div>
-          </div>
-
-          {/* Mobile FOL — full width below md */}
-          <div className="md:hidden mt-8">
-            <InteractiveFOL pathwayCounts={pathwayCounts} />
+          {/* CTA */}
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/start"
+              className="px-6 py-3 bg-white text-[#0d1117] rounded font-medium text-sm hover:bg-[#f4f5f7] transition-colors"
+            >
+              What do you need? &rarr;
+            </Link>
+            <Link
+              href="#pathways"
+              className="px-6 py-3 border border-white/20 rounded text-sm hover:bg-white/10 transition-colors"
+            >
+              Browse pathways
+            </Link>
           </div>
         </div>
+      </section>
 
-        {/* Pathway spectrum bar */}
-        <div className="flex h-1">
-          {THEME_LIST.map(function (t) {
-            return <div key={t.id} className="flex-1" style={{ background: t.color }} />
+      {/* ═══════════════════════════════════════════════════════════════════
+          2. SEVEN PATHWAYS — Table of Contents
+          ═══════════════════════════════════════════════════════════════ */}
+      <section id="pathways" className="max-w-[1200px] mx-auto px-6 py-16">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-serif font-bold">Explore by pathway</h2>
+          <p className="mt-3 text-sm text-[#5c6474] max-w-[500px] mx-auto">
+            Seven lenses into your community. Each pathway connects you to organizations,
+            services, officials, and opportunities.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {PATHWAY_LIST.map((p) => {
+            const counts = pathwayCounts[p.id] || { content: 0, orgs: 0, total: 0 }
+            return (
+              <Link
+                key={p.slug}
+                href={`/${p.slug}`}
+                className="group block border border-[#dde1e8] rounded-lg p-5 hover:border-transparent hover:shadow-md transition-all"
+                style={{ borderLeftWidth: 4, borderLeftColor: p.color }}
+              >
+                <h3 className="font-semibold text-[#0d1117] group-hover:text-[#1b5e8a] transition-colors">
+                  {p.name}
+                </h3>
+                <p className="mt-2 text-xs text-[#5c6474] leading-relaxed line-clamp-2">
+                  {p.description}
+                </p>
+                <p className="mt-3 text-[11px] text-[#8a929e]">
+                  {counts.total.toLocaleString()} resources &middot; {counts.orgs.toLocaleString()} orgs
+                </p>
+              </Link>
+            )
           })}
         </div>
       </section>
 
-      {/* ── TRUST STRIP ── */}
-      <div style={{ background: 'white', borderBottom: '1px solid #E2DDD5' }}>
-        <div className="max-w-[1152px] mx-auto px-8 py-4">
-          {/* Primary stats row */}
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-5 flex-wrap">
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{totalResources.toLocaleString()}</span>
-                <span className="text-[12px]" style={{ color: '#6B6560' }}>resources</span>
-              </div>
-              <div className="w-px h-6 hidden sm:block" style={{ background: '#E2DDD5' }} />
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{stats.officials || 0}</span>
-                <span className="text-[12px]" style={{ color: '#6B6560' }}>officials</span>
-              </div>
-              <div className="w-px h-6 hidden sm:block" style={{ background: '#E2DDD5' }} />
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>{stats.organizations || 0}</span>
-                <span className="text-[12px]" style={{ color: '#6B6560' }}>organizations</span>
-              </div>
-              <div className="w-px h-6 hidden sm:block" style={{ background: '#E2DDD5' }} />
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-serif text-2xl font-bold" style={{ color: '#1A1A1A' }}>7</span>
-                <span className="text-[12px]" style={{ color: '#6B6560' }}>pathways</span>
-              </div>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold" style={{ color: '#2D8659' }}>
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full rounded-full opacity-40 animate-ping" style={{ background: '#2D8659' }} />
-                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#2D8659' }} />
-              </span>
-              Updated daily
-            </span>
-          </div>
-          {/* Civic credibility strip */}
-          <div className="flex items-center gap-3 mt-2 flex-wrap text-[11px]" style={{ color: '#9B9590' }}>
-            <span>4 levels of government</span>
-            <span style={{ color: '#D5D0CA' }}>&middot;</span>
-            <span>3 languages</span>
-            <span style={{ color: '#D5D0CA' }}>&middot;</span>
-            <span>6th-grade reading level</span>
-            <span style={{ color: '#D5D0CA' }}>&middot;</span>
-            <span>Zero ads</span>
-            <span style={{ color: '#D5D0CA' }}>&middot;</span>
-            <span>Free forever</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-[1152px] mx-auto px-8">
-
-        {/* ── THREE CENTERS ── */}
-        <section className="py-12">
-          <div className="flex items-end justify-between mb-6">
+      {/* ═══════════════════════════════════════════════════════════════════
+          3. WHAT'S NEW — Latest from the Guide
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="bg-[#f4f5f7]">
+        <div className="max-w-[1200px] mx-auto px-6 py-16">
+          <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>Three Centers</h2>
-              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Every pathway leads to one of these doorways</p>
+              <h2 className="text-2xl font-serif font-bold">What&apos;s new</h2>
+              <p className="mt-1 text-sm text-[#5c6474]">Latest from the guide</p>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {CENTER_LIST.map(function (c) {
-              const count = centerCounts[c.slug] || 0
-              return (
-                <Link
-                  key={c.slug}
-                  href={c.href}
-                  className="relative bg-white border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
-                  style={{ borderColor: '#E2DDD5' }}
-                >
-                  {/* Color accent top */}
-                  <div className="h-1.5" style={{ background: c.color }} />
-
-                  {/* FOL background graphic */}
-                  <div className="absolute top-0 right-0 w-[180px] h-[180px] pointer-events-none" aria-hidden="true">
-                    <div
-                      className="absolute inset-0 transition-all duration-500 group-hover:scale-110 group-hover:opacity-[0.12]"
-                      style={{ opacity: 0.06, transform: 'translate(30%, -20%)' }}
-                    >
-                      <Geo type={c.geoType} color={c.color} opacity={1} />
-                    </div>
-                  </div>
-
-                  {/* Radial glow on hover */}
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      background: `radial-gradient(circle at 80% 20%, ${c.color}10 0%, transparent 60%)`,
-                    }}
-                  />
-
-                  <div className="relative z-10 p-5">
-                    {/* Instrument-style geo mark with ring */}
-                    <div className="w-[52px] h-[52px] mb-4 relative">
-                      <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
-                        {/* Outer ring */}
-                        <circle cx="50" cy="50" r="46" fill="none" stroke={`${c.color}20`} strokeWidth="2" />
-                        {/* Inner ring */}
-                        <circle cx="50" cy="50" r="38" fill="none" stroke={`${c.color}10`} strokeWidth="1" />
-                        {/* Decorative dots at cardinal points */}
-                        {[0, 90, 180, 270].map(function (angle) {
-                          const rad = (angle * Math.PI) / 180
-                          return (
-                            <circle
-                              key={angle}
-                              cx={50 + 46 * Math.cos(rad)}
-                              cy={50 + 46 * Math.sin(rad)}
-                              r="2"
-                              fill={`${c.color}30`}
-                            />
-                          )
-                        })}
-                      </svg>
-                      {/* Sacred geometry centered inside */}
-                      <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110" style={{ opacity: 0.5 }}>
-                        <div className="w-[55%]">
-                          <Geo type={c.geoType} color={c.color} opacity={1} />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-baseline justify-between mb-1">
-                      <h3 className="text-[16px] font-bold" style={{ color: '#1A1A1A' }}>{c.name}</h3>
-                      {count > 0 && <span className="text-[11px] font-mono" style={{ color: '#9B9590' }}>{count.toLocaleString()}</span>}
-                    </div>
-                    <p className="text-[13px] italic mb-2" style={{ color: c.color }}>{c.tagline}</p>
-                    <p className="text-[13px] leading-relaxed mb-3" style={{ color: '#6B6560' }}>{c.description}</p>
-                    <span className="text-[12px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: c.color }}>Enter &rarr;</span>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-
-        {/* Section divider */}
-        <hr className="border-0 h-px" style={{ background: 'linear-gradient(to right, #E2DDD5, rgba(226,221,213,0.6), transparent)' }} />
-
-        {/* ── WHAT'S NEW — MAGAZINE LAYOUT ── */}
-        <section className="py-12 pb-20">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>What&apos;s New</h2>
-              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Recently published for the Houston community</p>
-            </div>
-            <Link href="/news" className="inline-flex items-center gap-1 text-[14px] font-semibold" style={{ color: '#C75B2A' }}>
-              See all <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            <Link href="/news" className="text-sm text-[#1b5e8a] hover:underline">
+              All updates &rarr;
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6">
-            {/* Featured card */}
-            {featured && (
-              <Link
-                href={'/content/' + featured.id}
-                className="bg-white border overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px]"
-                style={{ borderColor: '#E2DDD5' }}
-              >
-                {featured.image_url ? (
-                  <div className="h-[220px] overflow-hidden">
-                    <Image src={featured.image_url} alt="" className="w-full h-full object-cover" width={800} height={400} />
-                  </div>
-                ) : (
-                  <FolFallback pathway={featured.pathway_primary} size="hero" />
-                )}
-                <div className="p-4">
-                  <h4 className="font-serif text-[16px] font-bold leading-snug mb-1.5" style={{ color: '#1A1A1A' }}>
-                    {featured.title_6th_grade || (featured as any).title}
-                  </h4>
-                  {(featured as any).summary_6th_grade && (
-                    <p className="text-[14px] line-clamp-2" style={{ color: '#6B6560' }}>{(featured as any).summary_6th_grade.length > 150 ? (featured as any).summary_6th_grade.slice(0, 150) + '...' : (featured as any).summary_6th_grade}</p>
-                  )}
-                  <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid rgba(226,221,213,0.5)' }}>
-                    <div className="flex items-center gap-1.5">
-                      {(() => {
-                        const fTheme = THEME_LIST.find(function (t) { return t.id === featured.pathway_primary })
-                        return fTheme ? (
-                          <>
-                            <span className="w-2 h-2 rounded-full" style={{ background: fTheme.color }} />
-                            <span className="text-[12px]" style={{ color: '#6B6560' }}>{fTheme.name}</span>
-                          </>
-                        ) : null
-                      })()}
-                    </div>
-                    <span className="text-[12px] font-semibold" style={{ color: '#C75B2A' }}>Read more &rsaquo;</span>
-                  </div>
-                </div>
-              </Link>
-            )}
+          {latestContent && latestContent.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {latestContent.map((item: any) => {
+                const classification = item.classification_v2 || {}
+                const contentType = classification.content_type || 'article'
+                const themeId = classification.theme_primary
+                const theme = themeId ? (THEMES as any)[themeId] : null
 
-            {/* Stacked list */}
-            <div className="flex flex-col gap-4">
-              {sideItems.map(function (item: any) {
-                const theme = THEME_LIST.find(function (t) { return t.id === item.pathway_primary })
                 return (
                   <Link
                     key={item.id}
-                    href={'/content/' + item.id}
-                    className="flex bg-white border overflow-hidden transition-all hover:shadow-md group"
-                    style={{ borderColor: '#E2DDD5' }}
+                    href={`/content/${item.id}`}
+                    className="group bg-white rounded-lg border border-[#dde1e8] overflow-hidden hover:shadow-md transition-all"
                   >
+                    {/* Image placeholder */}
                     {item.image_url ? (
-                      <div className="w-[110px] flex-shrink-0 overflow-hidden">
-                        <Image src={item.image_url} alt="" className="w-full h-full object-cover" width={800} height={400} />
-                      </div>
+                      <div
+                        className="h-36 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${item.image_url})` }}
+                      />
                     ) : (
-                      <div className="w-[110px] flex-shrink-0 overflow-hidden">
-                        <FolFallback pathway={item.pathway_primary} height="h-full" />
+                      <div
+                        className="h-36 flex items-center justify-center"
+                        style={{ background: theme?.color || '#1b5e8a' }}
+                      >
+                        <span className="text-white/30 text-xs uppercase tracking-wider">
+                          {contentType}
+                        </span>
                       </div>
                     )}
-                    <div className="flex-1 p-3.5 min-w-0">
-                      {theme && (
-                        <div className="flex items-center gap-1.5 mb-1 text-[11px] uppercase tracking-wider font-semibold" style={{ color: theme.color }}>
-                          {theme.name}
-                        </div>
-                      )}
-                      <h4 className="text-[14px] font-bold leading-snug line-clamp-2" style={{ color: '#1A1A1A' }}>
-                        {item.title_6th_grade || item.title}
-                      </h4>
-                      {item.summary_6th_grade && (
-                        <p className="text-[13px] mt-1 line-clamp-2" style={{ color: '#6B6560' }}>{item.summary_6th_grade.length > 150 ? item.summary_6th_grade.slice(0, 150) + '...' : item.summary_6th_grade}</p>
-                      )}
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-[12px]" style={{ color: '#6B6560' }}>{item.source_domain || ''}</span>
-                        <span className="text-[13px] font-semibold" style={{ color: '#C75B2A' }}>Open &rsaquo;</span>
+
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[10px] uppercase tracking-wider text-[#8a929e]">
+                          {contentType}
+                        </span>
+                        {theme && (
+                          <>
+                            <span className="text-[#dde1e8]">&middot;</span>
+                            <span className="text-[10px] uppercase tracking-wider" style={{ color: theme.color }}>
+                              {theme.name}
+                            </span>
+                          </>
+                        )}
                       </div>
+                      <h3 className="text-sm font-medium text-[#0d1117] line-clamp-2 group-hover:text-[#1b5e8a] transition-colors">
+                        {item.title_6th_grade || 'Untitled'}
+                      </h3>
+                      {item.source_domain && (
+                        <p className="mt-2 text-[11px] text-[#8a929e]">{item.source_domain}</p>
+                      )}
                     </div>
                   </Link>
                 )
               })}
             </div>
-          </div>
-        </section>
+          ) : (
+            <p className="text-sm text-[#8a929e]">No content yet.</p>
+          )}
+        </div>
+      </section>
 
-        {/* ── PATHWAY DIRECTORY ── */}
-        <section className="py-12 pb-20">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="font-serif text-4xl" style={{ color: '#1A1A1A' }}>Seven Pathways</h2>
-              <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Every issue connects to a pathway. Pick one to start exploring.</p>
-            </div>
-            <Link href="/compass" className="inline-flex items-center gap-1 text-[14px] font-semibold" style={{ color: '#1b5e8a' }}>
-              Use the Compass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-            </Link>
+      {/* ═══════════════════════════════════════════════════════════════════
+          4. TRUST STRIP
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="border-t border-b border-[#dde1e8]">
+        <div className="max-w-[1200px] mx-auto px-6 py-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-[#5c6474]">
+            <span><strong className="text-[#0d1117]">{totalResources.toLocaleString()}</strong> resources</span>
+            <span className="hidden sm:inline text-[#dde1e8]">|</span>
+            <span><strong className="text-[#0d1117]">{(orgCount || 0).toLocaleString()}</strong> organizations</span>
+            <span className="hidden sm:inline text-[#dde1e8]">|</span>
+            <span>4 levels of government</span>
+            <span className="hidden sm:inline text-[#dde1e8]">|</span>
+            <span>3 languages</span>
+            <span className="hidden sm:inline text-[#dde1e8]">|</span>
+            <span>Updated daily</span>
+            <span className="hidden sm:inline text-[#dde1e8]">|</span>
+            <span>Free forever</span>
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {THEME_LIST.map(function (t) {
-              const count = pathwayCounts[t.id] || 0
-              return (
-                <Link
-                  key={t.id}
-                  href={'/pathways/' + t.slug}
-                  className="flex items-center gap-3 bg-white border px-4 py-3.5 transition-all hover:shadow-md hover:translate-y-[-1px] group"
-                  style={{ borderColor: '#E2DDD5' }}
-                >
-                  <div className="w-3 h-3 flex-shrink-0" style={{ background: t.color }} />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[14px] font-bold block" style={{ color: '#1A1A1A' }}>{t.name}</span>
-                    <span className="text-[12px] line-clamp-1" style={{ color: '#6B6560' }}>{t.description.split('.')[0]}.</span>
-                  </div>
-                  {count > 0 && (
-                    <span className="text-[11px] font-mono flex-shrink-0" style={{ color: '#9B9590' }}>{count}</span>
-                  )}
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-
-      </div>
+        </div>
+      </section>
     </div>
   )
 }
