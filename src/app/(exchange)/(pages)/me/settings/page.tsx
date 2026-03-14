@@ -144,10 +144,10 @@ export default function SettingsPage() {
 
     const supabase = createClient()
     const ext = file.name.split('.').pop() || 'jpg'
-    const path = 'avatars/' + userId + '.' + ext
+    const path = userId + '/avatar.' + ext
 
     const { error: uploadErr } = await supabase.storage
-      .from('public')
+      .from('profile-pictures')
       .upload(path, file, { upsert: true, contentType: file.type })
 
     if (uploadErr) {
@@ -156,15 +156,17 @@ export default function SettingsPage() {
       return
     }
 
-    const { data: urlData } = supabase.storage.from('public').getPublicUrl(path)
+    const { data: urlData } = supabase.storage.from('profile-pictures').getPublicUrl(path)
     const newUrl = urlData.publicUrl + '?t=' + Date.now()
 
-    const { error: metaErr } = await supabase.auth.updateUser({
-      data: { avatar_url: newUrl },
-    })
+    // Sync avatar URL to auth metadata and user_profiles
+    const [{ error: metaErr }, { error: profileErr }] = await Promise.all([
+      supabase.auth.updateUser({ data: { avatar_url: newUrl } }),
+      supabase.from('user_profiles').update({ avatar_url: newUrl } as any).eq('auth_id', userId),
+    ])
 
-    if (metaErr) {
-      setError('Failed to update profile: ' + metaErr.message)
+    if (metaErr || profileErr) {
+      setError('Failed to update profile: ' + (metaErr?.message || profileErr?.message))
     } else {
       setAvatarUrl(newUrl)
       setMessage('Profile picture updated.')

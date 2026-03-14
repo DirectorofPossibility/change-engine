@@ -54,10 +54,19 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
   // Fetch user avatar on mount
   useEffect(function () {
     const supabase = createClient()
-    supabase.auth.getUser().then(function ({ data }) {
+    supabase.auth.getUser().then(async function ({ data }) {
       const user = data?.user
       if (!user) return
-      const url = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
+      // Try auth metadata first, then user_profiles table
+      let url = user.user_metadata?.avatar_url || user.user_metadata?.picture || null
+      if (!url) {
+        const { data: prof } = await (supabase
+          .from('user_profiles') as any)
+          .select('avatar_url')
+          .eq('auth_id', user.id)
+          .single()
+        if (prof?.avatar_url) url = prof.avatar_url
+      }
       if (url) setAvatarUrl(url)
       const name = user.user_metadata?.display_name || user.user_metadata?.full_name || user.email || ''
       if (name) {
