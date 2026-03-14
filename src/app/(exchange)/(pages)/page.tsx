@@ -345,7 +345,7 @@ export default async function ExchangeHomePage() {
               <p className="text-[14px] mt-1" style={{ color: '#6B6560' }}>Every issue connects to a pathway. Pick one to start exploring.</p>
             </div>
             <Link href="/compass" className="inline-flex items-center gap-1 text-[14px] font-semibold" style={{ color: '#1b5e8a' }}>
-              Take the Compass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              Use the Compass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
             </Link>
           </div>
 
