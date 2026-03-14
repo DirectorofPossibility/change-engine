@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/dashboard/', '/me/', '/api/'],
+      disallow: ['/dashboard/', '/me/', '/api/', '/design2/', '/demo/'],
     },
     sitemap: 'https://www.changeengine.us/sitemap.xml',
   }

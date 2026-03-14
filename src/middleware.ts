@@ -56,12 +56,17 @@ export async function middleware(request: NextRequest) {
   // Look up profile for authenticated users (needed for role checks + feature flag bypass)
   let profileData: { account_status?: string; role?: string } | null = null
   if (user) {
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('account_status, role')
-      .eq('auth_id', user.id)
-      .single()
-    profileData = profile as { account_status?: string; role?: string } | null
+    try {
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('account_status, role')
+        .eq('auth_id', user.id)
+        .single()
+      profileData = profile as { account_status?: string; role?: string } | null
+    } catch {
+      // If profile fetch fails, proceed as unauthenticated to avoid gateway timeout
+      profileData = null
+    }
   }
 
   const isAdmin = profileData?.role === 'admin'

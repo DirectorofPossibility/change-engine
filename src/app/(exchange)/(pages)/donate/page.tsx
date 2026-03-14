@@ -151,13 +151,11 @@ export default function DonatePage() {
         {/* CTA */}
         <section className="mb-12 text-center">
           <a
-            href="https://www.paypal.com/donate/?hosted_button_id=PLACEHOLDER"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:info@changeengine.us?subject=Donation%20Inquiry"
             className="inline-block px-8 py-3 text-white text-base"
             style={{ background: '#1b5e8a' }}
           >
-            Make a Donation
+            Contact Us to Donate
           </a>
         </section>
 

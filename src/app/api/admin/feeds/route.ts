@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/roles'
 
 export async function GET() {
+  try { await requireAdmin() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
   const supabase = await createClient()
   const { data, error } = await (supabase as any)
     .from('rss_feeds')
@@ -12,6 +14,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  try { await requireAdmin() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
   const body = await request.json()
   const supabase = await createClient()
   const { data, error } = await (supabase as any)
@@ -33,6 +36,7 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
+  try { await requireAdmin() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
   const body = await request.json()
   const { id, ...updates } = body
   if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
@@ -53,6 +57,7 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  try { await requireAdmin() } catch { return NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) }
   const body = await request.json()
   if (!body.id) return NextResponse.json({ error: 'Missing id' }, { status: 400 })
   const supabase = await createClient()

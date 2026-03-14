@@ -9,6 +9,13 @@
 import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
+  // Basic abuse prevention — require same-origin requests
+  const origin = req.headers.get('origin') || ''
+  const referer = req.headers.get('referer') || ''
+  if (!origin.includes('changeengine.us') && !referer.includes('changeengine.us') && !origin.includes('localhost')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) {
     return NextResponse.json({ error: 'AI service not configured' }, { status: 500 })
