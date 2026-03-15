@@ -459,7 +459,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* ── LEFT: Content Tabs ── */}
-            <div className="flex-1 min-w-0" style={{ maxWidth: 740 }}>
+            <div className="flex-1 min-w-0">
               <ContentTabs
                 themeColor={themeColor}
                 bodyHtml={bodyHtml}
