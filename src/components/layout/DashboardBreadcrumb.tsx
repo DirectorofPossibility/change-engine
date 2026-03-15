@@ -49,7 +49,7 @@ const SEGMENT_LABELS: Record<string, string> = {
 
 export function DashboardBreadcrumb() {
   const pathname = usePathname()
-  if (!pathname || pathname === '/dashboard' || pathname === '/dashboard/partner') return null
+  if (!pathname || pathname === '/dashboard' || pathname === '/dashboard/partner' || pathname === '/dashboard/neighbor') return null
 
   const segments = pathname.replace(/^\//, '').split('/')
   const crumbs: { label: string; href: string }[] = []

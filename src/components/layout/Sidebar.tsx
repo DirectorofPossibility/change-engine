@@ -141,7 +141,7 @@ const NEIGHBOR_GROUPS: NavGroup[] = [
     label: 'Dashboard',
     defaultOpen: true,
     items: [
-      { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+      { href: '/dashboard/neighbor', label: 'Overview', icon: LayoutDashboard },
       { href: '/dashboard/submit', label: 'Submit Content', icon: FileText },
       { href: '/dashboard/library', label: 'Knowledge Base', icon: BookOpen },
       { href: '/dashboard/preferences', label: 'Content Preferences', icon: SlidersHorizontal },
@@ -181,7 +181,7 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
       : 'Pipeline Admin'
 
   const isActive = (href: string) => {
-    if (href === '/dashboard' || href === '/dashboard/partner') return pathname === href
+    if (href === '/dashboard' || href === '/dashboard/partner' || href === '/dashboard/neighbor') return pathname === href
     return pathname.startsWith(href)
   }
 
@@ -197,7 +197,7 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
     >
       {/* Logo */}
       <div className="px-5 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-        <Link href={role === 'partner' ? '/dashboard/partner' : '/dashboard'} className="block">
+        <Link href={role === 'partner' ? '/dashboard/partner' : role === 'neighbor' ? '/dashboard/neighbor' : '/dashboard'} className="block">
           <h1 className="font-display text-lg font-bold tracking-tight">The Change Engine</h1>
           <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{portalLabel}</p>
           {role === 'partner' && orgName && (

@@ -15,6 +15,8 @@
  * @route GET /dashboard
  */
 
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 import { getPipelineStats, getReviewStatusBreakdown, getContentByPathway, getContentByCenter, getIngestionLog, getEntityCounts } from '@/lib/data/dashboard'
 import Link from 'next/link'
 import { Inbox, Search, CheckCircle, Globe, Database } from 'lucide-react'
@@ -26,6 +28,19 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { CRON_JOBS } from '@/lib/types/dashboard'
 
 export default async function DashboardPage() {
+  // Redirect non-admin roles to their own overviews
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('auth_id', user.id)
+      .single()
+    if (profile?.role === 'partner') redirect('/dashboard/partner')
+    if (profile?.role === 'neighbor') redirect('/dashboard/neighbor')
+  }
+
   const [stats, breakdown, byPathway, byCenter, activity, entityCounts] = await Promise.all([
     getPipelineStats(),
     getReviewStatusBreakdown(),
