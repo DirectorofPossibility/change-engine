@@ -1,8 +1,8 @@
 /**
- * @fileoverview Homepage — Discovery feed for Houston.
+ * @fileoverview Homepage — Magazine-style editorial layout for Houston.
  *
- * Visual, thumbnail-driven content grid. Every item has an image.
- * Organizations are the backbone but surfaced through content, not lists.
+ * Inspired by Greater Good Berkeley: hero content grid, two-column feeds,
+ * pathway topic cards, video shelf, quote of the day.
  * Asset-based framing. Meet people where they are.
  *
  * @route GET /
@@ -22,13 +22,14 @@ import { FlowerOfLife } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
 import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
 import { HeroSearch } from '@/components/exchange/home/HeroSearch'
-import { ArrowRight, Calendar, MapPin, Megaphone, HandHeart, Scale, UserCheck, Users, Sparkles } from 'lucide-react'
+import { ArrowRight, Calendar, MapPin, Megaphone, HandHeart, Scale, UserCheck, Users, Play } from 'lucide-react'
 
 /* ── Design Tokens ── */
 const RULE = '#dde1e8'
 const DIM = '#5c6474'
 const INK = '#0d1117'
 const SIDEBAR_BG = '#f4f5f7'
+const ACCENT = '#C75B2A'
 
 export const revalidate = 3600
 
@@ -47,10 +48,11 @@ function getGreeting(): string {
 }
 
 export default async function ExchangeHomePage() {
-  const [stats, newsFeed, latestContent, upcomingEvents, quote, promotions, entityPathwayCounts] = await Promise.all([
+  const [stats, newsFeed, latestContent, videos, upcomingEvents, quote, promotions, entityPathwayCounts] = await Promise.all([
     getExchangeStats(),
-    getNewsFeed(undefined, 6),
+    getNewsFeed(undefined, 10),
     getLatestContent(8),
+    getNewsFeed(undefined, 6, 'video'),
     getUpcomingEvents(5),
     getRandomQuote(),
     getActivePromotions(undefined, 3),
@@ -65,31 +67,17 @@ export default async function ExchangeHomePage() {
   const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
   const greeting = getGreeting()
 
-  // Build a visual feed: mix news + resources, every item gets a thumbnail
-  const allContent = [
-    ...(newsFeed || []).map(function (item: any) { return { ...item, _type: 'news' } }),
-    ...(latestContent || []).map(function (item: any) { return { ...item, _type: 'resource' } }),
-  ]
-  // Dedupe by id, interleave types
-  const seen = new Set<string>()
-  const feed: any[] = []
-  const news = allContent.filter(function (item) { return item._type === 'news' })
-  const resources = allContent.filter(function (item) { return item._type === 'resource' })
-  let ni = 0, ri = 0
-  while (feed.length < 12 && (ni < news.length || ri < resources.length)) {
-    // Alternate: 2 news, 1 resource
-    for (let j = 0; j < 2 && ni < news.length; j++) {
-      if (!seen.has(news[ni].id)) { seen.add(news[ni].id); feed.push(news[ni]) }
-      ni++
-    }
-    if (ri < resources.length) {
-      if (!seen.has(resources[ri].id)) { seen.add(resources[ri].id); feed.push(resources[ri]) }
-      ri++
-    }
-  }
+  // Hero grid: 1 large + 4 small
+  const heroItems = (newsFeed || []).slice(0, 5)
+  const heroMain = heroItems[0]
+  const heroSide = heroItems.slice(1, 5)
 
-  const heroItem = feed[0]
-  const gridItems = feed.slice(1, 9)
+  // Latest / recent content for two-column section
+  const recentNews = (newsFeed || []).slice(5, 11)
+  const recentResources = (latestContent || []).slice(0, 6)
+
+  // Pathways for topic cards (exclude "The Bigger We" center — show 6 outer pathways)
+  const pathwayCards = THEME_LIST.filter(function (t) { return t.id !== 'THEME_07' })
 
   return (
     <div>
@@ -97,7 +85,7 @@ export default async function ExchangeHomePage() {
           PROMOTIONS BANNER
          ══════════════════════════════════════════════════════════════════ */}
       {promotions && promotions.length > 0 && (
-        <div style={{ background: promotions[0].color || '#1b5e8a' }}>
+        <div style={{ background: promotions[0].color || ACCENT }}>
           <div className="max-w-[1200px] mx-auto px-6 py-2.5 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 min-w-0">
               <Megaphone size={14} className="text-white/70 flex-shrink-0" />
@@ -114,7 +102,7 @@ export default async function ExchangeHomePage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          HERO
+          HERO — Dark banner with FOL + search
          ══════════════════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
         <Image src="/images/hero/houston-skyline.jpg" alt="" fill className="object-cover opacity-[0.10]" priority />
@@ -165,162 +153,105 @@ export default async function ExchangeHomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
-          DISCOVERY FEED — Visual content grid, every item has a thumbnail
+          HERO CONTENT GRID — 1 large + 4 small (Greater Good style)
          ══════════════════════════════════════════════════════════════════ */}
-      <div className="max-w-[1200px] mx-auto px-6 py-10">
-        <div className="flex items-center gap-2 mb-6">
-          <Sparkles size={16} style={{ color: DIM }} />
-          <h2 className="font-display text-2xl font-bold" style={{ color: INK }}>Discover what&apos;s happening</h2>
-          <div className="flex-1 h-px ml-3" style={{ background: RULE }} />
-          <Link href="/news" className="text-xs font-mono font-semibold text-blue hover:underline tracking-wide">
-            See all <ArrowRight size={11} className="inline ml-0.5" />
-          </Link>
-        </div>
-
-        {/* Hero feature + grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-5 mb-5">
-          {/* Big featured item */}
-          {heroItem && (
-            <Link
-              href={'/content/' + heroItem.id}
-              className="block rounded-xl overflow-hidden transition-all hover:shadow-xl hover:translate-y-[-2px] group"
-              style={{ border: `1px solid ${RULE}` }}
-            >
-              <div className="h-[280px] overflow-hidden relative">
-                {heroItem.image_url ? (
-                  <Image src={heroItem.image_url} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+      {heroItems.length > 0 && (
+        <section className="max-w-[1200px] mx-auto px-6 pt-10 pb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-1">
+            {/* Large featured item */}
+            {heroMain && (
+              <Link
+                href={'/content/' + heroMain.id}
+                className="block relative overflow-hidden group"
+                style={{ minHeight: 420 }}
+              >
+                {heroMain.image_url ? (
+                  <Image src={heroMain.image_url} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                 ) : (
-                  <FolFallback pathway={heroItem.pathway_primary} size="hero" />
+                  <FolFallback pathway={heroMain.pathway_primary} size="hero" />
                 )}
-                {/* Gradient overlay for text */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
                   {(() => {
-                    const t = THEME_LIST.find(function (th) { return th.id === heroItem.pathway_primary })
+                    const t = THEME_LIST.find(function (th) { return th.id === heroMain.pathway_primary })
                     return t ? (
-                      <span className="inline-block px-2.5 py-1 rounded-full font-mono text-[0.55rem] uppercase tracking-[0.14em] font-bold text-white mb-2"
-                        style={{ background: t.color + 'cc' }}
+                      <span className="inline-block px-2.5 py-1 rounded-sm font-mono text-[0.55rem] uppercase tracking-[0.14em] font-bold text-white mb-3"
+                        style={{ background: t.color }}
                       >
                         {t.name}
                       </span>
                     ) : null
                   })()}
-                  <h3 className="font-display text-xl font-black text-white leading-snug mb-1">
-                    {heroItem.title_6th_grade || heroItem.title}
+                  <h3 className="font-display text-2xl md:text-3xl font-black text-white leading-snug mb-2">
+                    {heroMain.title_6th_grade}
                   </h3>
-                  {heroItem.summary_6th_grade && (
-                    <p className="text-sm text-white/70 line-clamp-2">{heroItem.summary_6th_grade}</p>
+                  {heroMain.summary_6th_grade && (
+                    <p className="text-sm text-white/80 line-clamp-2 max-w-lg">{heroMain.summary_6th_grade}</p>
                   )}
                 </div>
-              </div>
-            </Link>
-          )}
+              </Link>
+            )}
 
-          {/* Stacked items with thumbnails */}
-          <div className="space-y-3">
-            {gridItems.slice(0, 3).map(function (item: any) {
-              const t = THEME_LIST.find(function (th) { return th.id === item.pathway_primary })
-              return (
-                <Link
-                  key={item.id}
-                  href={'/content/' + item.id}
-                  className="flex gap-3 rounded-xl overflow-hidden transition-all hover:shadow-md group"
-                  style={{ border: `1px solid ${RULE}`, background: '#ffffff' }}
-                >
-                  <div className="w-[120px] h-[90px] flex-shrink-0 overflow-hidden relative">
+            {/* 2x2 grid of smaller items */}
+            <div className="grid grid-cols-2 gap-1">
+              {heroSide.map(function (item: any) {
+                const t = THEME_LIST.find(function (th) { return th.id === item.pathway_primary })
+                return (
+                  <Link
+                    key={item.id}
+                    href={'/content/' + item.id}
+                    className="block relative overflow-hidden group"
+                    style={{ minHeight: 209 }}
+                  >
                     {item.image_url ? (
-                      <Image src={item.image_url} alt="" fill className="object-cover" />
-                    ) : (
-                      <FolFallback pathway={item.pathway_primary} height="h-full" />
-                    )}
-                  </div>
-                  <div className="flex-1 py-2.5 pr-3 min-w-0">
-                    {t && (
-                      <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
-                    )}
-                    <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
-                      {item.title_6th_grade || item.title}
-                    </h4>
-                    <span className="text-xs font-mono mt-1 block" style={{ color: DIM }}>{item.source_domain || ''}</span>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Second row — 4-up thumbnail grid */}
-        {gridItems.length > 3 && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {gridItems.slice(3, 7).map(function (item: any) {
-              const t = THEME_LIST.find(function (th) { return th.id === item.pathway_primary })
-              return (
-                <Link
-                  key={item.id}
-                  href={'/content/' + item.id}
-                  className="block rounded-xl overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
-                  style={{ border: `1px solid ${RULE}`, background: '#ffffff' }}
-                >
-                  <div className="h-[140px] overflow-hidden relative">
-                    {item.image_url ? (
-                      <Image src={item.image_url} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <Image src={item.image_url} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                     ) : (
                       <FolFallback pathway={item.pathway_primary} size="hero" />
                     )}
-                  </div>
-                  <div className="p-3">
-                    {t && (
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className="w-2 h-2 rounded-full" style={{ background: t.color }} />
-                        <span className="font-mono text-[0.5rem] uppercase tracking-[0.12em] font-bold" style={{ color: t.color }}>{t.name}</span>
-                      </div>
-                    )}
-                    <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
-                      {item.title_6th_grade || item.title}
-                    </h4>
-                  </div>
-                </Link>
-              )
-            })}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      {t && (
+                        <span className="inline-block px-2 py-0.5 rounded-sm font-mono text-[0.5rem] uppercase tracking-[0.12em] font-bold text-white mb-1.5"
+                          style={{ background: t.color }}
+                        >
+                          {t.name}
+                        </span>
+                      )}
+                      <h4 className="font-display text-sm font-bold text-white leading-snug line-clamp-3">
+                        {item.title_6th_grade}
+                      </h4>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
-        )}
-      </div>
+        </section>
+      )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          THE THREADS — depth layers on dark background
+          DEPTH LAYERS — Accent band (like newsletter signup bar)
          ══════════════════════════════════════════════════════════════════ */}
       <section style={{ background: INK }}>
-        <div className="max-w-[1200px] mx-auto px-6 py-12">
-          <div className="text-center mb-8">
-            <Sparkles size={20} className="mx-auto mb-3 text-white/30" />
-            <h2 className="font-display text-2xl font-black text-white mb-2">Pull on a thread</h2>
-            <p className="text-sm text-white/50 max-w-lg mx-auto">
-              Behind every story is a web of people, services, and decisions. Here&apos;s how to follow the connections.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="max-w-[1200px] mx-auto px-6 py-5">
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
             {[
-              { icon: HandHeart, label: 'Services', count: stats.services || 0, href: '/services', color: '#16a34a', question: 'What help is available near me?' },
-              { icon: UserCheck, label: 'Your Representatives', count: stats.officials || 0, href: '/officials', color: '#3b82f6', question: 'Who speaks for my neighborhood?' },
-              { icon: Scale, label: 'Policies & Legislation', count: stats.policies || 0, href: '/policies', color: '#ef4444', question: 'What decisions are being made?' },
-              { icon: Users, label: 'Ways to Participate', count: stats.opportunities || 0, href: '/opportunities', color: '#a855f7', question: 'How can I show up?' },
+              { icon: HandHeart, label: 'Services', count: stats.services || 0, href: '/services' },
+              { icon: UserCheck, label: 'Representatives', count: stats.officials || 0, href: '/officials' },
+              { icon: Scale, label: 'Policies', count: stats.policies || 0, href: '/policies' },
+              { icon: Users, label: 'Ways to Participate', count: stats.opportunities || 0, href: '/opportunities' },
+              { icon: Calendar, label: 'Events', count: upcomingEvents?.length || 0, href: '/calendar' },
             ].map(function (layer) {
               const Icon = layer.icon
               return (
                 <Link
                   key={layer.label}
                   href={layer.href}
-                  className="p-5 rounded-xl transition-all hover:translate-y-[-3px] hover:shadow-xl group"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+                  className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
                 >
-                  <Icon size={22} className="mb-3" style={{ color: layer.color }} />
-                  <p className="text-white/40 text-xs italic mb-2">{layer.question}</p>
-                  <h3 className="text-sm font-bold text-white mb-1">{layer.label}</h3>
-                  <span className="font-display text-2xl font-black" style={{ color: layer.color }}>{layer.count.toLocaleString()}</span>
-                  <span className="block text-xs text-white/30 mt-2 group-hover:text-white/50 transition-colors">
-                    Explore <ArrowRight size={10} className="inline ml-0.5" />
-                  </span>
+                  <Icon size={16} />
+                  <span className="text-sm font-semibold">{layer.label}</span>
+                  <span className="text-xs font-mono text-white/30">{layer.count.toLocaleString()}</span>
                 </Link>
               )
             })}
@@ -329,70 +260,253 @@ export default async function ExchangeHomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
-          COMING UP
+          TWO-COLUMN: Latest News + Recent Resources (Greater Good style)
          ══════════════════════════════════════════════════════════════════ */}
-      {upcomingEvents && upcomingEvents.length > 0 && (
-        <div className="max-w-[1200px] mx-auto px-6 py-10">
-          <div className="flex items-center gap-2 mb-5">
-            <Calendar size={16} style={{ color: DIM }} />
-            <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Coming Up</h2>
-            <div className="flex-1 h-px ml-2" style={{ background: RULE }} />
-            <Link href="/calendar" className="text-xs font-mono font-semibold text-blue hover:underline tracking-wide">
-              Full calendar <ArrowRight size={11} className="inline ml-0.5" />
-            </Link>
+      <section className="max-w-[1200px] mx-auto px-6 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {/* Left column — Latest News */}
+          <div>
+            <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
+              <h2 className="font-display text-xl font-black" style={{ color: INK }}>Latest News</h2>
+              <Link href="/news" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
+                See all <ArrowRight size={11} className="inline ml-0.5" />
+              </Link>
+            </div>
+            <div className="space-y-0">
+              {recentNews.map(function (item: any, i: number) {
+                const t = THEME_LIST.find(function (th) { return th.id === item.pathway_primary })
+                return (
+                  <Link
+                    key={item.id}
+                    href={'/content/' + item.id}
+                    className="flex gap-4 py-4 group"
+                    style={{ borderBottom: `1px solid ${RULE}` }}
+                  >
+                    <div className="w-[100px] h-[75px] flex-shrink-0 overflow-hidden relative rounded">
+                      {item.image_url ? (
+                        <Image src={item.image_url} alt="" fill className="object-cover" />
+                      ) : (
+                        <FolFallback pathway={item.pathway_primary} height="h-full" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      {t && (
+                        <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
+                      )}
+                      <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
+                        {item.title_6th_grade}
+                      </h4>
+                      <span className="text-xs mt-1 block" style={{ color: DIM }}>{item.source_domain || ''}</span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-            {upcomingEvents.map(function (event: any) {
-              const eventDate = new Date(event.date)
-              const month = eventDate.toLocaleDateString('en-US', { month: 'short' })
-              const day = eventDate.getDate()
-              const weekday = eventDate.toLocaleDateString('en-US', { weekday: 'short' })
+          {/* Right column — Featured Resources */}
+          <div>
+            <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
+              <h2 className="font-display text-xl font-black" style={{ color: INK }}>Featured Resources</h2>
+              <Link href="/resources" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
+                See all <ArrowRight size={11} className="inline ml-0.5" />
+              </Link>
+            </div>
+            <div className="space-y-0">
+              {recentResources.map(function (item: any) {
+                const t = THEME_LIST.find(function (th) { return th.id === item.pathway_primary })
+                return (
+                  <Link
+                    key={item.id}
+                    href={'/content/' + item.id}
+                    className="flex gap-4 py-4 group"
+                    style={{ borderBottom: `1px solid ${RULE}` }}
+                  >
+                    <div className="w-[100px] h-[75px] flex-shrink-0 overflow-hidden relative rounded">
+                      {item.image_url ? (
+                        <Image src={item.image_url} alt="" fill className="object-cover" />
+                      ) : (
+                        <FolFallback pathway={item.pathway_primary} height="h-full" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      {t && (
+                        <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
+                      )}
+                      <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
+                        {item.title_6th_grade || item.title}
+                      </h4>
+                      <span className="text-xs mt-1 block" style={{ color: DIM }}>
+                        {item.content_type ? item.content_type.charAt(0).toUpperCase() + item.content_type.slice(1) : ''}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          PATHWAYS — Topic cards (like "Keys to Well-Being")
+         ══════════════════════════════════════════════════════════════════ */}
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}`, borderBottom: `1px solid ${RULE}` }}>
+        <div className="max-w-[1200px] mx-auto px-6 py-10">
+          <div className="text-center mb-8">
+            <h2 className="font-display text-2xl font-black" style={{ color: INK }}>Explore by Pathway</h2>
+            <p className="text-sm mt-2 max-w-lg mx-auto" style={{ color: DIM }}>
+              Seven lenses into the work Houston organizations are doing. Each pathway connects you to services, news, officials, and ways to get involved.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {pathwayCards.map(function (theme) {
+              const count = pathwayCounts[theme.id] || 0
               return (
                 <Link
-                  key={event.id}
-                  href={event.href}
-                  className="p-4 rounded-xl transition-all hover:shadow-md hover:translate-y-[-2px]"
-                  style={{ background: '#ffffff', border: `1px solid ${RULE}` }}
+                  key={theme.id}
+                  href={'/pathways/' + theme.slug}
+                  className="bg-white rounded-xl overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
+                  style={{ border: `1px solid ${RULE}` }}
                 >
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-10 h-10 rounded-lg flex flex-col items-center justify-center" style={{ background: SIDEBAR_BG }}>
-                      <span className="font-mono text-[0.5rem] uppercase tracking-wider font-bold" style={{ color: DIM }}>{month}</span>
-                      <span className="font-display text-base font-black leading-none" style={{ color: INK }}>{day}</span>
+                  {/* Colored header band with FOL pattern */}
+                  <div className="h-24 relative overflow-hidden" style={{ background: theme.color }}>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                      <FlowerOfLife color="#ffffff" size={120} />
                     </div>
-                    <span className="text-xs font-mono" style={{ color: DIM }}>{weekday}</span>
+                    <div className="absolute bottom-3 left-4">
+                      <span className="font-mono text-[0.55rem] uppercase tracking-[0.14em] text-white/60">{count.toLocaleString()} resources</span>
+                    </div>
                   </div>
-                  <h4 className="text-sm font-bold leading-snug line-clamp-2" style={{ color: INK }}>{event.title}</h4>
-                  {event.location && (
-                    <div className="flex items-center gap-1 text-xs mt-1.5" style={{ color: DIM }}>
-                      <MapPin size={9} />
-                      <span className="truncate">{event.location}</span>
-                    </div>
-                  )}
+                  <div className="p-4">
+                    <h3 className="font-display text-lg font-black mb-1 group-hover:underline" style={{ color: INK }}>
+                      {theme.name}
+                    </h3>
+                    <p className="text-xs leading-relaxed line-clamp-3" style={{ color: DIM }}>
+                      {theme.description}
+                    </p>
+                  </div>
                 </Link>
               )
             })}
           </div>
         </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          VIDEOS — 3-up shelf
+         ══════════════════════════════════════════════════════════════════ */}
+      {videos && videos.length > 0 && (
+        <section className="max-w-[1200px] mx-auto px-6 py-10">
+          <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
+            <h2 className="font-display text-xl font-black" style={{ color: INK }}>Videos</h2>
+            <Link href="/news?type=video" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
+              See all <ArrowRight size={11} className="inline ml-0.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {(videos as any[]).slice(0, 3).map(function (item: any) {
+              const t = THEME_LIST.find(function (th) { return th.id === item.pathway_primary })
+              return (
+                <Link
+                  key={item.id}
+                  href={'/content/' + item.id}
+                  className="block group"
+                >
+                  <div className="relative overflow-hidden rounded-lg mb-3" style={{ aspectRatio: '16/9' }}>
+                    {item.image_url ? (
+                      <Image src={item.image_url} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <FolFallback pathway={item.pathway_primary} size="hero" />
+                    )}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                        <Play size={20} fill={INK} style={{ color: INK, marginLeft: 2 }} />
+                      </div>
+                    </div>
+                  </div>
+                  {t && (
+                    <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
+                  )}
+                  <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline mt-0.5" style={{ color: INK }}>
+                    {item.title_6th_grade}
+                  </h4>
+                  {item.summary_6th_grade && (
+                    <p className="text-xs mt-1 line-clamp-2" style={{ color: DIM }}>{item.summary_6th_grade}</p>
+                  )}
+                </Link>
+              )
+            })}
+          </div>
+        </section>
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          COMMUNITY VOICE
+          COMING UP — Events
+         ══════════════════════════════════════════════════════════════════ */}
+      {upcomingEvents && upcomingEvents.length > 0 && (
+        <section style={{ borderTop: `1px solid ${RULE}` }}>
+          <div className="max-w-[1200px] mx-auto px-6 py-10">
+            <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
+              <h2 className="font-display text-xl font-black" style={{ color: INK }}>Coming Up</h2>
+              <Link href="/calendar" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
+                Full calendar <ArrowRight size={11} className="inline ml-0.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {upcomingEvents.map(function (event: any) {
+                const eventDate = new Date(event.date)
+                const month = eventDate.toLocaleDateString('en-US', { month: 'short' })
+                const day = eventDate.getDate()
+                const weekday = eventDate.toLocaleDateString('en-US', { weekday: 'short' })
+                return (
+                  <Link
+                    key={event.id}
+                    href={event.href}
+                    className="p-4 rounded-xl transition-all hover:shadow-md hover:translate-y-[-2px] bg-white"
+                    style={{ border: `1px solid ${RULE}` }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-10 h-10 rounded-lg flex flex-col items-center justify-center" style={{ background: SIDEBAR_BG }}>
+                        <span className="font-mono text-[0.5rem] uppercase tracking-wider font-bold" style={{ color: DIM }}>{month}</span>
+                        <span className="font-display text-base font-black leading-none" style={{ color: INK }}>{day}</span>
+                      </div>
+                      <span className="text-xs font-mono" style={{ color: DIM }}>{weekday}</span>
+                    </div>
+                    <h4 className="text-sm font-bold leading-snug line-clamp-2" style={{ color: INK }}>{event.title}</h4>
+                    {event.location && (
+                      <div className="flex items-center gap-1 text-xs mt-1.5" style={{ color: DIM }}>
+                        <MapPin size={9} />
+                        <span className="truncate">{event.location}</span>
+                      </div>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+          QUOTE OF THE DAY
          ══════════════════════════════════════════════════════════════════ */}
       {quote && (
-        <div style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
-          <div className="max-w-[700px] mx-auto px-6 py-10 text-center">
-            <div className="w-8 h-8 mx-auto mb-3 flex items-center justify-center rounded-full" style={{ background: `${INK}08` }}>
-              <FlowerOfLife color={INK} size={16} />
-            </div>
-            <blockquote className="font-display text-lg leading-relaxed italic mb-2" style={{ color: INK }}>
+        <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+          <div className="max-w-[700px] mx-auto px-6 py-12 text-center">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] mb-4" style={{ color: DIM }}>Quote of the Day</p>
+            <blockquote className="font-display text-2xl leading-relaxed italic mb-3" style={{ color: INK }}>
               &ldquo;{quote.quote_text}&rdquo;
             </blockquote>
             {quote.attribution && (
-              <p className="text-sm font-mono" style={{ color: DIM }}>— {quote.attribution}</p>
+              <p className="text-sm" style={{ color: DIM }}>— {quote.attribution}</p>
             )}
           </div>
-        </div>
+        </section>
       )}
 
       {/* ── FOOTER CODA ── */}
@@ -408,7 +522,7 @@ export default async function ExchangeHomePage() {
               <span style={{ color: RULE }}>&middot;</span>
               <span>Free forever</span>
             </div>
-            <Link href="/about" className="text-sm font-semibold text-blue hover:underline">
+            <Link href="/about" className="text-sm font-semibold hover:underline" style={{ color: ACCENT }}>
               About The Change Engine <ArrowRight size={12} className="inline ml-1" />
             </Link>
           </div>
