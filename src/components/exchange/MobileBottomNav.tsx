@@ -5,21 +5,21 @@ import { usePathname } from 'next/navigation'
 import { Home, Search, Heart, Compass, User } from 'lucide-react'
 
 const navItems = [
-  { href: '/exchange', label: 'Home', icon: Home },
+  { href: '/', label: 'Home', icon: Home },
   { href: '/help', label: 'Help', icon: Heart },
   { href: '/search', label: 'Search', icon: Search },
   { href: '/compass', label: 'Explore', icon: Compass },
-  { href: '/me', label: 'Account', icon: User },
+  { href: '/me', label: 'Me', icon: User },
 ]
 
 export default function MobileBottomNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-sm border-t border-rule pb-[env(safe-area-inset-bottom)] lg:hidden">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-ink pb-[env(safe-area-inset-bottom)] lg:hidden">
       <div className="flex items-center justify-around h-14">
         {navItems.map(function ({ href, label, icon: Icon }) {
-          const isActive = pathname === href
+          const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
           return (
             <Link
               key={href}
@@ -29,8 +29,8 @@ export default function MobileBottomNav() {
                 isActive ? 'text-blue' : 'text-muted'
               }`}
             >
-              <Icon size={20} />
-              <span className="text-xs font-medium">{label}</span>
+              <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
+              <span className="font-mono text-[10px] uppercase tracking-wider">{label}</span>
             </Link>
           )
         })}

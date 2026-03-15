@@ -90,9 +90,9 @@ export const CENTERS: Record<string, { question: string; emoji: string; slug: st
  * Keep these in sync with the Tailwind theme extension.
  */
 export const BRAND = {
-  name: 'Change Engine',
-  tagline: 'A project of The Change Lab',
-  origin: 'Made in Houston, for everyone',
+  name: 'Community Exchange',
+  tagline: 'Powered by The Change Lab',
+  origin: 'Built with love in Houston, for everyone',
   background: '#ffffff',
   text: '#0d1117',
   accent: '#1b5e8a',

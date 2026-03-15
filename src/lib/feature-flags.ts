@@ -115,6 +115,7 @@ const ALWAYS_ENABLED_EXACT = [
   '/',
   '/account-locked',
   '/dashboard',
+  '/design-preview',
 ]
 
 /**

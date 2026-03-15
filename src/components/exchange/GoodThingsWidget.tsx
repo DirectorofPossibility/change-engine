@@ -116,7 +116,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
   // card variant (for sidebar / homepage)
   return (
     <div className={'bg-white border border-brand-border p-4 relative overflow-hidden transition-opacity duration-300 ' + (fade ? 'opacity-100' : 'opacity-0')}>
-      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#1a6b56] via-[#1b5e8a] to-[#4a2870]" />
+      <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue" />
       <div className="pl-3">
         <div className="flex items-center gap-2 mb-3">
           <FlowerOfLifeIcon size={16} color="#4a2870" />
