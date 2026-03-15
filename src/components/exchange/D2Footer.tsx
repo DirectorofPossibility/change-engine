@@ -19,10 +19,13 @@ export function D2Footer() {
 
   const COMMUNITY = filterNavItems([
     { label: 'Neighborhoods', href: '/neighborhoods' },
+    { label: 'Super neighborhoods', href: '/super-neighborhoods' },
     { label: 'Organizations', href: '/organizations' },
     { label: 'Foundations', href: '/foundations' },
     { label: 'Events calendar', href: '/calendar' },
+    { label: 'Events', href: '/events' },
     { label: 'Three Good Things', href: '/goodthings' },
+    { label: 'Stories', href: '/stories' },
     { label: 'Teen Hub', href: '/teens' },
   ])
 
@@ -31,23 +34,37 @@ export function D2Footer() {
     { label: 'Library', href: '/library' },
     { label: 'Bookshelf', href: '/bookshelf' },
     { label: 'Topics', href: '/pathways' },
+    { label: 'Guides', href: '/guides' },
+    { label: 'Collections', href: '/collections' },
+    { label: 'Glossary', href: '/glossary' },
+    { label: 'FAQ', href: '/faq' },
     { label: 'Civic Compass', href: '/compass' },
     { label: 'Ask Chance', href: '/chat' },
   ])
 
   const FIND_HELP = filterNavItems([
     { label: 'What\u2019s available', href: '/help' },
+    { label: 'Services', href: '/services' },
+    { label: 'Municipal services', href: '/municipal-services' },
+    { label: 'Benefits', href: '/benefits' },
+    { label: 'Agencies', href: '/agencies' },
     { label: 'Volunteer', href: '/opportunities' },
     { label: 'Find on the map', href: '/geography' },
-    { label: 'Services', href: '/services' },
+    { label: 'Explore', href: '/explore' },
   ])
 
   const GET_INVOLVED = filterNavItems([
     { label: 'Elections', href: '/elections' },
+    { label: 'Candidates', href: '/candidates' },
+    { label: 'Your ballot', href: '/ballot' },
+    { label: 'Officials', href: '/officials' },
+    { label: 'Look up your reps', href: '/officials/lookup' },
     { label: 'Contact your reps', href: '/call-your-senators' },
     { label: 'Where to vote', href: '/polling-places' },
+    { label: 'Districts', href: '/districts' },
     { label: 'Governance', href: '/governance' },
     { label: 'Policies', href: '/policies' },
+    { label: 'Campaigns', href: '/campaigns' },
     { label: 'Live dashboard', href: '/dashboard-live' },
   ])
 
@@ -55,8 +72,13 @@ export function D2Footer() {
     { label: 'About us', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'User manual', href: '/manual' },
+    { label: 'Donate', href: '/donate' },
+    { label: 'Submit content', href: '/me/submit' },
     { label: 'Search', href: '/search' },
     { label: 'My account', href: '/me' },
+    { label: 'Data', href: '/data' },
+    { label: 'UN SDGs', href: '/sdgs' },
+    { label: 'TIRZ', href: '/tirz' },
   ]
 
   const linkClass = 'block py-0.5 text-sm text-white/50 hover:text-white transition-colors'
