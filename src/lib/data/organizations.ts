@@ -4,7 +4,7 @@ export async function getOrganizations({ limit = 200, offset = 0 }: { limit?: nu
   const supabase = await createClient()
   const { data } = await supabase
     .from('organizations')
-    .select('org_id, org_name, description_5th_grade, website, phone, address, city, state, zip_code, logo_url, org_type, mission_statement, service_area, focus_area_ids, ntee_code, is_verified')
+    .select('org_id, org_name, description_5th_grade, website, phone, address, city, state, zip_code, logo_url, org_type, mission_statement, service_area, focus_area_ids, ntee_code, is_verified, city_slug')
     .order('org_name')
     .range(offset, offset + limit - 1)
   return data ?? []

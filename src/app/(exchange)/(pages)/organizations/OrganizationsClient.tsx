@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, MapPin } from 'lucide-react'
 import Image from 'next/image'
+import { useCity } from '@/lib/contexts/CityContext'
 
 type Org = {
   org_id: string
@@ -22,6 +23,7 @@ type Org = {
   focus_area_ids: string | null
   ntee_code: string | null
   is_verified: string | null
+  city_slug: string | null
 }
 
 const ORG_TYPES: Array<{ label: string; color: string }> = [
@@ -41,53 +43,83 @@ const ORG_TYPES: Array<{ label: string; color: string }> = [
 const ORG_TYPE_COLOR: Record<string, string> = {}
 for (const t of ORG_TYPES) ORG_TYPE_COLOR[t.label] = t.color
 
-// Houston-area cities that count as "local"
-const HOUSTON_AREA_CITIES = new Set([
-  'houston', 'pasadena', 'sugar land', 'pearland', 'league city',
-  'baytown', 'missouri city', 'the woodlands', 'conroe', 'spring',
-  'katy', 'humble', 'kingwood', 'cypress', 'tomball', 'friendswood',
-  'deer park', 'la porte', 'galveston', 'webster', 'clear lake',
-  'bellaire', 'west university place', 'stafford', 'richmond',
-  'rosenberg', 'alvin', 'angleton', 'dickinson', 'texas city',
-  'la marque', 'seabrook', 'kemah', 'mont belvieu',
-])
+// City-specific metro-area cities for "local" scope classification
+const LOCAL_AREA_CITIES: Record<string, Set<string>> = {
+  houston: new Set([
+    'houston', 'pasadena', 'sugar land', 'pearland', 'league city',
+    'baytown', 'missouri city', 'the woodlands', 'conroe', 'spring',
+    'katy', 'humble', 'kingwood', 'cypress', 'tomball', 'friendswood',
+    'deer park', 'la porte', 'galveston', 'webster', 'clear lake',
+    'bellaire', 'west university place', 'stafford', 'richmond',
+    'rosenberg', 'alvin', 'angleton', 'dickinson', 'texas city',
+    'la marque', 'seabrook', 'kemah', 'mont belvieu',
+  ]),
+  'san-francisco': new Set([
+    'san francisco', 'daly city', 'south san francisco', 'san bruno',
+    'pacifica', 'brisbane', 'colma',
+  ]),
+  berkeley: new Set([
+    'berkeley', 'albany', 'emeryville', 'oakland', 'richmond',
+    'el cerrito', 'kensington',
+  ]),
+}
+
+const STATE_BY_CITY: Record<string, string> = {
+  houston: 'TX',
+  'san-francisco': 'CA',
+  berkeley: 'CA',
+}
 
 type GeoScope = 'local' | 'regional' | 'national'
 
-function classifyScope(org: Org): GeoScope {
+function classifyScope(org: Org, citySlug: string): GeoScope {
+  // If org has a city_slug, it's local to that city
+  if (org.city_slug === citySlug) return 'local'
+
   const sa = (org.service_area || '').toLowerCase()
 
   // Use service_area directly when set
-  if (sa === 'greater houston' || sa === 'houston metropolitan area') return 'local'
-  if (sa === 'texas') return 'regional'
+  if (sa.includes('greater') || sa.includes('metropolitan') || sa.includes('metro')) return 'local'
   if (sa === 'national' || sa === 'international') return 'national'
 
   // Fallback: infer from city/state
-  const city = (org.city || '').toLowerCase().trim()
+  const orgCity = (org.city || '').toLowerCase().trim()
   const state = (org.state || '').toUpperCase().trim()
+  const localCities = LOCAL_AREA_CITIES[citySlug]
+  const stateCode = STATE_BY_CITY[citySlug] || 'TX'
 
-  if (HOUSTON_AREA_CITIES.has(city) || city.includes('houston')) return 'local'
-  if (state === 'TX' || state === 'TEXAS') return 'regional'
+  if (localCities && localCities.has(orgCity)) return 'local'
+  if (sa === stateCode.toLowerCase() || sa === getStateName(stateCode).toLowerCase()) return 'regional'
+  if (state === stateCode) return 'regional'
 
   return 'national'
 }
 
-const SCOPE_CONFIG: Record<GeoScope, { label: string; description: string; color: string }> = {
-  local: {
-    label: 'Local',
-    description: 'Organizations based in your local area',
-    color: '#1a6b56',
-  },
-  regional: {
-    label: 'Texas & Regional',
-    description: 'Statewide and regional organizations serving your area',
-    color: '#1e4d7a',
-  },
-  national: {
-    label: 'National & Beyond',
-    description: 'National and international organizations with locally relevant programs',
-    color: '#4a2870',
-  },
+function getStateName(code: string): string {
+  const names: Record<string, string> = { TX: 'Texas', CA: 'California', TN: 'Tennessee' }
+  return names[code] || code
+}
+
+function getScopeConfig(citySlug: string): Record<GeoScope, { label: string; description: string; color: string }> {
+  const stateCode = STATE_BY_CITY[citySlug] || 'TX'
+  const stateName = getStateName(stateCode)
+  return {
+    local: {
+      label: 'Local',
+      description: 'Organizations based in your local area',
+      color: '#1a6b56',
+    },
+    regional: {
+      label: stateName + ' & Regional',
+      description: 'Statewide and regional organizations serving your area',
+      color: '#1e4d7a',
+    },
+    national: {
+      label: 'National & Beyond',
+      description: 'National and international organizations with locally relevant programs',
+      color: '#4a2870',
+    },
+  }
 }
 
 const SCOPE_ORDER: GeoScope[] = ['local', 'regional', 'national']
@@ -98,14 +130,16 @@ interface OrganizationsClientProps {
 }
 
 export function OrganizationsClient({ organizations, userZip }: OrganizationsClientProps) {
+  const { citySlug } = useCity()
+  const SCOPE_CONFIG = useMemo(() => getScopeConfig(citySlug), [citySlug])
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState<string | null>(null)
   const [scopeFilter, setScopeFilter] = useState<GeoScope | null>(null)
 
   // Classify all orgs by scope
   const orgsWithScope = useMemo(() => {
-    return organizations.map(o => ({ ...o, _scope: classifyScope(o) }))
-  }, [organizations])
+    return organizations.map(o => ({ ...o, _scope: classifyScope(o, citySlug) }))
+  }, [organizations, citySlug])
 
   const filtered = useMemo(() => {
     let result = orgsWithScope
@@ -300,7 +334,7 @@ function OrgGrid({ orgs }: { orgs: Array<Org & { _scope: GeoScope }> }) {
                 ) : null}
                 {org.city && (
                   <span className="flex items-center gap-0.5">
-                    <MapPin size={9} /> {org.city}{org.state && org.state !== 'TX' ? ', ' + org.state : ''}
+                    <MapPin size={9} /> {org.city}{org.state ? ', ' + org.state : ''}
                   </span>
                 )}
               </div>
