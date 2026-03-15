@@ -66,13 +66,19 @@ export default async function ExchangeHomePage() {
   const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
   const greeting = getGreeting()
 
-  // Hero grid: 1 large + 4 small
-  const heroItems = (newsFeed || []).slice(0, 5)
+  // Sort content: items with images first, then without
+  const allNews = (newsFeed || []) as any[]
+  const withImages = allNews.filter(function (item: any) { return !!item.image_url })
+  const withoutImages = allNews.filter(function (item: any) { return !item.image_url })
+  const sortedFeed = [...withImages, ...withoutImages]
+
+  // Hero grid: prioritize items with real images
+  const heroItems = sortedFeed.slice(0, 5)
   const heroMain = heroItems[0]
   const heroSide = heroItems.slice(1, 5)
 
-  // Latest / recent content for two-column section
-  const recentNews = (newsFeed || []).slice(5, 11)
+  // Latest / recent content for two-column section (can include no-image items)
+  const recentNews = sortedFeed.slice(5, 11)
   const recentResources = (latestContent || []).slice(0, 6)
 
   // Pathways for topic cards (exclude "The Bigger We" center — show 6 outer pathways)
@@ -105,7 +111,8 @@ export default async function ExchangeHomePage() {
          ══════════════════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden" style={{ minHeight: 400 }}>
         <Image src="/images/hero/houston-skyline.jpg" alt="Houston skyline" fill className="object-cover" priority />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-16 md:py-24 flex flex-col justify-end" style={{ minHeight: 400 }}>
           <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/60 mb-4">The Change Engine</p>
@@ -145,7 +152,7 @@ export default async function ExchangeHomePage() {
           HERO CONTENT GRID — 1 large + 4 small (Greater Good style)
          ══════════════════════════════════════════════════════════════════ */}
       {heroItems.length > 0 && (
-        <section className="max-w-[1200px] mx-auto px-6 pt-10 pb-6">
+        <section className="max-w-[1200px] mx-auto px-6 pt-5 pb-6">
           <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-1">
             {/* Large featured item */}
             {heroMain && (
