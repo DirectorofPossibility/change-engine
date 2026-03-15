@@ -3104,6 +3104,7 @@ export type Database = {
           event_name: string
           event_type: string | null
           focus_area_ids: string | null
+          hero_image_url: string | null
           is_active: string | null
           is_free: string | null
           is_recurring: string | null
@@ -3131,6 +3132,7 @@ export type Database = {
           event_name: string
           event_type?: string | null
           focus_area_ids?: string | null
+          hero_image_url?: string | null
           is_active?: string | null
           is_free?: string | null
           is_recurring?: string | null
@@ -3158,6 +3160,7 @@ export type Database = {
           event_name?: string
           event_type?: string | null
           focus_area_ids?: string | null
+          hero_image_url?: string | null
           is_active?: string | null
           is_free?: string | null
           is_recurring?: string | null

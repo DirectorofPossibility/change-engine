@@ -49,7 +49,7 @@ export const getCalendarItems = cache(async function getCalendarItems(pathway?: 
   // Events table — only future/current
   const eventsQ = supabase
     .from('events')
-    .select('event_id, event_name, description_5th_grade, event_type, start_datetime, end_datetime, address, city, is_virtual, registration_url, org_id, focus_area_ids')
+    .select('event_id, event_name, description_5th_grade, event_type, start_datetime, end_datetime, address, city, is_virtual, registration_url, org_id, focus_area_ids, hero_image_url')
     .eq('is_active', 'Yes')
     .or(`end_datetime.gte.${now},start_datetime.gte.${now}`)
     .order('start_datetime', { ascending: true })
@@ -148,7 +148,7 @@ export const getCalendarItems = cache(async function getCalendarItems(pathway?: 
       isVirtual: e.is_virtual === 'Yes',
       registrationUrl: e.registration_url,
       sourceUrl: null,
-      imageUrl: null,
+      imageUrl: e.hero_image_url || null,
       pathway: null,
       eventType: e.event_type,
       orgName: e.org_id ? orgMap.get(e.org_id) || null : null,
