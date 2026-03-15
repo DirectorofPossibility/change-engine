@@ -93,12 +93,12 @@ export default async function ExchangeHomePage() {
         <div style={{ background: promotions[0].color || ACCENT }}>
           <div className="max-w-[1200px] mx-auto px-6 py-2.5 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 min-w-0">
-              <Megaphone size={14} className="text-white/70 flex-shrink-0" />
-              <span className="text-sm font-semibold text-white truncate">{promotions[0].title}</span>
-              {promotions[0].subtitle && <span className="text-sm text-white/70 hidden sm:inline">— {promotions[0].subtitle}</span>}
+              <Megaphone size={16} className="text-white/70 flex-shrink-0" />
+              <span className="text-base font-semibold text-white truncate">{promotions[0].title}</span>
+              {promotions[0].subtitle && <span className="text-base text-white/70 hidden sm:inline">— {promotions[0].subtitle}</span>}
             </div>
             {promotions[0].cta_href && (
-              <Link href={promotions[0].cta_href} className="text-xs font-bold text-white/90 hover:text-white flex-shrink-0 underline underline-offset-2">
+              <Link href={promotions[0].cta_href} className="text-sm font-bold text-white/90 hover:text-white flex-shrink-0 underline underline-offset-2">
                 {promotions[0].cta_text || 'Learn more'}
               </Link>
             )}
@@ -109,22 +109,22 @@ export default async function ExchangeHomePage() {
       {/* ══════════════════════════════════════════════════════════════════
           HERO — Houston skyline with search
          ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden" style={{ minHeight: 400 }}>
+      <section className="relative overflow-hidden" style={{ minHeight: 420 }}>
         <Image src="/images/hero/houston-skyline.jpg" alt="Houston skyline" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-16 md:py-24 flex flex-col justify-end" style={{ minHeight: 400 }}>
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/60 mb-4">The Change Engine</p>
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-16 md:py-24 flex flex-col justify-end" style={{ minHeight: 420 }}>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-white/70 mb-4">The Change Engine</p>
           <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)' }}
+            style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}
           >
             {greeting}.
           </h1>
-          <p className="text-xl text-white/90 mb-2 max-w-xl leading-relaxed font-display">
+          <p className="text-2xl text-white/90 mb-2 max-w-xl leading-relaxed font-display">
             <span className="text-white font-bold">{(stats.organizations || 0).toLocaleString()} organizations</span> are already building the Houston you want to live in.
           </p>
-          <p className="text-sm text-white/60 mb-6 max-w-xl leading-relaxed">
+          <p className="text-base text-white/70 mb-6 max-w-xl leading-relaxed">
             This is your guide to what they do, how to connect, and where you fit in.
           </p>
 
@@ -133,11 +133,11 @@ export default async function ExchangeHomePage() {
           </div>
 
           <div className="flex items-center gap-4 mt-4 flex-wrap">
-            <span className="text-xs font-mono text-white/50">{totalResources.toLocaleString()} resources</span>
-            <span className="text-white/25">&middot;</span>
-            <span className="text-xs font-mono text-white/50">3 languages</span>
-            <span className="text-white/25">&middot;</span>
-            <span className="text-xs font-mono text-white/50">Free forever</span>
+            <span className="text-sm font-mono text-white/60">{totalResources.toLocaleString()} resources</span>
+            <span className="text-white/30">&middot;</span>
+            <span className="text-sm font-mono text-white/60">3 languages</span>
+            <span className="text-white/30">&middot;</span>
+            <span className="text-sm font-mono text-white/60">Free forever</span>
           </div>
         </div>
 
@@ -171,7 +171,7 @@ export default async function ExchangeHomePage() {
                   {(() => {
                     const t = THEME_LIST.find(function (th) { return th.id === heroMain.pathway_primary })
                     return t ? (
-                      <span className="inline-block px-2.5 py-1 rounded-sm font-mono text-[0.55rem] uppercase tracking-[0.14em] font-bold text-white mb-3"
+                      <span className="inline-block px-3 py-1 rounded-sm font-mono text-xs uppercase tracking-[0.1em] font-bold text-white mb-3"
                         style={{ background: t.color }}
                       >
                         {t.name}
@@ -182,7 +182,7 @@ export default async function ExchangeHomePage() {
                     {heroMain.title_6th_grade}
                   </h3>
                   {heroMain.summary_6th_grade && (
-                    <p className="text-sm text-white/80 line-clamp-2 max-w-lg">{heroMain.summary_6th_grade}</p>
+                    <p className="text-base text-white/80 line-clamp-2 max-w-lg">{heroMain.summary_6th_grade}</p>
                   )}
                 </div>
               </Link>
@@ -205,15 +205,15 @@ export default async function ExchangeHomePage() {
                       <FolFallback pathway={item.pathway_primary} size="hero" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
                       {t && (
-                        <span className="inline-block px-2 py-0.5 rounded-sm font-mono text-[0.5rem] uppercase tracking-[0.12em] font-bold text-white mb-1.5"
+                        <span className="inline-block px-2 py-0.5 rounded-sm font-mono text-xs uppercase tracking-[0.08em] font-bold text-white mb-1.5"
                           style={{ background: t.color }}
                         >
                           {t.name}
                         </span>
                       )}
-                      <h4 className="font-display text-sm font-bold text-white leading-snug line-clamp-3">
+                      <h4 className="font-display text-base font-bold text-white leading-snug line-clamp-3">
                         {item.title_6th_grade}
                       </h4>
                     </div>
@@ -226,7 +226,7 @@ export default async function ExchangeHomePage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          DEPTH LAYERS — Accent band (like newsletter signup bar)
+          DEPTH LAYERS — Accent band
          ══════════════════════════════════════════════════════════════════ */}
       <section style={{ background: INK }}>
         <div className="max-w-[1200px] mx-auto px-6 py-5">
@@ -245,9 +245,9 @@ export default async function ExchangeHomePage() {
                   href={layer.href}
                   className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
                 >
-                  <Icon size={16} />
-                  <span className="text-sm font-semibold">{layer.label}</span>
-                  <span className="text-xs font-mono text-white/30">{layer.count.toLocaleString()}</span>
+                  <Icon size={18} />
+                  <span className="text-base font-semibold">{layer.label}</span>
+                  <span className="text-sm font-mono text-white/40">{layer.count.toLocaleString()}</span>
                 </Link>
               )
             })}
@@ -263,9 +263,9 @@ export default async function ExchangeHomePage() {
           {/* Left column — Latest News */}
           <div>
             <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
-              <h2 className="font-display text-xl font-black" style={{ color: INK }}>Latest News</h2>
-              <Link href="/news" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
-                See all <ArrowRight size={11} className="inline ml-0.5" />
+              <h2 className="font-display text-2xl font-black" style={{ color: INK }}>Latest News</h2>
+              <Link href="/news" className="text-sm font-semibold hover:underline" style={{ color: ACCENT }}>
+                See all <ArrowRight size={13} className="inline ml-0.5" />
               </Link>
             </div>
             <div className="space-y-0">
@@ -278,7 +278,7 @@ export default async function ExchangeHomePage() {
                     className="flex gap-4 py-4 group"
                     style={{ borderBottom: `1px solid ${RULE}` }}
                   >
-                    <div className="w-[100px] h-[75px] flex-shrink-0 overflow-hidden relative rounded">
+                    <div className="w-[120px] h-[85px] flex-shrink-0 overflow-hidden relative rounded">
                       {item.image_url ? (
                         <Image src={item.image_url} alt="" fill className="object-cover" />
                       ) : (
@@ -287,12 +287,12 @@ export default async function ExchangeHomePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       {t && (
-                        <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
+                        <span className="font-mono text-xs uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
                       )}
-                      <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
+                      <h4 className="text-base font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
                         {item.title_6th_grade}
                       </h4>
-                      <span className="text-xs mt-1 block" style={{ color: DIM }}>{item.source_domain || ''}</span>
+                      <span className="text-sm mt-1 block" style={{ color: DIM }}>{item.source_domain || ''}</span>
                     </div>
                   </Link>
                 )
@@ -303,9 +303,9 @@ export default async function ExchangeHomePage() {
           {/* Right column — Featured Resources */}
           <div>
             <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
-              <h2 className="font-display text-xl font-black" style={{ color: INK }}>Featured Resources</h2>
-              <Link href="/resources" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
-                See all <ArrowRight size={11} className="inline ml-0.5" />
+              <h2 className="font-display text-2xl font-black" style={{ color: INK }}>Featured Resources</h2>
+              <Link href="/resources" className="text-sm font-semibold hover:underline" style={{ color: ACCENT }}>
+                See all <ArrowRight size={13} className="inline ml-0.5" />
               </Link>
             </div>
             <div className="space-y-0">
@@ -318,7 +318,7 @@ export default async function ExchangeHomePage() {
                     className="flex gap-4 py-4 group"
                     style={{ borderBottom: `1px solid ${RULE}` }}
                   >
-                    <div className="w-[100px] h-[75px] flex-shrink-0 overflow-hidden relative rounded">
+                    <div className="w-[120px] h-[85px] flex-shrink-0 overflow-hidden relative rounded">
                       {item.image_url ? (
                         <Image src={item.image_url} alt="" fill className="object-cover" />
                       ) : (
@@ -327,12 +327,12 @@ export default async function ExchangeHomePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       {t && (
-                        <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
+                        <span className="font-mono text-xs uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
                       )}
-                      <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
+                      <h4 className="text-base font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
                         {item.title_6th_grade || item.title}
                       </h4>
-                      <span className="text-xs mt-1 block" style={{ color: DIM }}>
+                      <span className="text-sm mt-1 block" style={{ color: DIM }}>
                         {item.content_type ? item.content_type.charAt(0).toUpperCase() + item.content_type.slice(1) : ''}
                       </span>
                     </div>
@@ -350,8 +350,8 @@ export default async function ExchangeHomePage() {
       <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}`, borderBottom: `1px solid ${RULE}` }}>
         <div className="max-w-[1200px] mx-auto px-6 py-10">
           <div className="text-center mb-8">
-            <h2 className="font-display text-2xl font-black" style={{ color: INK }}>Explore by Pathway</h2>
-            <p className="text-sm mt-2 max-w-lg mx-auto" style={{ color: DIM }}>
+            <h2 className="font-display text-3xl font-black" style={{ color: INK }}>Explore by Pathway</h2>
+            <p className="text-base mt-2 max-w-lg mx-auto" style={{ color: DIM }}>
               Seven lenses into the work Houston organizations are doing. Each pathway connects you to services, news, officials, and ways to get involved.
             </p>
           </div>
@@ -372,14 +372,14 @@ export default async function ExchangeHomePage() {
                       <FlowerOfLife color="#ffffff" size={120} />
                     </div>
                     <div className="absolute bottom-3 left-4">
-                      <span className="font-mono text-[0.55rem] uppercase tracking-[0.14em] text-white/60">{count.toLocaleString()} resources</span>
+                      <span className="font-mono text-xs uppercase tracking-wide text-white/70">{count.toLocaleString()} resources</span>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-display text-lg font-black mb-1 group-hover:underline" style={{ color: INK }}>
+                  <div className="p-5">
+                    <h3 className="font-display text-xl font-black mb-1.5 group-hover:underline" style={{ color: INK }}>
                       {theme.name}
                     </h3>
-                    <p className="text-xs leading-relaxed line-clamp-3" style={{ color: DIM }}>
+                    <p className="text-sm leading-relaxed line-clamp-3" style={{ color: DIM }}>
                       {theme.description}
                     </p>
                   </div>
@@ -396,9 +396,9 @@ export default async function ExchangeHomePage() {
       {videos && videos.length > 0 && (
         <section className="max-w-[1200px] mx-auto px-6 py-10">
           <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
-            <h2 className="font-display text-xl font-black" style={{ color: INK }}>Videos</h2>
-            <Link href="/news?type=video" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
-              See all <ArrowRight size={11} className="inline ml-0.5" />
+            <h2 className="font-display text-2xl font-black" style={{ color: INK }}>Videos</h2>
+            <Link href="/news?type=video" className="text-sm font-semibold hover:underline" style={{ color: ACCENT }}>
+              See all <ArrowRight size={13} className="inline ml-0.5" />
             </Link>
           </div>
 
@@ -419,19 +419,19 @@ export default async function ExchangeHomePage() {
                     )}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-                        <Play size={20} fill={INK} style={{ color: INK, marginLeft: 2 }} />
+                      <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
+                        <Play size={24} fill={INK} style={{ color: INK, marginLeft: 2 }} />
                       </div>
                     </div>
                   </div>
                   {t && (
-                    <span className="font-mono text-[0.5rem] uppercase tracking-[0.14em] font-bold" style={{ color: t.color }}>{t.name}</span>
+                    <span className="font-mono text-xs uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
                   )}
-                  <h4 className="text-sm font-bold leading-snug line-clamp-2 group-hover:underline mt-0.5" style={{ color: INK }}>
+                  <h4 className="text-base font-bold leading-snug line-clamp-2 group-hover:underline mt-1" style={{ color: INK }}>
                     {item.title_6th_grade}
                   </h4>
                   {item.summary_6th_grade && (
-                    <p className="text-xs mt-1 line-clamp-2" style={{ color: DIM }}>{item.summary_6th_grade}</p>
+                    <p className="text-sm mt-1.5 line-clamp-2" style={{ color: DIM }}>{item.summary_6th_grade}</p>
                   )}
                 </Link>
               )
@@ -447,9 +447,9 @@ export default async function ExchangeHomePage() {
         <section style={{ borderTop: `1px solid ${RULE}` }}>
           <div className="max-w-[1200px] mx-auto px-6 py-10">
             <div className="flex items-center justify-between mb-5" style={{ borderBottom: `2px solid ${INK}`, paddingBottom: 8 }}>
-              <h2 className="font-display text-xl font-black" style={{ color: INK }}>Coming Up</h2>
-              <Link href="/calendar" className="text-xs font-semibold hover:underline" style={{ color: ACCENT }}>
-                Full calendar <ArrowRight size={11} className="inline ml-0.5" />
+              <h2 className="font-display text-2xl font-black" style={{ color: INK }}>Coming Up</h2>
+              <Link href="/calendar" className="text-sm font-semibold hover:underline" style={{ color: ACCENT }}>
+                Full calendar <ArrowRight size={13} className="inline ml-0.5" />
               </Link>
             </div>
 
@@ -467,16 +467,16 @@ export default async function ExchangeHomePage() {
                     style={{ border: `1px solid ${RULE}` }}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-10 h-10 rounded-lg flex flex-col items-center justify-center" style={{ background: SIDEBAR_BG }}>
-                        <span className="font-mono text-[0.5rem] uppercase tracking-wider font-bold" style={{ color: DIM }}>{month}</span>
-                        <span className="font-display text-base font-black leading-none" style={{ color: INK }}>{day}</span>
+                      <div className="w-12 h-12 rounded-lg flex flex-col items-center justify-center" style={{ background: SIDEBAR_BG }}>
+                        <span className="font-mono text-xs uppercase tracking-wider font-bold" style={{ color: DIM }}>{month}</span>
+                        <span className="font-display text-lg font-black leading-none" style={{ color: INK }}>{day}</span>
                       </div>
-                      <span className="text-xs font-mono" style={{ color: DIM }}>{weekday}</span>
+                      <span className="text-sm font-mono" style={{ color: DIM }}>{weekday}</span>
                     </div>
-                    <h4 className="text-sm font-bold leading-snug line-clamp-2" style={{ color: INK }}>{event.title}</h4>
+                    <h4 className="text-base font-bold leading-snug line-clamp-2" style={{ color: INK }}>{event.title}</h4>
                     {event.location && (
-                      <div className="flex items-center gap-1 text-xs mt-1.5" style={{ color: DIM }}>
-                        <MapPin size={9} />
+                      <div className="flex items-center gap-1 text-sm mt-1.5" style={{ color: DIM }}>
+                        <MapPin size={12} />
                         <span className="truncate">{event.location}</span>
                       </div>
                     )}
@@ -494,12 +494,12 @@ export default async function ExchangeHomePage() {
       {quote && (
         <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
           <div className="max-w-[700px] mx-auto px-6 py-12 text-center">
-            <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] mb-4" style={{ color: DIM }}>Quote of the Day</p>
-            <blockquote className="font-display text-2xl leading-relaxed italic mb-3" style={{ color: INK }}>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: DIM }}>Quote of the Day</p>
+            <blockquote className="font-display text-2xl md:text-3xl leading-relaxed italic mb-3" style={{ color: INK }}>
               &ldquo;{quote.quote_text}&rdquo;
             </blockquote>
             {quote.attribution && (
-              <p className="text-sm" style={{ color: DIM }}>— {quote.attribution}</p>
+              <p className="text-base" style={{ color: DIM }}>— {quote.attribution}</p>
             )}
           </div>
         </section>
@@ -509,7 +509,7 @@ export default async function ExchangeHomePage() {
       <div style={{ background: '#ffffff', borderTop: `1px solid ${RULE}` }}>
         <div className="max-w-[1200px] mx-auto px-6 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4 flex-wrap text-xs font-mono" style={{ color: DIM }}>
+            <div className="flex items-center gap-4 flex-wrap text-sm font-mono" style={{ color: DIM }}>
               <span>3 languages</span>
               <span style={{ color: RULE }}>&middot;</span>
               <span>Plain language</span>
@@ -518,8 +518,8 @@ export default async function ExchangeHomePage() {
               <span style={{ color: RULE }}>&middot;</span>
               <span>Free forever</span>
             </div>
-            <Link href="/about" className="text-sm font-semibold hover:underline" style={{ color: ACCENT }}>
-              About The Change Engine <ArrowRight size={12} className="inline ml-1" />
+            <Link href="/about" className="text-base font-semibold hover:underline" style={{ color: ACCENT }}>
+              About The Change Engine <ArrowRight size={14} className="inline ml-1" />
             </Link>
           </div>
         </div>
