@@ -17,9 +17,7 @@ import { getExchangeStats } from '@/lib/data/exchange'
 import { getNewsFeed, getLatestContent } from '@/lib/data/content'
 import { getRandomQuote, getActivePromotions } from '@/lib/data/homepage'
 import { getUpcomingEvents } from '@/lib/data/events'
-import { getPathwayCounts as getEntityPathwayCounts } from '@/lib/data/entity-graph'
 import { THEMES, MAP_CENTERS } from '@/lib/constants'
-import { FlowerOfLife } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
 import { HeroSearch } from '@/components/exchange/home/HeroSearch'
 import { ArrowRight, Calendar, MapPin, Megaphone, HandHeart, Scale, UserCheck, Users, Play } from 'lucide-react'
@@ -58,7 +56,7 @@ export default async function ExchangeHomePage() {
   const citySlug = cookieStore.get('ce_city')?.value || 'houston'
   const cityName = CITY_NAMES[citySlug] || 'Houston'
 
-  const [stats, newsFeed, latestContent, videos, upcomingEvents, quote, promotions, entityPathwayCounts] = await Promise.all([
+  const [stats, newsFeed, latestContent, videos, upcomingEvents, quote, promotions] = await Promise.all([
     getExchangeStats(),
     getNewsFeed(undefined, 10),
     getLatestContent(8),
@@ -66,15 +64,8 @@ export default async function ExchangeHomePage() {
     getUpcomingEvents(5),
     getRandomQuote(),
     getActivePromotions(undefined, 3),
-    getEntityPathwayCounts(),
   ])
 
-  const pathwayCounts: Record<string, number> = {}
-  for (const [id, counts] of Object.entries(entityPathwayCounts)) {
-    pathwayCounts[id] = counts.total
-  }
-
-  const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
   const greeting = getGreeting(cityName)
 
   // Sort content: items with images first, then without
@@ -91,9 +82,6 @@ export default async function ExchangeHomePage() {
   // Latest / recent content for two-column section (can include no-image items)
   const recentNews = sortedFeed.slice(5, 11)
   const recentResources = (latestContent || []).slice(0, 6)
-
-  // Pathways for topic cards (exclude "The Bigger We" center — show 6 outer pathways)
-  const pathwayCards = THEME_LIST.filter(function (t) { return t.id !== 'THEME_07' })
 
   return (
     <div>
@@ -235,17 +223,17 @@ export default async function ExchangeHomePage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          DEPTH LAYERS — Accent band
+          QUICK LINKS — What you can find here
          ══════════════════════════════════════════════════════════════════ */}
       <section style={{ background: INK }}>
         <div className="max-w-[1200px] mx-auto px-6 py-5">
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
             {[
-              { icon: HandHeart, label: 'Services', count: stats.services || 0, href: '/services' },
-              { icon: UserCheck, label: 'Representatives', count: stats.officials || 0, href: '/officials' },
-              { icon: Scale, label: 'Policies', count: stats.policies || 0, href: '/policies' },
-              { icon: Users, label: 'Ways to Participate', count: stats.opportunities || 0, href: '/opportunities' },
-              { icon: Calendar, label: 'Events', count: upcomingEvents?.length || 0, href: '/calendar' },
+              { icon: HandHeart, label: 'Find Help', href: '/services' },
+              { icon: UserCheck, label: 'Your Reps', href: '/officials' },
+              { icon: Scale, label: 'Policy Tracker', href: '/policies' },
+              { icon: Users, label: 'Get Involved', href: '/opportunities' },
+              { icon: Calendar, label: 'Events', href: '/calendar' },
             ].map(function (layer) {
               const Icon = layer.icon
               return (
@@ -256,7 +244,6 @@ export default async function ExchangeHomePage() {
                 >
                   <Icon size={18} />
                   <span className="text-base font-semibold">{layer.label}</span>
-                  <span className="text-sm font-mono text-white/40">{layer.count.toLocaleString()}</span>
                 </Link>
               )
             })}
@@ -354,42 +341,40 @@ export default async function ExchangeHomePage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════════
-          PATHWAYS — Topic cards (like "Keys to Well-Being")
+          WHAT'S INSIDE — Friendly guide to the exchange
          ══════════════════════════════════════════════════════════════════ */}
       <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}`, borderBottom: `1px solid ${RULE}` }}>
         <div className="max-w-[1200px] mx-auto px-6 py-10">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-3xl font-black" style={{ color: INK }}>Explore by Pathway</h2>
-            <p className="text-base mt-2 max-w-lg mx-auto" style={{ color: DIM }}>
-              Seven lenses into the work community organizations are doing. Each pathway connects you to services, news, officials, and ways to get involved.
+          <div className="max-w-2xl mb-8">
+            <h2 className="font-display text-3xl font-black" style={{ color: INK }}>What&apos;s Inside</h2>
+            <p className="text-base mt-2" style={{ color: DIM }}>
+              Think of this as a community field guide. We gather the best resources, events, and opportunities from organizations across {cityName} so you don&apos;t have to hunt for them.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {pathwayCards.map(function (theme) {
-              const count = pathwayCounts[theme.id] || 0
+            {[
+              { title: 'Events & Webinars', desc: 'Workshops, community meetings, panels, and things happening near you — in person or online.', href: '/calendar', color: '#059669' },
+              { title: 'DIY Toolkits & Guides', desc: 'Step-by-step resources you can use on your own time. Learn how things work, build skills, take action.', href: '/resources', color: '#C75B2A' },
+              { title: 'Videos & Stories', desc: 'Short films, explainers, and stories from people in your community who are doing the work.', href: '/news?type=video', color: '#7c3aed' },
+              { title: 'Services Near You', desc: 'Food, legal aid, counseling, housing — real help from real organizations, searchable by ZIP code.', href: '/services', color: '#0891b2' },
+              { title: 'Ways to Get Involved', desc: 'Volunteer spots, advocacy campaigns, and opportunities that match the time you actually have.', href: '/opportunities', color: '#16a34a' },
+              { title: 'Know Your Government', desc: 'Who represents you, what they&apos;re deciding, and how to make your voice heard — from City Hall to Congress.', href: '/action', color: '#dc2626' },
+            ].map(function (card) {
               return (
                 <Link
-                  key={theme.id}
-                  href={'/pathways/' + theme.slug}
+                  key={card.title}
+                  href={card.href}
                   className="bg-white rounded-xl overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group"
                   style={{ border: `1px solid ${RULE}` }}
                 >
-                  {/* Colored header band with FOL pattern */}
-                  <div className="h-24 relative overflow-hidden" style={{ background: theme.color }}>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                      <FlowerOfLife color="#ffffff" size={120} />
-                    </div>
-                    <div className="absolute bottom-3 left-4">
-                      <span className="font-mono text-sm uppercase tracking-wide text-white/70">{count.toLocaleString()} resources</span>
-                    </div>
-                  </div>
+                  <div className="h-2" style={{ background: card.color }} />
                   <div className="p-5">
-                    <h3 className="font-display text-xl font-black mb-1.5 group-hover:underline" style={{ color: INK }}>
-                      {theme.name}
+                    <h3 className="font-display text-lg font-black mb-1.5 group-hover:underline" style={{ color: INK }}>
+                      {card.title}
                     </h3>
-                    <p className="text-sm leading-relaxed line-clamp-3" style={{ color: DIM }}>
-                      {theme.description}
+                    <p className="text-sm leading-relaxed" style={{ color: DIM }}>
+                      {card.desc}
                     </p>
                   </div>
                 </Link>
@@ -519,9 +504,7 @@ export default async function ExchangeHomePage() {
         <div className="max-w-[1200px] mx-auto px-6 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-wrap text-sm font-mono" style={{ color: DIM }}>
-              <span>3 languages</span>
-              <span style={{ color: RULE }}>&middot;</span>
-              <span>Plain language</span>
+              <span>EN &middot; ES &middot; VI</span>
               <span style={{ color: RULE }}>&middot;</span>
               <span>No ads</span>
               <span style={{ color: RULE }}>&middot;</span>
