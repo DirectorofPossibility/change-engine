@@ -102,7 +102,7 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
   const avatarR = 18
 
   return (
-    <div className="relative w-full max-w-[620px] mx-auto">
+    <div className="relative w-full max-w-[930px] mx-auto">
       <svg
         viewBox="0 0 400 400"
         className="w-full h-auto"
@@ -295,13 +295,12 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
           )}
         </g>
 
-        {/* Pathway labels — always visible, emphasized on hover */}
+        {/* Pathway name — only visible on hover */}
         {PETAL_MAP.map(function ({ themeId, angle }) {
           const theme = THEMES[themeId as keyof typeof THEMES]
           if (!theme) return null
           const [lx, ly] = labelPos(angle)
           const isHovered = hovered === themeId
-          const count = pathwayCounts[themeId] || 0
 
           let anchor: 'start' | 'middle' | 'end' = 'middle'
           if (angle > -80 && angle < 80) anchor = 'start'
@@ -315,49 +314,19 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
                 textAnchor={anchor}
                 dominantBaseline="central"
                 style={{
-                  fill: isHovered ? 'white' : 'rgba(255,255,255,0.55)',
-                  fontSize: isHovered ? 14 : 11,
+                  fill: 'white',
+                  fontSize: 13,
                   fontFamily: 'var(--font-body)',
-                  fontWeight: isHovered ? 700 : 600,
-                  transition: 'all 0.25s ease',
+                  fontWeight: 700,
+                  opacity: isHovered ? 1 : 0,
+                  transition: 'opacity 0.25s ease',
                 }}
               >
                 {theme.name}
               </text>
-              {count > 0 && (
-                <text
-                  x={lx} y={ly + (isHovered ? 16 : 14)}
-                  textAnchor={anchor}
-                  dominantBaseline="central"
-                  style={{
-                    fill: isHovered ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.25)',
-                    fontSize: isHovered ? 10 : 9,
-                    fontFamily: 'var(--font-mono)',
-                    transition: 'all 0.25s ease',
-                  }}
-                >
-                  {count}
-                </text>
-              )}
             </g>
           )
         })}
-
-        {/* Center label — always visible */}
-        <text
-          x={CX} y={CY + R * 0.75}
-          textAnchor="middle"
-          className="pointer-events-none select-none"
-          style={{
-            fill: hovered === CENTER_THEME_ID ? 'white' : 'rgba(255,255,255,0.4)',
-            fontSize: hovered === CENTER_THEME_ID ? 12 : 10,
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 700,
-            transition: 'all 0.25s ease',
-          }}
-        >
-          {isLoggedIn ? 'You' : 'The Bigger We'}
-        </text>
       </svg>
 
       {/* Mobile fallback — simple list below md */}
