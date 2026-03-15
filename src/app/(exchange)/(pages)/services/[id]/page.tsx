@@ -17,10 +17,18 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { BookmarkButton } from '@/components/exchange/BookmarkButton'
 import { serviceJsonLd } from '@/lib/jsonld'
 import { THEMES } from '@/lib/constants'
+import { FlowerOfLife } from '@/components/geo/sacred'
+import Image from 'next/image'
 
+/* ── Design Tokens ── */
+const RULE = '#dde1e8'
+const DIM = '#5c6474'
+const INK = '#0d1117'
+const SIDEBAR_BG = '#f4f5f7'
 
 export const revalidate = 300
 
@@ -111,242 +119,320 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   const jsonLd = serviceJsonLd(service as any, org?.org_name)
 
-  const subtitle = org
-    ? <>Provided by{' '}<Link href={'/organizations/' + org.org_id} className="text-blue hover:underline">{org.org_name}</Link></>
-    : undefined
-
-  const breadcrumbs = [
-    { label: 'Home', href: '/' },
-    { label: t('detail.all_services'), href: '/services' },
-    { label: displayName },
-  ]
-
-  const footerContent = (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div className="h-px bg-rule mb-10" />
-      <Link href="/services" className="italic text-blue text-[0.95rem] hover:underline">
-        Back to Services
-      </Link>
-    </div>
-  )
+  const hasDetails = !!(service.eligibility || (service as any).fees || (service as any).languages || service.hours)
 
   return (
     <>
-      <DetailPageLayout
-        title={displayName}
-        subtitle={subtitle as any}
-        eyebrow={themeName ? { text: themeName } : undefined}
-        breadcrumbs={breadcrumbs}
-        themeColor={themeColor}
-        wayfinderData={wayfinderData}
-        wayfinderType="service"
-        wayfinderEntityId={id}
-        userRole={userProfile?.role}
-        jsonLd={jsonLd || undefined}
-        actions={{
-          bookmark: { contentType: 'service', contentId: service.service_id, title: displayName },
-        }}
-        feedbackType="service"
-        feedbackId={service.service_id}
-        feedbackName={displayName}
-        footer={footerContent}
-        sidebar={
-          <>
-            <FeaturedPromo variant="card" />
-            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
-          </>
-        }
+      <SpiralTracker action="view_service" />
+
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+          GRADIENT HERO
+         ══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, ${themeColor}55 100%)` }}
       >
-        <SpiralTracker action="view_service" />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
+          <FlowerOfLife color="#ffffff" size={400} />
+        </div>
 
-        {/* Concierge CTA */}
-        {(service.phone || service.website) && (
-          <div className="mb-10 p-6 border border-blue bg-faint">
-            <p className="font-mono text-micro uppercase tracking-wider text-muted mb-3">
-              Here is how to reach them
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {service.phone && (
-                <a href={'tel:' + service.phone} className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90 font-mono text-micro uppercase tracking-wider font-semibold bg-blue">
-                  <Phone size={14} /> Call {service.phone}
-                </a>
+        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-10 items-center">
+            <div className="flex-1">
+              {/* Breadcrumb */}
+              <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+                <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                <span className="mx-1.5">&rsaquo;</span>
+                <Link href="/services" className="hover:text-white transition-colors">{t('detail.all_services')}</Link>
+              </nav>
+
+              {/* Badge */}
+              {themeName && (
+                <div className="mb-5">
+                  <span className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                    style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
+                  >
+                    {themeName}
+                  </span>
+                </div>
               )}
-              {service.website && (
-                <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 transition-colors font-mono text-micro uppercase tracking-wider font-semibold border border-blue text-blue">
-                  <Globe size={14} /> Visit their website
-                </a>
+
+              {/* Title */}
+              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
+                style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+              >
+                {displayName}
+              </h1>
+
+              {/* Provided by org */}
+              {org && (
+                <p className="text-white/80 mb-4 text-sm">
+                  Provided by{' '}
+                  <Link href={'/organizations/' + org.org_id} className="text-white underline underline-offset-2 hover:text-white/90">
+                    {org.org_name}
+                  </Link>
+                </p>
               )}
-            </div>
-            {fullAddress && (
-              <p className="mt-3 flex items-center gap-1.5 text-[0.9rem] text-muted">
-                <MapPin size={13} /> {fullAddress}
-              </p>
-            )}
-          </div>
-        )}
 
-        {/* About */}
-        {displayDesc && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('detail.about_service')}</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <p className="text-[0.95rem] leading-relaxed">{displayDesc}</p>
-          </section>
-        )}
+              {/* Summary */}
+              {displayDesc && (
+                <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.05rem' }}>
+                  {displayDesc.length > 200 ? displayDesc.slice(0, 200) + '...' : displayDesc}
+                </p>
+              )}
 
-        {/* Detail fields */}
-        {(service.eligibility || service.fees || service.languages) && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('detail.details')}</h2>
+              {/* Bookmark */}
+              <BookmarkButton
+                contentType="service"
+                contentId={service.service_id}
+                title={displayName}
+              />
+
+              {/* Contact links in hero */}
+              <div className="flex flex-wrap items-center gap-3 mt-6">
+                {service.phone && (
+                  <a href={'tel:' + service.phone} className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-mono uppercase tracking-wider font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                    <Phone size={13} /> {service.phone}
+                  </a>
+                )}
+                {service.website && (
+                  <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-mono uppercase tracking-wider font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                    <Globe size={13} /> Website
+                  </a>
+                )}
+              </div>
+
+              {/* Meta strip */}
+              <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-4">
+                {fullAddress && (
+                  <span className="inline-flex items-center gap-1"><MapPin size={10} /> {fullAddress}</span>
+                )}
+                {service.hours && (
+                  <>
+                    {fullAddress && <span>&middot;</span>}
+                    <span className="inline-flex items-center gap-1"><Clock size={10} /> {service.hours}</span>
+                  </>
+                )}
+              </div>
             </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            {service.eligibility && (
-              <div className="py-3 border-b border-rule">
-                <p className="text-[0.9rem] font-semibold mb-1">{t('detail.eligibility')}</p>
-                <p className="italic text-sm text-muted">{service.eligibility}</p>
+
+            {/* Org logo */}
+            {org?.logo_url && (
+              <div className="w-full lg:w-[280px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center p-6">
+                <Image
+                  src={org.logo_url}
+                  alt={org.org_name}
+                  className="max-w-full max-h-[180px] w-auto h-auto object-contain"
+                  width={280}
+                  height={180}
+                />
               </div>
             )}
-            {service.fees && (
-              <div className="py-3 border-b border-rule">
-                <p className="text-[0.9rem] font-semibold mb-1">{t('detail.fees')}</p>
-                <p className="italic text-sm text-muted">{service.fees}</p>
-              </div>
-            )}
-            {service.languages && (
-              <div className="py-3">
-                <p className="text-[0.9rem] font-semibold mb-1">{t('detail.languages')}</p>
-                <p className="italic text-sm text-muted">{service.languages}</p>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* Contact & Location */}
-        <section className="mb-10">
-          <div className="flex items-baseline justify-between mb-1">
-            <h2 className="text-2xl">{t('detail.contact')}</h2>
           </div>
-          <div className="h-px border-b border-dotted border-rule mb-4" />
-          <div className="space-y-3">
-            {service.phone && (
-              <a href={'tel:' + service.phone} className="flex items-center gap-2 hover:underline text-[0.9rem] text-blue">
-                <Phone size={15} /> {service.phone}
-              </a>
-            )}
-            {service.website && (
-              <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline text-[0.9rem] text-blue">
-                <Globe size={15} /> {t('detail.website')}
-              </a>
-            )}
-            {fullAddress && (
-              <p className="flex items-center gap-2 text-[0.9rem] text-muted">
-                <MapPin size={15} className="shrink-0" /> {fullAddress}
-              </p>
-            )}
-            {service.hours && (
-              <p className="flex items-center gap-2 text-[0.9rem] text-muted">
-                <Clock size={15} /> {service.hours}
-              </p>
-            )}
-          </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Location Map */}
-        {(service as any).latitude != null && (service as any).longitude != null && (
-          <div className="mb-10 border border-rule">
-            <InteractiveMap
-              markers={[{
-                id: service.service_id,
-                lat: (service as any).latitude as number,
-                lng: (service as any).longitude as number,
-                title: service.service_name,
-                type: 'service' as const,
-                address: fullAddress || null,
-                phone: service.phone,
-              }]}
-              layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
-              defaultVisibleLayers={[]}
-              zoom={14}
-              center={{ lat: (service as any).latitude as number, lng: (service as any).longitude as number }}
-              showLegend={false}
-              className="w-full h-[250px]"
-            />
-          </div>
-        )}
+      {/* ══════════════════════════════════════════════════════════════════
+          TWO-COLUMN LAYOUT
+         ══════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+          <div className="flex flex-col lg:flex-row gap-10">
 
-        <div className="my-10 h-px bg-rule" />
+            {/* ── LEFT: Main Content ── */}
+            <div className="flex-1 min-w-0">
 
-        {/* Parent Organization */}
-        {org && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('detail.organization')}</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <Link href={'/organizations/' + org.org_id} className="block p-5 transition-colors hover:opacity-80 border border-rule">
-              <h3 className="text-base font-bold">{org.org_name}</h3>
-              {org.description_5th_grade && (
-                <p className="line-clamp-2 mt-1 text-sm text-muted">{org.description_5th_grade}</p>
+              {/* About — full description if hero was truncated */}
+              {displayDesc && displayDesc.length > 200 && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('detail.about_service')}</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayDesc}</p>
+                </section>
               )}
-            </Link>
-          </section>
-        )}
 
-        {/* Library nuggets */}
-        {libraryNuggets.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('detail.go_deeper')}</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} labels={{ goDeeper: t('detail.go_deeper') }} />
-          </section>
-        )}
+              {/* Details accordion — eligibility, fees, languages, hours */}
+              {hasDetails && (
+                <details className="mb-8 group" open>
+                  <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <span className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.details')}</span>
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="transition-transform group-open:rotate-180">
+                      <path d="M5 7.5L10 12.5L15 7.5" stroke={DIM} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </summary>
+                  <div className="pt-3 space-y-0">
+                    {service.eligibility && (
+                      <div className="py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>{t('detail.eligibility')}</p>
+                        <p className="text-sm" style={{ color: DIM }}>{service.eligibility}</p>
+                      </div>
+                    )}
+                    {(service as any).fees && (
+                      <div className="py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>{t('detail.fees')}</p>
+                        <p className="text-sm" style={{ color: DIM }}>{(service as any).fees}</p>
+                      </div>
+                    )}
+                    {(service as any).languages && (
+                      <div className="py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>{t('detail.languages')}</p>
+                        <p className="text-sm" style={{ color: DIM }}>{(service as any).languages}</p>
+                      </div>
+                    )}
+                    {service.hours && (
+                      <div className="py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>Hours</p>
+                        <p className="text-sm" style={{ color: DIM }}>{service.hours}</p>
+                      </div>
+                    )}
+                  </div>
+                </details>
+              )}
 
-        {/* Related Services */}
-        {displayRelated.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('detail.other_resources')}</h2>
-              <Link href="/services" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.65rem] uppercase tracking-wider text-blue">
-                {t('detail.all_services')} <ArrowRight size={12} />
-              </Link>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            {displayRelated.slice(0, 3).map(function (svc) {
-              return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
-                  <h4 className="line-clamp-2 text-[0.9rem] font-semibold">{svc.service_name}</h4>
-                  {svc.description_5th_grade && (
-                    <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
-                  )}
-                </Link>
-              )
-            })}
-            {displayRelated.length > 3 && (
-              <details className="mt-2">
-                <summary className="italic text-blue text-[0.9rem] cursor-pointer">
-                  See {displayRelated.length - 3} more services
-                </summary>
-                {displayRelated.slice(3).map(function (svc) {
-                  return (
-                    <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
-                      <h4 className="line-clamp-2 text-[0.9rem] font-semibold">{svc.service_name}</h4>
-                      {svc.description_5th_grade && (
-                        <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
+              {/* Location Map */}
+              {(service as any).latitude != null && (service as any).longitude != null && (
+                <div className="mb-8 rounded overflow-hidden" style={{ border: `1px solid ${RULE}` }}>
+                  <InteractiveMap
+                    markers={[{
+                      id: service.service_id,
+                      lat: (service as any).latitude as number,
+                      lng: (service as any).longitude as number,
+                      title: service.service_name,
+                      type: 'service' as const,
+                      address: fullAddress || null,
+                      phone: service.phone,
+                    }]}
+                    layers={[GEO_LAYERS.superNeighborhoods, GEO_LAYERS.councilDistricts]}
+                    defaultVisibleLayers={[]}
+                    zoom={14}
+                    center={{ lat: (service as any).latitude as number, lng: (service as any).longitude as number }}
+                    showLegend={false}
+                    className="w-full h-[250px]"
+                  />
+                </div>
+              )}
+
+              {/* Parent Organization */}
+              {org && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.organization')}</h2>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <Link href={'/organizations/' + org.org_id} className="flex items-center gap-4 p-4 transition-colors hover:bg-gray-50 rounded" style={{ border: `1px solid ${RULE}` }}>
+                    {org.logo_url && (
+                      <Image src={org.logo_url} alt="" width={48} height={48} className="w-12 h-12 rounded object-contain flex-shrink-0 bg-gray-50" />
+                    )}
+                    <div className="min-w-0">
+                      <h3 className="text-[0.9rem] font-bold" style={{ color: INK }}>{org.org_name}</h3>
+                      {org.description_5th_grade && (
+                        <p className="line-clamp-2 mt-0.5 text-sm" style={{ color: DIM }}>{org.description_5th_grade}</p>
                       )}
-                    </Link>
-                  )
-                })}
-              </details>
-            )}
-          </section>
-        )}
+                    </div>
+                  </Link>
+                </section>
+              )}
 
-      </DetailPageLayout>
+              {/* Library nuggets */}
+              {libraryNuggets.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.go_deeper')}</h2>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} labels={{ goDeeper: t('detail.go_deeper') }} />
+                </section>
+              )}
+
+              {/* Related Services */}
+              {displayRelated.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.other_resources')}</h2>
+                    <Link href="/services" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: themeColor }}>
+                      {t('detail.all_services')} <ArrowRight size={11} />
+                    </Link>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  {displayRelated.slice(0, 3).map(function (svc) {
+                    return (
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
+                        <div className="min-w-0">
+                          <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
+                          {svc.description_5th_grade && (
+                            <span className="block line-clamp-1 mt-0.5 text-sm" style={{ color: DIM }}>{svc.description_5th_grade}</span>
+                          )}
+                        </div>
+                      </Link>
+                    )
+                  })}
+                  {displayRelated.length > 3 && (
+                    <details className="mt-2">
+                      <summary className="italic text-sm cursor-pointer" style={{ color: themeColor }}>
+                        {displayRelated.length - 3} more services
+                      </summary>
+                      {displayRelated.slice(3).map(function (svc) {
+                        return (
+                          <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                            <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
+                            <span className="font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
+                          </Link>
+                        )
+                      })}
+                    </details>
+                  )}
+                </section>
+              )}
+
+              {/* Sidebar extras — below main content on mobile */}
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+                <FeaturedPromo variant="card" />
+                {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
+              </div>
+            </div>
+
+            {/* ── RIGHT: WAYFINDER SIDEBAR ── */}
+            <aside className="w-full lg:w-[340px] flex-shrink-0">
+              <div className="lg:sticky lg:top-4 space-y-4">
+                <DetailWayfinder
+                  data={wayfinderData}
+                  currentType="service"
+                  currentId={id}
+                  userRole={userProfile?.role ?? undefined}
+                />
+
+                <div className="hidden lg:block space-y-4">
+                  <FeaturedPromo variant="card" />
+                  {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER CODA ── */}
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
+            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+          >
+            <ArrowRight size={14} className="rotate-180" /> Back to Services
+          </Link>
+        </div>
+      </section>
 
       <AdminEditPanel
         entityType="services_211"
