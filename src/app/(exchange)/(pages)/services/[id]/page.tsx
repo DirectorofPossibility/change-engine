@@ -381,8 +381,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                             </div>
                           )}
                           <div className="p-4" style={{ background: `${themeColor}05` }}>
-                            <span className="block font-bold text-base mb-1" style={{ color: INK }}>{item.title_6th_grade}</span>
-                            {item.summary_6th_grade && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{item.summary_6th_grade}</span>}
+                            <span className="block font-bold text-base mb-1" style={{ color: INK }}>
+                              {item.title_6th_grade && item.title_6th_grade.length > 75 ? item.title_6th_grade.slice(0, 75) + '...' : item.title_6th_grade}
+                            </span>
+                            {item.summary_6th_grade && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{item.summary_6th_grade.length > 75 ? item.summary_6th_grade.slice(0, 75) + '...' : item.summary_6th_grade}</span>}
                           </div>
                         </Link>
                       )
@@ -407,8 +409,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                         <Link key={svc.service_id} href={'/services/' + svc.service_id}
                           className="block p-4 rounded-xl border-2 transition-all hover:-translate-y-0.5 hover:shadow-md"
                           style={{ borderColor: `${themeColor}25`, background: `${themeColor}05` }}>
-                          <span className="block font-bold text-base mb-1" style={{ color: INK }}>{svc.service_name}</span>
-                          {svc.description_5th_grade && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{svc.description_5th_grade}</span>}
+                          <span className="block font-bold text-base mb-1" style={{ color: INK }}>
+                            {svc.service_name.length > 75 ? svc.service_name.slice(0, 75) + '...' : svc.service_name}
+                          </span>
+                          {svc.description_5th_grade && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{svc.description_5th_grade.length > 75 ? svc.description_5th_grade.slice(0, 75) + '...' : svc.description_5th_grade}</span>}
                         </Link>
                       )
                     })}
