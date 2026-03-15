@@ -145,7 +145,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     getLibraryNuggets(pathwayThemeIds, focusAreaIds, 3),
     getSDGMap(),
     getSDOHMap(),
-    item.org_id ? supabase.from('organizations').select('org_id, org_name, website, description_5th_grade, logo_url, mission_statement').eq('org_id', item.org_id).single().then((r: any) => r.data) : Promise.resolve(null),
+    item.org_id ? supabase.from('organizations').select('org_id, org_name, website, description_5th_grade, logo_url, hero_image_url, mission_statement').eq('org_id', item.org_id).single().then((r: any) => r.data) : Promise.resolve(null),
     audienceIds.length > 0 ? supabase.from('audience_segments').select('segment_id, segment_name').in('segment_id', audienceIds).then((r: any) => r.data) : Promise.resolve([]),
     actionTypeIds.length > 0 ? supabase.from('action_types').select('action_type_id, action_type_name').in('action_type_id', actionTypeIds).then((r: any) => r.data) : Promise.resolve([]),
     timeCommitmentId ? supabase.from('time_commitments').select('time_id, time_name').eq('time_id', timeCommitmentId).single().then((r: any) => r.data) : Promise.resolve(null),
@@ -350,6 +350,9 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     return '<p class="text-ink leading-relaxed mb-4" style="font-size:1.0625rem;line-height:1.85">' + processed + '</p>'
   }).join('\n')
 
+  // Image inheritance: if content has no image (or only the generic org OG image), fall back to org hero_image_url
+  const heroImage = item.image_url || orgData?.hero_image_url || orgData?.logo_url || null
+
   const jsonLd = articleJsonLd(item as any)
   const sourceDomain = item.source_url ? (() => { try { return new URL(item.source_url).hostname } catch { return 'the source' } })() : null
 
@@ -437,10 +440,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
 
-            {/* Hero image */}
-            {item.image_url && (
+            {/* Hero image — falls back to org image if content has none */}
+            {heroImage && (
               <div className="w-full lg:w-[340px] flex-shrink-0 overflow-hidden shadow-xl border-2 border-white/20">
-                <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
+                <ContentImage src={heroImage} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
               </div>
             )}
           </div>
