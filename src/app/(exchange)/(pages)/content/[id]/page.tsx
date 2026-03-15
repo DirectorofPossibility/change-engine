@@ -10,7 +10,7 @@ import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from 
 import { getRelatedOfficials } from '@/lib/data/officials'
 import { getSDGMap, getSDOHMap } from '@/lib/data/taxonomy'
 import { getLibraryNuggets } from '@/lib/data/library'
-import { Globe, ArrowRight, BookOpen, Users, Megaphone, GraduationCap, Rocket } from 'lucide-react'
+import { Globe, ArrowRight } from 'lucide-react'
 import { ContentTabs } from '@/components/exchange/ContentTabs'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
@@ -27,13 +27,6 @@ const DIM = '#5c6474'
 const INK = '#0d1117'
 const SIDEBAR_BG = '#f4f5f7'
 
-const TRAIL_LEVELS = [
-  { name: 'Get Curious', subtitle: 'Learn', color: '#1b5e8a', icon: BookOpen },
-  { name: 'Find Your People', subtitle: 'Connect', color: '#1a6b56', icon: Users },
-  { name: 'Show Up', subtitle: 'Participate', color: '#4a2870', icon: Megaphone },
-  { name: 'Go Deeper', subtitle: 'Build skills & capacity', color: '#7a2018', icon: GraduationCap },
-  { name: 'Make Your Move', subtitle: 'Take action in whatever form fits you', color: '#0d1117', icon: Rocket },
-]
 
 /** Strip scraped page chrome */
 function sanitizeBody(raw: string): string {
@@ -349,7 +342,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const sdohEntry = sdohCode ? sdohMap[sdohCode] : null
   const matchedSDGs = sdgIds.map(sid => sdgMap[sid]).filter(Boolean)
 
-  const currentLevel = (item as any).trail_level || 1
   const actionItems = (item as any).action_items || {}
   return (
     <>
@@ -375,75 +367,64 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           <FlowerOfLife color="#ffffff" size={400} />
         </div>
 
-        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-10 items-center">
-            <div className="flex-1">
-              {/* Breadcrumb */}
-              <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+        <div className="max-w-[1080px] mx-auto px-6 py-10 sm:py-14 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-8 items-center">
+            <div className="flex-1 min-w-0">
+              {/* Breadcrumb + type in one line */}
+              <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
                 <Link href="/guide" className="hover:text-white transition-colors">Guide</Link>
                 {themeEntry && (
                   <>
-                    <span className="mx-1.5">&rsaquo;</span>
+                    <span>&rsaquo;</span>
                     <Link href={'/pathways/' + (themeSlug || '')} className="hover:text-white transition-colors">{themeEntry.name}</Link>
                   </>
                 )}
-              </nav>
-
-              {/* Badge row */}
-              <div className="flex items-center gap-3 mb-5">
                 {contentType && (
-                  <span className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
-                    style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
-                  >
-                    {contentType}
-                  </span>
+                  <>
+                    <span>&rsaquo;</span>
+                    <span className="text-white/40">{contentType}</span>
+                  </>
                 )}
                 {isTranslated && (
-                  <span className="inline-flex items-center gap-1 text-white/80 font-mono text-[0.65rem] uppercase tracking-[0.1em]">
+                  <span className="inline-flex items-center gap-1 text-white/50 ml-2">
                     <Globe size={11} /> {t('content.translated')}
                   </span>
                 )}
-              </div>
+              </nav>
 
               {/* Title */}
-              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
-                style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
+                style={{ fontSize: 'clamp(26px, 3.5vw, 40px)' }}
               >
                 {title}
               </h1>
 
-              {/* Summary */}
+              {/* Summary + meta on one line */}
               {summary && (
-                <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.1rem' }}>
-                  {summary.length > 200 ? summary.slice(0, 200) + '...' : summary}
+                <p className="text-white/80 leading-relaxed mb-5 max-w-[560px] text-base">
+                  {summary.length > 180 ? summary.slice(0, 180) + '...' : summary}
                 </p>
               )}
 
-              {/* Bookmark */}
-              <BookmarkButton
-                contentType="content"
-                contentId={item.id}
-                title={item.title_6th_grade || item.title}
-                imageUrl={item.image_url}
-              />
-
-              {/* Meta strip */}
-              <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-6">
-                {item.published_at && (
-                  <span>{new Date(item.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                )}
-                {orgData && (
-                  <>
-                    <span>&middot;</span>
-                    <span>{orgData.org_name}</span>
-                  </>
-                )}
+              <div className="flex items-center gap-4">
+                <BookmarkButton
+                  contentType="content"
+                  contentId={item.id}
+                  title={item.title_6th_grade || item.title}
+                  imageUrl={item.image_url}
+                />
+                <span className="text-xs text-white/40">
+                  {[
+                    item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null,
+                    orgData?.org_name,
+                  ].filter(Boolean).join(' \u00b7 ')}
+                </span>
               </div>
             </div>
 
             {/* Hero image */}
             {item.image_url && (
-              <div className="w-full lg:w-[380px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30">
+              <div className="w-full lg:w-[340px] flex-shrink-0 overflow-hidden shadow-xl border-2 border-white/20">
                 <ContentImage src={item.image_url} alt={title || ''} themeColor={themeColor} pathway={item.pathway_primary} />
               </div>
             )}
@@ -484,208 +465,140 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
             {/* ══════════════════════════════════════════════════════════════════
                 RIGHT: TAXONOMY WAYFINDER SIDEBAR
                ══════════════════════════════════════════════════════════════════ */}
-            <aside className="w-full lg:w-[340px] flex-shrink-0">
-              <div className="lg:sticky lg:top-4 space-y-0 overflow-hidden" style={{ border: `2px solid ${themeColor}30`, background: 'white' }}>
+            <aside className="w-full lg:w-[280px] flex-shrink-0">
+              <div className="lg:sticky lg:top-[72px] overflow-hidden" style={{ border: `1px solid ${RULE}`, background: 'white' }}>
 
-                {/* Wayfinder — collapsible on mobile via <details>, always open on lg */}
+                {/* Wayfinder — collapsible on mobile */}
                 <details className="lg:open group" open>
-                  <summary className="px-6 py-5 cursor-pointer lg:cursor-default list-none flex items-center justify-between" style={{ borderBottom: `3px solid ${themeColor}25` }}>
-                    <div>
-                      <h2 className="font-display text-lg font-black uppercase tracking-[0.05em] mb-0.5"
-                        style={{ color: themeColor }}
-                      >
-                        Wayfinder
-                      </h2>
-                      <p className="text-xs" style={{ color: DIM }}>Navigate by topic to find related resources</p>
-                    </div>
+                  <summary className="px-5 py-4 cursor-pointer lg:cursor-default list-none flex items-center justify-between" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <h2 className="text-sm font-bold text-ink uppercase tracking-wider">Wayfinder</h2>
                     <span className="lg:hidden text-muted group-open:rotate-180 transition-transform">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </span>
                   </summary>
 
-                {/* Source Box */}
+                {/* Source link */}
                 {item.source_url && (
-                  <div className="px-6 py-4" style={{ background: SIDEBAR_BG, borderBottom: `1px solid ${RULE}` }}>
-                    <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: DIM }}>Source</h4>
+                  <div className="px-5 py-3" style={{ background: SIDEBAR_BG, borderBottom: `1px solid ${RULE}` }}>
                     <a href={item.source_url} target="_blank" rel="noopener noreferrer"
-                      className="text-sm font-semibold hover:underline block truncate" style={{ color: themeColor }}
+                      className="text-sm font-semibold hover:underline flex items-center gap-1.5" style={{ color: themeColor }}
                     >
-                      {item.source_org_name || sourceDomain} &rarr;
+                      {item.source_org_name || sourceDomain}
+                      <ArrowRight size={12} />
                     </a>
                   </div>
                 )}
 
-                {/* Organization */}
-                {orgData && (
-                  <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
-                    <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: DIM }}>Organization</h4>
-                    <Link href={'/organizations/' + orgData.org_id} className="group">
-                      <span className="text-sm font-bold group-hover:underline block" style={{ color: INK }}>{orgData.org_name}</span>
-                      {orgData.description_5th_grade && (
-                        <span className="text-xs block mt-1 line-clamp-2" style={{ color: DIM }}>{orgData.description_5th_grade}</span>
-                      )}
-                    </Link>
-                  </div>
-                )}
-
-                {/* Your Journey */}
-                <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
-                  <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-3" style={{ color: DIM }}>Your Journey</h4>
-                  <div className="space-y-0">
-                    {TRAIL_LEVELS.map(function (level, i) {
-                      const n = i + 1
-                      const isActive = n === currentLevel
-                      const isPast = n < currentLevel
-                      const Icon = level.icon
-                      return (
-                        <Link key={n} href={'/explore?engagement=' + encodeURIComponent(level.name)}
-                          className="flex items-center gap-2.5 py-1.5 group transition-opacity hover:!opacity-100"
-                          style={{ opacity: isActive ? 1 : isPast ? 0.7 : 0.35 }}
-                        >
-                          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 rounded-full transition-colors"
-                            style={{ background: isActive ? level.color : 'transparent' }}
-                          >
-                            <Icon size={11} style={{ color: isActive ? 'white' : level.color }} strokeWidth={2.5} />
-                          </div>
-                          <span className={'text-xs leading-tight group-hover:underline ' + (isActive ? 'font-bold' : 'font-medium')}
-                            style={{ color: isActive ? INK : undefined }}
-                          >
-                            {level.name}
-                          </span>
-                          {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: level.color }} />}
-                        </Link>
-                      )
-                    })}
-                  </div>
-                </div>
-
                 {/* Topic */}
                 {themeEntry && (
-                  <SidebarSection title="Topic">
+                  <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
                     <Link href={'/pathways/' + (themeSlug || '')} className="flex items-center gap-2 group">
-                      <FlowerOfLife size={18} color={themeColor} opacity={0.7} />
+                      <FlowerOfLife size={16} color={themeColor} opacity={0.7} />
                       <span className="text-sm font-semibold group-hover:underline" style={{ color: themeColor }}>{themeEntry.name}</span>
                     </Link>
-                  </SidebarSection>
+                  </div>
                 )}
 
                 {/* Focus Areas */}
                 {focusAreas.length > 0 && (
-                  <SidebarSection title="Focus Areas">
-                    {focusAreas.map(function (fa: any) {
-                      return (
-                        <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
-                          className="text-sm font-medium hover:underline block py-0.5" style={{ color: themeColor }}
-                        >
-                          {fa.focus_area_name}
-                        </Link>
-                      )
-                    })}
-                  </SidebarSection>
-                )}
-
-                {/* UN Sustainable Development Goals */}
-                {matchedSDGs.length > 0 && (
-                  <CollapsibleSidebarSection title="UN Sustainable Development Goals">
-                    {matchedSDGs.map(function (sdg) {
-                      return (
-                        <Link key={sdg.sdg_number} href={'/explore?sdg=SDG-' + String(sdg.sdg_number).padStart(2, '0')}
-                          className="flex items-center gap-2 py-0.5 group"
-                        >
-                          <span className="w-5 h-5 rounded-sm flex items-center justify-center text-white text-[0.6rem] font-bold flex-shrink-0"
-                            style={{ background: sdg.sdg_color || themeColor }}
+                  <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <p className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Focus Areas</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {focusAreas.map(function (fa: any) {
+                        return (
+                          <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
+                            className="text-xs px-2.5 py-1 hover:opacity-80 transition-opacity"
+                            style={{ background: themeColor + '12', color: themeColor }}
                           >
-                            {sdg.sdg_number}
-                          </span>
-                          <span className="text-sm font-medium group-hover:underline" style={{ color: themeColor }}>{sdg.sdg_name}</span>
-                        </Link>
-                      )
-                    })}
+                            {fa.focus_area_name}
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Details row — compact single-value items */}
+                {(audienceData && (audienceData as any[]).length > 0 || timeData || geoScope || contentType) && (
+                  <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="space-y-1.5 text-xs">
+                      {audienceData && (audienceData as any[]).length > 0 && (
+                        <div className="flex gap-2">
+                          <span className="text-muted font-semibold shrink-0">For:</span>
+                          <span style={{ color: themeColor }}>{(audienceData as any[]).map((s: any) => s.segment_name).join(', ')}</span>
+                        </div>
+                      )}
+                      {timeData && (
+                        <div className="flex gap-2">
+                          <span className="text-muted font-semibold shrink-0">Time:</span>
+                          <span style={{ color: themeColor }}>{(timeData as any).time_name}</span>
+                        </div>
+                      )}
+                      {geoScope && (
+                        <div className="flex gap-2">
+                          <span className="text-muted font-semibold shrink-0">Where:</span>
+                          <span style={{ color: themeColor }}>{geoScope}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Taxonomy — collapsed by default */}
+                {(matchedSDGs.length > 0 || sdohEntry || govData || (actionTypeData && (actionTypeData as any[]).length > 0)) && (
+                  <CollapsibleSidebarSection title="Taxonomy">
+                    <div className="space-y-3">
+                      {matchedSDGs.length > 0 && (
+                        <div>
+                          <p className="text-xs text-muted mb-1">UN SDGs</p>
+                          <div className="flex flex-wrap gap-1">
+                            {matchedSDGs.map(function (sdg) {
+                              return (
+                                <Link key={sdg.sdg_number} href={'/explore?sdg=SDG-' + String(sdg.sdg_number).padStart(2, '0')}
+                                  className="w-6 h-6 flex items-center justify-center text-white text-[0.55rem] font-bold hover:opacity-80"
+                                  style={{ background: sdg.sdg_color || themeColor }}
+                                  title={sdg.sdg_name}
+                                >
+                                  {sdg.sdg_number}
+                                </Link>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      {sdohEntry && (
+                        <div>
+                          <p className="text-xs text-muted mb-1">SDOH</p>
+                          <span className="text-xs font-medium" style={{ color: themeColor }}>{sdohEntry.sdoh_name}</span>
+                        </div>
+                      )}
+                      {govData && (
+                        <div>
+                          <p className="text-xs text-muted mb-1">Government Level</p>
+                          <span className="text-xs font-medium" style={{ color: themeColor }}>{(govData as any).gov_level_name}</span>
+                        </div>
+                      )}
+                      {actionTypeData && (actionTypeData as any[]).length > 0 && (
+                        <div>
+                          <p className="text-xs text-muted mb-1">Action Types</p>
+                          <div className="flex flex-wrap gap-1">
+                            {(actionTypeData as any[]).map(function (at: any) {
+                              return (
+                                <span key={at.action_type_id} className="text-xs px-2 py-0.5"
+                                  style={{ background: themeColor + '12', color: themeColor }}
+                                >
+                                  {at.action_type_name}
+                                </span>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </CollapsibleSidebarSection>
                 )}
 
-                {/* SDOH Domain */}
-                {sdohEntry && (
-                  <CollapsibleSidebarSection title="Social Determinant of Health">
-                    <span className="text-sm font-medium" style={{ color: themeColor }}>{sdohEntry.sdoh_name}</span>
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Audience */}
-                {audienceData && (audienceData as any[]).length > 0 && (
-                  <CollapsibleSidebarSection title="Audience">
-                    {(audienceData as any[]).map(function (seg: any) {
-                      return (
-                        <Link key={seg.segment_id} href={'/explore?audience=' + seg.segment_id}
-                          className="text-sm font-medium hover:underline block py-0.5" style={{ color: themeColor }}
-                        >
-                          {seg.segment_name}
-                        </Link>
-                      )
-                    })}
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Action Types */}
-                {actionTypeData && (actionTypeData as any[]).length > 0 && (
-                  <CollapsibleSidebarSection title="Action Types">
-                    {(actionTypeData as any[]).map(function (at: any) {
-                      return (
-                        <span key={at.action_type_id} className="inline-block text-xs font-semibold px-2.5 py-1 rounded-full mr-1.5 mb-1.5"
-                          style={{ background: themeColor + '15', color: themeColor }}
-                        >
-                          {at.action_type_name}
-                        </span>
-                      )
-                    })}
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Time Commitment */}
-                {timeData && (
-                  <CollapsibleSidebarSection title="Time Commitment">
-                    <span className="text-sm font-medium" style={{ color: themeColor }}>{(timeData as any).time_name}</span>
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Government Level */}
-                {govData && (
-                  <CollapsibleSidebarSection title="Government Level">
-                    <span className="text-sm font-medium" style={{ color: themeColor }}>{(govData as any).gov_level_name}</span>
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Geographic Scope */}
-                {geoScope && (
-                  <CollapsibleSidebarSection title="Location">
-                    <span className="text-sm font-medium" style={{ color: themeColor }}>{geoScope}</span>
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Content Type */}
-                {contentType && (
-                  <CollapsibleSidebarSection title="Content Type">
-                    <span className="text-sm font-medium capitalize" style={{ color: themeColor }}>{contentType}</span>
-                  </CollapsibleSidebarSection>
-                )}
-
-                {/* Related Policies */}
-                {relatedPolicies.length > 0 && (
-                  <CollapsibleSidebarSection title="Related Legislation">
-                    {relatedPolicies.map(function (p: any) {
-                      return (
-                        <Link key={p.policy_id} href={'/policies/' + p.policy_id}
-                          className="text-sm font-medium hover:underline block py-0.5" style={{ color: themeColor }}
-                        >
-                          {p.title_6th_grade || p.policy_name}
-                          {p.level && <span className="text-xs ml-1" style={{ color: DIM }}>({p.level})</span>}
-                        </Link>
-                      )
-                    })}
-                  </CollapsibleSidebarSection>
-                )}
-
-                <div className="h-4" />
+                <div className="h-2" />
                 </details>
               </div>
             </aside>
@@ -726,15 +639,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   )
 }
 
-/* ── Sidebar Section Component ── */
+/* ── Sidebar Section Component (unused, kept for reference) ── */
 function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="px-6 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
-      <h4 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2"
-        style={{ color: DIM }}
-      >
-        {title}
-      </h4>
+    <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+      <h4 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">{title}</h4>
       <div>{children}</div>
     </div>
   )

@@ -65,8 +65,8 @@ export function ContentTabs(props: ContentTabsProps) {
 
   return (
     <div className="flex flex-col md:flex-row gap-0">
-      {/* ── Vertical tab rail (left side on md+, horizontal scroll on mobile) ── */}
-      <div className="md:w-[200px] flex-shrink-0 md:border-r border-b md:border-b-0 border-rule bg-paper/50">
+      {/* ── Vertical tab rail ── */}
+      <div className="md:w-[180px] flex-shrink-0 md:border-r border-b md:border-b-0 border-rule">
         <div className="flex md:flex-col overflow-x-auto md:overflow-visible md:sticky md:top-[72px]">
           {TABS.map(function (tab) {
             const Icon = tab.icon
@@ -75,33 +75,30 @@ export function ContentTabs(props: ContentTabsProps) {
               <button
                 key={tab.key}
                 onClick={function () { setActive(tab.key) }}
-                className="flex items-center gap-3 px-4 py-4 md:py-5 text-left whitespace-nowrap md:whitespace-normal transition-all md:border-l-3 border-b-2 md:border-b-0 -mb-px md:mb-0 md:-ml-px w-full"
+                className="flex items-center gap-2.5 px-3 py-3 md:py-3.5 text-left whitespace-nowrap md:whitespace-normal transition-all md:border-l-2 border-b-2 md:border-b-0 -mb-px md:mb-0 md:-ml-px w-full"
                 style={{
                   borderColor: isActive ? tab.color : 'transparent',
-                  background: isActive ? tab.color + '08' : undefined,
+                  background: isActive ? tab.color + '06' : undefined,
                 }}
               >
                 <div
-                  className="w-10 h-10 flex items-center justify-center flex-shrink-0 transition-all"
+                  className="w-8 h-8 flex items-center justify-center flex-shrink-0 rounded transition-all"
                   style={{
-                    background: isActive ? tab.color : '#f4f5f7',
-                    color: isActive ? 'white' : '#5c6474',
+                    background: isActive ? tab.color : 'transparent',
+                    color: isActive ? 'white' : '#9ca3af',
                   }}
                 >
-                  <Icon size={22} />
-                </div>
-                <div className="hidden md:block">
-                  <span
-                    className="block text-sm leading-tight"
-                    style={{ fontWeight: isActive ? 700 : 500, color: isActive ? tab.color : '#0d1117' }}
-                  >
-                    {tab.name}
-                  </span>
-                  <span className="block text-xs text-muted mt-0.5">{tab.subtitle}</span>
+                  <Icon size={18} />
                 </div>
                 <span
+                  className="text-sm leading-tight hidden md:block"
+                  style={{ fontWeight: isActive ? 600 : 400, color: isActive ? tab.color : '#5c6474' }}
+                >
+                  {tab.name}
+                </span>
+                <span
                   className="block md:hidden text-xs"
-                  style={{ fontWeight: isActive ? 700 : 500, color: isActive ? tab.color : '#0d1117' }}
+                  style={{ fontWeight: isActive ? 600 : 400, color: isActive ? tab.color : '#5c6474' }}
                 >
                   {tab.name.split(' ')[0]}
                 </span>
@@ -111,8 +108,8 @@ export function ContentTabs(props: ContentTabsProps) {
         </div>
       </div>
 
-      {/* ── Tab content (scales to fill remaining width) ── */}
-      <div className="flex-1 min-w-0 py-6 md:py-8 md:pl-8">
+      {/* ── Tab content ── */}
+      <div className="flex-1 min-w-0 py-6 md:py-6 md:pl-6">
         {active === 'curious' && <CuriousTab {...props} />}
         {active === 'people' && <PeopleTab {...props} />}
         {active === 'showup' && <ShowUpTab {...props} />}
