@@ -284,8 +284,8 @@ export default async function ExchangeHomePage() {
                       {item.title_6th_grade || item.title}
                     </h3>
                     {item.summary_6th_grade && (
-                      <p className="text-sm leading-relaxed line-clamp-3" style={{ color: DIM }}>
-                        {item.summary_6th_grade}
+                      <p className="text-sm leading-relaxed" style={{ color: DIM }}>
+                        {item.summary_6th_grade.length > 75 ? item.summary_6th_grade.slice(0, 75) + '…' : item.summary_6th_grade}
                       </p>
                     )}
                   </div>

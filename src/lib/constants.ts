@@ -284,15 +284,7 @@ export const BERKELEY_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     label: 'Council Districts',
     url: '/geo/berkeley/council-districts.geojson',
     color: '#1a6b56',
-    idProperty: 'DISTRICT',
-    detailPath: null,
-  },
-  berkeleyNeighborhoods: {
-    id: 'berkeleyNeighborhoods',
-    label: 'Neighborhoods',
-    url: '/geo/berkeley/neighborhoods.geojson',
-    color: '#4a2870',
-    idProperty: 'NAME',
+    idProperty: 'district',
     detailPath: null,
   },
   berkeleyParks: {
@@ -300,7 +292,7 @@ export const BERKELEY_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     label: 'Parks',
     url: '/geo/berkeley/parks.geojson',
     color: '#2D8659',
-    idProperty: 'PARK_NAME',
+    idProperty: 'name',
     detailPath: null,
   },
   berkeleyZipCodes: {
@@ -309,6 +301,14 @@ export const BERKELEY_GEO_LAYERS: Record<string, GeoLayerConfig> = {
     url: '/geo/berkeley/zip-codes.geojson',
     color: '#1a5030',
     idProperty: 'zip',
+    detailPath: null,
+  },
+  berkeleyCityBoundary: {
+    id: 'berkeleyCityBoundary',
+    label: 'City Boundary',
+    url: '/geo/berkeley/city-boundary.geojson',
+    color: '#4a2870',
+    idProperty: 'objectid',
     detailPath: null,
   },
 };
@@ -373,12 +373,17 @@ export const URGENCY_CONFIG: Record<string, { key: string; color: string }> = {
 
 /** Trail level engagement → Tailwind badge classes. */
 export const ENGAGEMENT_LEVEL_COLORS: Record<string, string> = {
+  'Activity Guide': 'bg-sky-100 text-sky-800',
+  'About': 'bg-emerald-100 text-emerald-800',
+  'Local Resources': 'bg-purple-100 text-purple-800',
+  "Who's Responsible": 'bg-rose-100 text-rose-800',
+  'Get Involved': 'bg-gray-900 text-white',
+  // Legacy values — kept for backward compatibility
   'Get Curious': 'bg-sky-100 text-sky-800',
   'Find Your People': 'bg-emerald-100 text-emerald-800',
   'Show Up': 'bg-purple-100 text-purple-800',
   'Go Deeper': 'bg-rose-100 text-rose-800',
   'Make Your Move': 'bg-gray-900 text-white',
-  // Legacy values — kept for backward compatibility during migration
   'On the Couch': 'bg-sky-100 text-sky-800',
   'Off the Couch': 'bg-purple-100 text-purple-800',
   'Use Your Superpower': 'bg-gray-900 text-white',

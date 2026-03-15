@@ -11,11 +11,11 @@ import {
 import { BreakItDown } from './BreakItDown'
 
 const TABS = [
-  { key: 'curious', name: 'Get Curious', subtitle: 'Learn about it', icon: BookOpen, color: '#1b5e8a' },
-  { key: 'people', name: 'Find Your People', subtitle: 'Connect with others', icon: Users, color: '#1a6b56' },
-  { key: 'showup', name: 'Show Up', subtitle: 'Participate', icon: Megaphone, color: '#4a2870' },
-  { key: 'deeper', name: 'Go Deeper', subtitle: 'Build knowledge', icon: GraduationCap, color: '#7a2018' },
-  { key: 'move', name: 'Make Your Move', subtitle: 'Take action', icon: Rocket, color: '#0d1117' },
+  { key: 'curious', name: 'Activity Guide', subtitle: 'What this is about', icon: BookOpen, color: '#1b5e8a' },
+  { key: 'people', name: 'About', subtitle: 'Who is behind this', icon: Users, color: '#1a6b56' },
+  { key: 'showup', name: 'Local Resources', subtitle: 'Things you can use', icon: Megaphone, color: '#4a2870' },
+  { key: 'deeper', name: 'Who\'s Responsible', subtitle: 'Policy & legislation', icon: GraduationCap, color: '#7a2018' },
+  { key: 'move', name: 'Get Involved', subtitle: 'Take action', icon: Rocket, color: '#0d1117' },
 ]
 
 const CONTENT_TYPE_ICONS: Record<string, any> = {
@@ -114,8 +114,8 @@ export function ContentTabs(props: ContentTabsProps) {
         {active === 'curious' && <CuriousTab {...props} />}
         {active === 'people' && <PeopleTab {...props} />}
         {active === 'showup' && <ShowUpTab {...props} />}
-        {active === 'deeper' && <DeeperTab {...props} />}
-        {active === 'move' && <MoveTab {...props} />}
+        {active === 'deeper' && <ResponsibleTab {...props} />}
+        {active === 'move' && <InvolvedTab {...props} />}
       </div>
     </div>
   )
@@ -189,15 +189,15 @@ function CuriousTab({ bodyHtml, title, summary, videoUrl, heroQuote, themeColor 
   )
 }
 
-/* ── Find Your People ── */
-function PeopleTab({ orgData, relatedServices, relatedContent, themeColor }: ContentTabsProps) {
-  const hasAnything = orgData || relatedServices.length > 0 || relatedContent.length > 0
+/* ── About — Organization + Related Content ── */
+function PeopleTab({ orgData, relatedContent, themeColor }: ContentTabsProps) {
+  const hasAnything = orgData || relatedContent.length > 0
 
   if (!hasAnything) {
     return (
       <div className="text-center py-12">
         <Users size={40} className="mx-auto mb-3 text-muted/30" />
-        <p className="text-sm text-muted">No organizations or community resources connected to this content yet.</p>
+        <p className="text-sm text-muted">No organization info connected to this content yet.</p>
       </div>
     )
   }
@@ -224,30 +224,6 @@ function PeopleTab({ orgData, relatedServices, relatedContent, themeColor }: Con
         </div>
       )}
 
-      {relatedServices.length > 0 && (
-        <div>
-          <SectionHeader title="Community Resources" subtitle="Local services and support near you" icon={Globe} color="#16a34a" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {relatedServices.map(function (svc: any) {
-              return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id}
-                  className="flex items-start gap-3 p-4 border border-rule hover:shadow-md transition-all group bg-white"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-emerald-50 text-emerald-600">
-                    <Globe size={18} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-bold text-ink group-hover:text-blue block">{svc.service_name}</span>
-                    {svc.phone && <span className="text-xs text-muted block mt-0.5">{svc.phone}</span>}
-                    {svc.address && <span className="text-xs text-muted block">{svc.address}{svc.city ? `, ${svc.city}` : ''}</span>}
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
       {relatedContent.length > 0 && (
         <div>
           <SectionHeader title="Related Reading" subtitle="More on this topic" icon={BookOpen} color={themeColor} />
@@ -261,7 +237,7 @@ function PeopleTab({ orgData, relatedServices, relatedContent, themeColor }: Con
                     </div>
                   )}
                   <span className="text-sm font-bold text-ink group-hover:text-blue block line-clamp-2">{r.title_6th_grade}</span>
-                  {r.summary_6th_grade && <span className="text-xs text-muted mt-1 block line-clamp-2">{r.summary_6th_grade.slice(0, 120)}</span>}
+                  {r.summary_6th_grade && <span className="text-xs text-muted mt-1 block line-clamp-2">{r.summary_6th_grade.length > 75 ? r.summary_6th_grade.slice(0, 75) + '…' : r.summary_6th_grade}</span>}
                 </Link>
               )
             })}
@@ -272,55 +248,24 @@ function PeopleTab({ orgData, relatedServices, relatedContent, themeColor }: Con
   )
 }
 
-/* ── Show Up ── */
-function ShowUpTab({ opportunities, actionItems, themeColor, typedContent }: ContentTabsProps) {
-  const actions = [
-    actionItems.volunteer_url && { href: actionItems.volunteer_url, label: 'Volunteer', desc: 'Give your time and talent', emoji: '\u{1f91d}' },
-    actionItems.donate_url && { href: actionItems.donate_url, label: 'Donate', desc: 'Support this work financially', emoji: '\u{1f49b}' },
-    actionItems.signup_url && { href: actionItems.signup_url, label: 'Sign Up', desc: 'Get involved today', emoji: '\u{270d}\u{fe0f}' },
-    actionItems.register_url && { href: actionItems.register_url, label: 'Register', desc: 'Reserve your spot', emoji: '\u{1f4cb}' },
-    actionItems.attend_url && { href: actionItems.attend_url, label: 'Attend', desc: 'Show up in person', emoji: '\u{1f4cd}' },
-  ].filter(Boolean) as { href: string; label: string; desc: string; emoji: string }[]
-
-  // DIY kits, videos, guides, tools, courses, events
+/* ── Local Resources — DIY kits, guides, tools, services ── */
+function ShowUpTab({ relatedServices, typedContent, themeColor }: ContentTabsProps) {
   const hasTyped = typedContent.length > 0
 
-  if (actions.length === 0 && opportunities.length === 0 && !hasTyped) {
+  if (!hasTyped && relatedServices.length === 0) {
     return (
       <div className="text-center py-12">
-        <Megaphone size={40} className="mx-auto mb-3 text-muted/30" />
-        <p className="text-sm text-muted">No actions or opportunities connected to this content yet.</p>
+        <Wrench size={40} className="mx-auto mb-3 text-muted/30" />
+        <p className="text-sm text-muted">No local resources connected to this content yet.</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-10">
-      {actions.length > 0 && (
-        <div>
-          <SectionHeader title="Take Action" subtitle="Ways you can get involved right now" icon={Megaphone} color="#4a2870" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {actions.map(function (a) {
-              return (
-                <a key={a.href} href={a.href} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-5 border-2 border-rule hover:border-purple-300 hover:shadow-lg transition-all group bg-white"
-                >
-                  <span className="text-2xl flex-shrink-0">{a.emoji}</span>
-                  <div className="flex-1">
-                    <span className="text-sm font-bold text-ink group-hover:text-purple-700 block">{a.label}</span>
-                    <span className="text-xs text-muted">{a.desc}</span>
-                  </div>
-                  <ExternalLink size={16} className="flex-shrink-0 text-muted group-hover:text-purple-500" />
-                </a>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
       {hasTyped && (
         <div>
-          <SectionHeader title="Things You Can Use" subtitle="DIY kits, guides, videos, tools, and more from organizations working on this" icon={Wrench} color={themeColor} />
+          <SectionHeader title="Things You Can Use" subtitle="DIY kits, guides, videos, tools, and more" icon={Wrench} color={themeColor} />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {typedContent.map(function (c: any) {
               const TypeIcon = CONTENT_TYPE_ICONS[c.content_type] || BookOpen
@@ -343,9 +288,155 @@ function ShowUpTab({ opportunities, actionItems, themeColor, typedContent }: Con
                       {typeLabel}
                     </span>
                     <span className="text-sm font-bold text-ink group-hover:text-blue block line-clamp-2">{c.title_6th_grade}</span>
-                    {c.summary_6th_grade && <span className="text-xs text-muted mt-0.5 block line-clamp-2">{c.summary_6th_grade.slice(0, 100)}</span>}
+                    {c.summary_6th_grade && <span className="text-xs text-muted mt-0.5 block line-clamp-2">{c.summary_6th_grade.length > 75 ? c.summary_6th_grade.slice(0, 75) + '…' : c.summary_6th_grade}</span>}
                   </div>
                 </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {relatedServices.length > 0 && (
+        <div>
+          <SectionHeader title="Community Services" subtitle="Local organizations and support near you" icon={Globe} color="#16a34a" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {relatedServices.map(function (svc: any) {
+              return (
+                <Link key={svc.service_id} href={'/services/' + svc.service_id}
+                  className="flex items-start gap-3 p-4 border border-rule hover:shadow-md transition-all group bg-white"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-emerald-50 text-emerald-600">
+                    <Globe size={18} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-bold text-ink group-hover:text-blue block">{svc.service_name}</span>
+                    {svc.phone && <span className="text-xs text-muted block mt-0.5">{svc.phone}</span>}
+                    {svc.address && <span className="text-xs text-muted block">{svc.address}{svc.city ? `, ${svc.city}` : ''}</span>}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ── Who's Responsible — Officials + Policies + Legislation ── */
+function ResponsibleTab({ responsibleOfficials, relatedPolicies, themeColor }: ContentTabsProps) {
+  if (responsibleOfficials.length === 0 && relatedPolicies.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <GraduationCap size={40} className="mx-auto mb-3 text-muted/30" />
+        <p className="text-sm text-muted">No officials or policies connected to this content yet.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-10">
+      {responsibleOfficials.length > 0 && (
+        <div>
+          <SectionHeader title="Elected Officials" subtitle="Who has authority over this issue" icon={Users} color="#0d1117" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {responsibleOfficials.map(function (o: any) {
+              return (
+                <Link key={o.official_id} href={'/officials/' + o.official_id}
+                  className="flex items-center gap-4 p-4 border border-rule hover:shadow-lg transition-all group bg-white"
+                >
+                  <div className="w-14 h-14 overflow-hidden flex-shrink-0 rounded-full border-2 border-rule">
+                    {o.photo_url ? (
+                      <Image src={o.photo_url} alt="" width={56} height={56} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-base font-bold" style={{ color: themeColor, background: themeColor + '15' }}>
+                        {o.official_name?.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-sm font-bold text-ink group-hover:text-blue block truncate">{o.official_name}</span>
+                    <span className="text-xs text-muted truncate block">{[o.title, o.party, o.level].filter(Boolean).join(' \u00b7 ')}</span>
+                    {(o.email || o.office_phone) && (
+                      <span className="text-xs font-semibold mt-1 block" style={{ color: themeColor }}>
+                        Contact &rarr;
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {relatedPolicies.length > 0 && (
+        <div>
+          <SectionHeader title="Related Legislation" subtitle="Policies and laws connected to this topic" icon={BookOpen} color="#7a2018" />
+          <div className="space-y-3">
+            {relatedPolicies.map(function (p: any) {
+              return (
+                <Link key={p.policy_id} href={'/policies/' + p.policy_id}
+                  className="flex items-center gap-4 p-4 border border-rule hover:shadow-md transition-all group bg-white"
+                >
+                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-red-50 text-red-700">
+                    <BookOpen size={18} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-bold text-ink group-hover:text-blue block">{p.title_6th_grade || p.policy_name}</span>
+                    <span className="text-xs text-muted">{[p.level, p.status, p.bill_number].filter(Boolean).join(' \u00b7 ')}</span>
+                  </div>
+                  <ArrowRight size={16} className="flex-shrink-0 text-muted" />
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ── Get Involved — Opportunities + Books + Programs + Library ── */
+function InvolvedTab({ opportunities, actionItems, relatedBooks, programs, libraryNuggets, typedContent, themeColor }: ContentTabsProps) {
+  const actions = [
+    actionItems.volunteer_url && { href: actionItems.volunteer_url, label: 'Volunteer', desc: 'Give your time and talent', emoji: '\u{1f91d}' },
+    actionItems.donate_url && { href: actionItems.donate_url, label: 'Donate', desc: 'Support this work financially', emoji: '\u{1f49b}' },
+    actionItems.signup_url && { href: actionItems.signup_url, label: 'Sign Up', desc: 'Get involved today', emoji: '\u{270d}\u{fe0f}' },
+    actionItems.register_url && { href: actionItems.register_url, label: 'Register', desc: 'Reserve your spot', emoji: '\u{1f4cb}' },
+    actionItems.attend_url && { href: actionItems.attend_url, label: 'Attend', desc: 'Show up in person', emoji: '\u{1f4cd}' },
+  ].filter(Boolean) as { href: string; label: string; desc: string; emoji: string }[]
+
+  const hasAnything = actions.length > 0 || opportunities.length > 0 || relatedBooks.length > 0 || programs.length > 0 || libraryNuggets.length > 0
+
+  if (!hasAnything) {
+    return (
+      <div className="text-center py-12">
+        <Rocket size={40} className="mx-auto mb-3 text-muted/30" />
+        <p className="text-sm text-muted">No involvement opportunities connected to this content yet.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-10">
+      {actions.length > 0 && (
+        <div>
+          <SectionHeader title="Take Action" subtitle="Ways you can get involved right now" icon={Megaphone} color="#4a2870" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {actions.map(function (a) {
+              return (
+                <a key={a.href} href={a.href} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-5 border-2 border-rule hover:border-purple-300 hover:shadow-lg transition-all group bg-white"
+                >
+                  <span className="text-2xl flex-shrink-0">{a.emoji}</span>
+                  <div className="flex-1">
+                    <span className="text-sm font-bold text-ink group-hover:text-purple-700 block">{a.label}</span>
+                    <span className="text-xs text-muted">{a.desc}</span>
+                  </div>
+                  <ExternalLink size={16} className="flex-shrink-0 text-muted group-hover:text-purple-500" />
+                </a>
               )
             })}
           </div>
@@ -378,28 +469,10 @@ function ShowUpTab({ opportunities, actionItems, themeColor, typedContent }: Con
           </div>
         </div>
       )}
-    </div>
-  )
-}
 
-/* ── Go Deeper ── */
-function DeeperTab({ relatedPolicies, libraryNuggets, programs, relatedBooks, themeColor }: ContentTabsProps) {
-  const hasAnything = relatedPolicies.length > 0 || libraryNuggets.length > 0 || programs.length > 0 || relatedBooks.length > 0
-
-  if (!hasAnything) {
-    return (
-      <div className="text-center py-12">
-        <GraduationCap size={40} className="mx-auto mb-3 text-muted/30" />
-        <p className="text-sm text-muted">No deeper resources connected to this content yet.</p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-10">
       {relatedBooks.length > 0 && (
         <div>
-          <SectionHeader title="Recommended Reading" subtitle="Books on this topic from our bookshelf" icon={BookMarked} color="#92400e" />
+          <SectionHeader title="Recommended Reading" subtitle="Books on this topic" icon={BookMarked} color="#92400e" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {relatedBooks.map(function (book: any) {
               const href = book.free_url || book.purchase_url || '/bookshelf'
@@ -445,30 +518,6 @@ function DeeperTab({ relatedPolicies, libraryNuggets, programs, relatedBooks, th
         </div>
       )}
 
-      {relatedPolicies.length > 0 && (
-        <div>
-          <SectionHeader title="Related Legislation" subtitle="Policies and laws connected to this topic" icon={BookOpen} color="#7a2018" />
-          <div className="space-y-3">
-            {relatedPolicies.map(function (p: any) {
-              return (
-                <Link key={p.policy_id} href={'/policies/' + p.policy_id}
-                  className="flex items-center gap-4 p-4 border border-rule hover:shadow-md transition-all group bg-white"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-red-50 text-red-700">
-                    <BookOpen size={18} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-bold text-ink group-hover:text-blue block">{p.title_6th_grade || p.policy_name}</span>
-                    <span className="text-xs text-muted">{[p.level, p.status, p.bill_number].filter(Boolean).join(' \u00b7 ')}</span>
-                  </div>
-                  <ArrowRight size={16} className="flex-shrink-0 text-muted" />
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
       {libraryNuggets.length > 0 && (
         <div>
           <SectionHeader title="From the Library" subtitle="Research and reference materials" icon={BookOpen} color={themeColor} />
@@ -487,80 +536,6 @@ function DeeperTab({ relatedPolicies, libraryNuggets, programs, relatedBooks, th
                   </div>
                   <ExternalLink size={16} className="flex-shrink-0 text-muted" />
                 </a>
-              )
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-/* ── Make Your Move ── */
-function MoveTab({ responsibleOfficials, relatedPolicies, themeColor }: ContentTabsProps) {
-  if (responsibleOfficials.length === 0 && relatedPolicies.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Rocket size={40} className="mx-auto mb-3 text-muted/30" />
-        <p className="text-sm text-muted">No officials or advocacy actions connected to this content yet.</p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-10">
-      {responsibleOfficials.length > 0 && (
-        <div>
-          <SectionHeader title="Who Is Responsible" subtitle="Elected officials connected to this topic" icon={Users} color="#0d1117" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {responsibleOfficials.map(function (o: any) {
-              return (
-                <Link key={o.official_id} href={'/officials/' + o.official_id}
-                  className="flex items-center gap-4 p-4 border border-rule hover:shadow-lg transition-all group bg-white"
-                >
-                  <div className="w-14 h-14 overflow-hidden flex-shrink-0 rounded-full border-2 border-rule">
-                    {o.photo_url ? (
-                      <Image src={o.photo_url} alt="" width={56} height={56} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-base font-bold" style={{ color: themeColor, background: themeColor + '15' }}>
-                        {o.official_name?.charAt(0)}
-                      </div>
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-sm font-bold text-ink group-hover:text-blue block truncate">{o.official_name}</span>
-                    <span className="text-xs text-muted truncate block">{[o.title, o.party, o.level].filter(Boolean).join(' \u00b7 ')}</span>
-                    {(o.email || o.office_phone) && (
-                      <span className="text-xs font-semibold mt-1 block" style={{ color: themeColor }}>
-                        Contact &rarr;
-                      </span>
-                    )}
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {relatedPolicies.length > 0 && (
-        <div>
-          <SectionHeader title="Track the Policy" subtitle="Follow the legislation that affects this issue" icon={BookOpen} color="#7a2018" />
-          <div className="space-y-3">
-            {relatedPolicies.map(function (p: any) {
-              return (
-                <Link key={p.policy_id} href={'/policies/' + p.policy_id}
-                  className="flex items-center gap-4 p-4 border border-rule hover:shadow-md transition-all group bg-white"
-                >
-                  <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 bg-red-50 text-red-700">
-                    <BookOpen size={18} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-bold text-ink group-hover:text-blue block">{p.title_6th_grade || p.policy_name}</span>
-                    <span className="text-xs text-muted">{[p.level, p.status].filter(Boolean).join(' \u00b7 ')}</span>
-                  </div>
-                  <ArrowRight size={16} className="flex-shrink-0 text-muted" />
-                </Link>
               )
             })}
           </div>

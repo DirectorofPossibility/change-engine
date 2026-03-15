@@ -53,7 +53,7 @@ export function ServiceCard({ serviceId, name, orgName, orgId, description, phon
       ) : orgName ? (
         <p className="text-xs text-muted mb-2">{orgName}</p>
       ) : null}
-      {displayDesc && <p className="text-sm text-muted mb-3 line-clamp-2">{displayDesc.length > 150 ? displayDesc.slice(0, 150) + '...' : displayDesc}</p>}
+      {displayDesc && <p className="text-sm text-muted mb-3 line-clamp-2">{displayDesc.length > 150 ? displayDesc.slice(0, 75) + '...' : displayDesc}</p>}
       <div className="space-y-1.5">
         {phone && (
           <a href={`tel:${phone}`} className="flex items-center gap-2 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>

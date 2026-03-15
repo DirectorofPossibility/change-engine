@@ -58,7 +58,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                 {newsFeed[0].summary_6th_grade && (
                   <p className="font-body text-base text-muted leading-relaxed">
                     {newsFeed[0].summary_6th_grade.length > 150
-                      ? newsFeed[0].summary_6th_grade.slice(0, 150) + '...'
+                      ? newsFeed[0].summary_6th_grade.slice(0, 75) + '...'
                       : newsFeed[0].summary_6th_grade}
                   </p>
                 )}
