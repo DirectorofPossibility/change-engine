@@ -74,12 +74,12 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
               Skip to main content
             </a>
             <D2Nav />
+            <TickerTape election={nextElection} className="ticker-banner" />
             <TranslateBar />
             <main id="main-content" className="flex-1 pb-14">
               {children}
             </main>
             <D2Footer />
-            <TickerTape election={nextElection} className="ticker-banner" />
             {siteConfig.onboarding_flow !== false && <OnboardingLoader />}
             {siteConfig.scroll_to_top !== false && <ScrollToTop />}
             {siteConfig.chat_widget !== false && <ChanceChatWidget />}
