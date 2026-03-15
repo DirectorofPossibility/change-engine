@@ -17,7 +17,7 @@ export async function getOrganizationsWithCoords(zipCode?: string) {
   const supabase = await createClient()
   let query = supabase
     .from('organizations')
-    .select('org_id, org_name, description_5th_grade, website, latitude, longitude, zip_code, address, city')
+    .select('org_id, org_name, description_5th_grade, website, latitude, longitude, zip_code, address, city, org_type')
     .not('latitude', 'is', null)
     .not('longitude', 'is', null)
 

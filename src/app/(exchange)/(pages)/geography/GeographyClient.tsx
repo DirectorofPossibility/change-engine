@@ -50,6 +50,43 @@ interface Official {
   photo_url: string | null
 }
 
+interface Organization {
+  org_id: string
+  org_name: string
+  description: string | null
+  website: string | null
+  address: string | null
+  org_type: string | null
+  primaryPathway: string | null
+  pathways: string[]
+}
+
+const ORG_TYPE_LABELS: Record<string, string> = {
+  T: 'Charitable',
+  P: 'Cultural & Arts',
+  R: 'Civil Rights',
+  B: 'Education',
+  A: 'Arts & Culture',
+  S: 'Community',
+  E: 'Health',
+  F: 'Mental Health',
+  C: 'Environment',
+  J: 'Employment',
+  L: 'Housing',
+  GOV: 'Government',
+  O: 'Youth',
+  K: 'Food & Agriculture',
+  W: 'Public Safety',
+  X: 'Religious',
+  N: 'Recreation',
+  BIZ: 'Business',
+  I: 'Crime & Legal',
+  M: 'Medical Research',
+  V: 'Social Science',
+}
+
+const ORG_TYPE_ORDER = ['GOV', 'E', 'F', 'B', 'S', 'T', 'L', 'K', 'J', 'R', 'C', 'P', 'A', 'O', 'N', 'W', 'I', 'M', 'V', 'X', 'BIZ']
+
 interface EntityCounts {
   organizations: number
   services: number
@@ -103,6 +140,7 @@ export function GeographyClient({
   const [selectedRegion, setSelectedRegion] = useState<SelectedRegion | null>(null)
   const [markers, setMarkers] = useState<MarkerData[]>([])
   const [officials, setOfficials] = useState<Official[]>([])
+  const [organizations, setOrganizations] = useState<Organization[]>([])
   const [entityCounts, setEntityCounts] = useState<EntityCounts>({ organizations: 0, services: 0, voting: 0, officials: 0 })
   const [loading, setLoading] = useState(false)
   const [activePathway, setActivePathway] = useState<string | null>(null)
@@ -129,10 +167,12 @@ export function GeographyClient({
       const data = await res.json()
       setMarkers(data.markers || [])
       setOfficials(data.officials || [])
+      setOrganizations(data.organizations || [])
       setEntityCounts(data.entityCounts || { organizations: 0, services: 0, voting: 0, officials: 0 })
     } catch {
       setMarkers([])
       setOfficials([])
+      setOrganizations([])
       setEntityCounts({ organizations: 0, services: 0, voting: 0, officials: 0 })
     } finally {
       setLoading(false)
@@ -419,8 +459,98 @@ export function GeographyClient({
                   </div>
                 )}
 
+                {/* Organizations list — grouped by org_type */}
+                {selectedRegion && !loading && organizations.length > 0 && (() => {
+                  // Group orgs by type, sorted by ORG_TYPE_ORDER
+                  const grouped = new Map<string, Organization[]>()
+                  const sorted = [...organizations].sort(function (a, b) {
+                    const ai = ORG_TYPE_ORDER.indexOf(a.org_type || '')
+                    const bi = ORG_TYPE_ORDER.indexOf(b.org_type || '')
+                    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi)
+                  })
+                  for (const org of sorted) {
+                    const key = org.org_type || 'Other'
+                    if (!grouped.has(key)) grouped.set(key, [])
+                    grouped.get(key)!.push(org)
+                  }
+
+                  let shown = 0
+                  const MAX_SHOWN = 15
+
+                  return (
+                    <div className={officials.length > 0 ? 'mt-4 pt-4 border-t border-brand-border' : ''}>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-1.5">
+                          <Building2 size={13} className="text-brand-accent" />
+                          <span className="text-xs font-bold text-brand-text">Organizations</span>
+                        </div>
+                        <span className="text-[10px] text-brand-muted">{organizations.length} found</span>
+                      </div>
+
+                      {Array.from(grouped.entries()).map(function ([typeCode, orgs]) {
+                        if (shown >= MAX_SHOWN) return null
+                        const label = ORG_TYPE_LABELS[typeCode] || typeCode
+                        const orgsToShow = orgs.slice(0, MAX_SHOWN - shown)
+                        shown += orgsToShow.length
+
+                        return (
+                          <div key={typeCode} className="mb-3">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5 px-0.5">
+                              {label} <span className="font-normal">({orgs.length})</span>
+                            </p>
+                            <div className="space-y-1.5">
+                              {orgsToShow.map(function (org) {
+                                const pw = org.primaryPathway ? (THEMES as Record<string, { name: string; color: string }>)[org.primaryPathway] : null
+                                return (
+                                  <Link
+                                    key={org.org_id}
+                                    href={'/organizations/' + org.org_id}
+                                    className="block p-2.5 border border-brand-border hover:border-brand-accent/40 hover:bg-brand-bg/50 transition-all group"
+                                  >
+                                    <div className="flex items-start gap-2.5">
+                                      <div
+                                        className="w-9 h-9 rounded flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: pw ? pw.color + '15' : '#f4f5f7' }}
+                                      >
+                                        <Building2 size={14} style={{ color: pw?.color || '#C75B2A' }} />
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <span className="block text-sm font-semibold text-brand-text truncate group-hover:text-brand-accent transition-colors">
+                                          {org.org_name}
+                                        </span>
+                                        {org.description && (
+                                          <span className="block text-[11px] text-brand-muted line-clamp-2 mt-0.5 leading-relaxed">
+                                            {org.description}
+                                          </span>
+                                        )}
+                                        {org.address && (
+                                          <span className="flex items-center gap-1 text-[10px] text-brand-muted-light mt-1">
+                                            <MapPin size={9} />
+                                            {org.address}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <ChevronRight size={14} className="text-brand-muted flex-shrink-0 mt-1" />
+                                    </div>
+                                  </Link>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+
+                      {organizations.length > MAX_SHOWN && (
+                        <p className="text-[10px] text-brand-muted text-center mt-2">
+                          + {organizations.length - MAX_SHOWN} more on the map
+                        </p>
+                      )}
+                    </div>
+                  )
+                })()}
+
                 {/* Empty state */}
-                {selectedRegion && !loading && officials.length === 0 && markers.length === 0 && (
+                {selectedRegion && !loading && officials.length === 0 && organizations.length === 0 && markers.length === 0 && (
                   <div className="text-center py-4">
                     <p className="text-sm text-brand-muted">No results found for this area.</p>
                     <p className="text-xs text-brand-muted-light mt-0.5">Try a different region or pathway.</p>

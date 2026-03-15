@@ -332,8 +332,14 @@ export async function GET(req: Request) {
     })
   }
 
-  // Organization markers
+  // Organization markers + list data
   const seenOrgIdsForMarkers = new Set<string>()
+  const organizationsList: Array<{
+    org_id: string; org_name: string; description: string | null
+    website: string | null; address: string | null; org_type: string | null
+    primaryPathway: string | null; pathways: string[]
+  }> = []
+
   orgResults.flat().forEach(function (o) {
     if (seenOrgIdsForMarkers.has(o.org_id)) return
     seenOrgIdsForMarkers.add(o.org_id)
@@ -350,7 +356,17 @@ export async function GET(req: Request) {
       type: 'organization',
       address: [o.address, o.city].filter(Boolean).join(', ') || null,
       phone: null,
-      link: '/services?org=' + o.org_id,
+      link: '/organizations/' + o.org_id,
+      primaryPathway: pw?.primaryPathway || null,
+      pathways: pw?.pathways || [],
+    })
+    organizationsList.push({
+      org_id: o.org_id,
+      org_name: o.org_name || 'Organization',
+      description: o.description_5th_grade || null,
+      website: o.website || null,
+      address: [o.address, o.city].filter(Boolean).join(', ') || null,
+      org_type: o.org_type || null,
       primaryPathway: pw?.primaryPathway || null,
       pathways: pw?.pathways || [],
     })
@@ -393,6 +409,7 @@ export async function GET(req: Request) {
   return NextResponse.json({
     markers,
     officials: enrichedOfficials,
+    organizations: organizationsList,
     entityCounts,
   })
 }
