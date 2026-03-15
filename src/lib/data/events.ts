@@ -5,11 +5,17 @@ import { createClient } from '@/lib/supabase/server'
  */
 export async function getEventsFeed(limit = 20) {
   const supabase = await createClient()
+  const now = new Date().toISOString()
+  const todayDate = now.split('T')[0]
+
+  // Prefer event_start_date if it exists, fall back to published_at
+  // Exclude events whose end date (or start date if no end) is in the past
   const { data } = await supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
     .eq('content_type', 'event')
+    .or(`event_end_date.gte.${todayDate},event_start_date.gte.${todayDate},event_start_date.is.null`)
     .order('published_at', { ascending: false })
     .limit(limit)
   return data ?? []
@@ -26,38 +32,44 @@ export async function getEventsFeed(limit = 20) {
  */
 export const getCalendarItems = cache(async function getCalendarItems(pathway?: string) {
   const supabase = await createClient()
+  const now = new Date().toISOString()
+  const todayDate = now.split('T')[0]
 
-  // Content items tagged as events
+  // Content items tagged as events — only future/current
   let contentQ = supabase
     .from('content_published')
     .select('*')
     .eq('is_active', true)
     .eq('content_type', 'event')
+    .or(`event_end_date.gte.${todayDate},event_start_date.gte.${todayDate},event_start_date.is.null`)
     .order('published_at', { ascending: false })
     .limit(50)
   if (pathway) contentQ = contentQ.eq('pathway_primary', pathway)
 
-  // Events table (community events with real datetimes)
+  // Events table — only future/current
   const eventsQ = supabase
     .from('events')
     .select('event_id, event_name, description_5th_grade, event_type, start_datetime, end_datetime, address, city, is_virtual, registration_url, org_id, focus_area_ids')
     .eq('is_active', 'Yes')
+    .or(`end_datetime.gte.${now},start_datetime.gte.${now}`)
     .order('start_datetime', { ascending: true })
     .limit(50)
 
-  // Civic calendar (government meetings, deadlines, elections)
+  // Civic calendar — only future/current
   const civicQ = supabase
     .from('civic_calendar')
     .select('event_id, event_name, event_type, description_5th_grade, date_start, time_start, location_name, location_address, is_virtual, virtual_url, registration_url, is_deadline, is_election, gov_level_id')
     .eq('is_active', 'Yes')
+    .gte('date_start', todayDate)
     .order('date_start', { ascending: true })
     .limit(30)
 
-  // Opportunities with dates
+  // Opportunities — only future/current
   let oppsQ = supabase
     .from('opportunities')
     .select('opportunity_id, opportunity_name, description_5th_grade, start_date, end_date, time_commitment_id, is_virtual, registration_url, address, city, org_id')
     .eq('is_active', 'Yes')
+    .or(`end_date.gte.${todayDate},start_date.gte.${todayDate},start_date.is.null`)
     .order('start_date', { ascending: true })
     .limit(30)
 
