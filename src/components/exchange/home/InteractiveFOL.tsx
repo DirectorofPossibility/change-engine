@@ -102,7 +102,7 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
   const avatarR = 18
 
   return (
-    <div className="relative w-full max-w-[930px] mx-auto">
+    <div className="relative w-full max-w-[1160px] mx-auto">
       <svg
         viewBox="0 0 400 400"
         className="w-full h-auto"
@@ -314,28 +314,6 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
         })}
       </svg>
 
-      {/* Mobile fallback — simple list below md */}
-      <div className="md:hidden mt-6 space-y-2">
-        {[...PETAL_MAP.map(function (p) { return p.themeId }), CENTER_THEME_ID].map(function (themeId) {
-          const theme = THEMES[themeId as keyof typeof THEMES]
-          if (!theme) return null
-          const count = pathwayCounts[themeId] || 0
-          return (
-            <button
-              key={themeId}
-              onClick={function () { handleClick(theme.slug) }}
-              className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors"
-              style={{ background: theme.color + '12', borderLeft: '3px solid ' + theme.color }}
-            >
-              <span className="w-2.5 h-2.5 flex-shrink-0" style={{ background: theme.color }} />
-              <span className="flex-1 text-sm text-white font-medium">{theme.name}</span>
-              {count > 0 && (
-                <span className="text-[11px] font-mono" style={{ color: 'rgba(255,255,255,0.5)' }}>{count}</span>
-              )}
-            </button>
-          )
-        })}
-      </div>
     </div>
   )
 }
