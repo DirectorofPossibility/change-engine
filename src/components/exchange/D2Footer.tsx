@@ -27,6 +27,7 @@ export function D2Footer() {
     { label: t('d2footer.knowledge_graph'), href: '/knowledge-graph' },
     { label: t('d2footer.library'), href: '/library' },
     { label: t('d2footer.foundations'), href: '/foundations' },
+    { label: 'UN SDGs', href: '/sdgs' },
   ])
 
   const ACT = filterNavItems([
