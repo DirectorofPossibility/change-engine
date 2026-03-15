@@ -30,7 +30,7 @@ export default function MobileBottomNav() {
               }`}
             >
               <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
-              <span className="font-mono text-[10px] uppercase tracking-wider">{label}</span>
+              <span className="text-[11px]">{label}</span>
             </Link>
           )
         })}

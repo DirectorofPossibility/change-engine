@@ -1,53 +1,28 @@
+/**
+ * @fileoverview Pathway hub — magazine front page.
+ *
+ * Shows all the objects in the database for this pathway:
+ * content (articles, videos, guides, DIY kits), services, organizations,
+ * opportunities, and policies. Each object links to its detail page.
+ * No stats, no "state of health" descriptions — just the actual stuff.
+ *
+ * @route GET /pathways/:slug
+ */
+
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
-import { THEMES, CENTER_COLORS, CIVIC_DATA_REFERENCES } from '@/lib/constants'
+import Image from 'next/image'
+import { THEMES } from '@/lib/constants'
 import {
-  getPathwayContent, getCenterContentForPathway,
-  getRelatedOpportunities, getRelatedPolicies, getRelatedServices, getRelatedOfficials,
-  getFocusAreas, getBridgesForPathway,
-  getPathwayNewsCount,
-  getLangId, fetchTranslationsForTable,
-  getRandomQuote,
+  getPathwayBraidedFeed,
+  getFocusAreas,
+  getRelatedOrgsForGuide,
+  getRelatedOpportunities,
+  getBridgesForPathway,
 } from '@/lib/data/exchange'
-import { getPathwayTopics } from '@/lib/data/taxonomy'
-import { LibraryNugget } from '@/components/exchange/LibraryNugget'
-import { QuoteCard } from '@/components/exchange/QuoteCard'
-import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
-import { getLibraryNuggets } from '@/lib/data/library'
-import { getUIStrings } from '@/lib/i18n'
-import type { ContentPublished } from '@/lib/types/exchange'
-import { ThemeMasthead } from '@/components/templates/ThemeMasthead'
-import { SectionHeader } from '@/components/templates/SectionHeader'
-import { ControlPanel } from '@/components/templates/ControlPanel'
-import { CouchGrid } from '@/components/templates/CouchGrid'
-import { DataStories } from '@/components/templates/DataStories'
-import { FeatureOpener } from '@/components/templates/FeatureOpener'
-import { PageCrossLinks } from '@/components/exchange/PageCrossLinks'
-
-// Map theme IDs to sacred geometry types
-const THEME_GEO: Record<string, string> = {
-  THEME_01: 'flower_of_life',
-  THEME_02: 'seed_of_life',
-  THEME_03: 'hex_grid',
-  THEME_04: 'concentric_rings',
-  THEME_05: 'golden_spiral',
-  THEME_06: 'torus',
-  THEME_07: 'metatron_cube',
-}
-
-// Map focus area to geo type by name pattern
-const FOCUS_GEO: Record<string, string> = {
-  mental: 'vesica_piscis',
-  food: 'flower_of_life',
-  healthcare: 'compass_rose',
-  maternal: 'nested_circles',
-  substance: 'outward_spiral',
-  disability: 'hub_and_spokes',
-  oral: 'six_petal_rose',
-  environment: 'torus',
-}
+import { FlowerOfLife } from '@/components/geo/sacred'
+import { FolFallback } from '@/components/ui/FolFallback'
 
 function resolveTheme(slug: string) {
   for (const [id, theme] of Object.entries(THEMES)) {
@@ -56,13 +31,9 @@ function resolveTheme(slug: string) {
   return null
 }
 
-function focusGeo(name: string): string {
-  const lower = name.toLowerCase()
-  for (const [key, geo] of Object.entries(FOCUS_GEO)) {
-    if (lower.includes(key)) return geo
-  }
-  return 'seed_of_life'
-}
+const THEME_LIST = Object.entries(THEMES).map(function ([id, t]) {
+  return { id, ...t }
+})
 
 export const revalidate = 3600
 
@@ -71,429 +42,366 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const theme = resolveTheme(slug)
   if (!theme) return { title: 'Not Found' }
   return {
-    title: theme.name,
+    title: `${theme.name} — Community Exchange`,
     description: theme.description,
   }
 }
 
-export default async function SinglePathwayPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PathwayHubPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const theme = resolveTheme(slug)
   if (!theme) notFound()
 
-  const [content, centerCounts, allFocusAreas, bridgeData, newsCount, topics] = await Promise.all([
-    getPathwayContent(theme.id),
-    getCenterContentForPathway(theme.id),
+  const [feed, allFocusAreas, bridgeData] = await Promise.all([
+    getPathwayBraidedFeed(theme.id),
     getFocusAreas(),
     getBridgesForPathway(theme.id),
-    getPathwayNewsCount(theme.id),
-    getPathwayTopics(theme.id),
   ])
 
   const themeFocusAreas = allFocusAreas.filter(fa => fa.theme_id === theme.id)
-  const themeFocusAreaIds = themeFocusAreas.map(fa => fa.focus_id)
+  const focusAreaIds = themeFocusAreas.map(fa => fa.focus_id)
 
-  const [opportunities, policies, relatedServices, relatedOfficials, libraryNuggets, quote] = await Promise.all([
-    getRelatedOpportunities(themeFocusAreaIds),
-    getRelatedPolicies(themeFocusAreaIds),
-    getRelatedServices(themeFocusAreaIds),
-    getRelatedOfficials(themeFocusAreaIds),
-    getLibraryNuggets([theme.id], themeFocusAreaIds, 3),
-    getRandomQuote(theme.id),
+  const [orgs, opportunities] = await Promise.all([
+    getRelatedOrgsForGuide(focusAreaIds),
+    getRelatedOpportunities(focusAreaIds),
   ])
 
-  const langId = await getLangId()
-  const cookieStore = await cookies()
-  const lang = cookieStore.get('lang')?.value || 'en'
-  const t = getUIStrings(lang)
+  const content = feed.content || []
+  const services = feed.services || []
 
-  let contentTranslations: Record<string, { title?: string; summary?: string }> = {}
-  if (langId) {
-    const contentIds = content.map(c => c.inbox_id).filter((id): id is string => id != null)
-    if (contentIds.length > 0) {
-      contentTranslations = await fetchTranslationsForTable('content_published', contentIds, langId)
+  // Split content: featured (has image) + rest
+  const featured = content.find(c => c.image_url) || content[0] || null
+  const restContent = content.filter(c => c !== featured)
+
+  // Content type labels for badges
+  function typeLabel(ct: string | null): string {
+    if (!ct) return 'Article'
+    const map: Record<string, string> = {
+      article: 'Article', news: 'News', video: 'Video', guide: 'Guide',
+      report: 'Report', podcast: 'Podcast', course: 'Course', tool: 'Tool',
+      diy_kit: 'DIY Kit', infographic: 'Infographic', event: 'Event',
     }
+    return map[ct] || ct.charAt(0).toUpperCase() + ct.slice(1)
   }
-
-  const sorted = [...content].sort((a, b) => {
-    if (a.is_featured && !b.is_featured) return -1
-    if (!a.is_featured && b.is_featured) return 1
-    return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime()
-  })
-
-  const getTitle = (c: ContentPublished) => {
-    const tr = contentTranslations[c.inbox_id || '']
-    return tr?.title || c.title_6th_grade || 'Untitled'
-  }
-  const getSummary = (c: ContentPublished) => {
-    const tr = contentTranslations[c.inbox_id || '']
-    return tr?.summary || c.summary_6th_grade || ''
-  }
-  const fmtDate = (d: string | null) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
-
-  const totalStories = content.length
-  const totalEntities = opportunities.length + policies.length + relatedServices.length + relatedOfficials.length
-
-  // Build couch grid items
-  const leadStory = sorted.find(c => c.is_featured && c.image_url) || sorted.find(c => c.image_url) || sorted[0] || null
-  const sidebarStories: ContentPublished[] = []
-  const usedCenters = new Set<string>()
-  if (leadStory) usedCenters.add(leadStory.center || '')
-  for (const c of sorted) {
-    if (sidebarStories.length >= 4) break
-    if (c === leadStory) continue
-    if (sidebarStories.length < 2 && usedCenters.has(c.center || '') && sorted.filter(s => s !== leadStory && !usedCenters.has(s.center || '')).length > 0) continue
-    sidebarStories.push(c)
-    usedCenters.add(c.center || '')
-  }
-
-  const couchItems = [
-    leadStory && {
-      id: leadStory.id,
-      href: '/content/' + leadStory.id,
-      title: getTitle(leadStory),
-      dek: getSummary(leadStory),
-      type: leadStory.center || 'Feature',
-      meta: fmtDate(leadStory.published_at) + (leadStory.source_domain ? ' -- ' + leadStory.source_domain : ''),
-      imageUrl: leadStory.image_url || undefined,
-      isFeature: true,
-    },
-    ...sidebarStories.map(c => ({
-      id: c.id,
-      href: '/content/' + c.id,
-      title: getTitle(c),
-      type: c.center || 'Feature',
-      meta: fmtDate(c.published_at),
-    })),
-  ].filter(Boolean) as Array<{ id: string; href: string; title: string; dek?: string; type?: string; meta?: string; imageUrl?: string; isFeature?: boolean }>
-
-  // Build remaining content by center
-  const usedIds = new Set([leadStory?.id, ...sidebarStories.map(s => s.id)])
-  const remaining = sorted.filter(c => !usedIds.has(c.id))
-  const byCenter: Record<string, ContentPublished[]> = { Learning: [], Action: [], Resource: [], Accountability: [] }
-  for (const c of remaining) {
-    const key = c.center || 'Learning'
-    if (byCenter[key]) byCenter[key].push(c)
-  }
-
-  // Build instrument data for control panel
-  const instruments = themeFocusAreas.map(fa => ({
-    name: fa.focus_area_name,
-    href: '/explore/focus/' + fa.focus_id,
-    geoType: focusGeo(fa.focus_area_name),
-    themeColor: theme.color,
-    levelsFilled: Math.min(5, Math.max(1, Math.ceil(Math.random() * 5))), // TODO: derive from actual content depth
-    totalLevels: 5,
-  }))
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Theme Masthead */}
-      <ThemeMasthead
-        themeName={theme.name}
-        themeColor={theme.color}
-        description={theme.description}
-        geoType={THEME_GEO[theme.id] || 'seed_of_life'}
-        dateline={`Houston, TX -- ${new Date().getFullYear()} Edition`}
-        stats={[
-          { num: String(totalStories), desc: 'Stories' },
-          { num: String(totalEntities), desc: 'Resources' },
-          { num: String(themeFocusAreas.length), desc: 'Focus areas' },
-        ]}
-      />
+      {/* ── Header ── */}
+      <div className="border-b border-rule">
+        <div className="max-w-[1080px] mx-auto px-6 py-8">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="w-4 h-4" style={{ background: theme.color }} />
+            <Link href="/pathways" className="text-sm text-muted hover:text-ink transition-colors">
+              All pathways
+            </Link>
+          </div>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-ink mb-3">
+            {theme.name}
+          </h1>
+          <p className="text-lg text-muted max-w-2xl">
+            {theme.description}
+          </p>
 
-      {/* Editorial body */}
-      <div className="max-w-[1080px] mx-auto px-6">
-
-        {/* Feature Opener — lede + quote */}
-        {leadStory && quote && (
-          <FeatureOpener
-            lede={getSummary(leadStory) || theme.description}
-            themeColor={theme.color}
-            quotes={[{ quote: quote.quote_text, source: quote.attribution }]}
-          />
-        )}
-
-        {/* Topic Pills */}
-        {topics.length > 0 && (
-          <div className="flex flex-wrap gap-2 py-6 border-b border-rule-inner">
-            {topics.map(function (topic) {
+          {/* Pathway nav — all 7 pathways */}
+          <div className="flex items-center gap-1 mt-6 overflow-x-auto pb-1">
+            {THEME_LIST.map(function (t) {
+              const isCurrent = t.id === theme.id
               return (
-                <span key={topic} className="font-mono text-[0.65rem] uppercase tracking-wider text-muted border border-rule px-3 py-1">
-                  {topic}
-                </span>
+                <Link
+                  key={t.id}
+                  href={'/pathways/' + t.slug}
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm whitespace-nowrap transition-colors"
+                  style={{
+                    background: isCurrent ? theme.color : undefined,
+                    color: isCurrent ? '#ffffff' : undefined,
+                  }}
+                >
+                  <span className="w-2 h-2 flex-shrink-0" style={{ background: isCurrent ? '#ffffff' : t.color }} />
+                  {t.name}
+                </Link>
               )
             })}
           </div>
-        )}
-
-        {/* Data Stories — stats row */}
-        <DataStories
-          themeColor={theme.color}
-          stories={[
-            { num: String(totalStories), hed: 'Stories tracked', copy: 'Across learning, action, resource, and accountability centers' },
-            { num: String(relatedServices.length), hed: 'Local services', copy: 'Available to Houston residents through 211 and partner organizations' },
-            { num: String(policies.length), hed: 'Active policies', copy: 'Federal, state, and local legislation affecting this pathway' },
-          ]}
-        />
-
-        {/* From the Couch — editorial grid */}
-        {couchItems.length > 0 && (
-          <section className="py-10 border-b border-rule-inner">
-            <SectionHeader
-              kicker="From the Couch"
-              heading="Latest"
-              headingEm="Reads"
-              allHref={'/news?pathway=' + theme.id}
-              allLabel="All stories"
-            />
-            <CouchGrid
-              items={couchItems}
-              themeColor={theme.color}
-              geoType={THEME_GEO[theme.id] || 'seed_of_life'}
-            />
-          </section>
-        )}
-
-        {/* Four Desks — by center */}
-        <section className="py-10 border-b border-rule-inner">
-          <SectionHeader kicker="By Center" heading="Explore by Intent" />
-          <div className="grid grid-cols-1 md:grid-cols-2 border border-rule-inner">
-            <DeskBlock label="How can I understand?" color={CENTER_COLORS.Learning} position="tl">
-              {byCenter.Learning.slice(0, 5).map(c => (
-                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-              ))}
-              {libraryNuggets.length > 0 && libraryNuggets.slice(0, 2).map(n => (
-                <DeskItem
-                  key={n.documentId}
-                  href={n.link}
-                  title={n.chunkExcerpt || n.documentTitle}
-                  meta="From the archives"
-                  color={CENTER_COLORS.Learning}
-                  typeLabel="Guide"
-                />
-              ))}
-            </DeskBlock>
-
-            <DeskBlock label="How can I help?" color={CENTER_COLORS.Action} position="tr">
-              {byCenter.Action.slice(0, 3).map(c => (
-                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-              ))}
-              {opportunities.slice(0, 4).map(o => (
-                <DeskItem
-                  key={o.opportunity_id}
-                  href={'/opportunities/' + o.opportunity_id}
-                  title={o.opportunity_name}
-                  meta={o.start_date ? 'Starts ' + new Date(o.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : undefined}
-                  color={CENTER_COLORS.Action}
-                  typeLabel="Opportunity"
-                />
-              ))}
-            </DeskBlock>
-
-            <DeskBlock label="What's available?" color={CENTER_COLORS.Resource} position="bl">
-              {byCenter.Resource.slice(0, 3).map(c => (
-                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-              ))}
-              {relatedServices.slice(0, 4).map(s => (
-                <DeskItem
-                  key={s.service_id}
-                  href={'/services/' + s.service_id}
-                  title={s.service_name}
-                  color={CENTER_COLORS.Resource}
-                  typeLabel="Service"
-                />
-              ))}
-            </DeskBlock>
-
-            <DeskBlock label="Who makes decisions?" color={CENTER_COLORS.Accountability} position="br">
-              {byCenter.Accountability.slice(0, 3).map(c => (
-                <DeskItem key={c.id} href={'/content/' + c.id} title={getTitle(c)} meta={fmtDate(c.published_at)} color={theme.color} />
-              ))}
-              {relatedOfficials.slice(0, 3).map(o => (
-                <DeskItem
-                  key={o.official_id}
-                  href={'/officials/' + o.official_id}
-                  title={o.official_name}
-                  meta={o.title || undefined}
-                  color={CENTER_COLORS.Accountability}
-                  typeLabel="Official"
-                />
-              ))}
-              {policies.slice(0, 3).map(p => (
-                <DeskItem
-                  key={p.policy_id}
-                  href={'/policies/' + p.policy_id}
-                  title={p.title_6th_grade || p.policy_name}
-                  meta={[p.bill_number, p.status].filter(Boolean).join(' / ') || undefined}
-                  color={CENTER_COLORS.Accountability}
-                  typeLabel="Policy"
-                />
-              ))}
-            </DeskBlock>
-          </div>
-        </section>
-
-        {/* Control Panel — focus area instruments */}
-        {instruments.length > 0 && (
-          <ControlPanel
-            instruments={instruments}
-            kicker="Control Panel"
-            heading="Focus Area Instruments"
-          />
-        )}
-
-        {/* Civic Data */}
-        {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id] && (
-          <section className="py-10 border-b border-rule-inner">
-            <SectionHeader kicker="Data" heading="See the Data" />
-            <div className="flex flex-wrap gap-3">
-              {(CIVIC_DATA_REFERENCES as Record<string, readonly { label: string; url: string; source: string }[]>)[theme.id].map(ref => (
-                <a
-                  key={ref.url}
-                  href={ref.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 py-2.5 px-4 border border-rule-inner transition-colors hover:bg-paper"
-                >
-                  <span className="font-body text-[0.85rem] group-hover:underline">{ref.label}</span>
-                  <span className="font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-muted">{ref.source}</span>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Featured Promotion */}
-        <section className="py-10 border-b border-rule-inner">
-          <FeaturedPromo variant="banner" />
-        </section>
-
-        {/* Quote */}
-        {quote && (
-          <section className="py-10 border-b border-rule-inner">
-            <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={theme.color} />
-          </section>
-        )}
-
-        {/* News Wire */}
-        {newsCount > 0 && (
-          <section className="py-10 border-b border-rule-inner">
-            <div className="p-6 bg-paper border border-rule-inner">
-              <span className="font-mono text-[0.6875rem] tracking-[0.2em] uppercase text-muted block mb-2">
-                The Wire
-              </span>
-              <p className="font-body text-[0.9rem]">
-                {newsCount} news {newsCount === 1 ? 'article' : 'articles'} covering {theme.name} in Houston
-              </p>
-              <Link
-                href={'/news?pathway=' + theme.id}
-                className="font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-blue font-semibold hover:underline mt-2 inline-block"
-              >
-                Read the latest →
-              </Link>
-            </div>
-          </section>
-        )}
-
-        {/* Deeper Reading */}
-        {libraryNuggets.length > 0 && (
-          <section className="py-10 border-b border-rule-inner">
-            <LibraryNugget
-              nuggets={libraryNuggets}
-              variant="sidebar"
-              color={theme.color}
-              labels={{ fromThe: t('library.from_the'), readMore: t('library.read_more') }}
-            />
-          </section>
-        )}
-
-        <PageCrossLinks preset="explore" />
-
-        {/* Colophon — pathway links */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 py-8">
-          <Link
-            href="/pathways"
-            className="font-mono text-[0.6875rem] tracking-[0.08em] uppercase text-blue hover:underline"
-          >
-            All Pathways
-          </Link>
-          {bridgeData.map(b => (
-            <Link
-              key={b.targetThemeId}
-              href={'/pathways/' + b.targetSlug}
-              className="inline-flex items-center gap-1.5 hover:underline font-mono text-[0.6875rem] tracking-[0.08em] uppercase"
-              style={{ color: b.targetColor }}
-            >
-              <span className="w-1.5 h-1.5" style={{ backgroundColor: b.targetColor }} />
-              {b.targetName}
-            </Link>
-          ))}
         </div>
       </div>
-    </div>
-  )
-}
 
-// ── Desk Block Component ─────────────────────────────────────────────────
+      <div className="max-w-[1080px] mx-auto px-6">
 
-function DeskBlock({ label, color, position, children }: {
-  label: string
-  color: string
-  position: 'tl' | 'tr' | 'bl' | 'br'
-  children: React.ReactNode
-}) {
-  const borderClasses = {
-    tl: 'md:border-r md:border-b',
-    tr: 'md:border-b',
-    bl: 'md:border-r',
-    br: '',
-  }
+        {/* ── Featured + Latest ── */}
+        {content.length > 0 && (
+          <section className="py-10">
+            <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-6">
+              {/* Featured */}
+              {featured && (
+                <Link
+                  href={'/content/' + featured.id}
+                  className="group bg-white border border-rule overflow-hidden hover:shadow-md transition-all"
+                >
+                  {featured.image_url ? (
+                    <div className="h-[260px] overflow-hidden">
+                      <Image
+                        src={featured.image_url}
+                        alt=""
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        width={800}
+                        height={400}
+                      />
+                    </div>
+                  ) : (
+                    <FolFallback pathway={theme.id} size="hero" />
+                  )}
+                  <div className="p-5">
+                    {(featured as any).content_type && (
+                      <span className="inline-block text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: theme.color }}>
+                        {typeLabel((featured as any).content_type)}
+                      </span>
+                    )}
+                    <h2 className="font-display text-xl font-bold text-ink leading-snug mb-2 group-hover:text-blue transition-colors">
+                      {featured.title_6th_grade || 'Untitled'}
+                    </h2>
+                    {featured.summary_6th_grade && (
+                      <p className="text-sm text-muted line-clamp-3">{featured.summary_6th_grade}</p>
+                    )}
+                    <div className="flex items-center gap-3 mt-3 pt-3 border-t border-rule">
+                      <span className="w-2 h-2" style={{ background: theme.color }} />
+                      {featured.source_domain && (
+                        <span className="text-xs text-muted">{featured.source_domain}</span>
+                      )}
+                      {featured.published_at && (
+                        <span className="text-xs text-muted">
+                          {new Date(featured.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              )}
 
-  return (
-    <div className={`p-6 border-rule-inner ${borderClasses[position]}`}>
-      <div className="flex items-center gap-2 mb-4">
-        <span className="w-2 h-2" style={{ backgroundColor: color }} />
-        <span className="font-mono text-[0.6875rem] tracking-[0.12em] uppercase text-muted">
-          {label}
-        </span>
-      </div>
-      <div className="h-0.5 w-8 mb-4" style={{ backgroundColor: color }} />
-      <div>{children}</div>
-    </div>
-  )
-}
-
-// ── Desk Item Component ──────────────────────────────────────────────────
-
-function DeskItem({ href, title, meta, color, typeLabel }: {
-  href: string
-  title: string
-  meta?: string
-  color: string
-  typeLabel?: string
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex items-start gap-3 py-2.5 -mx-2 px-2 transition-colors hover:bg-paper border-b border-rule"
-    >
-      <span className="w-1 min-h-[1.5rem] flex-shrink-0 mt-0.5" style={{ backgroundColor: color + '40' }} />
-      <div className="min-w-0 flex-1">
-        {typeLabel && (
-          <span className="font-mono text-[0.6875rem] tracking-[0.12em] uppercase block mb-0.5" style={{ color }}>
-            {typeLabel}
-          </span>
+              {/* Sidebar stack */}
+              <div className="flex flex-col gap-4">
+                {restContent.slice(0, 4).map(function (item) {
+                  return (
+                    <Link
+                      key={item.id}
+                      href={'/content/' + item.id}
+                      className="flex gap-3 group border-b border-rule pb-4 last:border-0"
+                    >
+                      {item.image_url ? (
+                        <div className="w-[100px] h-[70px] flex-shrink-0 overflow-hidden">
+                          <Image src={item.image_url} alt="" className="w-full h-full object-cover" width={200} height={140} />
+                        </div>
+                      ) : (
+                        <div className="w-[100px] flex-shrink-0">
+                          <FolFallback pathway={theme.id} height="h-[70px]" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        {(item as any).content_type && (
+                          <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.color }}>
+                            {typeLabel((item as any).content_type)}
+                          </span>
+                        )}
+                        <h3 className="text-sm font-bold text-ink leading-snug line-clamp-2 group-hover:text-blue transition-colors">
+                          {item.title_6th_grade || 'Untitled'}
+                        </h3>
+                        {item.source_domain && (
+                          <span className="text-xs text-muted mt-1 block">{item.source_domain}</span>
+                        )}
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
         )}
-        <h4 className="font-body text-[0.85rem] leading-snug line-clamp-2 group-hover:underline">
-          {title}
-        </h4>
-        {meta && (
-          <span className="font-mono text-[0.6875rem] text-muted mt-0.5 block">
-            {meta}
-          </span>
+
+        {/* ── Organizations doing this work ── */}
+        {orgs.length > 0 && (
+          <section className="py-10 border-t border-rule">
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <h2 className="font-display text-2xl font-bold text-ink">Organizations</h2>
+                <p className="text-sm text-muted mt-1">Local groups doing this work in Houston</p>
+              </div>
+              <Link href={'/organizations?pathway=' + theme.id} className="text-sm font-semibold text-blue hover:text-ink transition-colors">
+                See all &rarr;
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {orgs.slice(0, 6).map(function (org) {
+                return (
+                  <Link
+                    key={org.org_id}
+                    href={'/organizations/' + org.org_id}
+                    className="flex items-start gap-3 p-4 border border-rule hover:shadow-md transition-all group"
+                  >
+                    {(org as any).logo_url ? (
+                      <Image src={(org as any).logo_url} alt="" className="w-10 h-10 object-contain flex-shrink-0" width={40} height={40} />
+                    ) : (
+                      <div className="w-10 h-10 flex items-center justify-center flex-shrink-0" style={{ background: theme.color + '15' }}>
+                        <FlowerOfLife color={theme.color} size={20} />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-bold text-ink leading-snug group-hover:text-blue transition-colors line-clamp-1">
+                        {org.org_name}
+                      </h3>
+                      {org.description_5th_grade && (
+                        <p className="text-xs text-muted mt-1 line-clamp-2">{org.description_5th_grade}</p>
+                      )}
+                      {(org as any).org_type && (
+                        <span className="text-xs text-muted mt-1 block">{(org as any).org_type}</span>
+                      )}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
         )}
+
+        {/* ── Services you can use ── */}
+        {services.length > 0 && (
+          <section className="py-10 border-t border-rule">
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <h2 className="font-display text-2xl font-bold text-ink">Services</h2>
+                <p className="text-sm text-muted mt-1">Free and low-cost help available right now</p>
+              </div>
+              <Link href={'/help?pathway=' + theme.id} className="text-sm font-semibold text-blue hover:text-ink transition-colors">
+                See all &rarr;
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {services.slice(0, 6).map(function (svc) {
+                return (
+                  <Link
+                    key={svc.service_id}
+                    href={'/services/' + svc.service_id}
+                    className="p-4 border border-rule hover:shadow-md transition-all group"
+                  >
+                    <h3 className="text-sm font-bold text-ink leading-snug group-hover:text-blue transition-colors">
+                      {svc.service_name}
+                    </h3>
+                    {svc.description_5th_grade && (
+                      <p className="text-xs text-muted mt-1 line-clamp-2">{svc.description_5th_grade}</p>
+                    )}
+                    <div className="flex items-center gap-2 mt-2 text-xs text-muted">
+                      {(svc as any).org_name && <span>{(svc as any).org_name}</span>}
+                      {svc.city && <span>&middot; {svc.city}</span>}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── Ways to get involved ── */}
+        {opportunities.length > 0 && (
+          <section className="py-10 border-t border-rule">
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <h2 className="font-display text-2xl font-bold text-ink">Get Involved</h2>
+                <p className="text-sm text-muted mt-1">Volunteer, attend, or sign up</p>
+              </div>
+              <Link href={'/opportunities?pathway=' + theme.id} className="text-sm font-semibold text-blue hover:text-ink transition-colors">
+                See all &rarr;
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {opportunities.slice(0, 6).map(function (opp: any) {
+                return (
+                  <Link
+                    key={opp.opportunity_id}
+                    href={'/opportunities/' + opp.opportunity_id}
+                    className="p-4 border border-rule hover:shadow-md transition-all group"
+                  >
+                    <h3 className="text-sm font-bold text-ink leading-snug group-hover:text-blue transition-colors line-clamp-2">
+                      {opp.opportunity_name}
+                    </h3>
+                    {opp.description_5th_grade && (
+                      <p className="text-xs text-muted mt-1 line-clamp-2">{opp.description_5th_grade}</p>
+                    )}
+                    <div className="flex items-center gap-2 mt-2 text-xs text-muted">
+                      {opp.start_date && (
+                        <span>{new Date(opp.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                      )}
+                      {opp.is_virtual && <span className="text-blue">Virtual</span>}
+                      {opp.time_commitment && <span>&middot; {opp.time_commitment}</span>}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── More articles ── */}
+        {restContent.length > 4 && (
+          <section className="py-10 border-t border-rule">
+            <h2 className="font-display text-2xl font-bold text-ink mb-6">More on {theme.name}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {restContent.slice(4, 16).map(function (item) {
+                return (
+                  <Link
+                    key={item.id}
+                    href={'/content/' + item.id}
+                    className="group border border-rule overflow-hidden hover:shadow-md transition-all"
+                  >
+                    {item.image_url ? (
+                      <div className="h-[140px] overflow-hidden">
+                        <Image src={item.image_url} alt="" className="w-full h-full object-cover" width={400} height={280} />
+                      </div>
+                    ) : (
+                      <FolFallback pathway={theme.id} height="h-[140px]" />
+                    )}
+                    <div className="p-4">
+                      {(item as any).content_type && (
+                        <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: theme.color }}>
+                          {typeLabel((item as any).content_type)}
+                        </span>
+                      )}
+                      <h3 className="text-sm font-bold text-ink leading-snug line-clamp-2 mt-1 group-hover:text-blue transition-colors">
+                        {item.title_6th_grade || 'Untitled'}
+                      </h3>
+                      {item.source_domain && (
+                        <span className="text-xs text-muted mt-2 block">{item.source_domain}</span>
+                      )}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── Explore other pathways ── */}
+        <section className="py-10 border-t border-rule">
+          <h2 className="font-display text-2xl font-bold text-ink mb-4">Explore other pathways</h2>
+          <div className="flex flex-wrap gap-3">
+            {bridgeData.map(function (b: any) {
+              return (
+                <Link
+                  key={b.targetThemeId}
+                  href={'/pathways/' + b.targetSlug}
+                  className="flex items-center gap-2 px-4 py-2 border border-rule text-sm hover:shadow-md transition-all"
+                >
+                  <span className="w-3 h-3" style={{ background: b.targetColor }} />
+                  {b.targetName}
+                </Link>
+              )
+            })}
+            <Link
+              href="/pathways"
+              className="flex items-center gap-2 px-4 py-2 border border-rule text-sm text-muted hover:text-ink hover:shadow-md transition-all"
+            >
+              All pathways &rarr;
+            </Link>
+          </div>
+        </section>
       </div>
-    </Link>
+    </div>
   )
 }

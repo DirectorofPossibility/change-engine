@@ -89,7 +89,7 @@ export default async function ExchangeHomePage() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_480px] gap-8 items-center">
             {/* Left — copy + search */}
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-white/40 mb-5">
+              <p className="text-xs uppercase tracking-widest text-white/40 mb-5">
                 Houston, Texas
               </p>
               <h1 className="font-display text-[clamp(2rem,5vw,3.2rem)] leading-[1.1] tracking-tight text-white mb-4">
@@ -101,7 +101,7 @@ export default async function ExchangeHomePage() {
 
               <HeroSearch />
 
-              <p className="font-mono text-[12px] text-white/40 mt-4">
+              <p className="text-sm text-white/40 mt-4">
                 Or pick a pathway below to start exploring &rarr;
               </p>
             </div>
@@ -133,20 +133,20 @@ export default async function ExchangeHomePage() {
             <div className="flex items-center gap-5 flex-wrap">
               <div className="flex items-baseline gap-1.5">
                 <span className="font-display text-2xl font-bold text-ink">{totalResources.toLocaleString()}</span>
-                <span className="font-body text-[12px] text-muted">things you can use</span>
+                <span className="text-sm text-muted">things you can use</span>
               </div>
               <div className="w-px h-6 hidden sm:block bg-rule" />
               <div className="flex items-baseline gap-1.5">
                 <span className="font-display text-2xl font-bold text-ink">{stats.organizations || 0}</span>
-                <span className="font-body text-[12px] text-muted">local organizations</span>
+                <span className="text-sm text-muted">local organizations</span>
               </div>
               <div className="w-px h-6 hidden sm:block bg-rule" />
               <div className="flex items-baseline gap-1.5">
                 <span className="font-display text-2xl font-bold text-ink">7</span>
-                <span className="font-body text-[12px] text-muted">ways to explore</span>
+                <span className="text-sm text-muted">ways to explore</span>
               </div>
             </div>
-            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#2D8659]">
+            <span className="inline-flex items-center gap-1.5 text-xs text-[#2D8659]">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full rounded-full opacity-40 animate-ping bg-[#2D8659]" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2D8659]" />
@@ -154,7 +154,7 @@ export default async function ExchangeHomePage() {
               Updated daily
             </span>
           </div>
-          <div className="flex items-center gap-3 mt-2 flex-wrap font-mono text-[11px] text-faint">
+          <div className="flex items-center gap-3 mt-2 flex-wrap text-xs text-faint">
             <span>3 languages</span>
             <span className="text-rule">&middot;</span>
             <span>Plain language</span>
@@ -173,7 +173,7 @@ export default async function ExchangeHomePage() {
           <div className="flex items-end justify-between mb-6">
             <div>
               <h2 className="font-display text-3xl text-ink">How can we help?</h2>
-              <p className="font-body text-[14px] text-muted mt-1">Pick a starting point — we&apos;ll show you what&apos;s here for you.</p>
+              <p className="text-sm text-muted mt-1">Pick a starting point — we&apos;ll show you what&apos;s here for you.</p>
             </div>
           </div>
 
@@ -206,12 +206,12 @@ export default async function ExchangeHomePage() {
                     </div>
 
                     <div className="flex items-baseline justify-between mb-1">
-                      <h3 className="font-display text-[16px] font-bold text-ink">{friendly?.name || c.name}</h3>
-                      {count > 0 && <span className="font-mono text-[11px] text-faint">{count.toLocaleString()}</span>}
+                      <h3 className="text-base font-bold text-ink">{friendly?.name || c.name}</h3>
+                      {count > 0 && <span className="text-xs text-faint">{count.toLocaleString()}</span>}
                     </div>
-                    <p className="font-body text-[13px] italic mb-2" style={{ color: c.color }}>{friendly?.tagline || c.tagline}</p>
-                    <p className="font-body text-[13px] leading-relaxed text-muted mb-3">{friendly?.description || c.description}</p>
-                    <span className="font-mono text-[12px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: c.color }}>Explore &rarr;</span>
+                    <p className="text-sm italic mb-2" style={{ color: c.color }}>{friendly?.tagline || c.tagline}</p>
+                    <p className="text-sm leading-relaxed text-muted mb-3">{friendly?.description || c.description}</p>
+                    <span className="text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: c.color }}>Explore &rarr;</span>
                   </div>
                 </Link>
               )
@@ -227,9 +227,9 @@ export default async function ExchangeHomePage() {
           <div className="flex items-end justify-between mb-6">
             <div>
               <h2 className="font-display text-3xl text-ink">What&apos;s New</h2>
-              <p className="font-body text-[14px] text-muted mt-1">The latest from around Houston</p>
+              <p className="text-sm text-muted mt-1">The latest from around Houston</p>
             </div>
-            <Link href="/news" className="inline-flex items-center gap-1 font-mono text-[12px] font-semibold text-blue hover:text-ink transition-colors">
+            <Link href="/news" className="inline-flex items-center gap-1 text-sm font-semibold text-blue hover:text-ink transition-colors">
               See all <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
             </Link>
           </div>
@@ -249,11 +249,11 @@ export default async function ExchangeHomePage() {
                   <FolFallback pathway={featured.pathway_primary} size="hero" />
                 )}
                 <div className="p-4">
-                  <h4 className="font-display text-[16px] font-bold leading-snug text-ink mb-1.5">
+                  <h4 className="text-base font-bold leading-snug text-ink mb-1.5">
                     {featured.title_6th_grade || (featured as any).title}
                   </h4>
                   {(featured as any).summary_6th_grade && (
-                    <p className="font-body text-[14px] text-muted line-clamp-2">{(featured as any).summary_6th_grade.length > 150 ? (featured as any).summary_6th_grade.slice(0, 150) + '...' : (featured as any).summary_6th_grade}</p>
+                    <p className="text-sm text-muted line-clamp-2">{(featured as any).summary_6th_grade.length > 150 ? (featured as any).summary_6th_grade.slice(0, 150) + '...' : (featured as any).summary_6th_grade}</p>
                   )}
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-rule/50">
                     <div className="flex items-center gap-1.5">
@@ -262,12 +262,12 @@ export default async function ExchangeHomePage() {
                         return fTheme ? (
                           <>
                             <span className="w-2 h-2 rounded-full" style={{ background: fTheme.color }} />
-                            <span className="font-mono text-[11px] text-muted">{fTheme.name}</span>
+                            <span className="text-xs text-muted">{fTheme.name}</span>
                           </>
                         ) : null
                       })()}
                     </div>
-                    <span className="font-mono text-[12px] font-semibold text-blue">Read more &rsaquo;</span>
+                    <span className="text-sm font-semibold text-blue">Read more &rsaquo;</span>
                   </div>
                 </div>
               </Link>
@@ -294,19 +294,19 @@ export default async function ExchangeHomePage() {
                     )}
                     <div className="flex-1 p-3.5 min-w-0">
                       {theme && (
-                        <div className="flex items-center gap-1.5 mb-1 font-mono text-[11px] uppercase tracking-wider font-semibold" style={{ color: theme.color }}>
+                        <div className="flex items-center gap-1.5 mb-1 text-xs uppercase tracking-wider font-semibold" style={{ color: theme.color }}>
                           {theme.name}
                         </div>
                       )}
-                      <h4 className="font-display text-[14px] font-bold leading-snug text-ink line-clamp-2">
+                      <h4 className="text-sm font-bold leading-snug text-ink line-clamp-2">
                         {item.title_6th_grade || item.title}
                       </h4>
                       {item.summary_6th_grade && (
-                        <p className="font-body text-[13px] text-muted mt-1 line-clamp-2">{item.summary_6th_grade.length > 150 ? item.summary_6th_grade.slice(0, 150) + '...' : item.summary_6th_grade}</p>
+                        <p className="text-sm text-muted mt-1 line-clamp-2">{item.summary_6th_grade.length > 150 ? item.summary_6th_grade.slice(0, 150) + '...' : item.summary_6th_grade}</p>
                       )}
                       <div className="flex items-center justify-between mt-2">
-                        <span className="font-mono text-[11px] text-faint">{item.source_domain || ''}</span>
-                        <span className="font-mono text-[12px] font-semibold text-blue">Read &rsaquo;</span>
+                        <span className="text-xs text-faint">{item.source_domain || ''}</span>
+                        <span className="text-sm font-semibold text-blue">Read &rsaquo;</span>
                       </div>
                     </div>
                   </Link>
@@ -321,9 +321,9 @@ export default async function ExchangeHomePage() {
           <div className="flex items-end justify-between mb-6">
             <div>
               <h2 className="font-display text-3xl text-ink">Seven Ways In</h2>
-              <p className="font-body text-[14px] text-muted mt-1">Pick a topic that matters to you and see what&apos;s here.</p>
+              <p className="text-sm text-muted mt-1">Pick a topic that matters to you and see what&apos;s here.</p>
             </div>
-            <Link href="/compass" className="inline-flex items-center gap-1 font-mono text-[12px] font-semibold text-blue hover:text-ink transition-colors">
+            <Link href="/compass" className="inline-flex items-center gap-1 text-sm font-semibold text-blue hover:text-ink transition-colors">
               Open the Compass <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
             </Link>
           </div>
@@ -339,11 +339,11 @@ export default async function ExchangeHomePage() {
                 >
                   <div className="w-3 h-3 flex-shrink-0" style={{ background: t.color }} />
                   <div className="flex-1 min-w-0">
-                    <span className="font-display text-[14px] font-bold text-ink block">{t.name}</span>
-                    <span className="font-body text-[12px] text-muted line-clamp-1">{t.description.split('.')[0]}.</span>
+                    <span className="text-sm font-bold text-ink block">{t.name}</span>
+                    <span className="text-sm text-muted line-clamp-1">{t.description.split('.')[0]}.</span>
                   </div>
                   {count > 0 && (
-                    <span className="font-mono text-[11px] text-faint flex-shrink-0">{count}</span>
+                    <span className="text-xs text-faint flex-shrink-0">{count}</span>
                   )}
                 </Link>
               )

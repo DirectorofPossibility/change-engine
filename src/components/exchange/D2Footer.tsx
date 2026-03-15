@@ -72,15 +72,15 @@ export function D2Footer() {
                   <span className="block font-display text-lg font-bold text-white leading-tight">
                     Community Exchange
                   </span>
-                  <span className="block font-mono text-[10px] uppercase tracking-[0.15em] text-white/30">
+                  <span className="block text-xs text-white/30">
                     Powered by The Change Lab
                   </span>
                 </div>
               </div>
-              <p className="font-body text-[.88rem] text-white/50 mb-2">
+              <p className="text-sm text-white/50 mb-2">
                 Your neighbor&apos;s guide to Houston — everything free, everything local.
               </p>
-              <p className="font-body text-[.82rem] leading-relaxed text-white/40">
+              <p className="text-sm leading-relaxed text-white/40">
                 We connect people with the resources, organizations, and opportunities that make our city stronger.
               </p>
               {showSocials && <div className="flex items-center gap-3 mt-3">
@@ -101,7 +101,7 @@ export function D2Footer() {
 
             {/* Find Help */}
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/30 mb-3">
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
                 Find Help
               </p>
               <div className="space-y-1">
@@ -110,7 +110,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-white/50 hover:text-white transition-colors"
+                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -121,7 +121,7 @@ export function D2Footer() {
 
             {/* Stay Informed */}
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/30 mb-3">
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
                 Stay Informed
               </p>
               <div className="space-y-1">
@@ -130,7 +130,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-white/50 hover:text-white transition-colors"
+                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -141,7 +141,7 @@ export function D2Footer() {
 
             {/* Get Involved */}
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/30 mb-3">
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
                 Get Involved
               </p>
               <div className="space-y-1">
@@ -150,7 +150,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-white/50 hover:text-white transition-colors"
+                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -161,7 +161,7 @@ export function D2Footer() {
 
             {/* About */}
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/30 mb-3">
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
                 About
               </p>
               <div className="space-y-1">
@@ -170,7 +170,7 @@ export function D2Footer() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="block py-0.5 font-body text-[.82rem] text-white/50 hover:text-white transition-colors"
+                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -182,13 +182,13 @@ export function D2Footer() {
 
           {/* Mission */}
           <div className="mt-8 pt-6 border-t border-white/10">
-            <p className="font-body text-[.82rem] text-white/40 text-center max-w-2xl mx-auto">
+            <p className="text-sm text-white/40 text-center max-w-2xl mx-auto">
               Built with love in Houston, Texas. Everything here is free, always.
             </p>
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.06em] text-white/25">
+          <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-wide text-white/25">
             <p>&copy; {new Date().getFullYear()} The Change Lab &middot; Houston, TX</p>
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:text-white/50 transition-colors">Privacy</Link>
@@ -200,7 +200,7 @@ export function D2Footer() {
           </div>
 
           {/* Crisis numbers — always visible, warm language */}
-          <div className="mt-3 pt-3 border-t border-white/10 flex justify-center gap-4 flex-wrap font-mono text-[11px] text-white/30">
+          <div className="mt-3 pt-3 border-t border-white/10 flex justify-center gap-4 flex-wrap text-xs text-white/30">
             <span>Need help now? <strong className="text-white/60">988</strong></span>
             <span>City help: <strong className="text-white/60">311</strong></span>
             <span>Social services: <strong className="text-white/60">211</strong></span>
