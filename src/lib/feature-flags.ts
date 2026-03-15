@@ -23,6 +23,7 @@ const PHASE_ROUTES: Record<LaunchPhase, string[]> = {
   mvp: [
     // Core experience — the Compass links to all of these
     '/exchange',
+    '/community-exchange',
     '/compass',
     '/search',
     '/officials',
