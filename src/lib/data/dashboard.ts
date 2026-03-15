@@ -667,30 +667,113 @@ export async function getGraphExplorerData(): Promise<{
     nodes.push({ id: `campaign:${item.campaign_id}`, label: item.campaign_name || '', type: 'entity', subtype: 'campaign' })
   }
 
-  // Fetch edges from populated junction tables
-  const [contentFocus, foundFocus, foundPath, officialFocus, orgFocus] = await Promise.all([
-    supabase.from('content_focus_areas').select('content_id, focus_id').limit(2000),
+  // Fetch services too
+  const serviceData = await supabase.from('services_211').select('service_id, service_name').eq('is_active', 'Yes').limit(200)
+  for (const item of serviceData.data || []) {
+    nodes.push({ id: `service:${item.service_id}`, label: item.service_name || '', type: 'entity', subtype: 'service' })
+  }
+
+  // Fetch edges from ALL junction tables — focus areas, pathways, SDGs, audiences
+  const [
+    orgFocus, orgPath, orgSdg, orgAud,
+    contentFocus, contentPath, contentSdg, contentAud,
+    policyFocus, policyPath, policySdg, policyAud,
+    officialFocus, officialPath, officialSdg, officialAud,
+    oppFocus, oppPath, oppSdg, oppAud,
+    foundFocus, foundPath,
+    campaignPath, campaignSdg, campaignAud,
+    serviceFocus, servicePath, serviceSdg, serviceAud,
+  ] = await Promise.all([
+    // Organizations
+    supabase.from('organization_focus_areas').select('org_id, focus_id').limit(3000),
+    supabase.from('organization_pathways').select('org_id, theme_id').limit(2000),
+    supabase.from('organization_sdgs').select('org_id, sdg_id').limit(2000),
+    supabase.from('organization_audience_segments').select('org_id, segment_id').limit(2000),
+    // Content
+    supabase.from('content_focus_areas').select('content_id, focus_id').limit(3000),
+    supabase.from('content_pathways').select('content_id, theme_id').limit(2000),
+    supabase.from('content_sdgs').select('content_id, sdg_id').limit(2000),
+    supabase.from('content_audience_segments').select('content_id, segment_id').limit(2000),
+    // Policies
+    supabase.from('policy_focus_areas').select('policy_id, focus_id').limit(2000),
+    supabase.from('policy_pathways').select('policy_id, theme_id').limit(2000),
+    supabase.from('policy_sdgs').select('policy_id, sdg_id').limit(2000),
+    supabase.from('policy_audience_segments').select('policy_id, segment_id').limit(2000),
+    // Officials
+    supabase.from('official_focus_areas').select('official_id, focus_id').limit(2000),
+    supabase.from('official_pathways').select('official_id, theme_id').limit(2000),
+    supabase.from('official_sdgs').select('official_id, sdg_id').limit(2000),
+    supabase.from('official_audience_segments').select('official_id, segment_id').limit(2000),
+    // Opportunities
+    supabase.from('opportunity_focus_areas').select('opportunity_id, focus_id').limit(2000),
+    supabase.from('opportunity_pathways').select('opportunity_id, theme_id').limit(2000),
+    supabase.from('opportunity_sdgs').select('opportunity_id, sdg_id').limit(2000),
+    supabase.from('opportunity_audience_segments').select('opportunity_id, segment_id').limit(2000),
+    // Foundations
     supabase.from('foundation_focus_areas').select('foundation_id, focus_area').limit(2000),
     supabase.from('foundation_pathways').select('foundation_id, pathway_id').limit(2000),
-    supabase.from('official_focus_areas').select('official_id, focus_id').limit(2000),
-    supabase.from('organization_focus_areas').select('org_id, focus_id').limit(2000),
+    // Campaigns
+    supabase.from('campaign_pathways').select('campaign_id, theme_id').limit(2000),
+    supabase.from('campaign_sdgs').select('campaign_id, sdg_id').limit(2000),
+    supabase.from('campaign_audience_segments').select('campaign_id, segment_id').limit(2000),
+    // Services
+    supabase.from('service_focus_areas').select('service_id, focus_id').limit(3000),
+    supabase.from('service_pathways').select('service_id, theme_id').limit(2000),
+    supabase.from('service_sdgs').select('service_id, sdg_id').limit(2000),
+    supabase.from('service_audience_segments').select('service_id, segment_id').limit(2000),
   ])
 
-  for (const row of contentFocus.data || []) {
-    edges.push({ source: `content:${row.content_id}`, target: `focus_area:${row.focus_id}`, weight: 1 })
+  // Helper to push edges
+  function addEdges(data: any[] | null, sourcePrefix: string, sourceKey: string, targetPrefix: string, targetKey: string) {
+    for (const row of data || []) {
+      edges.push({ source: `${sourcePrefix}:${row[sourceKey]}`, target: `${targetPrefix}:${row[targetKey]}`, weight: 1 })
+    }
   }
-  for (const row of foundFocus.data || []) {
-    edges.push({ source: `foundation:${row.foundation_id}`, target: `focus_area:${row.focus_area}`, weight: 1 })
-  }
-  for (const row of foundPath.data || []) {
-    edges.push({ source: `foundation:${row.foundation_id}`, target: `pathway:${row.pathway_id}`, weight: 1 })
-  }
-  for (const row of officialFocus.data || []) {
-    edges.push({ source: `official:${row.official_id}`, target: `focus_area:${row.focus_id}`, weight: 1 })
-  }
-  for (const row of orgFocus.data || []) {
-    edges.push({ source: `organization:${row.org_id}`, target: `focus_area:${row.focus_id}`, weight: 1 })
-  }
+
+  // Organization edges
+  addEdges(orgFocus.data, 'organization', 'org_id', 'focus_area', 'focus_id')
+  addEdges(orgPath.data, 'organization', 'org_id', 'pathway', 'theme_id')
+  addEdges(orgSdg.data, 'organization', 'org_id', 'sdg', 'sdg_id')
+  addEdges(orgAud.data, 'organization', 'org_id', 'audience_segment', 'segment_id')
+
+  // Content edges
+  addEdges(contentFocus.data, 'content', 'content_id', 'focus_area', 'focus_id')
+  addEdges(contentPath.data, 'content', 'content_id', 'pathway', 'theme_id')
+  addEdges(contentSdg.data, 'content', 'content_id', 'sdg', 'sdg_id')
+  addEdges(contentAud.data, 'content', 'content_id', 'audience_segment', 'segment_id')
+
+  // Policy edges
+  addEdges(policyFocus.data, 'policy', 'policy_id', 'focus_area', 'focus_id')
+  addEdges(policyPath.data, 'policy', 'policy_id', 'pathway', 'theme_id')
+  addEdges(policySdg.data, 'policy', 'policy_id', 'sdg', 'sdg_id')
+  addEdges(policyAud.data, 'policy', 'policy_id', 'audience_segment', 'segment_id')
+
+  // Official edges
+  addEdges(officialFocus.data, 'official', 'official_id', 'focus_area', 'focus_id')
+  addEdges(officialPath.data, 'official', 'official_id', 'pathway', 'theme_id')
+  addEdges(officialSdg.data, 'official', 'official_id', 'sdg', 'sdg_id')
+  addEdges(officialAud.data, 'official', 'official_id', 'audience_segment', 'segment_id')
+
+  // Opportunity edges
+  addEdges(oppFocus.data, 'opportunity', 'opportunity_id', 'focus_area', 'focus_id')
+  addEdges(oppPath.data, 'opportunity', 'opportunity_id', 'pathway', 'theme_id')
+  addEdges(oppSdg.data, 'opportunity', 'opportunity_id', 'sdg', 'sdg_id')
+  addEdges(oppAud.data, 'opportunity', 'opportunity_id', 'audience_segment', 'segment_id')
+
+  // Foundation edges
+  addEdges(foundFocus.data, 'foundation', 'foundation_id', 'focus_area', 'focus_area')
+  addEdges(foundPath.data, 'foundation', 'foundation_id', 'pathway', 'pathway_id')
+
+  // Campaign edges
+  addEdges(campaignPath.data, 'campaign', 'campaign_id', 'pathway', 'theme_id')
+  addEdges(campaignSdg.data, 'campaign', 'campaign_id', 'sdg', 'sdg_id')
+  addEdges(campaignAud.data, 'campaign', 'campaign_id', 'audience_segment', 'segment_id')
+
+  // Service edges
+  addEdges(serviceFocus.data, 'service', 'service_id', 'focus_area', 'focus_id')
+  addEdges(servicePath.data, 'service', 'service_id', 'pathway', 'theme_id')
+  addEdges(serviceSdg.data, 'service', 'service_id', 'sdg', 'sdg_id')
+  addEdges(serviceAud.data, 'service', 'service_id', 'audience_segment', 'segment_id')
 
   return { nodes, edges }
 }

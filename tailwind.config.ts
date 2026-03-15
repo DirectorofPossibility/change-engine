@@ -17,7 +17,7 @@ const config: Config = {
         muted:      '#5c6474',
         dim:        '#5c6474',
         faint:      '#8a929e',
-        rule:       '#dde1e8',
+        rule:       '#c9ced6',
         blue:       '#1b5e8a',
         'blue-lt':  '#2a7ab0',
         'blue-bg':  '#eef3f7',

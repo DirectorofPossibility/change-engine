@@ -11,6 +11,7 @@ const SUBTYPE_COLORS: Record<string, string> = {
   official: '#dc2626',
   opportunity: '#f59e0b',
   campaign: '#ec4899',
+  service: '#0d9488',
   focus_area: '#8b5cf6',
   sdg: '#0ea5e9',
   pathway: '#D4654A',
@@ -31,6 +32,30 @@ const SUBTYPE_RADIUS: Record<string, number> = {
   official: 6,
   opportunity: 6,
   campaign: 6,
+  service: 6,
+}
+
+/** BFS to find all nodes within `depth` hops of a root node */
+function bfsLevels(root: string, adjacency: Map<string, Set<string>>, maxDepth: number): Map<string, number> {
+  const visited = new Map<string, number>()
+  visited.set(root, 0)
+  const queue: string[] = [root]
+  let head = 0
+  while (head < queue.length) {
+    const current = queue[head++]
+    const level = visited.get(current)!
+    if (level >= maxDepth) continue
+    const neighbors = adjacency.get(current)
+    if (!neighbors) continue
+    const neighborArr = Array.from(neighbors)
+    for (const n of neighborArr) {
+      if (!visited.has(n)) {
+        visited.set(n, level + 1)
+        queue.push(n)
+      }
+    }
+  }
+  return visited
 }
 
 interface SimNode extends GraphNode {
@@ -55,6 +80,7 @@ export function ForceGraph({ nodes, edges }: Props) {
   const [selectedNode, setSelectedNode] = useState<SimNode | null>(null)
   const [filter, setFilter] = useState<string>('all')
   const [search, setSearch] = useState('')
+  const [depth, setDepth] = useState(2)
 
   // Camera state
   const camRef = useRef({ x: 0, y: 0, zoom: 1 })
@@ -211,7 +237,8 @@ export function ForceGraph({ nodes, edges }: Props) {
       const nodeMap = new Map<string, SimNode>()
       for (const n of nodes) nodeMap.set(n.id, n)
 
-      const selectedNeighbors = selectedNode ? adjacencyRef.current.get(selectedNode.id) : null
+      // Multi-level BFS from selected node
+      const reachable = selectedNode ? bfsLevels(selectedNode.id, adjacencyRef.current, depth) : null
 
       // Draw edges
       ctx.lineWidth = 0.3
@@ -220,17 +247,22 @@ export function ForceGraph({ nodes, edges }: Props) {
         const t = nodeMap.get(e.target)
         if (!s || !t) continue
 
-        if (selectedNode) {
-          if (s.id === selectedNode.id || t.id === selectedNode.id) {
-            ctx.strokeStyle = 'rgba(199, 91, 42, 0.6)'
-            ctx.lineWidth = 1.5
+        if (reachable) {
+          const sLevel = reachable.get(s.id)
+          const tLevel = reachable.get(t.id)
+          if (sLevel !== undefined && tLevel !== undefined) {
+            // Edge is within the reachable subgraph
+            const maxLevel = Math.max(sLevel, tLevel)
+            const opacity = Math.max(0.2, 0.7 - maxLevel * 0.15)
+            ctx.strokeStyle = `rgba(199, 91, 42, ${opacity})`
+            ctx.lineWidth = Math.max(0.5, 2 - maxLevel * 0.4)
           } else {
-            ctx.strokeStyle = 'rgba(0,0,0,0.03)'
-            ctx.lineWidth = 0.2
+            ctx.strokeStyle = 'rgba(0,0,0,0.02)'
+            ctx.lineWidth = 0.15
           }
         } else {
-          ctx.strokeStyle = 'rgba(0,0,0,0.08)'
-          ctx.lineWidth = 0.3
+          ctx.strokeStyle = 'rgba(0,0,0,0.12)'
+          ctx.lineWidth = 0.4
         }
 
         ctx.beginPath()
@@ -248,13 +280,12 @@ export function ForceGraph({ nodes, edges }: Props) {
         const color = SUBTYPE_COLORS[n.subtype] ?? '#999'
 
         let alpha = 1
-        if (selectedNode) {
-          if (n.id === selectedNode.id) {
-            alpha = 1
-          } else if (selectedNeighbors?.has(n.id)) {
-            alpha = 0.9
+        if (reachable) {
+          const level = reachable.get(n.id)
+          if (level !== undefined) {
+            alpha = Math.max(0.3, 1 - level * 0.15)
           } else {
-            alpha = 0.1
+            alpha = 0.06
           }
         }
         if (searchLower && !n.label.toLowerCase().includes(searchLower)) {
@@ -290,7 +321,7 @@ export function ForceGraph({ nodes, edges }: Props) {
 
     animRef.current = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(animRef.current)
-  }, [nodes, edges, selectedNode, filter, search])
+  }, [nodes, edges, selectedNode, filter, search, depth])
 
   // Mouse handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -364,8 +395,20 @@ export function ForceGraph({ nodes, edges }: Props) {
             <option key={st} value={st}>{st.replace(/_/g, ' ')}</option>
           ))}
         </select>
+        <div className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg shadow-sm">
+          <span className="text-gray-500 text-xs font-medium">Depth:</span>
+          {[1, 2, 3, 4].map(d => (
+            <button
+              key={d}
+              onClick={() => setDepth(d)}
+              className={'w-6 h-6 rounded text-xs font-bold transition-colors ' + (depth === d ? 'bg-[#C75B2A] text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200')}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
         <button
-          onClick={() => { camRef.current = { x: 0, y: 0, zoom: 1 }; setSelectedNode(null); setSearch('') }}
+          onClick={() => { camRef.current = { x: 0, y: 0, zoom: 1 }; setSelectedNode(null); setSearch(''); setDepth(2) }}
           className="px-3 py-1.5 text-sm bg-gray-100 rounded-lg hover:bg-gray-200"
         >
           Reset
@@ -396,28 +439,52 @@ export function ForceGraph({ nodes, edges }: Props) {
             <button onClick={() => setSelectedNode(null)} className="text-gray-400 hover:text-gray-600 text-lg leading-none">&times;</button>
           </div>
           <h3 className="font-semibold text-gray-900 text-sm">{selectedNode.label}</h3>
-          <p className="text-xs text-gray-500 mt-1">Type: {selectedNode.type}</p>
-          <p className="text-xs text-gray-500">Connections: {selectedNode.degree}</p>
-          {selectedNode.degree > 0 && (
-            <div className="mt-3 border-t border-gray-100 pt-2">
-              <p className="text-xs font-medium text-gray-600 mb-1">Connected to:</p>
-              <div className="max-h-40 overflow-y-auto space-y-0.5">
-                {simNodesRef.current
-                  .filter(n => adjacencyRef.current.get(selectedNode.id)?.has(n.id))
-                  .slice(0, 20)
-                  .map(n => (
-                    <button
-                      key={n.id}
-                      onClick={() => setSelectedNode(n)}
-                      className="block text-left text-xs text-gray-500 hover:text-gray-900 w-full truncate"
-                    >
-                      <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: SUBTYPE_COLORS[n.subtype] }} />
-                      {n.label}
-                    </button>
+          <p className="text-xs text-gray-500 mt-1">Type: {selectedNode.type} &middot; {selectedNode.subtype.replace(/_/g, ' ')}</p>
+          <p className="text-xs text-gray-500">Direct connections: {selectedNode.degree}</p>
+          {(() => {
+            const levels = bfsLevels(selectedNode.id, adjacencyRef.current, depth)
+            const nodeMap = new Map(simNodesRef.current.map(n => [n.id, n]))
+            const grouped: Map<number, SimNode[]> = new Map()
+            for (const [id, lvl] of Array.from(levels.entries())) {
+              if (lvl === 0) continue
+              const node = nodeMap.get(id)
+              if (!node) continue
+              if (!grouped.has(lvl)) grouped.set(lvl, [])
+              grouped.get(lvl)!.push(node)
+            }
+            const totalReachable = Array.from(levels.values()).filter(v => v > 0).length
+            return (
+              <>
+                <p className="text-xs font-medium mt-1" style={{ color: '#C75B2A' }}>
+                  {totalReachable} reachable within {depth} levels
+                </p>
+                <div className="mt-3 border-t border-gray-200 pt-2 max-h-60 overflow-y-auto space-y-3">
+                  {Array.from(grouped.entries()).sort((a, b) => a[0] - b[0]).map(([lvl, nodeList]) => (
+                    <div key={lvl}>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                        Level {lvl} ({nodeList.length})
+                      </p>
+                      <div className="space-y-0.5">
+                        {nodeList.slice(0, 15).map(n => (
+                          <button
+                            key={n.id}
+                            onClick={() => setSelectedNode(n)}
+                            className="block text-left text-xs text-gray-500 hover:text-gray-900 w-full truncate"
+                          >
+                            <span className="inline-block w-2 h-2 rounded-full mr-1" style={{ backgroundColor: SUBTYPE_COLORS[n.subtype] }} />
+                            {n.label}
+                          </button>
+                        ))}
+                        {nodeList.length > 15 && (
+                          <span className="text-[10px] text-gray-400 pl-3">+{nodeList.length - 15} more</span>
+                        )}
+                      </div>
+                    </div>
                   ))}
-              </div>
-            </div>
-          )}
+                </div>
+              </>
+            )
+          })()}
         </div>
       )}
 
