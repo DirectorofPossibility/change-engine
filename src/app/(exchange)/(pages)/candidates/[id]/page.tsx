@@ -3,12 +3,20 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
-import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
-import { User, Globe, Mail, Phone } from 'lucide-react'
+import { User, Globe, Mail, Phone, ArrowRight } from 'lucide-react'
+import { BookmarkButton } from '@/components/exchange/BookmarkButton'
+import { FlowerOfLife } from '@/components/geo/sacred'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+
+/* ── Design Tokens ── */
+const RULE = '#dde1e8'
+const DIM = '#5c6474'
+const INK = '#0d1117'
+const SIDEBAR_BG = '#f4f5f7'
 
 export const revalidate = 300
-
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -28,122 +36,194 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
   if (!c) notFound()
 
   const canonicalUrl = `https://www.changeengine.us/candidates/${id}`
+  const themeColor = '#1b5e8a'
+  const heroText = c.bio_summary || ''
+  const truncatedHero = heroText.length > 200 ? heroText.slice(0, 200) + '...' : heroText
+  const showAbout = heroText.length > 200
 
   return (
-    <div className="bg-paper min-h-screen">
-      {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+    <>
+      <SpiralTracker action="view_candidate" />
+
+      {/* ══════════════════════════════════════════════════════════════════
+          GRADIENT HERO
+         ══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, ${themeColor}55 100%)` }}
+      >
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
+          <FlowerOfLife color="#ffffff" size={400} />
         </div>
-        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-muted">
-            The Change Engine
-          </p>
-          <div className="flex items-start gap-6 mt-4">
-            {c.photo_url ? (
-              <Image src={c.photo_url} alt="" className="object-cover flex-shrink-0 border border-rule" width={96} height={96} />
-            ) : (
-              <div className="w-24 h-24 flex items-center justify-center flex-shrink-0 bg-paper border border-rule">
-                <User className="w-10 h-10 text-muted" />
-              </div>
-            )}
-            <div>
-              <div className="flex items-center gap-3 mb-1">
-                <span className="text-blue uppercase" style={{ fontSize: '0.65rem', letterSpacing: '0.08em' }}>
+
+        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-10 items-center">
+            <div className="flex-1">
+              {/* Breadcrumb */}
+              <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+                <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                <span className="mx-1.5">&rsaquo;</span>
+                <Link href="/candidates" className="hover:text-white transition-colors">Candidates</Link>
+              </nav>
+
+              {/* Badge */}
+              <div className="mb-5 flex items-center gap-2">
+                <span
+                  className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                  style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
+                >
                   {c.party || 'Candidate'}
                 </span>
                 {c.incumbent === 'true' && (
-                  <span className="text-blue uppercase" style={{ fontSize: '0.6875rem', letterSpacing: '0.06em' }}>Incumbent</span>
+                  <span
+                    className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                    style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)' }}
+                  >
+                    Incumbent
+                  </span>
                 )}
               </div>
-              <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15 }}>
+
+              {/* Title */}
+              <h1
+                className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
+                style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+              >
                 {c.candidate_name}
               </h1>
-              <p className="text-muted" style={{ fontSize: '1rem', marginTop: '0.5rem' }}>
-                {c.office_sought}{c.district ? ` - ${c.district}` : ''}
+
+              {/* Office + District subtitle */}
+              <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.1rem' }}>
+                {c.office_sought}{c.district ? ` — ${c.district}` : ''}
               </p>
+
+              {/* Bio preview */}
+              {truncatedHero && (
+                <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '0.95rem' }}>
+                  {truncatedHero}
+                </p>
+              )}
+
+              {/* Bookmark */}
+              <BookmarkButton
+                contentType="candidate"
+                contentId={id}
+                title={c.candidate_name}
+                imageUrl={c.photo_url}
+              />
+
+              {/* Contact links in hero */}
+              <div className="flex flex-wrap items-center gap-3 mt-4">
+                {c.campaign_website && (
+                  <a href={c.campaign_website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
+                    <Globe size={12} /> Campaign website
+                  </a>
+                )}
+                {c.campaign_email && (
+                  <a href={`mailto:${c.campaign_email}`} className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
+                    <Mail size={12} /> {c.campaign_email}
+                  </a>
+                )}
+                {c.campaign_phone && (
+                  <span className="inline-flex items-center gap-1.5 text-white/80 text-xs">
+                    <Phone size={12} /> {c.campaign_phone}
+                  </span>
+                )}
+              </div>
+
+              {/* Meta strip — fundraising */}
+              {c.fundraising_total && (
+                <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex items-center gap-x-3 mt-6">
+                  <span>Fundraising: {c.fundraising_total}</span>
+                </div>
+              )}
             </div>
+
+            {/* Hero photo */}
+            {c.photo_url ? (
+              <div className="w-full lg:w-[300px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center">
+                <Image
+                  src={c.photo_url}
+                  alt={c.candidate_name}
+                  className="max-w-full max-h-[300px] w-auto h-auto object-cover"
+                  width={300}
+                  height={300}
+                />
+              </div>
+            ) : (
+              <div className="w-full lg:w-[300px] flex-shrink-0 rounded-2xl overflow-hidden border-[3px] border-white/30 bg-white/10 flex items-center justify-center py-16">
+                <User className="w-20 h-20 text-white/40" />
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav className="text-muted" style={{ fontSize: '0.7rem' }}>
-          <Link href="/" className="hover:underline text-blue">Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/candidates" className="hover:underline text-blue">Candidates</Link>
-          <span className="mx-2">/</span>
-          <span>{c.candidate_name}</span>
-        </nav>
-      </div>
+      {/* ══════════════════════════════════════════════════════════════════
+          TWO-COLUMN LAYOUT — Content + Sidebar
+         ══════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+          <div className="flex flex-col lg:flex-row gap-10">
 
-      {/* Main Content */}
-      <div className="max-w-[900px] mx-auto px-6 py-8">
+            {/* ── LEFT: Main Content ── */}
+            <div className="flex-1 min-w-0">
 
-        {/* About */}
-        {c.bio_summary && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>About</h2>
-            </div>
-            <div className="border-b border-dotted border-rule" style={{ marginBottom: '1rem' }} />
-            <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>{c.bio_summary}</p>
-          </section>
-        )}
+              {/* About — full bio when truncated in hero */}
+              {showAbout && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>About</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{c.bio_summary}</p>
+                </section>
+              )}
 
-        {/* Campaign */}
-        <section className="mb-10">
-          <div className="flex items-baseline justify-between mb-1">
-            <h2 style={{ fontSize: '1.5rem',  }}>Campaign</h2>
-          </div>
-          <div className="border-b border-dotted border-rule" style={{ marginBottom: '1rem' }} />
-          <div className="space-y-3">
-            {c.campaign_website && (
-              <a href={c.campaign_website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline text-blue" style={{ fontSize: '0.9rem' }}>
-                <Globe size={15} /> Campaign website
-              </a>
-            )}
-            {c.campaign_email && (
-              <a href={`mailto:${c.campaign_email}`} className="flex items-center gap-2 hover:underline text-blue" style={{ fontSize: '0.9rem' }}>
-                <Mail size={15} /> {c.campaign_email}
-              </a>
-            )}
-            {c.campaign_phone && (
-              <div className="flex items-center gap-2 text-muted" style={{ fontSize: '0.9rem' }}>
-                <Phone size={15} /> {c.campaign_phone}
+              {/* Positions & Endorsements */}
+              {(c.policy_positions || c.endorsements) && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Positions & Endorsements</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  {c.policy_positions && (
+                    <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{c.policy_positions}</p>
+                  )}
+                  {c.endorsements && (
+                    <p className="text-[0.95rem] leading-relaxed mt-3" style={{ color: DIM }}>{c.endorsements}</p>
+                  )}
+                </section>
+              )}
+
+              {/* Sidebar extras — below main content on mobile */}
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+                <FeaturedPromo variant="card" />
               </div>
-            )}
-            {c.fundraising_total && (
-              <div style={{ fontSize: '0.9rem' }}>
-                <span className="text-muted">Fundraising:</span>{' '}
-                <span style={{ fontWeight: 500 }}>{c.fundraising_total}</span>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Positions & Endorsements */}
-        {(c.policy_positions || c.endorsements) && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>Positions & Endorsements</h2>
             </div>
-            <div className="border-b border-dotted border-rule" style={{ marginBottom: '1rem' }} />
-            {c.policy_positions && <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>{c.policy_positions}</p>}
-            {c.endorsements && <p className="text-muted" style={{ fontSize: '0.95rem', lineHeight: 1.85, marginTop: '0.75rem' }}>{c.endorsements}</p>}
-          </section>
-        )}
-      </div>
 
-      {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6 h-px bg-rule" />
-      <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/candidates" className="hover:underline italic text-blue text-[0.95rem]">
-          Back to Candidates
-        </Link>
-      </div>
+            {/* ── RIGHT: SIDEBAR ── */}
+            <aside className="w-full lg:w-[340px] flex-shrink-0">
+              <div className="lg:sticky lg:top-4 space-y-4">
+                <div className="hidden lg:block space-y-4">
+                  <FeaturedPromo variant="card" />
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER CODA ── */}
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <Link
+            href="/candidates"
+            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
+            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+          >
+            <ArrowRight size={14} className="rotate-180" /> Back to Candidates
+          </Link>
+        </div>
+      </section>
 
       {/* JSON-LD */}
       <script
@@ -157,6 +237,6 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
           }),
         }}
       />
-    </div>
+    </>
   )
 }

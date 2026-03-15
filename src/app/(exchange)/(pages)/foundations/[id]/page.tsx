@@ -2,12 +2,23 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { Phone, Mail, Globe, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { getWayfinderContext } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { BookmarkButton } from '@/components/exchange/BookmarkButton'
+import { FlowerOfLife } from '@/components/geo/sacred'
+import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
+import { SpiralTracker } from '@/components/exchange/SpiralTracker'
+
+/* ── Design Tokens ── */
+const RULE = '#dde1e8'
+const DIM = '#5c6474'
+const INK = '#0d1117'
+const SIDEBAR_BG = '#f4f5f7'
 
 export const revalidate = 300
-
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -43,184 +54,234 @@ export default async function FoundationDetailPage({ params }: { params: Promise
     focusAreas = data || []
   }
 
-  const address = [f.address, f.city, f.state_code, f.zip_code].filter(Boolean).join(', ')
   const eyebrowParts = [f.type, f.geo_level].filter(Boolean)
+  const themeColor = '#1b5e8a'
+  const heroText = f.mission || ''
 
   return (
-    <div className="bg-paper min-h-screen">
-      {/* Hero */}
-      <div className="bg-paper relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
+    <>
+      <SpiralTracker action="view_foundation" />
+
+      {/* ══════════════════════════════════════════════════════════════════
+          GRADIENT HERO
+         ══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, ${themeColor}55 100%)` }}
+      >
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
+          <FlowerOfLife color="#ffffff" size={400} />
         </div>
-        <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
-            The Change Engine
-          </p>
+
+        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
+          {/* Breadcrumb */}
+          <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span className="mx-1.5">&rsaquo;</span>
+            <Link href="/foundations" className="hover:text-white transition-colors">Foundations</Link>
+          </nav>
+
+          {/* Badge */}
           {eyebrowParts.length > 0 && (
-            <p style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a", marginTop: '0.75rem' }}>
-              {eyebrowParts.join(' / ')}
-            </p>
+            <div className="mb-5">
+              <span
+                className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
+              >
+                {eyebrowParts.join(' / ')}
+              </span>
+            </div>
           )}
-          <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
+
+          {/* Title */}
+          <h1
+            className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
+            style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+          >
             {f.name}
           </h1>
-          {f.mission && (
-            <p style={{ fontSize: '1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
-              {f.mission}
+
+          {/* Mission */}
+          {heroText && (
+            <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.1rem' }}>
+              {heroText.length > 200 ? heroText.slice(0, 200) + '...' : heroText}
             </p>
           )}
-          {f.website_url && (
-            <a
-              href={f.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ fontSize: '0.65rem', letterSpacing: '0.08em', color: "#1b5e8a", textTransform: 'uppercase', display: 'inline-block', marginTop: '1rem' }}
-              className="hover:underline"
-            >
-              Visit Website
-            </a>
-          )}
+
+          {/* Bookmark */}
+          <BookmarkButton
+            contentType="foundation"
+            contentId={id}
+            title={f.name}
+          />
+
+          {/* Contact links — absorbed into hero */}
+          <div className="flex flex-wrap items-center gap-3 mt-4">
+            {f.website_url && (
+              <a href={f.website_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
+                <Globe size={12} /> Website
+              </a>
+            )}
+            {f.phone && (
+              <a href={'tel:' + f.phone} className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
+                <Phone size={12} /> {f.phone}
+              </a>
+            )}
+            {f.email && (
+              <a href={'mailto:' + f.email} className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
+                <Mail size={12} /> {f.email}
+              </a>
+            )}
+          </div>
+
+          {/* Meta strip — assets, annual giving, founded */}
+          <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-6">
+            {f.assets && (
+              <span>Assets: {f.assets}</span>
+            )}
+            {f.annual_giving && (
+              <>
+                {f.assets && <span>&middot;</span>}
+                <span>Annual Giving: {f.annual_giving}</span>
+              </>
+            )}
+            {f.founded_year && (
+              <>
+                {(f.assets || f.annual_giving) && <span>&middot;</span>}
+                <span>Est. {f.founded_year}</span>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Breadcrumb */}
-      <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
-          <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
-          <span className="mx-2">/</span>
-          <Link href="/foundations" className="hover:underline" style={{ color: "#1b5e8a" }}>Foundations</Link>
-          <span className="mx-2">/</span>
-          <span>{f.name}</span>
-        </nav>
-      </div>
+      {/* ══════════════════════════════════════════════════════════════════
+          TWO-COLUMN LAYOUT — Content + Wayfinder Sidebar
+         ══════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+          <div className="flex flex-col lg:flex-row gap-10">
 
-      {/* Main content */}
-      <div className="max-w-[900px] mx-auto px-6 py-8">
+            {/* ── LEFT: Main Content ── */}
+            <div className="flex-1 min-w-0">
 
-        {/* Details */}
-        {(f.assets || f.annual_giving || f.founded_year) && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>Details</h2>
-            </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <div className="space-y-3">
-              {f.assets && (
-                <div style={{ fontSize: '0.9rem',  }}>
-                  <span style={{ color: "#5c6474" }}>Assets:</span> <strong>{f.assets}</strong>
-                </div>
-              )}
-              {f.annual_giving && (
-                <div style={{ fontSize: '0.9rem',  }}>
-                  <span style={{ color: "#5c6474" }}>Annual giving:</span> <strong>{f.annual_giving}</strong>
-                </div>
-              )}
-              {f.founded_year && (
-                <div style={{ fontSize: '0.9rem',  }}>
-                  <span style={{ color: "#5c6474" }}>Founded:</span> {f.founded_year}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* Contact */}
-        {(f.phone || f.email || address) && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>Contact</h2>
-            </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <div className="space-y-3">
-              {f.phone && (
-                <div style={{ fontSize: '0.9rem' }}>
-                  <a href={'tel:' + f.phone} style={{ color: "#1b5e8a" }} className="hover:underline">{f.phone}</a>
-                </div>
-              )}
-              {f.email && (
-                <div style={{ fontSize: '0.9rem' }}>
-                  <a href={'mailto:' + f.email} style={{ color: "#1b5e8a" }} className="hover:underline">{f.email}</a>
-                </div>
-              )}
-              {address && (
-                <div style={{ fontSize: '0.9rem',  }}>{address}</div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* Focus Areas */}
-        {focusAreas.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>Focus Areas</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{focusAreas.length}</span>
-            </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <div className="flex flex-wrap gap-2">
-              {focusAreas.map(function (fa) {
-                return (
-                  <Link
-                    key={fa.focus_id}
-                    href={'/explore/focus/' + fa.focus_id}
-                    style={{ fontSize: '0.85rem', border: '1px solid #dde1e8', padding: '4px 12px' }}
-                    className="hover:opacity-80 transition-opacity"
-                  >
-                    {fa.focus_area_name}
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* People */}
-        {people && people.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 style={{ fontSize: '1.5rem',  }}>People</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{people.length}</span>
-            </div>
-            <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
-            <div className="space-y-2">
-              {people.slice(0, 4).map(function (p: any, i: number) {
-                return (
-                  <div key={i}>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{p.person_name}</span>
-                    {(p.role || p.title) && <span style={{ fontSize: '0.85rem', color: "#5c6474", marginLeft: '0.5rem' }}>{p.title || p.role}</span>}
+              {/* Focus Areas */}
+              {focusAreas.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Focus Areas</h2>
+                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{focusAreas.length}</span>
                   </div>
-                )
-              })}
-              {people.length > 4 && (
-                <details className="mt-2">
-                  <summary style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.9rem', cursor: 'pointer' }}>
-                    Show all {people.length} people
-                  </summary>
-                  <div className="space-y-2 mt-2">
-                    {people.slice(4).map(function (p: any, i: number) {
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="flex flex-wrap gap-2">
+                    {focusAreas.map(function (fa) {
                       return (
-                        <div key={i + 4}>
-                          <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{p.person_name}</span>
-                          {(p.role || p.title) && <span style={{ fontSize: '0.85rem', color: "#5c6474", marginLeft: '0.5rem' }}>{p.title || p.role}</span>}
-                        </div>
+                        <Link
+                          key={fa.focus_id}
+                          href={'/explore/focus/' + fa.focus_id}
+                          className="text-sm px-3 py-1 rounded-full hover:opacity-80 transition-opacity"
+                          style={{ border: `1px solid ${RULE}`, color: INK }}
+                        >
+                          {fa.focus_area_name}
+                        </Link>
                       )
                     })}
                   </div>
-                </details>
+                </section>
               )}
-            </div>
-          </section>
-        )}
-      </div>
 
-      {/* Footer */}
-      <div className="my-10 max-w-[900px] mx-auto px-6" style={{ height: 1, background: '#dde1e8' }} />
-      <div className="max-w-[900px] mx-auto px-6 pb-12">
-        <Link href="/foundations" style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '0.95rem' }} className="hover:underline">
-          Back to Foundations
-        </Link>
-      </div>
-    </div>
+              {/* People */}
+              {people && people.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>People</h2>
+                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{people.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="space-y-1">
+                    {people.slice(0, 4).map(function (p: any, i: number) {
+                      return (
+                        <div key={i} className="flex items-baseline gap-2 py-2" style={{ borderBottom: `1px solid ${RULE}` }}>
+                          <span className="mt-1.5 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
+                          <span className="text-[0.9rem] font-semibold" style={{ color: INK }}>{p.person_name}</span>
+                          {(p.role || p.title) && (
+                            <span className="text-sm" style={{ color: DIM }}>{p.title || p.role}</span>
+                          )}
+                        </div>
+                      )
+                    })}
+                    {people.length > 4 && (
+                      <details className="mt-2">
+                        <summary className="italic text-sm cursor-pointer" style={{ color: themeColor }}>
+                          {people.length - 4} more people
+                        </summary>
+                        <div className="space-y-1 mt-1">
+                          {people.slice(4).map(function (p: any, i: number) {
+                            return (
+                              <div key={i + 4} className="flex items-baseline gap-2 py-2" style={{ borderBottom: `1px solid ${RULE}` }}>
+                                <span className="mt-1.5 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
+                                <span className="text-[0.9rem] font-semibold" style={{ color: INK }}>{p.person_name}</span>
+                                {(p.role || p.title) && (
+                                  <span className="text-sm" style={{ color: DIM }}>{p.title || p.role}</span>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </details>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* Empty state */}
+              {focusAreas.length === 0 && (!people || people.length === 0) && (
+                <div className="text-center py-12" style={{ border: `1px dashed ${RULE}` }}>
+                  <p style={{ color: DIM }}>No focus areas or people have been linked to this foundation yet.</p>
+                </div>
+              )}
+
+              {/* Sidebar extras — below main content on mobile */}
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+                <FeaturedPromo variant="card" />
+              </div>
+            </div>
+
+            {/* ══════════════════════════════════════════════════════════════════
+                RIGHT: WAYFINDER SIDEBAR
+               ══════════════════════════════════════════════════════════════════ */}
+            <aside className="w-full lg:w-[340px] flex-shrink-0">
+              <div className="lg:sticky lg:top-4 space-y-4">
+                <DetailWayfinder
+                  data={wayfinderData}
+                  currentType="foundation"
+                  currentId={id}
+                  userRole={userProfile?.role ?? undefined}
+                />
+
+                <div className="hidden lg:block space-y-4">
+                  <FeaturedPromo variant="card" />
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER CODA ── */}
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <Link
+            href="/foundations"
+            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
+            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+          >
+            <ArrowRight size={14} className="rotate-180" /> Back to Foundations
+          </Link>
+        </div>
+      </section>
+    </>
   )
 }

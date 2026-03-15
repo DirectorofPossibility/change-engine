@@ -15,13 +15,20 @@ import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { BreakItDown } from '@/components/exchange/BreakItDown'
 import { LEVEL_COLORS, DEFAULT_LEVEL_COLOR } from '@/lib/constants'
 import { PolicyImpactSection } from '@/components/exchange/PolicyImpactSection'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, ArrowRight } from 'lucide-react'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { AdminEditPanel } from '@/components/exchange/AdminEditPanel'
 import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { policyJsonLd } from '@/lib/jsonld'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { BookmarkButton } from '@/components/exchange/BookmarkButton'
+import { FlowerOfLife } from '@/components/geo/sacred'
 
+/* ── Design Tokens ── */
+const RULE = '#dde1e8'
+const DIM = '#5c6474'
+const INK = '#0d1117'
+const SIDEBAR_BG = '#f4f5f7'
 
 function statusColor(status: string | null): { dotColor: string; textColor: string } {
   if (!status) return { dotColor: '#1b5e8a', textColor: '#1b5e8a' }
@@ -135,311 +142,378 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
 
   const levelColor = LEVEL_COLORS[policy.level || ''] || DEFAULT_LEVEL_COLOR
 
-  /* Eyebrow: level pill */
-  const eyebrow = policy.level
-    ? { text: policy.level, bgColor: levelColor, textColor: '#ffffff' }
-    : undefined
-
-  /* Eyebrow meta: type + status */
-  const eyebrowMeta = (
-    <span className="inline-flex items-center gap-3">
-      {policy.policy_type && (
-        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">{policy.policy_type}</span>
-      )}
-      {policy.status && (
-        <span className="inline-flex items-center gap-1.5" style={{ color: sc.textColor }}>
-          <span className="inline-block shrink-0" style={{ width: 7, height: 7, background: sc.dotColor }} />
-          <span className="font-mono text-[0.65rem] uppercase tracking-wider">{policy.status}</span>
-        </span>
-      )}
-    </span>
-  )
-
-  /* Meta row: bill number + source link */
-  const metaRow = (
-    <span className="inline-flex items-center gap-4">
-      {policy.bill_number && (
-        <span className="text-xs text-muted">{policy.bill_number}</span>
-      )}
-      {policy.source_url && (
-        <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.65rem] uppercase tracking-wider text-blue">
-          <ExternalLink size={10} /> Source
-        </a>
-      )}
-    </span>
-  )
-
-  /* Footer: back link */
-  const footerContent = (
-    <div className="max-w-[900px] mx-auto px-6 pb-12">
-      <div className="mb-6 border-t border-rule" />
-      <Link href="/policies" className="italic text-blue text-[0.95rem] hover:underline">
-        Back to Policies
-      </Link>
-    </div>
-  )
-
   return (
     <>
-      <DetailPageLayout
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: t('policy.policies'), href: '/policies' },
-          { label: displayName },
-        ]}
-        eyebrow={eyebrow}
-        eyebrowMeta={eyebrowMeta}
-        title={displayName}
-        subtitle={displaySummary}
-        metaRow={metaRow}
-        themeColor={levelColor}
-        wayfinderData={wayfinderData}
-        wayfinderType="policy"
-        wayfinderEntityId={id}
-        userRole={userProfile?.role}
-        footer={footerContent}
-        actions={{
-          bookmark: { contentType: 'policy', contentId: id, title: displayName },
-        }}
-        feedbackType="policy"
-        feedbackId={id}
-        feedbackName={displayName}
-        jsonLd={jsonLd || undefined}
-        sidebar={
-          <>
-            <FeaturedPromo variant="card" />
-            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={levelColor} />}
-          </>
-        }
-      >
-        <SpiralTracker action="view_policy" />
+      <SpiralTracker action="view_policy" />
 
-        {/* Quick Facts */}
-        <section className="mb-10">
-          <div className="flex items-baseline justify-between mb-1">
-            <h2 className="text-2xl">{t('policy.quick_facts')}</h2>
-          </div>
-          <div className="border-b border-dotted border-rule mb-4" />
-          <div className="space-y-2 text-sm">
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════════
+          GRADIENT HERO
+         ══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${levelColor} 0%, ${levelColor}dd 40%, ${levelColor}55 100%)` }}
+      >
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
+          <FlowerOfLife color="#ffffff" size={400} />
+        </div>
+
+        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
+          {/* Breadcrumb */}
+          <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span className="mx-1.5">&rsaquo;</span>
+            <Link href="/policies" className="hover:text-white transition-colors">{t('policy.policies')}</Link>
+          </nav>
+
+          {/* Badge row: level pill + status + policy_type */}
+          <div className="flex flex-wrap items-center gap-3 mb-5">
             {policy.level && (
-              <div className="flex justify-between">
-                <span className="text-xs text-muted">{t('policy.level')}</span>
-                <span className="font-semibold">{policy.level}</span>
-              </div>
+              <span
+                className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
+              >
+                {policy.level}
+              </span>
             )}
             {policy.status && (
-              <div className="flex justify-between">
-                <span className="text-xs text-muted">{t('policy.status')}</span>
-                <span className="font-semibold" style={{ color: sc.textColor }}>{policy.status}</span>
-              </div>
+              <span className="inline-flex items-center gap-1.5 text-white">
+                <span className="inline-block shrink-0 rounded-full" style={{ width: 7, height: 7, background: '#ffffff' }} />
+                <span className="font-mono text-[0.65rem] uppercase tracking-wider">{policy.status}</span>
+              </span>
             )}
-            {policy.introduced_date && (
-              <div className="flex justify-between">
-                <span className="text-xs text-muted">{t('policy.introduced')}</span>
-                <span>{new Date(policy.introduced_date).toLocaleDateString()}</span>
-              </div>
-            )}
-            {policy.data_source && (
-              <div className="flex justify-between">
-                <span className="text-xs text-muted">{t('policy.source')}</span>
-                <span className="capitalize">{policy.data_source.replace(/_/g, ' ')}</span>
-              </div>
+            {policy.policy_type && (
+              <span className="font-mono text-[0.65rem] uppercase tracking-wider text-white/80">{policy.policy_type}</span>
             )}
           </div>
-        </section>
 
-        {/* What this does */}
-        {displaySummary && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('policy.what_it_does')}</h2>
-            </div>
-            <div className="border-b border-dotted border-rule mb-4" />
-            <p className="text-base leading-relaxed">{displaySummary}</p>
-          </section>
-        )}
+          {/* Title */}
+          <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
+            style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+          >
+            {displayName}
+          </h1>
 
-        {/* Impact */}
-        {policy.impact_statement && (
-          <PolicyImpactSection impactStatement={policy.impact_statement} />
-        )}
+          {/* Summary */}
+          {displaySummary && (
+            <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.05rem' }}>
+              {displaySummary.length > 200 ? displaySummary.slice(0, 200) + '...' : displaySummary}
+            </p>
+          )}
 
-        {/* AI Break It Down */}
-        <BreakItDown title={displayName} summary={displaySummary} type="policy" />
+          {/* Bookmark */}
+          <BookmarkButton
+            contentType="policy"
+            contentId={id}
+            title={displayName}
+          />
 
-        <div className="my-10 h-px bg-rule" />
-
-        {/* Focus areas */}
-        {focusAreas.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('policy.topics')}</h2>
-              <span className="font-mono text-micro uppercase tracking-wider text-muted">{focusAreas.length}</span>
-            </div>
-            <div className="border-b border-dotted border-rule mb-4" />
-            <FocusAreaPills focusAreas={focusAreas} />
-          </section>
-        )}
-
-        {/* Geographic impact */}
-        {geography.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('policy.where_applies')}</h2>
-            </div>
-            <div className="border-b border-dotted border-rule mb-4" />
-            <div className="space-y-3">
-              {Object.entries(geoByType).map(function ([geoType, ids]) {
-                return (
-                  <div key={geoType}>
-                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">{formatGeoType(geoType)}</span>
-                    <div className="flex flex-wrap gap-1.5 mt-1">
-                      {ids.map(function (gid) {
-                        return (
-                          <span key={gid} className="text-xs bg-faint border border-rule inline-block px-2 py-0.5">
-                            {gid}
-                          </span>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* Timeline */}
-        <section className="mb-10">
-          <div className="flex items-baseline justify-between mb-1">
-            <h2 className="text-2xl">{t('policy.timeline')}</h2>
-          </div>
-          <div className="border-b border-dotted border-rule mb-4" />
-          <div>
-            {policy.introduced_date && (
-              <div className="flex items-start gap-4 py-4 border-b border-rule">
-                <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: '#1b5e8a', marginTop: 5 }} />
-                <div>
-                  <p className="text-[0.9rem] font-semibold">{t('policy.introduced')}</p>
-                  <p className="text-sm text-muted">{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                </div>
-              </div>
-            )}
-            {policy.last_action && (
-              <div className="flex items-start gap-4 py-4 border-b border-rule">
-                <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: sc.dotColor, marginTop: 5 }} />
-                <div>
-                  <p className="text-[0.9rem] font-semibold">{t('policy.latest_action')}</p>
-                  <p className="text-sm text-muted">{policy.last_action}</p>
-                  {policy.last_action_date && (
-                    <p className="font-mono text-micro uppercase tracking-wider text-muted mt-1">
-                      {new Date(policy.last_action_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                    </p>
-                  )}
-                </div>
-              </div>
+          {/* Meta strip: bill_number, source link, introduced date, data source */}
+          <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-4">
+            {policy.bill_number && (
+              <span>{policy.bill_number}</span>
             )}
             {policy.source_url && (
-              <div className="flex items-start gap-4 py-4">
-                <span className="inline-block shrink-0 bg-rule" style={{ width: 8, height: 8, marginTop: 5 }} />
-                <div>
-                  <p className="text-[0.9rem] font-semibold">{t('policy.source')}</p>
-                  <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline text-sm text-blue">
-                    View on {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'source'} <ExternalLink size={12} />
-                  </a>
-                </div>
-              </div>
+              <>
+                {policy.bill_number && <span>&middot;</span>}
+                <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-white transition-colors">
+                  <ExternalLink size={10} /> Source
+                </a>
+              </>
+            )}
+            {policy.introduced_date && (
+              <>
+                {(policy.bill_number || policy.source_url) && <span>&middot;</span>}
+                <span>Introduced {new Date(policy.introduced_date).toLocaleDateString()}</span>
+              </>
+            )}
+            {policy.data_source && (
+              <>
+                {(policy.bill_number || policy.source_url || policy.introduced_date) && <span>&middot;</span>}
+                <span className="capitalize">{policy.data_source.replace(/_/g, ' ')}</span>
+              </>
             )}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <div className="my-10 h-px bg-rule" />
+      {/* ══════════════════════════════════════════════════════════════════
+          TWO-COLUMN LAYOUT
+         ══════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+          <div className="flex flex-col lg:flex-row gap-10">
 
-        {/* Decision Makers */}
-        {officials.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('policy.leaders_connected')}</h2>
-              <span className="font-mono text-micro uppercase tracking-wider text-muted">{officials.length}</span>
-            </div>
-            <div className="border-b border-dotted border-rule mb-4" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {officials.map(function (o) {
-                const ot = officialTranslations[o.official_id]
-                return (
-                  <OfficialCard
-                    key={o.official_id}
-                    id={o.official_id}
-                    name={o.official_name}
-                    title={o.title}
-                    party={o.party}
-                    level={o.level}
-                    email={o.email}
-                    phone={o.office_phone}
-                    website={o.website}
-                    photoUrl={o.photo_url}
-                    translatedTitle={ot?.title}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        )}
+            {/* ── LEFT: Main Content ── */}
+            <div className="flex-1 min-w-0">
 
-        {/* Related Services */}
-        {displayRelatedServices.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">Related Services</h2>
-              <span className="font-mono text-micro uppercase tracking-wider text-muted">{displayRelatedServices.length}</span>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            {displayRelatedServices.map(function (svc: any) {
-              return (
-                <Link key={svc.service_id} href={'/services/' + svc.service_id} className="block py-3 hover:opacity-80 border-b border-rule">
-                  <h4 className="text-[0.9rem] font-semibold line-clamp-2">{svc.service_name}</h4>
-                  {svc.description_5th_grade && (
-                    <p className="line-clamp-2 mt-0.5 italic text-sm text-muted">{svc.description_5th_grade}</p>
+              {/* Quick Facts */}
+              <section className="mb-8">
+                <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.quick_facts')}</h2>
+                <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                <div className="space-y-2 text-sm">
+                  {policy.level && (
+                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <span className="text-xs" style={{ color: DIM }}>{t('policy.level')}</span>
+                      <span className="font-semibold" style={{ color: INK }}>{policy.level}</span>
+                    </div>
                   )}
-                </Link>
-              )
-            })}
-          </section>
-        )}
+                  {policy.status && (
+                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <span className="text-xs" style={{ color: DIM }}>{t('policy.status')}</span>
+                      <span className="font-semibold" style={{ color: sc.textColor }}>{policy.status}</span>
+                    </div>
+                  )}
+                  {policy.introduced_date && (
+                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <span className="text-xs" style={{ color: DIM }}>{t('policy.introduced')}</span>
+                      <span style={{ color: INK }}>{new Date(policy.introduced_date).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                  {policy.data_source && (
+                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <span className="text-xs" style={{ color: DIM }}>{t('policy.source')}</span>
+                      <span className="capitalize" style={{ color: INK }}>{policy.data_source.replace(/_/g, ' ')}</span>
+                    </div>
+                  )}
+                </div>
+              </section>
 
-        {/* Related Policies */}
-        {related && related.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">{t('policy.related_policies')}</h2>
-              <span className="font-mono text-micro uppercase tracking-wider text-muted">{related.length}</span>
-            </div>
-            <div className="border-b border-dotted border-rule mb-4" />
-            <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
-              {related.map(function (p, i) {
-                const rpt = relatedPolicyTranslations[p.policy_id]
-                return (
-                  <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-4 border-b border-rule" style={{ borderRight: i % 2 === 0 ? '1px solid #dde1e8' : 'none' }}>
-                    <PolicyCard
-                      name={p.title_6th_grade || p.policy_name}
-                      summary={p.summary_6th_grade || p.summary_5th_grade}
-                      billNumber={p.bill_number}
-                      status={p.status}
-                      level={p.level}
-                      sourceUrl={p.source_url}
-                      translatedName={rpt?.title}
-                      translatedSummary={rpt?.summary}
-                      impactPreview={p.impact_statement}
-                      lastActionDate={(p as any).last_action_date}
-                    />
-                  </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
+              {/* What this does */}
+              {displaySummary && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.what_it_does')}</h2>
+                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displaySummary}</p>
+                </section>
+              )}
 
-      </DetailPageLayout>
+              {/* Impact */}
+              {policy.impact_statement && (
+                <PolicyImpactSection impactStatement={policy.impact_statement} />
+              )}
+
+              {/* AI Break It Down */}
+              <BreakItDown title={displayName} summary={displaySummary} type="policy" />
+
+              <div className="my-8 h-px" style={{ background: RULE }} />
+
+              {/* Focus areas */}
+              {focusAreas.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('policy.topics')}</h2>
+                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{focusAreas.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <FocusAreaPills focusAreas={focusAreas} />
+                </section>
+              )}
+
+              {/* Geographic impact */}
+              {geography.length > 0 && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.where_applies')}</h2>
+                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="space-y-3">
+                    {Object.entries(geoByType).map(function ([geoType, ids]) {
+                      return (
+                        <div key={geoType}>
+                          <span className="font-mono text-[0.65rem] uppercase tracking-wider" style={{ color: DIM }}>{formatGeoType(geoType)}</span>
+                          <div className="flex flex-wrap gap-1.5 mt-1">
+                            {ids.map(function (gid) {
+                              return (
+                                <span key={gid} className="text-xs inline-block px-2 py-0.5" style={{ background: SIDEBAR_BG, border: `1px solid ${RULE}` }}>
+                                  {gid}
+                                </span>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
+              {/* Timeline */}
+              <section className="mb-8">
+                <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.timeline')}</h2>
+                <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                <div>
+                  {policy.introduced_date && (
+                    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: '#1b5e8a', marginTop: 5 }} />
+                      <div>
+                        <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{t('policy.introduced')}</p>
+                        <p className="text-sm" style={{ color: DIM }}>{new Date(policy.introduced_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      </div>
+                    </div>
+                  )}
+                  {policy.last_action && (
+                    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: sc.dotColor, marginTop: 5 }} />
+                      <div>
+                        <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{t('policy.latest_action')}</p>
+                        <p className="text-sm" style={{ color: DIM }}>{policy.last_action}</p>
+                        {policy.last_action_date && (
+                          <p className="font-mono text-[0.6rem] uppercase tracking-wider mt-1" style={{ color: DIM }}>
+                            {new Date(policy.last_action_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {policy.source_url && (
+                    <div className="flex items-start gap-4 py-4">
+                      <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: RULE, marginTop: 5 }} />
+                      <div>
+                        <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{t('policy.source')}</p>
+                        <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline text-sm" style={{ color: levelColor }}>
+                          View on {policy.data_source === 'congress_gov' ? 'Congress.gov' : policy.data_source === 'legistar' ? 'Legistar' : 'source'} <ExternalLink size={12} />
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </section>
+
+              <div className="my-8 h-px" style={{ background: RULE }} />
+
+              {/* Decision Makers */}
+              {officials.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('policy.leaders_connected')}</h2>
+                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{officials.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {officials.map(function (o) {
+                      const ot = officialTranslations[o.official_id]
+                      return (
+                        <OfficialCard
+                          key={o.official_id}
+                          id={o.official_id}
+                          name={o.official_name}
+                          title={o.title}
+                          party={o.party}
+                          level={o.level}
+                          email={o.email}
+                          phone={o.office_phone}
+                          website={o.website}
+                          photoUrl={o.photo_url}
+                          translatedTitle={ot?.title}
+                        />
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
+              {/* Related Services */}
+              {displayRelatedServices.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Related Services</h2>
+                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{displayRelatedServices.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  {displayRelatedServices.map(function (svc: any) {
+                    return (
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: levelColor }} />
+                        <div className="min-w-0">
+                          <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
+                          {svc.description_5th_grade && (
+                            <span className="block line-clamp-2 mt-0.5 text-sm" style={{ color: DIM }}>{svc.description_5th_grade}</span>
+                          )}
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </section>
+              )}
+
+              {/* Related Policies */}
+              {related && related.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('policy.related_policies')}</h2>
+                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{related.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
+                    {related.map(function (p, i) {
+                      const rpt = relatedPolicyTranslations[p.policy_id]
+                      return (
+                        <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-4" style={{ borderBottom: `1px solid ${RULE}`, borderRight: i % 2 === 0 ? `1px solid ${RULE}` : 'none' }}>
+                          <PolicyCard
+                            name={p.title_6th_grade || p.policy_name}
+                            summary={p.summary_6th_grade || p.summary_5th_grade}
+                            billNumber={p.bill_number}
+                            status={p.status}
+                            level={p.level}
+                            sourceUrl={p.source_url}
+                            translatedName={rpt?.title}
+                            translatedSummary={rpt?.summary}
+                            impactPreview={p.impact_statement}
+                            lastActionDate={(p as any).last_action_date}
+                          />
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
+              {/* Sidebar extras — below main content on mobile */}
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+                <FeaturedPromo variant="card" />
+                {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={levelColor} />}
+              </div>
+            </div>
+
+            {/* ── RIGHT: WAYFINDER SIDEBAR ── */}
+            <aside className="w-full lg:w-[340px] flex-shrink-0">
+              <div className="lg:sticky lg:top-4 space-y-4">
+                <DetailWayfinder
+                  data={wayfinderData}
+                  currentType="policy"
+                  currentId={id}
+                  userRole={userProfile?.role ?? undefined}
+                />
+
+                <div className="hidden lg:block space-y-4">
+                  <FeaturedPromo variant="card" />
+                  {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={levelColor} />}
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER CODA ── */}
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <Link
+            href="/policies"
+            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
+            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+          >
+            <ArrowRight size={14} className="rotate-180" /> Back to Policies
+          </Link>
+        </div>
+      </section>
 
       <AdminEditPanel
         entityType="policies"

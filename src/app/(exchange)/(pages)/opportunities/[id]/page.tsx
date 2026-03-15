@@ -8,10 +8,17 @@ import { getUserProfile } from '@/lib/auth/roles'
 import { QuoteCard } from '@/components/exchange/QuoteCard'
 import { FeaturedPromo } from '@/components/exchange/FeaturedPromo'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
-import { DetailPageLayout } from '@/components/exchange/DetailPageLayout'
+import { DetailWayfinder } from '@/components/exchange/DetailWayfinder'
+import { BookmarkButton } from '@/components/exchange/BookmarkButton'
+import { FlowerOfLife } from '@/components/geo/sacred'
 import { THEMES } from '@/lib/constants'
 import Image from 'next/image'
 
+/* ── Design Tokens ── */
+const RULE = '#dde1e8'
+const DIM = '#5c6474'
+const INK = '#0d1117'
+const SIDEBAR_BG = '#f4f5f7'
 
 export const revalidate = 86400
 
@@ -105,207 +112,288 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
   const locationParts = [opportunity.address, opportunity.city, opportunity.state].filter(Boolean)
   const displayLocation = locationParts.length > 0 ? locationParts.join(', ') : null
 
-  const subtitle = org
-    ? <>Hosted by{' '}<Link href={'/organizations/' + org.org_id} className="text-blue hover:underline">{org.org_name}</Link></>
-    : undefined
-
-  const breadcrumbs = [
-    { label: 'Home', href: '/' },
-    { label: 'Opportunities', href: '/opportunities' },
-    { label: displayName },
-  ]
-
-  const metaRow = (
-    <div className="flex flex-wrap items-center gap-4 text-muted text-[0.8rem]">
-      {opportunity.start_date && (
-        <span className="flex items-center gap-1.5">
-          <Calendar size={14} /> Starts {new Date(opportunity.start_date).toLocaleDateString()}
-        </span>
-      )}
-      {opportunity.end_date && (
-        <span className="flex items-center gap-1.5">
-          <Calendar size={14} /> Ends {new Date(opportunity.end_date).toLocaleDateString()}
-        </span>
-      )}
-      {displayLocation && (
-        <span className="flex items-center gap-1.5">
-          <MapPin size={14} /> {displayLocation}
-        </span>
-      )}
-      {opportunity.is_virtual && (
-        <span className="font-mono text-[0.65rem] uppercase tracking-wider px-2 py-0.5 border border-rule">Virtual</span>
-      )}
-    </div>
-  )
-
-  const footerContent = (
-    <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-      <div className="h-px bg-rule mb-10" />
-      <Link href="/opportunities" className="italic text-blue text-[0.95rem] hover:underline">
-        Back to Opportunities
-      </Link>
-    </div>
-  )
-
   return (
     <>
-      <DetailPageLayout
-        title={displayName}
-        subtitle={subtitle as any}
-        eyebrow={themeName ? { text: themeName } : { text: 'Opportunity' }}
-        breadcrumbs={breadcrumbs}
-        themeColor={themeColor}
-        metaRow={metaRow}
-        wayfinderData={wayfinderData}
-        wayfinderType="opportunity"
-        wayfinderEntityId={id}
-        userRole={userProfile?.role}
-        actions={{
-          bookmark: { contentType: 'opportunity', contentId: id, title: displayName },
-        }}
-        feedbackType="opportunity"
-        feedbackId={id}
-        feedbackName={displayName}
-        footer={footerContent}
-        sidebar={
-          <>
-            <FeaturedPromo variant="card" />
-            {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
-          </>
-        }
+      <SpiralTracker action="view_opportunity" />
+
+      {/* ══════════════════════════════════════════════════════════════════
+          GRADIENT HERO
+         ══════════════════════════════════════════════════════════════════ */}
+      <section
+        className="relative overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, ${themeColor}55 100%)` }}
       >
-        <SpiralTracker action="view_opportunity" />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+        <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
+          <FlowerOfLife color="#ffffff" size={400} />
+        </div>
 
-        {/* Registration CTA */}
-        {opportunity.registration_url && (
-          <div className="mb-10 p-6 border border-blue bg-faint">
-            <p className="font-mono text-micro uppercase tracking-wider text-muted mb-3">
-              Here is how to get involved
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={opportunity.registration_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-white transition-opacity hover:opacity-90 font-mono text-micro uppercase tracking-wider font-semibold bg-blue"
+        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-10 items-center">
+            <div className="flex-1">
+              {/* Breadcrumb */}
+              <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+                <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                <span className="mx-1.5">&rsaquo;</span>
+                <Link href="/opportunities" className="hover:text-white transition-colors">Opportunities</Link>
+              </nav>
+
+              {/* Badge */}
+              <div className="mb-5">
+                <span className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
+                  style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
+                >
+                  {themeName || 'Opportunity'}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
+                style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
               >
-                <ExternalLink size={14} /> Register
-              </a>
-            </div>
-          </div>
-        )}
+                {displayName}
+              </h1>
 
-        {/* Description */}
-        {displayDesc && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">About This Opportunity</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <p className="text-[0.95rem] leading-relaxed">{displayDesc}</p>
-          </section>
-        )}
-
-        {/* Quick details */}
-        {(timeCommitmentName || opportunity.spots_available != null) && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">Details</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <div className="space-y-3">
-              {timeCommitmentName && (
-                <p className="flex items-center gap-2 text-[0.9rem] text-muted">
-                  <Clock size={15} className="text-blue" /> {timeCommitmentName}
-                </p>
-              )}
-              {opportunity.spots_available != null && (
-                <p className="flex items-center gap-2 text-[0.9rem] text-muted">
-                  <Users size={15} className="text-blue" /> {opportunity.spots_available} spots available
-                </p>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* Focus Areas */}
-        {focusAreas.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">Focus Areas</h2>
-              <span className="font-mono text-[0.65rem] text-muted">{focusAreas.length}</span>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <div className="flex flex-wrap gap-x-4 gap-y-2">
-              {focusAreas.map(function (fa) {
-                return (
-                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="inline-flex items-center gap-2 hover:underline text-[0.9rem]">
-                    <span className="w-2 h-2 flex-shrink-0" style={{ backgroundColor: themeColor }} />
-                    {fa.focus_area_name}
+              {/* Hosted by org */}
+              {org && (
+                <p className="text-white/80 mb-4 text-sm">
+                  Hosted by{' '}
+                  <Link href={'/organizations/' + org.org_id} className="text-white underline underline-offset-2 hover:text-white/90">
+                    {org.org_name}
                   </Link>
-                )
-              })}
-            </div>
-          </section>
-        )}
+                </p>
+              )}
 
-        {/* Skills */}
-        {skills.length > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">Skills Involved</h2>
-              <span className="font-mono text-[0.65rem] text-muted">{skills.length}</span>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <div className="flex flex-wrap gap-x-4 gap-y-2">
-              {skills.map(function (s) {
-                return (
-                  <span key={s.skill_id} className="inline-flex items-center gap-2 text-[0.9rem] text-muted">
-                    <span className="w-1.5 h-1.5 flex-shrink-0 bg-muted" />
-                    {s.skill_name}
+              {/* Description preview */}
+              {displayDesc && (
+                <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.05rem' }}>
+                  {displayDesc.length > 200 ? displayDesc.slice(0, 200) + '...' : displayDesc}
+                </p>
+              )}
+
+              {/* Bookmark */}
+              <BookmarkButton
+                contentType="opportunity"
+                contentId={id}
+                title={displayName}
+              />
+
+              {/* Registration CTA in hero */}
+              {opportunity.registration_url && (
+                <div className="flex flex-wrap items-center gap-3 mt-6">
+                  <a
+                    href={opportunity.registration_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-mono uppercase tracking-wider font-semibold transition-colors hover:bg-white/20 rounded-full"
+                    style={{ background: 'rgba(255,255,255,0.15)' }}
+                  >
+                    <ExternalLink size={13} /> Register
+                  </a>
+                </div>
+              )}
+
+              {/* Meta strip */}
+              <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-4">
+                {opportunity.start_date && (
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar size={10} /> Starts {new Date(opportunity.start_date).toLocaleDateString()}
                   </span>
-                )
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* Age requirement */}
-        {opportunity.min_age != null && opportunity.min_age > 0 && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">Who Can Participate</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <p className="text-[0.95rem] leading-relaxed">Minimum age: {opportunity.min_age} years</p>
-          </section>
-        )}
-
-        <div className="my-10 h-px bg-rule" />
-
-        {/* Organization card */}
-        {org && (
-          <section className="mb-10">
-            <div className="flex items-baseline justify-between mb-1">
-              <h2 className="text-2xl">Organization</h2>
-            </div>
-            <div className="h-px border-b border-dotted border-rule mb-4" />
-            <Link href={'/organizations/' + org.org_id} className="block p-5 transition-colors hover:opacity-80 border border-rule">
-              <div className="flex items-center gap-3">
-                {org.logo_url && (
-                  <Image src={org.logo_url} alt={org.org_name} className="object-contain flex-shrink-0 border border-rule" width={48} height={48} />
                 )}
-                <div>
-                  <h3 className="text-base font-bold">{org.org_name}</h3>
-                  {org.website && (
-                    <span className="font-mono text-[0.65rem] text-blue mt-0.5 inline-block">Visit website</span>
-                  )}
+                {opportunity.end_date && (
+                  <>
+                    {opportunity.start_date && <span>&middot;</span>}
+                    <span className="inline-flex items-center gap-1">
+                      <Calendar size={10} /> Ends {new Date(opportunity.end_date).toLocaleDateString()}
+                    </span>
+                  </>
+                )}
+                {displayLocation && (
+                  <>
+                    {(opportunity.start_date || opportunity.end_date) && <span>&middot;</span>}
+                    <span className="inline-flex items-center gap-1">
+                      <MapPin size={10} /> {displayLocation}
+                    </span>
+                  </>
+                )}
+                {opportunity.is_virtual && (
+                  <>
+                    {(opportunity.start_date || opportunity.end_date || displayLocation) && <span>&middot;</span>}
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                      Virtual
+                    </span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Org logo */}
+            {org?.logo_url && (
+              <div className="w-full lg:w-[280px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center p-6">
+                <Image
+                  src={org.logo_url}
+                  alt={org.org_name}
+                  className="max-w-full max-h-[180px] w-auto h-auto object-contain"
+                  width={280}
+                  height={180}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════════
+          TWO-COLUMN LAYOUT
+         ══════════════════════════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+          <div className="flex flex-col lg:flex-row gap-10">
+
+            {/* ── LEFT: Main Content ── */}
+            <div className="flex-1 min-w-0">
+
+              {/* About — full description if hero was truncated */}
+              {displayDesc && displayDesc.length > 200 && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>About This Opportunity</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayDesc}</p>
+                </section>
+              )}
+
+              {/* Quick details */}
+              {(timeCommitmentName || opportunity.spots_available != null) && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Details</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="space-y-3">
+                    {timeCommitmentName && (
+                      <p className="flex items-center gap-2 text-[0.9rem]" style={{ color: DIM }}>
+                        <Clock size={15} style={{ color: themeColor }} /> {timeCommitmentName}
+                      </p>
+                    )}
+                    {opportunity.spots_available != null && (
+                      <p className="flex items-center gap-2 text-[0.9rem]" style={{ color: DIM }}>
+                        <Users size={15} style={{ color: themeColor }} /> {opportunity.spots_available} spots available
+                      </p>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {/* Focus Areas */}
+              {focusAreas.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Focus Areas</h2>
+                    <span className="font-mono text-[0.65rem]" style={{ color: DIM }}>{focusAreas.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    {focusAreas.map(function (fa) {
+                      return (
+                        <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="inline-flex items-center gap-2 hover:underline text-[0.9rem]" style={{ color: INK }}>
+                          <span className="w-2 h-2 flex-shrink-0 rounded-full" style={{ backgroundColor: themeColor }} />
+                          {fa.focus_area_name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
+              {/* Skills */}
+              {skills.length > 0 && (
+                <section className="mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Skills Involved</h2>
+                    <span className="font-mono text-[0.65rem]" style={{ color: DIM }}>{skills.length}</span>
+                  </div>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    {skills.map(function (s) {
+                      return (
+                        <span key={s.skill_id} className="inline-flex items-center gap-2 text-[0.9rem]" style={{ color: DIM }}>
+                          <span className="w-1.5 h-1.5 flex-shrink-0 rounded-full" style={{ background: DIM }} />
+                          {s.skill_name}
+                        </span>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
+              {/* Age requirement */}
+              {opportunity.min_age != null && opportunity.min_age > 0 && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Who Can Participate</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>Minimum age: {opportunity.min_age} years</p>
+                </section>
+              )}
+
+              <div className="my-8 h-px" style={{ background: RULE }} />
+
+              {/* Organization card */}
+              {org && (
+                <section className="mb-8">
+                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Organization</h2>
+                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <Link href={'/organizations/' + org.org_id} className="flex items-center gap-4 p-4 transition-colors hover:bg-gray-50 rounded" style={{ border: `1px solid ${RULE}` }}>
+                    {org.logo_url && (
+                      <Image src={org.logo_url} alt="" width={48} height={48} className="w-12 h-12 rounded object-contain flex-shrink-0 bg-gray-50" />
+                    )}
+                    <div className="min-w-0">
+                      <h3 className="text-[0.9rem] font-bold" style={{ color: INK }}>{org.org_name}</h3>
+                      {org.website && (
+                        <span className="font-mono text-[0.65rem] mt-0.5 inline-block" style={{ color: themeColor }}>Visit website</span>
+                      )}
+                    </div>
+                  </Link>
+                </section>
+              )}
+
+              {/* Sidebar extras — below main content on mobile */}
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+                <FeaturedPromo variant="card" />
+                {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
+              </div>
+            </div>
+
+            {/* ── RIGHT: WAYFINDER SIDEBAR ── */}
+            <aside className="w-full lg:w-[340px] flex-shrink-0">
+              <div className="lg:sticky lg:top-4 space-y-4">
+                <DetailWayfinder
+                  data={wayfinderData}
+                  currentType="opportunity"
+                  currentId={id}
+                  userRole={userProfile?.role ?? undefined}
+                />
+
+                <div className="hidden lg:block space-y-4">
+                  <FeaturedPromo variant="card" />
+                  {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
                 </div>
               </div>
-            </Link>
-          </section>
-        )}
-      </DetailPageLayout>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER CODA ── */}
+      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+          <Link
+            href="/opportunities"
+            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
+            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+          >
+            <ArrowRight size={14} className="rotate-180" /> Back to Opportunities
+          </Link>
+        </div>
+      </section>
     </>
   )
 }
