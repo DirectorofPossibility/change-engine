@@ -124,7 +124,6 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   // Stats for At a Glance bar
   const stats: Array<{ label: string; value: string }> = []
   if (org.people_served) stats.push({ label: 'People Served', value: String(org.people_served) })
-  if (org.service_area) stats.push({ label: 'Service Area', value: org.service_area })
   if (org.partner_count != null) stats.push({ label: 'Partners', value: String(org.partner_count) })
   if (org.annual_budget != null) stats.push({ label: 'Annual Budget', value: '$' + org.annual_budget.toLocaleString() })
 
@@ -452,12 +451,36 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                ══════════════════════════════════════════════════════════════════ */}
             <aside className="w-full lg:w-[340px] flex-shrink-0">
               <div className="lg:sticky lg:top-4 space-y-4">
-                <DetailWayfinder
-                  data={wayfinderData}
-                  currentType="organization"
-                  currentId={id}
-                  userRole={userProfile?.role ?? undefined}
-                />
+                <div>
+                  <DetailWayfinder
+                    data={wayfinderData}
+                    currentType="organization"
+                    currentId={id}
+                    userRole={userProfile?.role ?? undefined}
+                  />
+
+                  {/* Org-specific wayfinder extras — inside the wayfinder border */}
+                  <div className="bg-white border border-t-0 border-brand-border">
+                    {org.service_area && (
+                      <div className="px-4 py-3 border-t-[3px] border-brand-border">
+                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: DIM }}>Service Area</span>
+                        <p className="text-xs mt-1 font-medium" style={{ color: INK }}>{org.service_area}</p>
+                      </div>
+                    )}
+                    {org.org_type && (
+                      <div className="px-4 py-3 border-t-[3px] border-brand-border">
+                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: DIM }}>Organization Type</span>
+                        <p className="text-xs mt-1 font-medium" style={{ color: INK }}>{org.org_type}</p>
+                      </div>
+                    )}
+                    {fullAddress && (
+                      <div className="px-4 py-3 border-t-[3px] border-brand-border">
+                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: DIM }}>Location</span>
+                        <p className="text-xs mt-1 font-medium" style={{ color: INK }}>{fullAddress}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 <div className="hidden lg:block space-y-4">
                   <FeaturedPromo variant="card" />
